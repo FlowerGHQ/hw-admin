@@ -80,6 +80,8 @@ export default {
         add_distribution: "新增分配",
         // 修改分配
         modify_distribution: "修改分配",
+        // confirm_delete
+        confirm_delete: "确定删除",
     },
     en: {
         inquiry_list: "Inquiry list",
@@ -146,5 +148,6 @@ export default {
         cancel: "Cancel",
         add_distribution: "Add Distribution",
         modify_distribution: "Modify Distribution",
+        confirm_delete: "Confirm Delete",
     }
 }

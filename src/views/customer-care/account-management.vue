@@ -9,7 +9,7 @@
                 <SearchAll :options="searchList" @search="onSearch" @reset="onReset" :isShowMore="false"> </SearchAll>
             </div>
             <div class="table-container">
-                <a-button type="primary" class="add-btn" @click="handleEdit('add')">
+                <a-button type="primary" class="add-btn" @click="handleEdit('add',{})">
                     <!-- 新增分配 -->
                     {{ $t("customer-care.add_distribution") }}
                     <template #icon>
@@ -27,11 +27,11 @@
                         <template v-if="column.key === 'setting'">
                             <div class="default-accout" v-if="index === 0">-</div>
                             <div class="other-accout" v-else>
-                                <a-button type="link" size="small" @click="handleEdit('edit')">
+                                <a-button type="link" size="small" @click="handleEdit('edit',record)">
                                     <!-- 编辑 -->
                                     {{ $t("customer-care.edit") }}
                                 </a-button>
-                                <a-button type="link" size="small" @click="handleDelete">
+                                <a-button type="link" size="small" @click="handleDelete(record)">
                                     <!-- 删除 -->
                                     {{ $t("customer-care.delete") }}
                                 </a-button>
@@ -45,25 +45,22 @@
         <a-modal
             :title="modalTitle"
             :visible="editVisibilty"
+            destroyOnClose
             :ok-text="t('customer-care.confirm')"
             :cancel-text="t('customer-care.cancel')"
-            @cancel="editVisibilty = false"
-            @ok="editVisibilty = false">
+            @cancel="handleCancel"
+            @ok="handleSubmit">
             <!-- 表单 -->
             <a-form ref="formRef" name="custom-validation" :model="formState" :rules="rules">
                 <a-form-item :label="t('customer-care.customer_service_account')" name="username">
-                    <a-select v-model:value="formState.username" placeholder="请选择客服账号">
-                        <a-select-option value="china">中国</a-select-option>
-                        <a-select-option value="japan">日本</a-select-option>
-                        <a-select-option value="korea">韩国</a-select-option>
+                    <a-select v-model:value="formState.username" placeholder="请选择客服账号" :disabled="openType === 'edit'" >
+                        <a-select-option v-for="item in allAccount" :key="id" :value="item.username">
+                            {{ item.username }}
+                        </a-select-option>
                     </a-select>
                 </a-form-item>
                 <a-form-item :label="t('customer-care.distribution_country')" name="area">
-                    <a-select v-model:value="formState.area" placeholder="请选择分配国家">
-                        <a-select-option value="china">中国</a-select-option>
-                        <a-select-option value="japan">日本</a-select-option>
-                        <a-select-option value="korea">韩国</a-select-option>
-                    </a-select>
+                    <CountryCascaderTabMore v-model:value="formState.area" :def-area="defArea" :code-list="codeList" />
                 </a-form-item>
             </a-form>
         </a-modal>
@@ -78,6 +75,9 @@ import { useTable } from "@/hooks/useTable";
 import { useI18n } from "vue-i18n";
 import SearchAll from "@/components/horwin/based-on-ant/SearchAll.vue";
 import { PlusOutlined } from "@ant-design/icons-vue";
+import CountryCascaderTabMore from "@/components/common/CountryCascaderTabMore.vue";
+import { Modal } from 'ant-design-vue';
+const $confirm = Modal.confirm;
 const request = Core.Api.inquiry_sheet.cusomerList;
 const { t } = useI18n();
 
@@ -149,21 +149,42 @@ const tableColumns = computed(() => {
 const editVisibilty = ref(false);
 const formState = ref({
     username: null,
-    area: null,
+    area: [],
+    org_id: 1,
+    org_type: 10,
 });
+// const areaList = ref([]);
+const defArea = ref([]);
+const codeList = ref([]);
+const allAccount = ref([]);
+
+const formRef = ref(null);
+const activeRecord = ref({});
+const openType = ref("");
+
 const rules = ref({
     username: [
         {
             required: true,
-            message: "请输入账号",
-            trigger: "blur",
+            validator: (rule, value, callback) => {
+                if (!value) {
+                    return Promise.reject(new Error("请选择客服账号"));
+                } 
+                return Promise.resolve();
+
+            },
+            trigger: ["blur", "change"],
         },
     ],
     area: [
         {
             required: true,
-            message: "请选择分配国家",
-            trigger: "blur",
+            validator: (rule, value) => {
+                if (!value || !value.length) {
+                    return Promise.reject("请选择地区");
+                } 
+                return Promise.resolve();
+            },
         },
     ],
 });
@@ -179,14 +200,22 @@ const onReset = () => {
     refreshTable();
 };
 // 编辑
-const handleEdit = (type) => {
+const handleEdit = (type,record) => {
     getCustomerServiceAccount();
     switch (type) {
         case "add":
             modalTitle.value = t("customer-care.add_distribution");
+            openType.value = "add";
+            activeRecord.value = {};
             break;
         case "edit":
             modalTitle.value = t("customer-care.modify_distribution");
+            openType.value = "edit";
+            activeRecord.value = record;
+            formState.value.username = record.username;
+            formState.value.area = record.area;
+            formState.value.id = record.id;
+            defArea.value = record.area.split(",");
             break;
         default:
             break;
@@ -194,8 +223,18 @@ const handleEdit = (type) => {
     editVisibilty.value = true;
 };
 // 删除
-const handleDelete = () => {
-    console.log("删除");
+const handleDelete = (record) => {
+    $confirm({
+        title: `${t("customer-care.confirm_delete")}${record.username}?`,
+        okText: t("customer-care.confirm"),
+        okType: "danger",
+        cancelText: t("customer-care.cancel"),
+        onOk() {
+            Core.Api.inquiry_sheet.deleteCustomer({ username:record.username }).then((res) => {
+                refreshTable();
+            });
+        },
+    });
 };
 // 获取所有的客服账号
 const getCustomerServiceAccount = () => {
@@ -205,9 +244,33 @@ const getCustomerServiceAccount = () => {
         org_type: 10,
         return_type: 0,
     }).then((res) => {
-        console.log(res);
+        allAccount.value = res.list;
     });
 };
+// 提交
+const handleSubmit = () => {
+    console.log("提交",formState);
+    formRef.value.validate().then((res) => {
+        formState.value.area = formState.value.area?.map((item) => item.name)?.join(",") || "";
+        Core.Api.inquiry_sheet.addCustomer(formState.value).then((res) => {
+            editVisibilty.value = false;
+            refreshTable();
+        });
+    });
+};
+// 取消
+const handleCancel = () => {
+    editVisibilty.value = false;
+    // 清空数据
+    formState.value = {
+        username: null,
+        area: [],
+        org_id: 1,
+        org_type: 10,
+    };
+    defArea.value = [];
+};
+// getSalesAreaDetail
 </script>
 
 <style lang="less" scoped>
