@@ -25,12 +25,6 @@ export default defineConfig(({ mode }) => {
         }
       },
       rollupOptions: {
-        // output 定义出口文件夹及文件名
-        output: {
-          chunkFileNames: 'static/js/[name]-[hash].js',
-          entryFileNames: 'static/js/[name]-[hash].js',
-          assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
-        },
         // manualChunks 自定义分割
         manualChunks:{
           // 将vue相关的包单独打包
