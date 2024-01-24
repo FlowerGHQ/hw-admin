@@ -54,6 +54,8 @@ export default {
         customer_service_account: "客服账号",
         // 账号管理及分配
         account_management_and_distribution: "账号管理及分配",
+        // add_distribution
+        add_distribution: "新增分配",
         //
     },
     en: {
@@ -108,5 +110,6 @@ export default {
         not_mandatory: "Not Mandatory",
         customer_service_account: "Customer Service Account",
         account_management_and_distribution: "Account Management And Distribution",
+        add_distribution: "Add Distribution",
     }
 }
