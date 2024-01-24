@@ -397,7 +397,7 @@
                         <span class="nums">
                             {{ selectNums }}
                         </span>
-                        {{ $t('purchase.selected_items_total') }}
+                        {{ $t('purchase.s_items') }}
                     </span>
                     <span class="dis">
                         {{ $t('purchase.selected_items_total') }}
