@@ -409,6 +409,7 @@ const handleEditShow = () => {
 };
 const handleLogout = () => {
     Core.Api.Common.logout().then(() => {
+        localStorage.clear()
         $store.dispatch("SUPPLY_CHAIN/clearAll");
         if (Number(Core.Data.getLoginType()) === Core.Const.USER.TYPE.SUPPLIER) {
             $router.replace(`/login?user_type=${Core.Data.getLoginType()}`);
