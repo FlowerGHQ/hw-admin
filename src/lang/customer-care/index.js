@@ -56,7 +56,20 @@ export default {
         account_management_and_distribution: "账号管理及分配",
         // add_distribution
         add_distribution: "新增分配",
-        //
+        // 序号
+        serial_number: "序号",
+        //账号
+        account: "账号",
+        // 名称
+        name: "名称",
+        // 地区
+        area: "地区",
+        // 设置
+        setting: "设置",
+        // 修改
+        edit: "修改",
+        // 删除
+        delete: "删除",
     },
     en: {
         inquiry_list: "Inquiry list",
@@ -111,5 +124,12 @@ export default {
         customer_service_account: "Customer Service Account",
         account_management_and_distribution: "Account Management And Distribution",
         add_distribution: "Add Distribution",
+        serial_number: "Serial Number",
+        account: "Account",
+        name: "Name",
+        area: "Area",
+        setting: "Setting",
+        edit: "Edit",
+        delete: "Delete",
     }
 }
