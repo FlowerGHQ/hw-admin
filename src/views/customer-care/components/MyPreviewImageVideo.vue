@@ -34,7 +34,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import MyMask from "@/components/horwin/based-on-dom/MyMask.vue";
 import { LeftCircleOutlined, RightCircleOutlined, CloseOutlined } from "@ant-design/icons-vue";
 
@@ -66,6 +66,9 @@ const onAddBtn = (type) => {
     }
 };
 /* Methods end */
+onMounted(() => {
+    console.log("previewData", props.previewData);
+})
 </script>
 
 <style lang="less" scoped>

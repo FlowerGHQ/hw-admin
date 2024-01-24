@@ -140,9 +140,9 @@
                                         <img 
                                             :class="{ 'm-l-16': index > 0 }"
                                             class="attachment-img"
-                                            :src="Core.Const.NET.FILE_URL_PREFIX + item.path"
+                                            :src="item.path"
                                             alt=""
-                                            @click="onViewImage"
+                                            @click="onViewImage(item)"
                                         />
                                     </template>
                                     <template v-else-if="/video\+/.test(item.type)">
@@ -156,7 +156,9 @@
             </div>
             <!-- 按钮 -->
             <div v-if="Number(customerCareDetail.status) !== Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED" class="detail-btn">
-                <a-button @click="onBtn('edit')">编辑信息</a-button>
+                <a-button @click="onBtn('msg-edit')">
+                    {{ msgVisible ? '取消信息' : '编辑信息' }}
+                </a-button>
             </div>
         </div>
 
@@ -357,6 +359,24 @@
                 </div>
             </div>
         </div>
+
+        <MyPreviewImageVideo 
+            v-model:isClose="isClose" 
+            :type="isVideoImage" 
+            :previewData="uploadOptions.previewImageVideo"
+        > 
+        </MyPreviewImageVideo>
+
+        <!-- 编辑信息弹窗 -->
+        <a-modal 
+            v-model:visible="msgVisible" 
+            title="编辑资料" 
+            width="800px"
+            @ok="onBtn('msg-sumbit')"
+            @cancel="onBtn('msg-cancel')"
+        >
+            <customerCareEdit></customerCareEdit>
+        </a-modal>
     </div>
 </template>
 
@@ -366,6 +386,8 @@ import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import Core from "@/core";
 import { useRouter, useRoute } from "vue-router";
 import dayjs from "dayjs";
+import MyPreviewImageVideo from "./components/MyPreviewImageVideo.vue";
+import customerCareEdit from './customer-care-edit.vue'
 
 const { proxy } = getCurrentInstance();
 const router = useRouter()
@@ -422,6 +444,15 @@ const customerCareDetail = ref({
 });
 
 const isDistributerAdmin = ref(false); // 根据路由判断其是用在分销商(false) 还是平台方(true)
+const isClose = ref(false) // 预览组件
+const isVideoImage = ref("image"); // 预览组件
+
+// 上传预览和详情预览参数
+const uploadOptions = ref({
+    previewImageVideo: [], // 预览照片和预览视频    
+})
+
+const msgVisible = ref(false) // 基本信息弹窗
 
 /* computed start */
 const partsColumns = computed(() => {
@@ -454,6 +485,16 @@ const getDetailFetch = (params = {}) => {
         .then((res) => {
             console.log("详情接口 success", res.detail);
             customerCareDetail.value = res.detail
+
+            customerCareDetail.value.attachment_list = res.detail.attachment_list.map(el => {
+                return {
+                    id: el.id,
+                    type: el.type,
+                    path: Core.Const.NET.OSS_POINT  + el.path,
+                }
+            })
+
+            console.log("结果", customerCareDetail.value.attachment_list);
         })
         .catch((err) => {
             console.log("详情接口 err", err);
@@ -493,8 +534,34 @@ const getBindPartFetch = (params = {}) => {
 
 /* methods start */
 // 查看视频
-const onViewImage = () => {
+const onViewImage = (item) => {    
+    customerCareDetail.value.attachment_list.forEach(el => {        
+        if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
+            if (Number(el.id) === Number(item.id)) {
+                // 让预览的哪张图片在第一张
+                uploadOptions.value.previewImageVideo.unshift(el.path);
+            } else {
+                uploadOptions.value.previewImageVideo.push(el.path);
+            }
+        } else {
 
+        }
+    })    
+    isClose.value = true
+}
+// 按钮事件
+const onBtn = (type) => {
+    switch (type) {
+        case 'msg-edit':
+            msgVisible.value = !msgVisible.value
+        break;
+        case 'msg-sumbit':
+            msgVisible.value = true
+        break;
+        case 'msg-cancel':
+            msgVisible.value = false
+        break;
+    }
 }
 /* methods end */
 
@@ -578,6 +645,7 @@ onMounted(() => {
                                 height: 80px;
                                 border-radius: 4px;
                                 border: 1px solid black;
+                                object-fit: cover;
                             }
                         }
                     }

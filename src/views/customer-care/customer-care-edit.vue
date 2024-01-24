@@ -214,24 +214,6 @@ const formParams = ref({
     mileage: undefined, // 公里数
 });
 
-watch(
-    () => router.currentRoute.value,
-    (newValue, oldValue) => {
-        console.log("newValue", newValue);
-        if (newValue.matched[0].path === "/customer-care") {
-            // 分销商的客户关怀
-            isDistributerAdmin.value = false;
-        } else if (newValue.matched[0].path === "/inquiry-management") {
-            // 平台方
-            isDistributerAdmin.value = true;
-        }
-    },
-    {
-        deep: true,
-        immediate: true,
-    }
-);
-
 /* computed start*/
 const vehicle_column = computed(() => {
     let result = [
@@ -562,6 +544,24 @@ const handleRemove = ({ file, fileList }) => {
 }
 /* methods end*/
 
+watch(
+    () => router.currentRoute.value,
+    (newValue, oldValue) => {
+        console.log("newValue", newValue);
+        if (newValue.matched[0].path === "/customer-care") {
+            // 分销商的客户关怀
+            isDistributerAdmin.value = false;
+        } else if (newValue.matched[0].path === "/inquiry-management") {
+            // 平台方
+            isDistributerAdmin.value = true;
+        }
+    },
+    {
+        deep: true,
+        immediate: true,
+    }
+);
+
 onMounted(() => {   
     getVehicleTreeFetch()
 
@@ -577,7 +577,6 @@ onMounted(() => {
 
 <style lang="less" scoped>
 #customer-care-edit {
-    // height: 100%;
     position: relative;
 
     .d-f-a {
