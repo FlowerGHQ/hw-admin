@@ -258,7 +258,7 @@ export default {
         })
         .finally(() => {
           this.loading = false;
-          this.getExploreDetail(this.id);
+          this.getExploreDetail(this.detail.id);
         });
     },
     // 获取 同规格商品 列表接口
@@ -270,6 +270,7 @@ export default {
         flag_spread: 2,
         status: 0,
         ...params,
+        flag_default: 0,
       })
         .then((res) => {
           this.specList = res.list.filter((i) => i.flag_default !== 1);
@@ -302,7 +303,7 @@ export default {
     // 配件接口
     getAccessoryData(params = {}) {
       Core.Api.ItemAccessory.list({
-        item_id: this.id,
+        item_id: this.detail.id,
         is_authority: 1,
         ...params,
       }).then((res) => {
