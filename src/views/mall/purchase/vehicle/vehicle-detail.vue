@@ -248,7 +248,11 @@ const getItemDetail = () => {
         let detail = res.detail || {}
         detail.sales_area_name = detail.sales_area_list ? detail.sales_area_list.map(i => i.name).join(' , ') : ''
         Object.assign(vehicle_mes, detail) //logo封面，imgs详情图
-        if (detail.set_id) getListBySet();
+        if (detail.set_id) {
+            getListBySet();
+        } else {
+            getSwiperList([{ imgs: detail.logo }])
+        }
     }).finally(() => {
         spinning.value = false
     })
