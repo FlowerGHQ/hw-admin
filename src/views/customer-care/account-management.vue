@@ -42,29 +42,23 @@
             </div>
         </div>
         <!-- 修改和新增的弹框 -->
-        <a-modal 
-            title="Basic Modal" 
-            :visible="editVisibilty" 
-            ok-text="确认" 
-            cancel-text="取消"
+        <a-modal
+            :title="modalTitle"
+            :visible="editVisibilty"
+            :ok-text="t('customer-care.confirm')"
+            :cancel-text="t('customer-care.cancel')"
             @cancel="editVisibilty = false"
-            @ok="editVisibilty = false"
-        >
+            @ok="editVisibilty = false">
             <!-- 表单 -->
-            <a-form
-                ref="formRef"
-                name="custom-validation"
-                :model="formState"
-                :rules="rules"
-            >
-                <a-form-item label="客服账号" name="username">
+            <a-form ref="formRef" name="custom-validation" :model="formState" :rules="rules">
+                <a-form-item :label="t('customer-care.customer_service_account')" name="username">
                     <a-select v-model:value="formState.username" placeholder="请选择客服账号">
                         <a-select-option value="china">中国</a-select-option>
                         <a-select-option value="japan">日本</a-select-option>
                         <a-select-option value="korea">韩国</a-select-option>
                     </a-select>
                 </a-form-item>
-                <a-form-item label="分配国家" name="area">
+                <a-form-item :label="t('customer-care.distribution_country')" name="area">
                     <a-select v-model:value="formState.area" placeholder="请选择分配国家">
                         <a-select-option value="china">中国</a-select-option>
                         <a-select-option value="japan">日本</a-select-option>
@@ -152,7 +146,7 @@ const tableColumns = computed(() => {
     ];
     return column;
 });
-const editVisibilty = ref(true);
+const editVisibilty = ref(false);
 const formState = ref({
     username: null,
     area: null,
@@ -173,7 +167,7 @@ const rules = ref({
         },
     ],
 });
-
+const modalTitle = ref("");
 
 // 搜索
 const onSearch = (params) => {
@@ -186,13 +180,34 @@ const onReset = () => {
 };
 // 编辑
 const handleEdit = (type) => {
+    getCustomerServiceAccount();
+    switch (type) {
+        case "add":
+            modalTitle.value = t("customer-care.add_distribution");
+            break;
+        case "edit":
+            modalTitle.value = t("customer-care.modify_distribution");
+            break;
+        default:
+            break;
+    }
     editVisibilty.value = true;
 };
 // 删除
 const handleDelete = () => {
     console.log("删除");
 };
-
+// 获取所有的客服账号
+const getCustomerServiceAccount = () => {
+    console.log("获取所有的客服账号");
+    request({
+        org_id: 1,
+        org_type: 10,
+        return_type: 0,
+    }).then((res) => {
+        console.log(res);
+    });
+};
 </script>
 
 <style lang="less" scoped>

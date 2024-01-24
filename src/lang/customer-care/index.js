@@ -70,6 +70,16 @@ export default {
         edit: "修改",
         // 删除
         delete: "删除",
+        // 分配国家
+        distribution_country: "分配国家",
+        // 确定
+        confirm: "确定",
+        // 取消
+        cancel: "取消",
+        // 新增分配
+        add_distribution: "新增分配",
+        // 修改分配
+        modify_distribution: "修改分配",
     },
     en: {
         inquiry_list: "Inquiry list",
@@ -131,5 +141,10 @@ export default {
         setting: "Setting",
         edit: "Edit",
         delete: "Delete",
+        distribution_country: "Distribution Country",
+        confirm: "Confirm",
+        cancel: "Cancel",
+        add_distribution: "Add Distribution",
+        modify_distribution: "Modify Distribution",
     }
 }
