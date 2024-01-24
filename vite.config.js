@@ -24,16 +24,6 @@ export default defineConfig(({ mode }) => {
           drop_debugger: true
         }
       },
-      rollupOptions: {
-        // manualChunks 自定义分割
-        manualChunks:{
-          // 将vue相关的包单独打包
-          vue: ['vue', 'vue-router', 'vuex', 'vue-i18n'],
-          // 将loadsh相关的包单独打包
-          lodash: ['lodash'],
-        }
-      },
-      chunkSizeWarningLimit: 1024 * 4, //代码分割警告的限制
     },
     plugins: [
       vue(),
