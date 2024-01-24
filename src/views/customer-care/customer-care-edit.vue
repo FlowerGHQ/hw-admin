@@ -46,7 +46,14 @@
                 <div class="form-item required">
                     <div class="key t-r">{{ $t("common.vehicle_model") }}:</div>
                     <div class="value">
-                        <a-tree-select v-model:value="formParams.category_id" :placeholder="$t('common.please_enter') + $t('common.vehicle_model')">
+                        <a-tree-select 
+                            v-model:value="formParams.category_id" 
+                            allow-clear
+                            show-search
+                            tree-default-expand-all
+                            :tree-data="treeData"
+                            :placeholder="$t('common.please_enter') + $t('common.vehicle_model')"
+                        >
                         </a-tree-select>
                     </div>
                 </div>
@@ -167,7 +174,11 @@
         </div>
 
         <!-- 自定义图片预览 -->
-        <MyPreviewImageVideo v-model:isClose="isClose" :type="previewType" :previewData="uploadOptions.previewImage"> </MyPreviewImageVideo>
+        <MyPreviewImageVideo 
+            v-model:isClose="isClose" 
+            :type="previewType" 
+            :previewData="uploadOptions.previewImage"> 
+        </MyPreviewImageVideo>
     </div>
 </template>
 
@@ -203,6 +214,18 @@ const props = defineProps({
 // 判断是照片还是视频查看
 const previewType = ref("image");
 const isClose = ref(false);
+const treeData = ref([
+    {
+        label: 'parent 1',
+        value: '1',
+        children: [
+            {
+                label: 'parent 2',
+                value: '2',
+            }
+        ],
+    }
+])
 const formParams = ref({
     org_name: undefined, // 分销商名称
     type: Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION, // 问询单类型
@@ -218,6 +241,8 @@ const formParams = ref({
     ], // 车架信息
     mileage: undefined, // 公里数
 });
+
+
 
 /* computed start*/
 const vehicle_column = computed(() => {
@@ -343,7 +368,8 @@ const getVehicleTreeFetch = (params = {}) => {
     Core.Api.ItemCategory
         .tree(obj)
         .then((res) => {
-            console.log("获取车型接口 success", res);           
+            console.log("获取车型接口 success", res.list);
+            treeData.value = res.list
         })
         .catch((err) => {
             console.log("获取车型接口 err", err);

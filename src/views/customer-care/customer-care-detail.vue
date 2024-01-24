@@ -1,4 +1,4 @@
- <template>
+<template>
     <div class="customer-care-detail">
         <!-- 基本信息 -->
         <div class="base-msg">
@@ -6,85 +6,85 @@
                 <div class="base-msg-left d-f-a">
                     <div class="sn no-white-space">问询单号 {{ customerCareDetail.uid }}</div>
                     <div class="no-white-space m-r-8 color-4E5969">客户:</div>
-                    <div>{{ customerCareDetail.submit_user_name || '-' }}/{{ customerCareDetail.country || "-" }}</div>
+                    <div>{{ customerCareDetail.submit_user_name || "-" }}/{{ customerCareDetail.country || "-" }}</div>
                 </div>
-                <div 
+                <div
                     class="base-msg-right status-style"
                     :class="[
                         $Util.Common.returnClassName(customerCareDetail.status, [
                             {
                                 status: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.EQUALTREATMENT,
-                                className: 'wait'
+                                className: 'wait',
                             },
                             {
                                 status: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.INPROCESS,
-                                className: 'deal'
+                                className: 'deal',
                             },
                             {
                                 status: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED,
-                                className: 'success'
+                                className: 'success',
                             },
-                        ])
+                        ]),
                     ]"
                 >
-                    <MySvgIcon 
+                    <MySvgIcon
                         :icon-class="
                             $Util.Common.returnClassName(customerCareDetail.status, [
                                 {
                                     status: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.EQUALTREATMENT,
-                                    className: 'customer-care-wait'
+                                    className: 'customer-care-wait',
                                 },
                                 {
                                     status: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.INPROCESS,
-                                    className: 'customer-care-deal'
+                                    className: 'customer-care-deal',
                                 },
                                 {
                                     status: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED,
-                                    className: 'customer-care-success'
+                                    className: 'customer-care-success',
                                 },
                             ])
-                        " 
+                        "
                     />
                     <span class="m-l-4">
-                        {{ 
-                            Core.Const.CUSTOMER_CARE.ORDER_STATUS[customerCareDetail.status] ? 
-                            $t(Core.Const.CUSTOMER_CARE.ORDER_STATUS[customerCareDetail.status].t) : '-' 
+                        {{
+                            Core.Const.CUSTOMER_CARE.ORDER_STATUS[customerCareDetail.status]
+                                ? $t(Core.Const.CUSTOMER_CARE.ORDER_STATUS[customerCareDetail.status].t)
+                                : "-"
                         }}
-                    </span> 
+                    </span>
                 </div>
             </div>
             <!-- 详细信息 -->
             <div class="detail-msg">
                 <div class="msg-title">详细信息</div>
                 <div class="msg-content m-t-20">
-
                     <!-- 问询类型 -->
                     <div class="type-style">
                         <div class="col d-f-a">
                             <div class="key m-r-16">问询类型</div>
-                            <div 
+                            <div
                                 class="value inquiry-category-style"
                                 :class="[
                                     $Util.Common.returnClassName(customerCareDetail.type, [
                                         {
                                             status: Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION,
-                                            className: 'color-0061FF'
+                                            className: 'color-0061FF',
                                         },
                                         {
                                             status: Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION,
-                                            className: 'color-FF7D00'
+                                            className: 'color-FF7D00',
                                         },
                                         {
                                             status: Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY,
-                                            className: 'color-00B42A'
+                                            className: 'color-00B42A',
                                         },
-                                    ])
+                                    ]),
                                 ]"
                             >
-                                {{ 
-                                    Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE[customerCareDetail.type] ? 
-                                    $t(Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE[customerCareDetail.type].t) 
-                                    : '-' 
+                                {{
+                                    Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE[customerCareDetail.type]
+                                        ? $t(Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE[customerCareDetail.type].t)
+                                        : "-"
                                 }}
                             </div>
                         </div>
@@ -95,7 +95,7 @@
                             </div>
                         </div>
                         <div class="col">
-                            <div class="key m-r-16">故障时间</div>                            
+                            <div class="key m-r-16">故障时间</div>
                             <div class="value">
                                 {{ $Util.timeFilter(customerCareDetail.fault_time, 3) }}
                             </div>
@@ -103,7 +103,7 @@
                         <div class="col">
                             <div class="key m-r-16">车型</div>
                             <div class="value">
-                                {{ $i18n.locale === 'en'? customerCareDetail.category?.name_en : customerCareDetail.category?.name }}
+                                {{ $i18n.locale === "en" ? customerCareDetail.category?.name_en || '-' : customerCareDetail.category?.name || '-' }}
                             </div>
                         </div>
                     </div>
@@ -111,10 +111,14 @@
                     <!-- 车架号与公里数 -->
                     <div class="vehicle-no-style m-t-20">
                         <div class="col">
-                            <div class="key m-r-16 no-white-space">车架号、公里数</div>
+                            <div class="key m-r-16 no-white-space m-r-8 m-t-8">车架号、公里数</div>
                             <div class="value d-f-a">
-                                <div v-for="(item, index) in customerCareDetail.vehicle_list" :key="index" class="vehicle-item m-r-8 m-t-8">
-                                   {{ item.vehicle_uid }}({{ item.mileage }})
+                                <div 
+                                    v-for="(item, index) in customerCareDetail.vehicle_list" 
+                                    :key="index" 
+                                    class="vehicle-item m-r-8 m-t-8"
+                                >
+                                    {{ item.vehicle_uid }}({{ item.mileage }})
                                 </div>
                             </div>
                         </div>
@@ -133,11 +137,11 @@
                     <!-- 附件 -->
                     <div class="attachment-style m-t-20">
                         <div class="col">
-                            <div class="key m-r-16">{{ $t('customer-care.attachment') }}</div>
+                            <div class="key m-r-16">{{ $t("customer-care.attachment") }}</div>
                             <div class="value">
                                 <template v-for="(item, index) in customerCareDetail.attachment_list" :key="index">
                                     <template v-if="/(image\/|png|jpg|jpeg)/.test(item.type)">
-                                        <img 
+                                        <img
                                             :class="{ 'm-l-16': index > 0 }"
                                             class="attachment-img"
                                             :src="item.path"
@@ -145,7 +149,8 @@
                                             @click="onViewImage(item)"
                                         />
                                     </template>
-                                    <template v-else-if="/video\+/.test(item.type)">
+                                    <template v-else-if="/video\/+/.test(item.type)"> 
+                                        <!-- {{ customerCareDetail.attachment_list }} -->
                                         视频
                                     </template>
                                 </template>
@@ -157,7 +162,7 @@
             <!-- 按钮 -->
             <div v-if="Number(customerCareDetail.status) !== Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED" class="detail-btn">
                 <a-button @click="onBtn('msg-edit')">
-                    {{ msgVisible ? '取消信息' : '编辑信息' }}
+                    {{ msgVisible ? "取消信息" : "编辑信息" }}
                 </a-button>
             </div>
         </div>
@@ -166,7 +171,7 @@
         <div class="inquiry-classification m-t-16">
             <template v-if="isDistributerAdmin">
                 <div class="inquiry-classification-title">问询单归类</div>
-    
+
                 <!-- 归类 -->
                 <div class="inquiry-classification-item m-t-16">
                     <div class="inquiry-classification-key m-t-4">归类</div>
@@ -176,43 +181,62 @@
                                 {{ $t(item.t) }}
                             </a-radio>
                         </a-radio-group>
-                        <br/>
+                        <br />
                         <!-- 上面选中索赔出现 -->
-                        <template v-if="Number(customerCareDetail.sorting_type) === Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE_MAP.CLAIMCOMPENSATION">
+                        <template
+                            v-if="Number(customerCareDetail.sorting_type) === Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE_MAP.CLAIMCOMPENSATION"
+                        >
                             <a-radio-group v-model:value="customerCareDetail.claim_type">
                                 <a-radio v-for="(item, index) in Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO" :value="item.value">
                                     {{ $t(item.t) }}
                                 </a-radio>
-                            </a-radio-group>                        
-    
+                            </a-radio-group>
+
                             <!-- 善意索赔 和 开箱损 -->
-                            <div v-if="!$Util.Common.returnTypeBool(customerCareDetail.claim_type, [Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.GENERALCLAIM])" class="good-faith-claims p-10 m-t-16">
+                            <div
+                                v-if="
+                                    !$Util.Common.returnTypeBool(customerCareDetail.claim_type, [
+                                        Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.GENERALCLAIM,
+                                        0,
+                                    ])
+                                "
+                                class="good-faith-claims p-10 m-t-16"
+                            >
                                 <div class="good-faith-claims-title">
-                                    {{ 
-                                        Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO[customerCareDetail.claim_type] 
-                                        ? 
-                                        $t(Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO[customerCareDetail.claim_type].t) : '-'
+                                    {{
+                                        Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO[customerCareDetail.claim_type]
+                                            ? $t(Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO[customerCareDetail.claim_type].t)
+                                            : "-"
                                     }}
                                 </div>
                                 <div class="good-faith-claims-time">
-                                    <template v-if="$Util.Common.returnTypeBool(customerCareDetail.claim_type, [Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.BONAFIDECLAIM/*善意索赔*/])">
+                                    <template
+                                        v-if="
+                                            $Util.Common.returnTypeBool(customerCareDetail.claim_type, [
+                                                Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.BONAFIDECLAIM /*善意索赔*/,
+                                            ])
+                                        "
+                                    >
                                         <span class="time-name m-r-8">发货日期</span>
                                         <a-date-picker class="w-224 m-r-16" v-model:value="customerCareDetail.delivery_time" />
                                         <a-radio-group v-model:value="customerCareDetail.insurance_status">
-                                            <a-radio 
-                                                v-for="(item, index) in Core.Const.CUSTOMER_CARE.GOOD_FAITH" 
-                                                :value="item.value"
-                                            >
+                                            <a-radio v-for="(item, index) in Core.Const.CUSTOMER_CARE.GOOD_FAITH" :value="item.value">
                                                 {{ $t(item.t) }}
                                             </a-radio>
                                         </a-radio-group>
                                     </template>
-                                    <template v-else-if="$Util.Common.returnTypeBool(customerCareDetail.claim_type, [Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.UNPACKINGDAMAGE/*开箱损*/])">
+                                    <template
+                                        v-else-if="
+                                            $Util.Common.returnTypeBool(customerCareDetail.claim_type, [
+                                                Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.UNPACKINGDAMAGE /*开箱损*/,
+                                            ])
+                                        "
+                                    >
                                         <span class="time-name m-r-8">订单号</span>
-                                        <a-input 
+                                        <a-input
                                             class="w-224"
-                                            v-model:value="customerCareDetail.order_sn" 
-                                            :placeholder="$t('common.please_enter') + $t('common.vehicle_no')" 
+                                            v-model:value="customerCareDetail.order_sn"
+                                            :placeholder="$t('common.please_enter') + $t('common.vehicle_no')"
                                         />
                                     </template>
                                 </div>
@@ -220,49 +244,68 @@
                         </template>
                     </div>
                 </div>
-    
+
                 <!-- 部件 -->
                 <div class="inquiry-classification-item m-t-30">
                     <div class="inquiry-classification-key">部件</div>
                     <div class="inquiry-classification-value">
-                        <a-button>选择商品</a-button>
-                        <a-table class="m-t-8" 
-                            :columns="partsColumns" 
-                            :data-source="customerCareDetail.part_list" 
-                            :pagination="false" 
+                        <ItemSelect
+                            btnType="default"
+                            :btnText="$t('i.select_item')"
+                            btnClass="item-select-btn"
+                            :disabled-checked="partDisabledChecked"
+                            @select="onHandlePartSelectItem"
+                        />
+                        <a-table
+                            class="m-t-8"
+                            :columns="partsColumns"
+                            :data-source="customerCareDetail.part_list"
+                            :pagination="false"
                             :scroll="{ x: true }"
                         >
                             <template #bodyCell="{ column, text, record }">
                                 <!-- 名称 -->
                                 <template v-if="column.key === 'name'">
-                                    {{ 
-                                        $i18n.locale === 'en' ? 
-                                        record.item?.name_en || '-' : record.item?.name + '等' || '-' 
-                                    }}
+                                    {{ $i18n.locale === "en" ? record?.name_en || "-" : record?.name + "等" || "-" }}
                                 </template>
                                 <!-- 类型 -->
                                 <template v-if="column.key === 'type'">
-                                    {{ Core.Const.CUSTOMER_CARE.PART_STATUS[text] ? $t(Core.Const.CUSTOMER_CARE.PART_STATUS[text].t) : '-' }}
+                                    {{ Core.Const.CUSTOMER_CARE.PART_STATUS[text] ? $t(Core.Const.CUSTOMER_CARE.PART_STATUS[text].t) : "-" }}
                                 </template>
                                 <!-- 数量 -->
                                 <template v-if="column.key === 'amount'">
-                                    <a-input-number v-model:value="record.number" defaultValue="1" :placeholder="$t('common.please_enter')" />
+                                    <a-input-number v-model:value="record.amount" defaultValue="1" :placeholder="$t('common.please_enter')" />
                                 </template>
                             </template>
                         </a-table>
                     </div>
                 </div>
-    
+
                 <!-- 故障分类 -->
-                <div v-if="!$Util.Common.returnTypeBool(customerCareDetail.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION/*咨询*/])" class="inquiry-classification-item m-t-30">
-                    <div 
-                        class="inquiry-classification-key" 
-                        :class="{ 'm-t-4': $Util.Common.returnTypeBool(customerCareDetail.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY/*电池*/]) }"
+                <div
+                    v-if="
+                        !$Util.Common.returnTypeBool(customerCareDetail.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION /*咨询*/])
+                    "
+                    class="inquiry-classification-item m-t-30"
+                >
+                    <div
+                        class="inquiry-classification-key"
+                        :class="{
+                            'm-t-4': $Util.Common.returnTypeBool(customerCareDetail.type, [
+                                Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY /*电池*/,
+                            ]),
+                        }"
                     >
                         {{ $t("customer-care.fault_classification") }}
                     </div>
                     <div class="inquiry-classification-value">
-                        <template v-if="$Util.Common.returnTypeBool(customerCareDetail.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION/*故障*/])">
+                        <template
+                            v-if="
+                                $Util.Common.returnTypeBool(customerCareDetail.type, [
+                                    Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION /*故障*/,
+                                ])
+                            "
+                        >
                             <a-table :columns="faultColumns" :data-source="customerCareDetail.vehicle_list" :pagination="false" :scroll="{ x: true }">
                                 <template #bodyCell="{ column, text, record }">
                                     <!-- 故障类型 -->
@@ -278,7 +321,13 @@
                                 </template>
                             </a-table>
                         </template>
-                        <template v-else-if="$Util.Common.returnTypeBool(customerCareDetail.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY/*电池*/])">
+                        <template
+                            v-else-if="
+                                $Util.Common.returnTypeBool(customerCareDetail.type, [
+                                    Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY /*电池*/,
+                                ])
+                            "
+                        >
                             <a-radio-group v-model:value="customerCareDetail.fault_type">
                                 <template v-for="(item, index) in Core.Const.CUSTOMER_CARE.FAULT_TYPE" :key="index">
                                     <a-radio v-if="item.value !== -1" :value="item.value">
@@ -343,7 +392,7 @@
 
                         <!-- 添加附件 -->
                         <div class="add-attachment m-t-10">
-                            <div class="add-attachment-title">{{ $t('customer-care.add_attachment') }}</div>
+                            <div class="add-attachment-title">{{ $t("customer-care.add_attachment") }}</div>
                         </div>
                     </div>
                 </div>
@@ -351,8 +400,8 @@
 
             <div class="submit-btn">
                 <div>
-                    <a-button>取消</a-button>
-                    <a-button type="primary">提交</a-button>
+                    <a-button @click="onBtn('inquiry-classification-cancel')">取消</a-button>
+                    <a-button @click="onBtn('inquiry-classification-sumbit')" type="primary">提交</a-button>
                 </div>
                 <div class="problem-tips">
                     <span>问题已解决</span>
@@ -360,17 +409,12 @@
             </div>
         </div>
 
-        <MyPreviewImageVideo 
-            v-model:isClose="isClose" 
-            :type="isVideoImage" 
-            :previewData="uploadOptions.previewImageVideo"
-        > 
-        </MyPreviewImageVideo>
+        <MyPreviewImageVideo v-model:isClose="isClose" :type="isVideoImage" :previewData="uploadOptions.previewImageVideo"> </MyPreviewImageVideo>
 
         <!-- 编辑信息弹窗 -->
-        <a-modal 
-            v-model:visible="msgVisible" 
-            title="编辑资料" 
+        <a-modal
+            v-model:visible="msgVisible"
+            title="编辑资料"
             width="800px"
             :destroyOnClose="true"
             @ok="onBtn('msg-sumbit')"
@@ -380,9 +424,7 @@
             <template #footer>
                 <div v-if="!isDetailEnter" class="model-footer-btn">
                     <a-button @click="onBtn('msg-cancel')">{{ $t("def.cancel") }}</a-button>
-                    <a-button 
-                        @click="onBtn('msg-sumbit')" 
-                        type="primary">
+                    <a-button @click="onBtn('msg-sumbit')" type="primary">
                         {{ $t("def.sure") }}
                     </a-button>
                 </div>
@@ -398,78 +440,77 @@ import Core from "@/core";
 import { useRouter, useRoute } from "vue-router";
 import dayjs from "dayjs";
 import MyPreviewImageVideo from "./components/MyPreviewImageVideo.vue";
-import customerCareEdit from './customer-care-edit.vue'
+import customerCareEdit from "./customer-care-edit.vue";
+import ItemSelect from "@/components/popup-btn/ItemSelect.vue";
+import { message } from "ant-design-vue";
 
 const { proxy } = getCurrentInstance();
-const router = useRouter()
-const route = useRoute()
+const router = useRouter();
+const route = useRoute();
 
 const customerCareDetail = ref({
-    uid: "CN222203435667",
-    submit_user_name: "客户名称",
-    country: "国家",
-    type: 1, // 问询单类型 1故障 2咨询 3电池
-    sorting_type: 10, // 归类状态
-    claim_type: 310, // 索赔状态
-    status: 10, // 订单状态
-    create_time: "1705667810", // 创建时间
-    fault_time: "1705667810", // 故障时间
+    uid: undefined,
+    submit_user_name: undefined,
+    country: undefined,
+    type: undefined, // 问询单类型 1故障 2咨询 3电池
+    status: undefined, // 订单状态
+    create_time: undefined, // 创建时间"1705667810"
+    fault_time: undefined, // 故障时间"1705667810"
     category: {
-        name: "你好啊", 
-        name_en: "hello World",
+        // name: "你好啊",
+        // name_en: "hello World",
     }, // 车型
     vehicle_list: [
-        { 
-            vehicle_uid: "12312414214124", 
-            mileage: 20,
-            fault_type: 1,
-        },
-        { 
-
-            vehicle_uid: undefined, // "12312414214124"
-            mileage: undefined, // 20
-            fault_type: undefined, // 2
-        },     
+        // {
+        //     vehicle_uid: "12312414214124",
+        //     mileage: 20,
+        //     fault_type: 1,
+        // },
+        // {
+        //     vehicle_uid: undefined, // "12312414214124"
+        //     mileage: undefined, // 20
+        //     fault_type: undefined, // 2
+        // },
     ], // 车架信息
-    description:  undefined, // "你好安徽发撒撒发哈是否撒谎"
+    description: undefined, // "你好安徽发撒撒发哈是否撒谎"
     attachment_list: [],
 
-    // 归类
-    sorting_type: 1,
+    // 问询单归类底下的东西
+    sorting_type: undefined,
+    claim_type: undefined, // 索赔状态
     // 零件
     part_list: [
-        {
-            amount: 10,
-            type: 1,
-            item: {
-                code: "111",
-                name: "你哈送",
-                name_en: "Heoolw",
-            }
-        }
+        // {
+        //     amount: 10,
+        //     type: 1,
+        //     code: "111",
+        //     name: "你哈送",
+        //     name_en: "Heoolw",
+        // }
     ],
-    insurance_status: 1, // 保险类型
-    delivery_time: dayjs.unix("1705667810"), // 发货日期
-    order_sn: "111111", // 订单号
-    fault_type: 2, // 故障类型 1.失效，2.异响，3.划伤，4.燃烧，5.事故
+    insurance_status: undefined, // 保险状态 1.保内 2.保外 3.其他
+    delivery_time: undefined, // 发货日期
+    order_sn: undefined, // 订单号
+    fault_type: undefined, // 故障类型 1.失效，2.异响，3.划伤，4.燃烧，5.事故
 });
 
 const isDistributerAdmin = ref(false); // 根据路由判断其是用在分销商(false) 还是平台方(true)
-const isClose = ref(false) // 预览组件
+const isClose = ref(false); // 预览组件
 const isVideoImage = ref("image"); // 预览组件
 
 // 上传预览和详情预览参数
 const uploadOptions = ref({
-    previewImageVideo: [], // 预览照片和预览视频    
-})
+    previewImageVideo: [], // 预览照片和预览视频
+});
 
-const msgVisible = ref(false) // 基本信息弹窗
+const msgVisible = ref(false); // 基本信息弹窗
+const partDisabledChecked = ref([]); // 部件不可选择的
 
 /* computed start */
 const partsColumns = computed(() => {
     const result = [
         { title: proxy.$t("common.name"), dataIndex: "name", key: "name" }, // 名称
-        { title: proxy.$t("common.product_code"), dataIndex: ['item','code'], key: "code" }, // 商品编码
+        { title: proxy.$t("common.product_code"), dataIndex: "code", key: "code" }, // 商品编码
         { title: proxy.$t("common.type"), dataIndex: "type", key: "type" }, // 类型
         { title: proxy.$t("common.quantity"), dataIndex: "amount", key: "amount" }, // 数量
     ];
@@ -495,17 +536,31 @@ const getDetailFetch = (params = {}) => {
         .detail(obj)
         .then((res) => {
             console.log("详情接口 success", res.detail);
-            customerCareDetail.value = res.detail
+            customerCareDetail.value = res.detail;
 
-            customerCareDetail.value.attachment_list = res.detail.attachment_list.map(el => {
+            customerCareDetail.value.delivery_time = dayjs.unix(res.detail?.delivery_time); // 回显时间转换格式
+
+            customerCareDetail.value.attachment_list = res.detail.attachment_list.map((el) => {
                 return {
                     id: el.id,
                     type: el.type,
-                    path: Core.Const.NET.OSS_POINT  + el.path,
-                }
-            })
+                    path: Core.Const.NET.OSS_POINT + el.path,
+                };
+            });
 
-            console.log("结果", customerCareDetail.value.attachment_list);
+            partDisabledChecked.value = [];
+            customerCareDetail.value.part_list = res.detail?.part_list.map((el) => {
+                partDisabledChecked.value.push(el.item_id);
+                return {
+                    id: el.id || 0,
+                    item_id: el.item_id,
+                    type: el.type,
+                    code: el.item?.code,
+                    name: el.item?.name,
+                    name_en: el.item?.name_en,
+                    amount: el.amount,
+                };
+            });
         })
         .catch((err) => {
             console.log("详情接口 err", err);
@@ -513,72 +568,147 @@ const getDetailFetch = (params = {}) => {
 };
 // 归类接口
 const getSortingTypeFetch = (params = {}) => {
-    const obj = {
-        ...params,
-    };
-    Core.Api.inquiry_sheet
-        .sortingType(obj)
-        .then((res) => {
-            console.log("归类接口 success", res.detail);
-            customerCareDetail.value = res.detail            
-        })
-        .catch((err) => {
-            console.log("归类接口 err", err);
-        });
+    return new Promise((resolve, reject) => {
+        const obj = {
+            id: route.query?.id,
+            sorting_type: customerCareDetail.value.sorting_type,
+            ...params,
+        };
+
+        if (Number(customerCareDetail.value.sorting_type) === Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE_MAP.CLAIMCOMPENSATION /*索赔*/) {
+            obj["claim_type"] = customerCareDetail.value.claim_type;
+
+            if (Number(customerCareDetail.value.claim_type) === Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.BONAFIDECLAIM /*善意索赔*/) {
+                obj["delivery_time"] = dayjs(customerCareDetail.value.delivery_time).unix();
+                obj["insurance_status"] = customerCareDetail.value.insurance_status;
+            } else if (Number(customerCareDetail.value.claim_type) === Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.UNPACKINGDAMAGE /*开箱损*/) {
+                obj["order_sn"] = customerCareDetail.value.order_sn;
+            }
+        }
+
+        if (Number(customerCareDetail.value.type) === Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY) {
+            obj["fault_type"] = customerCareDetail.value.insurance_status; // 电池类下的故障分类
+        } else {
+            obj["vehicle_list"] = customerCareDetail.value.vehicle_list; // 咨询和故障类下的故障分类
+        }
+
+        console.log("参数", obj);
+
+        Core.Api.inquiry_sheet
+            .sortingType(obj)
+            .then((res) => {
+                console.log("归类接口 success", res);
+                resolve(res);
+            })
+            .catch((err) => {
+                console.log("归类接口 err", err);
+                resolve(err);
+            });
+    });
 };
 // 零件接口
 const getBindPartFetch = (params = {}) => {
-    const obj = {
-        ...params,
-    };
-    Core.Api.inquiry_sheet
-        .bindPart(obj)
-        .then((res) => {
-            console.log("零件接口 success", res.detail);
-            customerCareDetail.value = res.detail
-        })
-        .catch((err) => {
-            console.log("零件接口 err", err);
-        });
+    return new Promise((resolve, reject) => {
+        const obj = {
+            id: route.query?.id,
+            part_list: customerCareDetail.value.part_list, // 零件
+            ...params,
+        };
+        Core.Api.inquiry_sheet
+            .bindPart(obj)
+            .then((res) => {
+                console.log("零件接口 success", res);
+                resolve(res);
+            })
+            .catch((err) => {
+                console.log("零件接口 err", err);
+                reject(err);
+            });
+    });
 };
 /* fetch end */
 
 /* methods start */
 // 查看视频
-const onViewImage = (item) => {    
-    customerCareDetail.value.attachment_list.forEach(el => {        
+const onViewImage = (item) => {
+    uploadOptions.value.previewImageVideo = []
+    customerCareDetail.value.attachment_list.forEach((el) => {
         if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
             if (Number(el.id) === Number(item.id)) {
-                // 让预览的哪张图片在第一张
+                // 让预览的那张图片在第一张
                 uploadOptions.value.previewImageVideo.unshift(el.path);
             } else {
                 uploadOptions.value.previewImageVideo.push(el.path);
             }
         } else {
-
         }
-    })    
-    isClose.value = true
-}
+    });
+    isClose.value = true;
+};
 // 按钮事件
-const customeCareEdit = ref(null)
+const customeCareEdit = ref(null);
 const onBtn = (type) => {
+    console.log("点击", type);
     switch (type) {
-        case 'msg-edit':
-            msgVisible.value = !msgVisible.value
-        break;
-        case 'msg-sumbit':
+        case "msg-edit":
+            msgVisible.value = !msgVisible.value;
+            break;
+        case "msg-sumbit":
             console.log("确定按钮", customeCareEdit.value);
-            customeCareEdit.value?.handleSubmit().then(res => {
-                msgVisible.value = false
-                getDetailFetch()
-            })
-        break;
-        case 'msg-cancel':
-            msgVisible.value = false
-        break;
+            customeCareEdit.value?.handleSubmit().then((res) => {
+                msgVisible.value = false;
+                getDetailFetch();
+            });
+            break;
+        case "msg-cancel":
+            msgVisible.value = false;
+            break;
+        case "inquiry-classification-cancel":
+            if (!isDistributerAdmin.value) {
+                router.push({
+                    path: "/inquiry-management/list",                
+                });
+            } else {
+                // 平台方
+                router.push({
+                    path: "/inquiry-management/list",                
+                });
+            }
+            break;
+        case "inquiry-classification-sumbit":          
+            Promise.all([getBindPartFetch(), getSortingTypeFetch()])
+                .then(res => {
+                    console.log(res)
+                    message.success(proxy.$t('common.sucesss'))
+                })
+                .catch(err => console.log(err));
+                getDetailFetch();
+            break;
     }
-}
+};
+
+// 部件的组件事件
+const onHandlePartSelectItem = (ids, items) => {
+    console.log("handleSelectItem ids:", ids, "items:", items);
+
+    items.forEach((parentEl) => {
+        const findIndexItem = customerCareDetail.value.part_list.findIndex((chidrenId) => Number(parentEl.id) === Number(chidrenId.id));
+
+        let data = {
+            id: 0,
+            item_id: parentEl.id,
+            type: parentEl.type,
+            code: parentEl?.code,
+            name: parentEl?.name,
+            name_en: parentEl?.name_en,
+            amount: 1,
+        };
+        if (findIndexItem === -1) {
+            customerCareDetail.value.part_list.push(data);
+            partDisabledChecked.value.push(parentEl.id);
+        }
+    });
+};
 /* methods end */
 
 watch(
@@ -600,8 +730,8 @@ watch(
 );
 
 onMounted(() => {
-    getDetailFetch()
-})
+    getDetailFetch();
+});
 </script>
 
 <style lang="less" scoped>
@@ -759,7 +889,6 @@ onMounted(() => {
             }
 
             .communication-process-other-reply {
-                       
                 .other-reply-platform-top {
                     display: flex;
                     .other-reply-platform-avatar {
@@ -787,15 +916,14 @@ onMounted(() => {
 
                 .other-reply-platform-bottom {
                     display: inline-block;
-                    .speech-skill {       
-                        border-radius: 4px;                 
+                    .speech-skill {
+                        border-radius: 4px;
                         background-color: #fff;
-                        color: #1D2129;
+                        color: #1d2129;
                         font-size: 14px;
-                        font-weight: 400;                        
+                        font-weight: 400;
                     }
                     .attachment {
-
                     }
                 }
             }
@@ -832,24 +960,23 @@ onMounted(() => {
                 .my-reply-platform-bottom {
                     display: inline-block;
                     .speech-skill {
-                        border-radius: 4px;              
-                        background-color: #66A0FF;
-                        color: #FFF;
+                        border-radius: 4px;
+                        background-color: #66a0ff;
+                        color: #fff;
                         font-size: 14px;
-                        font-weight: 400;                        
+                        font-weight: 400;
                     }
                     .attachment {
-
                     }
                 }
             }
 
             .add-attachment {
                 .add-attachment-title {
-                    color: #1D2129;
+                    color: #1d2129;
                     font-size: 14px;
                     font-weight: 400;
-                }   
+                }
             }
         }
 
@@ -858,7 +985,7 @@ onMounted(() => {
             margin-top: 20px;
             padding-top: 18px;
             box-sizing: border-box;
-            border-top: 1px solid #F2F3F5;            
+            border-top: 1px solid #f2f3f5;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -868,16 +995,14 @@ onMounted(() => {
                 right: 0;
                 font-size: 14px;
                 font-weight: 400;
-                color: #1D2129;
+                color: #1d2129;
                 border-radius: 4px;
-                border: 1px solid #E5E6EB;
-                background: #FFF;
+                border: 1px solid #e5e6eb;
+                background: #fff;
                 padding: 4px 8px;
             }
         }
     }
-
-    
 }
 
 // 订单类别
@@ -893,13 +1018,12 @@ onMounted(() => {
     }
     &.wait {
         background: rgba(255, 125, 0, 0.05);
-        color: #FF7D00 ;
+        color: #ff7d00;
     }
     &.success {
         background: rgba(38, 171, 84, 0.05);
-        color: #00B42A;
+        color: #00b42a;
     }
-     
 }
 
 // 问询类别
@@ -911,16 +1035,16 @@ onMounted(() => {
     box-sizing: border-box;
     .flex();
     &.color-FF7D00 {
-        background: rgba(255, 125, 0, 0.10);
-        color: #FF7D00 !important;
+        background: rgba(255, 125, 0, 0.1);
+        color: #ff7d00 !important;
     }
     &.color-0061FF {
-        background: rgba(0, 97, 255, 0.10);
-        color: #0061FF !important;
+        background: rgba(0, 97, 255, 0.1);
+        color: #0061ff !important;
     }
     &.color-00B42A {
-        background: rgba(38, 171, 84, 0.10);
-        color: #00B42A !important;
+        background: rgba(38, 171, 84, 0.1);
+        color: #00b42a !important;
     }
 }
 
@@ -929,7 +1053,6 @@ onMounted(() => {
     display: flex;
     justify-content: center;
 }
-
 
 .d-f-a {
     display: flex;

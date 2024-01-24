@@ -4,12 +4,12 @@
             <div v-if="type === 'image'" class="preview-image">
                 <slot name="image">
                     <a-carousel arrows :dots="false">
-                        <template #prevArrow>
+                        <template v-if="previewData.length > 1" #prevArrow>
                             <div class="custom-slick-arrow" style="left: 60px; z-index: 1">
                                 <left-circle-outlined />
                             </div>
                         </template>
-                        <template #nextArrow>
+                        <template v-if="previewData.length > 1" #nextArrow>
                             <div class="custom-slick-arrow" style="right: 60px">
                                 <right-circle-outlined />
                             </div>

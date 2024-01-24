@@ -18,7 +18,7 @@ export default {
    */
     returnClassName(type, classNames) {  
         const item = classNames.find((el) => Number(el.status) === Number(type))        
-        const key = item.className        
+        const key = item?.className        
         return key
     },
 }
