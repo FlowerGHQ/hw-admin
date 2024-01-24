@@ -653,6 +653,7 @@ const messages = {
             save_draft_success: '保存草稿成功',
             // 销售地区
             sales_area: '销售地区',
+            add_spec_tip: '请添加规格商品',
         },
         fe: { // 反馈单
             feedback: '反馈',
@@ -2981,6 +2982,7 @@ const messages = {
             item_code_tip: 'Commodity code: the parent specification of the multi-specification commodity corresponds to the commodity code;',
             sku_code_tip: 'SKU code: The sub-specifications of single-specification and multi-specification goods correspond to the SKU code',
             verification_code: 'Verification Code',
+            add_spec_tip: 'Please Add Specifications!',
         },
         a: {
             new_retailer: 'Create A New Retailer',
