@@ -167,7 +167,7 @@
         </div>
 
         <!-- 自定义图片预览 -->
-        <MyPreviewImageVideo v-model:isClose="isClose" :type="isVideoImage" :previewData="uploadOptions.previewImage"> </MyPreviewImageVideo>
+        <MyPreviewImageVideo v-model:isClose="isClose" :type="previewType" :previewData="uploadOptions.previewImage"> </MyPreviewImageVideo>
     </div>
 </template>
 
@@ -191,12 +191,10 @@ const uploadOptions = ref({
     // previewImage
     // "https://horwin.oss-cn-hangzhou.aliyuncs.com//img/ba37a2f6f160d68d31f1a96b4a17f2b068b6cee17e6c7b96db51ba5016ef1df0.png", "https://horwin.oss-cn-hangzhou.aliyuncs.com//img/ba37a2f6f160d68d31f1a96b4a17f2b068b6cee17e6c7b96db51ba5016ef1df0.png"
     previewImage: [],
-    // previewVideo
-    previewVideo: undefined,
 });
 
 // 判断是照片还是视频查看
-const isVideoImage = ref("image");
+const previewType = ref("image");
 const isClose = ref(false);
 const formParams = ref({
     org_name: undefined, // 分销商名称
@@ -535,9 +533,13 @@ const handlePreview = ({ file, fileList }) => {
     console.log("预览", file, fileList);
 
     if (/^video\/+/.test(file.type)) {
-        uploadOptions.value.previewVideo = "";
+        uploadOptions.value.previewImage = []
+        previewType.value = 'video';
+        uploadOptions.value.previewImage.push(Core.Util.imageFilter(file.response?.data?.filename, 4))
         isClose.value = true;
         return;
+    } else {
+        previewType.value = 'image';
     }
 
     uploadOptions.value.previewImage = [];
