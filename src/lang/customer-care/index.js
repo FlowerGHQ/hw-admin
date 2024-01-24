@@ -50,6 +50,9 @@ export default {
         attachment: "附件",
         wait: "等",
         not_mandatory: "非必填",
+        // 车辆分类
+        vehicle_classification: "车辆分类",
+        
     },
     en: {
         inquiry_list: "Inquiry list",
@@ -101,5 +104,7 @@ export default {
         attachment: "Attachment",
         wait: "Wait",
         not_mandatory: "Not Mandatory",
+        // 车辆分类
+        vehicle_classification: "Vehicle Classification",
     }
 }
