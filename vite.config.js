@@ -1,10 +1,6 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import Components from 'unplugin-vue-components/vite'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
-import {
-  AntDesignVueResolver,
-} from 'unplugin-vue-components/resolvers'
 import * as path from 'path';
 // 正式环境清除console
 // https://vitejs.dev/config/
