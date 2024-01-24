@@ -21,7 +21,11 @@
                 </slot>
             </div>
             <div v-else-if="type === 'video'" class="preview-video">
-                <slot name="video"></slot>
+                <slot name="video">
+                    <div class="modal-body">
+                        <video width="1140" height="600" :src="previewData[0]" autoplay controls></video>
+                    </div>
+                </slot>
             </div>
             <div 
                 class="colos-icon" 
@@ -122,6 +126,8 @@ onMounted(() => {
 
     // video
     .preview-video {
+        .fcc();
+        height: 100%;
     }
 
     .colos-icon {
@@ -134,6 +140,7 @@ onMounted(() => {
         height: 30px;
         z-index: 6;
         opacity: 0.8;
+        cursor: pointer;
     }
 }
 </style>
