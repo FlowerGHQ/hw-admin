@@ -11,4 +11,14 @@ export default {
         let result = typeIncludes.includes(Number(type))
         return result
     },
+    /**
+    * @description 
+    * @param() 
+    * @param() 
+   */
+    returnClassName(type, classNames) {  
+        const item = classNames.find((el) => Number(el.status) === Number(type))        
+        const key = item.className        
+        return key
+    },
 }

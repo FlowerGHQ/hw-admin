@@ -1,16 +1,51 @@
-<template>
+ <template>
     <div class="customer-care-detail">
         <!-- 基本信息 -->
         <div class="base-msg">
             <div class="d-f-a-b">
                 <div class="base-msg-left d-f-a">
-                    <div class="sn no-white-space">问询单号 CN222203435667</div>
+                    <div class="sn no-white-space">问询单号 {{ customerCareDetail.uid }}</div>
                     <div class="no-white-space m-r-8 color-4E5969">客户:</div>
-                    <div>张明细/美国</div>
+                    <div>{{ customerCareDetail.submit_user_name || '-' }}/{{ customerCareDetail.country || "-" }}</div>
                 </div>
-                <div class="base-msg-right p-13 primary">
-                    <MySvgIcon :icon-class="favorites - icon" />
-                    <span>
+                <div 
+                    class="base-msg-right status-style"
+                    :class="[
+                        $Util.Common.returnClassName(customerCareDetail.status, [
+                            {
+                                status: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.EQUALTREATMENT,
+                                className: 'wait'
+                            },
+                            {
+                                status: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.INPROCESS,
+                                className: 'deal'
+                            },
+                            {
+                                status: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED,
+                                className: 'success'
+                            },
+                        ])
+                    ]"
+                >
+                    <MySvgIcon 
+                        :icon-class="
+                            $Util.Common.returnClassName(customerCareDetail.status, [
+                                {
+                                    status: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.EQUALTREATMENT,
+                                    className: 'customer-care-wait'
+                                },
+                                {
+                                    status: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.INPROCESS,
+                                    className: 'customer-care-deal'
+                                },
+                                {
+                                    status: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED,
+                                    className: 'customer-care-success'
+                                },
+                            ])
+                        " 
+                    />
+                    <span class="m-l-4">
                         {{ 
                             Core.Const.CUSTOMER_CARE.ORDER_STATUS[customerCareDetail.status] ? 
                             $t(Core.Const.CUSTOMER_CARE.ORDER_STATUS[customerCareDetail.status].t) : '-' 
@@ -27,29 +62,60 @@
                     <div class="type-style">
                         <div class="col d-f-a">
                             <div class="key m-r-16">问询类型</div>
-                            <div class="value p-4 primary">故障类</div>
+                            <div 
+                                class="value inquiry-category-style"
+                                :class="[
+                                    $Util.Common.returnClassName(customerCareDetail.type, [
+                                        {
+                                            status: Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION,
+                                            className: 'color-0061FF'
+                                        },
+                                        {
+                                            status: Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION,
+                                            className: 'color-FF7D00'
+                                        },
+                                        {
+                                            status: Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY,
+                                            className: 'color-00B42A'
+                                        },
+                                    ])
+                                ]"
+                            >
+                                {{ 
+                                    Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE[customerCareDetail.type] ? 
+                                    $t(Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE[customerCareDetail.type].t) 
+                                    : '-' 
+                                }}
+                            </div>
                         </div>
                         <div class="col">
                             <div class="key m-r-16">创建时间</div>
-                            <div class="value">2024.12.12 12:00</div>
+                            <div class="value">
+                                {{ $Util.timeFilter(customerCareDetail.create_time, 3) }}
+                            </div>
                         </div>
                         <div class="col">
-                            <div class="key m-r-16">故障时间</div>
-                            <!-- {{ $Util.timeFilter(text, 3) }} -->
-                            <div class="value">2024.12.12 12:00</div>
+                            <div class="key m-r-16">故障时间</div>                            
+                            <div class="value">
+                                {{ $Util.timeFilter(customerCareDetail.fault_time, 3) }}
+                            </div>
                         </div>
                         <div class="col">
                             <div class="key m-r-16">车型</div>
-                            <div class="value">SK3-limitded-皓月白</div>
+                            <div class="value">
+                                {{ $i18n.locale === 'en'? customerCareDetail.category?.name_en : customerCareDetail.category?.name }}
+                            </div>
                         </div>
                     </div>
 
                     <!-- 车架号与公里数 -->
                     <div class="vehicle-no-style m-t-20">
                         <div class="col">
-                            <div class="key m-r-16">车架号、公里数</div>
-                            <div class="value">
-                                <div class="vehicle-item">R45CR6B3M1000033(9km)</div>
+                            <div class="key m-r-16 no-white-space">车架号、公里数</div>
+                            <div class="value d-f-a">
+                                <div v-for="(item, index) in customerCareDetail.vehicle_list" :key="index" class="vehicle-item m-r-8 m-t-8">
+                                   {{ item.vehicle_uid }}({{ item.mileage }})
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -58,7 +124,9 @@
                     <div class="problem-description-style m-t-20">
                         <div class="col">
                             <div class="key m-r-16">问题描述</div>
-                            <div class="value">问题描述问题描述问题描述问题描述</div>
+                            <div class="value">
+                                {{ customerCareDetail.description }}
+                            </div>
                         </div>
                     </div>
 
@@ -67,8 +135,19 @@
                         <div class="col">
                             <div class="key m-r-16">{{ $t('customer-care.attachment') }}</div>
                             <div class="value">
-                                <template v-for="(item, index) in customerCareDetail.img" :key="index">
-                                    <img :class="{ 'm-l-16': index > 0 }" class="attachment-img" :src="item" alt="" />
+                                <template v-for="(item, index) in customerCareDetail.attachment_list" :key="index">
+                                    <template v-if="/(image\/|png|jpg|jpeg)/.test(item.type)">
+                                        <img 
+                                            :class="{ 'm-l-16': index > 0 }"
+                                            class="attachment-img"
+                                            :src="Core.Const.NET.FILE_URL_PREFIX + item.path"
+                                            alt=""
+                                            @click="onViewImage"
+                                        />
+                                    </template>
+                                    <template v-else-if="/video\+/.test(item.type)">
+                                        视频
+                                    </template>
                                 </template>
                             </div>
                         </div>
@@ -98,26 +177,26 @@
                         <br/>
                         <!-- 上面选中索赔出现 -->
                         <template v-if="Number(customerCareDetail.sorting_type) === Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE_MAP.CLAIMCOMPENSATION">
-                            <a-radio-group v-model:value="customerCareDetail.sorting_type2">
+                            <a-radio-group v-model:value="customerCareDetail.claim_type">
                                 <a-radio v-for="(item, index) in Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO" :value="item.value">
                                     {{ $t(item.t) }}
                                 </a-radio>
                             </a-radio-group>                        
     
                             <!-- 善意索赔 和 开箱损 -->
-                            <div v-if="!$Util.Common.returnTypeBool(customerCareDetail.sorting_type2, [Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.GENERALCLAIM])" class="good-faith-claims p-10 m-t-16">
+                            <div v-if="!$Util.Common.returnTypeBool(customerCareDetail.claim_type, [Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.GENERALCLAIM])" class="good-faith-claims p-10 m-t-16">
                                 <div class="good-faith-claims-title">
                                     {{ 
-                                        Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO[customerCareDetail.sorting_type2] 
+                                        Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO[customerCareDetail.claim_type] 
                                         ? 
-                                        $t(Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO[customerCareDetail.sorting_type2].t) : '-'
+                                        $t(Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO[customerCareDetail.claim_type].t) : '-'
                                     }}
                                 </div>
                                 <div class="good-faith-claims-time">
-                                    <template v-if="$Util.Common.returnTypeBool(customerCareDetail.sorting_type2, [Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.BONAFIDECLAIM/*善意索赔*/])">
+                                    <template v-if="$Util.Common.returnTypeBool(customerCareDetail.claim_type, [Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.BONAFIDECLAIM/*善意索赔*/])">
                                         <span class="time-name m-r-8">发货日期</span>
-                                        <a-date-picker class="w-224 m-r-16" v-model:value="customerCareDetail.time" />
-                                        <a-radio-group v-model:value="customerCareDetail.type">
+                                        <a-date-picker class="w-224 m-r-16" v-model:value="customerCareDetail.delivery_time" />
+                                        <a-radio-group v-model:value="customerCareDetail.insurance_status">
                                             <a-radio 
                                                 v-for="(item, index) in Core.Const.CUSTOMER_CARE.GOOD_FAITH" 
                                                 :value="item.value"
@@ -126,11 +205,11 @@
                                             </a-radio>
                                         </a-radio-group>
                                     </template>
-                                    <template v-else-if="$Util.Common.returnTypeBool(customerCareDetail.sorting_type2, [Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.UNPACKINGDAMAGE/*开箱损*/])">
+                                    <template v-else-if="$Util.Common.returnTypeBool(customerCareDetail.claim_type, [Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.UNPACKINGDAMAGE/*开箱损*/])">
                                         <span class="time-name m-r-8">订单号</span>
                                         <a-input 
                                             class="w-224"
-                                            v-model:value="customerCareDetail.no" 
+                                            v-model:value="customerCareDetail.order_sn" 
                                             :placeholder="$t('common.please_enter') + $t('common.vehicle_no')" 
                                         />
                                     </template>
@@ -145,11 +224,27 @@
                     <div class="inquiry-classification-key">部件</div>
                     <div class="inquiry-classification-value">
                         <a-button>选择商品</a-button>
-                        <a-table class="m-t-8" :columns="partsColumns" :data-source="partsData" :pagination="false" :scroll="{ x: true }">
+                        <a-table class="m-t-8" 
+                            :columns="partsColumns" 
+                            :data-source="customerCareDetail.part_list" 
+                            :pagination="false" 
+                            :scroll="{ x: true }"
+                        >
                             <template #bodyCell="{ column, text, record }">
+                                <!-- 名称 -->
+                                <template v-if="column.key === 'name'">
+                                    {{ 
+                                        $i18n.locale === 'en' ? 
+                                        record.item?.name_en || '-' : record.item?.name + '等' || '-' 
+                                    }}
+                                </template>
+                                <!-- 类型 -->
+                                <template v-if="column.key === 'type'">
+                                    {{ Core.Const.CUSTOMER_CARE.PART_STATUS[text] ? $t(Core.Const.CUSTOMER_CARE.PART_STATUS[text].t) : '-' }}
+                                </template>
                                 <!-- 数量 -->
-                                <template v-if="column.key === 'number'">
-                                    <a-input-number v-model:value="record.number" :min="1" :placeholder="$t('common.please_enter')" />
+                                <template v-if="column.key === 'amount'">
+                                    <a-input-number v-model:value="record.number" defaultValue="1" :placeholder="$t('common.please_enter')" />
                                 </template>
                             </template>
                         </a-table>
@@ -166,11 +261,11 @@
                     </div>
                     <div class="inquiry-classification-value">
                         <template v-if="$Util.Common.returnTypeBool(customerCareDetail.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION/*故障*/])">
-                            <a-table :columns="faultColumns" :data-source="faultData" :pagination="false" :scroll="{ x: true }">
+                            <a-table :columns="faultColumns" :data-source="customerCareDetail.vehicle_list" :pagination="false" :scroll="{ x: true }">
                                 <template #bodyCell="{ column, text, record }">
                                     <!-- 故障类型 -->
                                     <template v-if="column.key === 'fault_type'">
-                                        <a-radio-group v-model:value="customerCareDetail.type">
+                                        <a-radio-group v-model:value="record.fault_type">
                                             <template v-for="(item, index) in Core.Const.CUSTOMER_CARE.FAULT_TYPE" :key="index">
                                                 <a-radio v-if="item.value !== -1" :value="item.value">
                                                     {{ $t(item.t) }}
@@ -182,7 +277,7 @@
                             </a-table>
                         </template>
                         <template v-else-if="$Util.Common.returnTypeBool(customerCareDetail.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY/*电池*/])">
-                            <a-radio-group v-model:value="customerCareDetail.n">
+                            <a-radio-group v-model:value="customerCareDetail.fault_type">
                                 <template v-for="(item, index) in Core.Const.CUSTOMER_CARE.FAULT_TYPE" :key="index">
                                     <a-radio v-if="item.value !== -1" :value="item.value">
                                         {{ $t(item.t) }}
@@ -266,39 +361,142 @@
 </template>
 
 <script setup>
-import { ref, computed, getCurrentInstance, watch } from "vue";
+import { ref, computed, getCurrentInstance, watch, onMounted } from "vue";
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import Core from "@/core";
-import { useRouter } from "vue-router";
-import Util from "../../core/utils";
+import { useRouter, useRoute } from "vue-router";
+import dayjs from "dayjs";
 
 const { proxy } = getCurrentInstance();
 const router = useRouter()
+const route = useRoute()
 
 const customerCareDetail = ref({
+    uid: "CN222203435667",
+    submit_user_name: "客户名称",
+    country: "国家",
     type: 1, // 问询单类型 1故障 2咨询 3电池
     sorting_type: 10, // 归类状态
-    sorting_type2: 30, // 索赔状态
+    claim_type: 310, // 索赔状态
     status: 10, // 订单状态
-    img: [
-        "https://horwin.oss-cn-hangzhou.aliyuncs.com//img/ba37a2f6f160d68d31f1a96b4a17f2b068b6cee17e6c7b96db51ba5016ef1df0.png",
-        "https://horwin.oss-cn-hangzhou.aliyuncs.com//img/ba37a2f6f160d68d31f1a96b4a17f2b068b6cee17e6c7b96db51ba5016ef1df0.png",
+    create_time: "1705667810", // 创建时间
+    fault_time: "1705667810", // 故障时间
+    category: {
+        name: "你好啊", 
+        name_en: "hello World",
+    }, // 车型
+    vehicle_list: [
+        { 
+            vehicle_uid: "12312414214124", 
+            mileage: 20,
+            fault_type: 1,
+        },
+        { 
+
+            vehicle_uid: undefined, // "12312414214124"
+            mileage: undefined, // 20
+            fault_type: undefined, // 2
+        },     
+    ], // 车架信息
+    description:  undefined, // "你好安徽发撒撒发哈是否撒谎"
+    attachment_list: [],
+
+    // 归类
+    sorting_type: 1,
+    // 零件
+    part_list: [
+        {
+            amount: 10,
+            type: 1,
+            item: {
+                code: "111",
+                name: "你哈送",
+                name_en: "Heoolw",
+            }
+        }
     ],
+    insurance_status: 1, // 保险类型
+    delivery_time: dayjs.unix("1705667810"), // 发货日期
+    order_sn: "111111", // 订单号
+    fault_type: 2, // 故障类型 1.失效，2.异响，3.划伤，4.燃烧，5.事故
 });
 
-const partsData = ref([
-    {
-        id: 1,
-        name: 1,
-    },
-]);
-const faultData = ref([
-    {
-        id: 1,
-        vehicle_uid: 123456789,
-    },
-]);
 const isDistributerAdmin = ref(false); // 根据路由判断其是用在分销商(false) 还是平台方(true)
+
+/* computed start */
+const partsColumns = computed(() => {
+    const result = [
+        { title: proxy.$t("common.name"), dataIndex: "name", key: "name" }, // 名称
+        { title: proxy.$t("common.product_code"), dataIndex: ['item','code'], key: "code" }, // 商品编码
+        { title: proxy.$t("common.type"), dataIndex: "type", key: "type" }, // 类型
+        { title: proxy.$t("common.quantity"), dataIndex: "amount", key: "amount" }, // 数量
+    ];
+    return result;
+});
+const faultColumns = computed(() => {
+    const result = [
+        { title: proxy.$t("common.vehicle_no"), dataIndex: "vehicle_uid", key: "vehicle_uid" }, // 车架号
+        { title: proxy.$t("customer-care.fault_classification"), dataIndex: "fault_type", key: "fault_type" }, // 故障分类
+    ];
+    return result;
+});
+/* computed end */
+
+/* fetch start */
+// 详情接口
+const getDetailFetch = (params = {}) => {
+    const obj = {
+        id: route.query?.id,
+        ...params,
+    };
+    Core.Api.inquiry_sheet
+        .detail(obj)
+        .then((res) => {
+            console.log("详情接口 success", res.detail);
+            customerCareDetail.value = res.detail
+        })
+        .catch((err) => {
+            console.log("详情接口 err", err);
+        });
+};
+// 归类接口
+const getSortingTypeFetch = (params = {}) => {
+    const obj = {
+        ...params,
+    };
+    Core.Api.inquiry_sheet
+        .sortingType(obj)
+        .then((res) => {
+            console.log("归类接口 success", res.detail);
+            customerCareDetail.value = res.detail            
+        })
+        .catch((err) => {
+            console.log("归类接口 err", err);
+        });
+};
+// 零件接口
+const getBindPartFetch = (params = {}) => {
+    const obj = {
+        ...params,
+    };
+    Core.Api.inquiry_sheet
+        .bindPart(obj)
+        .then((res) => {
+            console.log("零件接口 success", res.detail);
+            customerCareDetail.value = res.detail
+        })
+        .catch((err) => {
+            console.log("零件接口 err", err);
+        });
+};
+/* fetch end */
+
+/* methods start */
+// 查看视频
+const onViewImage = () => {
+
+}
+/* methods end */
 
 watch(
     () => router.currentRoute.value,
@@ -318,41 +516,9 @@ watch(
     }
 );
 
-/* computed start */
-const partsColumns = computed(() => {
-    const result = [
-        { title: proxy.$t("common.name"), dataIndex: "name", key: "name" }, // 名称
-        { title: proxy.$t("common.product_code"), dataIndex: "name", key: "name" }, // 商品编码
-        { title: proxy.$t("common.type"), dataIndex: "name", key: "name" }, // 类型
-        { title: proxy.$t("common.quantity"), dataIndex: "number", key: "number" }, // 数量
-    ];
-    return result;
-});
-const faultColumns = computed(() => {
-    const result = [
-        { title: proxy.$t("common.vehicle_no"), dataIndex: "vehicle_uid", key: "vehicle_uid" }, // 车架号
-        { title: proxy.$t("customer-care.fault_classification"), dataIndex: "fault_type", key: "fault_type" }, // 故障分类
-    ];
-    return result;
-});
-/* computed end */
-
-/* fetch start */
-const Fetch = (params = {}) => {
-    const obj = {
-        ...params,
-    };
-
-    Core.Api.list(obj)
-        .then((res) => {
-            console.log(res);
-        })
-        .catch((err) => {});
-};
-/* fetch end */
-
-/* methods start */
-/* methods end */
+onMounted(() => {
+    getDetailFetch()
+})
 </script>
 
 <style lang="less" scoped>
@@ -372,13 +538,6 @@ const Fetch = (params = {}) => {
             font-size: 18px;
             font-weight: 500;
             margin-right: 20px;
-        }
-
-        .primary {
-            box-sizing: border-box;
-            border-radius: 4px;
-            background: rgba(0, 97, 255, 0.1);
-            color: #0061ff !important;
         }
 
         .detail-msg {
@@ -422,6 +581,11 @@ const Fetch = (params = {}) => {
                             }
                         }
                     }
+                }
+
+                .type-style {
+                    display: flex;
+                    align-items: center;
                 }
                 .vehicle-no-style {
                     .vehicle-item {
@@ -632,9 +796,55 @@ const Fetch = (params = {}) => {
     
 }
 
+// 订单类别
+.status-style {
+    box-sizing: border-box;
+    border-radius: 4px;
+    padding: 13px;
+    box-sizing: border-box;
+
+    &.deal {
+        background: rgba(0, 97, 255, 0.1);
+        color: #0061ff;
+    }
+    &.wait {
+        background: rgba(255, 125, 0, 0.05);
+        color: #FF7D00 ;
+    }
+    &.success {
+        background: rgba(38, 171, 84, 0.05);
+        color: #00B42A;
+    }
+     
+}
+
+// 问询类别
+.inquiry-category-style {
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 4px 13px;
+    box-sizing: border-box;
+    .flex();
+    &.color-FF7D00 {
+        background: rgba(255, 125, 0, 0.10);
+        color: #FF7D00 !important;
+    }
+    &.color-0061FF {
+        background: rgba(0, 97, 255, 0.10);
+        color: #0061FF !important;
+    }
+    &.color-00B42A {
+        background: rgba(38, 171, 84, 0.10);
+        color: #00B42A !important;
+    }
+}
+
+
 .d-f-a {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 }
 .d-f-a-b {
     display: flex;

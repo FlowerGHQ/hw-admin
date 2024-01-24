@@ -50,6 +50,11 @@ export default {
         attachment: "附件",
         wait: "等",
         not_mandatory: "非必填",
+        complete_vehicle :"整车",
+        parts_materials :"零部件/物料",
+        periphery :"周边",
+        publicity_products :"广宣品",
+        expenses :"费用",
     },
     en: {
         inquiry_list: "Inquiry list",
@@ -101,5 +106,10 @@ export default {
         attachment: "Attachment",
         wait: "Wait",
         not_mandatory: "Not Mandatory",
+        complete_vehicle :"Complete Vehicle",
+        parts_materials :"Parts Materials",
+        periphery :"Periphery",
+        publicity_products :"Publicity Products",
+        expenses :"Expenses",
     }
 }

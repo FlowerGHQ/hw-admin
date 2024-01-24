@@ -67,7 +67,7 @@
                         >
                             <template #headerCell="{ title, column }">
                                 {{ $t(title) }}
-                                <span v-if="column.key === 'mileage'">({{ $t('customer-care.not_mandatory') }})</span>
+                                <!-- <span v-if="column.key === 'mileage'">({{ $t('customer-care.not_mandatory') }})</span> -->
                             </template>
                             <template #bodyCell="{ column, record, index }">
                                 <!-- 车架号 -->
@@ -105,7 +105,7 @@
                 <!-- 公里数 -->
                 <div
                     v-if="$Util.Common.returnTypeBool(formParams.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION])"
-                    class="form-item required"
+                    class="form-item"
                 >
                     <div class="key t-r">{{ $t("customer-care.mileage") }}:</div>
                     <div class="value">                        
@@ -134,7 +134,12 @@
                     </div>
                 </div>
                 <!-- 添加附件 -->
-                <div class="form-item d-f-s">
+                <div 
+                    class="form-item d-f-s"
+                    :class="{
+                        required: $Util.Common.returnTypeBool(formParams.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY])
+                    }"
+                >
                     <div class="key t-r">{{ $t("customer-care.add_attachment") }}:</div>
                     <div class="value d-f">
                         <MyUpload                           
@@ -194,8 +199,8 @@ const uploadOptions = ref({
 const isVideoImage = ref("image");
 const isClose = ref(false);
 const formParams = ref({
-    org_name: undefined,
-    type: Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION,
+    org_name: undefined, // 分销商名称
+    type: Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION, // 问询单类型
     fault_time: undefined, // 故障日期
     category_id: undefined, // 车型
     description: undefined, // 问题描述
@@ -209,15 +214,6 @@ const formParams = ref({
     mileage: undefined, // 公里数
 });
 
-onMounted(() => {    
-    if (route.query?.id) {
-        getDetailFetch(
-            {
-                id: route.query?.id
-            }
-        )
-    }
-}),
 watch(
     () => router.currentRoute.value,
     (newValue, oldValue) => {
@@ -339,7 +335,25 @@ const getDetailFetch = (params = {}) => {
         .catch((err) => {
             console.log("详情接口 err", err);
         });
-};
+}
+// 获取车型接口
+const getVehicleTreeFetch = (params = {}) => {
+    const obj = {
+        parent_id: 0, // 写死
+        depth: 2, // 深度
+        type: 20, // 10商品管理 20表示车辆管理
+        page: 0,
+        ...params,
+    };
+    Core.Api.ItemCategory
+        .tree(obj)
+        .then((res) => {
+            console.log("获取车型接口 success", res);           
+        })
+        .catch((err) => {
+            console.log("获取车型接口 err", err);
+        });
+}
 /* fetch end*/
 
 /* methods start*/
@@ -361,11 +375,23 @@ const onAddBtn = (type, record, index) => {
 };
 // 提交
 const handleSubmit = () => {    
-    
+       
+    // 校验的数据
+    // 公共的(私有的需要在checkFormInput中添加)
+    const publicCheckForm = {
+        'org_name': "", // 分销商名称
+        'type': "", // 问询单类型
+        'category_id': "", // 车型
+        'description': "", // 问题描述
+    }
+
+    if (checkFormInput(publicCheckForm, formParams.value)) return
+    // 上面是检查的
+
     const submitForm = {
         ...formParams.value,     
         fault_time: dayjs().unix(formParams.value.fault_time)   
-    }
+    }   
 
     submitForm.attachment_list = []
     uploadOptions.value.fileData.forEach(el => {
@@ -377,15 +403,119 @@ const handleSubmit = () => {
     })
     console.log('submitForm', submitForm);
 
-    if (route.query.id) {
-        // 修改
-        modifyFetch(Core.Util.searchFilter(submitForm))
-    } else {
-        // 新增    
-        saveFetch(Core.Util.searchFilter(submitForm))
-    }
+    // if (route.query.id) {
+    //     // 修改
+    //     modifyFetch(Core.Util.searchFilter(submitForm))
+    // } else {
+    //     // 新增    
+    //     saveFetch(Core.Util.searchFilter(submitForm))
+    // }
 };
+// 检查 sourceData(元素数据) checkForm(检查的元素)
+const checkFormInput = (publicCheckForm, sourceData) => {
+    
+    // 私有的
+    let privateParams = {}    
+    
+    switch (formParams.value.type) {
+        case Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION:
+            // 故障
+            privateParams = {                               
+                fault_time: "", // 故障日期                
+                vehicle_list: [
+                    {
+                        vehicle_uid: null,
+                        mileage: null,
+                    },
+                ], // 车架信息                
+            }
+        break;
+        case Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION:
+            // 咨询            
+        break;
+        case Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY:
+            // 电池
+            privateParams = {
+                fault_time: "", // 故障日期                
+                attachment_list: [], // 附件
+            }
+        break;
+    }
 
+    let checkForm = {
+        ...privateParams,
+        ...publicCheckForm,
+    }
+    
+    let result = []
+    for (const key in checkForm) {
+        let keys = sourceData[key]
+
+        if (keys instanceof Array) {
+            if (key === 'attachment_list') {
+                // 附件
+                if (keys.length === 0) {
+                    result.push(`${key}`)
+                }
+                continue
+            }
+
+            for (const el of sourceData[key]) {
+                // 这里是必填项的参数循环 判断数据里面哪些参数是必填的
+                for (const arrItem in keys[0]) {
+                    if(!el[arrItem]) {                     
+                        result.push(`${key}`)
+                    }
+                }
+            }            
+            // 判断 数组
+        } else if (keys instanceof Object) {
+            
+        } else if (typeof keys === "string" || typeof keys === "number" || typeof keys === "boolean" || typeof keys === 'undefined') {
+            // | 字符串 | 数字 | 布尔            
+            if(!keys) {
+                result.push(`${key}`)
+            }
+        }        
+    }
+
+    console.log("结果", result);
+
+    let tips = null
+    for (const key of result) { 
+        console.log("key", key);     
+        switch (key) {
+            case "org_name":
+                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.distributor_account_number') + ')'
+                break;
+            case "type":
+                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.inquiry_form_type') + ')'
+                break;
+            case "fault_time":
+                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.failure_date') + ')'
+                break;
+            case "category_id":
+                // tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('common.vehicle_model') + ')'
+                break;
+            case "description":
+                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.problem_description') + ')'
+                break;
+            case "attachment_list":
+                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.add_attachment') + ')'
+                break;
+            case "mileage":
+                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.mileage') + ')'
+                break;
+            case "vehicle_list":
+                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('common.vehicle_no') + ')'
+                break;
+        }
+    }
+    message.warning(tips);
+    
+    console.log("sjshj", tips);
+    return tips
+}
 // 上传组件事件
 const handleDetailChange = ({ file, fileList }) => {
     console.log("输出文件", file, fileList);
@@ -400,7 +530,7 @@ const handleDetailChange = ({ file, fileList }) => {
     } else if (file.status === "error") {
         message.error(proxy.$t("common.upload_fail"));
     }
-};
+}
 const handlePreview = ({ file, fileList }) => {
     console.log("预览", file, fileList);
 
@@ -426,11 +556,23 @@ const handlePreview = ({ file, fileList }) => {
     });
     console.log("结果", uploadOptions.value.previewImage);
     isClose.value = true;
-};
+}
 const handleRemove = ({ file, fileList }) => {
     console.log("删除", fileList);     
-};
+}
 /* methods end*/
+
+onMounted(() => {   
+    getVehicleTreeFetch()
+
+    if (route.query?.id) {
+        getDetailFetch(
+            {
+                id: route.query?.id
+            }
+        )
+    }
+})
 </script>
 
 <style lang="less" scoped>

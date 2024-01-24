@@ -980,6 +980,8 @@ const apiList = {
         modify: ['PostJson','enquiry-ticket/update'], // 修改
         detail: ['PostJson','enquiry-ticket/detail'], // 详情
         statusList: ['PostJson','enquiry-ticket/status-list'], // 状态数据
+        sortingType: ['PostJson','enquiry-ticket/sorting-type'], // 归类
+        bindPart: ['PostJson','enquiry-ticket/bind-part'], // 零件
     }
 }; 
 

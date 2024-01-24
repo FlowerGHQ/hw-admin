@@ -25,6 +25,7 @@ export default {
         name: "名称",
         product_code: "商品编码",
         quantity: "数量",
+        please_complete_info: "请完善信息",
     },
     en: {
         operations: "Operations",
@@ -52,5 +53,6 @@ export default {
         name: "Name",
         product_code: "Product Code",
         quantity: "Quantity",  
+        please_complete_info: "Please Complete Info",
     }
 }
