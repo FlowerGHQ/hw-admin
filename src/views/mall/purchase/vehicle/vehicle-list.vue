@@ -18,7 +18,7 @@
                 </div>
                 <div class="list">
                     <div class="item" v-for="item in list" :key="item.id"
-                        @click="routerChange('/mall/vehicle-list/detail', { id: item.id })">
+                        @click="routerChange(`${route.path}/detail`, { id: item.id })">
                         <VehicleCard :record="item" />
                     </div>
                 </div>
@@ -39,7 +39,7 @@ import DownLoading from '../../components/DownLoading.vue';
 
 import Core from '@/core';
 import { ref, reactive, onMounted, computed, watch, getCurrentInstance, nextTick, onBeforeUnmount } from 'vue';
-import { useRoute, useRouter, onBeforeRouteUpdate } from "vue-router";
+import { useRoute, useRouter, onBeforeRouteLeave } from "vue-router";
 import { useStore } from "vuex";
 const { proxy } = getCurrentInstance();
 const route = useRoute();
@@ -47,7 +47,7 @@ const router = useRouter();
 const store = useStore();
 
 /* state start */
-const vehicle_type = ref(Number(route.query?.type) || 1);
+const vehicle_type = ref(Number(route.meta?.item_type) || 1);
 const spinning = ref(false)
 const pagination = reactive({
     page_size: 20,
@@ -59,8 +59,8 @@ const list = ref([])
 const itemListFetch = Core.Api.Item.list
 /* state end */
 
-onBeforeRouteUpdate((to) => {
-    vehicle_type.value = Number(to.query?.type) || 1
+onBeforeRouteLeave((to) => {
+    vehicle_type.value = Number(to.meta?.item_type) || 1
     getCarList({}, true);
 });
 /* computed start */
