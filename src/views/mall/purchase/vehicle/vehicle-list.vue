@@ -125,7 +125,9 @@ const getCarList = (q, reset = false) => {
         "page_size": pagination.page_size,
     }
     Object.assign(params, q)
+    const vehicle_type_old = Core.Util.deepCopy(vehicle_type.value)
     itemListFetch({ ...params }).then(res => {
+        if (vehicle_type_old !== vehicle_type.value) return; // 已切换类型不再赋值数据
         list.value = list.value.concat(res?.list)
         pagination.total = res.count
         pagination.total_page = Math.ceil(pagination.total / pagination.page_size)
