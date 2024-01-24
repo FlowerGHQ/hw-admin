@@ -372,10 +372,21 @@
             v-model:visible="msgVisible" 
             title="编辑资料" 
             width="800px"
+            :destroyOnClose="true"
             @ok="onBtn('msg-sumbit')"
             @cancel="onBtn('msg-cancel')"
         >
-            <customerCareEdit></customerCareEdit>
+            <customerCareEdit ref="customeCareEdit" :isDetailEnter="true"></customerCareEdit>
+            <template #footer>
+                <div v-if="!isDetailEnter" class="model-footer-btn">
+                    <a-button @click="onBtn('msg-cancel')">{{ $t("def.cancel") }}</a-button>
+                    <a-button 
+                        @click="onBtn('msg-sumbit')" 
+                        type="primary">
+                        {{ $t("def.sure") }}
+                    </a-button>
+                </div>
+            </template>
         </a-modal>
     </div>
 </template>
@@ -550,13 +561,18 @@ const onViewImage = (item) => {
     isClose.value = true
 }
 // 按钮事件
+const customeCareEdit = ref(null)
 const onBtn = (type) => {
     switch (type) {
         case 'msg-edit':
             msgVisible.value = !msgVisible.value
         break;
         case 'msg-sumbit':
-            msgVisible.value = true
+            console.log("确定按钮", customeCareEdit.value);
+            customeCareEdit.value?.handleSubmit().then(res => {
+                msgVisible.value = false
+                getDetailFetch()
+            })
         break;
         case 'msg-cancel':
             msgVisible.value = false
@@ -906,6 +922,12 @@ onMounted(() => {
         background: rgba(38, 171, 84, 0.10);
         color: #00B42A !important;
     }
+}
+
+.model-footer-btn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 

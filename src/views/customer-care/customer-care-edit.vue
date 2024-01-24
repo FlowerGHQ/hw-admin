@@ -1,16 +1,16 @@
 <template>
     <div id="customer-care-edit" class="common-edit-container">
-        <div class="title-container">
+        <div v-if="!isDetailEnter" class="title-container">
             <div class="title-area">
                 {{ route.query.id ? $t("customer-care.modify_inquiry_form") : $t("customer-care.create_inquiry_form") }}
             </div>
         </div>
         <!-- 问题描述 -->
-        <div class="form-block">
-            <div class="form-title">
+        <div class="form-block" :class="{ 'msg-detail-form-block': !isDetailEnter ? false : true }">
+            <div v-if="!isDetailEnter" class="form-title">
                 <div class="title"></div>
             </div>
-            <div class="form-content">
+            <div class="form-content" :class="{ 'w-100': !isDetailEnter ? false : true }">
                 <!-- 分销商账号 -->
                 <div v-if="isDistributerAdmin" class="form-item required">
                     <div class="key t-r">{{ $t("customer-care.distributor_account_number") }}:</div>
@@ -161,9 +161,9 @@
                 </div>
             </div>
         </div>
-        <div class="form-btns footer-btn">
-            <a-button @click="routerChange('back')">{{ $t("def.cancel") }}</a-button>
-            <a-button @click="handleSubmit" type="primary" v-if="$auth('repair-order.save')">{{ $t("def.sure") }}</a-button>
+        <div v-if="!isDetailEnter" class="form-btns footer-btn">
+            <a-button @click="onAddBtn('back')">{{ $t("def.cancel") }}</a-button>
+            <a-button @click="handleSubmit" type="primary">{{ $t("def.sure") }}</a-button>
         </div>
 
         <!-- 自定义图片预览 -->
@@ -192,6 +192,13 @@ const uploadOptions = ref({
     // "https://horwin.oss-cn-hangzhou.aliyuncs.com//img/ba37a2f6f160d68d31f1a96b4a17f2b068b6cee17e6c7b96db51ba5016ef1df0.png", "https://horwin.oss-cn-hangzhou.aliyuncs.com//img/ba37a2f6f160d68d31f1a96b4a17f2b068b6cee17e6c7b96db51ba5016ef1df0.png"
     previewImage: [],
 });
+
+const props = defineProps({
+    // 详情点击进来
+    isDetailEnter: {
+        type: Boolean
+    }
+}) 
 
 // 判断是照片还是视频查看
 const previewType = ref("image");
@@ -255,26 +262,34 @@ const saveFetch = (params = {}) => {
 };
 // 修改接口
 const modifyFetch = (params = {}) => {
-    const obj = {
-        ...params,
-    };
-    Core.Api.inquiry_sheet
-        .modify(obj)
-        .then((res) => {
-            console.log(res);
-            if (isDistributerAdmin.value) {
-                router.push({
-                    path: "/inquiry-management/list",                
-                });
-            } else {
-                router.push({
-                    path: "/customer-care/list",                
-                });
-            }
-        })
-        .catch((err) => {
-            console.log("保存接口", err);
-        });
+    return new Promise((resolve, reject) => {
+        const obj = {
+            ...params,
+        };
+        Core.Api.inquiry_sheet
+            .modify(obj)
+            .then((res) => {
+                console.log(res);
+                if (!props.isDetailEnter) {
+                    // 详情使用这边为组件进来的
+                    if (isDistributerAdmin.value) {
+                        // 平台方
+                        router.push({
+                            path: "/inquiry-management/list",                
+                        });
+                    } else {
+                        router.push({
+                            path: "/customer-care/list",                
+                        });
+                    }
+                }
+                resolve(true)
+            })
+            .catch((err) => {
+                console.log("保存接口", err);
+                resolve(true)
+            });
+    })
 };
 // 详情接口
 const getDetailFetch = (params = {}) => {
@@ -348,6 +363,18 @@ const onAddBtn = (type, record, index) => {
         case "delete":
             formParams.value.vehicle_list.splice(index, 1);
             break;
+        case "back":
+            if (!isDistributerAdmin.value) {
+                router.push({
+                    path: "/inquiry-management/list",                
+                });
+            } else {
+                // 平台方
+                router.push({
+                    path: "/inquiry-management/list",                
+                });
+            }
+            break;
 
         default:
             break;
@@ -383,13 +410,13 @@ const handleSubmit = () => {
     })
     console.log('submitForm', submitForm);
 
-    // if (route.query.id) {
-    //     // 修改
-    //     modifyFetch(Core.Util.searchFilter(submitForm))
-    // } else {
-    //     // 新增    
-    //     saveFetch(Core.Util.searchFilter(submitForm))
-    // }
+    if (route.query.id) {
+        // 修改
+        return modifyFetch(Core.Util.searchFilter(submitForm))
+    } else {
+        // 新增    
+        saveFetch(Core.Util.searchFilter(submitForm))
+    }
 };
 // 检查 sourceData(元素数据) checkForm(检查的元素)
 const checkFormInput = (publicCheckForm, sourceData) => {
@@ -426,23 +453,28 @@ const checkFormInput = (publicCheckForm, sourceData) => {
         ...privateParams,
         ...publicCheckForm,
     }
-    
+    // console.log("sourceData", sourceData);
     let result = []
     for (const key in checkForm) {
-        let keys = sourceData[key]
+        let keys = checkForm[key]
+        
 
         if (keys instanceof Array) {
             if (key === 'attachment_list') {
                 // 附件
-                if (keys.length === 0) {
+                if (sourceData[key].length === 0) {
                     result.push(`${key}`)
                 }
                 continue
             }
 
+
             for (const el of sourceData[key]) {
                 // 这里是必填项的参数循环 判断数据里面哪些参数是必填的
-                for (const arrItem in keys[0]) {
+
+                for (const arrItem in keys[0]) {                    
+                    // console.log("el", el[arrItem]);
+                    // console.log("arrItem", arrItem);
                     if(!el[arrItem]) {                     
                         result.push(`${key}`)
                     }
@@ -453,16 +485,16 @@ const checkFormInput = (publicCheckForm, sourceData) => {
             
         } else if (typeof keys === "string" || typeof keys === "number" || typeof keys === "boolean" || typeof keys === 'undefined') {
             // | 字符串 | 数字 | 布尔            
-            if(!keys) {
+            if(!sourceData[key]) {
                 result.push(`${key}`)
             }
         }        
     }
 
-    console.log("结果", result);
+    console.log("结果", [...new Set(result)]);
 
     let tips = null
-    for (const key of result) { 
+    for (const key of [...new Set(result)]) { 
         console.log("key", key);     
         switch (key) {
             case "org_name":
@@ -491,10 +523,8 @@ const checkFormInput = (publicCheckForm, sourceData) => {
                 break;
         }
     }
-    message.warning(tips);
-    
-    console.log("sjshj", tips);
-    return tips
+        
+    return tips ? message.warning(tips) : false
 }
 // 上传组件事件
 const handleDetailChange = ({ file, fileList }) => {
@@ -528,7 +558,7 @@ const handlePreview = ({ file, fileList }) => {
     fileList.forEach((el) => {
         // console.log("输出的东西", el.response);
         if (el.response) {
-            if (/^image\/+/.test(el.type)) {
+            if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
                 if (file.uid === el.uid) {
                     // 让预览的哪张图片在第一张
                     uploadOptions.value.previewImage.unshift(Core.Const.NET.FILE_URL_PREFIX + el.response?.data?.filename);
@@ -545,6 +575,11 @@ const handleRemove = ({ file, fileList }) => {
     console.log("删除", fileList);     
 }
 /* methods end*/
+
+// 暴露方法出去
+defineExpose({
+    handleSubmit
+})
 
 watch(
     () => router.currentRoute.value,
@@ -674,6 +709,20 @@ onMounted(() => {
     border-color: #eaecf1;
     background: #fff;
     overflow: hidden;
+}
+
+// 详情用这个组件过来的
+.w-100 {
+    width: 100% !important;
+}
+
+.msg-detail-form-block {
+    background: initial;
+    border-radius: 0px;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 </style>
