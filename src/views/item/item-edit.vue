@@ -2169,8 +2169,6 @@ export default {
                 };
                 console.log("_item-------------------------------", _item);
                 Core.Api.AttrDef.save(_item).then((res) => {
-                    console.log("详情--------------------", res.detail);
-                    return;
                     let target = this.specific.list.filter((i) => i.id === this.category_index)[0];
                     target.id = res.detail.id;
                     this.perAddSpecItem(this.category_index);
