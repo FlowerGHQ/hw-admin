@@ -50,6 +50,11 @@ export default {
         attachment: "附件",
         wait: "等",
         not_mandatory: "非必填",
+        // 客服账号
+        customer_service_account: "客服账号",
+        // 账号管理及分配
+        account_management_and_distribution: "账号管理及分配",
+        //
     },
     en: {
         inquiry_list: "Inquiry list",
@@ -101,5 +106,7 @@ export default {
         attachment: "Attachment",
         wait: "Wait",
         not_mandatory: "Not Mandatory",
+        customer_service_account: "Customer Service Account",
+        account_management_and_distribution: "Account Management And Distribution",
     }
 }

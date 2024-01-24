@@ -50,6 +50,16 @@ const inquiryManagement = {
                 title_en: 'Customer Service Inquiry Detail',
             }
         },
+        // 账号管理及分配
+        {
+            path: 'account-management',
+            name: 'AccountManagement',
+            component: () => import('@/views/customer-care/account-management.vue'),
+            meta: {
+                title: '账号管理及分配',
+                title_en: 'Account Management',
+            }
+        },
     ]
 }
 export  {
