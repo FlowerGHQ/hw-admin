@@ -277,6 +277,16 @@ class StorageHandler {
     clearGoodsDraft() {
         this.removeItem(Const.DATA.GOODS_DRAFT);
     }
+    // 设置购物车选中商品
+    setCartData(value) {
+        return this.setItem(Const.DATA.CART_DATA, value);
+    }
+    getCartData() {
+        return this.getItem(Const.DATA.CART_DATA) || [];
+    }
+    clearCartData() {
+        this.removeItem(Const.DATA.CART_DATA);
+    }
 }
 
 export default new StorageHandler();

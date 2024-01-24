@@ -8,7 +8,7 @@
                         {{ $t('purchase.selected_items') }}
                     </span>
                     <span class="price">
-                        {{ currency }} {{ allPrice.toFixed(2) }}
+                        {{ currency }} {{ allPrice }}
                     </span>
                     <my-button type="primary" padding="12px 32px" :disabled="!isSelected" font="14px"
                         @click.native="handleCreateOrder">
@@ -90,7 +90,7 @@
                                 </template>
                                 <template v-if="columnsItem.dataIndex === 'price'">
                                     <span class="row-text">{{ currency }}{{
-                                        $Util.Number.numFormat(item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)])
+                                        $Util.Number.numFormat($Util.countFilter(item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
                                     }}</span>
                                 </template>
                                 <template v-if="columnsItem.dataIndex === 'quantity'">
@@ -108,8 +108,8 @@
                                 <template v-if="columnsItem.dataIndex === 'operation'">
                                     <div class="operation">
                                         <span class="row-text price">{{ currency }}{{
-                                            $Util.Number.numFormat(item.amount *
-                                                item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)])
+                                            $Util.Number.numFormat($Util.countFilter(item.amount *
+                                                item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
                                         }}</span>
                                         <span class="row-text delete" @click="handleShopCartRemove(item)">{{
                                             $t('common.delete') }}</span>
@@ -189,7 +189,7 @@
                                 </template>
                                 <template v-if="columnsItem.dataIndex === 'price'">
                                     <span class="row-text">{{ currency }}{{
-                                        $Util.Number.numFormat(item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)])
+                                        $Util.Number.numFormat($Util.countFilter(item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
                                     }}</span>
                                 </template>
                                 <template v-if="columnsItem.dataIndex === 'quantity'">
@@ -207,8 +207,8 @@
                                 <template v-if="columnsItem.dataIndex === 'operation'">
                                     <div class="operation">
                                         <span class="row-text price">{{ currency }}{{
-                                            $Util.Number.numFormat(item.amount *
-                                                item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)])
+                                            $Util.Number.numFormat($Util.countFilter(item.amount *
+                                                item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
                                         }}</span>
                                         <span class="row-text delete" @click="handleShopCartRemove(item)">{{
                                             $t('common.delete') }}</span>
@@ -269,7 +269,7 @@
                                 </template>
                                 <template v-if="columnsItem.dataIndex === 'price'">
                                     <span class="row-text">{{ currency }}{{
-                                        $Util.Number.numFormat(item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)])
+                                        $Util.Number.numFormat($Util.countFilter(item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
                                     }}</span>
                                 </template>
                                 <template v-if="columnsItem.dataIndex === 'quantity'">
@@ -287,8 +287,8 @@
                                 <template v-if="columnsItem.dataIndex === 'operation'">
                                     <div class="operation">
                                         <span class="row-text price">{{ currency }}{{
-                                            $Util.Number.numFormat(item.amount *
-                                                item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)])
+                                            $Util.Number.numFormat($Util.countFilter(item.amount *
+                                                item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
                                         }}</span>
                                         <span class="row-text delete" @click="handleShopCartRemove(item)">{{
                                             $t('common.delete') }}</span>
@@ -349,7 +349,7 @@
                                 </template>
                                 <template v-if="columnsItem.dataIndex === 'price'">
                                     <span class="row-text">{{ currency }}{{
-                                        $Util.Number.numFormat(item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)])
+                                        $Util.Number.numFormat($Util.countFilter(item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
                                     }}</span>
                                 </template>
                                 <template v-if="columnsItem.dataIndex === 'quantity'">
@@ -367,8 +367,8 @@
                                 <template v-if="columnsItem.dataIndex === 'operation'">
                                     <div class="operation">
                                         <span class="row-text price">{{ currency }}{{
-                                            $Util.Number.numFormat(item.amount *
-                                                item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)])
+                                            $Util.Number.numFormat($Util.countFilter(item.amount *
+                                                item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
                                         }}</span>
                                         <span class="row-text delete" @click="handleShopCartRemove(item)">{{
                                             $t('common.delete') }}</span>
@@ -403,7 +403,7 @@
                         {{ $t('purchase.selected_items_total') }}
                     </span>
                     <span class="price">
-                        {{ currency }} {{ allPrice.toFixed(2) }}
+                        {{ currency }} {{ allPrice }}
                     </span>
                     <my-button type="primary" padding="12px 32px" :disabled="!isSelected" font="14px"
                         @click.native="handleCreateOrder">
@@ -605,7 +605,7 @@ const allPrice = computed(() => {
             price += item.amount * item?.item[proxy.$Util.Number.getStepPriceIndexByNums(item.amount)]
         }
     })
-    return price
+    return proxy.$Util.Number.numFormat(proxy.$Util.countFilter(price.toFixed(2)))
 })
 /* computed end */
 
@@ -892,11 +892,18 @@ const changeItem = () => {
 }
 // 创建订单
 const handleCreateOrder = () => {
+    const arr = []
+    for (let i in selectedId.value) {
+        selectedId.value[i].forEach(item => {
+            arr.push(item)
+        })
+    }
+    Core.Data.setCartData(arr)
     let routeUrl = router.resolve({
         path: "/purchase/item-settle",
         query: {
             unit: currency.value,
-            currency: unitMap[currency.value].key
+            currency: unitMap[currency.value].key,
         }
     })
     window.open(routeUrl.href, '_self')
