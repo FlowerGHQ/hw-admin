@@ -996,7 +996,7 @@ const apiList = {
         // 客服列表
         cusomerList: ['PostJson','user/customer-list'], // 客服列表
         // 删除
-        deleteCustomer: ['PostJson','delete-customer-country'], // 删除
+        deleteCustomer: ['PostJson','user/delete-customer-country'], // 删除
         // 添加
         addCustomer: ['PostJson','user/save-area'], // 添加
     }

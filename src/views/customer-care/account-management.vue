@@ -59,8 +59,8 @@
                         </a-select-option>
                     </a-select>
                 </a-form-item>
-                <a-form-item :label="t('customer-care.distribution_country')" name="area">
-                    <CountryCascaderTabMore v-model:value="formState.area" :def-area="defArea" :code-list="codeList" />
+                <a-form-item :label="t('customer-care.distribution_country')" name="country">
+                    <CountryCascaderTabMore v-model:value="formState.country" :def-area="defArea" :code-list="codeList" />
                 </a-form-item>
             </a-form>
         </a-modal>
@@ -76,8 +76,10 @@ import { useI18n } from "vue-i18n";
 import SearchAll from "@/components/horwin/based-on-ant/SearchAll.vue";
 import { PlusOutlined } from "@ant-design/icons-vue";
 import CountryCascaderTabMore from "@/components/common/CountryCascaderTabMore.vue";
-import { Modal } from 'ant-design-vue';
+// import CountryCascaderTabMore from "./components/CountryCascaderTabMore.vue";
+import { Modal , Message} from 'ant-design-vue';
 const $confirm = Modal.confirm;
+const $message = Message;
 const request = Core.Api.inquiry_sheet.cusomerList;
 const { t } = useI18n();
 
@@ -149,7 +151,7 @@ const tableColumns = computed(() => {
 const editVisibilty = ref(false);
 const formState = ref({
     username: null,
-    area: [],
+    country: [],
     org_id: 1,
     org_type: 10,
 });
@@ -176,7 +178,7 @@ const rules = ref({
             trigger: ["blur", "change"],
         },
     ],
-    area: [
+    country: [
         {
             required: true,
             validator: (rule, value) => {
@@ -251,9 +253,10 @@ const getCustomerServiceAccount = () => {
 const handleSubmit = () => {
     console.log("提交",formState);
     formRef.value.validate().then((res) => {
-        formState.value.area = formState.value.area?.map((item) => item.name)?.join(",") || "";
+        formState.value.country = formState.value.country?.map((item) => item.name)?.join(",") || "";
         Core.Api.inquiry_sheet.addCustomer(formState.value).then((res) => {
             editVisibilty.value = false;
+            $message.success(t("customer-care.successfully_add"));
             refreshTable();
         });
     });

@@ -82,6 +82,8 @@ export default {
         modify_distribution: "修改分配",
         // confirm_delete
         confirm_delete: "确定删除",
+        // successfully_add
+        successfully_add: "账号添加成功",
     },
     en: {
         inquiry_list: "Inquiry list",
@@ -149,5 +151,6 @@ export default {
         add_distribution: "Add Distribution",
         modify_distribution: "Modify Distribution",
         confirm_delete: "Confirm Delete",
+        successfully_add: "Account Added Successfully",
     }
 }
