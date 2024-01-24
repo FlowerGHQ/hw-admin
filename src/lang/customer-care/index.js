@@ -55,6 +55,9 @@ export default {
         periphery :"周边",
         publicity_products :"广宣品",
         expenses :"费用",
+        // 车辆分类
+        vehicle_classification: "车辆分类",
+        
     },
     en: {
         inquiry_list: "Inquiry list",
@@ -111,5 +114,7 @@ export default {
         periphery :"Periphery",
         publicity_products :"Publicity Products",
         expenses :"Expenses",
+        // 车辆分类
+        vehicle_classification: "Vehicle Classification",
     }
 }

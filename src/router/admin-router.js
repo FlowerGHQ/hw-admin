@@ -50,6 +50,16 @@ const inquiryManagement = {
                 title_en: 'Customer Service Inquiry Detail',
             }
         },
+        // 车型分类管理
+        {
+            path: 'car-model-management',
+            name: 'CarModelManagement',
+            component: () => import('@/views/customer-care/car-model-management.vue'),
+            meta: {
+                title: '车型分类管理',
+                title_en: 'Car Model Management',
+            }
+        },
     ]
 }
 export  {
