@@ -32,11 +32,7 @@ export default defineConfig(({ mode }) => {
         // 指定symbolId格式 :
         symbolId: 'icon-[name]', //实例：#icon-user
       }),
-      Components({
-        dirs: ['src/components'], // 目标文件夹
-        extensions: ['vue'], // 文件类型
-        resolvers: [AntDesignVueResolver()], // ui库解析器，也可以自定义，需要安装相关UI库
-      }),
+      
     ],
     resolve: {
       alias: {
