@@ -58,7 +58,7 @@ const onClick = ($1) => {
 onMounted(() => {
     // 初始化传递参数
     if(props.tabsList.length > 0){
-        emits("update:activeKey", props.tabsList[0].key)
+        // emits("update:activeKey", props.tabsList[0].key)
         emits("handlechange", props.tabsList[0].key)
     }
 })

@@ -23,7 +23,7 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('n.area') }}:</div>
                     <div class="value">
-                        <CountryCascader v-model:value="areaList" :def-area='defArea'/>
+                        <CountryCascaderTabMore v-model:value="areaList" :def-area='defArea' :code-list="codeList"/>
                     </div>
                 </div>
             </div>
@@ -38,9 +38,10 @@
 <script>
 import Core from '../../core';
 import CountryCascader from '@/components/common/CountryCascader.vue'
+import CountryCascaderTabMore from '@/components/common/CountryCascaderTabMore.vue'
 export default {
     name: 'SalesAreaEdit',
-    components: {CountryCascader},
+    components: {CountryCascader,CountryCascaderTabMore},
     props: {},
     data() {
         return {
@@ -60,7 +61,9 @@ export default {
                 country: '',
                 country_en: '',
                 country_code: '',
-            }
+            },
+           // code-集合数组
+           codeList: [] 
         };
     },
     watch: {},
@@ -93,7 +96,10 @@ export default {
                 for (const key in this.area) {
                     this.area[key] = d[key]
                 }
-                this.defArea = [d.continent || '', d.country || '']
+                // this.defArea = [d.continent || '', d.country || '']
+                // 城市code集合数组
+                this.codeList = d.country_code.split(",");
+                this.defArea = d.country.split(",");
 
             }).catch(err => {
                 console.log('getSalesAreaDetail err', err)
@@ -105,17 +111,18 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             let area = Core.Util.deepCopy(this.area)
             if (this.areaList.length) {
-                console.log('this.areaList:', this.areaList)
+                let arr = this.areaList;
                 area = {
-                    continent: this.areaList[0].name,
+                    /* continent: this.areaList[0].name,
                     continent_en: this.areaList[0].name_en,
-                    country: this.areaList[1].name,
+                     country: this.areaList[1].name,
                     country_en: this.areaList[1].name_en,
-                    country_code: this.areaList[1].code,
+                    country_code: this.areaList[1].code, */
+                    country : arr.map(obj => obj.name).join(","),
+                    country_en : arr.map(obj => obj.name_en).join(","),
+                    country_code : arr.map(obj => obj.code).join(","),
                 }
-                console.log('this.areaList[0].name_en,',this.areaList[0].name_en,)
             }
-            console.log('are',area)
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter')+this.$t('n.name'))
             }
@@ -125,6 +132,7 @@ export default {
             if (!area.country) {
                 return this.$message.warning(this.$t('def.enter')+this.$t('n.area'))
             }
+            console.log('submit------------111',{ ...form, ...area });
             Core.Api.SalesArea.save({
                 ...form,
                 ...area
