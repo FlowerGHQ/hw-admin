@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import Components from 'unplugin-vue-components/vite'
-import viteCompression from 'vite-plugin-compression'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import {
   AntDesignVueResolver,
@@ -33,14 +32,6 @@ export default defineConfig(({ mode }) => {
         // 指定symbolId格式 :
         symbolId: 'icon-[name]', //实例：#icon-user
       }),
-      viteCompression(
-        {
-          algorithm: 'gzip', // 压缩算法
-          threshold: 5120, // 文件大小大于这个值时启用压缩
-          verbose: false, // 是否在控制台输出压缩结果
-          deleteOriginFile: true // 是否删除原文件
-        }
-      ),//开启gzip
       Components({
         dirs: ['src/components'], // 目标文件夹
         extensions: ['vue'], // 文件类型
