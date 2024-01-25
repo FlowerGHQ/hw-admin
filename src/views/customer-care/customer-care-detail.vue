@@ -146,16 +146,18 @@
                                         />
                                     </template>
                                     <template v-else-if="/video\/+/.test(item.type)">
-                                        <!-- 视频 -->                                     
+                                        <!-- 视频 -->
                                         <img
                                             :class="{ 'm-l-16': index > 0 }"
                                             class="attachment-img"
                                             src="@images/item/video_default.svg"
                                             alt=""
-                                            @click="onViewImage({
-                                                type: 'video/*',
-                                                path: item.path,
-                                            })"
+                                            @click="
+                                                onViewImage({
+                                                    type: 'video/*',
+                                                    path: item.path,
+                                                })
+                                            "
                                         />
                                     </template>
                                 </template>
@@ -165,10 +167,7 @@
                 </div>
             </div>
             <!-- 按钮 -->
-            <div 
-                v-if="Number(customerCareDetail.status) !== Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED" 
-                class="detail-btn m-t-20"
-            >
+            <div v-if="Number(customerCareDetail.status) !== Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED" class="detail-btn m-t-20">
                 <a-button @click="onBtn('msg-edit')">
                     {{ msgVisible ? "取消信息" : "编辑信息" }}
                 </a-button>
@@ -183,18 +182,47 @@
                 <!-- 归类 -->
                 <div class="inquiry-classification-item m-t-16">
                     <div class="inquiry-classification-key m-t-4">归类</div>
-                    <div class="inquiry-classification-value">
-                        <a-radio-group v-model:value="customerCareDetail.sorting_type">
-                            <a-radio v-for="(item, index) in Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE" :value="item.value">
-                                {{ $t(item.t) }}
-                            </a-radio>
-                        </a-radio-group>
+                    <div
+                        class="inquiry-classification-value"
+                        :class="{
+                            'm-t-4': $Util.Common.returnTypeBool(customerCareDetail.status, [
+                                Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
+                            ]),
+                        }"
+                    >
+                        <template
+                            v-if="
+                                !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                    Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
+                                ])
+                            "
+                        >
+                            <a-radio-group v-model:value="customerCareDetail.purpose">
+                                <a-radio v-for="(item, index) in Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE" :value="item.value">
+                                    {{ $t(item.t) }}
+                                </a-radio>
+                            </a-radio-group>
+                        </template>
+                        <template v-else>
+                            <span>
+                                {{
+                                    Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE[customerCareDetail.purpose]
+                                        ? $t(Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE[customerCareDetail.purpose].t)
+                                        : "-"
+                                }}
+                            </span>
+                        </template>
                         <br />
                         <!-- 上面选中索赔出现 -->
-                        <template
-                            v-if="Number(customerCareDetail.sorting_type) === Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE_MAP.CLAIMCOMPENSATION"
-                        >
-                            <a-radio-group v-model:value="customerCareDetail.claim_type">
+                        <template v-if="Number(customerCareDetail.purpose) === Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE_MAP.CLAIMCOMPENSATION">
+                            <a-radio-group
+                                v-if="
+                                    !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                        Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
+                                    ])
+                                "
+                                v-model:value="customerCareDetail.claim_type"
+                            >
                                 <a-radio v-for="(item, index) in Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO" :value="item.value">
                                     {{ $t(item.t) }}
                                 </a-radio>
@@ -226,12 +254,30 @@
                                         "
                                     >
                                         <span class="time-name m-r-8">发货日期</span>
-                                        <a-date-picker class="w-224 m-r-16" v-model:value="customerCareDetail.delivery_time" />
-                                        <a-radio-group v-model:value="customerCareDetail.insurance_status">
-                                            <a-radio v-for="(item, index) in Core.Const.CUSTOMER_CARE.GOOD_FAITH" :value="item.value">
-                                                {{ $t(item.t) }}
-                                            </a-radio>
-                                        </a-radio-group>
+                                        <template
+                                            v-if="
+                                                !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                                    Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
+                                                ])
+                                            "
+                                        >
+                                            <a-date-picker class="w-224 m-r-16" v-model:value="customerCareDetail.delivery_time" />
+                                            <a-radio-group v-model:value="customerCareDetail.insurance_status">
+                                                <a-radio v-for="(item, index) in Core.Const.CUSTOMER_CARE.GOOD_FAITH" :value="item.value">
+                                                    {{ $t(item.t) }}
+                                                </a-radio>
+                                            </a-radio-group>
+                                        </template>
+                                        <template v-else>
+                                            <span>{{ dayjs(customerCareDetail.delivery_time).format("YYYY-MM-DD HH:mm") }}</span>
+                                            <span class="m-l-4">
+                                                {{
+                                                    Core.Const.CUSTOMER_CARE.GOOD_FAITH[customerCareDetail.insurance_status]
+                                                        ? $t(Core.Const.CUSTOMER_CARE.GOOD_FAITH[customerCareDetail.insurance_status].t)
+                                                        : "-"
+                                                }}
+                                            </span>
+                                        </template>
                                     </template>
                                     <template
                                         v-else-if="
@@ -241,11 +287,20 @@
                                         "
                                     >
                                         <span class="time-name m-r-8">订单号</span>
-                                        <a-input
-                                            class="w-224"
-                                            v-model:value="customerCareDetail.order_sn"
-                                            :placeholder="$t('common.please_enter') + $t('common.vehicle_no')"
-                                        />
+                                        <template
+                                            v-if="
+                                                !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                                    Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
+                                                ])
+                                            "
+                                        >
+                                            <a-input
+                                                class="w-224"
+                                                v-model:value="customerCareDetail.order_sn"
+                                                :placeholder="$t('common.please_enter') + $t('common.vehicle_no')"
+                                            />
+                                        </template>
+                                        <template> ({{ customerCareDetail.order_sn }}) </template>
                                     </template>
                                 </div>
                             </div>
@@ -258,6 +313,11 @@
                     <div class="inquiry-classification-key">部件</div>
                     <div class="inquiry-classification-value">
                         <ItemSelect
+                            v-if="
+                                !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                    Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED,
+                                ]) /*订单状态(已解决)*/
+                            "
                             btnType="default"
                             :btnText="$t('i.select_item')"
                             btnClass="item-select-btn"
@@ -282,7 +342,15 @@
                                 </template>
                                 <!-- 数量 -->
                                 <template v-if="column.key === 'amount'">
-                                    <a-input-number v-model:value="record.amount" defaultValue="1" :placeholder="$t('common.please_enter')" />
+                                    <template
+                                        v-if="
+                                            !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                                Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
+                                            ])
+                                        "
+                                    >
+                                        <a-input-number v-model:value="record.amount" defaultValue="1" :placeholder="$t('common.please_enter')" />
+                                    </template>
                                 </template>
                             </template>
                         </a-table>
@@ -318,13 +386,24 @@
                                 <template #bodyCell="{ column, text, record }">
                                     <!-- 故障类型 -->
                                     <template v-if="column.key === 'fault_type'">
-                                        <a-radio-group v-model:value="record.fault_type">
-                                            <template v-for="(item, index) in Core.Const.CUSTOMER_CARE.FAULT_TYPE" :key="index">
-                                                <a-radio v-if="item.value !== -1" :value="item.value">
-                                                    {{ $t(item.t) }}
-                                                </a-radio>
-                                            </template>
-                                        </a-radio-group>
+                                        <template
+                                            v-if="
+                                                !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                                    Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED,
+                                                ]) /*订单状态(已解决)*/
+                                            "
+                                        >
+                                            <a-radio-group v-model:value="record.fault_type">
+                                                <template v-for="(item, index) in Core.Const.CUSTOMER_CARE.FAULT_TYPE" :key="index">
+                                                    <a-radio v-if="item.value !== -1" :value="item.value">
+                                                        {{ $t(item.t) }}
+                                                    </a-radio>
+                                                </template>
+                                            </a-radio-group>
+                                        </template>
+                                        <template v-else>
+                                            {{ Core.Const.CUSTOMER_CARE.FAULT_TYPE[text] ? $t(Core.Const.CUSTOMER_CARE.FAULT_TYPE[text].t) : "-" }}
+                                        </template>
                                     </template>
                                 </template>
                             </a-table>
@@ -336,21 +415,38 @@
                                 ])
                             "
                         >
-                            <a-radio-group v-model:value="customerCareDetail.fault_type">
-                                <template v-for="(item, index) in Core.Const.CUSTOMER_CARE.FAULT_TYPE" :key="index">
-                                    <a-radio v-if="item.value !== -1" :value="item.value">
-                                        {{ $t(item.t) }}
-                                    </a-radio>
-                                </template>
-                            </a-radio-group>
+                            <template
+                                v-if="
+                                    !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                        Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED,
+                                    ]) /*订单状态(已解决)*/
+                                "
+                            >
+                                <a-radio-group v-model:value="customerCareDetail.fault_type">
+                                    <template v-for="(item, index) in Core.Const.CUSTOMER_CARE.FAULT_TYPE" :key="index">
+                                        <a-radio v-if="item.value !== -1" :value="item.value">
+                                            {{ $t(item.t) }}
+                                        </a-radio>
+                                    </template>
+                                </a-radio-group>
+                            </template>
+                            <template v-else>
+                                {{
+                                    Core.Const.CUSTOMER_CARE.FAULT_TYPE[customerCareDetail.status]
+                                        ? $t(Core.Const.CUSTOMER_CARE.FAULT_TYPE[customerCareDetail.status].t)
+                                        : "-"
+                                }}
+                            </template>
                         </template>
                     </div>
                 </div>
             </template>
 
             <!-- 沟通过程 -->
-            <div class="inquiry-classification-item" :class="{ 'm-t-30': isDistributerAdmin }">
-                <div class="inquiry-classification-key">{{ $t("customer-care.communication_process") }}</div>
+            <div id="inquiry-classification-item" class="inquiry-classification-item" :class="{ 'm-t-30': isDistributerAdmin }">
+                <div class="inquiry-classification-key">
+                    {{ isDistributerAdmin ? $t("customer-care.communication_process") : $t("customer-care.leave_message") }}
+                </div>
                 <div class="inquiry-classification-value">
                     <div class="communication-process p-10">
                         <template v-for="(item, index) in comment_list" :key="index">
@@ -373,7 +469,7 @@
                                             {{ isDistributerAdmin ? "分销商留言" : "平台方留言" }}
                                         </div>
                                         <div class="time">
-                                            {{ $Util.timeFilter(item.create_time, 3) }}
+                                            {{ $Util.timeFilter(item.create_time) }}
                                         </div>
                                     </div>
                                 </div>
@@ -391,10 +487,12 @@
                                                         class="attachment-img"
                                                         :src="itemPath.path"
                                                         alt=""
-                                                        @click="onViewImage({
-                                                            ...itemPath,
-                                                            file: item.file,
-                                                        })"
+                                                        @click="
+                                                            onViewImage({
+                                                                ...itemPath,
+                                                                file: item.file,
+                                                            })
+                                                        "
                                                     />
                                                 </template>
                                                 <template v-else-if="/video\/+/.test(itemPath.type)">
@@ -404,10 +502,12 @@
                                                         class="attachment-img"
                                                         src="@images/item/video_default.svg"
                                                         alt=""
-                                                        @click="onViewImage({
-                                                            type: 'video/*',
-                                                            path: itemPath.path,
-                                                        })"
+                                                        @click="
+                                                            onViewImage({
+                                                                type: 'video/*',
+                                                                path: itemPath.path,
+                                                            })
+                                                        "
                                                     />
                                                 </template>
                                             </template>
@@ -427,7 +527,7 @@
                                 <div class="my-reply-platform-top">
                                     <div class="my-reply-platform-name m-r-8">
                                         <div class="name">我的回复</div>
-                                        <div class="time">{{ $Util.timeFilter(item.create_time, 3) }}</div>
+                                        <div class="time">{{ $Util.timeFilter(item.create_time) }}</div>
                                     </div>
                                     <div class="my-reply-platform-avatar">
                                         <MySvgIcon icon-class="my-avater" />
@@ -447,10 +547,12 @@
                                                         class="attachment-img"
                                                         :src="itemPath.path"
                                                         alt=""
-                                                        @click="onViewImage({
-                                                            ...itemPath,
-                                                            file: item.file,
-                                                        })"
+                                                        @click="
+                                                            onViewImage({
+                                                                ...itemPath,
+                                                                file: item.file,
+                                                            })
+                                                        "
                                                     />
                                                 </template>
                                                 <template v-else-if="/video\/+/.test(itemPath.type)">
@@ -460,10 +562,12 @@
                                                         class="attachment-img"
                                                         src="@images/item/video_default.svg"
                                                         alt=""
-                                                        @click="onViewImage({
-                                                            type: 'video/*',
-                                                            path: itemPath.path,
-                                                        })"
+                                                        @click="
+                                                            onViewImage({
+                                                                type: 'video/*',
+                                                                path: itemPath.path,
+                                                            })
+                                                        "
                                                     />
                                                 </template>
                                             </template>
@@ -473,49 +577,63 @@
                             </div>
                         </template>
 
-                        <!-- 输入框 -->
-                        <div class="m-t-20">
-                            <a-textarea
-                                v-model:value="customerCareDetail.content"
-                                :placeholder="$t('common.please_enter') + $t('customer-care.leave_message')"
-                                allow-clear
-                                showCount
-                                :auto-size="{ minRows: 3, maxRows: 13 }"
-                                :maxlength="2000"
-                            />
-                        </div>
+                        <template
+                            v-if="
+                                !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                    Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
+                                ])
+                            "
+                        >
+                            <!-- 输入框 -->
+                            <div class="m-t-20">
+                                <a-textarea
+                                    v-model:value="customerCareDetail.content"
+                                    :placeholder="$t('common.please_enter') + $t('customer-care.leave_message')"
+                                    allow-clear
+                                    showCount
+                                    :auto-size="{ minRows: 3, maxRows: 13 }"
+                                    :maxlength="2000"
+                                />
+                            </div>
 
-                        <!-- 添加附件 -->
-                        <div class="add-attachment m-t-10">
-                            <div class="add-attachment-title">{{ $t("customer-care.add_attachment") }}</div>
-                            <div class="add-attachment-upload m-t-4">
-                                <MyUploads
-                                    v-model:fileList="uploadOptions.fileData"
-                                    @change="handleDetailChange"
-                                    @preview="handlePreview"
-                                    @remove="handleRemove"
-                                >
-                                </MyUploads>
+                            <!-- 添加附件 -->
+                            <div class="add-attachment m-t-10">
+                                <div class="add-attachment-title">{{ $t("customer-care.add_attachment") }}</div>
+                                <div class="add-attachment-upload m-t-4">
+                                    <MyUploads
+                                        v-model:fileList="uploadOptions.fileData"
+                                        @change="handleDetailChange"
+                                        @preview="handlePreview"
+                                        @remove="handleRemove"
+                                    >
+                                    </MyUploads>
 
-                                <div class="add-attachment-tip m-l-10">
-                                    <div>{{ $t("customer-care.tip1") }}</div>
-                                    <div>{{ $t("customer-care.tip2") }}</div>
-                                    <div>{{ $t("customer-care.tip3") }}</div>
+                                    <div class="add-attachment-tip m-l-10">
+                                        <div>{{ $t("customer-care.tip1") }}</div>
+                                        <div>{{ $t("customer-care.tip2") }}</div>
+                                        <div>{{ $t("customer-care.tip3") }}</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div v-if="!isDistributerAdmin" class="send-btn">
-                            <a-button @click="onBtn('sending')" type="primary">
-                                {{ $t("common.sending") /*发送*/ }}
-                            </a-button>
-                        </div>
+                            <div v-if="!isDistributerAdmin" class="send-btn">
+                                <a-button @click="onBtn('sending')" type="primary">
+                                    {{ $t("common.sending") /*发送*/ }}
+                                </a-button>
+                            </div>
+                        </template>
                     </div>
                 </div>
             </div>
 
-            <div v-if="isDistributerAdmin" class="submit-btn">
-                <div>
+            <div
+                v-if="
+                    !$Util.Common.returnTypeBool(customerCareDetail.status, [Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/])
+                "
+                class="submit-btn"
+                :style="{ 'border-top': isDistributerAdmin ? '1px solid #f2f3f5' : '0px' }"
+            >
+                <div v-if="isDistributerAdmin">
                     <a-button @click="onBtn('inquiry-classification-cancel')">取消</a-button>
                     <a-button @click="onBtn('inquiry-classification-sumbit')" type="primary">提交</a-button>
                 </div>
@@ -532,11 +650,7 @@
         </div>
 
         <!-- v-if="isClose" -->
-        <MyPreviewImageVideo
-            v-model:isClose="isClose" 
-            :type="uploadOptions.previewType" 
-            :previewData="uploadOptions.previewImageVideo"
-        >
+        <MyPreviewImageVideo v-model:isClose="isClose" :type="uploadOptions.previewType" :previewData="uploadOptions.previewImageVideo">
         </MyPreviewImageVideo>
 
         <!-- 编辑信息弹窗 -->
@@ -582,7 +696,7 @@ const customerCareDetail = ref({
     submit_user_name: undefined,
     country: undefined,
     type: undefined, // 问询单类型 1故障 2咨询 3电池
-    status: undefined, // 订单状态
+    status: undefined, // 订单状态(已解决)
     create_time: undefined, // 创建时间"1705667810"
     fault_time: undefined, // 故障时间"1705667810"
     category: {
@@ -605,7 +719,7 @@ const customerCareDetail = ref({
     attachment_list: [],
 
     // 问询单归类底下的东西
-    sorting_type: undefined,
+    purpose: undefined,
     claim_type: undefined, // 索赔状态
     // 零件
     part_list: [
@@ -713,11 +827,11 @@ const getSortingTypeFetch = (params = {}) => {
     return new Promise((resolve, reject) => {
         const obj = {
             id: route.query?.id,
-            sorting_type: customerCareDetail.value.sorting_type,
+            purpose: customerCareDetail.value.purpose,
             ...params,
         };
 
-        if (Number(customerCareDetail.value.sorting_type) === Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE_MAP.CLAIMCOMPENSATION /*索赔*/) {
+        if (Number(customerCareDetail.value.purpose) === Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE_MAP.CLAIMCOMPENSATION /*索赔*/) {
             obj["claim_type"] = customerCareDetail.value.claim_type;
 
             if (Number(customerCareDetail.value.claim_type) === Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.BONAFIDECLAIM /*善意索赔*/) {
@@ -774,7 +888,8 @@ const markResolvedFetch = (params = {}) => {
         id: route.query?.id,
         ...params,
     };
-    Core.Api.ItemCategory.markResolved(obj)
+    Core.Api.inquiry_sheet
+        .markResolved(obj)
         .then((res) => {
             console.log("问询单标记解决接口 success", res.list);
             message.success(proxy.$t("common.sucesss"));
@@ -845,14 +960,14 @@ const onViewImage = (item) => {
 
     if (/video\/+/.test(item.type)) {
         // 视频都是单个的
-        uploadOptions.value.previewType = "video"
-        uploadOptions.value.previewImageVideo = [item.path]
+        uploadOptions.value.previewType = "video";
+        uploadOptions.value.previewImageVideo = [item.path];
     } else {
-        uploadOptions.value.previewType = "image"
+        uploadOptions.value.previewType = "image";
         if (item.file?.length > 0) {
             // 留言下的附件
             item.file.forEach((el) => {
-                        if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
+                if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
                     if (el.name === item.name) {
                         // 让预览的那张图片在第一张
                         uploadOptions.value.previewImageVideo.unshift(el.path);
@@ -864,7 +979,7 @@ const onViewImage = (item) => {
         } else {
             // 这个是详情信息的查看(照片需要判断其点击的哪个先展示哪个)[照片是多个的]
             customerCareDetail.value.attachment_list.forEach((el) => {
-                        if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
+                if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
                     if (Number(el.id) === Number(item.id)) {
                         // 让预览的那张图片在第一张
                         uploadOptions.value.previewImageVideo.unshift(el.path);
@@ -873,8 +988,8 @@ const onViewImage = (item) => {
                     }
                 }
             });
-        }        
-    }       
+        }
+    }
     console.log("previewImageVideo", uploadOptions.value.previewImageVideo);
     isClose.value = true;
 };
@@ -909,21 +1024,26 @@ const onBtn = (type) => {
             }
             break;
         case "inquiry-classification-sumbit":
+            let inquiryFile = uploadOptions.value.fileData.map((el) => {
+                return {
+                    name: el.name, // 附件名称
+                    path: el.response?.data?.filename, // 附件url
+                    type: el.type, // 附件类型
+                };
+            });
             let saveCommentParams = {
-                file: JSON.stringify(
-                    uploadOptions.value.fileData.map((el) => {
-                        return {
-                            name: el.name, // 附件名称
-                            path: el.response?.data?.filename, // 附件url
-                            type: el.type, // 附件类型
-                        };
-                    })
-                ),
+                file: inquiryFile.length > 0 ? JSON.stringify(inquiryFile) : undefined,
                 content: customerCareDetail.value.content,
             };
 
+            let promiseAll = [getBindPartFetch(), getSortingTypeFetch()];
+            if (saveCommentParams.file || saveCommentParams.content) {
+                // 判断留言接口是否写了数据
+                promiseAll = [getBindPartFetch(), getSortingTypeFetch(), saveCommentFetch(saveCommentParams)];
+            }
+
             // 提交事件
-            Promise.all([getBindPartFetch(), getSortingTypeFetch(), saveCommentFetch(saveCommentParams)])
+            Promise.all(promiseAll)
                 .then((res) => {
                     console.log(res);
                     message.success(proxy.$t("common.sucesss"));
@@ -951,16 +1071,16 @@ const onBtn = (type) => {
             break;
         case "sending":
             // 发送按钮(分销商才有)
+            let sendingFile = uploadOptions.value.fileData.map((el) => {
+                return {
+                    name: el.name, // 附件名称
+                    path: el.response?.data?.filename, // 附件url
+                    type: el.type, // 附件类型
+                };
+            });
+
             let saveComment = {
-                file: JSON.stringify(
-                    uploadOptions.value.fileData.map((el) => {
-                        return {
-                            name: el.name, // 附件名称
-                            path: el.response?.data?.filename, // 附件url
-                            type: el.type, // 附件类型
-                        };
-                    })
-                ),
+                file: sendingFile.length > 0 ? JSON.stringify(sendingFile) : undefined,
                 content: customerCareDetail.value.content,
             };
             saveCommentFetch(saveComment)
@@ -1070,6 +1190,14 @@ watch(
 onMounted(() => {
     getDetailFetch();
     getCommentListFetch();
+    if (route.query?.leave) {
+        let errorDom = document.querySelector("#inquiry-classification-item");
+        errorDom.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "nearest",
+        });
+    }
 });
 </script>
 
@@ -1237,7 +1365,7 @@ onMounted(() => {
                             width: 80px;
                             height: 80px;
                             border-radius: 4px;
-                            border: 1px solid rgba(0, 0, 0, 0.5);                            
+                            border: 1px solid rgba(0, 0, 0, 0.5);
                             object-fit: cover;
                         }
                     }
@@ -1348,7 +1476,6 @@ onMounted(() => {
             margin-top: 20px;
             padding-top: 18px;
             box-sizing: border-box;
-            border-top: 1px solid #f2f3f5;
             display: flex;
             align-items: center;
             justify-content: center;

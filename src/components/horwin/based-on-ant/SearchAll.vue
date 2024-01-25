@@ -186,7 +186,8 @@ export default {
             this.options.forEach((el) => {
                 el.value = undefined;
             });
-
+            console.log("重置", this.options);
+            
             this.$emit("reset");
         },
         // 展开更多
