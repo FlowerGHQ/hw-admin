@@ -367,6 +367,15 @@ const onSelectChange = (selectedRowKeys, selectedRows) => {
     console.log("selectedRows changed: ", selectedRows);
     keyAndItem.selectedRowKeys = selectedRowKeys;
     keyAndItem.selectedRowItems = selectedRows;
+    // 如果长度大于1，显示批量设置
+    if (selectedRowKeys.length > 1) {
+        batchSetVisible.value = true;
+        dataSource.value[0].commodity = selectedRowKeys.length;
+        isDown.value = false;
+    } else {
+        batchSetVisible.value = false;
+        isDown.value = true;
+    }
 };
 // 全选
 const onSelectAll = (selected, selectedRows, changeRows) => {
@@ -444,6 +453,8 @@ const hanleAllSure = () => {
         item.fob_20gp_usd = dataSource.value[0].fob_20gp_usd;
         item.fob_usd = dataSource.value[0].fob_usd;
     });
+    // 批量设置隐藏
+    batchSetVisible.value = false;
     // 传递给父组件，让父组件去处理
     emit("handleLastLadderData", keyAndItem.selectedRowItems);
 };

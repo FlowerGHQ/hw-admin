@@ -12,7 +12,7 @@
 <script setup>
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
-import { defineProps, defineEmits, ref, watch, reactive, toRaw } from "vue";
+import { ref, watch, reactive, toRaw } from "vue";
 //withDefaults 是一个辅助函数，用于将默认值与传递的值合并
 const props = defineProps({
     modelValue: {

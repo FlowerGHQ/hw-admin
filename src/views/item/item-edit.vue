@@ -438,6 +438,9 @@
                     <div class="form-item specific-category" v-if="form.type === itemTypeMap['1']?.key">
                         <div class="key">
                             {{ $t("item-edit.spec_category") }}
+                            <a-tooltip :title="$t('item-edit.spec_category_tips')">
+                                <i class="icon i_hint" style="font-size: 12px"></i>
+                            </a-tooltip>
                         </div>
                         <div class="value">
                             <a-switch v-model:checked="openCategory" />
@@ -539,7 +542,10 @@
                                                             @keydown.enter="handleBatchSpec('fob_eur')"
                                                             :min="0"
                                                             :autofocus="true"
-                                                            :precision="2" />
+                                                            :precision="2" 
+                                                            :formatter="(value) => formatNum(value)"
+                                                            :parser="(value) => clearNum(value)"
+                                                            />
                                                         <div class="btns">
                                                             <a-button
                                                                 type="primary"
@@ -584,7 +590,10 @@
                                                             @keydown.enter="handleBatchSpec('fob_usd')"
                                                             :min="0"
                                                             :autofocus="true"
-                                                            :precision="2" />
+                                                            :precision="2" 
+                                                            :formatter="(value) => formatNum(value)"
+                                                            :parser="(value) => clearNum(value)"
+                                                            />
                                                         <div class="btns">
                                                             <a-button
                                                                 type="primary"
@@ -669,20 +678,20 @@
                                     <template v-if="column.dataIndex === 'price'">
                                         <a-input-number
                                             v-model:value="record.price"
-                                            :min="0.01"
+                                            :min="0.1"
                                             :precision="2"
-                                            :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                            :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
+                                            :formatter="(value) => formatNum(value)"
+                                            :parser="(value) => clearNum(value)"
                                             @change="inputValidateConfig" />
                                     </template>
                                     <template v-if="column.dataIndex === 'fob_eur'">
                                         <a-input-number
                                             v-if="form.type !== itemTypeMap['1']?.key"
                                             v-model:value="record.fob_eur"
-                                            :min="0.01"
+                                            :min="0.1"
                                             :precision="2"
-                                            :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                            :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
+                                            :formatter="(value) => formatNum(value)"
+                                            :parser="(value) => clearNum(value)"
                                             @change="inputValidateConfig" />
                                         <div
                                             class="show-ladder"
@@ -695,7 +704,7 @@
                                             <div class="show-ladder-item" @click="openLadderPrice('EUR',record,index)">
                                                 <div class="show-ladder-item-title">{{ $t("item-edit.sample") }} :</div>
                                                 <div class="show-ladder-item-content">
-                                                    {{ `€ ${record.fob_eur}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
+                                                    {{ `€ ${formatNum(record.fob_eur)}`}}
                                                 </div>
                                             </div>
                                             <div class="show-ladder-item" @click="openLadderPrice('EUR',record,index)">
@@ -704,7 +713,7 @@
                                                 </div>
                                                 <div class="show-ladder-item-content">
                                                     {{
-                                                        `€ ${record.fob_20gp_eur}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                                        `€ ${formatNum(record.fob_20gp_eur)}`
                                                     }}
                                                 </div>
                                             </div>
@@ -714,7 +723,7 @@
                                                 </div>
                                                 <div class="show-ladder-item-content">
                                                     {{
-                                                        `€ ${record.fob_40qh_eur}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                                        `€ ${formatNum(record.fob_40qh_eur)}`
                                                     }}
                                                 </div>
                                             </div>
@@ -736,10 +745,10 @@
                                         <a-input-number
                                             v-if="form.type !== itemTypeMap['1']?.key"
                                             v-model:value="record.fob_usd"
-                                            :min="0.01"
+                                            :min="0.1"
                                             :precision="2"
-                                            :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                            :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
+                                           :formatter="(value) => formatNum(value)"
+                                            :parser="(value) => clearNum(value)"
                                             @change="inputValidateConfig" />
                                         <div
                                             class="show-ladder"
@@ -752,7 +761,7 @@
                                             <div class="show-ladder-item" @click="openLadderPrice('USD',record,index)">
                                                 <div class="show-ladder-item-title">{{ $t("item-edit.sample") }} :</div>
                                                 <div class="show-ladder-item-content">
-                                                    {{ `$ ${record.fob_usd}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
+                                                    {{ `$ ${formatNum(record.fob_usd)}` }}
                                                 </div>
                                             </div>
                                             <div class="show-ladder-item" @click="openLadderPrice('USD',record,index)">
@@ -761,7 +770,7 @@
                                                 </div>
                                                 <div class="show-ladder-item-content">
                                                     {{
-                                                        `$ ${record.fob_20gp_usd}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                                        `$ ${formatNum(record.fob_20gp_usd)}`
                                                     }}
                                                 </div>
                                             </div>
@@ -770,9 +779,7 @@
                                                     {{ $t("item-edit.quantity_40HQ") }} :
                                                 </div>
                                                 <div class="show-ladder-item-content">
-                                                    {{
-                                                        `€ ${record.fob_40qh_usd}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                                                    }}
+                                                    {{ `€ ${formatNum(record.fob_40qh_usd)}` }}
                                                 </div>
                                             </div>
                                         </div>
@@ -831,14 +838,27 @@
                 <div class="form-item required">
                     <div class="key" :class="form.fob_eur === '' && isValidate ? 'error' : ''">FOB(EUR)</div>
                     <div class="value input-number">
-                        <a-input-number v-model:value="form.fob_eur" :min="0" :precision="2" placeholder="0.00" />
+                        <a-input-number 
+                            v-model:value="form.fob_eur" 
+                            :min="0.1"
+                            :precision="2" 
+                            placeholder="0.00" 
+                            :formatter="(value) => formatNum(value)"
+                            :parser="(value) => clearNum(value)"
+                        />
                         <span>€</span>
                     </div>
                 </div>
                 <div class="form-item required">
                     <div class="key" :class="form.fob_usd === '' && isValidate ? 'error' : ''">FOB(USD)</div>
                     <div class="value input-number">
-                        <a-input-number v-model:value="form.fob_usd" :min="0" :precision="2" placeholder="0.00" />
+                        <a-input-number 
+                            v-model:value="form.fob_usd" 
+                            :min="0.1"
+                            :precision="2" 
+                            placeholder="0.00" 
+                            :formatter="(value) => formatNum(value)"
+                            :parser="(value) => clearNum(value)"/>
                         <span>$</span>
                     </div>
                 </div>
@@ -856,18 +876,18 @@
                         <div class="value input-number">
                             <div  :class="!form.fob_40qh_eur && isValidate ? ' title required error' : 'title required'">{{ $t('item-edit.quantity_40HQ') }}</div>
                             <a-input-number
-                               v-model:value="form.fob_40qh_eur"
-                               :min="0.1"
-                               :precision="2"
-                               :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                               :parser="(value) => value.replace(/\s?|(,*)/g, '')"
-                               @change="inputValidateConfig('EUR')"
-                           >
-                               <template #addonAfter>
+                                v-model:value="form.fob_40qh_eur"
+                                :min="0.1"
+                                :precision="2"
+                                :formatter="(value) => formatNum(value)"
+                                :parser="(value) => clearNum(value)"
+                                @change="inputValidateConfig('EUR')"
+                            >
+                                <template #addonAfter>
                                    <span>€</span>
-                               </template>
+                                </template>
                             </a-input-number>
-                           <div class="tips ">{{ $t('item-edit.quantity_26_no') }}</div>
+                            <div class="tips ">{{ $t('item-edit.quantity_26_no') }}</div>
                         </div>
                         <div class="value input-number">
                             <div  :class="!form.fob_20gp_eur && isValidate ? ' title required error' : 'title required'">{{ $t('item-edit.quantity_20GP') }}</div>
@@ -875,8 +895,8 @@
                                 v-model:value="form.fob_20gp_eur"
                                 :min="0.1"
                                 :precision="2"
-                                :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/\s?|(,*)/g, '')"
+                                :formatter="(value) => formatNum(value)"
+                                :parser="(value) => clearNum(value)"
                                 @change="inputValidateConfig('EUR')"
                             >
                                 <template #addonAfter>
@@ -891,8 +911,8 @@
                                 v-model:value="form.fob_eur"
                                 :min="0.1"
                                 :precision="2"
-                                :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
+                                :formatter="(value) => formatNum(value)"
+                                :parser="(value) => clearNum(value)"
                                 @change="inputValidateConfig('EUR')"
                             >
                                 <template #addonAfter>
@@ -912,8 +932,8 @@
                                 v-model:value="form.fob_40qh_usd"
                                 :min="0.1"
                                 :precision="2"
-                                :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/\s?|(,*)/g, '')"
+                                :formatter="(value) => formatNum(value)"
+                                :parser="(value) => clearNum(value)"
                                 @change="inputValidateConfig('USD')"
                             >
                                 <template #addonAfter>
@@ -929,8 +949,8 @@
                                 v-model:value="form.fob_20gp_usd"
                                 :min="0.1"
                                 :precision="2"
-                                :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/\s?|(,*)/g, '')"
+                                :formatter="(value) => formatNum(value)"
+                                :parser="(value) => clearNum(value)"
                                 @change="inputValidateConfig('USD')"
                             >
                                 <template #addonAfter>
@@ -945,8 +965,8 @@
                                 v-model:value="form.fob_usd"
                                 :min="0.1"
                                 :precision="2"
-                                :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/\s?|(,*)/g, '')"
+                                :formatter="(value) => formatNum(value)"
+                                :parser="(value) => clearNum(value)"
                                 @change="inputValidateConfig('USD')"
                             >
                                 <template #addonAfter>
@@ -1332,11 +1352,22 @@ export default {
         next();
     },
     methods: {
+        // 数字的3位划分
+        formatNum(num) {
+            // 区分小数点
+            let [integer, decimal] = String.prototype.split.call(num, ".");
+            integer = integer.replace(/\d(?=(\d{3})+$)/g, "$&,");
+            return decimal ? `${integer}.${decimal}` : integer;
+        },
+        // 清除3位划分的逗号
+        clearNum(num) {
+            return num.replace(/,/g, "");
+        },
         // openLadderPrice
         openLadderPrice(type,record,index) {
             console.log(type,record,index)
-            console.log(this.specific.data,'---------------------------')
-            this.specific.data.forEach((item) => {
+            this.specific.data.forEach((item,index) => {
+                item.id = index;
                 item.fob_eur = item.fob_eur ? item.fob_eur : "";
                 item.fob_20gp_eur = item.fob_20gp_eur ? item.fob_20gp_eur : "";
                 item.fob_40qh_eur = item.fob_40qh_eur ? item.fob_40qh_eur : "";
@@ -1344,6 +1375,7 @@ export default {
                 item.fob_20gp_usd = item.fob_20gp_usd ? item.fob_20gp_usd : "";
                 item.fob_40qh_usd = item.fob_40qh_usd ? item.fob_40qh_usd : "";
             })
+            
             this.labberData = this.specific.data;
             this.ladderPriceVisible = true;
             this.activeRow = record;
@@ -2139,8 +2171,7 @@ export default {
             }
         },
         handleDescripttion() {
-            let item = _.cloneDeep(this.specific.list.filter((i) => i.id === this.category_index)[0]);
-            console.log("目标-------------------------");
+            let item = this.specific.list.filter((i) => i.id === this.category_index)[0];
             item.option = _.cloneDeep(this.categoryMessage);
             if (item.key.trim() && item.name.trim()) {
                 let value = "";

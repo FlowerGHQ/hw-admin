@@ -34,6 +34,7 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': path.resolve(__dirname, 'src'),
         '@images': path.resolve(__dirname, 'src/assets/images'),
+        'vue-i18n': '/node_modules/vue-i18n/dist/vue-i18n.cjs.js' // 指向正确的路径
       }
     },
     css: {
