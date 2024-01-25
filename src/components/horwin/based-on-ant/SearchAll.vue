@@ -1,6 +1,4 @@
-
 <template>
-
     <!-- 
         使用例子
         * 代表必填字段
@@ -69,39 +67,35 @@
         </SearchAll>
      -->
     <div class="search-all search-container-new">
-
-        <a-row :gutter="[20,20]" class="search-area">
+        <a-row :gutter="[20, 20]" class="search-area">
             <slot name="deafult">
                 <template v-for="(item, index) in options" :key="index">
                     <a-col v-if="item.type === 'input'" :xs="24" :sm="24" :xl="11" :xxl="8" class="search-box">
-                        <div  class="item-box">
+                        <div class="item-box">
                             <div class="key-box">
                                 {{ $t(item.key) }}
                             </div>
                             <div class="value-box">
                                 <a-input
-                                    :placeholder="$t(`${ item.placeholder || 'def.input' }`)"
+                                    :placeholder="$t(`${item.placeholder || 'def.input'}`)"
                                     v-model:value="item.value"
-                                    @keydown.enter="handleSearch" />
+                                    @keydown.enter="handleSearch"
+                                />
                             </div>
                         </div>
-                    </a-col>    
-                    <a-col v-else-if="(item.type === 'select')" :xs="24" :sm="24" :xl="11" :xxl="8" class="search-box" >
-
-                        <div  class="item-box">
+                    </a-col>
+                    <a-col v-else-if="item.type === 'select'" :xs="24" :sm="24" :xl="11" :xxl="8" class="search-box">
+                        <div class="item-box">
                             <div class="key-box">
                                 {{ $t(item.key) }}
                             </div>
                             <div class="value-box">
-                                <a-select
-                                    v-model:value="item.value"
-                                    :placeholder="$t(`${ item.placeholder || 'def.input' }`)">
-                                    <a-select-option
-                                        v-for="(val, key) in item.selectMap"
-                                        :key="key"
-                                        :value="val.value"
-                                        >{{ val[$i18n.locale] }}</a-select-option
-                                    >
+                                <a-select v-model:value="item.value" :placeholder="$t(`${item.placeholder || 'def.input'}`)">
+                                    <a-select-option v-for="(val, key) in item.selectMap" :key="key" :value="val.value">
+                                        {{
+                                            val[$i18n.locale] || $t(val.t)
+                                        }}
+                                    </a-select-option>
                                 </a-select>
                             </div>
                         </div>
@@ -129,59 +123,54 @@
             <slot name="extend"></slot>
         </a-row>
         <div class="btn-area-box">
-
             <slot name="pre_btn"></slot>
             <a-button @click="handleSearchReset" :disabled="disabled" v-if="isShowButton">{{ $t("def.reset") }}</a-button>
             <a-button @click="handleSearch" :disabled="disabled" type="primary" v-if="isShowButton">
-                {{  $t("def.search") }}
+                {{ $t("def.search") }}
             </a-button>
-            
+
             <!-- 缩起和展开 -->
             <a-button type="link" @click="moreSearch" v-if="isShowMore">
-
                 {{ isShow ? $t("def.stow") : $t("def.unfold") }}
-                <i class="icon i_xialajiantouxiao m-l-5" v-if="!isShow" ></i>
-                <i class="icon i_shouqijiantouxiao m-l-5" v-else ></i>
-
+                <i class="icon i_xialajiantouxiao m-l-5" v-if="!isShow"></i>
+                <i class="icon i_shouqijiantouxiao m-l-5" v-else></i>
             </a-button>
             <slot name="after_btn"></slot>
         </div>
-
     </div>
 </template>
 
 <script>
 import Core from "@/core";
 export default {
-    name: 'SearchAll',
+    name: "SearchAll",
     props: {
         options: {
             type: Array,
-            default: function() {
-                return [
-                ];
-            }
+            default: function () {
+                return [];
+            },
         },
         // 搜索框展示个数 ，default: 1--默认两个
         preSentationNumber: {
             type: Number,
-            default: 1
+            default: 1,
         },
         // 是否需要-展开收起
         isShowMore: {
             type: Boolean,
-            default: true
+            default: true,
         },
         // 是否需要-搜索重置按钮
         isShowButton: {
             type: Boolean,
-            default: true
+            default: true,
         },
         // 按钮禁用
         disabled: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
     data() {
         return {
@@ -189,13 +178,13 @@ export default {
             searchForm: {},
             isShow: false,
             searchDom: undefined, // DOM结构
-        }
+        };
     },
     mounted() {
         // 如果需要展开收起
-        if(this.isShowMore){
+        if (this.isShowMore) {
             // 获取DOM结构个数
-            this.searchDom = document.querySelectorAll('.search-box')
+            this.searchDom = document.querySelectorAll(".search-box");
             this.getSearchItem();
         }
     },
@@ -208,55 +197,48 @@ export default {
         },
         // 查询
         handleSearch() {
-            
-            const resultParams = {}
-            this.options.forEach(el => {
-                resultParams[el.searchParmas] =  el.value
-            })
-            this.$emit("search", resultParams)
-
+            const resultParams = {};
+            this.options.forEach((el) => {
+                resultParams[el.searchParmas] = el.value;
+            });
+            this.$emit("search", resultParams);
         },
         // 重置
         handleSearchReset() {
+            this.options.forEach((el) => {
+                el.value = undefined;
+            });
 
-            
-            this.options.forEach(el => {
-                el.value = undefined
-            })
-
-            this.$emit("reset")
+            this.$emit("reset");
         },
         // 展开更多
         moreSearch() {
-
             this.isShow = !this.isShow;
-            this.$emit('freshPageHeight');
+            this.$emit("freshPageHeight");
 
             /* 展开-设置显示 */
             if (this.isShow) {
-                this.getSearchItem('block');
+                this.getSearchItem("block");
                 return;
             }
             /* 非展开-设置隐藏 */
             this.getSearchItem();
-            
         },
         // 更改dom显隐
-        getSearchItem(type = 'none') {
-
+        getSearchItem(type = "none") {
             this.searchDom.forEach((el, index) => {
                 if (index > this.preSentationNumber) {
-                    el.style.display = type
+                    el.style.display = type;
                 }
-            })
-        }
+            });
+        },
     },
-}
+};
 </script>
 <style lang="less" scoped>
 .search-all {
     width: 100%;
-    background-color: #F7F8FA;
+    background-color: #f7f8fa;
     padding: 20px;
     box-sizing: border-box;
     border-radius: 4px;
@@ -272,6 +254,7 @@ export default {
     .btn-area-box {
         display: flex;
         justify-content: flex-end;
+        margin-left: 10px;
     }
 }
 .m-l-5 {

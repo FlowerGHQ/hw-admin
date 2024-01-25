@@ -173,6 +173,7 @@ export default {
                 id: this.detail.id,
                 name: this.detail.name,
                 parent_id: this.detail.parent_id,
+                type: 10,
                 config: JSON.stringify(config),
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
