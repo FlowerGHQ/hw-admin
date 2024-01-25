@@ -1314,12 +1314,16 @@ export default {
         isDesEmpty() {
             let flag = false;
             console.log(this.categoryMessage,'1111---------------------------')
-            for (let i = 0; i < this.categoryMessage.length; i++) {
+            if(this.categoryMessage && this.categoryMessage.length > 0  ){
+                for (let i = 0; i < this.categoryMessage.length; i++) {
                 const item = this.categoryMessage[i];
-                if (item.desc === "" || item.desc_en === "" || item.desc === "<p><br></p>" || item.desc_en === "<p><br></p>") {
-                    flag = true;
-                    break;
+                    if (item.desc === "" || item.desc_en === "" || item.desc === "<p><br></p>" || item.desc_en === "<p><br></p>") {
+                        flag = true;
+                        break;
+                    }
                 }
+            }else{
+                flag = true;
             }
             //every 用于判断数组中的每一项是否都满足条件
             return flag
@@ -1597,6 +1601,8 @@ export default {
             this.specData = res.specData;
             this.specific = res.specific;
             this.upload = res.upload;
+            this.category_index = res.category_index;
+            this.categoryMessage = res.categoryMessage;
            
         },
         // 获取商品规格列表
@@ -1823,10 +1829,6 @@ export default {
                     };
                 });
             }
-            // 是整车并且为多规格
-            if (form.type === this.itemTypeMap['1']?.key && this.specific.mode === 2) {
-                this.handleDescripttion();
-            }
             if(type === 'draft'){
                 // 草稿
                 this.goodsDraftData = {
@@ -1834,13 +1836,19 @@ export default {
                     attrDef,
                     specData,
                     specific: this.specific,
-                    upload: this.upload
+                    upload: this.upload,
+                    category_index: this.category_index,
+                    categoryMessage: this.categoryMessage,
+
                 }
                 Core.Data.setGoodsDraft(JSON.stringify(this.goodsDraftData));
                 this.$message.success(this.$t("i.save_draft_success"));
                 return
             }
-
+            // 是整车并且为多规格
+            if (form.type === this.itemTypeMap['1']?.key && this.specific.mode === 2) {
+                this.handleDescripttion();
+            }
             Core.Api.Item[apiName](Core.Util.searchFilter(form))
                 .then(() => {
                     this.$message.success(this.$t("pop_up.save_success"));
