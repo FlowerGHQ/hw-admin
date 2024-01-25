@@ -1,6 +1,6 @@
 <template>
 <div id="PurchaseList">
-    <div class="list-container">
+    <div class="list-container" ref="container">
         <div class="title-container">
             <div class="title-area">{{ $t('p.list')}}</div>  
         </div>
@@ -87,7 +87,7 @@
             <a-button class="right-f" v-if="searchForm.status === '150' && $auth('ADMIN')"  :disabled="!isShowErpDisabled" @click="sendErp">{{/* 同步至ERP */ $t('p.synchronization_to_erp') }}</a-button>
         </div>
         <div class="table-container">
-            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+            <a-table :loading="loading" :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-selection="searchForm.status === '150' && $auth('ADMIN')? rowSelection : null"
                 :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text , record}">
@@ -96,6 +96,17 @@
                             <a-button type="link" @click="routerChange('detail', record)" v-if="text !== ''">{{text }}</a-button>
                             <a-button type="link" disabled v-else>-</a-button>
                         </a-tooltip>
+                    </template>
+                    <!-- 销售bom -->
+                    <template v-if="column.key === 'accessory_list'">
+                        <span  class="accessory_list" @click="openBomModal(record)">
+                            {{ 
+                                record.item_list.map((item,index)=>{
+                                    return $i18n.locale === 'zh' ? item.item.name : item.item.name_en
+                                }).join(',') || '-'
+                            }}
+                        </span>
+                        
                     </template>
                     <template v-else-if="column.dataIndex === 'parent_sn' && $auth('purchase-order.detail')">
                         <a-tooltip placement="top" :title='text'>
@@ -198,6 +209,34 @@
                 @showSizeChange="pageSizeChange"
             />
         </div>
+        <a-modal 
+            v-model:visible="visible" 
+            :title="$t('i.sale_bom')" 
+            :getContainer="getContainer"
+            :footer="null"
+            :width="540"
+            class="sale-bom-modal"
+        >
+            <div class="bom-item-list" v-for="item in bomModalData" :key="item.id">
+                <div class="shop">
+                    {{ $i18n.locale === 'zh' ? item.item.name : item.item.name_en  }}
+                    <!-- 修改按钮 -->
+                    <a-button @click="routerChange('editBom',item)">{{$t('def.edit')}}</a-button>
+                </div>
+                <div class="bom">
+                    <div class="bom-item" v-for="item in item.accessory_list" :key="item.id" v-if="item?.accessory_list &&item.accessory_list.length>0 ">   
+                        <div class="bom-item-name">
+                            {{ $i18n.locale === 'zh' ? item.target_name : item.target_name_en  }}
+                        </div>
+                        <div class="bom-item-num">
+                            x{{ item.amount }}
+                        </div>
+                    </div>
+                    <a-empty v-else/>
+                </div>
+            </div>
+           
+        </a-modal>
     </div>
 </div>
 </template>
@@ -225,6 +264,8 @@ export default {
     props: {},
     data() {
         return {
+            visible: false,
+            bomModalData: [],
             LOGIN_TYPE,
             SEARCH_TYPE,
             STATUS,
@@ -284,6 +325,8 @@ export default {
         tableColumns() {
             let columns = [
                 { title: this.$t('p.number'), dataIndex: 'sn', },
+                // 销售BOM
+                { title:this.$t('i.sale_bom'),dataIndex: 'accessory_list', key: 'accessory_list'},
                 { title: this.$t('p.parent_sn'), dataIndex: 'parent_sn', },
                 { title: this.$t('p.order_type'), dataIndex: 'type', key: 'type' },
                 { title: this.$t('p.payment_method'), dataIndex: 'pay_type', key: 'pay_type' },                                
@@ -380,8 +423,15 @@ export default {
     beforeUnmount(){
         clearInterval(this.timer)
     },
-    methods: {
-
+    methods: {  
+        // 打开销售bom弹窗
+        openBomModal(record) {
+            this.visible = true;
+            this.bomModalData = record.item_list;
+        },
+        getContainer() {
+            return this.$refs.container
+        },
         // 点击推送按钮（erp)
         sendErp() {
             
@@ -448,6 +498,18 @@ export default {
                     })
                     window.open(routeUrl.href, '_self')
                     break;
+                case 'editBom':
+                    routeUrl = this.$router.resolve(
+                        {
+                            path:'/item/item-detail',
+                            query: {
+                                id: item.item_id,
+                                tab:3
+                            }
+                        }
+                    )
+                    window.open(routeUrl.href, '_self')
+                    break;
             }
         },
         pageChange(curr) {  // 页码改变
@@ -495,6 +557,7 @@ export default {
             }).then(res => {
                 this.total = res.count;
                 this.tableData = res.list;
+                this.loading = false;
                 // this.tableData.forEach(item=>{
                 //     item['total_price'] = (item['price'] || 0) + (item['freight'] || 0);
                 // })
@@ -505,7 +568,6 @@ export default {
             });
         },
         getStatusStat() {  // 获取 状态统计 数据
-            this.loading = true;
 
             Core.Api.Purchase.statusList({
                 search_type: this.search_type
@@ -526,9 +588,7 @@ export default {
                 this.statusList[0].value = total
             }).catch(err => {
                 console.log('getStatusStat err:', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+            })
         },
         getDistributorListAll() {
             Core.Api.Distributor.listAll().then(res => {
@@ -670,5 +730,84 @@ export default {
 
 .right-f {
     float: right;
+}
+:deep(.ant-table-cell){
+    .accessory_list{
+        display: inline-block;
+        width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: #006EF9;
+        cursor: pointer;
+    }
+}
+:deep(.sale-bom-modal){
+    .ant-modal-content{
+        border-radius: 4px;
+       .ant-modal-header{
+            padding: 16px 16px 16px 24px;
+            min-height: auto;
+            .ant-modal-title{
+                height: auto;
+                line-height: 1;
+            }
+       } 
+       .ant-modal-body{
+        padding: 16px 24px;
+        min-height: 444px;
+        overflow-y: auto;
+        // 滚动条样式
+        &::-webkit-scrollbar {
+            width: 8px; /* 滚动条宽度 */
+        }
+        
+        /* 滚动条背景 */
+        &::-webkit-scrollbar-track {
+            background-color: #FFF;
+        }
+        
+        /* 滚动条滑块 */
+        &::-webkit-scrollbar-thumb {
+            background-color: #E5E6EB;
+            border-radius: 20px; /* 滑块圆角 */
+        }
+        .bom-item-list{
+                border-radius: 4px;
+                border: 1px solid #EAECF2;
+                background: #FFF;
+                color: #1D2129;
+                font-size: 14px;
+                font-weight: 500;
+                margin-bottom: 16px;
+                &:last-child{
+                    margin-bottom: 0px;
+                }
+
+            .shop{
+                height: 48px;
+                border-radius: 4px 4px 0px 0px;
+                border: 1px solid #EAECF2;
+                background: #F5F7F9;
+                font-weight: 600;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 16px;
+            }
+            .bom{
+                padding: 18px 16px 16px 16px;
+                .bom-item{
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 16px;
+                    &:last-child{
+                        margin-bottom: 0px;
+                    }
+                }
+            }
+        }
+       }
+    }
 }
 </style>

@@ -343,6 +343,10 @@ const apiList = {
         delete: ['PostJson', 'receive-info/delete'],
     },
     Purchase: { // 采购订单
+        // 修改赠品单
+        updateGiveaway: ['PostJson', 'purchase-order-item/update-giveaway'],
+        // 删除赠品单
+        deleteGiveaway: ['PostJson', 'purchase-order-item/delete-giveaway'],
         list: ['PostJson', 'purchase-order/list'], // 采购订单列表
         cancel: ['PostJson', 'purchase-order/cancel'], // 取消采购订单
         create: ['PostJson', 'purchase-order/create'], // 创建采购订单
@@ -350,6 +354,7 @@ const apiList = {
         update: ['PostJson', 'purchase-order/update'], // 采购订单修改
         detailBySn: ['PostJson', 'purchase-order/detail-sn'],
         itemList: ['PostJson', 'purchase-order-item/list'], // 采购订单明细列表
+        giveawayList: ['PostJson', 'purchase-order-item/giveaway-list'], // 采购订单赠品明细列表
         payList: ['PostJson', 'purchase-order-pay/list'], // 采购订单收款明细列表
         payAudit: ['PostJson', 'purchase-order-pay/audit'], // 采购订单收款明细列表
         createAudit: ['PostJson', 'purchase-order/create-audit'], // 售后采购单创建审核
@@ -371,7 +376,6 @@ const apiList = {
 
         createGiveaway: ['PostJson', 'purchase-order/create-giveaway'], // 已下单的订单-编辑商品-审核
         updatePI: ['PostJson', 'purchase-order/update-pi'], // 修改pi
-
         // 平台方增加功能请求-手动同步u8--同步erp
         erpPush: ['PostJson', 'erp/purchase-order/push'], // 同步erp  待生产-》生产中
 
@@ -966,6 +970,15 @@ const apiList = {
         add: ['PostJson', 'supplier-application/save'], // 供应商前缀 /supplier
 
     },
+    SALES_STRATEGY:{
+        list: ['PostJson', 'sales-strategy/list'],
+        add: ['PostJson', 'sales-strategy/create'],
+        disable: ['PostJson', 'sales-strategy/disable'],
+        enable: ['PostJson', 'sales-strategy/enable'],
+        delete: ['PostJson', 'sales-strategy/delete'],
+        update: ['PostJson', 'sales-strategy/update'],
+        detail: ['PostJson', 'sales-strategy/detail'],
+    },
     DISTRIBUTOR_HOME: {
         searchList: ['PostJson', 'new/list'], // 分销商首页搜索
     },
@@ -985,6 +998,12 @@ const apiList = {
         markResolved: ['PostJson','enquiry-ticket/mark-resolved'], // 问题解决接口
         commentList: ['PostJson','comment/list'], // 评论
         saveComment: ['PostJson','comment/save'], // 新增评论
+        // 客服列表
+        cusomerList: ['PostJson','user/customer-list'], // 客服列表
+        // 删除
+        deleteCustomer: ['PostJson','user/delete-customer-country'], // 删除
+        // 添加
+        addCustomer: ['PostJson','user/save-area'], // 添加
     }
 }; 
 

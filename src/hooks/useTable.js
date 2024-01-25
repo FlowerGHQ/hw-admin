@@ -66,6 +66,7 @@ export function useTable ({ request, initParam, isPageAble = true, immediate = t
             isPageAble && updatePagination({ total: res.count });
         } catch (error) {
             console.error(error,'Request error')
+            state.loading = false;
         }
 
     }

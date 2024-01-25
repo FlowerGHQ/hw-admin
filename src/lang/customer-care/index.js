@@ -58,6 +58,40 @@ export default {
         // 车辆分类
         vehicle_classification: "车辆分类",
         mark_resolved_tips: "已解决的问询单无法继续编辑或留言。确定该问询单的问题已经解决了吗？",
+        // 客服账号
+        customer_service_account: "客服账号",
+        // 账号管理及分配
+        account_management_and_distribution: "账号管理及分配",
+        // add_distribution
+        add_distribution: "新增分配",
+        // 序号
+        serial_number: "序号",
+        //账号
+        account: "账号",
+        // 名称
+        name: "名称",
+        // 地区
+        area: "地区",
+        // 设置
+        setting: "设置",
+        // 修改
+        edit: "修改",
+        // 删除
+        delete: "删除",
+        // 分配国家
+        distribution_country: "分配国家",
+        // 确定
+        confirm: "确定",
+        // 取消
+        cancel: "取消",
+        // 新增分配
+        add_distribution: "新增分配",
+        // 修改分配
+        modify_distribution: "修改分配",
+        // confirm_delete
+        confirm_delete: "确定删除",
+        // successfully_add
+        successfully_add: "账号添加成功",
     },
     en: {
         inquiry_list: "Inquiry list",
@@ -117,5 +151,22 @@ export default {
         // 车辆分类
         vehicle_classification: "Vehicle Classification",
         mark_resolved_tips: "The resolved inquiry form cannot be edited or left a message. Are you sure the issue with this inquiry has been resolved?",
+        customer_service_account: "Customer Service Account",
+        account_management_and_distribution: "Account Management And Distribution",
+        add_distribution: "Add Distribution",
+        serial_number: "Serial Number",
+        account: "Account",
+        name: "Name",
+        area: "Area",
+        setting: "Setting",
+        edit: "Edit",
+        delete: "Delete",
+        distribution_country: "Distribution Country",
+        confirm: "Confirm",
+        cancel: "Cancel",
+        add_distribution: "Add Distribution",
+        modify_distribution: "Modify Distribution",
+        confirm_delete: "Confirm Delete",
+        successfully_add: "Account Added Successfully",
     }
 }

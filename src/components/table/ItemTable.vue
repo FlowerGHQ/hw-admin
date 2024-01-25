@@ -115,7 +115,7 @@ export default {
         defaultChecked: function(n) {
             console.log('defaultChecked:', n)
             this.selectedRowKeys = Core.Util.deepCopy(this.defaultChecked)
-        }
+        },
     },
     created() {
 
