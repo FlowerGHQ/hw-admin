@@ -18,8 +18,6 @@ export default {
 		spec_category: '规格分类',
 		// 选择分类
 		spec_category_select: '选择分类',
-		// 描述
-		description: '为前端样式更美观，请用分隔符分类的规格值进行描述，参数条数建议不超过4条，中文建议不超过14个字符',
 		spec_category_select_tips: '请先填写规格定义',
 		// 中文
 		chinese: '中文',
@@ -72,8 +70,6 @@ export default {
 		spec_category: 'Specification classification',
 		// 选择分类
 		spec_category_select: 'Select classification',
-		// 描述
-		description: 'For the more beautiful front-end style, please use the separator to describe the classified specification values. It is recommended that the number of parameters should not exceed 4 and the Chinese should not exceed 14 characters',
 		spec_category_select_tips: 'Please fill in the specification definition first',
 		// 中文
 		chinese: 'Chinese',
