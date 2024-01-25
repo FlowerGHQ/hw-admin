@@ -982,6 +982,13 @@
 
         <!-- 按钮 -->
         <div class="form-btns fixed-btns" ref="fixBox" :style="{ width: fixedWidth }">
+            <!-- 保存草稿 -->
+            <a-button
+                @click="handleSubmit('draft')"
+                v-if="saveDarftShow"
+            >
+                {{ $t("i.save_draft") }}
+            </a-button>
             <!--  type="primary" ghost -->
             <a-button @click="routerChange('back')">{{ $t("def.cancel") }}</a-button>
             <a-button type="primary" @click="handleSubmit">{{ $t("def.sure_create") }}</a-button>
@@ -1234,9 +1241,9 @@ export default {
             // 固定盒子高度
             fixedHeight: "auto",
             newChild: {
-                imgs: [],
+                imgs: []
             },
-
+            goodsDraftData: {},
         };
     },
     watch: {
@@ -1274,12 +1281,6 @@ export default {
                     key: "input",
                     dataIndex: "name_en",
                 },
-                /* {
-                    title: this.$t("i.cost_price"),
-                    key: "money",
-                    dataIndex: "original_price",
-                    width: 160,
-                }, */
                 {
                     title: "FOB(EUR)",
                     key: "money",
@@ -1301,10 +1302,6 @@ export default {
                     fixed: "right",
                 } // , fixed: 'right'
             );
-            // 判断数组长度是否为1，如果是，则将最后一个数据列配置删除
-            /* if (this.specific.data.length === 1) {
-                column.pop();
-            } */
             return column;
         },
         configSetTitle() {
@@ -1325,13 +1322,27 @@ export default {
             //every 用于判断数组中的每一项是否都满足条件
             return flag
         },
+        saveDarftShow() {
+            if(this.$route.query.edit){
+                return  false
+            }else {
+                return true
+            }
+        }
+
     },
     created() {
+        this.goodsDraftData = Core.Data.getGoodsDraft() ? JSON.parse(Core.Data.getGoodsDraft()) : {};
         this.form.id = Number(this.$route.query.id) || 0;
         this.set_id = Number(this.$route.query.set_id) || 0;
         this.indep_flag = Number(this.$route.query.indep_flag) || 0; // 商品详情里面的编辑按钮参数
+
+        // 获取草稿信息
         if (this.form.id) {
             this.getItemDetail();
+        }
+        if(Object.keys(this.goodsDraftData).length > 0 && !this.$route.query.edit){
+          this.setFormDartData(this.goodsDraftData);
         }
         this.getSalesAreaList();
     },
@@ -1574,6 +1585,16 @@ export default {
             }
             this.loading = false;
         },
+        setFormDartData(res){
+            console.log(res,'草稿信息')
+            this.form = res.form;
+            this.form.sales_area_ids = res.form.sales_area_ids.split(',').map((item) => Number(item));
+            this.attrDef = res.attrDef;
+            this.specData = res.specData;
+            this.specific = res.specific;
+            this.upload = res.upload;
+           
+        },
         // 获取商品规格列表
         setSpecificData(itemList) {
             console.log(itemList, "参数值--------------------------");
@@ -1699,17 +1720,22 @@ export default {
             });
         },
         // 保存、新建 商品
-        handleSubmit() {
+        handleSubmit(type) {
             let form = Core.Util.deepCopy(this.form);
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
-            let categoryMessage = Core.Util.deepCopy(this.categoryMessage);
-            // 校验检查
-            this.isValidate = true;
-            if (typeof this.checkFormInput(form, specData, attrDef, categoryMessage) === "function") {
-                return;
+            if(!type){
+                // 校验检查
+                this.isValidate = true;
+                if (
+                    typeof this.checkFormInput(form, specData, attrDef) ===
+                    "function" 
+                ) {
+                    console.log("checkFormInput err");
+                    return;
+                }
             }
-
+            
             // 封面上传
             if (this.upload.coverList.length || this.upload.coverList.length === 0) {
                 let coverList = this.upload.coverList.map((item) => {
@@ -1796,9 +1822,24 @@ export default {
             if (form.type === this.itemTypeMap['1']?.key && this.specific.mode === 2) {
                 this.handleDescripttion();
             }
+            if(type === 'draft'){
+                // 草稿
+                this.goodsDraftData = {
+                    form,
+                    attrDef,
+                    specData,
+                    specific: this.specific,
+                    upload: this.upload
+                }
+                Core.Data.setGoodsDraft(JSON.stringify(this.goodsDraftData));
+                this.$message.success(this.$t("i.save_draft_success"));
+                return
+            }
+
             Core.Api.Item[apiName](Core.Util.searchFilter(form))
                 .then(() => {
                     this.$message.success(this.$t("pop_up.save_success"));
+                    Core.Data.clearGoodsDraft();
                     this.routerChange("back");
                 })
                 .catch((err) => {

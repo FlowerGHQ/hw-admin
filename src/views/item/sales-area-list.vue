@@ -31,7 +31,9 @@
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :loading="loading"
-                    :row-key="record => record.id" :pagination='false'>
+                    :row-key="record => record.id" 
+                    :pagination='false'
+                >
                     <template #bodyCell="{ column, text , record}">
                         <template v-if="column.dataIndex === 'name' && $auth('sales-area.detail')">
                             <a-tooltip placement="top" :title='text'>
@@ -39,7 +41,9 @@
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'country'">
-                            {{ text || '-' }}
+                            <a-tooltip placement="topLeft" :title='text'>
+                                <span class="hand">{{ text || '-' }}</span>
+                            </a-tooltip>
                         </template>
                         <template v-if="column.key === 'name_en'">
                             {{ text || '-' }}
@@ -102,13 +106,13 @@ export default {
             let columns = [
                 {title: this.$t('n.name'), dataIndex: 'name'},
                 {title: this.$t('n.name_en'), dataIndex: 'name_en',key: 'name_en'},
-                {title: this.$t('n.continent'), dataIndex: 'continent',key: ''},
+                // {title: this.$t('n.continent'), dataIndex: 'continent',key: ''}, // 大洲
                 {title: this.$t('n.country'),dataIndex: 'country',key: 'country'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             if (this.$i18n.locale === 'en' ) {
-                columns.splice(2, 1, {title: this.$t('n.continent'), dataIndex: 'continent_en', key: 'country'})
-                columns.splice(3, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
+                // columns.splice(2, 1, {title: this.$t('n.continent'), dataIndex: 'continent_en', key: 'country'})
+                columns.splice(2, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
             }
             return columns
         },
@@ -133,7 +137,7 @@ export default {
                         path: "/distributor/sales-area-edit",
                         query: {id: item.id}
                     })
-                    window.open(routeUrl.href, '_self')
+                    window.open(routeUrl.href, '_blank')
                     break;
             }
         },
@@ -200,4 +204,15 @@ export default {
 
 <style lang="less" scoped>
 // #SalesAreaList {}
+.hand {
+    cursor: pointer;
+    display: block;
+    width: 60em;
+    overflow: hidden;
+    /* 显示省略符号来代表被修剪的文本。 */
+    text-overflow: ellipsis;
+    /* 文本不换行 */
+    white-space: nowrap;
+    text-align: left;
+}
 </style>
