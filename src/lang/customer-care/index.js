@@ -57,7 +57,7 @@ export default {
         expenses :"费用",
         // 车辆分类
         vehicle_classification: "车辆分类",
-        
+        mark_resolved_tips: "已解决的问询单无法继续编辑或留言。确定该问询单的问题已经解决了吗？",
     },
     en: {
         inquiry_list: "Inquiry list",
@@ -116,5 +116,6 @@ export default {
         expenses :"Expenses",
         // 车辆分类
         vehicle_classification: "Vehicle Classification",
+        mark_resolved_tips: "The resolved inquiry form cannot be edited or left a message. Are you sure the issue with this inquiry has been resolved?",
     }
 }

@@ -103,7 +103,7 @@
                         <div class="col">
                             <div class="key m-r-16">车型</div>
                             <div class="value">
-                                {{ $i18n.locale === "en" ? customerCareDetail.category?.name_en || '-' : customerCareDetail.category?.name || '-' }}
+                                {{ $i18n.locale === "en" ? customerCareDetail.category?.name_en || "-" : customerCareDetail.category?.name || "-" }}
                             </div>
                         </div>
                     </div>
@@ -113,11 +113,7 @@
                         <div class="col">
                             <div class="key m-r-16 no-white-space m-r-8 m-t-8">车架号、公里数</div>
                             <div class="value d-f-a">
-                                <div 
-                                    v-for="(item, index) in customerCareDetail.vehicle_list" 
-                                    :key="index" 
-                                    class="vehicle-item m-r-8 m-t-8"
-                                >
+                                <div v-for="(item, index) in customerCareDetail.vehicle_list" :key="index" class="vehicle-item m-r-8 m-t-8">
                                     {{ item.vehicle_uid }}({{ item.mileage }})
                                 </div>
                             </div>
@@ -149,9 +145,18 @@
                                             @click="onViewImage(item)"
                                         />
                                     </template>
-                                    <template v-else-if="/video\/+/.test(item.type)"> 
-                                        <!-- {{ customerCareDetail.attachment_list }} -->
-                                        视频
+                                    <template v-else-if="/video\/+/.test(item.type)">
+                                        <!-- 视频 -->                                     
+                                        <img
+                                            :class="{ 'm-l-16': index > 0 }"
+                                            class="attachment-img"
+                                            src="@images/item/video_default.svg"
+                                            alt=""
+                                            @click="onViewImage({
+                                                type: 'video/*',
+                                                path: item.path,
+                                            })"
+                                        />
                                     </template>
                                 </template>
                             </div>
@@ -160,7 +165,10 @@
                 </div>
             </div>
             <!-- 按钮 -->
-            <div v-if="Number(customerCareDetail.status) !== Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED" class="detail-btn">
+            <div 
+                v-if="Number(customerCareDetail.status) !== Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED" 
+                class="detail-btn m-t-20"
+            >
                 <a-button @click="onBtn('msg-edit')">
                     {{ msgVisible ? "取消信息" : "编辑信息" }}
                 </a-button>
@@ -345,43 +353,130 @@
                 <div class="inquiry-classification-key">{{ $t("customer-care.communication_process") }}</div>
                 <div class="inquiry-classification-value">
                     <div class="communication-process p-10">
-                        <!-- 其他回复 -->
-                        <div class="communication-process-other-reply">
-                            <div class="other-reply-platform-top">
-                                <div class="other-reply-platform-avatar m-r-4"></div>
-                                <div class="other-reply-platform-name">
-                                    <div class="name">平台留言</div>
-                                    <div class="time">2024.02.12 13:45</div>
+                        <template v-for="(item, index) in comment_list" :key="index">
+                            <!-- 其他回复 -->
+
+                            <div
+                                v-if="
+                                    isDistributerAdmin
+                                        ? Number(item.org_type) === Core.Const.USER.TYPE.DISTRIBUTOR
+                                        : Number(item.org_type) === Core.Const.USER.TYPE.ADMIN
+                                "
+                                class="communication-process-other-reply m-t-30"
+                            >
+                                <div class="other-reply-platform-top">
+                                    <div class="other-reply-platform-avatar m-r-8">
+                                        <MySvgIcon icon-class="default-avater" />
+                                    </div>
+                                    <div class="other-reply-platform-name">
+                                        <div class="name">
+                                            {{ isDistributerAdmin ? "分销商留言" : "平台方留言" }}
+                                        </div>
+                                        <div class="time">
+                                            {{ $Util.timeFilter(item.create_time, 3) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="other-reply-platform-bottom">
+                                    <div class="speech-skill p-10 m-t-10">
+                                        <span>{{ item.content }}</span>
+                                    </div>
+                                    <div v-if="item.file.length > 0" class="reply-platform-attachment m-t-4 p-10">
+                                        <div class="reply-platform-attachment-title">{{ $t("customer-care.attachment") }}:</div>
+                                        <div class="reply-platform-attachment-img m-t">
+                                            <template v-for="(itemPath, index) in item.file" :key="index">
+                                                <template v-if="/(image\/|png|jpg|jpeg)/.test(itemPath.type)">
+                                                    <img
+                                                        :class="{ 'm-l-16': index > 0 }"
+                                                        class="attachment-img"
+                                                        :src="itemPath.path"
+                                                        alt=""
+                                                        @click="onViewImage({
+                                                            ...itemPath,
+                                                            file: item.file,
+                                                        })"
+                                                    />
+                                                </template>
+                                                <template v-else-if="/video\/+/.test(itemPath.type)">
+                                                    <!-- 视频 -->
+                                                    <img
+                                                        :class="{ 'm-l-16': index > 0 }"
+                                                        class="attachment-img"
+                                                        src="@images/item/video_default.svg"
+                                                        alt=""
+                                                        @click="onViewImage({
+                                                            type: 'video/*',
+                                                            path: itemPath.path,
+                                                        })"
+                                                    />
+                                                </template>
+                                            </template>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="other-reply-platform-bottom">
-                                <div class="speech-skill p-10 m-t-10">
-                                    <span>收到，正在核实，感谢您的耐心等待</span>
+                            <!-- 我的回复 -->
+                            <div
+                                v-if="
+                                    isDistributerAdmin
+                                        ? Number(item.org_type) === Core.Const.USER.TYPE.ADMIN
+                                        : Number(item.org_type) === Core.Const.USER.TYPE.DISTRIBUTOR
+                                "
+                                class="communication-process-my-reply m-t-30"
+                            >
+                                <div class="my-reply-platform-top">
+                                    <div class="my-reply-platform-name m-r-8">
+                                        <div class="name">我的回复</div>
+                                        <div class="time">{{ $Util.timeFilter(item.create_time, 3) }}</div>
+                                    </div>
+                                    <div class="my-reply-platform-avatar">
+                                        <MySvgIcon icon-class="my-avater" />
+                                    </div>
                                 </div>
-                                <div class="attachment"></div>
-                            </div>
-                        </div>
-                        <!-- 我的回复 -->
-                        <div class="communication-process-my-reply m-t-30">
-                            <div class="my-reply-platform-top">
-                                <div class="my-reply-platform-name m-r-4">
-                                    <div class="name">我的回复</div>
-                                    <div class="time">2024.02.12 13:45</div>
+                                <div class="my-reply-platform-bottom">
+                                    <div class="speech-skill p-10 m-t-10">
+                                        <span>{{ item.content }}</span>
+                                    </div>
+                                    <div v-if="item.file.length > 0" class="reply-platform-attachment m-t-4 p-10">
+                                        <div class="reply-platform-attachment-title">{{ $t("customer-care.attachment") }}:</div>
+                                        <div class="reply-platform-attachment-img m-t">
+                                            <template v-for="(itemPath, index) in item.file" :key="index">
+                                                <template v-if="/(image\/|png|jpg|jpeg)/.test(itemPath.type)">
+                                                    <img
+                                                        :class="{ 'm-l-16': index > 0 }"
+                                                        class="attachment-img"
+                                                        :src="itemPath.path"
+                                                        alt=""
+                                                        @click="onViewImage({
+                                                            ...itemPath,
+                                                            file: item.file,
+                                                        })"
+                                                    />
+                                                </template>
+                                                <template v-else-if="/video\/+/.test(itemPath.type)">
+                                                    <!-- 视频 -->
+                                                    <img
+                                                        :class="{ 'm-l-16': index > 0 }"
+                                                        class="attachment-img"
+                                                        src="@images/item/video_default.svg"
+                                                        alt=""
+                                                        @click="onViewImage({
+                                                            type: 'video/*',
+                                                            path: itemPath.path,
+                                                        })"
+                                                    />
+                                                </template>
+                                            </template>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="my-reply-platform-avatar"></div>
                             </div>
-                            <div class="my-reply-platform-bottom">
-                                <div class="speech-skill p-10 m-t-10">
-                                    <span>收到，正在核实，感谢您的耐心等待</span>
-                                </div>
-                                <div class="attachment"></div>
-                            </div>
-                        </div>
+                        </template>
 
                         <!-- 输入框 -->
                         <div class="m-t-20">
                             <a-textarea
-                                v-model:value="customerCareDetail.description"
+                                v-model:value="customerCareDetail.content"
                                 :placeholder="$t('common.please_enter') + $t('customer-care.leave_message')"
                                 allow-clear
                                 showCount
@@ -393,23 +488,56 @@
                         <!-- 添加附件 -->
                         <div class="add-attachment m-t-10">
                             <div class="add-attachment-title">{{ $t("customer-care.add_attachment") }}</div>
+                            <div class="add-attachment-upload m-t-4">
+                                <MyUploads
+                                    v-model:fileList="uploadOptions.fileData"
+                                    @change="handleDetailChange"
+                                    @preview="handlePreview"
+                                    @remove="handleRemove"
+                                >
+                                </MyUploads>
+
+                                <div class="add-attachment-tip m-l-10">
+                                    <div>{{ $t("customer-care.tip1") }}</div>
+                                    <div>{{ $t("customer-care.tip2") }}</div>
+                                    <div>{{ $t("customer-care.tip3") }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div v-if="!isDistributerAdmin" class="send-btn">
+                            <a-button @click="onBtn('sending')" type="primary">
+                                {{ $t("common.sending") /*发送*/ }}
+                            </a-button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="submit-btn">
+            <div v-if="isDistributerAdmin" class="submit-btn">
                 <div>
                     <a-button @click="onBtn('inquiry-classification-cancel')">取消</a-button>
                     <a-button @click="onBtn('inquiry-classification-sumbit')" type="primary">提交</a-button>
                 </div>
-                <div class="problem-tips">
-                    <span>问题已解决</span>
+                <div class="problem-tips" @click="onBtn('exclamation-point')">
+                    <a-tooltip placement="topRight">
+                        <template #title> 点击后，该问询单表示处理完成 </template>
+                        <div class="cursor">
+                            <span class="m-r-4">问题已解决</span>
+                            <MySvgIcon icon-class="exclamation-point" />
+                        </div>
+                    </a-tooltip>
                 </div>
             </div>
         </div>
 
-        <MyPreviewImageVideo v-model:isClose="isClose" :type="isVideoImage" :previewData="uploadOptions.previewImageVideo"> </MyPreviewImageVideo>
+        <!-- v-if="isClose" -->
+        <MyPreviewImageVideo
+            v-model:isClose="isClose" 
+            :type="uploadOptions.previewType" 
+            :previewData="uploadOptions.previewImageVideo"
+        >
+        </MyPreviewImageVideo>
 
         <!-- 编辑信息弹窗 -->
         <a-modal
@@ -443,6 +571,7 @@ import MyPreviewImageVideo from "./components/MyPreviewImageVideo.vue";
 import customerCareEdit from "./customer-care-edit.vue";
 import ItemSelect from "@/components/popup-btn/ItemSelect.vue";
 import { message } from "ant-design-vue";
+import MyUploads from "./components/MyUploads.vue";
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
@@ -492,14 +621,27 @@ const customerCareDetail = ref({
     delivery_time: undefined, // 发货日期
     order_sn: undefined, // 订单号
     fault_type: undefined, // 故障类型 1.失效，2.异响，3.划伤，4.燃烧，5.事故
+
+    // 评论提交的参数
+    content: "",
 });
+
+// 评论list的参数
+const comment_list = ref([
+    // {
+    //     org_type: 10, //类型：10：平台方；15：分销商
+    //     content: "11111", //内容
+    //     file: "", //附件
+    // }
+]);
 
 const isDistributerAdmin = ref(false); // 根据路由判断其是用在分销商(false) 还是平台方(true)
 const isClose = ref(false); // 预览组件
-const isVideoImage = ref("image"); // 预览组件
 
 // 上传预览和详情预览参数
 const uploadOptions = ref({
+    previewType: "image", // 上传的类型
+    fileData: [], // 提交的数据
     previewImageVideo: [], // 预览照片和预览视频
 });
 
@@ -538,7 +680,7 @@ const getDetailFetch = (params = {}) => {
             console.log("详情接口 success", res.detail);
             customerCareDetail.value = res.detail;
 
-            customerCareDetail.value.delivery_time = dayjs.unix(res.detail?.delivery_time); // 回显时间转换格式
+            customerCareDetail.value.delivery_time = customerCareDetail.value.delivery_time ? dayjs.unix(res.detail?.delivery_time) : undefined; // 回显时间转换格式
 
             customerCareDetail.value.attachment_list = res.detail.attachment_list.map((el) => {
                 return {
@@ -626,23 +768,114 @@ const getBindPartFetch = (params = {}) => {
             });
     });
 };
+// 问询单标记解决接口
+const markResolvedFetch = (params = {}) => {
+    const obj = {
+        id: route.query?.id,
+        ...params,
+    };
+    Core.Api.ItemCategory.markResolved(obj)
+        .then((res) => {
+            console.log("问询单标记解决接口 success", res.list);
+            message.success(proxy.$t("common.sucesss"));
+            getDetailFetch();
+        })
+        .catch((err) => {
+            console.log("问询单标记解决接口 err", err);
+        });
+};
+// 评论接口list
+const getCommentListFetch = (params = {}) => {
+    const obj = {
+        target_id: route.query?.id,
+        target_type: 1, // 问询单
+        ...params,
+    };
+    Core.Api.inquiry_sheet
+        .commentList(obj)
+        .then((res) => {
+            console.log("评论接口", res);
+            comment_list.value = res.list.map((el) => {
+                return {
+                    ...el,
+                    file: el.file
+                        ? JSON.parse(el.file).map((fileEl) => {
+                              return {
+                                  ...fileEl,
+                                  path: Core.Const.NET.FILE_URL_PREFIX + fileEl.path,
+                              };
+                          })
+                        : [],
+                };
+            });
+        })
+        .catch((err) => {
+            console.log("问询单标记解决接口 err", err);
+        });
+};
+// 新增评论接口
+const saveCommentFetch = (params = {}) => {
+    return new Promise((resolve, reject) => {
+        const obj = {
+            target_id: route.query?.id, //问询单id
+            target_type: 1, //类型：1.问询单
+            // content: "11111", //内容
+            // file: "", //附件
+            ...params,
+        };
+        Core.Api.inquiry_sheet
+            .saveComment(obj)
+            .then((res) => {
+                console.log("新增评论接口 success", res);
+                resolve(res);
+            })
+            .catch((err) => {
+                console.log("新增评论接口 err", err);
+                reject(err);
+            });
+    });
+};
 /* fetch end */
 
 /* methods start */
-// 查看视频
+// 查看视频(图片)
 const onViewImage = (item) => {
-    uploadOptions.value.previewImageVideo = []
-    customerCareDetail.value.attachment_list.forEach((el) => {
-        if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
-            if (Number(el.id) === Number(item.id)) {
-                // 让预览的那张图片在第一张
-                uploadOptions.value.previewImageVideo.unshift(el.path);
-            } else {
-                uploadOptions.value.previewImageVideo.push(el.path);
-            }
+    console.log("item", item);
+    uploadOptions.value.previewImageVideo = [];
+
+    if (/video\/+/.test(item.type)) {
+        // 视频都是单个的
+        uploadOptions.value.previewType = "video"
+        uploadOptions.value.previewImageVideo = [item.path]
+    } else {
+        uploadOptions.value.previewType = "image"
+        if (item.file?.length > 0) {
+            // 留言下的附件
+            item.file.forEach((el) => {
+                        if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
+                    if (el.name === item.name) {
+                        // 让预览的那张图片在第一张
+                        uploadOptions.value.previewImageVideo.unshift(el.path);
+                    } else {
+                        uploadOptions.value.previewImageVideo.push(el.path);
+                    }
+                }
+            });
         } else {
-        }
-    });
+            // 这个是详情信息的查看(照片需要判断其点击的哪个先展示哪个)[照片是多个的]
+            customerCareDetail.value.attachment_list.forEach((el) => {
+                        if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
+                    if (Number(el.id) === Number(item.id)) {
+                        // 让预览的那张图片在第一张
+                        uploadOptions.value.previewImageVideo.unshift(el.path);
+                    } else {
+                        uploadOptions.value.previewImageVideo.push(el.path);
+                    }
+                }
+            });
+        }        
+    }       
+    console.log("previewImageVideo", uploadOptions.value.previewImageVideo);
     isClose.value = true;
 };
 // 按钮事件
@@ -666,23 +899,80 @@ const onBtn = (type) => {
         case "inquiry-classification-cancel":
             if (!isDistributerAdmin.value) {
                 router.push({
-                    path: "/inquiry-management/list",                
+                    path: "/inquiry-management/list",
                 });
             } else {
                 // 平台方
                 router.push({
-                    path: "/inquiry-management/list",                
+                    path: "/inquiry-management/list",
                 });
             }
             break;
-        case "inquiry-classification-sumbit":          
-            Promise.all([getBindPartFetch(), getSortingTypeFetch()])
-                .then(res => {
-                    console.log(res)
-                    message.success(proxy.$t('common.sucesss'))
+        case "inquiry-classification-sumbit":
+            let saveCommentParams = {
+                file: JSON.stringify(
+                    uploadOptions.value.fileData.map((el) => {
+                        return {
+                            name: el.name, // 附件名称
+                            path: el.response?.data?.filename, // 附件url
+                            type: el.type, // 附件类型
+                        };
+                    })
+                ),
+                content: customerCareDetail.value.content,
+            };
+
+            // 提交事件
+            Promise.all([getBindPartFetch(), getSortingTypeFetch(), saveCommentFetch(saveCommentParams)])
+                .then((res) => {
+                    console.log(res);
+                    message.success(proxy.$t("common.sucesss"));
+                    getDetailFetch();
+                    getCommentListFetch();
+                    customerCareDetail.value.content = undefined;
+                    uploadOptions.value.fileData = [];
                 })
-                .catch(err => console.log(err));
-                getDetailFetch();
+                .catch((err) => {
+                    console.log(err);
+                    message.success(err.message || "common.fail");
+                });
+            break;
+        case "exclamation-point":
+            // 问题已解决按钮
+            proxy.$confirm({
+                title: proxy.$t("customer-care.mark_resolved_tips"),
+                okText: proxy.$t("common.sure"),
+                cancelText: proxy.$t("common.cancel"),
+                okType: "danger",
+                onOk() {
+                    markResolvedFetch();
+                },
+            });
+            break;
+        case "sending":
+            // 发送按钮(分销商才有)
+            let saveComment = {
+                file: JSON.stringify(
+                    uploadOptions.value.fileData.map((el) => {
+                        return {
+                            name: el.name, // 附件名称
+                            path: el.response?.data?.filename, // 附件url
+                            type: el.type, // 附件类型
+                        };
+                    })
+                ),
+                content: customerCareDetail.value.content,
+            };
+            saveCommentFetch(saveComment)
+                .then((res) => {
+                    message.success(proxy.$t("common.sucesss"));
+                    getCommentListFetch();
+                    customerCareDetail.value.content = undefined;
+                    uploadOptions.value.fileData = [];
+                })
+                .catch((err) => {
+                    console.log("saveCommentFetch_err", err);
+                });
             break;
     }
 };
@@ -709,6 +999,54 @@ const onHandlePartSelectItem = (ids, items) => {
         }
     });
 };
+
+// 上传组件事件
+const handleDetailChange = ({ file, fileList }) => {
+    console.log("输出文件", file, fileList);
+    if (file.status === "done") {
+        // 上传成功
+        if (file.response.code === 0) {
+            uploadOptions.value.fileData = fileList;
+        } else {
+            // 上传失败
+            message.error(file.response.msg);
+        }
+    } else if (file.status === "error") {
+        message.error(proxy.$t("common.upload_fail"));
+    }
+};
+const handlePreview = ({ file, fileList }) => {
+    console.log("预览", file, fileList);
+
+    if (/^video\/+/.test(file.type)) {
+        uploadOptions.value.previewImageVideo = [];
+        uploadOptions.value.previewType = "video";
+        uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(file.response?.data?.filename, 4));
+        isClose.value = true;
+        return;
+    }
+
+    uploadOptions.value.previewType = "image";
+    uploadOptions.value.previewImageVideo = [];
+    fileList.forEach((el) => {
+        // console.log("输出的东西", el.response);
+        if (el.response) {
+            if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
+                if (file.uid === el.uid) {
+                    // 让预览的哪张图片在第一张
+                    uploadOptions.value.previewImageVideo.unshift(Core.Util.imageFilter(file.response?.data?.filename, 1));
+                } else {
+                    uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(file.response?.data?.filename, 1));
+                }
+            }
+        }
+    });
+    console.log("结果", uploadOptions.value.previewImageVideo);
+    isClose.value = true;
+};
+const handleRemove = ({ file, fileList }) => {
+    console.log("删除", fileList);
+};
 /* methods end */
 
 watch(
@@ -731,6 +1069,7 @@ watch(
 
 onMounted(() => {
     getDetailFetch();
+    getCommentListFetch();
 });
 </script>
 
@@ -790,7 +1129,7 @@ onMounted(() => {
                                 width: 80px;
                                 height: 80px;
                                 border-radius: 4px;
-                                border: 1px solid black;
+                                border: 1px solid rgba(0, 0, 0, 0.5);
                                 object-fit: cover;
                             }
                         }
@@ -886,19 +1225,33 @@ onMounted(() => {
 
             .communication-process-other-reply,
             .communication-process-my-reply {
+                .reply-platform-attachment {
+                    background-color: #fff;
+                    .reply-platform-attachment-title {
+                        color: #1d2129;
+                        font-size: 14px;
+                        font-weight: 400;
+                    }
+                    .reply-platform-attachment-img {
+                        .attachment-img {
+                            width: 80px;
+                            height: 80px;
+                            border-radius: 4px;
+                            border: 1px solid rgba(0, 0, 0, 0.5);                            
+                            object-fit: cover;
+                        }
+                    }
+                }
             }
 
             .communication-process-other-reply {
                 .other-reply-platform-top {
                     display: flex;
                     .other-reply-platform-avatar {
-                        width: 36px;
-                        height: 36px;
-                        background-color: #86909c;
-                        border-radius: 50%;
                         display: flex;
                         align-items: center;
                         justify-content: center;
+                        font-size: 36px;
                     }
                     .other-reply-platform-name {
                         .name {
@@ -923,8 +1276,6 @@ onMounted(() => {
                         font-size: 14px;
                         font-weight: 400;
                     }
-                    .attachment {
-                    }
                 }
             }
             .communication-process-my-reply {
@@ -934,13 +1285,10 @@ onMounted(() => {
                 .my-reply-platform-top {
                     display: flex;
                     .my-reply-platform-avatar {
-                        width: 36px;
-                        height: 36px;
-                        background-color: #86909c;
-                        border-radius: 50%;
                         display: flex;
                         align-items: center;
                         justify-content: center;
+                        font-size: 36px;
                     }
                     .my-reply-platform-name {
                         text-align: right;
@@ -966,8 +1314,6 @@ onMounted(() => {
                         font-size: 14px;
                         font-weight: 400;
                     }
-                    .attachment {
-                    }
                 }
             }
 
@@ -977,6 +1323,23 @@ onMounted(() => {
                     font-size: 14px;
                     font-weight: 400;
                 }
+
+                .add-attachment-upload {
+                    display: flex;
+                    align-items: center;
+                }
+
+                .add-attachment-tip {
+                    color: #666;
+                    font-size: 14px;
+                    font-weight: 400;
+                }
+            }
+
+            .send-btn {
+                width: 100%;
+                display: flex;
+                justify-content: flex-end;
             }
         }
 

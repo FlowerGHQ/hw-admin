@@ -149,15 +149,13 @@
                 >
                     <div class="key t-r">{{ $t("customer-care.add_attachment") }}:</div>
                     <div class="value d-f">
-                        <MyUpload                           
-                            v-model:fileList = uploadOptions.fileData
-                            :videoLimit="uploadOptions.videoLimit"
-                            :imageLimit="uploadOptions.imageLimit"
+                        <MyUploads                            
+                            v-model:fileList = uploadOptions.fileData                           
                             @change="handleDetailChange"
                             @preview="handlePreview"
                             @remove="handleRemove"
                         >
-                        </MyUpload>
+                        </MyUploads>
 
                         <div class="add-attachment-tip m-l-10">
                             <div>{{ $t("customer-care.tip1") }}</div>
@@ -176,8 +174,8 @@
         <!-- 自定义图片预览 -->
         <MyPreviewImageVideo 
             v-model:isClose="isClose" 
-            :type="previewType" 
-            :previewData="uploadOptions.previewImage"> 
+            :type="uploadOptions.previewType"
+            :previewData="uploadOptions.previewImageVideo"> 
         </MyPreviewImageVideo>
     </div>
 </template>
@@ -188,7 +186,7 @@ import Core from "@/core";
 import { useRouter, useRoute } from "vue-router";
 import { Upload, message } from "ant-design-vue";
 import MyPreviewImageVideo from "./components/MyPreviewImageVideo.vue";
-import MyUpload from "./components/MyUpload.vue";
+import MyUploads from "./components/MyUploads.vue";
 import dayjs from 'dayjs'
 
 const { proxy } = getCurrentInstance();
@@ -198,10 +196,11 @@ const route = useRoute();
 const isDistributerAdmin = ref(false); // 根据路由判断其是用在分销商(false) 还是平台方(true)
 
 const uploadOptions = ref({
+    previewType: "image",
     fileData: [], // 提交的数据    
-    // previewImage
+    // previewImageVideo
     // "https://horwin.oss-cn-hangzhou.aliyuncs.com//img/ba37a2f6f160d68d31f1a96b4a17f2b068b6cee17e6c7b96db51ba5016ef1df0.png", "https://horwin.oss-cn-hangzhou.aliyuncs.com//img/ba37a2f6f160d68d31f1a96b4a17f2b068b6cee17e6c7b96db51ba5016ef1df0.png"
-    previewImage: [],
+    previewImageVideo: [],
 });
 
 const props = defineProps({
@@ -212,7 +211,6 @@ const props = defineProps({
 }) 
 
 // 判断是照片还是视频查看
-const previewType = ref("image");
 const isClose = ref(false);
 const treeData = ref([
     {
@@ -436,7 +434,7 @@ const handleSubmit = () => {
     })
     console.log('submitForm', submitForm);
 
-    if (route.query.id) {
+    if (route.query?.id) {
         // 修改
         return modifyFetch(Core.Util.searchFilter(submitForm))
     } else {
@@ -571,30 +569,29 @@ const handlePreview = ({ file, fileList }) => {
     console.log("预览", file, fileList);
 
     if (/^video\/+/.test(file.type)) {
-        uploadOptions.value.previewImage = []
-        previewType.value = 'video';
-        uploadOptions.value.previewImage.push(Core.Util.imageFilter(file.response?.data?.filename, 4))
+        uploadOptions.value.previewImageVideo = []
+        uploadOptions.value.previewType = 'video';
+        uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(file.response?.data?.filename, 4))
         isClose.value = true;
         return;
-    } else {
-        previewType.value = 'image';
     }
-
-    uploadOptions.value.previewImage = [];
+    
+    uploadOptions.value.previewType = 'image';
+    uploadOptions.value.previewImageVideo = [];
     fileList.forEach((el) => {
         // console.log("输出的东西", el.response);
         if (el.response) {
             if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
                 if (file.uid === el.uid) {
                     // 让预览的哪张图片在第一张
-                    uploadOptions.value.previewImage.unshift(Core.Const.NET.FILE_URL_PREFIX + el.response?.data?.filename);
+                    uploadOptions.value.previewImageVideo.unshift(Core.Util.imageFilter(file.response?.data?.filename, 1));
                 } else {
-                    uploadOptions.value.previewImage.push(Core.Const.NET.FILE_URL_PREFIX + el.response?.data?.filename);
+                    uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(file.response?.data?.filename, 1));
                 }
             }
         }
     });
-    console.log("结果", uploadOptions.value.previewImage);
+    console.log("结果", uploadOptions.value.previewImageVideo);
     isClose.value = true;
 }
 const handleRemove = ({ file, fileList }) => {
@@ -660,6 +657,7 @@ onMounted(() => {
         color: #666;
         font-size: 14px;
         font-weight: 400;
+        white-space: nowrap;
     }
 
     .footer-btn {

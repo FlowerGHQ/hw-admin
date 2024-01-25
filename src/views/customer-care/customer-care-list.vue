@@ -59,12 +59,24 @@
                         </template>
                         <!-- 订单-状态 -->
                         <template v-if="column.key === 'status'">
-                            <div                                 
-                                :class="{
-                                    'color-FF7D00': $Util.Common.returnTypeBool(text, [Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.EQUALTREATMENT]),
-                                    'color-0061FF': $Util.Common.returnTypeBool(text, [Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.INPROCESS]),
-                                    'color-00B42A': $Util.Common.returnTypeBool(text, [Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED]),
-                                }"
+                            <div
+                                class="status-style"
+                                :class="[
+                                    $Util.Common.returnClassName(text, [
+                                        {
+                                            status: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.INPROCESS,
+                                            className: 'color-0061FF',
+                                        },
+                                        {
+                                            status: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.EQUALTREATMENT,
+                                            className: 'color-FF7D00',
+                                        },
+                                        {
+                                            status: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED,
+                                            className: 'color-00B42A',
+                                        },
+                                    ]),
+                                ]"
                             >
                                 {{ Core.Const.CUSTOMER_CARE.ORDER_STATUS[text] ? $t(Core.Const.CUSTOMER_CARE.ORDER_STATUS[text].t) : '-' }}
                             </div>
@@ -115,8 +127,8 @@
                                 </template>
                                 {{ 
                                     record.vehicle_list.length > 1 ? 
-                                    record.vehicle_list[0].vehicle_uid + '(' +record.vehicle_list[0].mileage + ')' + '等' 
-                                    : record.vehicle_list[0].vehicle_uid 
+                                    record.vehicle_list[0]?.vehicle_uid + '(' +record.vehicle_list[0].mileage + ')' + '等' 
+                                    : record.vehicle_list[0]?.vehicle_uid 
                                 }}
                             </a-tooltip>
                         </template>
@@ -132,13 +144,13 @@
                                     </span>
                                 </template>
                                 {{ 
-                                    record.vehicle_list.length > 1 ? record.vehicle_list[0].vehicle_uid + '等' : record.vehicle_list[0].vehicle_uid
+                                    record.vehicle_list.length > 1 ? record.vehicle_list[0]?.vehicle_uid + '等' : record.vehicle_list[0]?.vehicle_uid
                                 }}
                             </a-tooltip>
                         </template>
                         <!-- 车型 -->
                         <template v-if="column.key === 'category'">
-                            {{ $i18n.locale === 'en'? record.category.name_en : record.category.name }}
+                            {{ $i18n.locale === 'en'? record.category?.name_en : record.category?.name }}
                         </template>
                         <!-- 反馈类型 -->
                         <template v-if="column.key === 'type'">
@@ -602,37 +614,27 @@ onMounted(() => {
     }
 
 
-    .new {
-
-    }
+    .new {}
 }
 
-.color-FF7D00 {
+.status-style {
     border-radius: 4px;
-    background: rgba(255, 125, 0, 0.10);
-    color: #FF7D00;
     font-size: 14px;
     font-weight: 400;
+    padding: 4px 0px;
+    box-sizing: border-box;
     .flex();
-    padding: 4px 14px;
-    box-sizing: border-box;
-}
-.color-0061FF {
-    border-radius: 4px;
-    background: rgba(0, 97, 255, 0.10);
-    color: #0061FF;
-    font-size: 14px;
-    font-weight: 400;
-    padding: 4px 14px;
-    box-sizing: border-box;
-}
-.color-00B42A {
-    border-radius: 4px;
-    background: rgba(38, 171, 84, 0.10);
-    color: #00B42A;
-    font-size: 14px;
-    font-weight: 400;
-    padding: 4px 14px;
-    box-sizing: border-box;
+    &.color-FF7D00 {
+        background: rgba(255, 125, 0, 0.1);
+        color: #ff7d00 !important;
+    }
+    &.color-0061FF {
+        background: rgba(0, 97, 255, 0.1);
+        color: #0061ff !important;
+    }
+    &.color-00B42A {
+        background: rgba(38, 171, 84, 0.1);
+        color: #00b42a !important;
+    }
 }
 </style>

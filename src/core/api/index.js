@@ -982,6 +982,9 @@ const apiList = {
         statusList: ['PostJson','enquiry-ticket/status-list'], // 状态数据
         sortingType: ['PostJson','enquiry-ticket/sorting-type'], // 归类
         bindPart: ['PostJson','enquiry-ticket/bind-part'], // 零件
+        markResolved: ['PostJson','enquiry-ticket/mark-resolved'], // 问题解决接口
+        commentList: ['PostJson','comment/list'], // 评论
+        saveComment: ['PostJson','comment/save'], // 新增评论
     }
 }; 
 
