@@ -2,6 +2,11 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import viteCompression from "vite-plugin-compression";
+import Components from 'unplugin-vue-components/vite'
+import { terser } from 'rollup-plugin-terser';
+import {
+  AntDesignVueResolver,
+} from 'unplugin-vue-components/resolvers'
 import * as path from "path";
 // 正式环境清除console
 // https://vitejs.dev/config/
@@ -13,7 +18,7 @@ export default defineConfig(({ mode }) => {
             port: 8088,
         },
         build: {
-            minify: "terser", // 混淆器，terser构建后文件体积更小
+            minify: "terser", // 混淆器，terser构建后文件体积更小 // esbuild
             terserOptions: {
                 compress: {
                     drop_console: true,
@@ -34,6 +39,9 @@ export default defineConfig(({ mode }) => {
                     entryFileNames: "js/[name]-[hash].js", // 包的入口文件名称
                     assetFileNames: "[ext]/[name]-[hash].[ext]", // 资源文件像 字体，图片等
                 },
+                plugins: [
+                  terser() // 压缩代码
+                ]
             },
             //   关闭文件计算
             reportCompressedSize: false,
@@ -55,6 +63,11 @@ export default defineConfig(({ mode }) => {
                 algorithm: "gzip",
                 ext: ".gz",
             }),
+            Components({
+              resolvers: [
+                AntDesignVueResolver(),
+              ],
+            })
         ],
         resolve: {
             alias: {
