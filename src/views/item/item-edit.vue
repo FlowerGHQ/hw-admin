@@ -449,7 +449,7 @@
                     </div>
                     <!-- 选择分类 -->
                     <div class="form-item specific-category-select required" v-if="form.type === itemTypeMap['1']?.key">
-                        <div class="key" :class="(category_index || !isDesEmpty) && isValidate ? 'error' : ''">
+                        <div class="key" :class=" isDesEmpty && isValidate ? 'error' : ''">
                             {{ $t("item-edit.spec_category_select") }}
                         </div>
                         <div class="value">
@@ -496,8 +496,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-item specific-items">
-                        <div class="key" :class="!validateConfigFlag && isValidate ? 'error' : ''">
+                    <div class="form-item specific-items required">
+                        <div class="key " :class="!validateConfigFlag && isValidate ? 'error' : ''">
                             {{ $t("i.specs") }}
                         </div>
                         <div class="value table-container no-mg">
@@ -1314,7 +1314,7 @@ export default {
             console.log(this.categoryMessage,'1111---------------------------')
             for (let i = 0; i < this.categoryMessage.length; i++) {
                 const item = this.categoryMessage[i];
-                if (item.desc === "" || item.desc_en === "") {
+                if (item.desc === "" || item.desc_en === "" || item.desc === "<p><br></p>" || item.desc_en === "<p><br></p>") {
                     flag = true;
                     break;
                 }
@@ -1724,11 +1724,12 @@ export default {
             let form = Core.Util.deepCopy(this.form);
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
-            if(!type){
+            let categoryMessage = Core.Util.deepCopy(this.categoryMessage);
+            if(type !== 'draft'){
                 // 校验检查
                 this.isValidate = true;
                 if (
-                    typeof this.checkFormInput(form, specData, attrDef) ===
+                    typeof this.checkFormInput(form, specData, attrDef,categoryMessage) ===
                     "function" 
                 ) {
                     console.log("checkFormInput err");
@@ -1848,13 +1849,12 @@ export default {
         },
         // 保存时检查表单输入
         checkFormInput(form, specData, attrDef, categoryMessage) {
-
             // 如果是整车并且是多规格校验分类
             if (form.type === this.itemTypeMap['1']?.key && this.specific.mode === 2) {
                 // 查看
                 if (categoryMessage && categoryMessage.length > 0) {
                     for (let i = 0; i < categoryMessage.length; i++) {
-                        if(categoryMessage[i].desc === '' || categoryMessage[i].desc_en === ''){
+                        if(categoryMessage[i].desc === '' || categoryMessage[i].desc_en === '' || categoryMessage[i].desc === '<p><br></p>' || categoryMessage[i].desc_en === '<p><br></p>'){
                             return this.$message.warning(
                                 `${this.$t("item-edit.please_complete")}(${this.$t("item-edit.category_description")})`
                             );
@@ -1906,9 +1906,18 @@ export default {
             ) {
                 return this.$message.warning(`${this.$t("def.enter")}(${this.$t("n.detail_pic")})`);
             }
-            // 如果为整车
-            if (this.specific.mode === 1 || this.indep_flag) {
+            // 如果为单规格不为整车 或者 从详情跳转过来的
+            if ((this.specific.mode === 1 || this.indep_flag)&& form.type !== this.itemTypeMap['1']?.key ) {
                 // 单规格
+                if (!form.fob_eur) {
+                    return this.$message.warning(`${this.$t("def.enter")}(FOB(EUR))`);
+                }
+                if (!form.fob_usd) {
+                    return this.$message.warning(`${this.$t("def.enter")}(FOB(USD))`);
+                }
+            } 
+            //单规格并且为整车
+            else if((this.specific.mode === 1 && form.type === this.itemTypeMap['1']?.key)){
                 if (!form.fob_eur) {
                     return this.$message.warning(`${this.$t("def.enter")}(FOB(EUR))`);
                 }
@@ -1927,9 +1936,8 @@ export default {
                 if(!form.fob_40qh_usd){
                     return this.$message.warning(`${this.$t("def.enter")}(FOB(40QH))`);
                 }
-
-            } else {
-
+            }
+            else {
                 // 多规格
                 // 规格定义 检查
                 for (let i = 0; i < attrDef.length; i++) {
@@ -1963,23 +1971,33 @@ export default {
                     if (!item.name_en) {
                         return this.$message.warning(`${this.$t("def.enter")}(${this.$t("n.name_en")})`);
                     }
-                    if (!item.fob_eur) {
-                        return this.$message.warning(`${this.$t("def.enter")}(FOB(EUR))`);
-                    }
-                    if(!item.fob_20gp_eur){
-                        return this.$message.warning(`${this.$t("def.enter")}(FOB(20GP))`);
-                    }
-                    if(!item.fob_40qh_eur){
-                        return this.$message.warning(`${this.$t("def.enter")}(FOB(40QH))`);
-                    }
-                    if (!item.fob_usd) {
-                        return this.$message.warning(`${this.$t("def.enter")}(FOB(USD))`);
-                    }
-                    if(!item.fob_20gp_usd){
-                        return this.$message.warning(`${this.$t("def.enter")}(FOB(20GP))`);
-                    }
-                    if(!item.fob_40qh_usd){
-                        return this.$message.warning(`${this.$t("def.enter")}(FOB(40QH))`);
+                    // 如果为整车
+                    if(form.type === this.itemTypeMap['1']?.key){
+                        if (!item.fob_eur) {
+                            return this.$message.warning(`${this.$t("def.enter")}(FOB(EUR))`);
+                        }
+                        if(!item.fob_20gp_eur){
+                            return this.$message.warning(`${this.$t("def.enter")}(FOB(20GP))`);
+                        }
+                        if(!item.fob_40qh_eur){
+                            return this.$message.warning(`${this.$t("def.enter")}(FOB(40QH))`);
+                        }
+                        if (!item.fob_usd) {
+                            return this.$message.warning(`${this.$t("def.enter")}(FOB(USD))`);
+                        }
+                        if(!item.fob_20gp_usd){
+                            return this.$message.warning(`${this.$t("def.enter")}(FOB(20GP))`);
+                        }
+                        if(!item.fob_40qh_usd){
+                            return this.$message.warning(`${this.$t("def.enter")}(FOB(40QH))`);
+                        }
+                    }else{
+                        if (!item.fob_eur) {
+                            return this.$message.warning(`${this.$t("def.enter")}(FOB(EUR))`);
+                        }
+                        if (!item.fob_usd) {
+                            return this.$message.warning(`${this.$t("def.enter")}(FOB(USD))`);
+                        }
                     }
                     let str = "";
                     for (let j = 0; j < this.specific.list.length; j++) {
@@ -2480,23 +2498,52 @@ export default {
                 if (!item.name_en) {
                     return (this.validateConfigFlag = false);
                 }
-                if (!item.fob_eur) {
-                    return (this.validateConfigFlag = false);
+                // if (!item.fob_eur) {
+                //     return (this.validateConfigFlag = false);
+                // }
+                // if(!item.fob_20gp_eur){
+                //     return (this.validateConfigFlag = false);
+                // }
+                // if(!item.fob_40qh_eur){
+                //     return (this.validateConfigFlag = false);
+                // }
+                // if (!item.fob_usd) {
+                //     return (this.validateConfigFlag = false);
+                // }
+                // if(!item.fob_20gp_usd){
+                //     return (this.validateConfigFlag = false);
+                // }
+                // if(!item.fob_40qh_usd){
+                //     return (this.validateConfigFlag = false);
+                // }
+                //如果是整车并且为多规格
+                if(this.form.type === this.itemTypeMap['1']?.key && this.specific.mode === 2){
+                    if (!item.fob_eur) {
+                        return (this.validateConfigFlag = false);
+                    }
+                    if(!item.fob_20gp_eur){
+                        return (this.validateConfigFlag = false);
+                    }
+                    if(!item.fob_40qh_eur){
+                        return (this.validateConfigFlag = false);
+                    }
+                    if (!item.fob_usd) {
+                        return (this.validateConfigFlag = false);
+                    }
+                    if(!item.fob_20gp_usd){
+                        return (this.validateConfigFlag = false);
+                    }
+                    if(!item.fob_40qh_usd){
+                        return (this.validateConfigFlag = false);
+                    }
                 }
-                if(!item.fob_20gp_eur){
-                    return (this.validateConfigFlag = false);
-                }
-                if(!item.fob_40qh_eur){
-                    return (this.validateConfigFlag = false);
-                }
-                if (!item.fob_usd) {
-                    return (this.validateConfigFlag = false);
-                }
-                if(!item.fob_20gp_usd){
-                    return (this.validateConfigFlag = false);
-                }
-                if(!item.fob_40qh_usd){
-                    return (this.validateConfigFlag = false);
+                else{
+                    if (!item.fob_eur) {
+                        return (this.validateConfigFlag = false);
+                    }
+                    if (!item.fob_usd) {
+                        return (this.validateConfigFlag = false);
+                    }
                 }
                 let str = "";
                 for (let j = 0; j < this.specific.list.length; j++) {
