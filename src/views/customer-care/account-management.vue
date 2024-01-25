@@ -60,7 +60,10 @@
                     </a-select>
                 </a-form-item>
                 <a-form-item :label="t('customer-care.distribution_country')" name="country">
-                    <CountryCascaderTabMore v-model:value="formState.country" :def-area="defArea" :code-list="codeList" />
+                    <CountryCascaderTabMore 
+                        v-model:value="formState.country" 
+                        :reviewData="formState.area"
+                    />
                 </a-form-item>
             </a-form>
         </a-modal>
@@ -75,11 +78,13 @@ import { useTable } from "@/hooks/useTable";
 import { useI18n } from "vue-i18n";
 import SearchAll from "@/components/horwin/based-on-ant/SearchAll.vue";
 import { PlusOutlined } from "@ant-design/icons-vue";
-import CountryCascaderTabMore from "@/components/common/CountryCascaderTabMore.vue";
-// import CountryCascaderTabMore from "./components/CountryCascaderTabMore.vue";
-import { Modal , Message} from 'ant-design-vue';
+// import CountryCascaderTabMore from "@/components/common/CountryCascaderTabMore.vue";
+import CountryCascaderTabMore from "./components/CountryCascaderTabMore.vue";
+import { Modal , message} from 'ant-design-vue';
+import axios from "axios";
+import _ from "lodash";
 const $confirm = Modal.confirm;
-const $message = Message;
+const $message = message;
 const request = Core.Api.inquiry_sheet.cusomerList;
 const { t } = useI18n();
 
@@ -92,6 +97,35 @@ const { loading, tableData, search, refreshTable, onPageChange, searchParam } = 
         return_type: 1,
     },
 });
+const countryOptions = ref([]);
+// 给大洲的所有子元素添加父级code,并且添加一个全选
+const addParentCode = (arr, parentCode,parentName) => {
+    arr.forEach((item) => {
+        item.parentCode = parentCode;
+        item.parentName = parentName;
+        item.label = item.name;
+        item.value = item.name;
+        if (item.children && item.children.length) {
+            addParentCode(item.children, item.code,item.name);
+        }
+    });
+    let country = []
+    arr.forEach((item) => {
+        if(item.children && item.children.length){
+            country = country.concat(item.children)
+        }
+    });
+    return country;
+};
+const getCountryOptions = () => {
+    axios.get("/ext/continent-country.json").then((response) => {
+        console.log(response.data);
+        countryOptions.value = addParentCode(response.data,'','');
+        console.log(countryOptions.value);
+    });
+};
+// 只传递国家名字
+
 
 // 搜索配置
 const searchList = ref([
@@ -152,12 +186,10 @@ const editVisibilty = ref(false);
 const formState = ref({
     username: null,
     country: [],
+    area: [],
     org_id: 1,
     org_type: 10,
 });
-// const areaList = ref([]);
-const defArea = ref([]);
-const codeList = ref([]);
 const allAccount = ref([]);
 
 const formRef = ref(null);
@@ -187,6 +219,7 @@ const rules = ref({
                 } 
                 return Promise.resolve();
             },
+            trigger: ["blur", "change"],
         },
     ],
 });
@@ -211,13 +244,27 @@ const handleEdit = (type,record) => {
             activeRecord.value = {};
             break;
         case "edit":
+            console.log("编辑",record);
             modalTitle.value = t("customer-care.modify_distribution");
             openType.value = "edit";
             activeRecord.value = record;
             formState.value.username = record.username;
-            formState.value.area = record.area;
+            // 处理国家的回显
+            let reviewData = record?.area?.split(",") || [];
+            let target = [];
+            reviewData.forEach((item) => {
+                countryOptions.value.forEach((item2) => {
+                    if (item === item2.name) {
+                        target.push([
+                            item2.parentName,
+                            item2.name,
+                        ]);
+                    }
+                });
+            });
+            formState.value.country = target;
             formState.value.id = record.id;
-            defArea.value = record.area.split(",");
+            console.log(formState.value);
             break;
         default:
             break;
@@ -253,7 +300,12 @@ const getCustomerServiceAccount = () => {
 const handleSubmit = () => {
     console.log("提交",formState);
     formRef.value.validate().then((res) => {
-        formState.value.country = formState.value.country?.map((item) => item.name)?.join(",") || "";
+        let arr = []
+        let country = _.cloneDeep(formState.value.country);
+        country.forEach((item) => {
+                arr.push(item[1]);
+        });
+        formState.value.country = arr.join(",");
         Core.Api.inquiry_sheet.addCustomer(formState.value).then((res) => {
             editVisibilty.value = false;
             $message.success(t("customer-care.successfully_add"));
@@ -268,12 +320,15 @@ const handleCancel = () => {
     formState.value = {
         username: null,
         area: [],
+        country: [],
         org_id: 1,
         org_type: 10,
     };
-    defArea.value = [];
 };
-// getSalesAreaDetail
+
+onMounted(() => {
+    getCountryOptions();
+});
 </script>
 
 <style lang="less" scoped>
