@@ -86,6 +86,8 @@ const getData = () => {
     getCarList()
 }
 const handleScroll = () => {
+    // 因为存在子组件路由所以判断只在父路由时执行
+    if (route.path !== '/mall/vehicle-list') return;
     const footerHeight = document.querySelector('#mall-footer').clientHeight
     const html = document.documentElement
     Core.Util.handleScrollFn(html, getCarList, pagination, spinning.value, footerHeight)
