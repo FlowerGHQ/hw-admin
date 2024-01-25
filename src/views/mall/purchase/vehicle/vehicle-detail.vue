@@ -65,7 +65,7 @@
                                         </template>
                                     </div>
                                     <div class="count-edit">
-                                        <a-input-number v-model:value="editCount" :min="1" :precision="0" />
+                                        <a-input-number v-model:value="editCount" :min="1" :max="99999" :precision="0" />
                                     </div>
                                 </div>
                                 <my-button type="primary" padding="22px 32px" font="16px"
@@ -85,16 +85,19 @@
                     </div>
                     <div class="tab-body">
                         <template v-if="tabIndex === 0">
-                            <img class="img" :src="$Util.imageFilter(vehicle_mes.imgs, 2)" alt="" v-if="vehicle_mes.imgs">
+                            <template v-if="detailImageList.length > 0">
+                                <img class="img-detail" :src="$Util.imageFilter(item, 2)" alt=""
+                                    v-for="item in detailImageList">
+                            </template>
                             <a-empty :description="null" v-else />
                         </template>
                     </div>
                 </div>
                 <!-- 相同系列产品 -->
-                <div class="same-series" v-if="vehicle_mes.set_id" :key="lang">
+                <div class="same-series" v-if="sameSeriesList.length > 0" :key="lang">
                     <div class="title">{{ $t('purchase.same_series_of_products') }}</div>
                     <div class="same-series-list">
-                        <div class="same-series-item" v-for="item in itemList.slice(0, 4)" :key="item.id"
+                        <div class="same-series-item" v-for="item in sameSeriesList" :key="item.id"
                             @click="routerChange('/mall/vehicle-list/detail', { id: item.id })">
                             <VehicleCard :record="item" />
                         </div>
@@ -137,6 +140,7 @@ const tabList = ref([{
 const swiperList = ref([])
 const specList = ref([])
 const itemList = ref([])
+const sameSeriesList = ref([])
 const editCount = ref(1)
 const itemDetailFetch = Core.Api.Item.detail
 const listBySetFetch = Core.Api.AttrDef.listBySet
@@ -156,6 +160,9 @@ const stepPrice = computed(() => {
 })
 const price = computed(() => {
     return proxy.$Util.countFilter(vehicle_mes[proxy.$Util.Number.getPriceIndex()])
+})
+const detailImageList = computed(() => {
+    return vehicle_mes?.imgs ? vehicle_mes?.imgs.split(',') : [];
 })
 /* computed end */
 
@@ -177,6 +184,7 @@ onMounted(() => {
 // 获取数据
 const getData = () => {
     getItemDetail()
+    getSameSeriesList()
 }
 // 选择系列
 const selectSeries = (i) => {
@@ -193,12 +201,13 @@ const changeTab = (i) => {
     tabIndex.value = i
 }
 // 获取展示图列表
-const getSwiperList = (list) => {
+const getSwiperList = (list = []) => {
     swiperList.value = list.map(item => {
         return {
             path: item.imgs
         }
     })
+    swiperList.value.unshift({ path: vehicle_mes.logo })// 第一张为封面图
     // 刚进页面初始化 第一张 swiper 商品图
     swiperRef.value.selectSwiper(swiperList.value[0], 0);
 }
@@ -251,7 +260,7 @@ const getItemDetail = () => {
         if (detail.set_id) {
             getListBySet();
         } else {
-            getSwiperList([{ imgs: detail.logo }])
+            getSwiperList()
         }
     }).finally(() => {
         spinning.value = false
@@ -287,6 +296,19 @@ const getCarList = (q) => {
     itemListFetch({ ...params }).then(res => {
         itemList.value = res?.list
         getSwiperList(itemList.value)
+    })
+}
+// 获取同系列整车
+const getSameSeriesList = () => {
+    const params = {
+        "type": 1, //1.整车；2.零部件/物料；3.周边；4.广宣品
+        "page": 1,
+        "page_size": 5,// 取5个
+    }
+    itemListFetch({ ...params }).then(res => {
+        sameSeriesList.value = res?.list
+        sameSeriesList.value = sameSeriesList.value.filter(item => item.id !== Number(vehicle_id))
+        sameSeriesList.value = sameSeriesList.value.slice(0, 4)
     })
 }
 // 添加收藏
@@ -650,8 +672,12 @@ const getShopCartList = () => {
             .tab-body {
                 margin-top: 40px;
 
-                .img {
+                .img-detail {
                     width: 100%;
+
+                    &:nth-child(n + 2) {
+                        margin-top: 16px;
+                    }
                 }
             }
         }

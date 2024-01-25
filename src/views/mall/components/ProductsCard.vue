@@ -41,7 +41,7 @@
                 <template v-if="showOperation">
                     <div class="add">
                         <span class="count-edit">
-                            <a-input-number v-model:value="editCount" :min="1" :precision="0" autofocus />
+                            <a-input-number v-model:value="editCount" :min="1" :max="99999" :precision="0" autofocus />
                         </span>
                         <span class="car" @click="addCar(record)">
                             <svg-icon icon-class="car-icon" class-name="car-icon" />
