@@ -458,15 +458,18 @@
                     <div class="form-item specific-category" v-if="form.type === itemTypeMap['1']?.key">
                         <div class="key">
                             {{ $t("item-edit.spec_category") }}
+                            <a-tooltip :title="$t('item-edit.spec_category_tips')">
+                                <i class="icon i_hint" style="font-size: 12px"></i>
+                            </a-tooltip>
                         </div>
                         <div class="value">
-                            <a-switch v-model:checked="openCategory" />
-                            <span :class="openCategory ? 'open' : 'close'">{{ openCategory ? "开启" : "关闭" }}</span>
+                            <a-switch v-model:checked="openCategory" disabled/>
+                            <span :class="openCategory ? 'open' : 'close'" >{{ openCategory ? "开启" : "关闭" }}</span>
                         </div>
                     </div>
                     <!-- 选择分类 -->
                     <div class="form-item specific-category-select required" v-if="form.type === itemTypeMap['1']?.key">
-                        <div class="key" :class="(category_index || !isDesEmpty) && isValidate ? 'error' : ''">
+                        <div class="key" :class=" isDesEmpty && isValidate ? 'error' : ''">
                             {{ $t("item-edit.spec_category_select") }}
                         </div>
                         <div class="value">
@@ -479,7 +482,7 @@
                                     @change="handleCategory">
                                     <a-select-option
                                         v-for="(val, index) in specific.list"
-                                        :key="key"
+                                        :key="val.id"
                                         :value="val.id"
                                         :label="$i18n.locale === 'zh' ? val.name : val.name_en"
                                         >{{ $i18n.locale === "zh" ? val.name : val.name_en }}</a-select-option
@@ -513,8 +516,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-item specific-items">
-                        <div class="key" :class="!validateConfigFlag && isValidate ? 'error' : ''">
+                    <div class="form-item specific-items required">
+                        <div class="key " :class="!validateConfigFlag && isValidate ? 'error' : ''">
                             {{ $t("i.specs") }}
                         </div>
                         <div class="value table-container no-mg">
@@ -559,7 +562,10 @@
                                                             @keydown.enter="handleBatchSpec('fob_eur')"
                                                             :min="0"
                                                             :autofocus="true"
-                                                            :precision="2" />
+                                                            :precision="2" 
+                                                            :formatter="(value) => formatNum(value)"
+                                                            :parser="(value) => clearNum(value)"
+                                                            />
                                                         <div class="btns">
                                                             <a-button
                                                                 type="primary"
@@ -604,7 +610,10 @@
                                                             @keydown.enter="handleBatchSpec('fob_usd')"
                                                             :min="0"
                                                             :autofocus="true"
-                                                            :precision="2" />
+                                                            :precision="2" 
+                                                            :formatter="(value) => formatNum(value)"
+                                                            :parser="(value) => clearNum(value)"
+                                                            />
                                                         <div class="btns">
                                                             <a-button
                                                                 type="primary"
@@ -640,7 +649,7 @@
                                                 @change="handleNewChildChange"
                                                 @preview="handlePreview">
                                                 <a-button
-                                                    v-if="record.imgsList && !record.imgsList?.length"
+                                                    v-if="record.imgsList && record.imgsList.length === 0"
                                                     class="spce-add-pic"
                                                     type="primary"
                                                     ghost
@@ -649,7 +658,7 @@
                                             </a-upload>
                                             <div
                                                 class="imgList-box"
-                                                v-if="record.imgsList && record.imgsList.length > 0 ? true : false">
+                                                v-if="record.imgsList && record.imgsList.length > 0">
                                                 <img
                                                     class="img-pic"
                                                     @click="handlePreview(record.imgsList?.[0])"
@@ -689,20 +698,20 @@
                                     <template v-if="column.dataIndex === 'price'">
                                         <a-input-number
                                             v-model:value="record.price"
-                                            :min="0.01"
+                                            :min="0.1"
                                             :precision="2"
-                                            :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                            :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
+                                            :formatter="(value) => formatNum(value)"
+                                            :parser="(value) => clearNum(value)"
                                             @change="inputValidateConfig" />
                                     </template>
                                     <template v-if="column.dataIndex === 'fob_eur'">
                                         <a-input-number
                                             v-if="form.type !== itemTypeMap['1']?.key"
                                             v-model:value="record.fob_eur"
-                                            :min="0.01"
+                                            :min="0.1"
                                             :precision="2"
-                                            :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                            :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
+                                            :formatter="(value) => formatNum(value)"
+                                            :parser="(value) => clearNum(value)"
                                             @change="inputValidateConfig" />
                                         <div
                                             class="show-ladder"
@@ -715,7 +724,7 @@
                                             <div class="show-ladder-item" @click="openLadderPrice('EUR',record,index)">
                                                 <div class="show-ladder-item-title">{{ $t("item-edit.sample") }} :</div>
                                                 <div class="show-ladder-item-content">
-                                                    {{ `€ ${record.fob_eur}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
+                                                    {{ `€ ${formatNum(record.fob_eur)}`}}
                                                 </div>
                                             </div>
                                             <div class="show-ladder-item" @click="openLadderPrice('EUR',record,index)">
@@ -724,7 +733,7 @@
                                                 </div>
                                                 <div class="show-ladder-item-content">
                                                     {{
-                                                        `€ ${record.fob_20gp_eur}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                                        `€ ${formatNum(record.fob_20gp_eur)}`
                                                     }}
                                                 </div>
                                             </div>
@@ -734,7 +743,7 @@
                                                 </div>
                                                 <div class="show-ladder-item-content">
                                                     {{
-                                                        `€ ${record.fob_40qh_eur}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                                        `€ ${formatNum(record.fob_40qh_eur)}`
                                                     }}
                                                 </div>
                                             </div>
@@ -756,10 +765,10 @@
                                         <a-input-number
                                             v-if="form.type !== itemTypeMap['1']?.key"
                                             v-model:value="record.fob_usd"
-                                            :min="0.01"
+                                            :min="0.1"
                                             :precision="2"
-                                            :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                            :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
+                                           :formatter="(value) => formatNum(value)"
+                                            :parser="(value) => clearNum(value)"
                                             @change="inputValidateConfig" />
                                         <div
                                             class="show-ladder"
@@ -772,7 +781,7 @@
                                             <div class="show-ladder-item" @click="openLadderPrice('USD',record,index)">
                                                 <div class="show-ladder-item-title">{{ $t("item-edit.sample") }} :</div>
                                                 <div class="show-ladder-item-content">
-                                                    {{ `$ ${record.fob_usd}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
+                                                    {{ `$ ${formatNum(record.fob_usd)}` }}
                                                 </div>
                                             </div>
                                             <div class="show-ladder-item" @click="openLadderPrice('USD',record,index)">
@@ -781,7 +790,7 @@
                                                 </div>
                                                 <div class="show-ladder-item-content">
                                                     {{
-                                                        `$ ${record.fob_20gp_usd}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                                        `$ ${formatNum(record.fob_20gp_usd)}`
                                                     }}
                                                 </div>
                                             </div>
@@ -790,9 +799,7 @@
                                                     {{ $t("item-edit.quantity_40HQ") }} :
                                                 </div>
                                                 <div class="show-ladder-item-content">
-                                                    {{
-                                                        `€ ${record.fob_40qh_usd}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                                                    }}
+                                                    {{ `€ ${formatNum(record.fob_40qh_usd)}` }}
                                                 </div>
                                             </div>
                                         </div>
@@ -851,14 +858,27 @@
                 <div class="form-item required">
                     <div class="key" :class="form.fob_eur === '' && isValidate ? 'error' : ''">FOB(EUR)</div>
                     <div class="value input-number">
-                        <a-input-number v-model:value="form.fob_eur" :min="0" :precision="2" placeholder="0.00" />
+                        <a-input-number 
+                            v-model:value="form.fob_eur" 
+                            :min="0.1"
+                            :precision="2" 
+                            placeholder="0.00" 
+                            :formatter="(value) => formatNum(value)"
+                            :parser="(value) => clearNum(value)"
+                        />
                         <span>€</span>
                     </div>
                 </div>
                 <div class="form-item required">
                     <div class="key" :class="form.fob_usd === '' && isValidate ? 'error' : ''">FOB(USD)</div>
                     <div class="value input-number">
-                        <a-input-number v-model:value="form.fob_usd" :min="0" :precision="2" placeholder="0.00" />
+                        <a-input-number 
+                            v-model:value="form.fob_usd" 
+                            :min="0.1"
+                            :precision="2" 
+                            placeholder="0.00" 
+                            :formatter="(value) => formatNum(value)"
+                            :parser="(value) => clearNum(value)"/>
                         <span>$</span>
                     </div>
                 </div>
@@ -876,18 +896,18 @@
                         <div class="value input-number">
                             <div  :class="!form.fob_40qh_eur && isValidate ? ' title required error' : 'title required'">{{ $t('item-edit.quantity_40HQ') }}</div>
                             <a-input-number
-                               v-model:value="form.fob_40qh_eur"
-                               :min="0.1"
-                               :precision="2"
-                               :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                               :parser="(value) => value.replace(/\s?|(,*)/g, '')"
-                               @change="inputValidateConfig('EUR')"
-                           >
-                               <template #addonAfter>
+                                v-model:value="form.fob_40qh_eur"
+                                :min="0.1"
+                                :precision="2"
+                                :formatter="(value) => formatNum(value)"
+                                :parser="(value) => clearNum(value)"
+                                @change="inputValidateConfig('EUR')"
+                            >
+                                <template #addonAfter>
                                    <span>€</span>
-                               </template>
+                                </template>
                             </a-input-number>
-                           <div class="tips ">{{ $t('item-edit.quantity_26_no') }}</div>
+                            <div class="tips ">{{ $t('item-edit.quantity_26_no') }}</div>
                         </div>
                         <div class="value input-number">
                             <div  :class="!form.fob_20gp_eur && isValidate ? ' title required error' : 'title required'">{{ $t('item-edit.quantity_20GP') }}</div>
@@ -895,8 +915,8 @@
                                 v-model:value="form.fob_20gp_eur"
                                 :min="0.1"
                                 :precision="2"
-                                :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/\s?|(,*)/g, '')"
+                                :formatter="(value) => formatNum(value)"
+                                :parser="(value) => clearNum(value)"
                                 @change="inputValidateConfig('EUR')"
                             >
                                 <template #addonAfter>
@@ -911,8 +931,8 @@
                                 v-model:value="form.fob_eur"
                                 :min="0.1"
                                 :precision="2"
-                                :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
+                                :formatter="(value) => formatNum(value)"
+                                :parser="(value) => clearNum(value)"
                                 @change="inputValidateConfig('EUR')"
                             >
                                 <template #addonAfter>
@@ -932,8 +952,8 @@
                                 v-model:value="form.fob_40qh_usd"
                                 :min="0.1"
                                 :precision="2"
-                                :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/\s?|(,*)/g, '')"
+                                :formatter="(value) => formatNum(value)"
+                                :parser="(value) => clearNum(value)"
                                 @change="inputValidateConfig('USD')"
                             >
                                 <template #addonAfter>
@@ -949,8 +969,8 @@
                                 v-model:value="form.fob_20gp_usd"
                                 :min="0.1"
                                 :precision="2"
-                                :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/\s?|(,*)/g, '')"
+                                :formatter="(value) => formatNum(value)"
+                                :parser="(value) => clearNum(value)"
                                 @change="inputValidateConfig('USD')"
                             >
                                 <template #addonAfter>
@@ -965,8 +985,8 @@
                                 v-model:value="form.fob_usd"
                                 :min="0.1"
                                 :precision="2"
-                                :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/\s?|(,*)/g, '')"
+                                :formatter="(value) => formatNum(value)"
+                                :parser="(value) => clearNum(value)"
                                 @change="inputValidateConfig('USD')"
                             >
                                 <template #addonAfter>
@@ -991,9 +1011,7 @@
             </a-button>
             <!--  type="primary" ghost -->
             <a-button @click="routerChange('back')">{{ $t("def.cancel") }}</a-button>
-            <a-button type="primary" @click="handleSubmit('')">{{
-                $t("def.sure_create")
-            }}</a-button>
+            <a-button type="primary" @click="handleSubmit">{{ $t("def.sure_create") }}</a-button>
             <!-- 底部障眼法-盒子 -->
             <div class="bottom-box"></div>
         </div>
@@ -1074,6 +1092,8 @@ import CategoryTreeSelectMultiple from "@/components/popup-btn/CategoryTreeSelec
 import ItemHeader from "./components/ItemHeader.vue";
 import ItemSelect from "@/components/popup-btn/ItemSelect.vue";
 import _ from "lodash";
+import {  Upload } from 'ant-design-vue';
+
 // 查重
 function findDuplicates(arr) {
     let set = new Set();
@@ -1317,7 +1337,7 @@ export default {
             console.log(this.categoryMessage,'1111---------------------------')
             for (let i = 0; i < this.categoryMessage.length; i++) {
                 const item = this.categoryMessage[i];
-                if (item.desc === "" || item.desc_en === "") {
+                if (item.desc === "" || item.desc_en === "" || item.desc === "<p><br></p>" || item.desc_en === "<p><br></p>") {
                     flag = true;
                     break;
                 }
@@ -1366,11 +1386,22 @@ export default {
         next();
     },
     methods: {
+        // 数字的3位划分
+        formatNum(num) {
+            // 区分小数点
+            let [integer, decimal] = String.prototype.split.call(num, ".");
+            integer = integer.replace(/\d(?=(\d{3})+$)/g, "$&,");
+            return decimal ? `${integer}.${decimal}` : integer;
+        },
+        // 清除3位划分的逗号
+        clearNum(num) {
+            return num.replace(/,/g, "");
+        },
         // openLadderPrice
         openLadderPrice(type,record,index) {
             console.log(type,record,index)
-            console.log(this.specific.data,'---------------------------')
-            this.specific.data.forEach((item) => {
+            this.specific.data.forEach((item,index) => {
+                item.id = index;
                 item.fob_eur = item.fob_eur ? item.fob_eur : "";
                 item.fob_20gp_eur = item.fob_20gp_eur ? item.fob_20gp_eur : "";
                 item.fob_40qh_eur = item.fob_40qh_eur ? item.fob_40qh_eur : "";
@@ -1378,6 +1409,7 @@ export default {
                 item.fob_20gp_usd = item.fob_20gp_usd ? item.fob_20gp_usd : "";
                 item.fob_40qh_usd = item.fob_40qh_usd ? item.fob_40qh_usd : "";
             })
+            
             this.labberData = this.specific.data;
             this.ladderPriceVisible = true;
             this.activeRow = record;
@@ -1438,12 +1470,14 @@ export default {
         },
         // 选择分类的触发
         handleCategory(val) {
-            console.log(val,'----------------------------');
+            console.log(this.specific.list,'---------------')
             this.category_index = val;
             this.categoryMessage = [];
-            console.log(this.categoryMessage,'---------------------------');
+            console.log(val,'id----------------------------');
+            console.log(this.categoryMessage,'categoryMessage---------------------------');
+            console.log(this.specific.list,'specific.list---------------------------');
             this.categoryMessage = this.specific.list.filter((item) => item.id === val)[0]?.option || [];
-            console.log(this.categoryMessage);
+            console.log(this.categoryMessage,'此时的----------------');
         },
         // 获取商品详情
         getItemDetail() {
@@ -1484,6 +1518,7 @@ export default {
         },
         // 根据详情-赋值规格等信息
         setFormData(res) {
+            console.log(res, "规格详情--------------------------");
             this.loading = true;
             this.detail = res;
             let config = [];
@@ -1715,12 +1750,18 @@ export default {
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
             let categoryMessage = Core.Util.deepCopy(this.categoryMessage);
-            // 校验检查
-            this.isValidate = true;
-            if (typeof this.checkFormInput(form, specData, attrDef, categoryMessage) === "function") {
-                return;
+            if(type !== 'draft'){
+                // 校验检查
+                this.isValidate = true;
+                if (
+                    typeof this.checkFormInput(form, specData, attrDef,categoryMessage) ===
+                    "function" 
+                ) {
+                    console.log("checkFormInput err");
+                    return;
+                }
             }
-
+            
             // 封面上传
             if (this.upload.coverList.length || this.upload.coverList.length === 0) {
                 let coverList = this.upload.coverList.map((item) => {
@@ -1803,6 +1844,10 @@ export default {
                     };
                 });
             }
+            // 是整车并且为多规格
+            if (form.type === this.itemTypeMap['1']?.key && this.specific.mode === 2) {
+                this.handleDescripttion();
+            }
             if(type === 'draft'){
                 // 草稿
                 this.goodsDraftData = {
@@ -1816,11 +1861,6 @@ export default {
                 this.$message.success(this.$t("i.save_draft_success"));
                 return
             }
-
-            // 是整车并且为多规格
-            if (form.type === this.itemTypeMap['1']?.key && this.specific.mode === 2) {
-                this.handleDescripttion();
-            }
             Core.Api.Item[apiName](Core.Util.searchFilter(form))
                 .then(() => {
                     this.$message.success(this.$t("pop_up.save_success"));
@@ -1833,13 +1873,12 @@ export default {
         },
         // 保存时检查表单输入
         checkFormInput(form, specData, attrDef, categoryMessage) {
-
             // 如果是整车并且是多规格校验分类
             if (form.type === this.itemTypeMap['1']?.key && this.specific.mode === 2) {
                 // 查看
                 if (categoryMessage && categoryMessage.length > 0) {
                     for (let i = 0; i < categoryMessage.length; i++) {
-                        if(categoryMessage[i].desc === '' || categoryMessage[i].desc_en === ''){
+                        if(categoryMessage[i].desc === '' || categoryMessage[i].desc_en === '' || categoryMessage[i].desc === '<p><br></p>' || categoryMessage[i].desc_en === '<p><br></p>'){
                             return this.$message.warning(
                                 `${this.$t("item-edit.please_complete")}(${this.$t("item-edit.category_description")})`
                             );
@@ -1891,9 +1930,18 @@ export default {
             ) {
                 return this.$message.warning(`${this.$t("def.enter")}(${this.$t("n.detail_pic")})`);
             }
-            // 如果为整车
-            if (this.specific.mode === 1 || this.indep_flag) {
+            // 如果为单规格不为整车 或者 从详情跳转过来的
+            if ((this.specific.mode === 1 || this.indep_flag)&& form.type !== this.itemTypeMap['1']?.key ) {
                 // 单规格
+                if (!form.fob_eur) {
+                    return this.$message.warning(`${this.$t("def.enter")}(FOB(EUR))`);
+                }
+                if (!form.fob_usd) {
+                    return this.$message.warning(`${this.$t("def.enter")}(FOB(USD))`);
+                }
+            } 
+            //单规格并且为整车
+            else if((this.specific.mode === 1 && form.type === this.itemTypeMap['1']?.key)){
                 if (!form.fob_eur) {
                     return this.$message.warning(`${this.$t("def.enter")}(FOB(EUR))`);
                 }
@@ -1912,10 +1960,8 @@ export default {
                 if(!form.fob_40qh_usd){
                     return this.$message.warning(`${this.$t("def.enter")}(FOB(40QH))`);
                 }
-
-            } else {
-                console.log('specData', specData);
-
+            }
+            else {
                 // 多规格
                 for (let i = 0; i < attrDef.length; i++) {
                     console.log('attrDef', attrDef);
@@ -1955,23 +2001,33 @@ export default {
                     if (!item.name_en) {
                         return this.$message.warning(`${this.$t("def.enter")}(${this.$t("n.name_en")})`);
                     }
-                    if (!item.fob_eur) {
-                        return this.$message.warning(`${this.$t("def.enter")}(FOB(EUR))`);
-                    }
-                    if(!item.fob_20gp_eur){
-                        return this.$message.warning(`${this.$t("def.enter")}(FOB(20GP))`);
-                    }
-                    if(!item.fob_40qh_eur){
-                        return this.$message.warning(`${this.$t("def.enter")}(FOB(40QH))`);
-                    }
-                    if (!item.fob_usd) {
-                        return this.$message.warning(`${this.$t("def.enter")}(FOB(USD))`);
-                    }
-                    if(!item.fob_20gp_usd){
-                        return this.$message.warning(`${this.$t("def.enter")}(FOB(20GP))`);
-                    }
-                    if(!item.fob_40qh_usd){
-                        return this.$message.warning(`${this.$t("def.enter")}(FOB(40QH))`);
+                    // 如果为整车
+                    if(form.type === this.itemTypeMap['1']?.key){
+                        if (!item.fob_eur) {
+                            return this.$message.warning(`${this.$t("def.enter")}(FOB(EUR))`);
+                        }
+                        if(!item.fob_20gp_eur){
+                            return this.$message.warning(`${this.$t("def.enter")}(FOB(20GP))`);
+                        }
+                        if(!item.fob_40qh_eur){
+                            return this.$message.warning(`${this.$t("def.enter")}(FOB(40QH))`);
+                        }
+                        if (!item.fob_usd) {
+                            return this.$message.warning(`${this.$t("def.enter")}(FOB(USD))`);
+                        }
+                        if(!item.fob_20gp_usd){
+                            return this.$message.warning(`${this.$t("def.enter")}(FOB(20GP))`);
+                        }
+                        if(!item.fob_40qh_usd){
+                            return this.$message.warning(`${this.$t("def.enter")}(FOB(40QH))`);
+                        }
+                    }else{
+                        if (!item.fob_eur) {
+                            return this.$message.warning(`${this.$t("def.enter")}(FOB(EUR))`);
+                        }
+                        if (!item.fob_usd) {
+                            return this.$message.warning(`${this.$t("def.enter")}(FOB(USD))`);
+                        }
                     }
                     let str = "";
                     for (let j = 0; j < this.specific.list.length; j++) {
@@ -2013,7 +2069,7 @@ export default {
             if (!isLt10M) {
                 this.$message.warning(this.$t("n.picture_smaller"));
             }
-            return isCanUpType && isLt10M;
+            return (isCanUpType && isLt10M) ||  Upload.LIST_IGNORE;
         },
         // 上传图片
         handleCoverChange({ file, fileList }) {
@@ -2193,6 +2249,8 @@ export default {
                     name: item.name,
                     value: value,
                     value_en: value_en,
+                    desc: item.desc || "",
+                    desc_en: item.desc_en || "",
                 };
                 Core.Api.AttrDef.save(_item)
                     .then((res) => {
@@ -2204,8 +2262,7 @@ export default {
             }
         },
         handleDescripttion() {
-            let item = _.cloneDeep(this.specific.list.filter((i) => i.id === this.category_index)[0]);
-            console.log("目标-------------------------");
+            let item = this.specific.list.filter((i) => i.id === this.category_index)[0];
             item.option = _.cloneDeep(this.categoryMessage);
             if (item.key.trim() && item.name.trim()) {
                 let value = "";
@@ -2473,23 +2530,52 @@ export default {
                 if (!item.name_en) {
                     return (this.validateConfigFlag = false);
                 }
-                if (!item.fob_eur) {
-                    return (this.validateConfigFlag = false);
+                // if (!item.fob_eur) {
+                //     return (this.validateConfigFlag = false);
+                // }
+                // if(!item.fob_20gp_eur){
+                //     return (this.validateConfigFlag = false);
+                // }
+                // if(!item.fob_40qh_eur){
+                //     return (this.validateConfigFlag = false);
+                // }
+                // if (!item.fob_usd) {
+                //     return (this.validateConfigFlag = false);
+                // }
+                // if(!item.fob_20gp_usd){
+                //     return (this.validateConfigFlag = false);
+                // }
+                // if(!item.fob_40qh_usd){
+                //     return (this.validateConfigFlag = false);
+                // }
+                //如果是整车并且为多规格
+                if(this.form.type === this.itemTypeMap['1']?.key && this.specific.mode === 2){
+                    if (!item.fob_eur) {
+                        return (this.validateConfigFlag = false);
+                    }
+                    if(!item.fob_20gp_eur){
+                        return (this.validateConfigFlag = false);
+                    }
+                    if(!item.fob_40qh_eur){
+                        return (this.validateConfigFlag = false);
+                    }
+                    if (!item.fob_usd) {
+                        return (this.validateConfigFlag = false);
+                    }
+                    if(!item.fob_20gp_usd){
+                        return (this.validateConfigFlag = false);
+                    }
+                    if(!item.fob_40qh_usd){
+                        return (this.validateConfigFlag = false);
+                    }
                 }
-                if(!item.fob_20gp_eur){
-                    return (this.validateConfigFlag = false);
-                }
-                if(!item.fob_40qh_eur){
-                    return (this.validateConfigFlag = false);
-                }
-                if (!item.fob_usd) {
-                    return (this.validateConfigFlag = false);
-                }
-                if(!item.fob_20gp_usd){
-                    return (this.validateConfigFlag = false);
-                }
-                if(!item.fob_40qh_usd){
-                    return (this.validateConfigFlag = false);
+                else{
+                    if (!item.fob_eur) {
+                        return (this.validateConfigFlag = false);
+                    }
+                    if (!item.fob_usd) {
+                        return (this.validateConfigFlag = false);
+                    }
                 }
                 let str = "";
                 for (let j = 0; j < this.specific.list.length; j++) {

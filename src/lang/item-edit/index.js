@@ -58,6 +58,7 @@ export default {
 		quantity_40HQ: '40HQ',
 		// 20GP
 		quantity_20GP: '20GP',
+		spec_category_tips:'建议使用版本作为分类基础'
     },
     en: {
 		// 新增规格
@@ -108,5 +109,6 @@ export default {
 		quantity_40HQ: '40HQ',
 		// 20GP
 		quantity_20GP: '20GP',
+		spec_category_tips:'It is recommended to use the version as the basis for classification'
 	}
 }

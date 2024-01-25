@@ -12,7 +12,7 @@
 <script setup>
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
-import { defineProps, defineEmits, ref, watch, reactive, toRaw } from "vue";
+import { ref, watch, reactive, toRaw } from "vue";
 //withDefaults 是一个辅助函数，用于将默认值与传递的值合并
 const props = defineProps({
     modelValue: {
@@ -51,10 +51,13 @@ const setValue = () => {
 watch(
     () => props.modelValue,
     (val) => {
-        if (val != null || val != "") {
+        console.log(val,'获得的富文本数据');
+        if ((val != null || val != "" ) && val) {
             content.value = val;
         } else {
-            toRaw(quillRef.value).setContents("");
+            console.log("清空");
+            content.value = "";
+            toRaw(quillRef.value).setContents(""); // 清空编辑器
         }
     },
     {
