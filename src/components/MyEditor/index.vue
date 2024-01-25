@@ -55,9 +55,8 @@ watch(
         if ((val != null || val != "" ) && val) {
             content.value = val;
         } else {
-            console.log("清空");
             content.value = "";
-            // toRaw(quillRef.value).setContents(""); // 清空编辑器
+            toRaw(quillRef.value).setContents(""); // 清空编辑器
         }
     },
     {
