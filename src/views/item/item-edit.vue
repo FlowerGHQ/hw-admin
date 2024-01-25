@@ -2835,6 +2835,17 @@ export default {
                             flex-direction: column;
                             min-height: 186px;
                             width: 100%;
+                            cursor: pointer;
+                            &:hover {
+                                :deep(.ql-toolbar){
+                                    border: 1px solid #0061FF;
+                                    border-bottom: none;
+                                }
+                                :deep(.editor-area){
+                                    border: 1px solid #0061FF;
+                                    border-top: 1px solid #d1d5db;
+                                }
+                            }
                             :deep(.ql-toolbar.ql-snow) {
                                 border-radius: 3px 3px 0px 0px;
                                 background: #f2f3f5;
@@ -2890,6 +2901,7 @@ export default {
         display: flex;
         //   align-items: center;
         margin-bottom: 16px;
+        
         .name,
         .option {
             > p {
