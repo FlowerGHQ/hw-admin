@@ -991,7 +991,7 @@
             </a-button>
             <!--  type="primary" ghost -->
             <a-button @click="routerChange('back')">{{ $t("def.cancel") }}</a-button>
-            <a-button type="primary" @click="handleSubmit">{{
+            <a-button type="primary" @click="handleSubmit('')">{{
                 $t("def.sure_create")
             }}</a-button>
             <!-- 底部障眼法-盒子 -->
