@@ -443,8 +443,8 @@
                             </a-tooltip>
                         </div>
                         <div class="value">
-                            <a-switch v-model:checked="openCategory" />
-                            <span :class="openCategory ? 'open' : 'close'">{{ openCategory ? "开启" : "关闭" }}</span>
+                            <a-switch v-model:checked="openCategory" disabled/>
+                            <span :class="openCategory ? 'open' : 'close'" >{{ openCategory ? "开启" : "关闭" }}</span>
                         </div>
                     </div>
                     <!-- 选择分类 -->
@@ -462,7 +462,7 @@
                                     @change="handleCategory">
                                     <a-select-option
                                         v-for="(val, index) in specific.list"
-                                        :key="key"
+                                        :key="val.id"
                                         :value="val.id"
                                         :label="$i18n.locale === 'zh' ? val.name : val.name_en"
                                         >{{ $i18n.locale === "zh" ? val.name : val.name_en }}</a-select-option
@@ -629,7 +629,7 @@
                                                 @change="handleNewChildChange"
                                                 @preview="handlePreview">
                                                 <a-button
-                                                    v-if="record.imgsList && !record.imgsList?.length"
+                                                    v-if="record.imgsList && record.imgsList.length === 0"
                                                     class="spce-add-pic"
                                                     type="primary"
                                                     ghost
@@ -638,7 +638,7 @@
                                             </a-upload>
                                             <div
                                                 class="imgList-box"
-                                                v-if="record.imgsList && record.imgsList.length > 0 ? true : false">
+                                                v-if="record.imgsList && record.imgsList.length > 0">
                                                 <img
                                                     class="img-pic"
                                                     @click="handlePreview(record.imgsList?.[0])"
@@ -1072,6 +1072,8 @@ import CategoryTreeSelectMultiple from "@/components/popup-btn/CategoryTreeSelec
 import ItemHeader from "./components/ItemHeader.vue";
 import ItemSelect from "@/components/popup-btn/ItemSelect.vue";
 import _ from "lodash";
+import {  Upload } from 'ant-design-vue';
+
 // 查重
 function findDuplicates(arr) {
     let set = new Set();
@@ -1447,12 +1449,14 @@ export default {
         },
         // 选择分类的触发
         handleCategory(val) {
-            console.log(val,'----------------------------');
+            console.log(this.specific.list,'---------------')
             this.category_index = val;
             this.categoryMessage = [];
-            console.log(this.categoryMessage,'---------------------------');
+            console.log(val,'id----------------------------');
+            console.log(this.categoryMessage,'categoryMessage---------------------------');
+            console.log(this.specific.list,'specific.list---------------------------');
             this.categoryMessage = this.specific.list.filter((item) => item.id === val)[0]?.option || [];
-            console.log(this.categoryMessage);
+            console.log(this.categoryMessage,'此时的----------------');
         },
         // 获取商品详情
         getItemDetail() {
@@ -2039,7 +2043,7 @@ export default {
             if (!isLt10M) {
                 this.$message.warning(this.$t("n.picture_smaller"));
             }
-            return isCanUpType && isLt10M;
+            return (isCanUpType && isLt10M) ||  Upload.LIST_IGNORE;
         },
         // 上传图片
         handleCoverChange({ file, fileList }) {
@@ -2219,6 +2223,8 @@ export default {
                     name: item.name,
                     value: value,
                     value_en: value_en,
+                    desc: item.desc || "",
+                    desc_en: item.desc_en || "",
                 };
                 Core.Api.AttrDef.save(_item)
                     .then((res) => {
