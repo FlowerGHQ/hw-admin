@@ -9,7 +9,7 @@
                 <SearchAll :options="searchList" @search="onSearch" @reset="onReset" :isShowMore="false"> </SearchAll>
             </div>
             <div class="table-container">
-                <a-button type="primary" class="add-btn" @click="handleEdit('add',{})">
+                <a-button type="primary" class="add-btn" @click="handleEdit('add', {})">
                     <!-- 新增分配 -->
                     {{ $t("customer-care.add_distribution") }}
                     <template #icon>
@@ -24,10 +24,23 @@
                     :row-key="(record) => record.id"
                     :pagination="false">
                     <template #bodyCell="{ column, text, record, index }">
+                        <template v-if="column.key === 'area'" class="area-content">
+                            <!-- 地区字段长度 -->
+                            <a-tooltip  placement="top">
+                                <template #title>
+                                    <div class="area-cell">
+                                        {{ text }}
+                                    </div>
+                                </template>
+                                <span class="area-cell">
+                                    {{ text }}
+                                </span>
+                            </a-tooltip>
+                        </template>
                         <template v-if="column.key === 'setting'">
                             <div class="default-accout" v-if="index === 0">-</div>
                             <div class="other-accout" v-else>
-                                <a-button type="link" size="small" @click="handleEdit('edit',record)">
+                                <a-button type="link" size="small" @click="handleEdit('edit', record)">
                                     <!-- 编辑 -->
                                     {{ $t("customer-care.edit") }}
                                 </a-button>
@@ -53,17 +66,17 @@
             <!-- 表单 -->
             <a-form ref="formRef" name="custom-validation" :model="formState" :rules="rules">
                 <a-form-item :label="t('customer-care.customer_service_account')" name="username">
-                    <a-select v-model:value="formState.username" placeholder="请选择客服账号" :disabled="openType === 'edit'" >
+                    <a-select
+                        v-model:value="formState.username"
+                        placeholder="请选择客服账号"
+                        :disabled="openType === 'edit'">
                         <a-select-option v-for="item in allAccount" :key="id" :value="item.username">
                             {{ item.username }}
                         </a-select-option>
                     </a-select>
                 </a-form-item>
                 <a-form-item :label="t('customer-care.distribution_country')" name="country">
-                    <CountryCascaderTabMore 
-                        v-model:value="formState.country" 
-                        :reviewData="formState.area"
-                    />
+                    <CountryCascaderTabMore v-model:value="formState.country" :reviewData="formState.area" />
                 </a-form-item>
             </a-form>
         </a-modal>
@@ -80,7 +93,7 @@ import SearchAll from "@/components/horwin/based-on-ant/SearchAll.vue";
 import { PlusOutlined } from "@ant-design/icons-vue";
 // import CountryCascaderTabMore from "@/components/common/CountryCascaderTabMore.vue";
 import CountryCascaderTabMore from "./components/CountryCascaderTabMore.vue";
-import { Modal , message} from 'ant-design-vue';
+import { Modal, message } from "ant-design-vue";
 import axios from "axios";
 import _ from "lodash";
 const $confirm = Modal.confirm;
@@ -99,20 +112,20 @@ const { loading, tableData, search, refreshTable, onPageChange, searchParam } = 
 });
 const countryOptions = ref([]);
 // 给大洲的所有子元素添加父级code,并且添加一个全选
-const addParentCode = (arr, parentCode,parentName) => {
+const addParentCode = (arr, parentCode, parentName) => {
     arr.forEach((item) => {
         item.parentCode = parentCode;
         item.parentName = parentName;
         item.label = item.name;
         item.value = item.name;
         if (item.children && item.children.length) {
-            addParentCode(item.children, item.code,item.name);
+            addParentCode(item.children, item.code, item.name);
         }
     });
-    let country = []
+    let country = [];
     arr.forEach((item) => {
-        if(item.children && item.children.length){
-            country = country.concat(item.children)
+        if (item.children && item.children.length) {
+            country = country.concat(item.children);
         }
     });
     return country;
@@ -120,12 +133,11 @@ const addParentCode = (arr, parentCode,parentName) => {
 const getCountryOptions = () => {
     axios.get("/ext/continent-country.json").then((response) => {
         console.log(response.data);
-        countryOptions.value = addParentCode(response.data,'','');
+        countryOptions.value = addParentCode(response.data, "", "");
         console.log(countryOptions.value);
     });
 };
 // 只传递国家名字
-
 
 // 搜索配置
 const searchList = ref([
@@ -203,9 +215,8 @@ const rules = ref({
             validator: (rule, value, callback) => {
                 if (!value) {
                     return Promise.reject(new Error("请选择客服账号"));
-                } 
+                }
                 return Promise.resolve();
-
             },
             trigger: ["blur", "change"],
         },
@@ -216,7 +227,7 @@ const rules = ref({
             validator: (rule, value) => {
                 if (!value || !value.length) {
                     return Promise.reject("请选择地区");
-                } 
+                }
                 return Promise.resolve();
             },
             trigger: ["blur", "change"],
@@ -235,7 +246,7 @@ const onReset = () => {
     refreshTable();
 };
 // 编辑
-const handleEdit = (type,record) => {
+const handleEdit = (type, record) => {
     getCustomerServiceAccount();
     switch (type) {
         case "add":
@@ -244,7 +255,7 @@ const handleEdit = (type,record) => {
             activeRecord.value = {};
             break;
         case "edit":
-            console.log("编辑",record);
+            console.log("编辑", record);
             modalTitle.value = t("customer-care.modify_distribution");
             openType.value = "edit";
             activeRecord.value = record;
@@ -255,10 +266,7 @@ const handleEdit = (type,record) => {
             reviewData.forEach((item) => {
                 countryOptions.value.forEach((item2) => {
                     if (item === item2.name) {
-                        target.push([
-                            item2.parentName,
-                            item2.name,
-                        ]);
+                        target.push([item2.parentName, item2.name]);
                     }
                 });
             });
@@ -279,7 +287,7 @@ const handleDelete = (record) => {
         okType: "danger",
         cancelText: t("customer-care.cancel"),
         onOk() {
-            Core.Api.inquiry_sheet.deleteCustomer({ username:record.username }).then((res) => {
+            Core.Api.inquiry_sheet.deleteCustomer({ username: record.username }).then((res) => {
                 refreshTable();
             });
         },
@@ -298,12 +306,12 @@ const getCustomerServiceAccount = () => {
 };
 // 提交
 const handleSubmit = () => {
-    console.log("提交",formState);
+    console.log("提交", formState);
     formRef.value.validate().then((res) => {
-        let arr = []
+        let arr = [];
         let country = _.cloneDeep(formState.value.country);
         country.forEach((item) => {
-                arr.push(item[1]);
+            arr.push(item[1]);
         });
         formState.value.country = arr.join(",");
         Core.Api.inquiry_sheet.addCustomer(formState.value).then((res) => {
@@ -336,6 +344,17 @@ onMounted(() => {
     .table-container {
         .add-btn {
             margin-bottom: 10px;
+        }
+    }
+    :deep(.ant-table-cell) {
+        .area-cell {
+            display: inline-block;
+            width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: center;
+            cursor: pointer;
         }
     }
 }

@@ -4,7 +4,7 @@
         v-model="value"
         collapse-tags
         collapse-tags-tooltip
-        max-collapse-tags="2"
+        max-collapse-tags="4"
         :props="props"
         clearable
         filterable
