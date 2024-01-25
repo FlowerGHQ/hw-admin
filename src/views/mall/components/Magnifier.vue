@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from 'vue';
+import { ref, onMounted, reactive, onUnmounted } from 'vue';
 const props = defineProps({
     activePicUrl: {
         type: String,
@@ -42,6 +42,10 @@ const rate = ref(0)
 onMounted(() => {
     // 监听页面窗口
     window.addEventListener('resize', handleWindowResize)
+})
+onUnmounted(() => {
+    // 监听页面窗口
+    window.removeEventListener('resize', handleWindowResize)
 })
 /* methods start */
 // 图片加载后重载数据
