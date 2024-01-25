@@ -124,7 +124,7 @@ const { proxy } = getCurrentInstance();
 const route = useRoute();
 const router = useRouter();
 const store = useStore();
-const vehicle_id = route.query?.id;
+const vehicle_id = Number(route.query?.id);
 
 /* state start */
 const currency = ref('€')
@@ -306,12 +306,12 @@ const getSameSeriesList = () => {
     const params = {
         "type": 1, //1.整车；2.零部件/物料；3.周边；4.广宣品
         "page": 1,
-        "page_size": 5,// 取5个
+        "page_size": 4,// 取5个
+        "flag_random_order": 1, //是否随机排序
+        "id": vehicle_id, //商品id
     }
     itemListFetch({ ...params }).then(res => {
         sameSeriesList.value = res?.list
-        sameSeriesList.value = sameSeriesList.value.filter(item => item.id !== Number(vehicle_id))
-        sameSeriesList.value = sameSeriesList.value.slice(0, 4)
     })
 }
 // 添加收藏
