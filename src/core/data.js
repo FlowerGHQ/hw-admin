@@ -267,6 +267,15 @@ class StorageHandler {
     clearSalesData() {
         this.removeItem(Const.DATA.SALES_DATA);
     }
+    setSalesData(value) {
+        return this.setItem(Const.DATA.SALES_DATA, value);
+    }
+    getSalesData() {
+        return this.getItem(Const.DATA.SALES_DATA) || [];
+    }
+    clearSalesData() {
+        this.removeItem(Const.DATA.SALES_DATA);
+    }
     // 商品管理的草稿信息
     setGoodsDraft(value) {
         return this.setItem(Const.DATA.GOODS_DRAFT, value);

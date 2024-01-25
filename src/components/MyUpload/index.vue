@@ -41,9 +41,11 @@
       </a-upload>
     </div>
 
-    <div class="tip" v-if="showTip && !upload.fileList.length > 0">
-      {{ tip }}
-    </div>
+    <slot name="tip">
+        <div class="tip" v-if="showTip && !upload.fileList.length > 0">
+          {{ tip }}
+        </div>
+    </slot>
     <!-- 自定义图片预览 -->
     <div
       class="image-preview"
