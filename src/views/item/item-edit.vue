@@ -481,7 +481,7 @@
                                         <div class="rich-item-area">
                                             <MyEditor
                                                 v-model:modelValue="item.desc"
-                                                :placeholder="$t('item-edit.description')" />
+                                                placeholder="为前端样式更美观，请用分隔符分类的规格值进行描述，参数条数建议不超过4条，中文建议不超过14个字符 如：                                 ·电池规格：356-23sSDV" />
                                         </div>
                                         <div class="rich-title">
                                             {{ item.en || "-" }}（{{ $t("item-edit.english") }}）
@@ -489,7 +489,7 @@
                                         <div class="rich-item-area">
                                             <MyEditor
                                                 v-model:modelValue="item.desc_en"
-                                                :placeholder="$t('item-edit.description')" />
+                                                placeholder="为前端样式更美观，请用分隔符分类的规格值进行描述，参数条数建议不超过4条，中文建议不超过14个字符 如：                                 ·Battery Volume : 72V46AH"/>
                                         </div>
                                     </div>
                                 </div>
