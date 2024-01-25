@@ -4,7 +4,7 @@
             <Header v-if="headAuth"></Header>
             <div class="mall-container">
                 <Breadcrumb :list="breadcrumbList"></Breadcrumb>
-                <router-view></router-view>
+                <router-view :key="$route.fullPath"></router-view>
                 <template v-if="totopAuth">
                     <a id="back-top" :style="{ position: upTopPosition }" @click="back2Top" v-show="showTop">
                         <svg-icon icon-class="purchase-up" class-name="back-top-icon" />
