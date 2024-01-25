@@ -541,30 +541,35 @@ const amount = computed(() => {
 })
 // 计算是否全选车辆
 const vehicleListSelected = computed(() => {
-    if (vehicleList.value.length === 0) return true;
-    return selectedId.value['vehicleList'].length === vehicleList.value.length
+    const vehicleListLen = vehicleList.value.filter(item => item.flag_item_valid).length
+    return selectedId.value['vehicleList'].length === vehicleListLen && vehicleListLen
 })
 // 计算是否全选配件
 const accessoriesListSelected = computed(() => {
-    if (accessoriesList.value.length === 0) return true;
-    return selectedId.value['accessoriesList'].length === accessoriesList.value.length
+    const accessoriesListLen = accessoriesList.value.filter(item => item.flag_item_valid).length
+    return selectedId.value['accessoriesList'].length === accessoriesListLen && accessoriesListLen
 })
 // 计算是否全选周边
 const peripheralListSelected = computed(() => {
-    if (peripheralList.value.length === 0) return true;
-    return selectedId.value['peripheralList'].length === peripheralList.value.length
+    const peripheralListLen = peripheralList.value.filter(item => item.flag_item_valid).length
+    return selectedId.value['peripheralList'].length === peripheralListLen && peripheralListLen
 })
 // 计算是否全选广宣品
 const promotionalListSelected = computed(() => {
-    if (promotionalList.value.length === 0) return true;
-    return selectedId.value['promotionalList'].length === promotionalList.value.length
+    const promotionalListLen = promotionalList.value.filter(item => item.flag_item_valid).length
+    return selectedId.value['promotionalList'].length === promotionalList.value.length && promotionalListLen
 })
 // 计算是否全部选中
 const allSelected = computed(() => {
-    return selectedId.value['vehicleList'].length === vehicleList.value.length &&
-        selectedId.value['accessoriesList'].length === accessoriesList.value.length &&
-        selectedId.value['peripheralList'].length === peripheralList.value.length &&
-        selectedId.value['promotionalList'].length === promotionalList.value.length
+    const vehicleListLen = vehicleList.value.filter(item => item.flag_item_valid).length
+    const accessoriesListLen = accessoriesList.value.filter(item => item.flag_item_valid).length
+    const peripheralListLen = peripheralList.value.filter(item => item.flag_item_valid).length
+    const promotionalListLen = promotionalList.value.filter(item => item.flag_item_valid).length
+    const lens = vehicleListLen + accessoriesListLen + peripheralListLen + promotionalListLen
+    return selectedId.value['vehicleList'].length === vehicleListLen &&
+        selectedId.value['accessoriesList'].length === accessoriesListLen &&
+        selectedId.value['peripheralList'].length === peripheralListLen &&
+        selectedId.value['promotionalList'].length === promotionalListLen && lens
 })
 // 计算是否有被选中产品
 const isSelected = computed(() => {
@@ -632,6 +637,10 @@ const filterData = (list, type) => {
     list = list.map(item => {
         const index = selectedId.value[type].indexOf(item.id)
         item.selected = index === -1 ? false : true
+        if (item.item.set_id) {
+            item.item.logo = item.item.imgs
+        }
+        return item
     })
 }
 // 修改数量
@@ -661,8 +670,10 @@ const selectAll = (type, selected = false) => {
             selectedId.value['vehicleList'] = []
             if (selected) {
                 vehicleList.value = vehicleList.value.map(item => {
-                    item.selected = selected
-                    selectedId.value['vehicleList'].push(item.id)
+                    if (item.flag_item_valid) {
+                        item.selected = selected
+                        selectedId.value['vehicleList'].push(item.id)
+                    }
                     return item
                 })
             } else {
@@ -676,12 +687,18 @@ const selectAll = (type, selected = false) => {
             selectedId.value['accessoriesList'] = []
             if (selected) {
                 accessoriesList.value = accessoriesList.value.map(item => {
-                    item.selected = selected
-                    selectedId.value['accessoriesList'].push(item.id)
+                    if (item.flag_item_valid) {
+                        item.selected = selected
+                        selectedId.value['accessoriesList'].push(item.id)
+                    }
                     return item
                 })
             } else {
                 accessoriesList.value = accessoriesList.value.map(item => {
+                    if (item.flag_item_valid) {
+                        item.selected = selected
+                        selectedId.value['vehicleList'].push(item.id)
+                    }
                     item.selected = selected
                     return item
                 })
@@ -691,8 +708,10 @@ const selectAll = (type, selected = false) => {
             selectedId.value['peripheralList'] = []
             if (selected) {
                 peripheralList.value = peripheralList.value.map(item => {
-                    item.selected = selected
-                    selectedId.value['peripheralList'].push(item.id)
+                    if (item.flag_item_valid) {
+                        item.selected = selected
+                        selectedId.value['peripheralList'].push(item.id)
+                    }
                     return item
                 })
             } else {
@@ -706,8 +725,10 @@ const selectAll = (type, selected = false) => {
             selectedId.value['promotionalList'] = []
             if (selected) {
                 promotionalList.value = promotionalList.value.map(item => {
-                    item.selected = selected
-                    selectedId.value['promotionalList'].push(item.id)
+                    if (item.flag_item_valid) {
+                        item.selected = selected
+                        selectedId.value['promotionalList'].push(item.id)
+                    }
                     return item
                 })
             } else {
