@@ -38,9 +38,9 @@ export default  {
         '-1': { value: -1, t: 'common.all',  }, // 全部
         '1': { value: 10, t: 'customer-care.consultation',  }, // 咨询
         '2': { value: 20, t: 'customer-care.complaints',  }, // 投诉
-        '30': { value: 30, t: 'customer-care.general_claim',  }, // 索赔-a.普通索赔
-        '40': { value: 40, t: 'customer-care.bona_fide_claim',  }, // 索赔-b.善意索赔
-        '50': { value: 50, t: 'customer-care.unpacking_damage',  }, // 开箱损
+        '310': { value: 310, t: 'customer-care.general_claim',  }, // 索赔-a.普通索赔
+        '320': { value: 320, t: 'customer-care.bona_fide_claim',  }, // 索赔-b.善意索赔
+        '330': { value: 330, t: 'customer-care.unpacking_damage',  }, // 开箱损
     },
     SORTING_TYPE_THREE_MAP: {
         CONSULTATION: 1, // 咨询
@@ -53,19 +53,27 @@ export default  {
         '3': { value: 3, t: 'customer-care.claim_compensation',  }, // 索赔
     },
     SORTING_TYPE_TWO: { 
-        '30': { value: 30, t: 'customer-care.general_claim',  }, // 普通索赔
-        '40': { value: 40, t: 'customer-care.bona_fide_claim',  }, // 善意索赔
-        '50': { value: 50, t: 'customer-care.unpacking_damage',  }, // 开箱损
+        '310': { value: 310, t: 'customer-care.general_claim',  }, // 普通索赔
+        '320': { value: 320, t: 'customer-care.bona_fide_claim',  }, // 善意索赔
+        '330': { value: 330, t: 'customer-care.unpacking_damage',  }, // 开箱损
     },
     SORTING_TYPE_TWO_MAP: {
-        GENERALCLAIM: 30, // 普通索赔
-        BONAFIDECLAIM: 40, // 善意索赔
-        UNPACKINGDAMAGE: 50, // 开箱损
+        GENERALCLAIM: 310, // 普通索赔
+        BONAFIDECLAIM: 320, // 善意索赔
+        UNPACKINGDAMAGE: 330, // 开箱损
     },
     // 保内 保外 其他
     GOOD_FAITH: {
         '1': { value: 1, t: 'common.within_warranty',  }, // 保内
         '2': { value: 2, t: 'common.on_bail',  }, // 保外
         '3': { value: 3, t: 'common.other',  }, // 其他
+    },
+    // part_status
+    PART_STATUS: {        
+        '1': { value: 1, t: 'customer-care.complete_vehicle',  }, // 整车
+        '2': { value: 2, t: 'customer-care.parts_materials',  }, // 零部件/物料
+        '3': { value: 3, t: 'customer-care.periphery',  }, // 周边
+        '4': { value: 4, t: 'customer-care.publicity_products',  }, // 广宣品
+        '5': { value: 5, t: 'customer-care.expenses',  }, // 费用
     }
 }
