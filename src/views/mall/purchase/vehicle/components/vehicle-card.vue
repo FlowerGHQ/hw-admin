@@ -8,7 +8,8 @@
         <div class="text">
             <div>
                 <p class="title" :title="record[$Util.regionalUnitMoney().name_index]">{{ record[$Util.regionalUnitMoney().name_index] }}</p>
-                <p class="code">{{ record.code ? record.code : '-' }}</p>
+                <p class="code" :title="$t('i.code')">{{ record.code ? record.code : '-' }}</p>
+                <p class="code" v-if="record.set_id">{{ record.children_number }} {{ $t('purchase.variants') }}</p>
             </div>
             <div class="btn">
                 <p class="price">{{ currency }}{{ minPrice }} ~ {{ currency }}{{ maxPrice }}</p>
@@ -142,16 +143,15 @@ const routerChange = (routeUrl, item = {}, type = 1) => {
             font-style: normal;
             font-weight: 500;
             line-height: normal;
+            margin-bottom: 8px;
         }
 
         .code {
-            margin-top: 8px;
             color: #666;
-            font-size: 12px;
+            font-size: 14px;
             font-style: normal;
             font-weight: 400;
             line-height: 150%;
-            /* 18px */
         }
 
         .price {
@@ -163,7 +163,9 @@ const routerChange = (routeUrl, item = {}, type = 1) => {
             margin-bottom: 16px;
         }
 
-        .btn {}
+        .btn {
+            margin-top: 23px;
+        }
     }
 }
 
