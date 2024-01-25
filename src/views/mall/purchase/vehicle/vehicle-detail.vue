@@ -207,6 +207,7 @@ const getSwiperList = (list = []) => {
             path: item.imgs
         }
     })
+    swiperList.value.unshift({ path: vehicle_mes.logo })// 第一张为封面图
     // 刚进页面初始化 第一张 swiper 商品图
     swiperRef.value.selectSwiper(swiperList.value[0], 0);
 }
@@ -257,11 +258,13 @@ const getItemDetail = () => {
         Object.assign(vehicle_mes, detail) //logo封面，imgs详情图
         if (detail.set_id) {
             getListBySet();
-            getSwiperList(detail.img_list.map(item => {
-                return { imgs: item }
-            }))
+            const q = {
+                "set_id": vehicle_mes.set_id, //商品组id
+                "flag_default": 0,
+            }
+            getCarList(q, 'getSwiperList')
         } else {
-            getSwiperList([{ imgs: vehicle_mes.logo }]) // 第一张为主图 logo
+            getSwiperList()
         }
     }).finally(() => {
         spinning.value = false
@@ -287,7 +290,7 @@ const getListBySet = (params = {}) => {
             console.log("getSpecList err", err);
         })
 }
-const getCarList = (q) => {
+const getCarList = (q, type) => {
     const params = {
         "type": 1, //1.整车；2.零部件/物料；3.周边；4.广宣品
         "page": 1,
@@ -299,6 +302,7 @@ const getCarList = (q) => {
             item.logo = item.imgs
             return item
         })
+        if (type === 'getSwiperList') getSwiperList(itemList.value);
     })
 }
 // 获取同系列整车
