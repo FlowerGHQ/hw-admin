@@ -34,7 +34,6 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服  
         // URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
         // URL_POINT = 'http://10.10.12.75:8889' // zwq
-        // URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         break;
     case 'eos.hw.innotick.com':
         URL_POINT = 'https://eos-api.horwincloud.com' // 老正式服   
@@ -49,9 +48,9 @@ switch (window.location.hostname) {
         // URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'https://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
+        // URL_POINT = 'http://10.10.12.65:8889' // my
         // URL_POINT = 'http://10.0.0.170:8889' // my
-        // URL_POINT = 'http://10.0.0.170:8889' // my
-        URL_POINT = 'http://10.10.12.194:8881' // zwq
+        URL_POINT = 'http://10.10.12.194:8889' // zwq
         // URL_POINT = 'http://10.10.12.194:8889'  // zy
 
         break;
@@ -92,8 +91,8 @@ let Const = {
         LOGIN_MES: 'login-mes',
         SALES_DATA: 'sales-data',
         GOODS_DRAFT: 'goods-draft',
-        CART_DATA: 'cart-data'
-
+        CART_DATA: 'cart-data',
+        GOODS_DRAFT: 'goods-draft',
     },
     DEFULT_IMG: {
         1: defult_img,

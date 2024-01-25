@@ -8,6 +8,7 @@
                 type: "input", 
                 value: "", 
                 searchParmas: "name",  
+                allowClear: true, // 是否需要清除按钮
                 key: 'supply-chain.company_name' 
             },
             {
@@ -77,6 +78,7 @@
                             </div>
                             <div class="value-box">
                                 <a-input
+                                    :allowClear="item.allowClear || false"
                                     :placeholder="$t(`${item.placeholder || 'def.input'}`)"
                                     v-model:value="item.value"
                                     @keydown.enter="handleSearch"

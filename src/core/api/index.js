@@ -1009,6 +1009,12 @@ const apiList = {
         modify: ['PostJson','enquiry-ticket/update'], // 修改
         detail: ['PostJson','enquiry-ticket/detail'], // 详情
         statusList: ['PostJson','enquiry-ticket/status-list'], // 状态数据
+        // 客服列表
+        cusomerList: ['PostJson','user/customer-list'], // 客服列表
+        // 删除
+        deleteCustomer: ['PostJson','user/delete-customer-country'], // 删除
+        // 添加
+        addCustomer: ['PostJson','user/save-area'], // 添加
     }
 };
 
