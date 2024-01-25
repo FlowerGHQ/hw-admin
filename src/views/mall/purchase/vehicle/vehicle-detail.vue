@@ -12,7 +12,7 @@
                             <p class="title">{{ vehicle_mes[$Util.regionalUnitMoney().name_index] }}</p>
                             <p class="code">
                                 <span class="code-left">{{ vehicle_mes.code }}</span>
-                                <span class="code-right">{{ specList?.length || 0 }} series</span>
+                                <span class="code-right">{{ specList?.length || 0 }} {{ $t('purchase.series') }}</span>
                             </p>
                             <div class="series-cards">
                                 <div class="series-card" :style="{ flex: specList?.length > 2 ? 'none' : '1' }"
@@ -21,7 +21,7 @@
                                 </div>
                             </div>
                             <div class="variants">
-                                <p class="nums">{{ itemList?.length || 0 }} Variants</p>
+                                <p class="nums">{{ itemList?.length || 0 }} {{ $t('purchase.variants') }}</p>
                                 <div class="variants-body">
                                     <div class="variants-item" v-for="(item, i) in itemList" :key="item.id">
                                         <ProductsCard @handlechange="selectSeries(seriesIndex)" type="small"
@@ -294,7 +294,10 @@ const getCarList = (q) => {
     }
     Object.assign(params, q)
     itemListFetch({ ...params }).then(res => {
-        itemList.value = res?.list
+        itemList.value = res?.list.map(item => {
+            item.logo = item.imgs
+            return item
+        })
         getSwiperList(itemList.value)
     })
 }

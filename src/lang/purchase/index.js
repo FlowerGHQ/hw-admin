@@ -47,6 +47,8 @@ export default {
         unit_price: '单价',
         quantity: '数量',
         total_operation: '总价/操作',
+        variants: '规格',
+        series: '系列',
     },
     en: {
         system: "HORWIN Business Operating System",
@@ -96,6 +98,8 @@ export default {
         unit_price: 'Unit Price',
         quantity: 'Quantity',
         total_operation: 'Total/Operation',
+        variants: 'Variants',
+        series: 'Series',
     }
 }
 
