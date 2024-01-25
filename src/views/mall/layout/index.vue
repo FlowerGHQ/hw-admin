@@ -61,11 +61,11 @@ export default {
             immediate: true,
             handler(n) {
                 this.breadcrumbList = n.matched.slice(1, n.matched.length)
-                let result = Core.Const.MALLHEADERAUTH.ROUTERS.find(el => {
+                let result = Core.Const.MALL_HEADER_AUTH.ROUTERS.find(el => {
                     return el.value == n.path
                 })
                 this.headAuth = result
-                let target = Core.Const.MALLHEADERAUTH.FOOTER.some(el => {
+                let target = Core.Const.MALL_HEADER_AUTH.FOOTER.some(el => {
                     return el.value == n.path
                 });
                 this.footAuth = target

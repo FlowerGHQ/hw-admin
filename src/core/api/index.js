@@ -1001,6 +1001,20 @@ const apiList = {
     // 官网端接口
     CLIENT: {
         communityList:['PostJson','community-post/list'], //动态列表
+    },
+    // 问询单
+    inquiry_sheet: {
+        list: ['PostJson','enquiry-ticket/list'], // 列表
+        add: ['PostJson','enquiry-ticket/create'], // 创建
+        modify: ['PostJson','enquiry-ticket/update'], // 修改
+        detail: ['PostJson','enquiry-ticket/detail'], // 详情
+        statusList: ['PostJson','enquiry-ticket/status-list'], // 状态数据
+        // 客服列表
+        cusomerList: ['PostJson','user/customer-list'], // 客服列表
+        // 删除
+        deleteCustomer: ['PostJson','user/delete-customer-country'], // 删除
+        // 添加
+        addCustomer: ['PostJson','user/save-area'], // 添加
     }
 };
 
