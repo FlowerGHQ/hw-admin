@@ -483,19 +483,19 @@ const columns = [
         title: 'purchase.unit_price',
         dataIndex: 'price',
         key: 'price',
-        width: 200,
+        width: 150,
     },
     {
         title: 'purchase.quantity',
         dataIndex: 'quantity',
         key: 'quantity',
-        width: 200,
+        width: 150,
     },
     {
         title: 'purchase.total_operation',
         dataIndex: 'operation',
         key: 'operation',
-        width: 200,
+        width: 150,
     },
 ]
 /* state start */
@@ -873,7 +873,10 @@ const getCarList = (q) => {
     }
     Object.assign(params, q)
     itemListFetch({ ...params }).then(res => {
-        itemList.value = res?.list
+        itemList.value = res?.list.map(item => {
+            item.logo = item.imgs
+            return item
+        })
     })
 }
 // 切换商品
@@ -1057,7 +1060,6 @@ const handleCreateOrder = () => {
 
     .row {
         .flex(initial, center, row);
-        flex-wrap: wrap;
         user-select: none;
 
         &:nth-child(n + 3) {
