@@ -169,36 +169,28 @@
                         <div class="key not-white-space appearance-font">{{ $t("d.appearance") }}</div>
                         <div class="value">
                             <a-row gutter="16">
-                                    <!-- 净重 -->
-                                    <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
-                                        <a-input-number
-                                            :controls="false"
-                                            v-model:value="form.net_weight"
-                                            :placeholder="$t('def.input')"
-                                        >
-                                            <template #addonBefore>
-                                                <span class="l-w-h-style">{{ $t("d.net_weight") }}</span>
-                                            </template>
-                                            <template #addonAfter>
-                                                <span class="l-w-h-style">KG</span>
-                                            </template>
-                                        </a-input-number>
-                                    </a-col>
-                                    <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
-                                        <!-- 毛重 -->
-                                        <a-input-number
-                                            :controls="false"
-                                            v-model:value="form.gross_weight"
-                                            :placeholder="$t('def.input')"
-                                        >
-                                            <template #addonBefore>
-                                                <span class="l-w-h-style">{{ $t("d.gross_weight") }}</span>
-                                            </template>
-                                            <template #addonAfter>
-                                                <span class="l-w-h-style">KG</span>
-                                            </template>
-                                        </a-input-number>
-                                    </a-col>
+                                <!-- 净重 -->
+                                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
+                                    <a-input v-model:value="form.net_weight" :placeholder="$t('def.input')">
+                                        <template #addonBefore>
+                                            <span class="l-w-h-style">{{ $t("d.net_weight") }}</span>
+                                        </template>
+                                        <template #addonAfter>
+                                            <span class="l-w-h-style-unit">KG</span>
+                                        </template>
+                                    </a-input>
+                                </a-col>
+                                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
+                                    <!-- 毛重 -->
+                                    <a-input v-model:value="form.gross_weight" :placeholder="$t('def.input')">
+                                        <template #addonBefore>
+                                            <span class="l-w-h-style">{{ $t("d.gross_weight") }}</span>
+                                        </template>
+                                        <template #addonAfter>
+                                            <span class="l-w-h-style-unit">KG</span>
+                                        </template>
+                                    </a-input>
+                                </a-col>
                             </a-row>
                             <a-row gutter="16" class="m-t-16">
                                 <!-- 长 -->
@@ -212,7 +204,7 @@
                                             <span class="l-w-h-style">{{ $t("d.long") }}</span>
                                         </template>
                                         <template #addonAfter>
-                                            <span class="l-w-h-style">CM</span>
+                                            <span class="l-w-h-style-unit">CM</span>
                                         </template>
                                     </a-input-number>
                                 </a-col>
@@ -227,7 +219,7 @@
                                             <span class="l-w-h-style">{{ $t("d.wide") }}</span>
                                         </template>
                                         <template #addonAfter>
-                                            <span class="l-w-h-style">CM</span>
+                                            <span class="l-w-h-style-unit">CM</span>
                                         </template>
                                     </a-input-number>
                                 </a-col>
@@ -242,7 +234,7 @@
                                             <span class="l-w-h-style">{{ $t("d.high") }}</span>
                                         </template>
                                         <template #addonAfter>
-                                            <span class="l-w-h-style">CM</span>
+                                            <span class="l-w-h-style-unit">CM</span>
                                         </template>
                                     </a-input-number>
                                 </a-col>
@@ -463,7 +455,7 @@
                             </a-tooltip>
                         </div>
                         <div class="value">
-                            <a-switch v-model:checked="openCategory" disabled/>
+                            <a-switch v-model:checked="openCategory" @change="openCategory = true"/>
                             <span :class="openCategory ? 'open' : 'close'" >{{ openCategory ? "开启" : "关闭" }}</span>
                         </div>
                     </div>
@@ -496,7 +488,7 @@
                                 <div class="rich-item">
                                     <div class="rich-item-content" v-for="item in categoryMessage">
                                         <div class="rich-title">
-                                            {{ item.zh || "-" }}（{{ $t("item-edit.chinese") }}）
+                                            {{ item.zh || "-" }}
                                         </div>
                                         <div class="rich-item-area">
                                             <MyEditor
@@ -504,7 +496,7 @@
                                                 placeholder="为前端样式更美观，请用分隔符分类的规格值进行描述，参数条数建议不超过4条，中文建议不超过14个字符 如：                                 ·电池规格：356-23sSDV" />
                                         </div>
                                         <div class="rich-title">
-                                            {{ item.en || "-" }}（{{ $t("item-edit.english") }}）
+                                            {{ item.en || "-" }}
                                         </div>
                                         <div class="rich-item-area">
                                             <MyEditor
@@ -525,6 +517,7 @@
                                 :columns="specificColumns"
                                 :data-source="specific.data"
                                 :scroll="{ x: true }"
+                                tableLayout="fixed"
                                 :row-key="(record,index) => record.title"
                                 :pagination="false"
                                 class="specific-table">
@@ -2709,7 +2702,7 @@ export default {
                     font-size: 14px;
                 }
                 .labber{
-                    margin-left:116px;
+                    margin-left:67px;
                 }
                 .value,.input-number{
                     margin-bottom:16px;
@@ -2746,7 +2739,9 @@ export default {
                         }
 
                     }
+
                 }
+              
             }
         }
 
@@ -2761,9 +2756,6 @@ export default {
             flex-shrink: 0;
         }
         > .value {
-            // width: calc(~'100% - 200px');
-            // min-width: calc(~"100% - 86px");
-            min-width: 1035px;
             max-width: none;
             flex-shrink: 0;
             .value-price {
@@ -2811,6 +2803,10 @@ export default {
                     .rich-item-content {
                         margin-right: 16px;
                         width: 237px;
+                        border: 1px solid #eaecf1;
+                        &:last-child{
+                            margin-right: 0;
+                        }
                         .rich-title {
                             height: 32px;
                             background-color: #f2f3f5;
@@ -2835,7 +2831,6 @@ export default {
                             flex-direction: column;
                             min-height: 186px;
                             width: 100%;
-                            cursor: pointer;
                             &:hover {
                                 :deep(.ql-toolbar){
                                     border: 1px solid #0061FF;
@@ -2843,7 +2838,7 @@ export default {
                                 }
                                 :deep(.editor-area){
                                     border: 1px solid #0061FF;
-                                    border-top: 1px solid #d1d5db;
+                                    border-top: 1px solid #EAECF1;
                                 }
                             }
                             :deep(.ql-toolbar.ql-snow) {
@@ -2853,6 +2848,7 @@ export default {
                                 font-size: 12px;
                                 display: flex;
                                 justify-content: space-between;
+                                border-color: #EAECF1 !important;
                                 .ql-formats {
                                     &:nth-child(2) {
                                         margin-right: 0;
@@ -2877,8 +2873,10 @@ export default {
                             :deep(.ql-container.ql-snow) {
                                 border-radius: 0px 0px 3px 3px;
                                 flex: 1;
+                                border-color: #EAECF1 !important;
                                 .ql-editor {
                                     padding: 10px;
+                                    min-height: 143px;
                                     ul {
                                         padding-left: 0;
                                     }
@@ -3127,6 +3125,13 @@ export default {
             .show-ladder {
                 display: flex;
                 align-items: center;
+                &:hover {
+                    border: 1px solid rgba(0, 97, 255, 0.50);
+                    border-radius: 4px;
+                    .show-ladder-item{
+                        background: rgba(0, 97, 255, 0.1);
+                    }
+                }
                 .show-ladder-item {
                     align-items: center;
                     display: inline-flex;
@@ -3136,16 +3141,14 @@ export default {
                     align-items: center;
                     border-radius: 6px;
                     background: #f2f3f5;
-                    margin-left: 4px;
+                    margin: 4px;
                     font-size: 14px;
                     color: #1d2129;
                     cursor: pointer;
-                    &:first-child {
-                        margin-left: 0;
-                    }
-                    &:hover {
-                        background: rgba(0, 97, 255, 0.1);
-                    }
+                    // &:first-child {
+                    //     margin-left: 0;
+                    // }
+
                     .show-ladder-item-title {
                         margin-right: 4px;
                     }
@@ -3283,6 +3286,9 @@ export default {
     .ant-input-group-addon:nth-of-type(1) {
         background-color: #fff;
     }
+}
+:deep(.ant-input-number-group-addon){
+    color: #8090A6;
 }
 .not-white-space {
     white-space: nowrap;
@@ -3448,7 +3454,11 @@ export default {
 
 .ant-input-group-wrapper {
     :deep(.ant-input-group-addon) {
-        border-color: #eaecf2;
+        border-color: #eaecf2 !important;
+        color: #8090A6;
+        .l-w-h-style-unit{
+            color: #8090A6;
+        }
     }
 }
 
