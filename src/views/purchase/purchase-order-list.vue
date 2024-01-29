@@ -100,13 +100,12 @@
                     <!-- 销售bom -->
                     <template v-if="column.key === 'accessory_list'">
                         <span  class="accessory_list" @click="openBomModal(record)">
-                            {{ 
+                            {{  
                                 record.item_list.map((item,index)=>{
                                     return $i18n.locale === 'zh' ? item.item.name : item.item.name_en
                                 }).join(',') || '-'
                             }}
                         </span>
-                        
                     </template>
                     <template v-else-if="column.dataIndex === 'parent_sn' && $auth('purchase-order.detail')">
                         <a-tooltip placement="top" :title='text'>
@@ -335,8 +334,13 @@ export default {
                 { title: this.$t('p.payment_status'), dataIndex: 'payment_status' },                
                 { title: this.$t('p.payment_time'), dataIndex: 'pay_time', key: 'time' },
                 { title: this.$t('p.complete_time'), dataIndex: 'close_time', key: 'time' },
-
             ]
+            if (this.$auth('DISTRIBUTOR')) {
+                const index = columns.findIndex(column => column.dataIndex === 'accessory_list');
+                if (index !== -1) {
+                    columns.splice(index, 1);
+                }
+            }
             if (!this.$auth('purchase-order.supply-detail')) {
                 columns.splice(4, 0, { title: this.$t('n.institution'), dataIndex: ['create_org', 'name'], key: 'item' },)
                 columns.splice(5, 0, { title: this.$t('p.total_price'), dataIndex: 'total_price', key: 'total_price' },)                
