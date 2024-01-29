@@ -39,7 +39,7 @@
                             </th>
                         </tr>
                     </thead>
-                    <div style="height: 24px;width: 100%;display: table-row-group;"></div>
+                    <div class="seize"></div>
                     <!-- 整车 -->
                     <tbody v-if="vehicleList.length !== 0" class="list-body">
                         <tr class="row row-title">
@@ -76,7 +76,8 @@
                                             <a-image :src="$Util.imageFilter(item?.item?.logo, 5)" />
                                         </div>
                                         <div class="product-mes">
-                                            <p class="name">{{ item?.item[$Util.regionalUnitMoney().name_index] }}</p>
+                                            <p class="name" :title="item?.item[$Util.regionalUnitMoney().name_index]">{{
+                                                item?.item[$Util.regionalUnitMoney().name_index] }}</p>
                                             <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
                                             <p class="version" @click="showDrawer(item)" v-if="item?.item.set_id">
                                                 <span>
@@ -113,7 +114,7 @@
                             </td>
                         </tr>
                     </tbody>
-                    <div style="height: 24px;width: 100%;display: table-row-group;"></div>
+                    <div class="seize"></div>
                     <!-- 零配件 -->
                     <tbody v-if="accessoriesList.length !== 0" class="list-body">
                         <tr class="row row-title">
@@ -150,7 +151,8 @@
                                             <a-image :src="$Util.imageFilter(item?.item?.logo, 5)" />
                                         </div>
                                         <div class="product-mes">
-                                            <p class="name">{{ item?.item[$Util.regionalUnitMoney().name_index] }}</p>
+                                            <p class="name" :title="item?.item[$Util.regionalUnitMoney().name_index]">{{
+                                                item?.item[$Util.regionalUnitMoney().name_index] }}</p>
                                             <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
                                             <p class="version" @click="showDrawer(item)" v-if="item?.item.set_id">
                                                 <span>
@@ -187,7 +189,7 @@
                             </td>
                         </tr>
                     </tbody>
-                    <div style="height: 24px;width: 100%;display: table-row-group;"></div>
+                    <div class="seize"></div>
                     <!-- 周边件 -->
                     <tbody v-if="peripheralList.length !== 0" class="list-body">
                         <tr class="row row-title">
@@ -225,7 +227,8 @@
                                             <a-image :src="$Util.imageFilter(item?.item?.logo, 5)" />
                                         </div>
                                         <div class="product-mes">
-                                            <p class="name">{{ item?.item[$Util.regionalUnitMoney().name_index] }}</p>
+                                            <p class="name" :title="item?.item[$Util.regionalUnitMoney().name_index]">{{
+                                                item?.item[$Util.regionalUnitMoney().name_index] }}</p>
                                             <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
                                             <p class="version" @click="showDrawer(item)" v-if="item?.item.set_id">
                                                 <span>
@@ -262,7 +265,7 @@
                             </td>
                         </tr>
                     </tbody>
-                    <div style="height: 24px;width: 100%;display: table-row-group;"></div>
+                    <div class="seize"></div>
                     <!-- 广宣品 -->
                     <tbody v-if="promotionalList.length !== 0" class="list-body">
                         <tr class="row row-title">
@@ -300,7 +303,8 @@
                                             <a-image :src="$Util.imageFilter(item?.item?.logo, 5)" />
                                         </div>
                                         <div class="product-mes">
-                                            <p class="name">{{ item?.item[$Util.regionalUnitMoney().name_index] }}</p>
+                                            <p class="name" :title="item?.item[$Util.regionalUnitMoney().name_index]">{{
+                                                item?.item[$Util.regionalUnitMoney().name_index] }}</p>
                                             <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
                                             <p class="version" @click="showDrawer(item)" v-if="item?.item.set_id">
                                                 <span>
@@ -1346,6 +1350,7 @@ const handleCreateOrder = () => {
                     border: 1px solid #EEE;
                     width: 120px;
                     height: 120px;
+                    min-width: 120px;
 
                     :deep(.ant-image) {
                         height: 100%;
@@ -1362,6 +1367,7 @@ const handleCreateOrder = () => {
                     margin-left: 24px;
 
                     .name {
+                        .ellipsis(1);
                         color: #000;
                         font-size: 20px;
                         font-style: normal;
@@ -1403,6 +1409,7 @@ const handleCreateOrder = () => {
                         .cart-arrow-right-active {
                             width: 16px;
                             height: 16px;
+                            min-width: 16px;
                             margin-left: 24px;
                         }
 
@@ -1451,6 +1458,12 @@ const handleCreateOrder = () => {
         .row-item-check {
             vertical-align: inherit;
         }
+    }
+
+    .seize {
+        height: 24px;
+        width: 100%;
+        display: table-row-group;
     }
 
     .operation {
@@ -1553,5 +1566,4 @@ const handleCreateOrder = () => {
             }
         }
     }
-}
-</style>
+}</style>
