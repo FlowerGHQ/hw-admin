@@ -50,9 +50,14 @@ export default {
         attachment: "附件",
         wait: "等",
         not_mandatory: "非必填",
+        complete_vehicle :"整车",
+        parts_materials :"零部件/物料",
+        periphery :"周边",
+        publicity_products :"广宣品",
+        expenses :"费用",
         // 车辆分类
         vehicle_classification: "车辆分类",
-        
+        mark_resolved_tips: "已解决的问询单无法继续编辑或留言。确定该问询单的问题已经解决了吗？",
         // 客服账号
         customer_service_account: "客服账号",
         // 账号管理及分配
@@ -138,8 +143,14 @@ export default {
         attachment: "Attachment",
         wait: "Wait",
         not_mandatory: "Not Mandatory",
+        complete_vehicle :"Complete Vehicle",
+        parts_materials :"Parts Materials",
+        periphery :"Periphery",
+        publicity_products :"Publicity Products",
+        expenses :"Expenses",
         // 车辆分类
         vehicle_classification: "Vehicle Classification",
+        mark_resolved_tips: "The resolved inquiry form cannot be edited or left a message. Are you sure the issue with this inquiry has been resolved?",
         customer_service_account: "Customer Service Account",
         account_management_and_distribution: "Account Management And Distribution",
         add_distribution: "Add Distribution",

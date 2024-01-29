@@ -298,11 +298,15 @@ const getCarList = (q, type) => {
     }
     Object.assign(params, q)
     itemListFetch({ ...params }).then(res => {
-        itemList.value = res?.list.map(item => {
+        const arr = res?.list.map(item => {
             item.logo = item.imgs
             return item
         })
-        if (type === 'getSwiperList') getSwiperList(itemList.value);
+        if (type === 'getSwiperList') {
+            getSwiperList(arr)
+        } else {
+            itemList.value = arr
+        }
     })
 }
 // 获取同系列整车

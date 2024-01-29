@@ -81,14 +81,15 @@ const uploadOptions = ref({
         console.log("sizeM", sizeM);
 
         if (/^video\/+/.test(file.type)) {
+            uploadOptions.value.data.type = 'video'
             // 视频 50M
             if (sizeM > props.videoLimit) {
                 isLt = false;
                 message.warning(proxy.$t("common.please_upload_less_than") + "50M" + proxy.$t("common.file"));
                 return false || Upload.LIST_IGNORE;
             }
-        }
-        if (/^image\/+/.test(file.type)) {
+        } else if (/^image\/+/.test(file.type)) {
+            uploadOptions.value.data.type = 'img'
             // 照片 10M
             if (sizeM > props.imageLimit) {
                 isLt = false;
@@ -96,7 +97,7 @@ const uploadOptions = ref({
                 return false || Upload.LIST_IGNORE;
             }
         } else {
-            message.warning($t("common.file_incorrect"));
+            message.warning(proxy.$t("common.file_incorrect"));
             return false || Upload.LIST_IGNORE;
         }
 
@@ -155,13 +156,18 @@ const handleRemove = (file) => {
             height: 100%;
         }
     }
+    ::deep(.ant-upload-list-picture-card) {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
     :deep(.ant-upload.ant-upload-select-picture-card) {
         width: 80px;
         height: 80px;
         border-radius: 4px;
         border: 1px dashed #eaecf1;
         background: #fff;
-        margin: 0;
+        margin: 0;           
     }
 
     :deep(.ant-upload-list-picture-card-container) {
@@ -170,6 +176,11 @@ const handleRemove = (file) => {
         border-radius: 4px;
         border: 1px dashed #eaecf1;
         background: #fff;
+    }
+
+    :deep(.ant-upload-list-item-actions > a:nth-child(1)) {
+        pointer-events: initial !important;
+        opacity: 1 !important;
     }
 }
 </style>

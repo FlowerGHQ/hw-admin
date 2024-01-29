@@ -30,6 +30,12 @@ export default {
         name: "名称",
         product_code: "商品编码",
         quantity: "数量",
+        please_complete_info: "请完善信息",
+        sucesss: '提交成功',
+        sure: '确认',
+        cancel: '取消',
+        fail: '失败',
+        sending: '发送',
     },
     en: {
         operations: "Operations",
@@ -62,5 +68,11 @@ export default {
         name: "Name",
         product_code: "Product Code",
         quantity: "Quantity",  
+        please_complete_info: "Please Complete Info",
+        sucesss: 'Sucesss',
+        sure: 'sure',
+        cancel: 'cancel',
+        fail: 'fail',
+        sending: 'sending',
     }
 }

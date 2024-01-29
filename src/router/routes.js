@@ -389,7 +389,7 @@ const routes = [
     { // 采购管理 - 经销商端 && 门店端 && 分销商端
         path: '/purchase',
         component: Layout,
-        redirect: '/purchase/item-list',
+        redirect: '/purchase/purchase-order-list',
         name: 'PurchaseManagement',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
         meta: {
@@ -408,6 +408,7 @@ const routes = [
                     title_en: 'Purchase',
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
 	                auth: ["item.list"],
+                    hidden: true
                 }
             },
             {
@@ -430,6 +431,7 @@ const routes = [
                     title: '购物车',
                     title_en: 'Shopping cart',
 	                auth: ["purchase-order.save"],
+                    hidden: true
                 }
             },
             {

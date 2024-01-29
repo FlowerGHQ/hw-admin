@@ -4,12 +4,12 @@
             <div v-if="type === 'image'" class="preview-image">
                 <slot name="image">
                     <a-carousel arrows :dots="false">
-                        <template #prevArrow>
+                        <template v-if="previewData.length > 1" #prevArrow>
                             <div class="custom-slick-arrow" style="left: 60px; z-index: 1">
                                 <left-circle-outlined />
                             </div>
                         </template>
-                        <template #nextArrow>
+                        <template v-if="previewData.length > 1" #nextArrow>
                             <div class="custom-slick-arrow" style="right: 60px">
                                 <right-circle-outlined />
                             </div>
@@ -21,7 +21,11 @@
                 </slot>
             </div>
             <div v-else-if="type === 'video'" class="preview-video">
-                <slot name="video"></slot>
+                <slot name="video">
+                    <div class="modal-body">
+                        <video width="1140" height="600" :src="previewData[0]" autoplay controls></video>
+                    </div>
+                </slot>
             </div>
             <div 
                 class="colos-icon" 
@@ -34,7 +38,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import MyMask from "@/components/horwin/based-on-dom/MyMask.vue";
 import { LeftCircleOutlined, RightCircleOutlined, CloseOutlined } from "@ant-design/icons-vue";
 
@@ -66,6 +70,9 @@ const onAddBtn = (type) => {
     }
 };
 /* Methods end */
+onMounted(() => {
+    console.log("previewData", props.previewData);
+})
 </script>
 
 <style lang="less" scoped>
@@ -119,6 +126,8 @@ const onAddBtn = (type) => {
 
     // video
     .preview-video {
+        .fcc();
+        height: 100%;
     }
 
     .colos-icon {
@@ -131,6 +140,7 @@ const onAddBtn = (type) => {
         height: 30px;
         z-index: 6;
         opacity: 0.8;
+        cursor: pointer;
     }
 }
 </style>

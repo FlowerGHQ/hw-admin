@@ -1009,6 +1009,11 @@ const apiList = {
         modify: ['PostJson','enquiry-ticket/update'], // 修改
         detail: ['PostJson','enquiry-ticket/detail'], // 详情
         statusList: ['PostJson','enquiry-ticket/status-list'], // 状态数据
+        sortingType: ['PostJson','enquiry-ticket/sorting-type'], // 归类
+        bindPart: ['PostJson','enquiry-ticket/bind-part'], // 零件
+        markResolved: ['PostJson','enquiry-ticket/mark-resolved'], // 问题解决接口
+        commentList: ['PostJson','comment/list'], // 评论
+        saveComment: ['PostJson','comment/save'], // 新增评论
         // 客服列表
         cusomerList: ['PostJson','user/customer-list'], // 客服列表
         // 删除
