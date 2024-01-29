@@ -701,6 +701,10 @@ onMounted(() => {
         background: #fff;
     }
 }
+// 上传时候的文字
+:deep(.ant-upload-list-item-thumbnail) {
+    white-space: nowrap;
+}
 
 .w-370 {
     width: 370px;

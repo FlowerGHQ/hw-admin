@@ -15,10 +15,12 @@
 </template>
 
 <script>
+import MyMask from "@/components/horwin/based-on-dom/MyMask.vue";
 export default {
     name: 'CustomerCare',
     components: {
-        TimeSearch
+        TimeSearch,
+        MyMask
     },
     props: {},
     data() {
