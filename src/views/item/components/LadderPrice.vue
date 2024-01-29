@@ -26,13 +26,12 @@
                     <a-button type="primary" @click="handleComfirmLadderPrice">{{ $t("def.sure") }}</a-button>
                 </div>
             </div>
-            <div :class="{ 'batch-set': true, 'slide-in-down': batchSetVisible ,'slide-in-up':isDown}">
+            <!-- <div :class="{ 'batch-set': true, 'slide-in-down': batchSetVisible, 'slide-in-up': isDown }">
                 <div class="title-area">
                     <div class="title">
                         {{ $t("item-edit.batch_price") }}
                     </div>
                     <div class="btn-area">
-                        <!-- 取消确定 -->
                         <a-button @click="hanleAllVisible">{{ $t("def.cancel") }}</a-button>
                         <a-button type="primary" @click="hanleAllSure">{{ $t("def.sure") }}</a-button>
                     </div>
@@ -99,7 +98,7 @@
                         </template>
                     </a-table>
                 </div>
-            </div>
+            </div> -->
         </template>
         <div class="table-content">
             <!-- 选择的商品和设置EUR和USD -->
@@ -113,7 +112,7 @@
                     onSelectAll: onSelectAll,
                     type: 'checkbox',
                 }"
-                class="ladder-table"
+                :class="{ 'ladder-table': true, 'slide-down-wrap': !batchSetVisible, 'slide-up-wrap': isDown }"
                 :pagination="false"
                 :rowKey="(record, index) => index">
                 <template #bodyCell="{ column, record, index, text }">
@@ -170,6 +169,80 @@
                         @change="inputValidateConfig" />
                 </template>
             </a-table>
+            <div :class="{ 'batch-set': true, 'slide-in-down': batchSetVisible, 'slide-in-up': isDown }">
+                <div class="title-area">
+                    <div class="title">
+                        {{ $t("item-edit.batch_price") }}
+                    </div>
+                    <div class="btn-area">
+                        <!-- 取消确定 -->
+                        <a-button @click="hanleAllVisible">{{ $t("def.cancel") }}</a-button>
+                        <a-button type="primary" ghost  @click="hanleAllSure">{{ $t("def.sure") }}</a-button>
+                    </div>
+                </div>
+                <div class="table-content">
+                    <a-table
+                        :columns="batchLadderColumns"
+                        bordered
+                        :dataSource="dataSource"
+                        :pagination="false"
+                        :rowKey="(record, index) => index">
+                        <template #bodyCell="{ column, record, index, text }">
+                            <div v-if="column.dataIndex === 'commodity'">
+                                <span class="commodity-area">已选{{ text }}个商品</span>
+                            </div>
+                            <a-input-number
+                                v-if="column.dataIndex === 'fob_eur'"
+                                v-model:value="record[column.dataIndex]"
+                                :min="0.1"
+                                :precision="2"
+                                :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
+                                @change="inputValidateConfig" />
+                            <a-input-number
+                                v-if="column.dataIndex === 'fob_20gp_eur'"
+                                v-model:value="record[column.dataIndex]"
+                                :min="0.1"
+                                :precision="2"
+                                :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
+                                @change="inputValidateConfig" />
+                            <a-input-number
+                                v-if="column.dataIndex === 'fob_40qh_eur'"
+                                v-model:value="record[column.dataIndex]"
+                                :min="0.1"
+                                :precision="2"
+                                :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
+                                @change="inputValidateConfig" />
+                            <a-input-number
+                                v-if="column.dataIndex === 'fob_usd'"
+                                v-model:value="record[column.dataIndex]"
+                                :min="0.1"
+                                :precision="2"
+                                :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
+                                @change="inputValidateConfig" />
+                            <a-input-number
+                                v-if="column.dataIndex === 'fob_20gp_usd'"
+                                v-model:value="record[column.dataIndex]"
+                                :min="0.1"
+                                :precision="2"
+                                :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
+                                @change="inputValidateConfig" />
+                            <a-input-number
+                                v-if="column.dataIndex === 'fob_40qh_usd'"
+                                v-model:value="record[column.dataIndex]"
+                                :min="0.1"
+                                :precision="2"
+                                :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
+                                @change="inputValidateConfig" />
+                        </template>
+                    </a-table>
+                </div>
+            </div>
         </div>
     </a-modal>
 </template>
@@ -178,7 +251,7 @@
 import { ref, reactive, computed, watch, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 const $t = useI18n().t;
-const emit = defineEmits(["update:ladderPriceVisible", "handleLastLadderData",'initActiveIndex']);
+const emit = defineEmits(["update:ladderPriceVisible", "handleLastLadderData", "initActiveIndex"]);
 const props = defineProps({
     // 阶梯价格
     ladderData: {
@@ -225,48 +298,42 @@ const batchLadderColumns = computed(() => {
             dataIndex: "commodity",
             key: "commodity",
         },
-        // EUR
         {
-            title: "EUR",
-            // 下面有子项
-            children: [
-                {
-                    // 26<=订货量（40QH）
-                    title: $t("item-edit.quantity_26"),
-                    dataIndex: "fob_40qh_eur",
-                    key: "fob_40qh_eur",
-                },
-                {
-                    title: $t("item-edit.quantity_11_25"),
-                    dataIndex: "fob_20gp_eur",
-                    key: "fob_20gp_eur",
-                },
-                {
-                    title: $t("item-edit.quantity_1_10"),
-                    dataIndex: "fob_eur",
-                    key: "fob_eur",
-                },
-            ],
+            // 26<=订货量（40QH）
+            title: $t("item-edit.quantity_26"),
+            dataIndex: "fob_40qh_eur",
+            key: "fob_40qh_eur",
+            width: 108,
         },
         {
-            title: "USD",
-            children: [
-                {
-                    title: $t("item-edit.quantity_26"),
-                    dataIndex: "fob_40qh_usd",
-                    key: "fob_40qh_usd",
-                },
-                {
-                    title: $t("item-edit.quantity_11_25"),
-                    dataIndex: "fob_20gp_usd",
-                    key: "fob_20gp_usd",
-                },
-                {
-                    title: $t("item-edit.quantity_1_10"),
-                    dataIndex: "fob_usd",
-                    key: "fob_usd",
-                },
-            ],
+            title: $t("item-edit.quantity_11_25"),
+            dataIndex: "fob_20gp_eur",
+            key: "fob_20gp_eur",
+            width: 108,
+        },
+        {
+            title: $t("item-edit.quantity_1_10"),
+            dataIndex: "fob_eur",
+            key: "fob_eur",
+            width: 108,
+        },
+        {
+            title: $t("item-edit.quantity_26"),
+            dataIndex: "fob_40qh_usd",
+            key: "fob_40qh_usd",
+            width: 108,
+        },
+        {
+            title: $t("item-edit.quantity_11_25"),
+            dataIndex: "fob_20gp_usd",
+            key: "fob_20gp_usd",
+            width: 108,
+        },
+        {
+            title: $t("item-edit.quantity_1_10"),
+            dataIndex: "fob_usd",
+            key: "fob_usd",
+            width: 108,
         },
     ];
 });
@@ -283,7 +350,7 @@ const ladderColumns = computed(() => {
         },
         // EUR
         {
-            title: "EUR",
+            title: "EUR（€）",
             // 下面有子项
             children: [
                 {
@@ -311,7 +378,7 @@ const ladderColumns = computed(() => {
             ],
         },
         {
-            title: "USD",
+            title: "USD（$）",
             children: [
                 {
                     title: $t("item-edit.quantity_26"),
@@ -351,15 +418,11 @@ const dataSource = ref([
         fob_usd: null,
     },
 ]);
-// 选择的
-// const selectedRowKeys = ref([]);
-// const selectedRowItems = ref([]);
 
 const keyAndItem = reactive({
     selectedRowKeys: [],
     selectedRowItems: [],
 });
-
 
 // 触发选择
 const onSelectChange = (selectedRowKeys, selectedRows) => {
@@ -399,7 +462,7 @@ const getContainer = () => {
 const handleComfirmLadderPrice = () => {
     console.log(props.ladderData);
     // 传递给父组件，让父组件去处理
-    emit('handleSaveLadderData', props.ladderData);
+    emit("handleSaveLadderData", props.ladderData);
     emit("update:ladderPriceVisible", false);
 };
 // 取消按钮
@@ -420,7 +483,7 @@ const handleCancelLadderPrice = () => {
     keyAndItem.selectedRowItems = [];
     batchSetVisible.value = false;
     isDown.value = false;
-    emit('initActiveIndex', null);
+    emit("initActiveIndex", null);
     emit("update:ladderPriceVisible", false);
 };
 const inputValidateConfig = (value) => {
@@ -463,9 +526,18 @@ const hanleAllSure = () => {
 watch(
     () => props.activeIndex,
     (newVal) => {
-        console.log(newVal,'----------------');
-        // 设置选中的行
-        keyAndItem.selectedRowKeys = [newVal];
+        if (newVal !== null) {
+            if (
+                props.ladderData[newVal].fob_eur ||
+                props.ladderData[newVal].fob_20gp_eur ||
+                props.ladderData[newVal].fob_40qh_eur ||
+                props.ladderData[newVal].fob_usd ||
+                props.ladderData[newVal].fob_20gp_usd ||
+                props.ladderData[newVal].fob_40qh_usd
+            ) {
+                keyAndItem.selectedRowKeys = [newVal];
+            }
+        }
         // 设置选中的数据
     },
     {
@@ -496,28 +568,73 @@ watch(
                 }
             }
             .ant-modal-body {
-                padding: 20px 24px;
-                height: 652px;
-                overflow-y: scroll;
-                // 滚动条样式
-                &::-webkit-scrollbar {
-                    width: 6px;
-                    height: 6px;
-                }
-                &::-webkit-scrollbar-thumb {
-                    border-radius: 3px;
-                    background-color: rgba(0, 0, 0, 0.2);
-                }
-                &::-webkit-scrollbar-track {
-                    border-radius: 3px;
-                    background-color: rgba(0, 0, 0, 0.1);
-                }
+                height: 666px;
+                padding: 0;
+                overflow-y: hidden;
+
                 .table-content {
                     width: 100%;
                     height: 100%;
                     .ladder-table {
                         width: 100%;
-                        height: 100%;
+                        height: calc(100% - 180px);
+                        padding: 20px 24px;
+                        overflow-y: scroll;
+                        // 滚动条样式
+                        &::-webkit-scrollbar {
+                            width: 6px;
+                            height: 6px;
+                        }
+                        &::-webkit-scrollbar-thumb {
+                            border-radius: 3px;
+                            background-color: rgba(0, 0, 0, 0.2);
+                        }
+                        &::-webkit-scrollbar-track {
+                            border-radius: 3px;
+                            background-color: rgba(0, 0, 0, 0.1);
+                        }
+                    }
+                    .slide-down-wrap {
+                        height: 646px;
+                    }
+                    .batch-set {
+                        width: 100%;
+                        height: 140px;
+                        background-color: #fff;
+                        z-index: 1;
+                        box-shadow: 0px -4px 10px rgba(143, 146, 152, 0.1);
+                        padding: 16px 24px 10px 24px;
+                        transform: translateY(100%);
+                        .title-area {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            align-items: center;
+                            margin-bottom: 14px;
+                            .title {
+                                font-size: 14px;
+                                font-weight: 500;
+                                color: #1d2129;
+                                display: flex;
+                                align-items: center;
+                                &::before {
+                                    content: "";
+                                    display: inline-block;
+                                    width: 3px;
+                                    height: 12px;
+                                    background-color: #0061ff;
+                                    margin-right: 4px;
+                                }
+                            }
+                            .btn-area {
+                                .ant-btn {
+                                    height: auto;
+                                    min-width: auto;
+                                    padding: 4px 16px;
+                                    border-radius: 4px;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -553,48 +670,6 @@ watch(
                         }
                     }
                 }
-                .batch-set {
-                    position: absolute;
-                    bottom: 0;
-                    left: 0;
-                    width: 100%;
-                    min-height: 140px;
-                    background-color: #fff;
-                    z-index: 1;
-                    box-shadow: 0px -4px 10px rgba(143, 146, 152, 0.1);
-                    padding: 16px 24px;
-                    transform: translateY(100%);
-                    .title-area {
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                        align-items: center;
-                        margin-bottom: 14px;
-                        .title {
-                            font-size: 14px;
-                            font-weight: 500;
-                            color: #1d2129;
-                            display: flex;
-                            align-items: center;
-                            &::before {
-                                content: "";
-                                display: inline-block;
-                                width: 3px;
-                                height: 12px;
-                                background-color: #0061ff;
-                                margin-right: 4px;
-                            }
-                        }
-                        .btn-area {
-                            .ant-btn {
-                                height: auto;
-                                min-width: auto;
-                                padding: 4px 16px;
-                                border-radius: 4px;
-                            }
-                        }
-                    }
-                }
             }
         }
     }
@@ -605,7 +680,7 @@ watch(
 }
 
 .slide-in-up {
-    animation: slideInUp 0.3s ease-in-out forwards; //forwards表示动画结束后保持最后的状态 
+    animation: slideInUp 0.3s ease-in-out forwards; //forwards表示动画结束后保持最后的状态
 }
 :deep(table) {
     .ant-table-cell {
@@ -614,17 +689,31 @@ watch(
         // 文字居中
         text-align: center !important;
         color: #1d2129;
+        padding: 10px 16px;
+        .commodity-area{
+            display: inline-block;
+            height: 24px;
+            line-height: 24px;
+            background-color: #F2F3F5;
+            padding: 0 30px;
+            border-radius: 4px;
+        }
     }
     .ant-table-tbody {
         .ant-table-row {
             .ant-table-cell-row-hover {
-                background-color: rgba(0, 97, 255, 0.05);
+                // background-color: rgba(0, 97, 255, 0.05);
             }
         }
         .ant-table-row-selected {
             .ant-table-cell {
                 background: rgba(0, 97, 255, 0.05);
             }
+        }
+    }
+    .ant-table-thead {
+        .ant-table-cell {
+            padding: 2px 4px !important;
         }
     }
 }

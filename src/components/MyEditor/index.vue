@@ -52,7 +52,7 @@ watch(
     () => props.modelValue,
     (val) => {
         console.log(val,'获得的富文本数据');
-        if ((val != null || val != "" ) && val) {
+        if ((val != null || val != "" || val != "<p><br></p>" ) && val) {
             content.value = val;
         } else {
             content.value = "";
@@ -60,7 +60,7 @@ watch(
         }
     },
     {
-        immediate: true,
+        deep: true,
     }
 );
 </script>
