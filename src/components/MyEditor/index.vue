@@ -50,7 +50,6 @@ const setValue = () => {
 watch(
     () => props.modelValue,
     (val) => {
-        console.log(val, "获得的富文本数据");
         if (val != null || val != "") {
             content.value = val;
         } else if (val == "<p><br></p>") {
