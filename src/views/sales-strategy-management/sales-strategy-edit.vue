@@ -533,19 +533,24 @@ const editData = (data) => {
 };
 // 提交上传
 const handleSubmit = () => {
-    // 拷贝一份数据,formState的数据
-    let form = _.cloneDeep(formState);
-    form.rule = JSON.stringify(form.rule);
-    form.item_list = showSelectData.value.map((item) => {
-        return item.value;
-    });
-    // 整合到上传的数据中
-    if (type.value === "add") {
-        addData(form);
-    } else if (type.value === "edit") {
-        form.id = $route.query.id;
-        editData(form);
-    }
+    formRef.value && formRef.value.clearValidate();
+    // 校验表单
+    formRef.value &&
+        formRef.value.validate().then((res) => {
+            // 拷贝一份数据,formState的数据
+            let form = _.cloneDeep(formState);
+            form.rule = JSON.stringify(form.rule);
+            form.item_list = showSelectData.value.map((item) => {
+                return item.value;
+            });
+            // 整合到上传的数据中
+            if (type.value === "add") {
+                addData(form);
+            } else if (type.value === "edit") {
+                form.id = $route.query.id;
+                editData(form);
+            }
+        });
 };
 
 // 修改
@@ -559,25 +564,27 @@ const handleEdit = (record, index) => {
 };
 // 修改返回值
 const handleModalEdit = (data) => {
-    console.log(data,'data------------------------');
-    console.log(formState.strategy_detail,'strategy_detail-----------------');
-    console.log(tableData.value,'tableData-------------------');
-    console.log(formState.rule,'rule-----------------');
+    console.log(data, "data------------------------");
+    console.log(formState.strategy_detail, "strategy_detail-----------------");
+    console.log(tableData.value, "tableData-------------------");
+    console.log(formState.rule, "rule-----------------");
     let country = data[0].country;
     let no;
     let countryArr = formState.strategy_detail.filter((item) => item.country == country) || [];
-        // 说明点击了修改,但是修改了国家
-    if(countryArr.length === 0){
-         no = formState.strategy_detail[reviewData.value.index].no;
+    // 说明点击了修改,但是修改了国家
+    if (countryArr.length === 0) {
+        no = formState.strategy_detail[reviewData.value.index].no;
         // 删除点击的国家的数据
-        formState.strategy_detail = formState.strategy_detail.filter((item) => item.country != formState.strategy_detail[reviewData.value.index].country);
-    }else{
-         no = countryArr[0].no;
+        formState.strategy_detail = formState.strategy_detail.filter(
+            (item) => item.country != formState.strategy_detail[reviewData.value.index].country
+        );
+    } else {
+        no = countryArr[0].no;
     }
-    formState.strategy_detail.forEach(item=>{
+    formState.strategy_detail.forEach((item) => {
         item.rule = formState.rule;
         item.type = formState.type;
-    })
+    });
 
     // 重新构建数据
     let newData = data.map((item) => {
@@ -591,10 +598,10 @@ const handleModalEdit = (data) => {
         };
     });
 
-    console.log(newData,'newData-------------------');
+    console.log(newData, "newData-------------------");
     formState.strategy_detail = formState.strategy_detail.filter((item) => item.country !== country);
     formState.strategy_detail = [...formState.strategy_detail, ...newData];
-    console.log(formState.strategy_detail,'strategy_detail-----------------');
+    console.log(formState.strategy_detail, "strategy_detail-----------------");
     console.log(viewData(formState.strategy_detail));
     tableData.value = viewData(formState.strategy_detail);
     // 拷贝一份数据,formState的数据
