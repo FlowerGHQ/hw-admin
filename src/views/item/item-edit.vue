@@ -3111,6 +3111,7 @@ export default {
                     border-radius: 4px;
                     .show-ladder-item{
                         background: rgba(0, 97, 255, 0.1);
+                        margin: 4px !important;
                     }
                 }
                 .show-ladder-item {
@@ -3126,10 +3127,9 @@ export default {
                     font-size: 14px;
                     color: #1d2129;
                     cursor: pointer;
-                    // &:first-child {
-                    //     margin-left: 0;
-                    // }
-
+                    &:first-child {
+                        margin-left: 0;
+                    }
                     .show-ladder-item-title {
                         margin-right: 4px;
                     }
