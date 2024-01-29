@@ -17,7 +17,7 @@
         <template #footer>
             <div class="confim-footer">
                 <div class="tips">
-                    {{ $t("item-edit.batch_price") }}
+                  <MySvgIcon icon-class="hint"/>  {{ $t("item-edit.batch_price") }}
                 </div>
                 <div class="btn-area">
                     <!-- 取消按钮 -->
@@ -26,79 +26,6 @@
                     <a-button type="primary" @click="handleComfirmLadderPrice">{{ $t("def.sure") }}</a-button>
                 </div>
             </div>
-            <!-- <div :class="{ 'batch-set': true, 'slide-in-down': batchSetVisible, 'slide-in-up': isDown }">
-                <div class="title-area">
-                    <div class="title">
-                        {{ $t("item-edit.batch_price") }}
-                    </div>
-                    <div class="btn-area">
-                        <a-button @click="hanleAllVisible">{{ $t("def.cancel") }}</a-button>
-                        <a-button type="primary" @click="hanleAllSure">{{ $t("def.sure") }}</a-button>
-                    </div>
-                </div>
-                <div class="table-content">
-                    <a-table
-                        :columns="batchLadderColumns"
-                        bordered
-                        :dataSource="dataSource"
-                        :pagination="false"
-                        :rowKey="(record, index) => index">
-                        <template #bodyCell="{ column, record, index, text }">
-                            <div v-if="column.dataIndex === 'commodity'">
-                                <span>已选{{ text }}个商品</span>
-                            </div>
-                            <a-input-number
-                                v-if="column.dataIndex === 'fob_eur'"
-                                v-model:value="record[column.dataIndex]"
-                                :min="0.1"
-                                :precision="2"
-                                :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
-                                @change="inputValidateConfig" />
-                            <a-input-number
-                                v-if="column.dataIndex === 'fob_20gp_eur'"
-                                v-model:value="record[column.dataIndex]"
-                                :min="0.1"
-                                :precision="2"
-                                :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
-                                @change="inputValidateConfig" />
-                            <a-input-number
-                                v-if="column.dataIndex === 'fob_40qh_eur'"
-                                v-model:value="record[column.dataIndex]"
-                                :min="0.1"
-                                :precision="2"
-                                :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
-                                @change="inputValidateConfig" />
-                            <a-input-number
-                                v-if="column.dataIndex === 'fob_usd'"
-                                v-model:value="record[column.dataIndex]"
-                                :min="0.1"
-                                :precision="2"
-                                :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
-                                @change="inputValidateConfig" />
-                            <a-input-number
-                                v-if="column.dataIndex === 'fob_20gp_usd'"
-                                v-model:value="record[column.dataIndex]"
-                                :min="0.1"
-                                :precision="2"
-                                :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
-                                @change="inputValidateConfig" />
-                            <a-input-number
-                                v-if="column.dataIndex === 'fob_40qh_usd'"
-                                v-model:value="record[column.dataIndex]"
-                                :min="0.1"
-                                :precision="2"
-                                :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
-                                @change="inputValidateConfig" />
-                        </template>
-                    </a-table>
-                </div>
-            </div> -->
         </template>
         <div class="table-content">
             <!-- 选择的商品和设置EUR和USD -->
@@ -248,6 +175,7 @@
 </template>
 
 <script setup>
+import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import { ref, reactive, computed, watch, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 const $t = useI18n().t;
@@ -654,6 +582,13 @@ watch(
                         color: #666;
                         text-align: center;
                         border-radius: 4px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        .svg-icon{
+                            margin-right: 2px;
+                            font-size: 16px;
+                        }
                     }
                     .btn-area {
                         margin-left: 174px;
