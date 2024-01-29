@@ -1,4 +1,4 @@
-export default {
+const MALL_HEADER_AUTH = {
     /*
         页头:
         页尾:
@@ -53,3 +53,4 @@ export default {
         { value: '/mall/shopping-bag' },
     ],
 }
+export default MALL_HEADER_AUTH

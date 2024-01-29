@@ -69,7 +69,7 @@ export default {
                     return el.value == n.path
                 });
                 this.footAuth = target
-                let totop = Core.Const.MALLHEADERAUTH.TOTOP.some(el => {
+                let totop = Core.Const.MALL_HEADER_AUTH.TOTOP.some(el => {
                     return el.value == n.path
                 });
                 this.totopAuth = totop
