@@ -14,7 +14,7 @@
                                 <span class="code-left">{{ vehicle_mes.code }}</span>
                                 <span class="code-right">{{ specList?.length || 0 }} {{ $t('purchase.series') }}</span>
                             </p>
-                            <div class="series-cards">
+                            <div class="series-cards" :class="specList?.length > 3 ? 'padding-bottom' : ''">
                                 <div class="series-card" :style="{ flex: specList?.length > 2 ? 'none' : '1' }"
                                     v-for="(item, i) in specList" :key="item.id" @click="selectSeries(i)">
                                     <seriesCard :record="item" :selected="seriesIndex === i" />
@@ -68,7 +68,7 @@
                                         <a-input-number v-model:value="editCount" :min="1" :max="99999" :precision="0" />
                                     </div>
                                 </div>
-                                <my-button type="primary" padding="22px 32px" font="16px"
+                                <my-button type="primary" padding="20px 32px" font="16px"
                                     @click.native="addCar(vehicle_mes)">
                                     <svg-icon icon-class="add-car-icon" class-name="add-car-icon" />
                                     {{ $t('i.cart') }}
@@ -86,7 +86,7 @@
                     <div class="tab-body">
                         <template v-if="tabIndex === 0">
                             <template v-if="detailImageList.length > 0">
-                                <img class="img-detail" :src="$Util.imageFilter(item, 2)" alt=""
+                                <img class="img-detail" :src="$Util.imageFilter(item, 5)" alt=""
                                     v-for="item in detailImageList">
                             </template>
                             <a-empty :description="null" v-else />
@@ -95,7 +95,7 @@
                 </div>
                 <!-- 相同系列产品 -->
                 <div class="same-series" v-if="sameSeriesList.length > 0" :key="lang">
-                    <div class="title">{{ $t('purchase.same_series_of_products') }}</div>
+                    <div class="title">{{ $t('purchase.recommended_products') }}</div>
                     <div class="same-series-list">
                         <div class="same-series-item" v-for="item in sameSeriesList" :key="item.id"
                             @click="routerChange('/mall/vehicle-list/detail', { id: item.id })">
@@ -513,7 +513,7 @@ const getShopCartList = () => {
                                                     border-radius: 20px;
                                                     display: inline-block;
                                                     content: '';
-                                                    width: 12px;
+                                                    width: 15px;
                                                     height: 1px;
                                                     background: #1C1B1F;
                                                     border-radius: 20px 20px 20px 20px;
@@ -534,12 +534,12 @@ const getShopCartList = () => {
                                                 }
 
                                                 &::before {
-                                                    width: 12px;
+                                                    width: 15px;
                                                     height: 1px;
                                                 }
 
                                                 &::after {
-                                                    height: 12px;
+                                                    height: 15px;
                                                     width: 1px;
                                                 }
                                             }
@@ -575,6 +575,7 @@ const getShopCartList = () => {
                     font-weight: 500;
                     line-height: normal;
                     letter-spacing: 0.48px;
+                    margin-bottom: 12px;
                 }
 
                 .code {
@@ -605,7 +606,10 @@ const getShopCartList = () => {
                     .flex(initial, initial, row);
                     overflow-x: auto;
                     margin-top: 24px;
-                    padding-bottom: 24px;
+
+                    &.padding-bottom {
+                        padding-bottom: 24px;
+                    }
 
                     .series-card {
                         flex-shrink: 0;

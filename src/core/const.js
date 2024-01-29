@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import defult_img from '@images/defult_img.png'
+import defult_mall_img from '@images/defult_mall_img.png'
 import defult_org from '@images/defult_org.png'
 import defult_item from '@images/defult_item.png'
 import defult_file from '@images/defult_file.png'
@@ -103,6 +104,7 @@ let Const = {
         2: defult_item,
         3: defult_org,
         4: defult_file,
+        5: defult_mall_img,
     },
 
     TIME_PICKER_DEFAULT_VALUE: {
@@ -636,10 +638,10 @@ let Const = {
             COMPONENT: 2//零件
         },
         TYPE_MAP: {
-            '1': { key: 1, zh: '整车', en: 'Vehicle', value: 1, id: 1, nameLang: 'products_name1', mesLang: 'products_mes1',img: 'products-img1', path: '/purchase/item-list' },
-            '2': { key: 2, zh: '零部件', en: 'Parts', value: 2, id: 2, nameLang: 'products_name2', mesLang: 'products_mes2',img: 'products-img2', path: '/purchase/item-list' },
-            '3': { key: 3, zh: '周边', en: 'Peripheral', value: 3, id: 53, nameLang: 'products_name3', mesLang: 'products_mes3',img: 'products-img3', path: '/purchase/item-list' },
-            '4': { key: 4, zh: '广宣品', en: 'Publicity products', value: 4, id: 59, nameLang: 'products_name1', mesLang: 'products_mes1',img: 'products-img1', path: '/purchase/item-list' },
+            '1': { key: 1, zh: '整车', en: 'Vehicle', value: 1, id: 1, nameLang: 'products_name1', mesLang: 'products_mes1',img: 'products-img1', path: '/mall/vehicle-list' },
+            '2': { key: 2, zh: '零部件', en: 'Parts', value: 2, id: 2, nameLang: 'products_name2', mesLang: 'products_mes2',img: 'products-img2', path: '/mall/accessories-list' },
+            '3': { key: 3, zh: '周边', en: 'Peripheral', value: 3, id: 53, nameLang: 'products_name3', mesLang: 'products_mes3',img: 'products-img3', path: '/mall/peripheral-list' },
+            '4': { key: 4, zh: '广宣品', en: 'Publicity products', value: 4, id: 59, nameLang: 'products_name1', mesLang: 'products_mes1',img: 'products-img1', path: '/mall/promotional-list' },
         },
         MONETARY_TYPE: {
             '￥': 'CNY',

@@ -879,7 +879,7 @@ export default {
     }
 }
 .ant-input {
-   caret-color: #C6F; /* 将光标颜色设为红色 */
+    caret-color: #C6F; /* 光标颜色 */
 }
 input.ant-input {
     border: none;

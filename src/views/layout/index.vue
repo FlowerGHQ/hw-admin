@@ -322,7 +322,7 @@ export default {
                     break;
                 case 'shop_cart':
                     routeUrl = this.$router.resolve({
-                        path: "/purchase/item-collect",
+                        path: "/mall/shopping-bag",
                     })
                     window.open(routeUrl.href, '_self')
                     break;

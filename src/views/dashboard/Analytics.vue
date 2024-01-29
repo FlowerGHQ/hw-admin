@@ -268,10 +268,10 @@ export default {
             switch (type) {
                 case 'item' :
                     routeUrl = this.$router.resolve({
-                        path: "/purchase/item-list",
-                        query: {
-                            first_level_id : first_level_id
-                        }
+                        path: "/mall/vehicle-list",
+                        // query: {
+                        //     first_level_id : first_level_id
+                        // }
                     })
                     window.open(routeUrl.href, '_self')
                     break;

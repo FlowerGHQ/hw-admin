@@ -99,7 +99,7 @@ export default {
                     break;
                 case 'purchase': // 采购
                     routeUrl = this.$router.resolve({
-                        path: "/purchase/item-list",
+                        path: "/mall/vehicle-list",
                     })
                     break;
                 case 'transfer': // 调货

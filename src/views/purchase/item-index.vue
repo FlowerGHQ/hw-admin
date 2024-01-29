@@ -259,7 +259,7 @@ export default {
         case "favorite": // 收藏夹
         case "shop_cart": // 购物车
           routeUrl = this.$router.resolve({
-            path: "/purchase/item-collect",
+            path: "/mall/shopping-bag",
           });
           window.open(routeUrl.href, "_self");
           break;

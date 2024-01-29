@@ -131,13 +131,6 @@ const routerChange = (routeUrl, item = {}, type = 1) => {
             margin-top: 8px;
 
             .dis-text {
-                color: #333;
-                font-size: 12px;
-                font-style: normal;
-                font-weight: 400;
-                line-height: 120%;
-                /* 14.4px */
-                position: relative;
 
                 // &::before {
                 //     content: '';
@@ -154,6 +147,16 @@ const routerChange = (routeUrl, item = {}, type = 1) => {
 
                 &:nth-child(n + 2) {
                     margin-top: 10px;
+                }
+
+                :deep(*) {
+                    margin: 0;
+                    color: #333;
+                    font-size: 12px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 120%;
+                    position: relative;
                 }
             }
         }
@@ -174,10 +177,7 @@ const routerChange = (routeUrl, item = {}, type = 1) => {
     border: 2px solid #9167FF !important;
 
     .name {
-        background: linear-gradient(100deg, #C6F 0%, #66F 100%);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: #8F00FF !important;
     }
 }
 </style>
