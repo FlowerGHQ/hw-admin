@@ -134,7 +134,7 @@
                     <div class="attachment-style m-t-20">
                         <div class="col">
                             <div class="key m-r-16">{{ $t("customer-care.attachment") }}</div>
-                            <div class="value">
+                            <div class="value d-f-a">
                                 <template v-for="(item, index) in customerCareDetail.attachment_list" :key="index">
                                     <template v-if="/(image\/|png|jpg|jpeg)/.test(item.type)">
                                         <img
@@ -147,18 +147,20 @@
                                     </template>
                                     <template v-else-if="/video\/+/.test(item.type)">
                                         <!-- 视频 -->
-                                        <img
+                                        <div
+                                            class="video-container"
                                             :class="{ 'm-l-16': index > 0 }"
-                                            class="attachment-img"
-                                            src="@images/item/video_default.svg"
-                                            alt=""
                                             @click="
                                                 onViewImage({
                                                     type: 'video/*',
                                                     path: item.path,
                                                 })
                                             "
-                                        />
+                                        >
+                                            <MySvgIcon class="video-icon" icon-class="video-icon" />
+                                            <div class="time">2:32s</div>
+                                            <div class="bottom-mask">{{ item.name }}</div>
+                                        </div>
                                     </template>
                                 </template>
                             </div>
@@ -479,7 +481,7 @@
                                     </div>
                                     <div v-if="item.file.length > 0" class="reply-platform-attachment m-t-4 p-10">
                                         <div class="reply-platform-attachment-title">{{ $t("customer-care.attachment") }}:</div>
-                                        <div class="reply-platform-attachment-img m-t">
+                                        <div class="reply-platform-attachment-img m-t d-f-a">
                                             <template v-for="(itemPath, index) in item.file" :key="index">
                                                 <template v-if="/(image\/|png|jpg|jpeg)/.test(itemPath.type)">
                                                     <img
@@ -497,18 +499,20 @@
                                                 </template>
                                                 <template v-else-if="/video\/+/.test(itemPath.type)">
                                                     <!-- 视频 -->
-                                                    <img
+                                                    <div
+                                                        class="video-container"
                                                         :class="{ 'm-l-16': index > 0 }"
-                                                        class="attachment-img"
-                                                        src="@images/item/video_default.svg"
-                                                        alt=""
                                                         @click="
                                                             onViewImage({
                                                                 type: 'video/*',
-                                                                path: itemPath.path,
+                                                                path: item.path,
                                                             })
                                                         "
-                                                    />
+                                                    >
+                                                        <MySvgIcon class="video-icon" icon-class="video-icon" />
+                                                        <div class="time">2:32s</div>
+                                                        <div class="bottom-mask">{{ item.name }}</div>
+                                                    </div>
                                                 </template>
                                             </template>
                                         </div>
@@ -539,7 +543,7 @@
                                     </div>
                                     <div v-if="item.file.length > 0" class="reply-platform-attachment m-t-4 p-10">
                                         <div class="reply-platform-attachment-title">{{ $t("customer-care.attachment") }}:</div>
-                                        <div class="reply-platform-attachment-img m-t">
+                                        <div class="reply-platform-attachment-img m-t d-f-a">
                                             <template v-for="(itemPath, index) in item.file" :key="index">
                                                 <template v-if="/(image\/|png|jpg|jpeg)/.test(itemPath.type)">
                                                     <img
@@ -557,18 +561,20 @@
                                                 </template>
                                                 <template v-else-if="/video\/+/.test(itemPath.type)">
                                                     <!-- 视频 -->
-                                                    <img
+                                                    <div
+                                                        class="video-container"
                                                         :class="{ 'm-l-16': index > 0 }"
-                                                        class="attachment-img"
-                                                        src="@images/item/video_default.svg"
-                                                        alt=""
                                                         @click="
                                                             onViewImage({
                                                                 type: 'video/*',
-                                                                path: itemPath.path,
+                                                                path: item.path,
                                                             })
                                                         "
-                                                    />
+                                                    >
+                                                        <MySvgIcon class="video-icon" icon-class="video-icon" />
+                                                        <div class="time">2:32s</div>
+                                                        <div class="bottom-mask">{{ item.name }}</div>
+                                                    </div>
                                                 </template>
                                             </template>
                                         </div>
@@ -799,6 +805,7 @@ const getDetailFetch = (params = {}) => {
             customerCareDetail.value.attachment_list = res.detail.attachment_list.map((el) => {
                 return {
                     id: el.id,
+                    name: el.name,
                     type: el.type,
                     path: Core.Const.NET.OSS_POINT + el.path,
                 };
@@ -1542,6 +1549,49 @@ onMounted(() => {
     width: 100%;
     display: flex;
     justify-content: center;
+}
+
+// 视频样式
+.video-container {
+    width: 80px;
+    height: 80px;
+    background-color: #e9edf4;
+    border-radius: 4px;
+    position: relative;
+
+    .video-icon {
+        width: 32px;
+        height: 23px;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 16px;
+    }
+
+    .time {
+        color: v#4E5969;
+        font-size: 10px;
+        font-weight: 400;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 38px;
+    }
+
+    .bottom-mask {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 22px;
+        line-height: 22px;
+        border-radius: 0px 0px 4px 4px;
+        background: rgba(29, 33, 41, 0.6);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 400;
+        text-align: center;
+    }
 }
 
 .d-f-a {
