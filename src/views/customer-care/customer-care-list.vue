@@ -17,7 +17,7 @@
                     <a-tab-pane :key="item.key" v-for="item of statusList">
                         <template #tab>
                             <div class="tabs-title">
-                                <span>{{ $t(item.t) }}</span>
+                                {{ $t(item.t) }}
                                 <span :class="item.color">
                                     {{ item.count }}
                                 </span>
@@ -49,7 +49,7 @@
                         <!-- 公共 -->
                         <template v-if="column.key === 'uid'">
                             <div class="new">
-                                <span class="new-msg" v-if="record.new_msg_id">新消息</span>
+                                <span class="new-msg" v-if="newMsgIdFn(record, 'admin')">新消息</span>
                                 <div>{{ text || "-" }}</div>
                             </div>
                         </template>
@@ -453,7 +453,8 @@ const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPa
     //     console.log("数据 ", res);
     //     return [
     //         {
-    //             new_msg_id: 0,
+    //             id: 1,
+    //             new_msg_id: 2,
     //             uid : 1231241414,  // 订单号
     //             vehicle_list: [
     //                 { vehicle_uid: "12312414214124", mileage: 20 },
@@ -518,6 +519,9 @@ const routerChange = (type, record) => {
                     },
                 });
                 window.open(routeUrl.href, "_blank");
+
+                storageFn(Core.Data.getDistributorNewMsg(), 'setDistributorNewMsg', record)
+
                 break;
         }
     } else {
@@ -552,6 +556,8 @@ const routerChange = (type, record) => {
                     },
                 });
                 window.open(routeUrl.href, "_blank");
+
+                storageFn(Core.Data.getAdminNewMsg(), 'setAdminNewMsg', record)
                 break;
         }
     }
@@ -564,6 +570,44 @@ const onSearch = (data) => {
 const onReset = () => {
     refreshTable();
 };
+// 点击留言的时候存储本地
+const storageFn = (loaclData, setLoaclDataName, record) => {
+    let newMsg = loaclData || []
+    
+    // 判断本地是否存在id(存在替换)
+    const findIndex = newMsg?.findIndex(el => el.id === record.id);
+    if (findIndex !== -1) {
+        newMsg?.splice(findIndex, 1, {
+            id: record.id,
+            new_msg_id: record.new_msg_id
+        })
+    } else {
+        newMsg?.push({
+            id: record.id,
+            new_msg_id: record.new_msg_id
+        })
+    }
+
+    Core.Data[setLoaclDataName](newMsg)
+}
+// 判断是否显示新消息标签
+const newMsgIdFn = (record) => {    
+    let loaclData = []
+
+    if (isDistributerAdmin.value) {
+        // 平台方
+        loaclData = Core.Data.getAdminNewMsg()
+    } else {
+        // 分销商
+        loaclData = Core.Data.getDistributorNewMsg()
+    }
+
+    const find = loaclData?.find(el => Number(el.id) === Number(record.id))
+    // console.log("find data", find);
+
+    // 判断找到的本地数据的数量是否少于渲染的数据(是 返回true 否则返回 false)
+    return find?.new_msg_id ? Number(find?.new_msg_id) < Number(record?.new_msg_id) : record?.new_msg_id > 0
+}
 
 /* methods end*/
 
@@ -594,12 +638,6 @@ onMounted(() => {
 
 <style lang="less" scoped>
 #customer-care {
-    .tabs-title {
-        color: #4e5969;
-        font-size: 14px;
-        font-weight: 400;
-    }
-
     .table-title {
         color: #1d2129;
         font-size: 14px;

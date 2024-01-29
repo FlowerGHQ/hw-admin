@@ -13,7 +13,7 @@ export default {
         processing_progress: '处理进度',
         fault_classification: '故障分类',
         belonging_customer_service: '归属客服',
-        Construction_site_number: "工地编号",
+        Construction_site_number: "工单编号",
         classify: "归类",        
         submitter: "提交人",
         model_number_mileage: "车型号、公里数",
