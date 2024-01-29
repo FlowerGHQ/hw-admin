@@ -365,7 +365,7 @@ export default {
                 this.$router.replace(`/login`);
             }
             Core.Api.Common.logout().then(() => {
-                localStorage.clear()
+                Core.Data.clearSpecificItem();
             })
         },
 

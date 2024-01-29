@@ -83,6 +83,19 @@ class StorageHandler {
         return localStorage.removeItem(FINAL_KEY);
     }
 
+    // 把特定的参数清空掉(不能直接用掉了 使用 localStorage.clear())
+    /**
+     * @params(excludeData) 排除这两个不需要清除的
+     * Core.Data.clearSpecificItem();  使用
+    */    
+    clearSpecificItem(excludeData = ['ADMIN_NEW_MSG', 'DISTRIBUTOR_NEW_MSG']) {
+        for (const key in Const.DATA) {            
+            if (!excludeData.includes(key)) {
+                this.removeItem(Const.DATA[key]);
+            }
+        }
+    }
+
     setToken(value) {
         this.setItem(Const.DATA.KEY_TOKEN, value);
     }
