@@ -10,36 +10,327 @@
                     <span class="price">
                         {{ currency }} {{ allPrice }}
                     </span>
-                    <my-button type="primary" padding="12px 32px" :disabled="!isSelected" font="14px"
+                    <my-button showRightIcon type="primary" padding="12px 32px" :disabled="!isSelected" font="14px"
                         @click.native="handleCreateOrder">
                         {{ $t('purchase.settlement') }}
                     </my-button>
                 </span>
             </div>
-            <div class="select-all">
-                <div class="row">
-                    <span class="row-item" :class="item.dataIndex === 'operation' ? 'operation-row' : ''"
-                        :style="{ flex: item.width ? `0 0 ${item.width}px` : '1' }" v-for="item in columns">
-                        <template v-if="item.dataIndex === 'check'">
-                            <span class="check-box" @click="selectAll('all', !allSelected)">
-                                <svg-icon icon-class="no-select" class-name="no-select" v-if="!allSelected" />
-                                <svg-icon icon-class="selected" class-name="selected" v-else />
-                            </span>
-                        </template>
-                        <template v-else>
-                            <template v-if="item.dataIndex === 'product'">
-                                <span class="row-text select-all-text">
-                                    {{ $t('purchase.select_all') }}
-                                </span>
-                            </template>
-                            <span class="row-text">{{ $t(item.title) }}</span>
-                        </template>
-                    </span>
-                </div>
-            </div>
             <a-spin tip="Loading..." :spinning="spinning">
-                <div class="list">
+                <table style="width: 100%;">
+                    <thead>
+                        <tr class="select-all">
+                            <th :class="item.dataIndex === 'operation' ? 'operation-row' : ''"
+                                :style="{ width: item.width ? `${item.width}px` : 'auto' }" v-for="item in columns">
+                                <template v-if="item.dataIndex === 'check'">
+                                    <span class="check-box" @click="selectAll('all', !allSelected)">
+                                        <svg-icon icon-class="no-select" class-name="no-select" v-if="!allSelected" />
+                                        <svg-icon icon-class="selected" class-name="selected" v-else />
+                                    </span>
+                                </template>
+                                <template v-else>
+                                    <template v-if="item.dataIndex === 'product'">
+                                        <span class="row-text select-all-text">
+                                            {{ $t('purchase.select_all') }}
+                                        </span>
+                                    </template>
+                                    <span class="row-text">{{ $t(item.title) }}</span>
+                                </template>
+                            </th>
+                        </tr>
+                    </thead>
+                    <div style="height: 24px;width: 100%;display: table-row-group;"></div>
                     <!-- 整车 -->
+                    <tbody v-if="vehicleList.length !== 0" class="list-body">
+                        <tr class="row row-title">
+                            <td v-for="item in columns" class="row-item">
+                                <template v-if="item.dataIndex === 'check'">
+                                    <span class="check-box" @click="selectAll('vehicle', !vehicleListSelected)">
+                                        <svg-icon icon-class="no-select" class-name="no-select"
+                                            v-if="!vehicleListSelected" />
+                                        <svg-icon icon-class="selected" class-name="selected" v-else />
+                                    </span>
+                                </template>
+                                <template v-if="item.dataIndex === 'product'">
+                                    <span class="row-text">
+                                        {{ $t('mall.vehicle_models') }}({{ vehicleList.length }})
+                                    </span>
+                                </template>
+                            </td>
+                        </tr>
+                        <tr v-for="item in vehicleList" class="row">
+                            <td v-for="columnsItem in columns" class="row-item"
+                                :class="!item.flag_item_valid ? 'invalid' : '', columnsItem.dataIndex === 'check' ? 'row-item-check' : ''">
+                                <template v-if="columnsItem.dataIndex === 'check'">
+                                    <span class="check-box" @click="changeSelect(item, 'vehicleList')">
+                                        <svg-icon icon-class="no-select" class-name="no-select" v-if="!item.selected" />
+                                        <svg-icon icon-class="selected" class-name="selected" v-else />
+                                    </span>
+                                    <span class="invalid-box">
+                                        {{ $t('common.invalid') }}
+                                    </span>
+                                </template>
+                                <template v-if="columnsItem.dataIndex === 'product'">
+                                    <div class="product">
+                                        <div class="product-img">
+                                            <a-image :src="$Util.imageFilter(item?.item?.logo, 5)" />
+                                        </div>
+                                        <div class="product-mes">
+                                            <p class="name">{{ item?.item[$Util.regionalUnitMoney().name_index] }}</p>
+                                            <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
+                                            <p class="version" @click="showDrawer(item)" v-if="item?.item.set_id">
+                                                <span>
+                                                    {{ $Util.itemSpecFilter(item.item.attr_list, lang) }}
+                                                </span>
+                                                <svg-icon icon-class="cart-arrow-right" class-name="cart-arrow-right" />
+                                            </p>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template v-if="columnsItem.dataIndex === 'price'">
+                                    <span class="row-text unit-price">{{ currency }}{{
+                                        $Util.Number.numFormat($Util.countFilter(item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
+                                    }}</span>
+                                </template>
+                                <template v-if="columnsItem.dataIndex === 'quantity'">
+                                    <div class="count-edit">
+                                        <a-input-number v-model:value="item.amount" :min="1" :max="99999" :precision="0"
+                                            @blur="changeAmount(item)" />
+                                    </div>
+                                </template>
+                                <template v-if="columnsItem.dataIndex === 'operation'">
+                                    <div class="operation">
+                                        <span class="row-text price">{{ currency }}{{
+                                            $Util.Number.numFormat($Util.countFilter(item.amount *
+                                                item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
+                                        }}</span>
+                                        <span class="row-text delete" @click="handleShopCartRemove(item)">{{
+                                            $t('common.delete') }}</span>
+                                    </div>
+                                </template>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <div style="height: 24px;width: 100%;display: table-row-group;"></div>
+                    <!-- 零配件 -->
+                    <tbody v-if="accessoriesList.length !== 0" class="list-body">
+                        <tr class="row row-title">
+                            <td v-for="item in columns" class="row-item">
+                                <template v-if="item.dataIndex === 'check'">
+                                    <span class="check-box" @click="selectAll('accessories', !accessoriesListSelected)">
+                                        <svg-icon icon-class="no-select" class-name="no-select"
+                                            v-if="!accessoriesListSelected" />
+                                        <svg-icon icon-class="selected" class-name="selected" v-else />
+                                    </span>
+                                </template>
+                                <template v-if="item.dataIndex === 'product'">
+                                    <span class="row-text">
+                                        {{ $t('mall.accessories') }}({{ accessoriesList.length }})
+                                    </span>
+                                </template>
+                            </td>
+                        </tr>
+                        <tr v-for="item in accessoriesList" class="row">
+                            <td v-for="columnsItem in columns" class="row-item"
+                                :class="!item.flag_item_valid ? 'invalid' : '', columnsItem.dataIndex === 'check' ? 'row-item-check' : ''">
+                                <template v-if="columnsItem.dataIndex === 'check'">
+                                    <span class="check-box" @click="changeSelect(item, 'accessoriesList')">
+                                        <svg-icon icon-class="no-select" class-name="no-select" v-if="!item.selected" />
+                                        <svg-icon icon-class="selected" class-name="selected" v-else />
+                                    </span>
+                                    <span class="invalid-box">
+                                        {{ $t('common.invalid') }}
+                                    </span>
+                                </template>
+                                <template v-if="columnsItem.dataIndex === 'product'">
+                                    <div class="product">
+                                        <div class="product-img">
+                                            <a-image :src="$Util.imageFilter(item?.item?.logo, 5)" />
+                                        </div>
+                                        <div class="product-mes">
+                                            <p class="name">{{ item?.item[$Util.regionalUnitMoney().name_index] }}</p>
+                                            <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
+                                            <p class="version" @click="showDrawer(item)" v-if="item?.item.set_id">
+                                                <span>
+                                                    {{ $Util.itemSpecFilter(item.item.attr_list, lang) }}
+                                                </span>
+                                                <svg-icon icon-class="cart-arrow-right" class-name="cart-arrow-right" />
+                                            </p>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template v-if="columnsItem.dataIndex === 'price'">
+                                    <span class="row-text unit-price">{{ currency }}{{
+                                        $Util.Number.numFormat($Util.countFilter(item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
+                                    }}</span>
+                                </template>
+                                <template v-if="columnsItem.dataIndex === 'quantity'">
+                                    <div class="count-edit">
+                                        <a-input-number v-model:value="item.amount" :min="1" :max="99999" :precision="0"
+                                            @blur="changeAmount(item)" />
+                                    </div>
+                                </template>
+                                <template v-if="columnsItem.dataIndex === 'operation'">
+                                    <div class="operation">
+                                        <span class="row-text price">{{ currency }}{{
+                                            $Util.Number.numFormat($Util.countFilter(item.amount *
+                                                item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
+                                        }}</span>
+                                        <span class="row-text delete" @click="handleShopCartRemove(item)">{{
+                                            $t('common.delete') }}</span>
+                                    </div>
+                                </template>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <div style="height: 24px;width: 100%;display: table-row-group;"></div>
+                    <!-- 周边件 -->
+                    <tbody v-if="peripheralList.length !== 0" class="list-body">
+                        <tr class="row row-title">
+                            <td v-for="item in columns" class="row-item">
+                                <template v-if="item.dataIndex === 'check'">
+                                    <span class="check-box"
+                                        @click="selectAll('peripheral_products', !peripheralListSelected)">
+                                        <svg-icon icon-class="no-select" class-name="no-select"
+                                            v-if="!peripheralListSelected" />
+                                        <svg-icon icon-class="selected" class-name="selected" v-else />
+                                    </span>
+                                </template>
+                                <template v-if="item.dataIndex === 'product'">
+                                    <span class="row-text">
+                                        {{ $t('mall.peripheral_products') }}({{ peripheralList.length }})
+                                    </span>
+                                </template>
+                            </td>
+                        </tr>
+                        <tr v-for="item in peripheralList" class="row">
+                            <td v-for="columnsItem in columns" class="row-item"
+                                :class="!item.flag_item_valid ? 'invalid' : '', columnsItem.dataIndex === 'check' ? 'row-item-check' : ''">
+                                <template v-if="columnsItem.dataIndex === 'check'">
+                                    <span class="check-box" @click="changeSelect(item, 'peripheralList')">
+                                        <svg-icon icon-class="no-select" class-name="no-select" v-if="!item.selected" />
+                                        <svg-icon icon-class="selected" class-name="selected" v-else />
+                                    </span>
+                                    <span class="invalid-box">
+                                        {{ $t('common.invalid') }}
+                                    </span>
+                                </template>
+                                <template v-if="columnsItem.dataIndex === 'product'">
+                                    <div class="product">
+                                        <div class="product-img">
+                                            <a-image :src="$Util.imageFilter(item?.item?.logo, 5)" />
+                                        </div>
+                                        <div class="product-mes">
+                                            <p class="name">{{ item?.item[$Util.regionalUnitMoney().name_index] }}</p>
+                                            <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
+                                            <p class="version" @click="showDrawer(item)" v-if="item?.item.set_id">
+                                                <span>
+                                                    {{ $Util.itemSpecFilter(item.item.attr_list, lang) }}
+                                                </span>
+                                                <svg-icon icon-class="cart-arrow-right" class-name="cart-arrow-right" />
+                                            </p>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template v-if="columnsItem.dataIndex === 'price'">
+                                    <span class="row-text unit-price">{{ currency }}{{
+                                        $Util.Number.numFormat($Util.countFilter(item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
+                                    }}</span>
+                                </template>
+                                <template v-if="columnsItem.dataIndex === 'quantity'">
+                                    <div class="count-edit">
+                                        <a-input-number v-model:value="item.amount" :min="1" :max="99999" :precision="0"
+                                            @blur="changeAmount(item)" />
+                                    </div>
+                                </template>
+                                <template v-if="columnsItem.dataIndex === 'operation'">
+                                    <div class="operation">
+                                        <span class="row-text price">{{ currency }}{{
+                                            $Util.Number.numFormat($Util.countFilter(item.amount *
+                                                item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
+                                        }}</span>
+                                        <span class="row-text delete" @click="handleShopCartRemove(item)">{{
+                                            $t('common.delete') }}</span>
+                                    </div>
+                                </template>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <div style="height: 24px;width: 100%;display: table-row-group;"></div>
+                    <!-- 广宣品 -->
+                    <tbody v-if="promotionalList.length !== 0" class="list-body">
+                        <tr class="row row-title">
+                            <td v-for="item in columns" class="row-item">
+                                <template v-if="item.dataIndex === 'check'">
+                                    <span class="check-box"
+                                        @click="selectAll('promotional_products', !promotionalListSelected)">
+                                        <svg-icon icon-class="no-select" class-name="no-select"
+                                            v-if="!promotionalListSelected" />
+                                        <svg-icon icon-class="selected" class-name="selected" v-else />
+                                    </span>
+                                </template>
+                                <template v-if="item.dataIndex === 'product'">
+                                    <span class="row-text">
+                                        {{ $t('mall.promotional_products') }}({{ promotionalList.length }})
+                                    </span>
+                                </template>
+                            </td>
+                        </tr>
+                        <tr v-for="item in promotionalList" class="row">
+                            <td v-for="columnsItem in columns" class="row-item"
+                                :class="!item.flag_item_valid ? 'invalid' : '', columnsItem.dataIndex === 'check' ? 'row-item-check' : ''">
+                                <template v-if="columnsItem.dataIndex === 'check'">
+                                    <span class="check-box" @click="changeSelect(item, 'promotionalList')">
+                                        <svg-icon icon-class="no-select" class-name="no-select" v-if="!item.selected" />
+                                        <svg-icon icon-class="selected" class-name="selected" v-else />
+                                    </span>
+                                    <span class="invalid-box">
+                                        {{ $t('common.invalid') }}
+                                    </span>
+                                </template>
+                                <template v-if="columnsItem.dataIndex === 'product'">
+                                    <div class="product">
+                                        <div class="product-img">
+                                            <a-image :src="$Util.imageFilter(item?.item?.logo, 5)" />
+                                        </div>
+                                        <div class="product-mes">
+                                            <p class="name">{{ item?.item[$Util.regionalUnitMoney().name_index] }}</p>
+                                            <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
+                                            <p class="version" @click="showDrawer(item)" v-if="item?.item.set_id">
+                                                <span>
+                                                    {{ $Util.itemSpecFilter(item.item.attr_list, lang) }}
+                                                </span>
+                                                <svg-icon icon-class="cart-arrow-right" class-name="cart-arrow-right" />
+                                            </p>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template v-if="columnsItem.dataIndex === 'price'">
+                                    <span class="row-text unit-price">{{ currency }}{{
+                                        $Util.Number.numFormat($Util.countFilter(item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
+                                    }}</span>
+                                </template>
+                                <template v-if="columnsItem.dataIndex === 'quantity'">
+                                    <div class="count-edit">
+                                        <a-input-number v-model:value="item.amount" :min="1" :max="99999" :precision="0"
+                                            @blur="changeAmount(item)" />
+                                    </div>
+                                </template>
+                                <template v-if="columnsItem.dataIndex === 'operation'">
+                                    <div class="operation">
+                                        <span class="row-text price">{{ currency }}{{
+                                            $Util.Number.numFormat($Util.countFilter(item.amount *
+                                                item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
+                                        }}</span>
+                                        <span class="row-text delete" @click="handleShopCartRemove(item)">{{
+                                            $t('common.delete') }}</span>
+                                    </div>
+                                </template>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- <div class="list">
                     <div class="list-body" v-if="vehicleList.length !== 0">
                         <div class="row title">
                             <span class="row-item" :style="{ flex: item.width ? `0 0 ${item.width}px` : '1' }"
@@ -60,7 +351,7 @@
                         </div>
                         <div class="row" v-for="item in vehicleList">
                             <span class="row-item" :class="!item.flag_item_valid ? 'invalid' : ''"
-                                :style="{ flex: columnsItem.width ? `0 0 ${columnsItem.width}px` : '1' }"
+                                :style="{ maxWidth: columnsItem.width ? `${columnsItem.width}px` : 'auto', alignSelf: columnsItem.dataIndex === 'check' ? 'center' : '' }"
                                 v-for="columnsItem in columns">
                                 <template v-if="columnsItem.dataIndex === 'check'">
                                     <span class="check-box" @click="changeSelect(item, 'vehicleList')">
@@ -74,7 +365,7 @@
                                 <template v-if="columnsItem.dataIndex === 'product'">
                                     <div class="product">
                                         <div class="product-img">
-                                            <a-image :src="$Util.imageFilter(item?.item?.logo, 2)" />
+                                            <a-image :src="$Util.imageFilter(item?.item?.logo, 5)" />
                                         </div>
                                         <div class="product-mes">
                                             <p class="name">{{ item?.item[$Util.regionalUnitMoney().name_index] }}</p>
@@ -89,106 +380,7 @@
                                     </div>
                                 </template>
                                 <template v-if="columnsItem.dataIndex === 'price'">
-                                    <span class="row-text">{{ currency }}{{
-                                        $Util.Number.numFormat($Util.countFilter(item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
-                                    }}</span>
-                                </template>
-                                <template v-if="columnsItem.dataIndex === 'quantity'">
-                                    <template v-if="!item.editMode">
-                                        <span class="count" @click="handleCountEditShow(item)">x&nbsp;{{
-                                            item.amount }}</span>
-                                    </template>
-                                    <template v-else>
-                                        <div class="count-edit">
-                                            <a-input-number v-model:value="item.amount" :min="1" :max="99999" :precision="0"
-                                                @blur="changeAmount(item)" />
-                                        </div>
-                                    </template>
-                                </template>
-                                <template v-if="columnsItem.dataIndex === 'operation'">
-                                    <div class="operation">
-                                        <span class="row-text price">{{ currency }}{{
-                                            $Util.Number.numFormat($Util.countFilter(item.amount *
-                                                item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
-                                        }}</span>
-                                        <span class="row-text delete" @click="handleShopCartRemove(item)">{{
-                                            $t('common.delete') }}</span>
-                                    </div>
-                                </template>
-                            </span>
-                            <!--  <div class="gift" :style="{ marginLeft: `${columns[0].width + 10}px`/* 去除选中框的宽度 */ }">
-                                <div class="gift-item" v-for="item in 1">
-                                    <div class="gift-img">
-                                        <a-image :src="$Util.imageFilter(item?.item?.logo, 2)" />
-                                    </div>
-                                    <div class="gift-mes">
-                                        <p class="name">
-                                            {{ item?.item[$Util.regionalUnitMoney().name_index] }}
-                                            123
-                                            <span class="label">
-                                                {{ $t('purchase.free_gift') }}
-                                            </span>
-                                        </p>
-                                        <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
-                                        <span class="nums">
-                                            ×2
-                                        </span>
-                                    </div>
-                                </div>
-                            </div> -->
-                        </div>
-                    </div>
-                    <!-- 零配件 -->
-                    <div class="list-body" v-if="accessoriesList.length !== 0">
-                        <div class="row title">
-                            <span class="row-item" :style="{ flex: item.width ? `0 0 ${item.width}px` : '1' }"
-                                v-for="item in columns">
-                                <template v-if="item.dataIndex === 'check'">
-                                    <span class="check-box" @click="selectAll('accessories', !accessoriesListSelected)">
-                                        <svg-icon icon-class="no-select" class-name="no-select"
-                                            v-if="!accessoriesListSelected" />
-                                        <svg-icon icon-class="selected" class-name="selected" v-else />
-                                    </span>
-                                </template>
-                                <template v-if="item.dataIndex === 'product'">
-                                    <span class="row-text">
-                                        {{ $t('mall.accessories') }}({{ accessoriesList.length }})
-                                    </span>
-                                </template>
-                            </span>
-                        </div>
-                        <div class="row" v-for="item in accessoriesList">
-                            <span class="row-item" :class="!item.flag_item_valid ? 'invalid' : ''"
-                                :style="{ flex: columnsItem.width ? `0 0 ${columnsItem.width}px` : '1' }"
-                                v-for="columnsItem in columns">
-                                <template v-if="columnsItem.dataIndex === 'check'">
-                                    <span class="check-box" @click="changeSelect(item, 'accessoriesList')">
-                                        <svg-icon icon-class="no-select" class-name="no-select" v-if="!item.selected" />
-                                        <svg-icon icon-class="selected" class-name="selected" v-else />
-                                    </span>
-                                    <span class="invalid-box">
-                                        {{ $t('common.invalid') }}
-                                    </span>
-                                </template>
-                                <template v-if="columnsItem.dataIndex === 'product'">
-                                    <div class="product">
-                                        <div class="product-img">
-                                            <a-image :src="$Util.imageFilter(item?.item?.logo, 2)" />
-                                        </div>
-                                        <div class="product-mes">
-                                            <p class="name">{{ item?.item[$Util.regionalUnitMoney().name_index] }}</p>
-                                            <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
-                                            <p class="version" @click="showDrawer(item)" v-if="item?.item.set_id">
-                                                <span>
-                                                    {{ $Util.itemSpecFilter(item.item.attr_list, lang) }}
-                                                </span>
-                                                <svg-icon icon-class="cart-arrow-right" class-name="cart-arrow-right" />
-                                            </p>
-                                        </div>
-                                    </div>
-                                </template>
-                                <template v-if="columnsItem.dataIndex === 'price'">
-                                    <span class="row-text">{{ currency }}{{
+                                    <span class="row-text unit-price">{{ currency }}{{
                                         $Util.Number.numFormat($Util.countFilter(item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
                                     }}</span>
                                 </template>
@@ -217,167 +409,7 @@
                             </span>
                         </div>
                     </div>
-                    <!-- 周边件 -->
-                    <div class="list-body" v-if="peripheralList.length !== 0">
-                        <div class="row title">
-                            <span class="row-item" :style="{ flex: item.width ? `0 0 ${item.width}px` : '1' }"
-                                v-for="item in columns">
-                                <template v-if="item.dataIndex === 'check'">
-                                    <span class="check-box"
-                                        @click="selectAll('peripheral_products', !peripheralListSelected)">
-                                        <svg-icon icon-class="no-select" class-name="no-select"
-                                            v-if="!peripheralListSelected" />
-                                        <svg-icon icon-class="selected" class-name="selected" v-else />
-                                    </span>
-                                </template>
-                                <template v-if="item.dataIndex === 'product'">
-                                    <span class="row-text">
-                                        {{ $t('mall.peripheral_products') }}({{ peripheralList.length }})
-                                    </span>
-                                </template>
-                            </span>
-                        </div>
-                        <div class="row" v-for="item in peripheralList">
-                            <span class="row-item" :class="!item.flag_item_valid ? 'invalid' : ''"
-                                :style="{ flex: columnsItem.width ? `0 0 ${columnsItem.width}px` : '1' }"
-                                v-for="columnsItem in columns">
-                                <template v-if="columnsItem.dataIndex === 'check'">
-                                    <span class="check-box" @click="changeSelect(item, 'peripheralList')">
-                                        <svg-icon icon-class="no-select" class-name="no-select" v-if="!item.selected" />
-                                        <svg-icon icon-class="selected" class-name="selected" v-else />
-                                    </span>
-                                    <span class="invalid-box">
-                                        {{ $t('common.invalid') }}
-                                    </span>
-                                </template>
-                                <template v-if="columnsItem.dataIndex === 'product'">
-                                    <div class="product">
-                                        <div class="product-img">
-                                            <a-image :src="$Util.imageFilter(item?.item?.logo, 2)" />
-                                        </div>
-                                        <div class="product-mes">
-                                            <p class="name">{{ item?.item[$Util.regionalUnitMoney().name_index] }}</p>
-                                            <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
-                                            <p class="version" @click="showDrawer(item)" v-if="item?.item.set_id">
-                                                <span>
-                                                    {{ $Util.itemSpecFilter(item.item.attr_list, lang) }}
-                                                </span>
-                                                <svg-icon icon-class="cart-arrow-right" class-name="cart-arrow-right" />
-                                            </p>
-                                        </div>
-                                    </div>
-                                </template>
-                                <template v-if="columnsItem.dataIndex === 'price'">
-                                    <span class="row-text">{{ currency }}{{
-                                        $Util.Number.numFormat($Util.countFilter(item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
-                                    }}</span>
-                                </template>
-                                <template v-if="columnsItem.dataIndex === 'quantity'">
-                                    <template v-if="!item.editMode">
-                                        <span class="count" @click="handleCountEditShow(item)">x&nbsp;{{
-                                            item.amount }}</span>
-                                    </template>
-                                    <template v-else>
-                                        <div class="count-edit">
-                                            <a-input-number v-model:value="item.amount" :min="1" :max="99999" :precision="0"
-                                                @blur="changeAmount(item)" />
-                                        </div>
-                                    </template>
-                                </template>
-                                <template v-if="columnsItem.dataIndex === 'operation'">
-                                    <div class="operation">
-                                        <span class="row-text price">{{ currency }}{{
-                                            $Util.Number.numFormat($Util.countFilter(item.amount *
-                                                item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
-                                        }}</span>
-                                        <span class="row-text delete" @click="handleShopCartRemove(item)">{{
-                                            $t('common.delete') }}</span>
-                                    </div>
-                                </template>
-                            </span>
-                        </div>
-                    </div>
-                    <!-- 广宣品 -->
-                    <div class="list-body" v-if="promotionalList.length !== 0">
-                        <div class="row title">
-                            <span class="row-item" :style="{ flex: item.width ? `0 0 ${item.width}px` : '1' }"
-                                v-for="item in columns">
-                                <template v-if="item.dataIndex === 'check'">
-                                    <span class="check-box"
-                                        @click="selectAll('promotional_products', !promotionalListSelected)">
-                                        <svg-icon icon-class="no-select" class-name="no-select"
-                                            v-if="!promotionalListSelected" />
-                                        <svg-icon icon-class="selected" class-name="selected" v-else />
-                                    </span>
-                                </template>
-                                <template v-if="item.dataIndex === 'product'">
-                                    <span class="row-text">
-                                        {{ $t('mall.promotional_products') }}({{ promotionalList.length }})
-                                    </span>
-                                </template>
-                            </span>
-                        </div>
-                        <div class="row" v-for="item in promotionalList">
-                            <span class="row-item" :class="!item.flag_item_valid ? 'invalid' : ''"
-                                :style="{ flex: columnsItem.width ? `0 0 ${columnsItem.width}px` : '1' }"
-                                v-for="columnsItem in columns">
-                                <template v-if="columnsItem.dataIndex === 'check'">
-                                    <span class="check-box" @click="changeSelect(item, 'promotionalList')">
-                                        <svg-icon icon-class="no-select" class-name="no-select" v-if="!item.selected" />
-                                        <svg-icon icon-class="selected" class-name="selected" v-else />
-                                    </span>
-                                    <span class="invalid-box">
-                                        {{ $t('common.invalid') }}
-                                    </span>
-                                </template>
-                                <template v-if="columnsItem.dataIndex === 'product'">
-                                    <div class="product">
-                                        <div class="product-img">
-                                            <a-image :src="$Util.imageFilter(item?.item?.logo, 2)" />
-                                        </div>
-                                        <div class="product-mes">
-                                            <p class="name">{{ item?.item[$Util.regionalUnitMoney().name_index] }}</p>
-                                            <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
-                                            <p class="version" @click="showDrawer(item)" v-if="item?.item.set_id">
-                                                <span>
-                                                    {{ $Util.itemSpecFilter(item.item.attr_list, lang) }}
-                                                </span>
-                                                <svg-icon icon-class="cart-arrow-right" class-name="cart-arrow-right" />
-                                            </p>
-                                        </div>
-                                    </div>
-                                </template>
-                                <template v-if="columnsItem.dataIndex === 'price'">
-                                    <span class="row-text">{{ currency }}{{
-                                        $Util.Number.numFormat($Util.countFilter(item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
-                                    }}</span>
-                                </template>
-                                <template v-if="columnsItem.dataIndex === 'quantity'">
-                                    <template v-if="!item.editMode">
-                                        <span class="count" @click="handleCountEditShow(item)">x&nbsp;{{
-                                            item.amount }}</span>
-                                    </template>
-                                    <template v-else>
-                                        <div class="count-edit">
-                                            <a-input-number v-model:value="item.amount" :min="1" :max="99999" :precision="0"
-                                                @blur="changeAmount(item)" />
-                                        </div>
-                                    </template>
-                                </template>
-                                <template v-if="columnsItem.dataIndex === 'operation'">
-                                    <div class="operation">
-                                        <span class="row-text price">{{ currency }}{{
-                                            $Util.Number.numFormat($Util.countFilter(item.amount *
-                                                item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
-                                        }}</span>
-                                        <span class="row-text delete" @click="handleShopCartRemove(item)">{{
-                                            $t('common.delete') }}</span>
-                                    </div>
-                                </template>
-                            </span>
-                        </div>
-                    </div>
-                </div>
+                </div> -->
             </a-spin>
         </div>
         <!-- 底部支付栏 -->
@@ -405,7 +437,7 @@
                     <span class="price">
                         {{ currency }} {{ allPrice }}
                     </span>
-                    <my-button type="primary" padding="12px 32px" :disabled="!isSelected" font="14px"
+                    <my-button showRightIcon type="primary" padding="12px 32px" :disabled="!isSelected" font="14px"
                         @click.native="handleCreateOrder">
                         {{ $t('purchase.settlement') }}
                     </my-button>
@@ -417,7 +449,7 @@
             placement="bottom" :visible="visible" @close="onClose">
             <div class="drawer">
                 <div class="vehicle-body-series">
-                    <div class="series-cards">
+                    <div class="series-cards" :class="specList?.length > 3 ? 'padding-bottom' : ''">
                         <div class="series-card" :style="{ flex: specList?.length > 2 ? 'none' : '1' }"
                             v-for="(item, i) in specList" :key="item.id" @click="selectSeries(i)">
                             <seriesCard :record="item" :selected="seriesIndex === i" />
@@ -464,8 +496,6 @@ const { proxy } = getCurrentInstance();
 const route = useRoute();
 const router = useRouter();
 const store = useStore();
-const key = route.query?.key;
-store.commit('setMallKey', key);
 
 const columns = [
     {
@@ -483,19 +513,19 @@ const columns = [
         title: 'purchase.unit_price',
         dataIndex: 'price',
         key: 'price',
-        width: 150,
+        width: 200,
     },
     {
         title: 'purchase.quantity',
         dataIndex: 'quantity',
         key: 'quantity',
-        width: 150,
+        width: 250,
     },
     {
         title: 'purchase.total_operation',
         dataIndex: 'operation',
         key: 'operation',
-        width: 150,
+        width: 200,
     },
 ]
 /* state start */
@@ -649,7 +679,6 @@ const changeAmount = (item) => {
 }
 // 显示数量输入框
 const handleCountEditShow = (item) => {
-    item.editMode = !item.editMode
     editCount.value = item.amount
 }
 // 选中按钮
@@ -937,6 +966,10 @@ const handleCreateOrder = () => {
 <style lang='scss' scoped src='../css/layout.css'></style>
 <style lang="less" scoped>
 #shopping-bag {
+    .content {
+        padding-top: 48px;
+    }
+
     .settlement-fixed {
         position: fixed;
         bottom: 0;
@@ -1013,6 +1046,7 @@ const handleCreateOrder = () => {
         font-style: normal;
         font-weight: 500;
         line-height: normal;
+        margin-bottom: 24px;
         .flex(space-between, initial, row);
 
         .settlement {
@@ -1040,9 +1074,28 @@ const handleCreateOrder = () => {
     }
 
     .select-all {
-        padding: 22px 56px 22px 24px;
         background: #FFF;
         user-select: none;
+
+        >th {
+            text-align: left;
+            padding: 22px 0;
+            color: #000;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 150%;
+            padding-left: 12px;
+
+            &:first-child {
+                padding-left: 24px;
+            }
+
+            &:last-child {
+                padding-right: 56px;
+                text-align: right;
+            }
+        }
     }
 
     .check-box {
@@ -1073,27 +1126,57 @@ const handleCreateOrder = () => {
     }
 
     .list-body {
-        padding: 24px 56px 24px 24px;
         background: #FFF;
-        margin-top: 24px;
-        width: 100%;
+
+        >tr td {
+            text-align: left;
+            padding: 0 0 40px 0;
+            color: #000;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 150%;
+            padding-left: 12px;
+
+            &:first-child {
+                padding-left: 24px;
+            }
+
+            &:last-child {
+                padding-right: 56px;
+                text-align: right;
+            }
+        }
     }
 
     .row {
-        .flex(initial, center, row);
         user-select: none;
 
-        &:nth-child(n + 3) {
-            margin-top: 40px;
-        }
+        &.row-title {
+            >td {
+                text-align: left;
+                padding: 24px 0;
+                color: #000;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 150%;
+                padding-left: 12px;
 
-        &.title {
-            margin-bottom: 24px;
+                &:first-child {
+                    padding-left: 24px;
+                }
+
+                &:last-child {
+                    padding-right: 56px;
+                    text-align: right;
+                }
+            }
         }
 
         .row-item {
-            .flex(initial, center, row);
             margin-right: 10px;
+            vertical-align: top;
 
             &:last-child {
                 margin-right: 0;
@@ -1123,6 +1206,8 @@ const handleCreateOrder = () => {
                     font-style: normal;
                     font-weight: 700;
                     line-height: normal;
+                    margin-top: 4px;
+                    display: inline-block;
                 }
 
                 &.delete {
@@ -1133,6 +1218,11 @@ const handleCreateOrder = () => {
                     line-height: 150%;
                     margin-top: 8px;
                     cursor: pointer;
+                }
+
+                &.unit-price {
+                    display: inline-block;
+                    margin-top: 5px;
                 }
             }
 
@@ -1298,6 +1388,10 @@ const handleCreateOrder = () => {
                             height: 16px;
                             margin-left: 24px;
                         }
+
+                        &:hover {
+                            color: #8F00FF;
+                        }
                     }
                 }
             }
@@ -1329,66 +1423,8 @@ const handleCreateOrder = () => {
             }
         }
 
-        .gift {
-            width: 100%;
-
-            .gift-item {
-                margin-top: 16px;
-                background: #FAFAFA;
-                padding: 24px;
-
-                .gift-img {}
-
-                .gift-mes {
-                    position: relative;
-
-                    .name {
-                        .flex(initial, center, row);
-                        color: #000;
-                        font-size: 16px;
-                        font-style: normal;
-                        font-weight: 500;
-                        line-height: 150%;
-
-                        .label {
-                            margin-left: 12px;
-                            border: 1px solid #C6F;
-                            display: inline-flex;
-                            padding: 4px 8px;
-                            justify-content: center;
-                            align-items: center;
-                            font-size: 10px;
-                            font-style: normal;
-                            font-weight: 500;
-                            line-height: 10px;
-                            background: linear-gradient(100deg, #C6F 0%, #66F 100%);
-                            background-clip: text;
-                            -webkit-background-clip: text;
-                            -webkit-text-fill-color: transparent;
-                        }
-                    }
-
-                    .code {
-                        color: #666;
-                        font-size: 12px;
-                        font-style: normal;
-                        font-weight: 400;
-                        line-height: 150%;
-                    }
-
-                    .nums {
-                        position: absolute;
-                        right: 0;
-                        top: 0;
-                        color: #000;
-                        text-align: right;
-                        font-size: 16px;
-                        font-style: normal;
-                        font-weight: 500;
-                        line-height: 150%;
-                    }
-                }
-            }
+        .row-item-check {
+            vertical-align: inherit;
         }
     }
 
@@ -1418,6 +1454,10 @@ const handleCreateOrder = () => {
             .series-cards {
                 .flex(initial, initial, row);
                 overflow-x: auto;
+
+                &.padding-bottom {
+                    padding-bottom: 24px;
+                }
 
                 .series-card {
                     flex-shrink: 0;

@@ -4,7 +4,7 @@
      -->
     <div id="products-card" :class="[type, selected ? 'active' : '']">
         <div class="img">
-            <a-image :src="$Util.imageFilter(record.logo, 2)" />
+            <a-image :src="$Util.imageFilter(record.logo, 5)" />
         </div>
         <div class="mes">
             <div class="mes-left">
@@ -28,7 +28,7 @@
                             40QH : {{ currency }}{{ stepPrice['40qh'] }}
                         </p>
                         <p class="price-text-t">
-                            Samples : {{ currency }}{{ stepPrice['normal'] }}/20GP : {{ currency }}{{
+                            Samples : {{ currency }}{{ stepPrice['normal'] }} / 20GP : {{ currency }}{{
                                 stepPrice['20gp'] }}
                         </p>
                     </template>
@@ -370,7 +370,18 @@ const removeFavorites = (item) => {
                     width: 32px;
                     height: 32px;
                     border: 1px solid #C6F;
+                    background: transparent;
+                    background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                    border-image: linear-gradient(100deg, #C6F 0%, #66F 100%) 1;
+                    background-clip: text;
+                    -webkit-background-clip: text;
                     cursor: pointer;
+
+                    .car-icon,
+                    .car-white-icon {
+                        width: 18px;
+                        height: 18px;
+                    }
 
                     .car-white-icon {
                         display: none;
@@ -427,10 +438,11 @@ const removeFavorites = (item) => {
     }
 }
 
-.small {
+#products-card.small {
     .img {
         width: 90px;
         height: 90px;
+        border-color: #EEE;
     }
 
     .mes {
@@ -455,6 +467,35 @@ const removeFavorites = (item) => {
 
             .add {
                 padding-bottom: 0px;
+
+                .count-edit {
+                    /deep/.ant-input-number {
+
+                        .ant-input-number-handler-wrap {
+
+                            .ant-input-number-handler {
+
+                                &.ant-input-number-handler-down {
+
+                                    &::before {
+                                        width: 10px;
+                                    }
+                                }
+
+                                &.ant-input-number-handler-up {
+
+                                    &::before {
+                                        width: 10px;
+                                    }
+
+                                    &::after {
+                                        height: 10px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

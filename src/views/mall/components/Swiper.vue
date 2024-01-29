@@ -1,10 +1,10 @@
 <template>
     <div id="Swiper">
         <div class="preview">
-            <div class="preview-img">
-                <Magnifier :activePicUrl="$Util.imageFilter(previewImg, 2)" />
+            <div class="preview-img" v-if="previewImg">
+                <Magnifier :activePicUrl="$Util.imageFilter(previewImg, 5)" />
             </div>
-            <!-- <img class="preview-img" :src="previewImg" alt=""> -->
+            <img class="preview-img" :src="$Util.imageFilter(previewImg, 5)" alt="" v-else>
         </div>
         <div class="swiper-content" v-if="swiperList.length > 1">
             <div class="swiper-body">
@@ -13,15 +13,17 @@
                     <swiper-slide v-for="(item, i) in swiperList" :key="i" @click="selectSwiper(item, i)">
                         <div class="swiper-img">
                             <img class="img" :class="swiperIndex === i ? 'active' : ''"
-                                :src="$Util.imageFilter(item.path, 2)" alt="">
+                                :src="$Util.imageFilter(item.path, 5)" alt="">
                         </div>
                     </swiper-slide>
                 </swiper>
-                <div class="swiper-button-prev" v-if="swiperList.length > mySwiperOption.slidesPerView">
-                    <svg-icon icon-class="vehicle-left" class-name="swiper-button-pre" />
+                <div class="swiper-button-pre" v-if="swiperList.length > mySwiperOption.slidesPerView">
+                    <svg-icon icon-class="vehicle-left" class-name="swiper-button-pre-svg" />
+                    <svg-icon icon-class="vehicle-left-active" class-name="swiper-button-pre-svg-active" />
                 </div>
                 <div class="swiper-button-next" v-if="swiperList.length > mySwiperOption.slidesPerView">
-                    <svg-icon icon-class="vehicle-right" class-name="swiper-button-next" />
+                    <svg-icon icon-class="vehicle-right" class-name="swiper-button-next-svg" />
+                    <svg-icon icon-class="vehicle-right-active" class-name="swiper-button-next-svg-active" />
                 </div>
             </div>
         </div>
@@ -44,7 +46,7 @@ const props = defineProps({
                 slidesPerGroup: 1,
                 navigation: {
                     nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
+                    prevEl: '.swiper-button-pre',
                 }
             }
         },
@@ -88,7 +90,7 @@ defineExpose({
         position: relative;
 
         .swiper-img {
-            padding: 0px 5%;
+            padding: 0px 12px;
 
             .img {
                 border: 1px solid transparent;
@@ -97,6 +99,7 @@ defineExpose({
                 aspect-ratio: 1;
                 object-fit: cover;
                 user-select: none;
+                border: 1px solid #EEE;
                 cursor: pointer;
 
                 &.active {
@@ -113,6 +116,29 @@ defineExpose({
             transform: translateY(-50%);
             z-index: 1;
             cursor: pointer;
+
+            .swiper-button-pre-svg,
+            .swiper-button-next-svg {
+                display: inline-block;
+            }
+
+            .swiper-button-pre-svg-active,
+            .swiper-button-next-svg-active {
+                display: none;
+            }
+
+            &:hover {
+
+                .swiper-button-pre-svg,
+                .swiper-button-next-svg {
+                    display: none;
+                }
+
+                .swiper-button-pre-svg-active,
+                .swiper-button-next-svg-active {
+                    display: inline-block;
+                }
+            }
         }
 
         .swiper-button-pre {
