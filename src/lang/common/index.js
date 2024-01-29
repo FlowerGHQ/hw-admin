@@ -31,6 +31,7 @@ export default {
         cancel: '取消',
         fail: '失败',
         sending: '发送',
+        add: '添加',
     },
     en: {
         operations: "Operations",
@@ -64,5 +65,6 @@ export default {
         cancel: 'cancel',
         fail: 'fail',
         sending: 'sending',
+        add: 'Add',
     }
 }

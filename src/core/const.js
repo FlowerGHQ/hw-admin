@@ -43,12 +43,12 @@ switch (window.location.hostname) {
         URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         break;
     default:
-        // URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
+        URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'https://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         // URL_POINT = 'http://10.10.12.65:8889' // my
         // URL_POINT = 'http://10.0.0.170:8889' // my
-        URL_POINT = 'http://10.10.12.194:8889' // zwq
+        // URL_POINT = 'http://10.10.12.194:8889' // zwq
         // URL_POINT = 'http://10.10.12.194:8889'  // zy
 
         break;
@@ -90,6 +90,9 @@ let Const = {
         SALES_DATA: 'sales-data',
 
         GOODS_DRAFT: 'goods-draft',
+        // 这两个是问询单新消息存储(正常来说是后端, 这边先前端做)
+        ADMIN_NEW_MSG: 'admin-new-msg',
+        DISTRIBUTOR_NEW_MSG: 'distributor-new-msg',
     },
     DEFULT_IMG: {
         1: defult_img,

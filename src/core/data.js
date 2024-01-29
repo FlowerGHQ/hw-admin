@@ -277,6 +277,27 @@ class StorageHandler {
     clearGoodsDraft() {
         this.removeItem(Const.DATA.GOODS_DRAFT);
     }
+
+    // 问询单新消息
+    setAdminNewMsg(value) {
+        return this.setItem(Const.DATA.ADMIN_NEW_MSG, value);
+    }
+    getAdminNewMsg() {
+        return this.getItem(Const.DATA.ADMIN_NEW_MSG) || undefined;
+    }
+    clearAdminNewMsg() {
+        this.removeItem(Const.DATA.ADMIN_NEW_MSG);
+    }
+    setDistributorNewMsg(value) {
+        return this.setItem(Const.DATA.DISTRIBUTOR_NEW_MSG, value);
+    }
+    getDistributorNewMsg() {
+        return this.getItem(Const.DATA.DISTRIBUTOR_NEW_MSG) || undefined;
+    }
+    clearDistributorNewMsg() {
+        this.removeItem(Const.DATA.DISTRIBUTOR_NEW_MSG);
+    }
+
 }
 
 export default new StorageHandler();

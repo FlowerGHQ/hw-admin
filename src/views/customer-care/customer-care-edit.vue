@@ -105,7 +105,7 @@
                         </a-table>
 
                         <a-button class="m-t-16" type="primary" ghost @click="onAddBtn('add-data')">
-                            {{ $t("supply-chain.add_opponents") }}
+                            {{ $t("common.add") }}
                         </a-button>
                     </div>
                 </div>
@@ -357,7 +357,7 @@ const getDetailFetch = (params = {}) => {
 // 获取车型接口
 const getVehicleTreeFetch = (params = {}) => {
     const obj = {
-        parent_id: 0, // 写死
+        parent_id: 1, // 写死
         depth: 2, // 深度
         type: 20, // 10商品管理 20表示车辆管理
         page: 0,
