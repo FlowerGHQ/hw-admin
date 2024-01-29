@@ -234,6 +234,7 @@ export default {
                 parent_id: parent_id,
                 index: index,
                 index_key: index_key,
+                type:10
             }
             console.log('this.editForm:', this.editForm)
             this.parentNode = parent
