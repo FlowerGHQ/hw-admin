@@ -41,6 +41,7 @@
                 }"
                 :class="{ 'ladder-table': true, 'slide-down-wrap': !batchSetVisible, 'slide-up-wrap': isDown }"
                 :pagination="false"
+
                 :rowKey="(record, index) => index">
                 <template #bodyCell="{ column, record, index, text }">
                     <div v-if="column.dataIndex === 'name'">
@@ -231,37 +232,37 @@ const batchLadderColumns = computed(() => {
             title: $t("item-edit.quantity_26"),
             dataIndex: "fob_40qh_eur",
             key: "fob_40qh_eur",
-            width: 108,
+            width: 110
         },
         {
             title: $t("item-edit.quantity_11_25"),
             dataIndex: "fob_20gp_eur",
             key: "fob_20gp_eur",
-            width: 108,
+            width: 110
         },
         {
             title: $t("item-edit.quantity_1_10"),
             dataIndex: "fob_eur",
             key: "fob_eur",
-            width: 108,
+            width: 110
         },
         {
             title: $t("item-edit.quantity_26"),
             dataIndex: "fob_40qh_usd",
             key: "fob_40qh_usd",
-            width: 108,
+            width: 110
         },
         {
             title: $t("item-edit.quantity_11_25"),
             dataIndex: "fob_20gp_usd",
             key: "fob_20gp_usd",
-            width: 108,
+            width: 110
         },
         {
             title: $t("item-edit.quantity_1_10"),
             dataIndex: "fob_usd",
             key: "fob_usd",
-            width: 108,
+            width: 110
         },
     ];
 });
@@ -354,8 +355,6 @@ const keyAndItem = reactive({
 
 // 触发选择
 const onSelectChange = (selectedRowKeys, selectedRows) => {
-    console.log("selectedRowKeys changed: ", selectedRowKeys);
-    console.log("selectedRows changed: ", selectedRows);
     keyAndItem.selectedRowKeys = selectedRowKeys;
     keyAndItem.selectedRowItems = selectedRows;
     // 如果长度大于1，显示批量设置
@@ -437,17 +436,17 @@ const hanleAllVisible = () => {
 const hanleAllSure = () => {
     console.log(dataSource.value);
     keyAndItem.selectedRowItems.forEach((item) => {
-        item.fob_40qh_eur = dataSource.value[0].fob_40qh_eur;
-        item.fob_20gp_eur = dataSource.value[0].fob_20gp_eur;
-        item.fob_eur = dataSource.value[0].fob_eur;
-        item.fob_40qh_usd = dataSource.value[0].fob_40qh_usd;
-        item.fob_20gp_usd = dataSource.value[0].fob_20gp_usd;
-        item.fob_usd = dataSource.value[0].fob_usd;
+        item.fob_40qh_eur = dataSource?.value[0]?.fob_40qh_eur || item.fob_40qh_eur;
+        item.fob_20gp_eur = dataSource?.value[0]?.fob_20gp_eur || item.fob_20gp_eur;
+        item.fob_eur = dataSource?.value[0]?.fob_eur || item.fob_eur;
+        item.fob_40qh_usd = dataSource?.value[0]?.fob_40qh_usd || item.fob_40qh_usd;
+        item.fob_20gp_usd = dataSource?.value[0]?.fob_20gp_usd || item.fob_20gp_usd;
+        item.fob_usd = dataSource?.value[0]?.fob_usd || item.fob_usd;
     });
     // 批量设置隐藏
     batchSetVisible.value = false;
     // 传递给父组件，让父组件去处理
-    emit("handleLastLadderData", keyAndItem.selectedRowItems);
+    emit("handleLastLadderData", props.ladderData);
 };
 
 // 监听
@@ -533,6 +532,8 @@ watch(
                         box-shadow: 0px -4px 10px rgba(143, 146, 152, 0.1);
                         padding: 16px 24px 10px 24px;
                         transform: translateY(100%);
+                        display: flex;
+                        flex-direction: column;
                         .title-area {
                             display: flex;
                             align-items: center;
@@ -556,12 +557,17 @@ watch(
                             }
                             .btn-area {
                                 .ant-btn {
-                                    height: auto;
                                     min-width: auto;
-                                    padding: 4px 16px;
-                                    border-radius: 4px;
+                                    display: inline-flex;
+                                    height: 28px;
+                                    padding: 10px 16px;
+                                    justify-content: center;
+                                    align-items: center;
+                                    font-size: 14px;
                                 }
                             }
+                        }
+                        .table-content{
                         }
                     }
                 }
@@ -593,11 +599,13 @@ watch(
                     .btn-area {
                         margin-left: 174px;
                         .ant-btn {
-                            border-radius: 4px;
                             min-width: auto;
-                            padding: 0 16px;
-                            border-color: #e5e6eb;
-                            color: #1d2129;
+                            border-radius: 4px;
+                            display: inline-flex;
+                            height: 28px;
+                            padding: 10px 16px;
+                            justify-content: center;
+                            align-items: center;
                             font-size: 14px;
                         }
                         .ant-btn-primary {
@@ -647,6 +655,7 @@ watch(
         }
     }
     .ant-table-thead {
+
         .ant-table-cell {
             padding: 2px 4px !important;
         }

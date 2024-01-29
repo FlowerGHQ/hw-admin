@@ -29,9 +29,9 @@ export default {
 		please_complete: '请完善',
 		ladder_price: '设置阶梯价',
 		// EUR阶梯价设置
-		EUR_ladder_price: 'EUR阶梯价设置',
+		EUR_ladder_price: 'EUR阶梯价格设置',
 		//USD阶梯价设置
-		ESD_ladder_price: 'USD阶梯价设置',
+		ESD_ladder_price: 'USD阶梯价格设置',
 		// 勾选商品可批量设置价格
 		batch_price: '勾选商品可批量设置价格',
 		// 批量设置价格
