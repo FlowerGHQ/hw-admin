@@ -3106,6 +3106,7 @@ export default {
             .show-ladder {
                 display: flex;
                 align-items: center;
+                border: 1px solid #EAECF1;
                 &:hover {
                     border: 1px solid rgba(0, 97, 255, 0.50);
                     border-radius: 4px;
@@ -3127,9 +3128,6 @@ export default {
                     font-size: 14px;
                     color: #1d2129;
                     cursor: pointer;
-                    &:first-child {
-                        margin-left: 0;
-                    }
                     .show-ladder-item-title {
                         margin-right: 4px;
                     }
