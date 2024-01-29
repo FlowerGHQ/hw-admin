@@ -91,8 +91,11 @@ let Const = {
         LOGIN_MES: 'login-mes',
         SALES_DATA: 'sales-data',
         GOODS_DRAFT: 'goods-draft',
-        CART_DATA: 'cart-data'
+        CART_DATA: 'cart-data',
 
+        // 这两个是问询单新消息存储(正常来说是后端, 这边先前端做)
+        ADMIN_NEW_MSG: 'admin-new-msg',
+        DISTRIBUTOR_NEW_MSG: 'distributor-new-msg',
     },
     DEFULT_IMG: {
         1: defult_img,

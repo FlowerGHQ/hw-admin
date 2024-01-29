@@ -247,15 +247,7 @@ export default {
                 parent_id: parent_id ? parent_id : this.searchForm.parent_id,
                 index: index,
                 index_key: index_key,
-            };
-
-            // console.log("输出", this.editForm);
-
-            let foundObj = null;
-            if (parent?.parent_id) {
-                foundObj = this.statusList.find(obj => obj.id === parent.parent_id);
-            } else {
-                foundObj = this.statusList.find(obj => obj.id === this.searchForm.parent_id);
+                type:10
             }
 
             if (foundObj) {

@@ -335,7 +335,7 @@ export default {
         // 退出登录
         handleLogout() {          
             Core.Api.Common.logout().then(res => {
-                localStorage.clear() 
+                Core.Data.clearSpecificItem();
                 this.$router.replace('/login');
             })
         },
