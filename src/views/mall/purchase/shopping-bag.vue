@@ -83,6 +83,8 @@
                                                     {{ $Util.itemSpecFilter(item.item.attr_list, lang) }}
                                                 </span>
                                                 <svg-icon icon-class="cart-arrow-right" class-name="cart-arrow-right" />
+                                                <svg-icon icon-class="cart-arrow-right-active"
+                                                    class-name="cart-arrow-right-active" />
                                             </p>
                                         </div>
                                     </div>
@@ -155,6 +157,8 @@
                                                     {{ $Util.itemSpecFilter(item.item.attr_list, lang) }}
                                                 </span>
                                                 <svg-icon icon-class="cart-arrow-right" class-name="cart-arrow-right" />
+                                                <svg-icon icon-class="cart-arrow-right-active"
+                                                    class-name="cart-arrow-right-active" />
                                             </p>
                                         </div>
                                     </div>
@@ -228,6 +232,8 @@
                                                     {{ $Util.itemSpecFilter(item.item.attr_list, lang) }}
                                                 </span>
                                                 <svg-icon icon-class="cart-arrow-right" class-name="cart-arrow-right" />
+                                                <svg-icon icon-class="cart-arrow-right-active"
+                                                    class-name="cart-arrow-right-active" />
                                             </p>
                                         </div>
                                     </div>
@@ -301,6 +307,8 @@
                                                     {{ $Util.itemSpecFilter(item.item.attr_list, lang) }}
                                                 </span>
                                                 <svg-icon icon-class="cart-arrow-right" class-name="cart-arrow-right" />
+                                                <svg-icon icon-class="cart-arrow-right-active"
+                                                    class-name="cart-arrow-right-active" />
                                             </p>
                                         </div>
                                     </div>
@@ -1384,6 +1392,15 @@ const handleCreateOrder = () => {
                         cursor: pointer;
 
                         .cart-arrow-right {
+                            display: inline-block;
+                        }
+
+                        .cart-arrow-right-active {
+                            display: none;
+                        }
+
+                        .cart-arrow-right,
+                        .cart-arrow-right-active {
                             width: 16px;
                             height: 16px;
                             margin-left: 24px;
@@ -1391,6 +1408,14 @@ const handleCreateOrder = () => {
 
                         &:hover {
                             color: #8F00FF;
+
+                            .cart-arrow-right {
+                                display: none;
+                            }
+
+                            .cart-arrow-right-active {
+                                display: inline-block;
+                            }
                         }
                     }
                 }
