@@ -985,6 +985,25 @@ const apiList = {
     // 官网端接口
     CLIENT: {
         communityList:['PostJson','community-post/list'], //动态列表
+    },
+    // 问询单
+    inquiry_sheet: {
+        list: ['PostJson','enquiry-ticket/list'], // 列表
+        add: ['PostJson','enquiry-ticket/create'], // 创建
+        modify: ['PostJson','enquiry-ticket/update'], // 修改
+        detail: ['PostJson','enquiry-ticket/detail'], // 详情
+        statusList: ['PostJson','enquiry-ticket/status-list'], // 状态数据
+        sortingType: ['PostJson','enquiry-ticket/sorting-type'], // 归类
+        bindPart: ['PostJson','enquiry-ticket/bind-part'], // 零件
+        markResolved: ['PostJson','enquiry-ticket/mark-resolved'], // 问题解决接口
+        commentList: ['PostJson','comment/list'], // 评论
+        saveComment: ['PostJson','comment/save'], // 新增评论
+        // 客服列表
+        cusomerList: ['PostJson','user/customer-list'], // 客服列表
+        // 删除
+        deleteCustomer: ['PostJson','user/delete-customer-country'], // 删除
+        // 添加
+        addCustomer: ['PostJson','user/save-area'], // 添加
     }
 }; 
 

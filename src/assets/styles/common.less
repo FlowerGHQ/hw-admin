@@ -117,135 +117,19 @@
     }
 }
 
-
-/* 首页编辑样式 */
-.edit-container-new-edit {
-
-    // 编辑页
-    background: @BG_N;
-    box-sizing: border-box;
-    border-radius: 6px;
-    position: relative;
-
-    .form-block-box {
-
-    // 新增页 分块
-    margin: 0 20px 20px;
-    background: #F8FAFC;
-    border-radius: 6px;
-    overflow: hidden;
-    padding-top: 58px;
-
-    .form-block {
-        // 新增页 分块
-        // margin: 0 20px 20px;
-        background: #F8FAFC;
-        // border-radius: 6px;
-        box-sizing: border-box;
-        padding: 0px 0 8px 0;
-        display: flex;
-
-        .form-title {
-            width: 174px;
-            text-align: right;
-            box-sizing: border-box;
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 20px;
-            color: #363D42;
-        }
-
-        .form-content {
-            width: 78%;
-            margin-left: 78px;
-
-        }
-
-        .form-item {
-            margin-bottom: 16px;
-            position: relative;
-
-            .key {
-                min-width: 126px;
-                color: #8090A6;
-                text-align: right;
-                padding-right: 8px;
-            }
-
-            .value {
-                width: calc(~'100% - 86px');
-                max-width: 650px;
-            }
-
-            .sp {
-                position: relative;
-                font-size: 12px;
-                margin-left: 14px;
-
-                .ant-btn {
-                    font-size: 12px;
-                }
-            }
-
-            &.rich_text {
-                .value {
-                    max-width: calc(100% - 100px);
-                }
-            }
-        }
-    }
-
-    }
-    // 子列样式
-    .form-content-item-column {
-
-        display: flex;
-        width: calc(100% + 86px);
-
-        .item-column-block-box {
-
-            box-sizing: border-box;
-            padding: 0px 0 8px 0;
-            flex:1;
-
-            .item-column-title-box {
-                .title {
-                    color: #8090A6;
-                    font-size: 16px;
-                    font-weight: 500;
-                    width: 126px;
-                    text-align: right;
-                    padding-right: 8px;
-                }
-            }
-            .item-column-title {
-
-                min-width: 126px;
-                color: #8090A6;
-                text-align: right;
-                padding-right: 8px;
-            }
-
-            .item-column-value {
-                width: calc(~'100% - 86px');
-                max-width: 650px;
-            }
-
-            .item-column-block {
-                margin-bottom: 16px;
-                display: flex;
-                align-items: center;
-            }
-        }
-    }
-
-    // 子列表格样式
-    .form-content-item-table {
-
-    }
-}
-
 // padding 样式
+.p-4 {
+    padding: 4px;
+    box-sizing: border-box;
+}
+.p-10 {
+    padding: 10px;
+    box-sizing: border-box;
+}
+.p-13 {
+    padding: 13px;
+    box-sizing: border-box;
+}
 .p-t-0 {
     padding-top: 0px !important;
 }
@@ -254,6 +138,24 @@
 }
 .p-r-0 {
     padding-right: 0px !important;
+}
+.p-b-0 {
+    padding-bottom: 0px !important;
+}
+.p-b-4 {
+    padding-bottom: 4px;
+}
+.p-b-8 {
+    padding-bottom: 8px;
+}
+.p-b-10 {
+    padding-bottom: 10px;
+}
+.p-b-16 {
+    padding-bottom: 16px;
+}
+.p-b-20 {
+    padding-bottom: 20px;
 }
 
 // margin 样式
@@ -357,6 +259,10 @@
     margin-bottom: 40px;
 }
 
+.c-white-space {
+    white-space: nowrap;
+}
+
 // tab栏hover效果
 .tab-animate {
     position: relative;
@@ -386,5 +292,69 @@
             width: 100%;
             background: rgba(255, 255, 255, 0.7) !important;
         }
+    }
+}
+
+// 编辑页面的form样式布局
+.common-edit-container {
+    // 编辑页
+    background: @BG_N;
+    box-sizing: border-box;
+    border-radius: 6px;
+    position: relative;
+
+    .form-block {
+        // 新增页 分块
+        background: #F8FAFC;
+        border-radius: 6px;
+        display: flex;
+        margin: 0 20px;
+        padding: 20px 0;
+        box-sizing: border-box;
+
+        .form-title {
+            width: 18%;
+            text-align: right;
+            font-size: 16px;
+            box-sizing: border-box;
+            font-weight: 500;
+            line-height: 20px;
+            color: #363D42;
+            padding-right: 2em;
+        }
+
+        .form-content {
+            width: 78%;
+
+            .form-item {
+                position: relative;                
+    
+                .key {
+                    min-width: 86px;
+                    color: #8090A6;
+                    margin-right: 8px;
+                }
+    
+                .value {
+                    width: calc(~'100% - 86px');
+                    max-width: 650px;
+                }
+
+                // 必选图标
+                &.required {
+                    .key::before {
+                        content: "*";
+                        color: #EB4141;
+                        vertical-align: middle;
+                        margin-right: 4px;
+                    }
+                }
+            }
+        }        
+    }
+
+    .form-btns {
+        border: 1px solid #EDF1F4;
+        padding: 18px 0;
     }
 }

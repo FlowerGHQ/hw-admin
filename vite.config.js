@@ -1,6 +1,9 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import * as path from 'path';
 // 正式环境清除console
 // https://vitejs.dev/config/
@@ -28,7 +31,12 @@ export default defineConfig(({ mode }) => {
         // 指定symbolId格式 :
         symbolId: 'icon-[name]', //实例：#icon-user
       }),
-      
+      AutoImport({
+        resolvers: [ElementPlusResolver()],
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()],
+      }),
     ],
     resolve: {
       alias: {
