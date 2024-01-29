@@ -28,10 +28,9 @@ const props = defineProps({
         default: "请输入内容...",
     },
 });
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(["update:modelValue"]);
 
-
-const {placeholder} = props
+const { placeholder } = props;
 const content = ref("");
 const quillRef = ref(null);
 const myOptions = reactive({
@@ -51,15 +50,18 @@ const setValue = () => {
 watch(
     () => props.modelValue,
     (val) => {
-        console.log(val,'获得的富文本数据');
-        if ((val != null || val != "" || val != "<p><br></p>" ) && val) {
+        console.log(val, "获得的富文本数据");
+        if (val != null || val != "") {
             content.value = val;
+        } else if (val == "<p><br></p>") {
+            content.value = "";
         } else {
             content.value = "";
             toRaw(quillRef.value).setContents(""); // 清空编辑器
         }
     },
     {
+        immediate: true,
         deep: true,
     }
 );
