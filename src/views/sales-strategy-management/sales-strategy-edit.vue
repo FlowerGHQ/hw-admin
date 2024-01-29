@@ -537,6 +537,10 @@ const handleSubmit = () => {
     // 校验表单
     formRef.value &&
         formRef.value.validate().then((res) => {
+            if (formState.strategy_detail.length === 0) {
+                message.warning("请添加方案明细");
+                return;
+            }
             // 拷贝一份数据,formState的数据
             let form = _.cloneDeep(formState);
             form.rule = JSON.stringify(form.rule);
