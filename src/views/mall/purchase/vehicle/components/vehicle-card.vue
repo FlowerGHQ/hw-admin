@@ -2,7 +2,7 @@
     <div id="vehicle-card" class="hover">
         <div class="img-body">
             <div class="img">
-                <img class="news-img" :src="$Util.imageFilter(record.logo, 2)">
+                <img class="news-img" :src="$Util.imageFilter(record.logo, 5)">
             </div>
         </div>
         <div class="text">

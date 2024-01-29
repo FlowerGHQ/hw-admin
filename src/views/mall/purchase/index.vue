@@ -16,7 +16,7 @@
                 <div class="content">
                     <div class="title">{{ $t('purchase.products') }}</div>
                     <div class="products-list">
-                        <div class="products-item hover" v-for="(item, index) in productsList.slice(0, 3)" :key="index" @click="routerChange(item.path, { tabId: item.id })">
+                        <div class="products-item hover" v-for="(item, index) in productsList.slice(0, 3)" :key="index" @click="routerChange(item.path)">
                             <div class="text">
                                 <p class="name">{{ $t(`purchase.${item.nameLang}`) }}</p>
                                 <p class="mes">{{ $t(`purchase.${item.mesLang}`) }}</p>

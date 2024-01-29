@@ -563,7 +563,7 @@ export default {
                     break;
                 case 'itemDetail':  // 分销商商品详情
                     routeUrl = this.$router.resolve({
-                        path: "/purchase/item-list",
+                        path: "/mall/vehicle-list/detail",
                         query: {
                             id: item.item_id
                         }

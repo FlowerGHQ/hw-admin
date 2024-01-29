@@ -69,7 +69,7 @@ export default {
                     return el.value == n.path
                 });
                 this.footAuth = target
-                let totop = Core.Const.MALLHEADERAUTH.TOTOP.some(el => {
+                let totop = Core.Const.MALL_HEADER_AUTH.TOTOP.some(el => {
                     return el.value == n.path
                 });
                 this.totopAuth = totop
@@ -109,7 +109,7 @@ export default {
     },
     methods: {
         // 监听窗口变化
-        handleWindowResize(e) {},
+        handleWindowResize(e) { },
         // 回到顶部
         back2Top() {
             const dom = document.getElementById('mall-header')
@@ -160,13 +160,12 @@ export default {
 
 .ant-input {
     border: none;
-    caret-color: red;
 
-    /* 将光标颜色设为红色 */
     &:focus {
         box-shadow: none;
     }
 }
+
 
 input.ant-input {
     font-size: 14px;
@@ -224,9 +223,17 @@ input.ant-input {
             -webkit-text-fill-color: transparent;
         }
     }
-}</style>
-<style lang="less">#mall-layout {
+}
+</style>
+<style lang="less">
+#mall-layout {
     &.en * {
         font-family: Montserrat !important;
     }
-}</style>
+
+    .ant-input,
+    .ant-input-number-input {
+        caret-color: #C6F;
+    }
+}
+</style>
