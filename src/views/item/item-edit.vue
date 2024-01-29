@@ -1327,19 +1327,22 @@ export default {
         },
         isDesEmpty() {
             let flag = false;
-            console.log(this.categoryMessage,'1111---------------------------')
             if(this.categoryMessage && this.categoryMessage.length > 0  ){
                 for (let i = 0; i < this.categoryMessage.length; i++) {
                 const item = this.categoryMessage[i];
-                    if (item.desc === "" || item.desc_en === "" || item.desc === "<p><br></p>" || item.desc_en === "<p><br></p>") {
+                    if (
+                        item.desc === "" || 
+                        item.desc_en === "" || 
+                        item.desc === "<p><br></p>" || 
+                        item.desc_en === "<p><br></p>") {
                         flag = true;
                         break;
                     }
                 }
             }else{
-                flag = true;
+                flag = false;
             }
-            //every 用于判断数组中的每一项是否都满足条件
+            console.log(flag,'flag')
             return flag
         },
         saveDarftShow() {
@@ -1396,7 +1399,6 @@ export default {
         },
         // openLadderPrice
         openLadderPrice(type,record,index) {
-            console.log(type,record,index)
             this.specific.data.forEach((item,index) => {
                 item.id = index;
                 item.fob_eur = item.fob_eur ? item.fob_eur : "";
@@ -1439,7 +1441,6 @@ export default {
             // 在这里处理宽高变化的逻辑
         },
         handlePreview(file) {
-            console.log(file);
             this.previewImage = file?.response?.data?.filename
                 ? Core.Const.NET.FILE_URL_PREFIX + file.response.data.filename
                 : file?.url
@@ -1467,14 +1468,9 @@ export default {
         },
         // 选择分类的触发
         handleCategory(val) {
-            console.log(this.specific.list,'---------------')
             this.category_index = val;
             this.categoryMessage = [];
-            console.log(val,'id----------------------------');
-            console.log(this.categoryMessage,'categoryMessage---------------------------');
-            console.log(this.specific.list,'specific.list---------------------------');
             this.categoryMessage = this.specific.list.filter((item) => item.id === val)[0]?.option || [];
-            console.log(this.categoryMessage,'此时的----------------');
         },
         // 获取商品详情
         getItemDetail() {
@@ -1483,7 +1479,6 @@ export default {
                 // 多规格商品
                 Core.Api.Item.listBySet({ set_id: this.set_id })
                     .then((res) => {
-                        console.log("getItemGroup res", res);
                         let list = res.list;
                         let mainItem = list.find((i) => i.flag_default === 1);
                         // 根据详情-赋值规格等信息
@@ -1515,7 +1510,6 @@ export default {
         },
         // 根据详情-赋值规格等信息
         setFormData(res) {
-            console.log(res, "规格详情--------------------------");
             this.loading = true;
             this.detail = res;
             let config = [];
@@ -1608,7 +1602,6 @@ export default {
             this.loading = false;
         },
         setFormDartData(res){
-            console.log(res,'草稿信息')
             this.form = res.form;
             this.form.sales_area_ids = res.form.sales_area_ids.split(',').map((item) => Number(item));
             this.attrDef = res.attrDef;
@@ -1621,11 +1614,9 @@ export default {
         },
         // 获取商品规格列表
         setSpecificData(itemList) {
-            console.log(itemList, "参数值--------------------------");
             this.loading = true;
             this.specific.mode = 2;
             Core.Api.AttrDef.listBySet({ set_id: this.set_id }).then((res) => {
-                console.log(res, "规格列表信息---------------------");
                 let list = res.list.map((item) => ({
                     id: item.id,
                     key: item.key,
@@ -1649,7 +1640,6 @@ export default {
                 }));
                 itemList.shift(); // 删除默认的
                 let categoryObj = list.filter((item) => item.flag_category === 1);
-                console.log(categoryObj, "categoryObj---------------------");
                 this.category_index = categoryObj[0]?.id || null;
                 this.categoryMessage = categoryObj[0]?.option || [];
 
@@ -1700,7 +1690,6 @@ export default {
                 // 多规格商品列表
                 this.specific.data = data;
                 this.labberData = data;
-                console.log("多规格商品列表----------------", this.specific.data);
             });
         },
         handleDelete(record) {
@@ -1712,8 +1701,6 @@ export default {
                 cancelText: this.$t("def.cancel"),
                 onOk() {
                     if (_this.form.id) {
-                        console.log("record 编辑", record);
-                        console.log("record data", _this.specific.data);
                         if (!record.target_id) {
                             // 判断在编辑的时候是否新添加信息
                             const index = _this.specific.data.findIndex((el) => el.id === record.id);
@@ -2256,7 +2243,6 @@ export default {
                 };
                 Core.Api.AttrDef.save(_item)
                     .then((res) => {
-                        console.log("详情--------------------", res.detail);
                         this.specific.list[index].id = res.detail.id;
                         this.perAddSpecItem(index);
                     })
@@ -3125,11 +3111,13 @@ export default {
             .show-ladder {
                 display: flex;
                 align-items: center;
+                border: 1px solid #EAECF1;
                 &:hover {
                     border: 1px solid rgba(0, 97, 255, 0.50);
                     border-radius: 4px;
                     .show-ladder-item{
                         background: rgba(0, 97, 255, 0.1);
+                        margin: 4px !important;
                     }
                 }
                 .show-ladder-item {
@@ -3145,10 +3133,6 @@ export default {
                     font-size: 14px;
                     color: #1d2129;
                     cursor: pointer;
-                    // &:first-child {
-                    //     margin-left: 0;
-                    // }
-
                     .show-ladder-item-title {
                         margin-right: 4px;
                     }

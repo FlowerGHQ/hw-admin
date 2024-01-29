@@ -43,7 +43,6 @@ export default {
             this.getFirstItemCategory(n)
         },
         categoryId(n) {
-            console.log('watch this.categoryId:', n)
             if (!n) {
                 this.value = undefined
             } else if (n && n !== this.value) {

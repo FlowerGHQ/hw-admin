@@ -1,10 +1,8 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
-import viteCompression from "vite-plugin-compression";
 import Components from "unplugin-vue-components/vite";
 import AutoImport from "unplugin-auto-import/vite";
-import { terser } from "rollup-plugin-terser";
 import { AntDesignVueResolver,ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import * as path from "path";
 // 正式环境清除console
@@ -38,9 +36,7 @@ export default defineConfig(({ mode }) => {
                     entryFileNames: "js/[name]-[hash].js", // 包的入口文件名称
                     assetFileNames: "[ext]/[name]-[hash].[ext]", // 资源文件像 字体，图片等
                 },
-                plugins: [
-                    terser(), // 压缩代码
-                ],
+               
             },
             //   关闭文件计算
             reportCompressedSize: false,
@@ -54,13 +50,6 @@ export default defineConfig(({ mode }) => {
                 iconDirs: [path.resolve(process.cwd(), "src/assets/svg")],
                 // 指定symbolId格式 :
                 symbolId: "icon-[name]", //实例：#icon-user
-            }),
-            viteCompression({
-                verbose: true,
-                disable: false,
-                threshold: 10240,
-                algorithm: "gzip",
-                ext: ".gz",
             }),
             AutoImport({
                 resolvers: [ElementPlusResolver(), AntDesignVueResolver()],
