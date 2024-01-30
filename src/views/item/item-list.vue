@@ -851,6 +851,7 @@ export default {
             }
             .title-container {
                 padding-left: 0px;
+                padding-right: 0px;
                 .btns-area {
                     .file-upload-btn {
                         margin-right: 15px;

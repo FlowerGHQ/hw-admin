@@ -7,6 +7,10 @@ import MallLayout from '../views/mall/layout/index.vue';
 
 // 供应商路由
 import { supplyManage, supplyRouters } from './supply-router'
+// // 分销商路由
+// import { customerCare } from './distributor-router'
+// // 平台方路由
+// import { inquiryManagement } from './admin-router'
 
 const LOGIN_TYPE = Const.LOGIN.TYPE
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE
@@ -839,7 +843,7 @@ const routes = [
             },
         ]
     },
-    { // 维修单
+    { // 工单管理
         path: '/repair',
         component: Layout,
         name: 'RepairManagement',
@@ -957,79 +961,9 @@ const routes = [
             },
         ]
     },
-	{ // 反馈单
-		path: '/feedback',
-		component: Layout,
-		name: 'FeedbackManagement',
-		redirect: '/feedback/feedback-list',
-        type: [ROUTER_TYPE.AFTER],
-		meta: {
-			title: '反馈管理',
-			title_en: 'Feedback',
-			icon: 'i_menu_fankuguanli',
-			auth: ['quality-feedback.list'],
-		},
-		children: [
-			{
-				path: 'feedback-list',
-				name: 'FeedbackList',
-				component: () => import('@/views/feedback/feedback-list.vue'),
-				meta: {
-					title: '反馈单列表',
-					title_en: 'Feedback orders',
-					auth: ['quality-feedback.list'],				
-                }
-			},
-			// {
-			// 	path: 'feedback-audit-list',
-			// 	name: 'FeedbackAuditList',
-			// 	component: () => import('@/views/feedback/feedback-list.vue'),
-			// 	meta: {
-			// 		title: '待审工单',
-			// 		title_en: 'Awaiting audit',
-			// 		roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-			// 		type: 'audit',
-			// 		auth: ['quality-feedback.audit'],
-			// 	}
-			// },
-			// {
-			// 	path: 'feedback-redit-list',
-			// 	name: 'FeedbackReditList',
-			// 	component: () => import('@/views/feedback/feedback-list.vue'),
-			// 	meta: {
-			// 		title: '待改工单',
-			// 		title_en: 'Awaiting revise',
-			// 		roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
-			// 		type: 'redit',
-			// 		auth: ['quality-feedback.save'],
-			// 	}
-			// },
-			{
-				path: 'feedback-edit',
-				name: 'FeedbackEdit',
-				component: () => import('@/views/feedback/feedback-edit.vue'),
-				meta: {
-					hidden: true,
-					title: '反馈单编辑',
-                    title_en: 'feedback-edit',
-					parent: '/feedback/feedback-list',					
-					auth: ['quality-feedback.save'],
-				}
-			},
-			{
-				path: 'feedback-detail',
-				name: 'FeedbackDetail',
-                title_en: 'feedback-detail',
-				component: () => import('@/views/feedback/feedback-detail.vue'),
-				meta: {
-					hidden: true,
-					title: '反馈单详情',
-					parent: '/feedback/feedback-list',
-					auth: ['quality-feedback.detail'],
-				}
-			},
-		]
-	},
+    // 客户关怀
+	// customerCare,
+    // inquiryManagement,
 
     /*{ // 零售商管理 - 零售商端
         path: '/agent/agent-detail-sp',
@@ -2879,7 +2813,7 @@ const routes = [
     {
         path:'/test',
         name:'test',
-        component: () => import('../views/z-test/test.vue'),
+        component: () => import('../views/z-test/test1.vue'),
         meta: {
             title: '测试1',
             not_sub_menu: true,
