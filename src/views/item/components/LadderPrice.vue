@@ -37,10 +37,7 @@
                     onSelectAll: onSelectAll,
                     type: 'checkbox',
                 }"
-                :class="{ 
-                    'ladder-table': true, 
-                    'slide-down-wrap': batchSetVisible, 
-                    'slide-up-wrap': !batchSetVisible }"
+                class="ladder-table"
                 :pagination="false"
                 :rowKey="(record, index) => index">
                 <template #headerCell="{ column, record, index, text }">
@@ -547,9 +544,11 @@ watch(
                 .table-content {
                     width: 100%;
                     height: 100%;
+                    display: flex;
+                    flex-direction: column;
                     .ladder-table {
                         width: 100%;
-                        height: calc(100% - 200px);
+                        flex: 1;
                         padding: 20px 24px;
                         overflow-y: scroll;
                         // 滚动条样式
@@ -565,9 +564,6 @@ watch(
                             border-radius: 3px;
                             background-color: rgba(0, 0, 0, 0.1);
                         }
-                    }
-                    .slide-up-wrap {
-                        height: 646px;
                     }
                     .batch-set {
                         width: 100%;
@@ -713,19 +709,22 @@ watch(
     0% {
         transform: translateY(100%);
         opacity: 0;
-        visibility: hidden; /* 确保元素在开始动画时是可见的，如果需要的话 */
+        display: none;
     }
     100% {
         transform: translateY(0);
         opacity: 1;
+        display: block;
     }
 }
 @keyframes slideInUp {
     0% {
         opacity: 1;
+        display: block;
     }
     100% {
         opacity: 0;
+        display: none;
         // 移动到底部
         transform: translateY(100%);
     }
