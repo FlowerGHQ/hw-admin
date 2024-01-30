@@ -83,11 +83,11 @@
                                 </template>
                                 <!-- 公里数 -->
                                 <template v-if="column.key === 'mileage'">
-                                    <a-input-number 
+                                    <a-input-number                                         
                                         v-model:value="record.mileage"
                                         :placeholder="$t('common.please_enter') + $t('customer-care.mileage')" 
-                                        :min="0"
-                                        :max="9999999"
+                                        min="0"
+                                        max="9999999"
                                     >
                                         <template #addonAfter>
                                             <span>KM</span>
@@ -104,7 +104,7 @@
                             </template>
                         </a-table>
 
-                        <a-button class="m-t-16" type="primary" ghost @click="onAddBtn('add-data')">
+                        <a-button class="m-t-10" type="primary" ghost @click="onAddBtn('add-data')">
                             {{ $t("common.add") }}
                         </a-button>
                     </div>
@@ -117,10 +117,11 @@
                     <div class="key t-r">{{ $t("customer-care.mileage") }}:</div>
                     <div class="value">                        
                         <a-input-number 
+                            class="w-100"
                             v-model:value="formParams.mileage"
                             :placeholder="$t('common.please_enter') + $t('customer-care.mileage')" 
-                            :min="0"
-                            :max="9999999"
+                            min="0"
+                            max="9999999"
                         >
                             <template #addonAfter>
                                 <span>KM</span>
@@ -345,10 +346,13 @@ const getDetailFetch = (params = {}) => {
                             type: el.type,
                         }) 
                     })                    
+                } else if(key === 'vehicle_list'){
+                    formParams.value[key] = res.detail[key].length > 0 ? res.detail[key] : [{ vehicle_uid: "", mileage: "" }]
                 } else {
                     formParams.value[key] = res.detail[key]
                 }
             }
+            console.log("最后的结果", formParams.value);
         })
         .catch((err) => {
             console.log("详情接口 err", err);
@@ -589,12 +593,12 @@ const handlePreview = ({ file, fileList }) => {
     fileList.forEach((el) => {
         // console.log("输出的东西", el.response);
         if (el.response) {
-            if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
+            if (/(image\/|png|jpg|jpeg)/.test(el.type)) {                
                 if (file.uid === el.uid) {
                     // 让预览的哪张图片在第一张
-                    uploadOptions.value.previewImageVideo.unshift(Core.Util.imageFilter(file.response?.data?.filename, 1));
+                    uploadOptions.value.previewImageVideo.unshift(Core.Util.imageFilter(el.response?.data?.filename, 1));
                 } else {
-                    uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(file.response?.data?.filename, 1));
+                    uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(el.response?.data?.filename, 1));
                 }
             }
         }

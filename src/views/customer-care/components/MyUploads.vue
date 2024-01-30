@@ -158,7 +158,7 @@ const handleRemove = (file) => {
     }
     :deep(.ant-upload-list-picture-card) {
         display: flex;
-        justify-content: center;
+        // justify-content: center;
         flex-wrap: wrap;
     }
     :deep(.ant-upload.ant-upload-select-picture-card) {
