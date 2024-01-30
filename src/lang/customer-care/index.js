@@ -31,6 +31,7 @@ export default {
         tip1: "支持上传图片和视频",
         tip2: "图片最大10M，视频最大50M",
         tip3: "最多上传9个",
+        tip4: "最多上传3个",
         distributor_account_number: "分销商账号",
         waiting_processing: "等待处理",
         in_process: "处理中",
@@ -92,6 +93,7 @@ export default {
         confirm_delete: "确定删除",
         // successfully_add
         successfully_add: "账号添加成功",
+        text_upload: "上传位机截图",
     },
     en: {
         inquiry_list: "Inquiry list",
@@ -124,6 +126,7 @@ export default {
         tip1: "Support uploading images and videos",
         tip2: "Maximum image size of 10M, maximum video size of 50M",
         tip3: "Upload up to 9",
+        tip4: "Upload up to 3",
         distributor_account_number: "Distributor Account Number",
         waiting_processing: "Waiting Processing",
         in_process: "In Proces",
@@ -168,5 +171,6 @@ export default {
         modify_distribution: "Modify Distribution",
         confirm_delete: "Confirm Delete",
         successfully_add: "Account Added Successfully",
+        text_upload: "Upload screenshot of bit machine",
     }
 }

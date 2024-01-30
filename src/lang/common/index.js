@@ -32,6 +32,7 @@ export default {
         fail: '失败',
         sending: '发送',
         add: '添加',
+        detail: '详情',
     },
     en: {
         operations: "Operations",
@@ -66,5 +67,6 @@ export default {
         fail: 'fail',
         sending: 'sending',
         add: 'Add',
+        detail: 'Detail',
     }
 }

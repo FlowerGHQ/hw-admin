@@ -158,7 +158,7 @@
                                             "
                                         >
                                             <MySvgIcon class="video-icon" icon-class="video-icon" />
-                                            <div class="time">2:32s</div>
+                                            <!-- <div class="time">2:32s</div> -->
                                             <div class="bottom-mask">{{ item.name }}</div>
                                         </div>
                                     </template>
@@ -608,6 +608,9 @@
                                 <div class="add-attachment-upload m-t-4">
                                     <MyUploads
                                         v-model:fileList="uploadOptions.fileData"
+                                        :options="{
+                                            maxCount: 3,
+                                        }"
                                         @change="handleDetailChange"
                                         @preview="handlePreview"
                                         @remove="handleRemove"
@@ -617,7 +620,7 @@
                                     <div class="add-attachment-tip m-l-10">
                                         <div>{{ $t("customer-care.tip1") }}</div>
                                         <div>{{ $t("customer-care.tip2") }}</div>
-                                        <div>{{ $t("customer-care.tip3") }}</div>
+                                        <div>{{ $t("customer-care.tip4") }}</div>
                                     </div>
                                 </div>
                             </div>

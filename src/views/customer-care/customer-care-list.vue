@@ -55,7 +55,7 @@
                         </template>
                         <!-- 时间类型 -->
                         <template v-if="column.key === 'time'">
-                            {{ $Util.timeFilter(text, 3) }}
+                            {{ $Util.timeFilter(text, 2) }}
                         </template>
                         <!-- 订单-状态 -->
                         <template v-if="column.key === 'status'">
@@ -158,7 +158,7 @@
                         <template v-if="column.key === 'operations'">
                             <a-button type="link" @click="routerChange('detail', record)">
                                 <MySvgIcon icon-class="common-view" />
-                                <span class="m-l-4">{{ $t("common.view") }}</span>
+                                <span class="m-l-4">{{ $t("common.detail") }}</span>
                             </a-button>
                             <a-button
                                 v-if="!$Util.Common.returnTypeBool(record.status, [Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED])"
