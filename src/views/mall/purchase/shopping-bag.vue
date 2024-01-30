@@ -622,6 +622,7 @@ const isSelected = computed(() => {
 })
 // 计算选中产品数量
 const selectNums = computed(() => {
+    console.log(selectedId)
     let nums = 0;
     nums += selectedId.value['vehicleList'].length;
     nums += selectedId.value['accessoriesList'].length;
@@ -736,10 +737,6 @@ const selectAll = (type, selected = false) => {
                 })
             } else {
                 accessoriesList.value = accessoriesList.value.map(item => {
-                    if (item.flag_item_valid) {
-                        item.selected = selected
-                        selectedId.value['vehicleList'].push(item.id)
-                    }
                     item.selected = selected
                     return item
                 })
