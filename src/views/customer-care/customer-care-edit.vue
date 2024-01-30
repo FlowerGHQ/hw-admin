@@ -136,7 +136,7 @@
                             v-model:value="formParams.description"
                             :placeholder="$t('common.please_enter') + $t('customer-care.problem_description')"
                             allow-clear
-                            :maxlength="20000"
+                            :maxlength="2000"
                         />
                     </div>
                 </div>
@@ -230,7 +230,7 @@ const formParams = ref({
     fault_time: undefined, // 故障日期
     category_id: undefined, // 车型
     description: undefined, // 问题描述
-    attachment_list: undefined, // 附件列表
+    attachment_list: [], // 附件列表
     vehicle_list: [
         {
             vehicle_uid: "",
@@ -418,7 +418,18 @@ const handleSubmit = () => {
     if (isDistributerAdmin.value) {
         // 平台方的时候出现
         publicCheckForm['org_name'] = "" // 分销商名称
-    }
+    }    
+
+    formParams.value.attachment_list = []
+    uploadOptions.value.fileData.forEach(el => {
+        formParams.value.attachment_list.push({
+            name: el.name, // 附件名称
+            path: el.response?.data?.filename, // 附件url
+            type: el.type, // 附件类型
+        })
+    })
+
+    console.log("formParams.value", formParams.value);
 
     if (checkFormInput(publicCheckForm, formParams.value)) return
     // 上面是检查的
@@ -428,14 +439,6 @@ const handleSubmit = () => {
         fault_time: dayjs().unix(formParams.value.fault_time)   
     }   
 
-    submitForm.attachment_list = []
-    uploadOptions.value.fileData.forEach(el => {
-        submitForm.attachment_list.push({
-            name: el.name, // 附件名称
-            path: el.response?.data?.filename, // 附件url
-            type: el.type, // 附件类型
-        })
-    })
     console.log('submitForm', submitForm);
 
     if (route.query?.id) {
@@ -481,7 +484,7 @@ const checkFormInput = (publicCheckForm, sourceData) => {
         ...privateParams,
         ...publicCheckForm,
     }
-    // console.log("sourceData", sourceData);
+    console.log("sourceData", sourceData);
     let result = []
     for (const key in checkForm) {
         let keys = checkForm[key]
@@ -489,8 +492,9 @@ const checkFormInput = (publicCheckForm, sourceData) => {
 
         if (keys instanceof Array) {
             if (key === 'attachment_list') {
+                // console.log("输出的东西", sourceData[key]);
                 // 附件
-                if (sourceData[key].length === 0) {
+                if (sourceData[key]?.length === 0) {
                     result.push(`${key}`)
                 }
                 continue
@@ -535,13 +539,13 @@ const checkFormInput = (publicCheckForm, sourceData) => {
                 tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.failure_date') + ')'
                 break;
             case "category_id":
-                // tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('common.vehicle_model') + ')'
+                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('common.vehicle_model') + ')'
                 break;
             case "description":
                 tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.problem_description') + ')'
                 break;
             case "attachment_list":
-                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.add_attachment') + ')'
+                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.text_upload') + ')'
                 break;
             case "mileage":
                 tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.mileage') + ')'
