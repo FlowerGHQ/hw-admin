@@ -59,6 +59,7 @@
             :title="modalTitle"
             :visible="editVisibilty"
             destroyOnClose
+            centered
             :ok-text="t('customer-care.confirm')"
             :cancel-text="t('customer-care.cancel')"
             @cancel="handleCancel"
