@@ -107,10 +107,10 @@
             <div
                 :class="{
                     'batch-set': true,
-                    'slide-in-down': batchSetVisible,
-                    'slide-in-up': !batchSetVisible,
                     'is-block': !isFirst,
                     'is-null': isFirst,
+                    'slide-in-down': batchSetVisible,
+                    'slide-in-up': !batchSetVisible,
                 }">
                 <div class="title-area">
                     <div class="title">
@@ -494,6 +494,20 @@ const hanleAllSure = () => {
         item.fob_20gp_usd = dataSource?.value[0]?.fob_20gp_usd || item.fob_20gp_usd;
         item.fob_usd = dataSource?.value[0]?.fob_usd || item.fob_usd;
     });
+    // 勾选的数据清空
+    keyAndItem.selectedRowKeys = [];
+    // 数据初始化
+    dataSource.value = [
+        {
+            commodity: 0,
+            fob_40qh_eur: null,
+            fob_20gp_eur: null,
+            fob_eur: null,
+            fob_40qh_usd: null,
+            fob_20gp_usd: null,
+            fob_usd: null,
+        },
+    ];
     // 批量设置隐藏
     batchSetVisible.value = false;
     // 传递给父组件，让父组件去处理
@@ -689,10 +703,10 @@ watch(
     // ease: 默认。动画以低速开始，然后加快，在结束前变慢
     // linear: 动画从头到尾的速度是相同的
 }
-.is-null{
+.is-null {
     display: none;
 }
-.is-block{
+.is-block {
     display: block;
 }
 :deep(table) {
