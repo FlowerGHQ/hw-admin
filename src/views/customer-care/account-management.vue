@@ -3,7 +3,7 @@
         <div class="list-container">
             <!-- 头部 -->
             <div class="title-container">
-                <div class="title-area">{{ $t("customer-care.account_management_and_distribution") }}</div>
+                <div class="title-area">{{ $t("customer-care.inquiry_sheet_distribution") }}</div>
             </div>
             <div class="search">
                 <SearchAll :options="searchList" @search="onSearch" @reset="onReset" :isShowMore="false"> </SearchAll>
@@ -59,6 +59,7 @@
             :title="modalTitle"
             :visible="editVisibilty"
             destroyOnClose
+            centered
             :ok-text="t('customer-care.confirm')"
             :cancel-text="t('customer-care.cancel')"
             @cancel="handleCancel"
