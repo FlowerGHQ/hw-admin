@@ -4,32 +4,45 @@
             <div class="title">
                 {{ $t('mall.Favorites') }}
             </div>
-            <a-spin tip="Loading..." :spinning="spinning">
-                <div class="body" v-if="list.length > 0">
-                    <div class="list-body">
-                        <div class="list-item" v-for="(child, index) in listRender" :key="child.item_id">
-                            <ProductsCard canRemoveFavorites :record="child" @handlechange="getCarList" />
-                        </div>
+            <div class="body" v-if="list.length > 0">
+                <div class="list-body">
+                    <div class="list-item" v-for="(child, index) in listRender" :key="child.item_id">
+                        <ProductsCard canRemoveFavorites :record="child" @handlechange="getCarList" />
                     </div>
                 </div>
-                <a-empty :description="null" v-else />
-            </a-spin>
+            </div>
+            <a-empty :description="null" v-else />
+            <div class="loading">
+                <down-loading class="loading" :show="spinning" />
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
 import ProductsCard from '../components/ProductsCard.vue';
+import DownLoading from '../components/DownLoading.vue';
 import Core from '@/core';
-import { ref, reactive, onMounted, computed, watch } from 'vue';
+import { ref, reactive, onMounted, computed, onBeforeUnmount } from 'vue';
 
 /* state start */
 const spinning = ref(false)
+const pagination = reactive({
+    page_size: 20,
+    page: 1,
+    total: 0,
+    total_page: 0,
+})
 const list = ref([])
+const favoriteListFetch = Core.Api.Favorite.list
 /* state end */
 
 onMounted(() => {
     getData()
+    window.addEventListener('scroll', handleScroll)
+})
+onBeforeUnmount(() => {
+    window.removeEventListener('scroll', handleScroll)
 })
 
 /* computed start */
@@ -49,21 +62,25 @@ const listRender = computed(() => {
 const getData = () => {
     getCarList()
 }
-const favoriteListFetch = Core.Api.Favorite.list
-// 回到顶部
-const back2Top = () => {
-    setTimeout(() => {
-        window.scrollTo(0,0)
-    }, 0);
+const handleScroll = () => {
+    // 因为存在子组件路由所以判断只在父路由时执行
+    const footerHeight = document.querySelector('#mall-footer').clientHeight
+    const html = document.documentElement
+    Core.Util.handleScrollFn(html, getCarList, pagination, spinning.value, footerHeight)
 }
 /* methods end */
 
 /* fetch start */
 const getCarList = () => {
     spinning.value = true
-    favoriteListFetch().then(res => {
-        list.value = res?.list
-        back2Top()
+    const params = {
+        "page": pagination.page,
+        "page_size": pagination.page_size,
+    }
+    favoriteListFetch({ ...params }).then(res => {
+        list.value = list.value.concat(res?.list)
+        pagination.total = res.count
+        pagination.total_page = Math.ceil(pagination.total / pagination.page_size)
     }).finally(() => {
         spinning.value = false
     })
@@ -78,6 +95,7 @@ const getCarList = () => {
         .body {
             .list-body {
                 margin-bottom: 40px;
+
                 .list-body-title {
                     color: #000;
                     font-size: 16px;
@@ -86,10 +104,15 @@ const getCarList = () => {
                     line-height: normal;
                     margin-bottom: 16px;
                 }
+
                 .list-item {
                     margin-bottom: 24px;
                 }
             }
+        }
+
+        .loading {
+            margin-top: 20px;
         }
     }
 }
