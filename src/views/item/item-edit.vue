@@ -1337,7 +1337,7 @@ export default {
             }else{
                 flag = false;
             }
-            console.log(flag,'flag')
+           
             return flag
         },
         saveDarftShow() {
