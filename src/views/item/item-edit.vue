@@ -3293,9 +3293,6 @@ export default {
         background-color: #fff;
     }
 }
-:deep(.ant-input-number-group-addon){
-    color: #8090A6;
-}
 .not-white-space {
     white-space: nowrap;
 }
