@@ -7,10 +7,10 @@ import MallLayout from '../views/mall/layout/index.vue';
 
 // 供应商路由
 import { supplyManage, supplyRouters } from './supply-router'
-// 分销商路由
-import { customerCare } from './distributor-router'
-// 平台方路由
-import { inquiryManagement } from './admin-router'
+// // 分销商路由
+// import { customerCare } from './distributor-router'
+// // 平台方路由
+// import { inquiryManagement } from './admin-router'
 
 const LOGIN_TYPE = Const.LOGIN.TYPE
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE
@@ -962,8 +962,8 @@ const routes = [
         ]
     },
     // 客户关怀
-	customerCare,
-    inquiryManagement,
+	// customerCare,
+    // inquiryManagement,
 
     /*{ // 零售商管理 - 零售商端
         path: '/agent/agent-detail-sp',
