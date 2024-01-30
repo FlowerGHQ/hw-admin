@@ -34,7 +34,7 @@ const MALL_HEADER_AUTH = {
         { value: '/mall/accessories-list/detail' },
         { value: '/mall/peripheral-list/detail' },
         { value: '/mall/promotional-list/detail' },
-        { value: '/mall/shopping-bag' },
+        // { value: '/mall/shopping-bag' },
     ],
     TOTOP: [
         { value: '/mall/index' },
