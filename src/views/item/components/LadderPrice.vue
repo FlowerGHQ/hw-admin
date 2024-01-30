@@ -660,11 +660,11 @@ watch(
 }
 
 .slide-in-down {
-    animation: slideInDown 5s ease-in-out forwards;
+    animation: slideInDown .3s ease-in-out forwards;
 }
 
 .slide-in-up {
-    animation:  slideInUp 5s linear forwards; //ease-in: 动画以低速开始,然后加快，在结束前变慢  forwards: 动画结束后，保持最后一个属性值（在这里是 opacity: 0;）
+    animation:  slideInUp .3s linear forwards; //ease-in: 动画以低速开始,然后加快，在结束前变慢  forwards: 动画结束后，保持最后一个属性值（在这里是 opacity: 0;）
     // ease-in-out: 动画以低速开始和结束
     // ease-out: 动画以低速结束\
     // ease: 默认。动画以低速开始，然后加快，在结束前变慢
