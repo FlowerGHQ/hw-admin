@@ -50,11 +50,13 @@ const setValue = () => {
 watch(
     () => props.modelValue,
     (val) => {
-        if (val != null || val != "") {
+
+        console.log(val,'-----------');
+        if ((val != null || val != "" || val != "<p><br></p>") &&val) {
+            console.log(1);
             content.value = val;
-        } else if (val == "<p><br></p>") {
-            content.value = "";
-        } else {
+        }  else {
+            console.log(2);
             content.value = "";
             toRaw(quillRef.value).setContents(""); // 清空编辑器
         }
