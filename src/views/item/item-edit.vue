@@ -2770,6 +2770,7 @@ export default {
     }
     .specific-category-select {
         .value {
+            width: calc(100% - 86px);
             .select-area {
                 .ant-select {
                     width: 269px;
@@ -2781,8 +2782,28 @@ export default {
                 }
             }
             .item-rich-area {
+                width: 100%;
                 display: flex;
                 margin-top: 17px;
+                padding-right: 32px;
+                overflow-x: scroll;
+                // 滚动条
+                &::-webkit-scrollbar {
+                    height: 8px;
+                    width: 8px;
+                    &-thumb {
+                        border-radius: 3px;
+                        background-color: @scrollbar-thumb;
+                        transition: background-color 0.3s;
+                        &:hover {
+                            background: @scrollbar-thumb-hover;
+                        }
+                    }
+                    &-track {
+                        /*滚动条内部轨道*/
+                        background: @scrollbar-track;
+                    }
+                }
 
                 .rich-item {
                     display: flex;
