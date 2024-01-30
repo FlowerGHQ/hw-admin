@@ -2785,7 +2785,7 @@ export default {
                 width: 100%;
                 display: flex;
                 margin-top: 17px;
-                overflow-x: scroll;
+                overflow-x: auto;
                 // 滚动条
                 &::-webkit-scrollbar {
                     height: 8px;
@@ -2803,7 +2803,6 @@ export default {
                         background: @scrollbar-track;
                     }
                 }
-
                 .rich-item {
                     display: flex;
                     .rich-item-content {
