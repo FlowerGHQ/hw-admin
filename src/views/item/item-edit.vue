@@ -3421,7 +3421,6 @@ export default {
 
 .ant-input-group-wrapper {
     :deep(.ant-input-group-addon) {
-        border-color: #eaecf2 !important;
         color: #8090A6;
         .l-w-h-style-unit{
             color: #8090A6;
