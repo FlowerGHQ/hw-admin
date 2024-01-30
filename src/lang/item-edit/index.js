@@ -33,7 +33,7 @@ export default {
 		//USD阶梯价设置
 		ESD_ladder_price: 'USD阶梯价格设置',
 		// 勾选商品可批量设置价格
-		batch_price: '勾选商品可批量设置价格',
+		batch_price_all: '勾选商品可批量设置价格',
 		// 批量设置价格
 		batch_price: '批量设置价格',
 		// 商品
@@ -83,7 +83,7 @@ export default {
 		// USD阶梯价设置
 		ESD_ladder_price: 'USD ladder price setting',
 		// 勾选商品可批量设置价格
-		batch_price: 'Check the goods to batch set the price',
+		batch_price_all: 'Check the goods to batch set the price',
 		// 批量设置价格
 		batch_price: 'Batch set price',
 		commodity: 'Commodity',
