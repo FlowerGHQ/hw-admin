@@ -129,6 +129,7 @@ const routerChange = (routeUrl, item = {}, type = 1) => {
 
         .dis {
             margin-top: 8px;
+            flex: 1;
 
             .dis-text {
 
@@ -155,8 +156,9 @@ const routerChange = (routeUrl, item = {}, type = 1) => {
                     font-size: 12px;
                     font-style: normal;
                     font-weight: 400;
-                    line-height: 120%;
+                    line-height: 170%;
                     position: relative;
+                    text-decoration: none;
                 }
             }
         }
