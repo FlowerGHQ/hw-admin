@@ -2790,6 +2790,8 @@ export default {
                         margin-right: 16px;
                         width: 237px;
                         border: 1px solid #eaecf1;
+                        border-radius: 4px;
+                        overflow: hidden;
                         &:last-child{
                             margin-right: 0;
                         }
