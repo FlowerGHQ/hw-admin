@@ -219,6 +219,7 @@
                                 <a-col :xs="24" :sm="8" :xl="8" :xxl="8">
                                     <a-input v-model:value="form.height" :placeholder="$t('def.input')">
                                         <template #addonBefore>
+                                            
                                             <span class="l-w-h-style">{{ $t("d.high") }}</span>
                                         </template>
                                         <template #addonAfter>
