@@ -49,7 +49,7 @@
                         <!-- 公共 -->
                         <template v-if="column.key === 'uid'">
                             <div class="new">
-                                <span class="new-msg" v-if="newMsgIdFn(record, 'admin')">新消息</span>
+                                <span class="new-msg" v-if="newMsgIdFn(record, 'admin')">{{ $t('customer-care.new_msg')/*新消息*/ }}</span>
                                 <div>{{ text || "-" }}</div>
                             </div>
                         </template>
@@ -126,7 +126,7 @@
                                 {{
                                     record.vehicle_list.length > 1
                                         ? record.vehicle_list[0]?.vehicle_uid + "(" + record.vehicle_list[0].mileage + ")" + "等"
-                                        : record.vehicle_list[0]?.vehicle_uid
+                                        : record.vehicle_list[0]?.vehicle_uid || '-'
                                 }}
                             </a-tooltip>
                         </template>
@@ -160,18 +160,19 @@
                                 <MySvgIcon icon-class="common-view" />
                                 <span class="m-l-4">{{ $t("common.detail") }}</span>
                             </a-button>
-                            <a-button
-                                v-if="!$Util.Common.returnTypeBool(record.status, [Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED])"
-                                type="link"
-                                @click="routerChange('edit', record)"
-                            >
-                                <MySvgIcon icon-class="common-edit" />
-                                <span class="m-l-4">{{ $t("common.edit") }}</span>
-                            </a-button>
-                            <a-button type="link" @click="routerChange('msg', record)">
-                                <MySvgIcon icon-class="common-leave" />
-                                <span class="m-l-4">{{ $t("customer-care.leave_message") }}</span>
-                            </a-button>
+                            <template v-if="!$Util.Common.returnTypeBool(record.status, [Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED])">
+                                <a-button                                
+                                    type="link"
+                                    @click="routerChange('edit', record)"
+                                >
+                                    <MySvgIcon icon-class="common-edit" />
+                                    <span class="m-l-4">{{ $t("common.edit") }}</span>
+                                </a-button>
+                                <a-button type="link" @click="routerChange('msg', record)">
+                                    <MySvgIcon icon-class="common-leave" />
+                                    <span class="m-l-4">{{ $t("customer-care.leave_message") }}</span>
+                                </a-button>
+                            </template>
                         </template>
                     </template>
                 </a-table>
@@ -403,7 +404,7 @@ const tableColumns = computed(() => {
             { title: proxy.$t("common.vehicle_no"), dataIndex: "vehicle_list", key: "vehicle_list" }, // 车架号
             { title: proxy.$t("customer-care.feedback_type"), dataIndex: "type", key: "type" }, // 反馈类型
             { title: proxy.$t("common.vehicle_model"), dataIndex: "category", key: "category" }, // 车型
-            { title: proxy.$t("common.status"), dataIndex: "status", key: "status" }, // 状态
+            { title: proxy.$t("common.status"), dataIndex: "status", key: "status", width: 70, }, // 状态
             { title: proxy.$t("common.create_time"), dataIndex: "create_time", key: "time" }, // 创建时间
             { title: proxy.$t("common.operations"), dataIndex: "operations", key: "operations", fixed: "right", width: 200 }, // 操作
         ];
@@ -414,7 +415,7 @@ const tableColumns = computed(() => {
             { title: proxy.$t("common.type"), dataIndex: "type", key: "type" }, // 类型
             { title: proxy.$t("customer-care.submitter"), dataIndex: "submit_user_name", key: "submit_user_name" }, // 提交人
             { title: proxy.$t("customer-care.part"), dataIndex: "part_list", key: "part_list" }, // 零件
-            { title: proxy.$t("customer-care.processing_progress"), dataIndex: "status", key: "status" }, // 处理进度
+            { title: proxy.$t("customer-care.processing_progress"), dataIndex: "status", key: "status", width: 70, }, // 处理进度
             { title: proxy.$t("customer-care.model_number_mileage"), dataIndex: "mileage", key: "mileage" }, // 车型号、公里数
             { title: proxy.$t("customer-care.fault_classification"), dataIndex: "fault_type", key: "fault_type" }, // 故障分类
             { title: proxy.$t("customer-care.belonging_customer_service"), dataIndex: "process_user_name", key: "process_user_name" }, // 归属客服
@@ -659,7 +660,7 @@ onMounted(() => {
             font-weight: 400;
             background-color: #f53f3f;
             padding: 2px 10px;
-            border-radius: 4px;
+            border-radius: 0px 0px 4px 0px;
             box-sizing: border-box;
             position: absolute;
             top: 0;
@@ -678,6 +679,7 @@ onMounted(() => {
     padding: 4px 0px;
     box-sizing: border-box;
     .flex();
+    min-width: 70px;
     &.color-FF7D00 {
         background: rgba(255, 125, 0, 0.1);
         color: #ff7d00 !important;

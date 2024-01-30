@@ -4,9 +4,9 @@
         <div class="base-msg">
             <div class="d-f-a-b">
                 <div class="base-msg-left d-f-a">
-                    <div class="sn no-white-space">问询单号 {{ customerCareDetail.uid }}</div>
-                    <div class="no-white-space m-r-8 color-4E5969">客户:</div>
-                    <div>{{ customerCareDetail.submit_user_name || "-" }}/{{ customerCareDetail.country || "-" }}</div>
+                    <div class="sn no-white-space">{{ $t('customer-care.inquiry_number') }} {{ customerCareDetail.uid }}</div>
+                    <div class="no-white-space m-r-8 color-4E5969">{{ $t('customer-care.customer') }}:</div>
+                    <div class="color-4E5969">{{ customerCareDetail.submit_user_name || "-" }}/{{ customerCareDetail.country || "-" }}</div>
                 </div>
                 <div
                     class="base-msg-right status-style"
@@ -56,12 +56,12 @@
             </div>
             <!-- 详细信息 -->
             <div class="detail-msg">
-                <div class="msg-title">详细信息</div>
+                <div class="msg-title">{{ $t('customer-care.detailed_information') }}</div>
                 <div class="msg-content m-t-20">
                     <!-- 问询类型 -->
                     <div class="type-style">
                         <div class="col d-f-a">
-                            <div class="key m-r-16">问询类型</div>
+                            <div class="key m-r-16">{{ $t('customer-care.inquiry_type') }}</div>
                             <div
                                 class="value inquiry-category-style"
                                 :class="[
@@ -89,19 +89,19 @@
                             </div>
                         </div>
                         <div class="col">
-                            <div class="key m-r-16">创建时间</div>
+                            <div class="key m-r-16">{{ $t('common.create_time') }}</div>
                             <div class="value">
                                 {{ $Util.timeFilter(customerCareDetail.create_time, 3) }}
                             </div>
                         </div>
                         <div class="col">
-                            <div class="key m-r-16">故障时间</div>
+                            <div class="key m-r-16">{{ $t('customer-care.failure_time') }}</div>
                             <div class="value">
                                 {{ $Util.timeFilter(customerCareDetail.fault_time, 3) }}
                             </div>
                         </div>
                         <div class="col">
-                            <div class="key m-r-16">车型</div>
+                            <div class="key m-r-16">{{ $t('common.vehicle_model') }}</div>
                             <div class="value">
                                 {{ $i18n.locale === "en" ? customerCareDetail.category?.name_en || "-" : customerCareDetail.category?.name || "-" }}
                             </div>
@@ -111,10 +111,10 @@
                     <!-- 车架号与公里数 -->
                     <div class="vehicle-no-style m-t-20">
                         <div class="col">
-                            <div class="key m-r-16 no-white-space m-r-8 m-t-8">车架号、公里数</div>
+                            <div class="key m-r-16 no-white-space m-r-8 m-t-8">{{ $t('common.vehicle_no') }}、{{ $t('customer-care.mileage') }}</div>
                             <div class="value d-f-a">
                                 <div v-for="(item, index) in customerCareDetail.vehicle_list" :key="index" class="vehicle-item m-r-8 m-t-8">
-                                    {{ item.vehicle_uid }}({{ item.mileage }})
+                                    {{ item.vehicle_uid }}({{ item.mileage }}km)
                                 </div>
                             </div>
                         </div>
@@ -123,7 +123,7 @@
                     <!-- 问题描述 -->
                     <div class="problem-description-style m-t-20">
                         <div class="col">
-                            <div class="key m-r-16">问题描述</div>
+                            <div class="key m-r-16">{{ $t('customer-care.problem_description') }}</div>
                             <div class="value">
                                 {{ customerCareDetail.description }}
                             </div>
@@ -134,7 +134,7 @@
                     <div class="attachment-style m-t-20">
                         <div class="col">
                             <div class="key m-r-16">{{ $t("customer-care.attachment") }}</div>
-                            <div class="value d-f-a">
+                            <div class="value d-f-a cursor">
                                 <template v-for="(item, index) in customerCareDetail.attachment_list" :key="index">
                                     <template v-if="/(image\/|png|jpg|jpeg)/.test(item.type)">
                                         <img
@@ -158,7 +158,7 @@
                                             "
                                         >
                                             <MySvgIcon class="video-icon" icon-class="video-icon" />
-                                            <!-- <div class="time">2:32s</div> -->
+                                            <div class="time">{{ item.duration || "-" }}{{ item.duration ? "s" : "" }}</div>
                                             <div class="bottom-mask">{{ item.name }}</div>
                                         </div>
                                     </template>
@@ -171,7 +171,7 @@
             <!-- 按钮 -->
             <div v-if="Number(customerCareDetail.status) !== Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED" class="detail-btn m-t-20">
                 <a-button @click="onBtn('msg-edit')">
-                    {{ msgVisible ? "取消信息" : "编辑信息" }}
+                    {{ msgVisible ? $t('customer-care.cancel_message') : $t('customer-care.edit_information') }}
                 </a-button>
             </div>
         </div>
@@ -179,11 +179,11 @@
         <!-- 问询单归类 -->
         <div class="inquiry-classification m-t-16">
             <template v-if="isDistributerAdmin">
-                <div class="inquiry-classification-title">问询单归类</div>
+                <div class="inquiry-classification-title">{{ $t('customer-care.inquiry_list_classification') }}</div>
 
                 <!-- 归类 -->
-                <div class="inquiry-classification-item m-t-16">
-                    <div class="inquiry-classification-key m-t-4">归类</div>
+                <div class="inquiry-classification-item m-t-16 m-b-30">
+                    <div class="inquiry-classification-key m-t-4">{{ $t('customer-care.classify') }}</div>
                     <div
                         class="inquiry-classification-value"
                         :class="{
@@ -201,7 +201,7 @@
                         >
                             <a-radio-group v-model:value="customerCareDetail.purpose">
                                 <a-radio v-for="(item, index) in Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE" :value="item.value">
-                                    {{ $t(item.t) }}
+                                    {{ $t(item.t) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 </a-radio>
                             </a-radio-group>
                         </template>
@@ -238,7 +238,7 @@
                                         0,
                                     ])
                                 "
-                                class="good-faith-claims p-10 m-t-16"
+                                class="good-faith-claims p-10 m-t-8"
                             >
                                 <div class="good-faith-claims-title">
                                     {{
@@ -255,7 +255,7 @@
                                             ])
                                         "
                                     >
-                                        <span class="time-name m-r-8">发货日期</span>
+                                        <span class="time-name m-r-8">{{ $t('customer-care.delivery_date') }}</span>
                                         <template
                                             v-if="
                                                 !$Util.Common.returnTypeBool(customerCareDetail.status, [
@@ -288,7 +288,7 @@
                                             ])
                                         "
                                     >
-                                        <span class="time-name m-r-8">订单号</span>
+                                        <span class="time-name m-r-8">{{ $t('customer-care.order_number') }}</span>
                                         <template
                                             v-if="
                                                 !$Util.Common.returnTypeBool(customerCareDetail.status, [
@@ -311,8 +311,8 @@
                 </div>
 
                 <!-- 部件 -->
-                <div class="inquiry-classification-item m-t-30">
-                    <div class="inquiry-classification-key">部件</div>
+                <div class="inquiry-classification-item">
+                    <div class="inquiry-classification-key">{{ $t('customer-care.parts') }}</div>
                     <div class="inquiry-classification-value">
                         <ItemSelect
                             v-if="
@@ -351,7 +351,13 @@
                                             ])
                                         "
                                     >
-                                        <a-input-number v-model:value="record.amount" defaultValue="1" :placeholder="$t('common.please_enter')" />
+                                        <a-input-number 
+                                            v-model:value="record.amount" 
+                                            defaultValue="1" 
+                                            :placeholder="$t('common.please_enter')" 
+                                            min="0"
+                                            max="9999999"
+                                        />
                                     </template>
                                 </template>
                             </template>
@@ -468,7 +474,7 @@
                                     </div>
                                     <div class="other-reply-platform-name">
                                         <div class="name">
-                                            {{ isDistributerAdmin ? "分销商留言" : "平台方留言" }}
+                                            {{ isDistributerAdmin ? $t("customer-care.distributor_message") : $t("customer-care.admin_message") }}
                                         </div>
                                         <div class="time">
                                             {{ $Util.timeFilter(item.create_time) }}
@@ -481,7 +487,7 @@
                                     </div>
                                     <div v-if="item.file.length > 0" class="reply-platform-attachment m-t-4 p-10">
                                         <div class="reply-platform-attachment-title">{{ $t("customer-care.attachment") }}:</div>
-                                        <div class="reply-platform-attachment-img m-t d-f-a">
+                                        <div class="reply-platform-attachment-img m-t d-f-a cursor">
                                             <template v-for="(itemPath, index) in item.file" :key="index">
                                                 <template v-if="/(image\/|png|jpg|jpeg)/.test(itemPath.type)">
                                                     <img
@@ -505,7 +511,7 @@
                                                         @click="
                                                             onViewImage({
                                                                 type: 'video/*',
-                                                                path: item.path,
+                                                                path: itemPath.path,
                                                             })
                                                         "
                                                     >
@@ -530,7 +536,7 @@
                             >
                                 <div class="my-reply-platform-top">
                                     <div class="my-reply-platform-name m-r-8">
-                                        <div class="name">我的回复</div>
+                                        <div class="name">{{ $t("customer-care.my_reply") }}</div>
                                         <div class="time">{{ $Util.timeFilter(item.create_time) }}</div>
                                     </div>
                                     <div class="my-reply-platform-avatar">
@@ -567,7 +573,7 @@
                                                         @click="
                                                             onViewImage({
                                                                 type: 'video/*',
-                                                                path: item.path,
+                                                                path: itemPath.path,
                                                             })
                                                         "
                                                     >
@@ -643,14 +649,14 @@
                 :style="{ 'border-top': isDistributerAdmin ? '1px solid #f2f3f5' : '0px' }"
             >
                 <div v-if="isDistributerAdmin">
-                    <a-button @click="onBtn('inquiry-classification-cancel')">取消</a-button>
-                    <a-button @click="onBtn('inquiry-classification-sumbit')" type="primary">提交</a-button>
+                    <a-button @click="onBtn('inquiry-classification-cancel')">{{ $t("common.cancel") /*取消*/ }}</a-button>
+                    <a-button @click="onBtn('inquiry-classification-sumbit')" type="primary">{{ $t("common.submit") /*提交*/ }}</a-button>
                 </div>
                 <div class="problem-tips" @click="onBtn('exclamation-point')">
                     <a-tooltip placement="topRight">
-                        <template #title> 点击后，该问询单表示处理完成 </template>
+                        <template #title> {{ $t("customer-care.deal_tips") }} </template>
                         <div class="cursor">
-                            <span class="m-r-4">问题已解决</span>
+                            <span class="m-r-4">{{ $t("customer-care.problem_solved") }}</span>
                             <MySvgIcon icon-class="exclamation-point" />
                         </div>
                     </a-tooltip>
@@ -665,7 +671,7 @@
         <!-- 编辑信息弹窗 -->
         <a-modal
             v-model:visible="msgVisible"
-            title="编辑资料"
+            :title="$t('customer-care.editing_data')"
             width="800px"
             :destroyOnClose="true"
             @ok="onBtn('msg-sumbit')"
@@ -799,20 +805,31 @@ const getDetailFetch = (params = {}) => {
     };
     Core.Api.inquiry_sheet
         .detail(obj)
-        .then((res) => {
+        .then(async (res) => {
             console.log("详情接口 success", res.detail);
             customerCareDetail.value = res.detail;
 
             customerCareDetail.value.delivery_time = customerCareDetail.value.delivery_time ? dayjs.unix(res.detail?.delivery_time) : undefined; // 回显时间转换格式
 
+            try {
+                await getVideoTime(res.detail.attachment_list);
+            } catch (error) {
+                console.log("error", error);
+            }
+
             customerCareDetail.value.attachment_list = res.detail.attachment_list.map((el) => {
+                // console.log(el.name);
+                // console.log(el.name.slice(0, 3));
+                // console.log(el.name.slice(-5));
                 return {
                     id: el.id,
-                    name: el.name,
+                    name: el.name.length <= 10 ? el.name : `${ el.name.slice(0, 3) }...${ el.name.slice(-4) }`,
                     type: el.type,
                     path: Core.Const.NET.OSS_POINT + el.path,
+                    duration: el.duration,
                 };
             });
+            console.log("最后的数据", customerCareDetail.value);
 
             partDisabledChecked.value = [];
             customerCareDetail.value.part_list = res.detail?.part_list.map((el) => {
@@ -1177,6 +1194,46 @@ const handlePreview = ({ file, fileList }) => {
 const handleRemove = ({ file, fileList }) => {
     console.log("删除", fileList);
 };
+// 获取视频的时长
+const getVideoTime = (data) => {    
+    return new Promise((resolve, reject) => {
+        const arrs = data.map((el) => {
+            if (/^video\/+/.test(el.type)) {
+                return videoItemPromise(Core.Const.NET.OSS_POINT + el.path).then((res) => {
+                    el.duration = res;
+                }).then(err => {
+                    console.error("哪个视频出错", err);
+                })
+            }
+        });
+
+        // 所有的promise对象完成了走 resolve
+        Promise.all(arrs)
+            .then(() => {
+                resolve();
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+};
+const videoItemPromise = (src) => {
+    const video = document.createElement("video");
+    video.src = src;
+
+    return new Promise((resolve, reject) => {
+        video.addEventListener("loadeddata", function () {
+            resolve(video.duration.toFixed(2));
+        });
+
+        video.addEventListener("error", function () {
+            reject(src);
+        });
+        // 加载视频的元数据
+        video.load();
+        video.remove();
+    });
+};
 /* methods end */
 
 watch(
@@ -1267,7 +1324,7 @@ onMounted(() => {
                                 width: 80px;
                                 height: 80px;
                                 border-radius: 4px;
-                                border: 1px solid rgba(0, 0, 0, 0.5);
+                                border: 1px solid #d9d9d9;
                                 object-fit: cover;
                             }
                         }
@@ -1284,6 +1341,9 @@ onMounted(() => {
                         background: #f2f3f5;
                         padding: 0 4px;
                         box-sizing: border-box;
+                        color: #1D2129;
+                        font-size: 14px;
+                        font-weight: 400;
                     }
                 }
                 .problem-description-style {
@@ -1299,7 +1359,7 @@ onMounted(() => {
         }
 
         .color-4E5969 {
-            color: #4e5969;
+            color: #4E5969;
             font-size: 16px;
             font-weight: 400;
         }
@@ -1375,7 +1435,7 @@ onMounted(() => {
                             width: 80px;
                             height: 80px;
                             border-radius: 4px;
-                            border: 1px solid rgba(0, 0, 0, 0.5);
+                            border: 1px solid #d9d9d9;
                             object-fit: cover;
                         }
                     }
@@ -1499,7 +1559,7 @@ onMounted(() => {
                 border-radius: 4px;
                 border: 1px solid #e5e6eb;
                 background: #fff;
-                padding: 4px 8px;
+                padding: 4px 8px;                
             }
         }
     }
@@ -1509,7 +1569,7 @@ onMounted(() => {
 .status-style {
     box-sizing: border-box;
     border-radius: 4px;
-    padding: 13px;
+    padding: 8px 16px;
     box-sizing: border-box;
 
     &.deal {

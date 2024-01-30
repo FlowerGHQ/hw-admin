@@ -38,6 +38,7 @@ export default {
         sending: '发送',
         add: '添加',
         detail: '详情',
+        submit: '提交',
     },
     en: {
         operations: "Operations",
@@ -78,5 +79,6 @@ export default {
         sending: 'sending',
         add: 'Add',
         detail: 'Detail',
+        submit: 'Submit',
     }
 }
