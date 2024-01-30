@@ -66,8 +66,8 @@ const inquiryManagement = {
             name: 'AccountManagement',
             component: () => import('@/views/customer-care/account-management.vue'),
             meta: {
-                title: '账号管理及分配',
-                title_en: 'Account Management',
+                title: '问询单分配',
+                title_en: 'Inquiry Sheet Distribution',
             }
         },
     ]
