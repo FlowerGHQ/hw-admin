@@ -2751,7 +2751,7 @@ export default {
     }
     .specific-category-select {
         .value {
-            width: calc(100% - 86px);
+            width: calc(100% - 86px - 20px);
             .select-area {
                 .ant-select {
                     width: 269px;
@@ -2766,7 +2766,6 @@ export default {
                 width: 100%;
                 display: flex;
                 margin-top: 17px;
-                padding-right: 32px;
                 overflow-x: scroll;
                 // 滚动条
                 &::-webkit-scrollbar {
