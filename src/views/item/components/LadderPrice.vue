@@ -510,6 +510,8 @@ const hanleAllSure = () => {
     ];
     // 批量设置隐藏
     batchSetVisible.value = false;
+    // 重置是否为首次进入
+    isFirst.value = true;
     // 传递给父组件，让父组件去处理
     emit("handleLastLadderData", props.ladderData);
 };
