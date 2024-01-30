@@ -31,7 +31,7 @@
             </div>
             <!-- table -->
             <div class="table-container">
-                <a-button v-if="isDistributerAdmin && false" class="m-b-10" type="primary" @click="handleExportIn/*导出功能*/">
+                <a-button v-if="isDistributerAdmin && false" class="m-b-10" type="primary" @click="handleExportIn; /*导出功能*/">
                     <i class="icon i_download" />{{ $t("common.export") }}
                 </a-button>
                 <a-table
@@ -49,7 +49,7 @@
                         <!-- 公共 -->
                         <template v-if="column.key === 'uid'">
                             <div class="new">
-                                <span class="new-msg" v-if="newMsgIdFn(record, 'admin')">{{ $t('customer-care.new_msg')/*新消息*/ }}</span>
+                                <span class="new-msg" v-if="newMsgIdFn(record, 'admin')">{{ $t("customer-care.new_msg") /*新消息*/ }}</span>
                                 <div>{{ text || "-" }}</div>
                             </div>
                         </template>
@@ -77,19 +77,45 @@
                                         },
                                     ]),
                                 ]"
-                            >
-                                {{ Core.Const.CUSTOMER_CARE.ORDER_STATUS[text] ? $t(Core.Const.CUSTOMER_CARE.ORDER_STATUS[text].t) : "-" }}
+                            >                                
+                                {{ $t($Util.Common.returnTranslation(text, Core.Const.CUSTOMER_CARE.ORDER_STATUS)) }}
                             </div>
                         </template>
 
                         <!-- 平台方 -->
                         <!-- 归类 -->
-                        <template v-if="column.key === 'purpose'">
-                            {{ Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE[text] ? $t(Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE[text].t) : "-" }}
+                        <template v-if="column.key === 'purpose'">                            
+                            {{ $t($Util.Common.returnTranslation(text, Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE)) }}
                         </template>
                         <!-- 故障类型 -->
                         <template v-if="column.key === 'fault_type'">
-                            {{ Core.Const.CUSTOMER_CARE.FAULT_TYPE[text] ? $t(Core.Const.CUSTOMER_CARE.FAULT_TYPE[text].t) : "-" }}
+                            <template
+                                v-if="$Util.Common.returnTypeBool(record.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY /*电池*/])"
+                            >                                
+                                {{ $t($Util.Common.returnTranslation(text, Core.Const.CUSTOMER_CARE.FAULT_TYPE)) }}
+                            </template>
+                            <template v-else>
+                                <a-tooltip placement="top">
+                                    <template #title>
+                                        <span v-for="(item, index) in record.vehicle_list">
+                                            <span>
+                                                {{ item.vehicle_uid + "(" + $t($Util.Common.returnTranslation(item?.fault_type, Core.Const.CUSTOMER_CARE.FAULT_TYPE)) + ")" }}
+                                            </span>
+                                            <span v-if="record.vehicle_list.length > 1">,</span>
+                                        </span>
+                                    </template>
+                                    <span v-if="record.vehicle_list.length > 1">                                        
+                                        {{ record.vehicle_list[0]?.vehicle_uid + "(" + $t($Util.Common.returnTranslation(record.vehicle_list[0]?.fault_type, Core.Const.CUSTOMER_CARE.FAULT_TYPE)) + ")" + "等" }}
+                                    </span>
+                                    <span v-else>
+                                        {{
+                                            record.vehicle_list[0]?.vehicle_uid
+                                                ? record.vehicle_list[0]?.vehicle_uid + "(" + $t($Util.Common.returnTranslation(record.vehicle_list[0]?.fault_type, Core.Const.CUSTOMER_CARE.FAULT_TYPE)) + ")"
+                                                : "-"
+                                        }}
+                                    </span>
+                                </a-tooltip>
+                            </template>
                         </template>
                         <!-- 零件 -->
                         <template v-if="column.key === 'part_list'">
@@ -118,15 +144,15 @@
                                 <template #title>
                                     <span v-for="(item, index) in record.vehicle_list">
                                         <span>
-                                            {{ item.vehicle_uid + "(" + item.mileage + ")" }}
+                                            {{ item.vehicle_uid + "(" + item.mileage + 'km' +")" }}
                                         </span>
                                         <span v-if="record.vehicle_list.length > 1">,</span>
                                     </span>
                                 </template>
                                 {{
                                     record.vehicle_list.length > 1
-                                        ? record.vehicle_list[0]?.vehicle_uid + "(" + record.vehicle_list[0].mileage + ")" + "等"
-                                        : record.vehicle_list[0]?.vehicle_uid || '-'
+                                        ? record.vehicle_list[0]?.vehicle_uid + "(" + record.vehicle_list[0].mileage + 'km' + ")" + "等"
+                                        : record.vehicle_list[0]?.vehicle_uid || "-"
                                 }}
                             </a-tooltip>
                         </template>
@@ -151,8 +177,8 @@
                             {{ $i18n.locale === "en" ? record.category?.name_en : record.category?.name }}
                         </template>
                         <!-- 反馈类型 -->
-                        <template v-if="column.key === 'type'">
-                            {{ Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE[text] ? $t(Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE[text].t) : "-" }}
+                        <template v-if="column.key === 'type'">                            
+                            {{ $t($Util.Common.returnTranslation(text, Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE)) }}
                         </template>
 
                         <template v-if="column.key === 'operations'">
@@ -161,10 +187,7 @@
                                 <span class="m-l-4">{{ $t("common.detail") }}</span>
                             </a-button>
                             <template v-if="!$Util.Common.returnTypeBool(record.status, [Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED])">
-                                <a-button                                
-                                    type="link"
-                                    @click="routerChange('edit', record)"
-                                >
+                                <a-button type="link" @click="routerChange('edit', record)">
                                     <MySvgIcon icon-class="common-edit" />
                                     <span class="m-l-4">{{ $t("common.edit") }}</span>
                                 </a-button>
@@ -282,7 +305,7 @@ const searchAdminList = ref([
         // 零件
         type: "input",
         value: undefined,
-        searchParmas: "part",
+        searchParmas: "part_name",
         key: "customer-care.part",
     },
     {
@@ -404,7 +427,7 @@ const tableColumns = computed(() => {
             { title: proxy.$t("common.vehicle_no"), dataIndex: "vehicle_list", key: "vehicle_list" }, // 车架号
             { title: proxy.$t("customer-care.feedback_type"), dataIndex: "type", key: "type" }, // 反馈类型
             { title: proxy.$t("common.vehicle_model"), dataIndex: "category", key: "category" }, // 车型
-            { title: proxy.$t("common.status"), dataIndex: "status", key: "status", width: 70, }, // 状态
+            { title: proxy.$t("common.status"), dataIndex: "status", key: "status", width: 70 }, // 状态
             { title: proxy.$t("common.create_time"), dataIndex: "create_time", key: "time" }, // 创建时间
             { title: proxy.$t("common.operations"), dataIndex: "operations", key: "operations", fixed: "right", width: 200 }, // 操作
         ];
@@ -415,7 +438,7 @@ const tableColumns = computed(() => {
             { title: proxy.$t("common.type"), dataIndex: "type", key: "type" }, // 类型
             { title: proxy.$t("customer-care.submitter"), dataIndex: "submit_user_name", key: "submit_user_name" }, // 提交人
             { title: proxy.$t("customer-care.part"), dataIndex: "part_list", key: "part_list" }, // 零件
-            { title: proxy.$t("customer-care.processing_progress"), dataIndex: "status", key: "status", width: 70, }, // 处理进度
+            { title: proxy.$t("customer-care.processing_progress"), dataIndex: "status", key: "status", width: 70 }, // 处理进度
             { title: proxy.$t("customer-care.model_number_mileage"), dataIndex: "mileage", key: "mileage" }, // 车型号、公里数
             { title: proxy.$t("customer-care.fault_classification"), dataIndex: "fault_type", key: "fault_type" }, // 故障分类
             { title: proxy.$t("customer-care.belonging_customer_service"), dataIndex: "process_user_name", key: "process_user_name" }, // 归属客服
@@ -514,14 +537,14 @@ const routerChange = (type, record) => {
             case "msg": // 留言
                 routeUrl = router.resolve({
                     path: "/customer-care/detail",
-                    query: { 
+                    query: {
                         id: record.id,
-                        leave: true
+                        leave: true,
                     },
                 });
                 window.open(routeUrl.href, "_blank");
 
-                storageFn(Core.Data.getDistributorNewMsg(), 'setDistributorNewMsg', record)
+                storageFn(Core.Data.getDistributorNewMsg(), "setDistributorNewMsg", record);
 
                 break;
         }
@@ -551,14 +574,14 @@ const routerChange = (type, record) => {
             case "msg": // 留言
                 routeUrl = router.resolve({
                     path: "/inquiry-management/detail",
-                    query: { 
+                    query: {
                         id: record.id,
-                        leave: true
+                        leave: true,
                     },
                 });
                 window.open(routeUrl.href, "_blank");
 
-                storageFn(Core.Data.getAdminNewMsg(), 'setAdminNewMsg', record)
+                storageFn(Core.Data.getAdminNewMsg(), "setAdminNewMsg", record);
                 break;
         }
     }
@@ -573,42 +596,42 @@ const onReset = () => {
 };
 // 点击留言的时候存储本地
 const storageFn = (loaclData, setLoaclDataName, record) => {
-    let newMsg = loaclData || []
-    
+    let newMsg = loaclData || [];
+
     // 判断本地是否存在id(存在替换)
-    const findIndex = newMsg?.findIndex(el => el.id === record.id);
+    const findIndex = newMsg?.findIndex((el) => el.id === record.id);
     if (findIndex !== -1) {
         newMsg?.splice(findIndex, 1, {
             id: record.id,
-            new_msg_id: record.new_msg_id
-        })
+            new_msg_id: record.new_msg_id,
+        });
     } else {
         newMsg?.push({
             id: record.id,
-            new_msg_id: record.new_msg_id
-        })
+            new_msg_id: record.new_msg_id,
+        });
     }
 
-    Core.Data[setLoaclDataName](newMsg)
-}
+    Core.Data[setLoaclDataName](newMsg);
+};
 // 判断是否显示新消息标签
-const newMsgIdFn = (record) => {    
-    let loaclData = []
+const newMsgIdFn = (record) => {
+    let loaclData = [];
 
     if (isDistributerAdmin.value) {
         // 平台方
-        loaclData = Core.Data.getAdminNewMsg()
+        loaclData = Core.Data.getAdminNewMsg();
     } else {
         // 分销商
-        loaclData = Core.Data.getDistributorNewMsg()
+        loaclData = Core.Data.getDistributorNewMsg();
     }
 
-    const find = loaclData?.find(el => Number(el.id) === Number(record.id))
+    const find = loaclData?.find((el) => Number(el.id) === Number(record.id));
     // console.log("find data", find);
 
     // 判断找到的本地数据的数量是否少于渲染的数据(是 返回true 否则返回 false)
-    return find?.new_msg_id ? Number(find?.new_msg_id) < Number(record?.new_msg_id) : record?.new_msg_id > 0
-}
+    return find?.new_msg_id ? Number(find?.new_msg_id) < Number(record?.new_msg_id) : record?.new_msg_id > 0;
+};
 
 /* methods end*/
 
@@ -659,7 +682,7 @@ onMounted(() => {
             font-size: 12px;
             font-weight: 400;
             background-color: #f53f3f;
-            padding: 2px 10px;
+            padding: 0px 8px;
             border-radius: 0px 0px 4px 0px;
             box-sizing: border-box;
             position: absolute;

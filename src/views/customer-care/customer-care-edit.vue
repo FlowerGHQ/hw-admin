@@ -169,7 +169,7 @@
         </div>
         <div v-if="!isDetailEnter" class="form-btns footer-btn">
             <a-button @click="onAddBtn('back')">{{ $t("def.cancel") }}</a-button>
-            <a-button @click="handleSubmit" type="primary">{{ $t("def.sure") }}</a-button>
+            <a-button @click="handleSubmit" type="primary">{{ $t("common.submit") }}</a-button>
         </div>
 
         <!-- 自定义图片预览 -->
