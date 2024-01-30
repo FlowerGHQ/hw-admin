@@ -230,6 +230,10 @@
                                         v-model:value="form.height"
                                     >
                                         <template #addonBefore>
+                                            
+                                            <span class="l-w-h-style">{{ $t("d.high") }}</span>
+                                        </template>
+                                        <template #addonAfter>
                                             <span class="l-w-h-style-unit">CM</span>
                                         </template>
                                     </a-input-number>
