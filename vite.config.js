@@ -33,9 +33,9 @@ export default defineConfig(({ mode }) => {
                             return id.toString().split("node_modules/")[1].split("/")[0].toString();
                         }
                     },
-                    // chunkFileNames: "js/[name]-[hash].js", // 引入文件名的名称
-                    // entryFileNames: "js/[name]-[hash].js", // 包的入口文件名称
-                    // assetFileNames: "[ext]/[name]-[hash].[ext]", // 资源文件像 字体，图片等
+                    chunkFileNames: "js/[name]-[hash].js", // 引入文件名的名称
+                    entryFileNames: "js/[name]-[hash].js", // 包的入口文件名称
+                    assetFileNames: "[ext]/[name]-[hash].[ext]", // 资源文件像 字体，图片等
                 },
                
             },
@@ -64,7 +64,7 @@ export default defineConfig(({ mode }) => {
                 threshold: 10240, // 如果体积大于阈值，将被压缩，单位为b，体积过小时请不要压缩，以免适得其反
                 algorithm: 'gzip', // 压缩算法，可选['gzip'，' brotliccompress '，'deflate '，'deflateRaw']
                 ext: '.gz',
-                deleteOriginFile: false // 源文件压缩后是否删除(我为了看压缩后的效果，先选择了true)
+                deleteOriginFile: false // 不需要删除源文件，nginx会自动根据请求头的accept-encoding进行判断
             })
         ],
         resolve: {
