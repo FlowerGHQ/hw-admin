@@ -7,7 +7,7 @@
             <div class="body" v-if="list.length > 0">
                 <div class="list-body">
                     <div class="list-item" v-for="(child, index) in listRender" :key="child.item_id">
-                        <ProductsCard canRemoveFavorites :record="child" @handlechange="getCarList" />
+                        <ProductsCard canRemoveFavorites :record="child" @handlechange="getCarList({}, true)" />
                     </div>
                 </div>
             </div>
@@ -68,15 +68,26 @@ const handleScroll = () => {
     const html = document.documentElement
     Core.Util.handleScrollFn(html, getCarList, pagination, spinning.value, footerHeight)
 }
+const resetFn = () => {
+    list.value = []
+    Object.assign(pagination, {
+        page_size: 20,
+        page: 1,
+        total: 0,
+        total_page: 0,
+    })
+}
 /* methods end */
 
 /* fetch start */
-const getCarList = () => {
+const getCarList = (q, reset = false) => {
+    if (reset) resetFn();
     spinning.value = true
     const params = {
         "page": pagination.page,
         "page_size": pagination.page_size,
     }
+    Object.assign(params, q)
     favoriteListFetch({ ...params }).then(res => {
         list.value = list.value.concat(res?.list)
         pagination.total = res.count
