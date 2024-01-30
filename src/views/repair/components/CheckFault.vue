@@ -35,8 +35,9 @@
                                 {{ $i18n.locale === 'zh' ? record.name : record.name_en }}
                             </template>
                             <template v-if="column.dataIndex === 'price'">
-                                € <a-input-number v-model:value="record.price" style="width: 82px;"
-                                    :min="0" :precision="2" placeholder="请输入"/>
+                                € {{ record.price || 0 }} 
+                                <!-- <a-input-number v-model:value="record.price" style="width: 82px;"
+                                    :min="0" :precision="2" placeholder="请输入"/> -->
                             </template>
 
                             <template v-if="column.key === 'amount'">
