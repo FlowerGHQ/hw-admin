@@ -2285,7 +2285,7 @@ import { useRoute, useRouter } from "vue-router";
 import Core from "@/core";
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import TimeSearch from "@/components/common/TimeSearch.vue";
-import MyMask from "../../../components/common/MyMask.vue";
+import MyMask from "@/components/horwin/based-on-dom/MyMask.vue";
 import MyUpload from "@/components/MyUpload/index.vue";
 import dayjs from 'dayjs';
 

@@ -409,11 +409,15 @@ const handleSubmit = () => {
        
     // 校验的数据
     // 公共的(私有的需要在checkFormInput中添加)
-    const publicCheckForm = {
-        'org_name': "", // 分销商名称
+    let publicCheckForm = {        
         'type': "", // 问询单类型
         'category_id': "", // 车型
         'description': "", // 问题描述
+    }
+
+    if (isDistributerAdmin.value) {
+        // 平台方的时候出现
+        publicCheckForm['org_name'] = "" // 分销商名称
     }
 
     if (checkFormInput(publicCheckForm, formParams.value)) return
@@ -700,6 +704,10 @@ onMounted(() => {
         border: 1px dashed #eaecf1;
         background: #fff;
     }
+}
+// 上传时候的文字
+:deep(.ant-upload-list-item-thumbnail) {
+    white-space: nowrap;
 }
 
 .w-370 {

@@ -17,7 +17,7 @@
                     <a-tab-pane :key="item.key" v-for="item of statusList">
                         <template #tab>
                             <div class="tabs-title">
-                                <span>{{ $t(item.t) }}</span>
+                                {{ $t(item.t) }}
                                 <span :class="item.color">
                                     {{ item.count }}
                                 </span>
@@ -638,12 +638,6 @@ onMounted(() => {
 
 <style lang="less" scoped>
 #customer-care {
-    .tabs-title {
-        color: #4e5969;
-        font-size: 14px;
-        font-weight: 400;
-    }
-
     .table-title {
         color: #1d2129;
         font-size: 14px;
