@@ -70,7 +70,7 @@
                         v-model:value="formState.username"
                         placeholder="请选择客服账号"
                         :disabled="openType === 'edit'">
-                        <a-select-option v-for="item in allAccount" :key="id" :value="item.username">
+                        <a-select-option v-for="item in otherAccount" :key="id" :value="item.username">
                             {{ item.username }}
                         </a-select-option>
                     </a-select>
@@ -203,6 +203,11 @@ const formState = ref({
     org_type: 10,
 });
 const allAccount = ref([]);
+const otherAccount = computed(()=>{
+    return allAccount.value.filter((item)=>{
+        return item.area !== '其他';
+    })
+})
 
 const formRef = ref(null);
 const activeRecord = ref({});
