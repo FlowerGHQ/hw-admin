@@ -64,7 +64,7 @@ export default defineConfig(({ mode }) => {
                 threshold: 10240, // 如果体积大于阈值，将被压缩，单位为b，体积过小时请不要压缩，以免适得其反
                 algorithm: 'gzip', // 压缩算法，可选['gzip'，' brotliccompress '，'deflate '，'deflateRaw']
                 ext: '.gz',
-                deleteOriginFile: false // 源文件压缩后是否删除(我为了看压缩后的效果，先选择了true)
+                deleteOriginFile: false // 不需要删除源文件，nginx会自动根据请求头的accept-encoding进行判断
             })
         ],
         resolve: {
