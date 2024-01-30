@@ -16,7 +16,9 @@
         <!-- footer -->
         <template #footer>
             <div class="confim-footer">
-                <div class="tips"><MySvgIcon icon-class="hint" /> {{ $t("item-edit.batch_price") }}</div>
+                <div class="tips">
+                    <MySvgIcon icon-class="hint" /> <span class="text-hint">{{ $t("item-edit.batch_price_all") }}</span>
+                </div>
                 <div class="btn-area">
                     <!-- 取消按钮 -->
                     <a-button @click="handleCancelLadderPrice">{{ $t("def.cancel") }}</a-button>
@@ -102,7 +104,14 @@
                         @change="inputValidateConfig" />
                 </template>
             </a-table>
-            <div :class="{ 'batch-set': true, 'slide-in-down': batchSetVisible, 'slide-in-up': !batchSetVisible }">
+            <div
+                :class="{
+                    'batch-set': true,
+                    'slide-in-down': batchSetVisible,
+                    'slide-in-up': !batchSetVisible,
+                    'is-block': !isFirst,
+                    'is-null': isFirst,
+                }">
                 <div class="title-area">
                     <div class="title">
                         {{ $t("item-edit.batch_price") }}
@@ -224,6 +233,8 @@ const props = defineProps({
 const LadderPrice = ref(null);
 // 动画框显示
 const batchSetVisible = ref(false);
+// 是否为首次进入
+const isFirst = ref(true);
 
 // 是否显示弹框
 const visibiliy = computed(() => {
@@ -445,7 +456,6 @@ const inputValidateConfig = (value) => {
 };
 // 取消按钮（动画）
 const hanleAllVisible = () => {
-
     // 数据初始化
     dataSource.value = [
         {
@@ -460,19 +470,18 @@ const hanleAllVisible = () => {
     ];
     // 选中
     if (props.activeIndex !== null) {
-            if (
-                props.ladderData[props.activeIndex].fob_eur ||
-                props.ladderData[props.activeIndex].fob_20gp_eur ||
-                props.ladderData[props.activeIndex].fob_40qh_eur ||
-                props.ladderData[props.activeIndex].fob_usd ||
-                props.ladderData[props.activeIndex].fob_20gp_usd ||
-                props.ladderData[props.activeIndex].fob_40qh_usd
-            ) {
-                keyAndItem.selectedRowKeys = [props.activeIndex];
-            }
+        if (
+            props.ladderData[props.activeIndex].fob_eur ||
+            props.ladderData[props.activeIndex].fob_20gp_eur ||
+            props.ladderData[props.activeIndex].fob_40qh_eur ||
+            props.ladderData[props.activeIndex].fob_usd ||
+            props.ladderData[props.activeIndex].fob_20gp_usd ||
+            props.ladderData[props.activeIndex].fob_40qh_usd
+        ) {
+            keyAndItem.selectedRowKeys = [props.activeIndex];
+        }
     }
     batchSetVisible.value = false;
-   
 };
 // 确定按钮（动画）
 const hanleAllSure = () => {
@@ -512,6 +521,19 @@ watch(
     {
         deep: true,
         immediate: true,
+    }
+);
+// 监听是否为首次显示动画
+watch(
+    () => batchSetVisible.value,
+    (newVal, oldValue) => {
+        if (newVal == !oldValue) {
+            isFirst.value = false;
+        }
+        console.log(isFirst.value);
+    },
+    {
+        deep: true,
     }
 );
 </script>
@@ -628,9 +650,10 @@ watch(
                         display: flex;
                         align-items: center;
                         justify-content: center;
+                        line-height: 1;
                         .svg-icon {
-                            margin-right: 2px;
                             font-size: 16px;
+                            margin-right: 4px;
                         }
                     }
                     .btn-area {
@@ -656,15 +679,21 @@ watch(
 }
 
 .slide-in-down {
-    animation: slideInDown .3s ease-in-out forwards;
+    animation: slideInDown 0.3s ease-in-out forwards;
 }
 
 .slide-in-up {
-    animation:  slideInUp .3s linear forwards; //ease-in: 动画以低速开始,然后加快，在结束前变慢  forwards: 动画结束后，保持最后一个属性值（在这里是 opacity: 0;）
+    animation: slideInUp 0.3s ease-in-out forwards; //ease-in: 动画以低速开始,然后加快，在结束前变慢  forwards: 动画结束后，保持最后一个属性值（在这里是 opacity: 0;）
     // ease-in-out: 动画以低速开始和结束
     // ease-out: 动画以低速结束\
     // ease: 默认。动画以低速开始，然后加快，在结束前变慢
     // linear: 动画从头到尾的速度是相同的
+}
+.is-null{
+    display: none;
+}
+.is-block{
+    display: block;
 }
 :deep(table) {
     .ant-table-cell {
@@ -720,13 +749,15 @@ watch(
 @keyframes slideInUp {
     0% {
         opacity: 1;
+        // 移动到底部
+        transform: translateY(0);
         display: block;
     }
     100% {
         opacity: 0;
-        display: none;
         // 移动到底部
-        transform: translateY(100%);
+        height: 0;
+        display: none;
     }
 }
 </style>
