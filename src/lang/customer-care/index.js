@@ -63,6 +63,8 @@ export default {
         customer_service_account: "客服账号",
         // 账号管理及分配
         account_management_and_distribution: "账号管理及分配",
+        // 问询单分配
+        inquiry_sheet_distribution: "问询单分配",
         // add_distribution
         add_distribution: "新增分配",
         // 序号
@@ -156,6 +158,7 @@ export default {
         mark_resolved_tips: "The resolved inquiry form cannot be edited or left a message. Are you sure the issue with this inquiry has been resolved?",
         customer_service_account: "Customer Service Account",
         account_management_and_distribution: "Account Management And Distribution",
+        inquiry_sheet_distribution: "Inquiry Sheet Distribution",
         add_distribution: "Add Distribution",
         serial_number: "Serial Number",
         account: "Account",
