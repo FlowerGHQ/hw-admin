@@ -9,17 +9,30 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('operation.area') }}</div>
                     <div class="value">
-                        <a-radio-group v-model:value="form.area" name="radioGroup">
-                            <a-radio value="1">全部区域</a-radio>
-                            <a-radio value="2">全部区域</a-radio>
-                        </a-radio-group>
+                        <div class="area-body">
+                            <a-radio-group v-model:value="form.area_type" name="radioGroup">
+                                <a-radio :value="1">全部区域</a-radio>
+                                <a-radio :value="2">全部区域</a-radio>
+                            </a-radio-group>
+                            <template v-if="areaIndex === '2'">
+                                <MyCountryCascader v-model:value="form.area" @handleGetItem="handleGetItem" />
+                            </template>
+                        </div>
                     </div>
                 </div>
                 <!-- 展示位置 -->
-                <div class="form-item required">
+                <div class="form-item required location">
                     <div class="key">{{ $t('operation.display_location') }}</div>
                     <div class="value">
-
+                        <a-checkbox-group v-model:value="form.show_type" @change="onChange">
+                            <a-checkbox v-for="it in locationList" :value="it.value">
+                                {{ $t('operation.' + it.label) }}
+                            </a-checkbox>
+                        </a-checkbox-group>
+                        <div class="location-preview">
+                            <img src="@images/operation/top_message.png" alt="">
+                            <img src="@images/operation/message_aggregation.png" alt="">
+                        </div>
                     </div>
                 </div>
                 <!-- 排序 -->
@@ -41,14 +54,15 @@
                 <div class="form-item required flex_start">
                     <div class="key">{{ $t('operation.report_content') }}</div>
                     <div class="value">
-
+                        <MyEditor v-model:modelValue="form.content" :modules="modules"
+                            :placeholder="`${$t('operation.enter_content')}...`" />
                     </div>
                 </div>
                 <!-- 图片 -->
                 <div class="form-item required flex_start">
                     <div class="key">{{ $t('operation.pic') }}</div>
                     <div class="value">
-                        <MyUpload name="add_attachments" v-model:value="form.pic_list" showTip :limit="1" :limitSize="2"
+                        <MyUpload name="add_picList" v-model:value="form.img" showTip :limit="1" :limitSize="10"
                             tipPosition="right">
                             <template #tip>
                                 <div class="tips">
@@ -64,8 +78,8 @@
                 <div class="form-item flex_start">
                     <div class="key">{{ $t('operation.add_attachments') }}</div>
                     <div class="value">
-                        <MyUpload name="add_attachments" :tip="'123\n123'" v-model:value="form.attachment_list" showTip
-                            :limit="1" :limitSize="2" tipPosition="right">
+                        <MyUpload name="add_attachments" :tip="'123\n123'" v-model:value="form.attachment" showTip
+                            :limit="3" :limitSize="50" tipPosition="right" accept=".pdf" :isCanUpType="['application/pdf']">
                             <template #tip>
                                 <div class="tips">
                                     <p>{{ $t('operation.attachments_tip1') }}</p>
@@ -78,9 +92,8 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary" v-if="$auth('crm-order-income.save')">{{ $t('def.sure')
-            }}</a-button>
             <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
+            <a-button @click="handleSubmit" type="primary">{{ $t('def.submit') }}</a-button>
         </div>
     </div>
 </template>
@@ -91,11 +104,13 @@ import Core from '../../core';
 import { useRouter, useRoute } from 'vue-router'
 
 import MyUpload from "@/components/MyUpload/index.vue";
+import MyCountryCascader from '@/components/MyCountryCascader/index.vue';
+import MyEditor from "@/components/MyEditor/index.vue";
 
 const { proxy } = getCurrentInstance();
 const router = useRouter()
 const route = useRoute()
-
+const locationList = Core.Const.OPERATION.locationList
 
 onMounted(() => {
     form.id = Number(route.query.id) || 0
@@ -110,11 +125,33 @@ const loading = ref(false)
 const detail = reactive({})
 const form = reactive({
     id: '',
-    area: '1',
+    area_type: 1,
+    area: '',
+    show_type: ['1'],
     sort: '',
     title: '',
-    pic_list: [],
-    attachment_list: [],
+    type: 1,// 1 公告 2 广告
+    content: '',
+    img: [],
+    attachment: [],
+})
+const areaIndex = ref('1')
+const modules = reactive({
+    toolbar: [
+        ['bold', 'italic', 'underline'], // 加粗 斜体 下划线 删除线
+        ['image'] // 链接、图片，需要视频的可以加上video
+    ],
+    // 拖拽上传
+    imageDrop: true,
+    // 调整图片大小
+    imageResize: {
+        displayStyles: {
+            backgroundColor: 'black',
+            border: 'none',
+            color: 'white'
+        },
+        modules: ['Resize', 'DisplaySize', 'Toolbar']
+    },
 })
 /* state end*/
 
@@ -123,7 +160,7 @@ const routerChange = (type, item) => {
     switch (type) {
         case 'back':    // 详情
             let routeUrl = router.resolve({
-                path: "/crm-order-income/order-income-list",
+                path: "/operation/report-list",
             })
             window.open(routeUrl.href, '_self')
             break;
@@ -141,18 +178,22 @@ const getReportDetail = () => {
     });
 }
 const handleSubmit = () => {
-    let form = Core.Util.deepCopy(form)
-    if (!form.order_id) {
+    let formNew = Core.Util.deepCopy(form)
+    formNew.show_type = formNew.show_type.join(',')
+    if (!formNew.show_type) {
         return proxy.$message.warning(proxy.$t('n.enter') + ":" + proxy.$t('crm_oi.belong_order'))
     }
     Core.Api.CRMReportIncome.save({
-        ...form,
+        ...formNew,
     }).then(() => {
         proxy.$message.success(proxy.$t('pop_up.save_success'))
         router.go(-1)
     }).catch(err => {
         console.log('handleSubmit err:', err)
     })
+}
+const onChange = () => {
+
 }
 /* methods end*/
 
@@ -177,6 +218,11 @@ const handleSubmit = () => {
                 }
 
                 .value {
+                    .area-body {
+                        display: flex;
+                        align-items: center;
+                    }
+
                     .tips {
                         >p {
                             color: #666;
@@ -203,6 +249,96 @@ const handleSubmit = () => {
                             margin-bottom: 0;
                         }
                     }
+
+                    .cascader-area {
+                        min-width: 224px;
+                        flex: 1;
+                    }
+
+                    //富文本编辑器
+                    .ql-toolbar.ql-snow {
+                        border-radius: 3px 3px 0px 0px;
+                        background: #f2f3f5;
+                        padding: 10px;
+                        font-size: 12px;
+                        border-color: #EAECF1 !important;
+
+                        .ql-formats {
+                            &:nth-child(1) {
+                                margin-right: 0;
+                            }
+
+                            .ql-list,
+                            .ql-underline,
+                            .ql-italic,
+                            .ql-bold {
+                                padding: 0;
+                                width: auto;
+                                margin-right: 16px;
+                                height: 15px;
+                            }
+
+                            .ql-list {
+                                margin-right: 0;
+                            }
+                        }
+
+                        &::after {
+                            display: none;
+                        }
+                    }
+
+                    .ql-container.ql-snow {
+                        border-radius: 0px 0px 3px 3px;
+                        flex: 1;
+                        border-color: #EAECF1 !important;
+                        background: #FFF;
+
+                        .ql-editor {
+                            padding: 10px;
+                            min-height: 143px;
+
+                            ul {
+                                padding-left: 0;
+                            }
+
+                            li {
+                                padding-left: 1em;
+                            }
+
+                            &::before {
+                                font-style: normal;
+                                color: #bfbfbf;
+                            }
+                        }
+                    }
+                }
+
+                &.location {
+                    padding-bottom: 67px;
+
+                    .value {
+                        position: relative;
+                    }
+
+                    .location-preview {
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        transform: translateY(100%);
+
+                        >img {
+                            width: 142px;
+                            height: 67px;
+                            border-radius: 4px;
+                            border: 1px solid #EAECF1;
+                            overflow: hidden;
+
+                            &:nth-child(n + 2) {
+                                margin-left: 24px;
+                            }
+                        }
+                    }
                 }
 
                 &.flex_start {
@@ -210,6 +346,10 @@ const handleSubmit = () => {
                 }
             }
         }
+    }
+
+    .form-btns {
+        text-align: center;
     }
 }
 </style>

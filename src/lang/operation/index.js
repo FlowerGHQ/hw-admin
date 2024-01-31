@@ -14,6 +14,9 @@ export default {
         attachments_tip2: '建议上传PDF格式',
         title_placeholder: '英文建议字符70/中文建议字符40，包括标点符合与空格',
         sort_placeholder: '请输入序号，数字越大排序越靠前',
+        top_message: '顶部消息区',
+        message_aggregation: '消息合集区',
+        enter_content: '请输入正文内容',
     },
     en: {
         area: 'Area',
@@ -30,5 +33,8 @@ export default {
         attachments_tip2: 'Suggest uploading in PDF format',
         title_placeholder: 'Suggested English characters 70/Chinese characters 40, including punctuation and spaces',
         sort_placeholder: 'Please enter the serial number. The larger the number, the higher the ranking',
+        top_message: 'Top Message Area',
+        message_aggregation: 'Message Aggregation Area',
+        enter_content: 'Please enter the main text content',
     }
 }
