@@ -4,6 +4,10 @@ const OPERATION = {
         '1': { value: 1, zh: '已发布', en: 'Have Released' },
         '2': { value: 2, zh: '未发布', en: 'Unpublish' },
     },
+    OPERATION_TYPE_MAP: {
+        REPORT: 1,
+        AD: 2
+    }
 }
 
 export default OPERATION
