@@ -2333,7 +2333,7 @@ const routes = [
 	{ // 运营管理
 		path: '/operation',
 		component: Layout,
-		redirect: '/operation/notice-list',
+		redirect: '/operation/report-list',
 		name: 'Operation',
         type: [ROUTER_TYPE.CRM],
 		meta: {
@@ -2344,18 +2344,18 @@ const routes = [
 		},
 		children: [
 			{
-				path: 'notice-list',
-				name: 'NoticeList',
-				component: () => import('@/views/operation/notice-list.vue'),
+				path: 'report-list',
+				name: 'ReportList',
+				component: () => import('@/views/operation/report-list.vue'),
 				meta: {
 					title: '通知公告',
 					title_en: 'Notice And Announcement',
 				}
 			},
             {
-                path: 'notice-edit',
-                name: 'NoticeEdit',
-                component: () => import('@/views/operation/notice-edit.vue'),
+                path: 'report-edit',
+                name: 'ReportEdit',
+                component: () => import('@/views/operation/report-edit.vue'),
                 meta: {
 					hidden: true,
                     title: '通知公告编辑',

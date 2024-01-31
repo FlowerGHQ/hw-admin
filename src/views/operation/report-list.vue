@@ -5,7 +5,6 @@
 </template>
 
 <script setup>
-onMounted(() => {});
 /* Fetch start*/
 
 /* Fetch end*/
