@@ -510,15 +510,7 @@ const exportFetch = (params = {}) => {
         ...params,
     };
 
-    Core.Api.inquiry_sheet
-        .enquiryTickeTexport(obj)
-        .then((res) => {
-            console.log("导出接口 res", res);
-            message.success(proxy.$t("common.sucesss"));
-        })
-        .catch((err) => {
-            console.log("导出接口 err", err);
-        });
+    Core.Api.Export.enquiryTickeTexport(obj)        
 };
 
 // 获取询问单列表
@@ -687,9 +679,10 @@ const newMsgIdFn = (record) => {
 // 导出功能
 const search_all = ref(null)
 const handleExportIn = () => {
-    search_all.value.handleSearch()    
-    // console.log("handleExportIn", searchParam.value);
-    exportFetch({ ...searchParam.value })    
+    search_all.value.handleSearch()
+    let exportUrl = Core.Api.Export.enquiryTickeTexport({ ...Core.Util.searchFilter(searchParam.value) })    
+    console.log("exportUrl", exportUrl);
+    window.open(exportUrl, '_blank')
 }
 
 /* methods end*/

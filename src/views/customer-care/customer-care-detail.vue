@@ -1548,6 +1548,7 @@ onMounted(() => {
                 .my-reply-platform-bottom {
                     display: inline-block;
                     .speech-skill {
+                        display: inline-block;
                         border-radius: 4px;
                         background-color: #66a0ff;
                         color: #fff;
