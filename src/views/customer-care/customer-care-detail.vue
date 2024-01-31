@@ -1054,7 +1054,7 @@ const onBtn = (type) => {
             });
             let saveCommentParams = {
                 file: inquiryFile.length > 0 ? JSON.stringify(inquiryFile) : undefined,
-                content: customerCareDetail.value.content,
+                content: customerCareDetail.value.content.trim(),
             };
 
             let promiseAll = [getBindPartFetch(), getSortingTypeFetch()];
@@ -1102,7 +1102,7 @@ const onBtn = (type) => {
 
             let saveComment = {
                 file: sendingFile.length > 0 ? JSON.stringify(sendingFile) : undefined,
-                content: customerCareDetail.value.content,
+                content: customerCareDetail.value.content.trim(),
             };
 
             if (saveComment.file || saveComment.content) {
