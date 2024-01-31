@@ -2330,6 +2330,59 @@ const routes = [
 			},
 		]
 	},
+	{ // 运营管理
+		path: '/operation',
+		component: Layout,
+		redirect: '/operation/notice-list',
+		name: 'Operation',
+        type: [ROUTER_TYPE.CRM],
+		meta: {
+			title: '运营管理',
+			title_en: 'Operation Management',
+			icon: 'i_order',
+            roles: [LOGIN_TYPE.ADMIN],
+		},
+		children: [
+			{
+				path: 'notice-list',
+				name: 'NoticeList',
+				component: () => import('@/views/operation/notice-list.vue'),
+				meta: {
+					title: '通知公告',
+					title_en: 'Notice And Announcement',
+				}
+			},
+            {
+                path: 'notice-edit',
+                name: 'NoticeEdit',
+                component: () => import('@/views/operation/notice-edit.vue'),
+                meta: {
+					hidden: true,
+                    title: '通知公告编辑',
+                    title_en: 'Notice Editor',
+                }
+            },
+			{
+				path: 'ad-list',
+				name: 'AD',
+				component: () => import('@/views/operation/ad-list.vue'),
+				meta: {
+					title: '广告位管理',
+					title_en: 'Advertising Space Management',
+				}
+			},
+            {
+                path: 'ad-edit',
+                name: 'AD',
+                component: () => import('@/views/operation/ad-edit.vue'),
+                meta: {
+					hidden: true,
+                    title: '广告位编辑',
+                    title_en: 'AD Space Editor',
+                }
+            },
+		]
+	},
 	{ // 回款单
 		path: '/crm-order-income',
 		component: Layout,
