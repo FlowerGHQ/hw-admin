@@ -107,7 +107,7 @@ const operationManagement = {
         },
         {
             path: 'ad-list',
-            name: 'AD',
+            name: 'adList',
             component: () => import('@/views/operation/ad-list.vue'),
             meta: {
                 title: '广告位管理',
@@ -116,7 +116,7 @@ const operationManagement = {
         },
         {
             path: 'ad-edit',
-            name: 'AD',
+            name: 'adEdit',
             component: () => import('@/views/operation/ad-edit.vue'),
             meta: {
                 hidden: true,
