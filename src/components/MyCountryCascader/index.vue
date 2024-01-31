@@ -94,7 +94,8 @@ onMounted(() => {
         // 清除所有的样式边框，boxshadow
         .el-input__wrapper {
             box-shadow: none !important;
-            border: 1px solid #eaecf2;
+            border: 1px solid @BC_N;
+            padding: 0 11px;
         }
     }
     .el-cascader__tags {
@@ -109,7 +110,7 @@ onMounted(() => {
     &:hover {
         .el-input {
             .el-input__wrapper {
-                border-color: #409eff !important;
+                border-color: rgb(82, 175, 252) !important;
             }
         }
     }
