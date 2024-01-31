@@ -73,6 +73,7 @@
                             :scroll="{ x: true }"
                             :row-key="(record) => record.id"
                             :pagination="false"
+                            :locale="$i18n.locale === 'en' ? localeEn : localeZh"
                             class="specific-table"
                         >
                             <template #headerCell="{ title, column }">
