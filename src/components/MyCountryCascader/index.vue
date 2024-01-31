@@ -33,7 +33,7 @@ console.log($locale.value);
 const countryOptions = ref([]);
 const props = { multiple: true };
 const targetCountryOptions = computed(() => {
-    return  addParentCode(countryOptions.value, "", "","");
+    return addParentCode(countryOptions.value, "", "", "");
 });
 // 给大洲的所有子元素添加父级code,并且添加一个全选
 const addParentCode = (arr, parentCode, parentName, parentEnName) => {
@@ -41,7 +41,7 @@ const addParentCode = (arr, parentCode, parentName, parentEnName) => {
         item.parentCode = parentCode;
         item.parentName = parentName;
         item.parentEnName = parentEnName;
-        item.label =$locale.value === 'zh' ? item.name : item.name_en;
+        item.label = $locale.value === "zh" ? item.name : item.name_en;
         item.value = item.name;
         if (item.children && item.children.length) {
             addParentCode(item.children, item.code, item.name, item.name_en);
@@ -100,6 +100,13 @@ onMounted(() => {
             box-shadow: none !important;
             border: 1px solid @BC_N;
             padding: 0 11px;
+            .el-input__inner {
+                // placeholder的颜色
+                &::-webkit-input-placeholder {
+                    font-size: 12px;
+                    color: #bfbfbf;
+                }
+            }
         }
     }
     .el-cascader__tags {
@@ -111,11 +118,18 @@ onMounted(() => {
             height: 6px;
         }
     }
-    &:hover {
-        .el-input {
-            .el-input__wrapper {
-                border-color: rgb(82, 175, 252) !important;
-            }
+    // &:hover {
+    //     .el-input {
+    //         .el-input__wrapper {
+    //             border-color: rgb(82, 175, 252) !important;
+    //         }
+    //     }
+    // }
+    .is-focus {
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        border-radius: 4px;
+        .el-input__wrapper {
+            border-color: rgb(82, 175, 252) !important;
         }
     }
 }
