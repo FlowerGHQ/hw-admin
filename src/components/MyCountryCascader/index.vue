@@ -1,6 +1,6 @@
 <template>
     <el-cascader
-        :options="countryOptions"
+        :options="targetCountryOptions"
         v-model="value"
         :props="props"
         clearable
@@ -18,6 +18,8 @@
  */
 import axios from "axios";
 import { ref, computed, getCurrentInstance, watch, onMounted, h } from "vue";
+import { useI18n } from "vue-i18n";
+const $locale = useI18n().locale;
 const $emit = defineEmits(["update:value", "handleGetItem"]);
 const $props = defineProps({
     value: {
@@ -25,18 +27,21 @@ const $props = defineProps({
         default: () => [],
     },
 });
+console.log($locale.value);
 
 // 前端获取所有大洲及国家的json文件
 const countryOptions = ref([]);
 const props = { multiple: true };
-
+const targetCountryOptions = computed(() => {
+    return  addParentCode(countryOptions.value, "", "","");
+});
 // 给大洲的所有子元素添加父级code,并且添加一个全选
 const addParentCode = (arr, parentCode, parentName, parentEnName) => {
     arr.forEach((item) => {
         item.parentCode = parentCode;
         item.parentName = parentName;
         item.parentEnName = parentEnName;
-        item.label = item.name;
+        item.label =$locale.value === 'zh' ? item.name : item.name_en;
         item.value = item.name;
         if (item.children && item.children.length) {
             addParentCode(item.children, item.code, item.name, item.name_en);
@@ -46,8 +51,7 @@ const addParentCode = (arr, parentCode, parentName, parentEnName) => {
 };
 const getCountryOptions = () => {
     axios.get("/ext/continent-country.json").then((response) => {
-        countryOptions.value = addParentCode(response.data, "", "");
-        console.log(countryOptions.value);
+        countryOptions.value = response.data;
     });
 };
 // 数据扁平化
