@@ -137,6 +137,7 @@
                             v-model:value="formParams.description"
                             :placeholder="$t('common.please_enter') + $t('customer-care.problem_description')"
                             allow-clear
+                            :autosize="{ minRows: 4, maxRows: 6 }"
                             :maxlength="2000"
                         />
                     </div>
@@ -441,7 +442,14 @@ const handleSubmit = () => {
     const submitForm = {
         ...formParams.value,     
         fault_time: dayjs().unix(formParams.value.fault_time)   
-    }   
+    }
+
+    // 将 mileage 转换为小数点后两位
+    submitForm.mileage = submitForm.mileage ? submitForm.mileage.toFixed(2) : undefined,
+    submitForm.vehicle_list?.forEach(el => {
+        el.mileage = el.mileage ? el.mileage.toFixed(2) : undefined
+    })
+
 
     console.log('submitForm', submitForm);
 
