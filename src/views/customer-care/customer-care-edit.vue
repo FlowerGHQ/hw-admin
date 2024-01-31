@@ -190,7 +190,7 @@ import { ref, watch, computed, getCurrentInstance, onMounted } from "vue";
 import Core from "@/core";
 import { useRouter, useRoute } from "vue-router";
 import { Upload, message } from "ant-design-vue";
-import MyPreviewImageVideo from "./components/MyPreviewImageVideo.vue";
+import MyPreviewImageVideo from "@/components/horwin/based-on-ant/MyPreviewImageVideo.vue";
 import MyUploads from "./components/MyUploads.vue";
 import dayjs from 'dayjs'
 import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';

@@ -126,6 +126,7 @@
                                             </span>
                                             <span v-if="record.vehicle_list.length > 1">,</span>
                                         </span>
+                                        <template v-if="record.vehicle_list.length === 0">-</template>
                                     </div>
                                 </a-tooltip>
                             </template>
@@ -149,6 +150,7 @@
                                         <span>{{ $i18n.locale === "en" ? item?.item?.name_en || "-" : item?.item?.name || "-" }}</span>
                                         <span v-if="record.part_list.length > 1">,</span>
                                     </span>
+                                    <template v-if="record.part_list.length === 0">-</template>
                                 </div>
                             </a-tooltip>
                         </template>
@@ -171,10 +173,11 @@
                                 >
                                     <span v-for="(item, index) in record.vehicle_list">
                                         <span>
-                                            {{ item.vehicle_uid + "(" + item.mileage + "km" + ")" }}
+                                            {{ item.vehicle_uid + "(" + item.mileage + "km" + ")"  }}
                                         </span>
                                         <span v-if="record.vehicle_list.length > 1">,</span>
                                     </span>
+                                    <template v-if="record.vehicle_list.length === 0">-</template>
                                 </div>
                             </a-tooltip>
                         </template>
@@ -196,9 +199,11 @@
                                     }"
                                 >
                                     <span v-for="(item, index) in record.vehicle_list">
-                                        <span>{{ item.vehicle_uid }}</span>
+                                        <span>{{ item.vehicle_uid || '-' }}</span>
                                         <span v-if="record.vehicle_list.length > 1">,</span>
                                     </span>
+                                    
+                                    <template v-if="record.vehicle_list.length === 0">-</template>
                                 </div>
                             </a-tooltip>
                         </template>
