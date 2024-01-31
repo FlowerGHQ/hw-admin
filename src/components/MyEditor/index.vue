@@ -27,19 +27,25 @@ const props = defineProps({
         type: String,
         default: "请输入内容...",
     },
+    modules: {
+        type: Object,
+        default: () => {
+            return {
+                toolbar: [
+                    ["bold", "underline", "italic"], // toggled buttons
+                    [{ list: "bullet" }],
+                ],
+            }
+        }
+    }
 });
 const emit = defineEmits(["update:modelValue"]);
 
-const { placeholder } = props;
+const { placeholder, modules } = props;
 const content = ref("");
 const quillRef = ref(null);
 const myOptions = reactive({
-    modules: {
-        toolbar: [
-            ["bold", "underline", "italic"], // toggled buttons
-            [{ list: "bullet" }],
-        ],
-    },
+    modules,
     placeholder,
 });
 

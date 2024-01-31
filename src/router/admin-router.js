@@ -72,6 +72,61 @@ const inquiryManagement = {
         },
     ]
 }
+// 运营管理
+const operationManagement = { 
+    path: '/operation',
+    component: Layout,
+    redirect: '/operation/report-list',
+    name: 'Operation',
+    type: [ROUTER_TYPE.CRM],
+    meta: {
+        title: '运营管理',
+        title_en: 'Operation Management',
+        icon: 'i_order',
+        roles: [LOGIN_TYPE.ADMIN],
+    },
+    children: [
+        {
+            path: 'report-list',
+            name: 'ReportList',
+            component: () => import('@/views/operation/report-list.vue'),
+            meta: {
+                title: '通知公告',
+                title_en: 'Notice And Announcement',
+            }
+        },
+        {
+            path: 'report-edit',
+            name: 'ReportEdit',
+            component: () => import('@/views/operation/report-edit.vue'),
+            meta: {
+                hidden: true,
+                title: '通知公告编辑',
+                title_en: 'Notice Editor',
+            }
+        },
+        {
+            path: 'ad-list',
+            name: 'AD',
+            component: () => import('@/views/operation/ad-list.vue'),
+            meta: {
+                title: '广告位管理',
+                title_en: 'Advertising Space Management',
+            }
+        },
+        {
+            path: 'ad-edit',
+            name: 'AD',
+            component: () => import('@/views/operation/ad-edit.vue'),
+            meta: {
+                hidden: true,
+                title: '广告位编辑',
+                title_en: 'AD Space Editor',
+            }
+        },
+    ]
+}
 export  {
-    inquiryManagement
+    inquiryManagement,
+    operationManagement
 }
