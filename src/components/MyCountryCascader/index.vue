@@ -1,6 +1,6 @@
 <template>
     <el-cascader
-        :options="countryOptions"
+        :options="targetCountryOptions"
         v-model="value"
         :props="props"
         clearable
@@ -18,6 +18,8 @@
  */
 import axios from "axios";
 import { ref, computed, getCurrentInstance, watch, onMounted, h } from "vue";
+import { useI18n } from "vue-i18n";
+const $locale = useI18n().locale;
 const $emit = defineEmits(["update:value", "handleGetItem"]);
 const $props = defineProps({
     value: {
@@ -25,18 +27,21 @@ const $props = defineProps({
         default: () => [],
     },
 });
+console.log($locale.value);
 
 // 前端获取所有大洲及国家的json文件
 const countryOptions = ref([]);
 const props = { multiple: true };
-
+const targetCountryOptions = computed(() => {
+    return addParentCode(countryOptions.value, "", "", "");
+});
 // 给大洲的所有子元素添加父级code,并且添加一个全选
 const addParentCode = (arr, parentCode, parentName, parentEnName) => {
     arr.forEach((item) => {
         item.parentCode = parentCode;
         item.parentName = parentName;
         item.parentEnName = parentEnName;
-        item.label = item.name;
+        item.label = $locale.value === "zh" ? item.name : item.name_en;
         item.value = item.name;
         if (item.children && item.children.length) {
             addParentCode(item.children, item.code, item.name, item.name_en);
@@ -46,8 +51,7 @@ const addParentCode = (arr, parentCode, parentName, parentEnName) => {
 };
 const getCountryOptions = () => {
     axios.get("/ext/continent-country.json").then((response) => {
-        countryOptions.value = addParentCode(response.data, "", "");
-        console.log(countryOptions.value);
+        countryOptions.value = response.data;
     });
 };
 // 数据扁平化
@@ -96,6 +100,13 @@ onMounted(() => {
             box-shadow: none !important;
             border: 1px solid @BC_N;
             padding: 0 11px;
+            .el-input__inner {
+                // placeholder的颜色
+                &::-webkit-input-placeholder {
+                    font-size: 12px;
+                    color: #bfbfbf;
+                }
+            }
         }
     }
     .el-cascader__tags {
@@ -107,11 +118,18 @@ onMounted(() => {
             height: 6px;
         }
     }
-    &:hover {
-        .el-input {
-            .el-input__wrapper {
-                border-color: rgb(82, 175, 252) !important;
-            }
+    // &:hover {
+    //     .el-input {
+    //         .el-input__wrapper {
+    //             border-color: rgb(82, 175, 252) !important;
+    //         }
+    //     }
+    // }
+    .is-focus {
+        box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        border-radius: 4px;
+        .el-input__wrapper {
+            border-color: rgb(82, 175, 252) !important;
         }
     }
 }
