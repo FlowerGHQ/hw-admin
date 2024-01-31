@@ -700,7 +700,7 @@ import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import Core from "@/core";
 import { useRouter, useRoute } from "vue-router";
 import dayjs from "dayjs";
-import MyPreviewImageVideo from "./components/MyPreviewImageVideo.vue";
+import MyPreviewImageVideo from "@/components/horwin/based-on-ant/MyPreviewImageVideo.vue";
 import customerCareEdit from "./customer-care-edit.vue";
 import ItemSelect from "@/components/popup-btn/ItemSelect.vue";
 import { message } from "ant-design-vue";

@@ -1004,7 +1004,7 @@ const apiList = {
         deleteCustomer: ['PostJson','user/delete-customer-country'], // 删除
         // 添加
         addCustomer: ['PostJson','user/save-area'], // 添加
-        enquiryTickeTexport: ['PostJson','enquiry-ticket/export'], // 导出接口
+        enquiryTickeTexport: ['GetJson','enquiry-ticket/export'], // 导出接口
     }
 }; 
 
