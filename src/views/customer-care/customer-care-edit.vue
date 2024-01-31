@@ -25,8 +25,11 @@
                 <div class="form-item required">
                     <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("customer-care.inquiry_form_type") }}:</div>
                     <div class="value">
-                        <a-radio-group v-model:value="formParams.type">
-                            <a-radio v-for="(item, index) in Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE" :value="item.value">
+                        <a-radio-group v-model:value="formParams.type" @change="onFormParamsType">
+                            <a-radio 
+                                v-for="(item, index) in Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE" 
+                                :value="item.value"
+                            >
                                 {{ $t(item.t) }}
                             </a-radio>
                         </a-radio-group>
@@ -443,7 +446,7 @@ const handleSubmit = () => {
 
     const submitForm = {
         ...formParams.value,     
-        fault_time: dayjs().unix(formParams.value.fault_time)   
+        fault_time: dayjs().unix(formParams.value.fault_time) || undefined
     }
 
     // 将 mileage 转换为小数点后两位
@@ -618,6 +621,30 @@ const handlePreview = ({ file, fileList }) => {
 }
 const handleRemove = ({ file, fileList }) => {
     console.log("删除", fileList);     
+}
+// 问询单类型切换
+const onFormParamsType = (e) => {    
+    console.log("formParams.type", formParams.value.type);
+    switch (Number(formParams.value.type)) {
+        case Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION:
+            // 故障
+            formParams.value.vehicle_list = [
+                {
+                    vehicle_uid: "",
+                    mileage: "",
+                },
+            ]
+            Core.Util.deleteParamsFilter(formParams.value, ['mileage']);
+            break;
+        case Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION:
+            // 咨询
+            Core.Util.deleteParamsFilter(formParams.value, ['fault_time', 'vehicle_list']);
+            break;
+        case Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY:
+            // 电池
+            Core.Util.deleteParamsFilter(formParams.value, ['vehicle_list']);
+            break;
+    }
 }
 /* methods end*/
 
