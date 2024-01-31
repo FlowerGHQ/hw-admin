@@ -2761,7 +2761,7 @@ const messages = {
             yuan:'元',
             see_detail:'查看详情',
 
-        }
+        },
     },
 
     en: {
@@ -5597,7 +5597,7 @@ const messages = {
             cancle_top: 'cancle top',
 
 
-        }
+        },
     },
 }
 

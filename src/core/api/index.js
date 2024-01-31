@@ -1004,7 +1004,13 @@ const apiList = {
         deleteCustomer: ['PostJson','user/delete-customer-country'], // 删除
         // 添加
         addCustomer: ['PostJson','user/save-area'], // 添加
-    }
+    },
+    Operation: {
+        list: ['PostJson','announcement/list'], // 列表
+        detail: ['PostJson','announcement/detail'], // 详情
+        delete: ['PostJson','announcement/delete'], // 删除
+        save: ['PostJson','announcement/save'], // 新增
+    },
 }; 
 
 export default new Api(baseUrl, apiList);
