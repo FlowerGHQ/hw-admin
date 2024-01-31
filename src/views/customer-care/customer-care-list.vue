@@ -27,11 +27,11 @@
                 </a-tabs>
             </div>
             <div class="search">
-                <SearchAll :options="isDistributerAdmin ? searchAdminList : searchDistributerList" @search="onSearch" @reset="onReset"> </SearchAll>
+                <SearchAll ref="search_all" :options="isDistributerAdmin ? searchAdminList : searchDistributerList" @search="onSearch" @reset="onReset"> </SearchAll>
             </div>
             <!-- table -->
             <div class="table-container">
-                <a-button v-if="isDistributerAdmin && false" class="m-b-10" type="primary" @click="handleExportIn; /*导出功能*/">
+                <a-button v-if="isDistributerAdmin" class="m-b-10" type="primary" @click="handleExportIn/*导出功能*/">
                     <i class="icon i_download" />{{ $t("common.export") }}
                 </a-button>
                 <a-table
@@ -261,6 +261,7 @@ const LOGIN_TYPE = Core.Const.LOGIN.TYPE;
 const USER_TYPE = Core.Const.USER.TYPE;
 import TimeSearch from "@/components/common/TimeSearch.vue";
 import { useRouter, useRoute } from "vue-router";
+import { message } from "ant-design-vue";
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
@@ -342,7 +343,7 @@ const searchAdminList = ref([
         // 车型
         type: "input",
         value: undefined,
-        searchParmas: "",
+        searchParmas: "category_name",
         key: "common.vehicle_model",
     },
     {
@@ -363,24 +364,24 @@ const searchAdminList = ref([
             return result;
         })(),
     },
-    {
-        // 处理进度
-        type: "select",
-        value: undefined,
-        searchParmas: "status",
-        key: "customer-care.processing_progress",
-        selectMap: (() => {
-            let result = [];
-            for (const key in Core.Const.CUSTOMER_CARE.ORDER_STATUS) {
-                if (key === "-1") {
-                    result.unshift(Core.Const.CUSTOMER_CARE.ORDER_STATUS[key]);
-                } else {
-                    result.push(Core.Const.CUSTOMER_CARE.ORDER_STATUS[key]);
-                }
-            }
-            return result;
-        })(),
-    },
+    // {
+    //     // 处理进度
+    //     type: "select",
+    //     value: undefined,
+    //     searchParmas: "status",
+    //     key: "customer-care.processing_progress",
+    //     selectMap: (() => {
+    //         let result = [];
+    //         for (const key in Core.Const.CUSTOMER_CARE.ORDER_STATUS) {
+    //             if (key === "-1") {
+    //                 result.unshift(Core.Const.CUSTOMER_CARE.ORDER_STATUS[key]);
+    //             } else {
+    //                 result.push(Core.Const.CUSTOMER_CARE.ORDER_STATUS[key]);
+    //             }
+    //         }
+    //         return result;
+    //     })(),
+    // },
     {
         // 故障分类
         type: "select",
@@ -417,7 +418,7 @@ const searchAdminList = ref([
         // 归属客服
         type: "input",
         value: undefined,
-        searchParmas: "",
+        searchParmas: "process_user_name",
         key: "customer-care.belonging_customer_service",
     },
 ]);
@@ -469,7 +470,7 @@ const tableColumns = computed(() => {
             { title: proxy.$t("customer-care.submitter"), dataIndex: "submit_user_name", key: "submit_user_name" }, // 提交人
             { title: proxy.$t("customer-care.part"), dataIndex: "part_list", key: "part_list", width: 150 }, // 零件
             { title: proxy.$t("customer-care.processing_progress"), dataIndex: "status", key: "status", width: 70 }, // 处理进度
-            { title: proxy.$t("customer-care.model_number_mileage"), dataIndex: "mileage", key: "mileage", width: 150 }, // 车型号、公里数
+            { title: proxy.$t("customer-care.model_number_mileage"), dataIndex: "mileage", key: "mileage", width: 150 }, // 车架号、公里数
             { title: proxy.$t("customer-care.fault_classification"), dataIndex: "fault_type", key: "fault_type", width: 150 }, // 故障分类
             { title: proxy.$t("customer-care.belonging_customer_service"), dataIndex: "process_user_name", key: "process_user_name" }, // 归属客服
             { title: proxy.$t("common.create_time"), dataIndex: "create_time", key: "time" }, // 创建时间
@@ -496,6 +497,22 @@ const getStatusFetch = (params = {}) => {
         })
         .catch((err) => {
             console.log("获取状态数据 err", err);
+        });
+};
+// 导出接口
+const exportFetch = (params = {}) => {
+    const obj = {
+        ...params,
+    };
+
+    Core.Api.inquiry_sheet
+        .enquiryTickeTexport(obj)
+        .then((res) => {
+            console.log("导出接口 res", res);
+            message.success(proxy.$t("common.sucesss"));
+        })
+        .catch((err) => {
+            console.log("导出接口 err", err);
         });
 };
 
@@ -617,7 +634,7 @@ const routerChange = (type, record) => {
     }
 };
 const onSearch = (data) => {
-    console.log("data", data);
+    console.log("data", data);    
     searchParam.value = { ...searchForm.value, ...data };
     search();
 };
@@ -662,6 +679,13 @@ const newMsgIdFn = (record) => {
     // 判断找到的本地数据的数量是否少于渲染的数据(是 返回true 否则返回 false)
     return find?.new_msg_id ? Number(find?.new_msg_id) < Number(record?.new_msg_id) : record?.new_msg_id > 0;
 };
+// 导出功能
+const search_all = ref(null)
+const handleExportIn = () => {
+    search_all.value.handleSearch()    
+    // console.log("handleExportIn", searchParam.value);
+    exportFetch({ ...searchParam.value })    
+}
 
 /* methods end*/
 

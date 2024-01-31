@@ -13,7 +13,7 @@
             <div class="form-content" :class="{ 'w-100': !isDetailEnter ? false : true }">
                 <!-- 分销商账号 -->
                 <div v-if="isDistributerAdmin" class="form-item required">
-                    <div class="key t-r">{{ $t("customer-care.distributor_account_number") }}:</div>
+                    <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("customer-care.distributor_account_number") }}:</div>
                     <div class="value">
                         <a-input
                             v-model:value="formParams.org_name"
@@ -23,7 +23,7 @@
                 </div>
                 <!-- 问询单类型 -->
                 <div class="form-item required">
-                    <div class="key t-r">{{ $t("customer-care.inquiry_form_type") }}:</div>
+                    <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("customer-care.inquiry_form_type") }}:</div>
                     <div class="value">
                         <a-radio-group v-model:value="formParams.type">
                             <a-radio v-for="(item, index) in Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE" :value="item.value">
@@ -37,14 +37,14 @@
                     v-if="!$Util.Common.returnTypeBool(formParams.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION])"
                     class="form-item required"
                 >
-                    <div class="key t-r">{{ $t("customer-care.failure_date") }}:</div>
+                    <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("customer-care.failure_date") }}:</div>
                     <div class="value">
-                        <a-date-picker class="w-370" v-model:value="formParams.fault_time" />
+                        <a-date-picker class="w-370" v-model:value="formParams.fault_time" :locale="$i18n.locale === 'en' ? localeEn : localeZh" />
                     </div>
                 </div>
                 <!-- 车型 -->
                 <div class="form-item required">
-                    <div class="key t-r">{{ $t("common.vehicle_model") }}:</div>
+                    <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("common.vehicle_model") }}:</div>
                     <div class="value">
                         <a-tree-select 
                             v-model:value="formParams.category_id" 
@@ -62,7 +62,7 @@
                     v-if="$Util.Common.returnTypeBool(formParams.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION])"
                     class="form-item d-f-s required"
                 >
-                    <div class="key t-r">{{ $t("common.vehicle_no") }}:</div>
+                    <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("common.vehicle_no") }}:</div>
                     <div class="value">
                         <a-table
                             :columns="vehicle_column"
@@ -114,7 +114,7 @@
                     v-if="$Util.Common.returnTypeBool(formParams.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION])"
                     class="form-item"
                 >
-                    <div class="key t-r">{{ $t("customer-care.mileage") }}:</div>
+                    <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("customer-care.mileage") }}:</div>
                     <div class="value">                        
                         <a-input-number 
                             class="w-100"
@@ -131,7 +131,7 @@
                 </div>
                 <!-- 问题描述 -->
                 <div class="form-item d-f-s required">
-                    <div class="key t-r">{{ $t("customer-care.problem_description") }}:</div>
+                    <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("customer-care.problem_description") }}:</div>
                     <div class="value">
                         <a-textarea
                             v-model:value="formParams.description"
@@ -149,7 +149,7 @@
                         required: $Util.Common.returnTypeBool(formParams.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY])
                     }"
                 >
-                    <div class="key t-r">{{ $t("customer-care.add_attachment") }}:</div>
+                    <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("customer-care.add_attachment") }}:</div>
                     <div class="value d-f">
                         <MyUploads                            
                             v-model:fileList = uploadOptions.fileData                           
@@ -190,6 +190,8 @@ import { Upload, message } from "ant-design-vue";
 import MyPreviewImageVideo from "./components/MyPreviewImageVideo.vue";
 import MyUploads from "./components/MyUploads.vue";
 import dayjs from 'dayjs'
+import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';
+import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
@@ -762,6 +764,10 @@ onMounted(() => {
 // 详情用这个组件过来的
 .w-100 {
     width: 100% !important;
+}
+
+.w-180 {
+    width: 180px !important;
 }
 
 .msg-detail-form-block {
