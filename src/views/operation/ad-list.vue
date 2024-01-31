@@ -28,7 +28,7 @@
                 <template #bodyCell="{ column, text, record, index }">
                     <!-- 序号 -->
                     <template v-if="column.key === 'number'">
-                        {{ record.id }}
+                        {{ index + 1 }}
                     </template>
                     <!-- 公司名称 -->
                     <template v-if="column.key === 'item'">
@@ -62,12 +62,12 @@
                     <!-- 操作 -->
                     <template v-if="column.key === 'effective_state'">
                         <div class="effective-state">
-                            <a-switch v-model:checked="record.state" size="small"
+                            <a-switch v-model:checked="record.status" size="small"
                                 @change="(event) => onSwitch(event, record)" />
                             <div 
-                                :class="record.state ? 'switch-state blue' : 'switch-state grey'"
+                                :class="record.status ? 'switch-state blue' : 'switch-state grey'"
                             >
-                                {{ record.state ? $t(/*已生效*/'operation.took_effect') : $t(/*未生效*/'operation.invalid') }}
+                                {{ record.status ? $t(/*已生效*/'operation.took_effect') : $t(/*未生效*/'operation.invalid') }}
                             </div>
                         </div>
                     </template>
@@ -118,14 +118,14 @@ const searchAllRef = ref(null)
 const tableColumns = computed(() => {
     let columns = [
         { title: $t(/*序号*/"n.index"), dataIndex: "id", key: "number" },
-        { title: $t(/*说明*/"operation.instructions"), dataIndex: "instructions", key: "item" },
+        { title: $t(/*说明*/"operation.instructions"), dataIndex: "img_desc", key: "item" },
         { title: $t(/*创建时间*/"n.time"), dataIndex: "create_time", key: "create_time" },
-        { title: $t(/*生效时间*/"operation.effective_time"), dataIndex: "effective_time", key: "create_time" },
+        { title: $t(/*生效时间*/"operation.effective_time"), dataIndex: "effect_time", key: "create_time" },
         { title: $t(/*图片*/"i.spec_pic"), dataIndex: "img", key: "img" },
         { title: $t(/*区域*/"operation.area"), dataIndex: "area", key: "item" },
         { title: $t(/*排序*/"n.sort"), dataIndex: "sort", key: "item" },
         // { title: $t(/*排序*/"n.sort"), dataIndex: "sort", key: "input" },
-        { title: $t(/*链接*/"operation.link"), dataIndex: "link", key: "item" },
+        { title: $t(/*链接*/"operation.link"), dataIndex: "url", key: "item" },
         { title: $t(/*生效状态*/"operation.effective_state"), key: "effective_state", fixed: "right" },
         { title: $t(/*操作*/"common.operations"), key: "operations", fixed: "right" },
     ];
@@ -136,7 +136,7 @@ const searchList = ref([
     {
         type: "input",
         value: "",
-        searchParmas: "instructions",
+        searchParmas: "img_desc",
         key: 'operation.instructions'
     },
     {
@@ -149,7 +149,7 @@ const searchList = ref([
     {
         type: "select",
         value: undefined,
-        searchParmas: "state",
+        searchParmas: "status",
         key: 'operation.status',
         selectMap: Core.Const.OPERATION.OPERATION_TYPE,
     },
@@ -157,42 +157,45 @@ const searchList = ref([
 const _tableData = ref([
     {
         id: 1,
-        instructions: '说明说明说明说明说明说明说明说明',
+        img_desc: '说明说明说明说明说明说明说明说明',
         create_time: 1706685629,
-        link: 'www.baidu.com',
+        url: 'www.baidu.com',
         img: 'img/923af7d80e1957343eb355aca5a4286dc23c70306d4c80351f34c4b76dd78145.jpg',
-        effective_time: 1706685629,
+        effect_time: 1706685629,
         area: '中国',
         sort: 1,
-        state: true,
+        status: true,
     },
     {
         id: 2,
-        instructions: '说明说明说明说明说明说明说明说明',
+        img_desc: '说明说明说明说明说明说明说明说明',
         create_time: 1706685629,
-        link: 'www.baidu.com',
+        url: 'www.baidu.com',
         img: 'img/923af7d80e1957343eb355aca5a4286dc23c70306d4c80351f34c4b76dd78145.jpg',
-        effective_time: 1706685629,
+        effect_time: 1706685629,
         area: '中国',
         sort: 2,
-        state: false,
+        status: false,
     },
     {
         id: 3,
-        instructions: '说明说明说明说明说明说明说明说明',
+        img_desc: '说明说明说明说明说明说明说明说明',
         create_time: 1706685629,
-        link: 'www.baidu.com',
+        url: 'www.baidu.com',
         img: 'img/923af7d80e1957343eb355aca5a4286dc23c70306d4c80351f34c4b76dd78145.jpg',
-        effective_time: 1706685629,
+        effect_time: 1706685629,
         area: '中国',
         sort: 3,
-        state: false,
+        status: false,
     },
 ])
 
-onMounted(() => {});
+onMounted(() => {
+    searchParam.value.type = Core.Const.OPERATION.OPERATION_TYPE_MAP.AD
+    search()
+});
 /* Fetch start*/
-const request = Core.Api.SUPPLY.adminList;
+const request = Core.Api.Operation.list;
 const {
     loading,
     tableData,
@@ -205,7 +208,7 @@ const {
 } = useTable({ request });
 
 const deleteFetch = (id) => {
-    Core.Api.xxx({
+    Core.Api.Operation.delete({
         id: id,
     }).then((res) => {
         console.log('deleteFetch res', res);
@@ -219,7 +222,7 @@ const deleteFetch = (id) => {
 
 /* methods start*/
 const onSearch = (data) => {
-    searchParam.value = data
+    searchParam.value = { ...data, type: Core.Const.OPERATION.OPERATION_TYPE_MAP.AD }
     search()
 }
 const onReset = () => {

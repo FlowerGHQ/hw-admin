@@ -28,7 +28,7 @@
                 <template #bodyCell="{ column, text, record, index }">
                     <!-- 序号 -->
                     <template v-if="column.key === 'number'">
-                        {{ record.id }}
+                        {{ index + 1 }}
                     </template>
                     <!-- 公司名称 -->
                     <template v-if="column.key === 'item'">
@@ -56,12 +56,12 @@
                     <!-- 操作 -->
                     <template v-if="column.key === 'effective_state'">
                         <div class="effective-state">
-                            <a-switch v-model:checked="record.state" size="small"
+                            <a-switch v-model:checked="record.status" size="small"
                                 @change="(event) => onSwitch(event, record)" />
                             <div 
-                                :class="record.state ? 'switch-state blue' : 'switch-state grey'"
+                                :class="record.status ? 'switch-state blue' : 'switch-state grey'"
                             >
-                                {{ record.state ? $t(/*已生效*/'operation.took_effect') : $t(/*未生效*/'operation.invalid') }}
+                                {{ record.status ? $t(/*已生效*/'operation.took_effect') : $t(/*未生效*/'operation.invalid') }}
                             </div>
                         </div>
                     </template>
@@ -115,7 +115,7 @@ const tableColumns = computed(() => {
         { title: $t(/*标题*/"operation.title"), dataIndex: "title", key: "item" },
         { title: $t(/*内容*/"n.content"), dataIndex: "content", key: "item" },
         { title: $t(/*创建时间*/"n.time"), dataIndex: "create_time", key: "create_time" },
-        { title: $t(/*生效时间*/"operation.effective_time"), dataIndex: "effective_time", key: "create_time" },
+        { title: $t(/*生效时间*/"operation.effective_time"), dataIndex: "effect_time", key: "create_time" },
         { title: $t(/*区域*/"operation.area"), dataIndex: "area", key: "item" },
         { title: $t(/*排序*/"n.sort"), dataIndex: "sort", key: "input" },
         { title: $t(/*生效状态*/"operation.effective_state"), key: "effective_state", fixed: "right" },
@@ -141,7 +141,7 @@ const searchList = ref([
     {
         type: "select",
         value: undefined,
-        searchParmas: "state",
+        searchParmas: "status",
         key: 'operation.status',
         selectMap: Core.Const.OPERATION.OPERATION_TYPE,
     },
@@ -152,36 +152,39 @@ const _tableData = ref([
         title: '公告标题公告标题公告标题公告标题公告标题',
         create_time: 1706685629,
         content: '公告内容公告内容公告内容公告内容公告内容',
-        effective_time: 1706685629,
+        effect_time: 1706685629,
         area: '中国',
         sort: 1,
-        state: true,
+        status: true,
     },
     {
         id: 2,
         title: '公告标题公告标题公告标题公告标题公告标题',
         create_time: 1706685629,
         content: '公告内容公告内容公告内容公告内容公告内容',
-        effective_time: 1706685629,
+        effect_time: 1706685629,
         area: '中国',
         sort: 2,
-        state: false,
+        status: false,
     },
     {
         id: 3,
         title: '公告标题公告标题公告标题公告标题公告标题',
         create_time: 1706685629,
         content: '公告内容公告内容公告内容公告内容公告内容',
-        effective_time: 1706685629,
+        effect_time: 1706685629,
         area: '中国',
         sort: 3,
-        state: false,
+        status: false,
     },
 ])
 
-onMounted(() => {});
+onMounted(() => {
+    searchParam.value.type = Core.Const.OPERATION.OPERATION_TYPE_MAP.REPORT
+    search()
+});
 /* Fetch start*/
-const request = Core.Api.SUPPLY.adminList;
+const request = Core.Api.Operation.list;
 const {
     loading,
     tableData,
@@ -194,7 +197,7 @@ const {
 } = useTable({ request });
 
 const deleteFetch = (id) => {
-    Core.Api.xxx({
+    Core.Api.Operation.delete({
         id: id,
     }).then((res) => {
         console.log('deleteFetch res', res);
