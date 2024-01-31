@@ -4,8 +4,8 @@
         <div class="base-msg">
             <div class="d-f-a-b">
                 <div class="base-msg-left d-f-a">
-                    <div class="sn no-white-space">{{ $t('customer-care.inquiry_number') }} {{ customerCareDetail.uid }}</div>
-                    <div class="no-white-space m-r-8 color-4E5969">{{ $t('customer-care.customer') }}:</div>
+                    <div class="sn no-white-space">{{ $t("customer-care.inquiry_number") }} {{ customerCareDetail.uid }}</div>
+                    <div class="no-white-space m-r-8 color-4E5969">{{ $t("customer-care.customer") }}:</div>
                     <div class="color-4E5969">{{ customerCareDetail.submit_user_name || "-" }}/{{ customerCareDetail.country || "-" }}</div>
                 </div>
                 <div
@@ -45,19 +45,19 @@
                             ])
                         "
                     />
-                    <span class="m-l-4">                        
+                    <span class="m-l-4">
                         {{ $t($Util.Common.returnTranslation(customerCareDetail.status, Core.Const.CUSTOMER_CARE.ORDER_STATUS)) }}
                     </span>
                 </div>
             </div>
             <!-- 详细信息 -->
             <div class="detail-msg">
-                <div class="msg-title">{{ $t('customer-care.detailed_information') }}</div>
+                <div class="msg-title">{{ $t("customer-care.detailed_information") }}</div>
                 <div class="msg-content m-t-20">
                     <!-- 问询类型 -->
                     <div class="type-style">
                         <div class="col d-f-a">
-                            <div class="key m-r-16">{{ $t('customer-care.inquiry_type') }}</div>
+                            <div class="key m-r-16">{{ $t("customer-care.inquiry_type") }}</div>
                             <div
                                 class="value inquiry-category-style"
                                 :class="[
@@ -76,49 +76,51 @@
                                         },
                                     ]),
                                 ]"
-                            >                               
+                            >
                                 {{ $t($Util.Common.returnTranslation(customerCareDetail.type, Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE)) }}
                             </div>
                         </div>
-                        <div class="col">                            
-                            <div class="key m-r-16">{{ $t('common.create_time')/*创建时间*/ }}</div>
+                        <div class="col">
+                            <div class="key m-r-16">{{ $t("common.create_time") /*创建时间*/ }}</div>
                             <div class="value">
                                 {{ $Util.timeFilter(customerCareDetail.create_time, 2) }}
                             </div>
                         </div>
-                        <div 
-                            class="col" 
-                            v-if="!$Util.Common.returnTypeBool(customerCareDetail.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION])"
+                        <div
+                            class="col"
+                            v-if="
+                                !$Util.Common.returnTypeBool(customerCareDetail.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION])
+                            "
                         >
-                            <div class="key m-r-16">{{ $t('customer-care.failure_time') /*故障时间*/ }}</div>
+                            <div class="key m-r-16">{{ $t("customer-care.failure_time") /*故障时间*/ }}</div>
                             <div class="value">
                                 {{ $Util.timeFilter(customerCareDetail.fault_time, 2) }}
                             </div>
                         </div>
                         <div class="col">
-                            <div class="key m-r-16">{{ $t('common.vehicle_model') /*车型*/}}</div>
+                            <div class="key m-r-16">{{ $t("common.vehicle_model") /*车型*/ }}</div>
                             <div class="value">
                                 {{ $i18n.locale === "en" ? customerCareDetail.category?.name_en || "-" : customerCareDetail.category?.name || "-" }}
                             </div>
                         </div>
-                        <div 
-                            class="col" 
-                            v-if="$Util.Common.returnTypeBool(customerCareDetail.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION])"
+                        <div
+                            class="col"
+                            v-if="
+                                $Util.Common.returnTypeBool(customerCareDetail.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION])
+                            "
                         >
-                            <div class="key m-r-16">{{ $t('customer-care.mileage') /*公里数*/ }}</div>
-                            <div class="value">                                
-                                {{ customerCareDetail.mileage || '0' }}km
-                            </div>
+                            <div class="key m-r-16">{{ $t("customer-care.mileage") /*公里数*/ }}</div>
+                            <div class="value">{{ customerCareDetail.mileage || "0" }}km</div>
                         </div>
                     </div>
 
                     <!-- 车架号与公里数 -->
-                    <div 
-                        v-if="$Util.Common.returnTypeBool(customerCareDetail.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION])" 
+                    <div
+                        v-if="$Util.Common.returnTypeBool(customerCareDetail.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION])"
                         class="vehicle-no-style m-t-20"
                     >
                         <div class="col">
-                            <div class="key m-r-16 no-white-space m-r-8 m-t-8">{{ $t('common.vehicle_no') }}、{{ $t('customer-care.mileage') }}</div>
+                            <div class="key m-r-16 no-white-space m-r-8 m-t-8">{{ $t("common.vehicle_no") }}、{{ $t("customer-care.mileage") }}</div>
                             <div class="value d-f-a">
                                 <div v-for="(item, index) in customerCareDetail.vehicle_list" :key="index" class="vehicle-item m-r-8 m-t-8">
                                     {{ item.vehicle_uid }}({{ item.mileage }}km)
@@ -130,7 +132,7 @@
                     <!-- 问题描述 -->
                     <div class="problem-description-style m-t-20">
                         <div class="col">
-                            <div class="key m-r-16">{{ $t('customer-care.problem_description') }}</div>
+                            <div class="key m-r-16">{{ $t("customer-care.problem_description") }}</div>
                             <div class="value">
                                 {{ customerCareDetail.description }}
                             </div>
@@ -171,7 +173,7 @@
                                     </template>
                                 </template>
                                 <template v-if="customerCareDetail.attachment_list.length === 0">
-                                    <span class="custom-not-uploaded">{{ $t('supply-chain.not_uploaded') }}</span>
+                                    <span class="custom-not-uploaded">{{ $t("supply-chain.not_uploaded") }}</span>
                                 </template>
                             </div>
                         </div>
@@ -181,7 +183,7 @@
             <!-- 按钮 -->
             <div v-if="Number(customerCareDetail.status) !== Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED" class="detail-btn m-t-20">
                 <a-button @click="onBtn('msg-edit')">
-                    {{ msgVisible ? $t('customer-care.cancel_message') : $t('customer-care.edit_information') }}
+                    {{ msgVisible ? $t("customer-care.cancel_message") : $t("customer-care.edit_information") }}
                 </a-button>
             </div>
         </div>
@@ -189,11 +191,11 @@
         <!-- 问询单归类 -->
         <div class="inquiry-classification m-t-16">
             <template v-if="isDistributerAdmin">
-                <div class="inquiry-classification-title">{{ $t('customer-care.inquiry_list_classification') }}</div>
+                <div class="inquiry-classification-title">{{ $t("customer-care.inquiry_list_classification") }}</div>
 
                 <!-- 归类 -->
                 <div class="inquiry-classification-item m-t-16 m-b-30">
-                    <div class="inquiry-classification-key m-t-4">{{ $t('customer-care.classify') }}</div>
+                    <div class="inquiry-classification-key m-t-4">{{ $t("customer-care.classify") }}</div>
                     <div
                         class="inquiry-classification-value"
                         :class="{
@@ -216,7 +218,7 @@
                             </a-radio-group>
                         </template>
                         <template v-else>
-                            <span>                                
+                            <span>
                                 {{ $t($Util.Common.returnTranslation(customerCareDetail.purpose, Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE)) }}
                             </span>
                         </template>
@@ -246,7 +248,7 @@
                                 "
                                 class="good-faith-claims p-10 m-t-8"
                             >
-                                <div class="good-faith-claims-title">                                
+                                <div class="good-faith-claims-title">
                                     {{ $t($Util.Common.returnTranslation(customerCareDetail.claim_type, Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO)) }}
                                 </div>
                                 <div class="good-faith-claims-time">
@@ -257,7 +259,7 @@
                                             ])
                                         "
                                     >
-                                        <span class="time-name m-r-8">{{ $t('customer-care.delivery_date') }}</span>
+                                        <span class="time-name m-r-8">{{ $t("customer-care.delivery_date") }}</span>
                                         <template
                                             v-if="
                                                 !$Util.Common.returnTypeBool(customerCareDetail.status, [
@@ -274,8 +276,15 @@
                                         </template>
                                         <template v-else>
                                             <span>{{ dayjs(customerCareDetail.delivery_time).format("YYYY-MM-DD HH:mm") }}</span>
-                                            <span class="m-l-4">                                                
-                                                {{ $t($Util.Common.returnTranslation(customerCareDetail.insurance_status, Core.Const.CUSTOMER_CARE.GOOD_FAITH)) }}
+                                            <span class="m-l-4">
+                                                {{
+                                                    $t(
+                                                        $Util.Common.returnTranslation(
+                                                            customerCareDetail.insurance_status,
+                                                            Core.Const.CUSTOMER_CARE.GOOD_FAITH
+                                                        )
+                                                    )
+                                                }}
                                             </span>
                                         </template>
                                     </template>
@@ -286,7 +295,7 @@
                                             ])
                                         "
                                     >
-                                        <span class="time-name m-r-8">{{ $t('customer-care.order_number') }}</span>
+                                        <span class="time-name m-r-8">{{ $t("customer-care.order_number") }}</span>
                                         <template
                                             v-if="
                                                 !$Util.Common.returnTypeBool(customerCareDetail.status, [
@@ -310,7 +319,7 @@
 
                 <!-- 部件 -->
                 <div class="inquiry-classification-item">
-                    <div class="inquiry-classification-key">{{ $t('customer-care.parts') }}</div>
+                    <div class="inquiry-classification-key">{{ $t("customer-care.parts") }}</div>
                     <div class="inquiry-classification-value">
                         <ItemSelect
                             v-if="
@@ -337,7 +346,7 @@
                                     {{ $i18n.locale === "en" ? record?.name_en || "-" : record?.name + "等" || "-" }}
                                 </template>
                                 <!-- 类型 -->
-                                <template v-if="column.key === 'type'">                                    
+                                <template v-if="column.key === 'type'">
                                     {{ $t($Util.Common.returnTranslation(text, Core.Const.CUSTOMER_CARE.PART_STATUS)) }}
                                 </template>
                                 <!-- 数量 -->
@@ -349,10 +358,10 @@
                                             ])
                                         "
                                     >
-                                        <a-input-number 
-                                            v-model:value="record.amount" 
-                                            defaultValue="1" 
-                                            :placeholder="$t('common.please_enter')" 
+                                        <a-input-number
+                                            v-model:value="record.amount"
+                                            defaultValue="1"
+                                            :placeholder="$t('common.please_enter')"
                                             min="0"
                                             max="9999999"
                                         />
@@ -407,7 +416,7 @@
                                                 </template>
                                             </a-radio-group>
                                         </template>
-                                        <template v-else>                                            
+                                        <template v-else>
                                             {{ $t($Util.Common.returnTranslation(text, Core.Const.CUSTOMER_CARE.FAULT_TYPE)) }}
                                         </template>
                                     </template>
@@ -436,7 +445,7 @@
                                     </template>
                                 </a-radio-group>
                             </template>
-                            <template v-else>                                
+                            <template v-else>
                                 {{ $t($Util.Common.returnTranslation(customerCareDetail.status, Core.Const.CUSTOMER_CARE.FAULT_TYPE)) }}
                             </template>
                         </template>
@@ -510,8 +519,8 @@
                                                         "
                                                     >
                                                         <MySvgIcon class="video-icon" icon-class="video-icon" />
-                                                        <div class="time">2:32s</div>
-                                                        <div class="bottom-mask">{{ item.name }}</div>
+                                                        <div class="time">{{ itemPath.duration || "-" }}{{ itemPath.duration ? "s" : "" }}</div>
+                                                        <div class="bottom-mask">{{ itemPath.name }}</div>
                                                     </div>
                                                 </template>
                                             </template>
@@ -572,8 +581,8 @@
                                                         "
                                                     >
                                                         <MySvgIcon class="video-icon" icon-class="video-icon" />
-                                                        <div class="time">2:32s</div>
-                                                        <div class="bottom-mask">{{ item.name }}</div>
+                                                        <div class="time">{{ itemPath.duration || "-" }}{{ itemPath.duration ? "s" : "" }}</div>
+                                                        <div class="bottom-mask">{{ itemPath.name }}</div>
                                                     </div>
                                                 </template>
                                             </template>
@@ -590,8 +599,9 @@
                                 ])
                             "
                         >
+                            <div class="line m-t-10"></div>
                             <!-- 输入框 -->
-                            <div class="m-t-20">
+                            <div class="m-t-10">
                                 <a-textarea
                                     v-model:value="customerCareDetail.content"
                                     :placeholder="$t('common.please_enter') + $t('customer-care.leave_message')"
@@ -817,7 +827,7 @@ const getDetailFetch = (params = {}) => {
                 // console.log(el.name.slice(-5));
                 return {
                     id: el.id,
-                    name: el.name.length <= 10 ? el.name : `${ el.name.slice(0, 3) }...${ el.name.slice(-4) }`,
+                    name: el.name.length <= 10 ? el.name : `${el.name.slice(0, 3)}...${el.name.slice(-4)}`,
                     type: el.type,
                     path: Core.Const.NET.OSS_POINT + el.path,
                     duration: el.duration,
@@ -929,7 +939,7 @@ const getCommentListFetch = (params = {}) => {
     };
     Core.Api.inquiry_sheet
         .commentList(obj)
-        .then((res) => {
+        .then(async (res) => {
             console.log("评论接口", res);
             comment_list.value = res.list.map((el) => {
                 return {
@@ -944,6 +954,28 @@ const getCommentListFetch = (params = {}) => {
                         : [],
                 };
             });
+
+            // comment_list.value = []
+            // res.list.forEach(async (el) => {
+            //     el.file = el.file ? JSON.parse(el.file) : []
+            //     try {
+            //         await getVideoTime(el.file);
+            //         let obj = {
+            //             ...el,
+            //             file: el.file.map(fileEl => {
+            //                 return {
+            //                     ...fileEl,
+            //                     path: Core.Const.NET.FILE_URL_PREFIX + fileEl.path,
+            //                 }
+            //             })
+            //         }
+            //         // comment_list.value.push(el)
+            //     } catch (error) {
+            //         console.log("error", error);
+            //     }
+            // })
+
+            // console.log("最后的数据11111111111", comment_list.value);
         })
         .catch((err) => {
             console.log("问询单标记解决接口 err", err);
@@ -1054,7 +1086,7 @@ const onBtn = (type) => {
             });
             let saveCommentParams = {
                 file: inquiryFile.length > 0 ? JSON.stringify(inquiryFile) : undefined,
-                content: customerCareDetail.value.content.trim(),
+                content: customerCareDetail.value.content?.trim(),
             };
 
             let promiseAll = [getBindPartFetch(), getSortingTypeFetch()];
@@ -1102,7 +1134,7 @@ const onBtn = (type) => {
 
             let saveComment = {
                 file: sendingFile.length > 0 ? JSON.stringify(sendingFile) : undefined,
-                content: customerCareDetail.value.content.trim(),
+                content: customerCareDetail.value.content?.trim(),
             };
 
             if (saveComment.file || saveComment.content) {
@@ -1195,15 +1227,19 @@ const handleRemove = ({ file, fileList }) => {
     console.log("删除", fileList);
 };
 // 获取视频的时长
-const getVideoTime = (data) => {    
+const getVideoTime = (data) => {
+    // console.log("获取视频的时长", data);
     return new Promise((resolve, reject) => {
         const arrs = data.map((el) => {
             if (/^video\/+/.test(el.type)) {
-                return videoItemPromise(Core.Const.NET.OSS_POINT + el.path).then((res) => {
-                    el.duration = res;
-                }).then(err => {
-                    console.error("哪个视频出错", err);
-                })
+                return videoItemPromise(Core.Const.NET.OSS_POINT + el.path)
+                    .then((res) => {
+                        el.duration = res;
+                        console.log("改变", el);
+                    })
+                    .catch((err) => {
+                        console.error("哪个视频出错", err);
+                    });
             }
         });
 
@@ -1227,6 +1263,7 @@ const videoItemPromise = (src) => {
         });
 
         video.addEventListener("error", function () {
+            // console.log("监听视频出错", src);
             reject(src);
         });
         // 加载视频的元数据
@@ -1314,8 +1351,10 @@ onMounted(() => {
                             font-weight: 400;
                             width: 100px;
                             text-align: right;
+                            white-space: nowrap;
                         }
                         .value {
+                            flex: 1;
                             color: #1d2129;
                             font-size: 14px;
                             font-weight: 400;
@@ -1341,7 +1380,7 @@ onMounted(() => {
                         background: #f2f3f5;
                         padding: 0 4px;
                         box-sizing: border-box;
-                        color: #1D2129;
+                        color: #1d2129;
                         font-size: 14px;
                         font-weight: 400;
                     }
@@ -1359,7 +1398,7 @@ onMounted(() => {
         }
 
         .color-4E5969 {
-            color: #4E5969;
+            color: #4e5969;
             font-size: 16px;
             font-weight: 400;
         }
@@ -1424,6 +1463,7 @@ onMounted(() => {
             .communication-process-other-reply,
             .communication-process-my-reply {
                 .reply-platform-attachment {
+                    border-radius: 4px;
                     background-color: #fff;
                     .reply-platform-attachment-title {
                         color: #1d2129;
@@ -1468,6 +1508,7 @@ onMounted(() => {
                 .other-reply-platform-bottom {
                     display: inline-block;
                     .speech-skill {
+                        display: inline-block;
                         border-radius: 4px;
                         background-color: #fff;
                         color: #1d2129;
@@ -1559,7 +1600,7 @@ onMounted(() => {
                 border-radius: 4px;
                 border: 1px solid #e5e6eb;
                 background: #fff;
-                padding: 4px 8px;                
+                padding: 4px 8px;
             }
         }
     }
@@ -1656,7 +1697,14 @@ onMounted(() => {
         text-align: center;
     }
 }
-
+.line {
+    position: relative;
+    right: 10px;
+    width: calc(100% + 20px);
+    height: 1px;
+    background-color: #f7f8fa;
+    box-shadow: 0px -1px 0px 0px #eaecf1 inset;
+}
 .d-f-a {
     display: flex;
     align-items: center;
