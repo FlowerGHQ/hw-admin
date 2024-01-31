@@ -77,99 +77,129 @@
                                         },
                                     ]),
                                 ]"
-                            >                                
+                            >
                                 {{ $t($Util.Common.returnTranslation(text, Core.Const.CUSTOMER_CARE.ORDER_STATUS)) }}
                             </div>
                         </template>
 
                         <!-- 平台方 -->
                         <!-- 归类 -->
-                        <template v-if="column.key === 'purpose'">                            
+                        <template v-if="column.key === 'purpose'">
                             {{ $t($Util.Common.returnTranslation(text, Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE)) }}
                         </template>
                         <!-- 故障类型 -->
                         <template v-if="column.key === 'fault_type'">
                             <template
                                 v-if="$Util.Common.returnTypeBool(record.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY /*电池*/])"
-                            >                                
+                            >
                                 {{ $t($Util.Common.returnTranslation(text, Core.Const.CUSTOMER_CARE.FAULT_TYPE)) }}
                             </template>
                             <template v-else>
-                                <a-tooltip placement="top">
+                                <a-tooltip placement="topLeft">
                                     <template #title>
                                         <span v-for="(item, index) in record.vehicle_list">
                                             <span>
-                                                {{ item.vehicle_uid + "(" + $t($Util.Common.returnTranslation(item?.fault_type, Core.Const.CUSTOMER_CARE.FAULT_TYPE)) + ")" }}
+                                                {{
+                                                    item.vehicle_uid +
+                                                    "(" +
+                                                    $t($Util.Common.returnTranslation(item?.fault_type, Core.Const.CUSTOMER_CARE.FAULT_TYPE)) +
+                                                    ")"
+                                                }}
                                             </span>
                                             <span v-if="record.vehicle_list.length > 1">,</span>
                                         </span>
                                     </template>
-                                    <span v-if="record.vehicle_list.length > 1">                                        
-                                        {{ record.vehicle_list[0]?.vehicle_uid + "(" + $t($Util.Common.returnTranslation(record.vehicle_list[0]?.fault_type, Core.Const.CUSTOMER_CARE.FAULT_TYPE)) + ")" + "等" }}
-                                    </span>
-                                    <span v-else>
-                                        {{
-                                            record.vehicle_list[0]?.vehicle_uid
-                                                ? record.vehicle_list[0]?.vehicle_uid + "(" + $t($Util.Common.returnTranslation(record.vehicle_list[0]?.fault_type, Core.Const.CUSTOMER_CARE.FAULT_TYPE)) + ")"
-                                                : "-"
-                                        }}
-                                    </span>
+                                    <div
+                                        class="one-spils cursor"
+                                        :style="{
+                                            width: column.width + 'px',
+                                        }"
+                                    >
+                                        <span v-for="(item, index) in record.vehicle_list">
+                                            <span>
+                                                {{
+                                                    item.vehicle_uid +
+                                                    "(" +
+                                                    $t($Util.Common.returnTranslation(item?.fault_type, Core.Const.CUSTOMER_CARE.FAULT_TYPE)) +
+                                                    ")"
+                                                }}
+                                            </span>
+                                            <span v-if="record.vehicle_list.length > 1">,</span>
+                                        </span>
+                                    </div>
                                 </a-tooltip>
                             </template>
                         </template>
                         <!-- 零件 -->
                         <template v-if="column.key === 'part_list'">
-                            <a-tooltip placement="top">
+                            <a-tooltip placement="topLeft">
                                 <template #title>
                                     <span v-for="(item, index) in record.part_list">
-                                        <span>{{ item?.item?.name }}</span>
+                                        <span>{{ $i18n.locale === "en" ? item?.item?.name_en || "-" : item?.item?.name || "-" }}</span>
                                         <span v-if="record.part_list.length > 1">,</span>
                                     </span>
                                 </template>
-                                <template v-if="record.part_list.length > 1">
-                                    {{
-                                        $i18n.locale === "en"
-                                            ? record.part_list[0]?.item?.name_en || "-"
-                                            : record.part_list[0]?.item?.name + "等" || "-"
-                                    }}
-                                </template>
-                                <template v-else>
-                                    {{ $i18n.locale === "en" ? record.part_list[0]?.item?.name_en || "-" : record.part_list[0]?.item?.name || "-" }}
-                                </template>
+                                <div
+                                    class="one-spils cursor"
+                                    :style="{
+                                        width: column.width + 'px',
+                                    }"
+                                >
+                                    <span v-for="(item, index) in record.part_list">
+                                        <span>{{ $i18n.locale === "en" ? item?.item?.name_en || "-" : item?.item?.name || "-" }}</span>
+                                        <span v-if="record.part_list.length > 1">,</span>
+                                    </span>
+                                </div>
                             </a-tooltip>
                         </template>
                         <!-- 车型号,公里数 -->
                         <template v-if="column.key === 'mileage'">
-                            <a-tooltip placement="top">
+                            <a-tooltip placement="topLeft">
                                 <template #title>
                                     <span v-for="(item, index) in record.vehicle_list">
                                         <span>
-                                            {{ item.vehicle_uid + "(" + item.mileage + 'km' +")" }}
+                                            {{ item.vehicle_uid + "(" + item.mileage + "km" + ")" }}
                                         </span>
                                         <span v-if="record.vehicle_list.length > 1">,</span>
                                     </span>
                                 </template>
-                                {{
-                                    record.vehicle_list.length > 1
-                                        ? record.vehicle_list[0]?.vehicle_uid + "(" + record.vehicle_list[0].mileage + 'km' + ")" + "等"
-                                        : record.vehicle_list[0]?.vehicle_uid || "-"
-                                }}
+                                <div
+                                    class="one-spils cursor"
+                                    :style="{
+                                        width: column.width + 'px',
+                                    }"
+                                >
+                                    <span v-for="(item, index) in record.vehicle_list">
+                                        <span>
+                                            {{ item.vehicle_uid + "(" + item.mileage + "km" + ")" }}
+                                        </span>
+                                        <span v-if="record.vehicle_list.length > 1">,</span>
+                                    </span>
+                                </div>
                             </a-tooltip>
                         </template>
 
                         <!-- 分销商 -->
                         <!-- 车架号 -->
                         <template v-if="column.key === 'vehicle_list'">
-                            <a-tooltip placement="top">
+                            <a-tooltip placement="topLeft">
                                 <template #title>
                                     <span v-for="(item, index) in record.vehicle_list">
                                         <span>{{ item.vehicle_uid }}</span>
                                         <span v-if="record.vehicle_list.length > 1">,</span>
                                     </span>
-                                </template>
-                                {{
-                                    record.vehicle_list.length > 1 ? record.vehicle_list[0]?.vehicle_uid + "等" : record.vehicle_list[0]?.vehicle_uid
-                                }}
+                                </template>                                
+                                <div
+                                    class="one-spils cursor"
+                                    :style="{
+                                        width: column.width + 'px',
+                                    }"
+                                >
+                                    <span v-for="(item, index) in record.vehicle_list">
+                                        <span>{{ item.vehicle_uid }}</span>
+                                        <span v-if="record.vehicle_list.length > 1">,</span>
+                                    </span>
+                                </div>
                             </a-tooltip>
                         </template>
                         <!-- 车型 -->
@@ -177,7 +207,7 @@
                             {{ $i18n.locale === "en" ? record.category?.name_en : record.category?.name }}
                         </template>
                         <!-- 反馈类型 -->
-                        <template v-if="column.key === 'type'">                            
+                        <template v-if="column.key === 'type'">
                             {{ $t($Util.Common.returnTranslation(text, Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE)) }}
                         </template>
 
@@ -424,7 +454,7 @@ const tableColumns = computed(() => {
     if (!isDistributerAdmin.value) {
         columns = [
             { title: proxy.$t("customer-care.inquiry_number"), dataIndex: "uid", key: "uid" }, // 问询单号
-            { title: proxy.$t("common.vehicle_no"), dataIndex: "vehicle_list", key: "vehicle_list" }, // 车架号
+            { title: proxy.$t("common.vehicle_no"), dataIndex: "vehicle_list", key: "vehicle_list", width: 150 }, // 车架号
             { title: proxy.$t("customer-care.feedback_type"), dataIndex: "type", key: "type" }, // 反馈类型
             { title: proxy.$t("common.vehicle_model"), dataIndex: "category", key: "category" }, // 车型
             { title: proxy.$t("common.status"), dataIndex: "status", key: "status", width: 70 }, // 状态
@@ -437,10 +467,10 @@ const tableColumns = computed(() => {
             { title: proxy.$t("customer-care.classify"), dataIndex: "purpose", key: "purpose" }, // 归类
             { title: proxy.$t("common.type"), dataIndex: "type", key: "type" }, // 类型
             { title: proxy.$t("customer-care.submitter"), dataIndex: "submit_user_name", key: "submit_user_name" }, // 提交人
-            { title: proxy.$t("customer-care.part"), dataIndex: "part_list", key: "part_list" }, // 零件
+            { title: proxy.$t("customer-care.part"), dataIndex: "part_list", key: "part_list", width: 150 }, // 零件
             { title: proxy.$t("customer-care.processing_progress"), dataIndex: "status", key: "status", width: 70 }, // 处理进度
-            { title: proxy.$t("customer-care.model_number_mileage"), dataIndex: "mileage", key: "mileage" }, // 车型号、公里数
-            { title: proxy.$t("customer-care.fault_classification"), dataIndex: "fault_type", key: "fault_type" }, // 故障分类
+            { title: proxy.$t("customer-care.model_number_mileage"), dataIndex: "mileage", key: "mileage", width: 150 }, // 车型号、公里数
+            { title: proxy.$t("customer-care.fault_classification"), dataIndex: "fault_type", key: "fault_type", width: 150 }, // 故障分类
             { title: proxy.$t("customer-care.belonging_customer_service"), dataIndex: "process_user_name", key: "process_user_name" }, // 归属客服
             { title: proxy.$t("common.create_time"), dataIndex: "create_time", key: "time" }, // 创建时间
             { title: proxy.$t("customer-care.last_modification_time"), dataIndex: "update_time", key: "time" }, // 最近一次修改时间
@@ -676,7 +706,7 @@ onMounted(() => {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: center;
+        // align-items: center;
         .new-msg {
             color: #fff;
             font-size: 12px;
