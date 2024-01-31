@@ -39,6 +39,7 @@
                     :data-source="tableData"
                     :scroll="{ x: true }"
                     :loading="loading"
+                    :locale="$i18n.locale === 'en' ? localeEn : localeZh"
                     :row-key="(record) => record.id"
                     :pagination="false"
                 >
@@ -260,6 +261,8 @@ import Core from "@/core";
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import { useTable } from "@/hooks/useTable";
 import SearchAll from "@/components/horwin/based-on-ant/SearchAll.vue";
+import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';
+import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
 
 const STATUS = Core.Const.FEEDBACK.STATUS;
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE;

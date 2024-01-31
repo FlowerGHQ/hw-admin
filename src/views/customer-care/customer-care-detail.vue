@@ -338,6 +338,7 @@
                             :columns="partsColumns"
                             :data-source="customerCareDetail.part_list"
                             :pagination="false"
+                            :locale="$i18n.locale === 'en' ? localeEn : localeZh"
                             :scroll="{ x: true }"
                         >
                             <template #bodyCell="{ column, text, record }">
@@ -397,7 +398,13 @@
                                 ])
                             "
                         >
-                            <a-table :columns="faultColumns" :data-source="customerCareDetail.vehicle_list" :pagination="false" :scroll="{ x: true }">
+                            <a-table 
+                                :columns="faultColumns" 
+                                :data-source="customerCareDetail.vehicle_list" 
+                                :pagination="false" 
+                                :scroll="{ x: true }"
+                                :locale="$i18n.locale === 'en' ? localeEn : localeZh"
+                            >
                                 <template #bodyCell="{ column, text, record }">
                                     <!-- 故障类型 -->
                                     <template v-if="column.key === 'fault_type'">
