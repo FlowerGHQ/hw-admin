@@ -30,8 +30,8 @@
                             </a-checkbox>
                         </a-checkbox-group>
                         <div class="location-preview">
-                            <img src="@images/operation/top_message.png" alt="">
-                            <img src="@images/operation/message_aggregation.png" alt="">
+                            <img :src="getSrcImg(item, 'png')" v-for="item in locationPreviewList" :key="item"
+                                @click="handleLocationPreview">
                         </div>
                     </div>
                 </div>
@@ -62,8 +62,8 @@
                 <div class="form-item required flex_start">
                     <div class="key">{{ $t('operation.pic') }}</div>
                     <div class="value">
-                        <MyUpload name="add_picList" v-model:value="form.img" showTip :limit="1" :limitSize="10"
-                            tipPosition="right">
+                        <MyUpload name="add_picList" v-model:value="form.img" showTip :limit="2" :limitSize="10"
+                            tipPosition="right" :defaultPreview="false" @preview="handlePreview">
                             <template #tip>
                                 <div class="tips">
                                     <p>{{ $t('operation.pic_tip1') }}</p>
@@ -95,6 +95,10 @@
             <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
             <a-button @click="handleSubmit" type="primary">{{ $t('def.submit') }}</a-button>
         </div>
+        <!-- 自定义图片预览 -->
+        <MyPreviewImageVideo v-model:isClose="isClose" :type="uploadOptions.previewType"
+            :previewData="uploadOptions.previewImageVideo">
+        </MyPreviewImageVideo>
     </div>
 </template>
 
@@ -106,6 +110,9 @@ import { useRouter, useRoute } from 'vue-router'
 import MyUpload from "@/components/MyUpload/index.vue";
 import MyCountryCascader from '@/components/MyCountryCascader/index.vue';
 import MyEditor from "@/components/MyEditor/index.vue";
+import MyPreviewImageVideo from "@/components/horwin/based-on-ant/MyPreviewImageVideo.vue";
+
+const imgModules = import.meta.globEager("../../assets/images/operation/*");
 
 const { proxy } = getCurrentInstance();
 const router = useRouter()
@@ -135,6 +142,11 @@ const form = reactive({
     img: [],
     attachment: [],
 })
+const uploadOptions = ref({
+    previewType: "image",
+    fileData: [], // 提交的数据
+    previewImageVideo: [],
+});
 const areaIndex = ref('1')
 const modules = reactive({
     toolbar: [
@@ -153,6 +165,8 @@ const modules = reactive({
         modules: ['Resize', 'DisplaySize', 'Toolbar']
     },
 })
+const locationPreviewList = ['top_message', 'message_aggregation']
+const isClose = ref(false)
 /* state end*/
 
 /* methods start*/
@@ -194,6 +208,33 @@ const handleSubmit = () => {
 }
 const onChange = () => {
 
+}
+const handleLocationPreview = () => {
+    const arr = locationPreviewList.map(item => {
+        return getSrcImg(item, 'png')
+    })
+    uploadOptions.value.previewImageVideo = arr;
+    isClose.value = true;
+}
+const handlePreview = ({ file, fileList }) => {
+    uploadOptions.value.previewType = 'image';
+    uploadOptions.value.previewImageVideo = [];
+    fileList.forEach((el) => {
+        if (el.response) {
+            if (file.uid === el.uid) {
+                // 让预览的哪张图片在第一张
+                uploadOptions.value.previewImageVideo.unshift(Core.Util.imageFilter(file.response?.data?.filename, 1));
+            } else {
+                uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(file.response?.data?.filename, 1));
+            }
+        }
+    });
+    isClose.value = true;
+}
+// 获取照片
+const getSrcImg = (name, type = "png") => {
+    const path = `../../assets/images/operation/${name}.${type}`;
+    return imgModules[path]?.default;
 }
 /* methods end*/
 
