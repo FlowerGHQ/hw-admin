@@ -1,0 +1,117 @@
+<template>
+    <el-cascader
+        :options="countryOptions"
+        v-model="value"
+        :props="props"
+        clearable
+        filterable
+        class="cascader-area"
+        :placeholder="$t('n.choose')"
+        @change="handleChange" />
+</template>
+
+<script setup>
+/**
+ * @description:国家选择的级联组件
+ * @param {Array} value 选中的值，返回的是一个数组 ps：["中国","日本"] 或者 [["亚洲","中国"],["亚洲","日本"]]
+ * @param {Function} handleGetItem 获取选中的数据,返回的是一个数组,ps:[{name: "中国",code: "CN",parentCode: "亚洲",parentName: "中国",parentEnName: "中国"}]
+ */
+import axios from "axios";
+import { ref, computed, getCurrentInstance, watch, onMounted, h } from "vue";
+const $emit = defineEmits(["update:value", "handleGetItem"]);
+const $props = defineProps({
+    value: {
+        type: Array,
+        default: () => [],
+    },
+});
+
+// 前端获取所有大洲及国家的json文件
+const countryOptions = ref([]);
+const props = { multiple: true };
+
+// 给大洲的所有子元素添加父级code,并且添加一个全选
+const addParentCode = (arr, parentCode, parentName, parentEnName) => {
+    arr.forEach((item) => {
+        item.parentCode = parentCode;
+        item.parentName = parentName;
+        item.parentEnName = parentEnName;
+        item.label = item.name;
+        item.value = item.name;
+        if (item.children && item.children.length) {
+            addParentCode(item.children, item.code, item.name, item.name_en);
+        }
+    });
+    return arr;
+};
+const getCountryOptions = () => {
+    axios.get("/ext/continent-country.json").then((response) => {
+        countryOptions.value = addParentCode(response.data, "", "");
+        console.log(countryOptions.value);
+    });
+};
+// 数据扁平化
+const flatten = (arr) => {
+    let result = [];
+    arr.forEach((item) => {
+        if (item.children && item.children.length) {
+            result = result.concat(flatten(item.children));
+        } else {
+            result.push(item);
+        }
+    });
+    return result;
+};
+// 触发获取
+const handleChange = (value) => {
+    // 默认传递国家数据
+    let arr = [];
+    value.forEach((item) => {
+        arr.push(item[1]);
+    });
+    let allData = flatten(countryOptions.value);
+    // 找到对应arr的name
+    let itemData = [];
+    arr.forEach((item) => {
+        allData.forEach((item2) => {
+            if (item === item2.name) {
+                itemData.push(item2);
+            }
+        });
+    });
+    $emit("handleGetItem", itemData);
+    $emit("update:value", arr);
+};
+
+onMounted(() => {
+    getCountryOptions();
+});
+</script>
+<style lang="less">
+.cascader-area {
+    width: 100%;
+    .el-input {
+        // 清除所有的样式边框，boxshadow
+        .el-input__wrapper {
+            box-shadow: none !important;
+            border: 1px solid #eaecf2;
+        }
+    }
+    .el-cascader__tags {
+        max-height: 300px;
+        overflow-y: scroll;
+        // 滚动条样式
+        &::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+    }
+    &:hover {
+        .el-input {
+            .el-input__wrapper {
+                border-color: #409eff !important;
+            }
+        }
+    }
+}
+</style>

@@ -228,9 +228,9 @@
                                     <a-input-number
                                         :controls="false"
                                         v-model:value="form.height"
-                                        :placeholder="$t('def.input')"
                                     >
                                         <template #addonBefore>
+                                            
                                             <span class="l-w-h-style">{{ $t("d.high") }}</span>
                                         </template>
                                         <template #addonAfter>
