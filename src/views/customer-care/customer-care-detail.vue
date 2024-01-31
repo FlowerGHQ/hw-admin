@@ -593,7 +593,7 @@
                             <!-- 输入框 -->
                             <div class="m-t-20">
                                 <a-textarea
-                                    v-model:value.trim="customerCareDetail.content"
+                                    v-model:value="customerCareDetail.content"
                                     :placeholder="$t('common.please_enter') + $t('customer-care.leave_message')"
                                     allow-clear
                                     showCount
@@ -1054,7 +1054,7 @@ const onBtn = (type) => {
             });
             let saveCommentParams = {
                 file: inquiryFile.length > 0 ? JSON.stringify(inquiryFile) : undefined,
-                content: customerCareDetail.value.content,
+                content: customerCareDetail.value.content.trim(),
             };
 
             let promiseAll = [getBindPartFetch(), getSortingTypeFetch()];
@@ -1102,18 +1102,24 @@ const onBtn = (type) => {
 
             let saveComment = {
                 file: sendingFile.length > 0 ? JSON.stringify(sendingFile) : undefined,
-                content: customerCareDetail.value.content,
+                content: customerCareDetail.value.content.trim(),
             };
-            saveCommentFetch(saveComment)
-                .then((res) => {
-                    message.success(proxy.$t("common.sucesss"));
-                    getCommentListFetch();
-                    customerCareDetail.value.content = undefined;
-                    uploadOptions.value.fileData = [];
-                })
-                .catch((err) => {
-                    console.log("saveCommentFetch_err", err);
-                });
+
+            if (saveComment.file || saveComment.content) {
+                saveCommentFetch(saveComment)
+                    .then((res) => {
+                        message.success(proxy.$t("common.sucesss"));
+                        getCommentListFetch();
+                        customerCareDetail.value.content = undefined;
+                        uploadOptions.value.fileData = [];
+                    })
+                    .catch((err) => {
+                        console.log("saveCommentFetch_err", err);
+                    });
+            } else {
+                message.success(proxy.$t("customer-care.no_content"));
+            }
+
             break;
     }
 };

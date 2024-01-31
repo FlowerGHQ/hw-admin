@@ -114,6 +114,7 @@ export default {
         problem_solved: "问题已解决",
         deal_tips: "点击后，该问询单表示处理完成",
         editing_data: "编辑资料",
+        no_content: "内容不能为空",
 
 
 
@@ -214,5 +215,6 @@ export default {
         problem_solved: "Problem Solved",
         deal_tips: "After Clicking, The Inquiry Sheet Indicates That The Processing Is Complete",
         editing_data: "Editing Data",
+        no_content: "Content cannot be empty",
     }
 }
