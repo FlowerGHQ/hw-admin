@@ -103,6 +103,7 @@ const operationManagement = {
                 hidden: true,
                 title: '通知公告编辑',
                 title_en: 'Notice Editor',
+                parent: '/operation/report-list',
             }
         },
         {
@@ -122,6 +123,7 @@ const operationManagement = {
                 hidden: true,
                 title: '广告位编辑',
                 title_en: 'AD Space Editor',
+                parent: '/operation/ad-list',
             }
         },
     ]
