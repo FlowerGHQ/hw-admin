@@ -103,11 +103,12 @@ const operationManagement = {
                 hidden: true,
                 title: '通知公告编辑',
                 title_en: 'Notice Editor',
+                parent: '/operation/report-list',
             }
         },
         {
             path: 'ad-list',
-            name: 'AD',
+            name: 'adList',
             component: () => import('@/views/operation/ad-list.vue'),
             meta: {
                 title: '广告位管理',
@@ -116,12 +117,13 @@ const operationManagement = {
         },
         {
             path: 'ad-edit',
-            name: 'AD',
+            name: 'adEdit',
             component: () => import('@/views/operation/ad-edit.vue'),
             meta: {
                 hidden: true,
                 title: '广告位编辑',
                 title_en: 'AD Space Editor',
+                parent: '/operation/ad-list',
             }
         },
     ]
