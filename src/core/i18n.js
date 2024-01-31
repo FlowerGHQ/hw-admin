@@ -2762,18 +2762,6 @@ const messages = {
             see_detail:'查看详情',
 
         },
-        operation: {
-            title: '标题',
-            notices_title: '通知及公告',
-            new_notice: '新增公告',
-            area: '区域',
-            status: '状态',
-            effective_time: '生效时间',
-            effective_state: '生效状态',
-            input_pla: '数字越大排序越靠前',
-            took_effect: '已生效',
-            invalid: '未生效',
-        }
     },
 
     en: {
@@ -5609,18 +5597,6 @@ const messages = {
             cancle_top: 'cancle top',
 
 
-        },
-        operation: {
-            title: 'title',
-            notices_title: 'Notices And Announcements',
-            new_notice: 'New Announcement',
-            area: 'Area',
-            status: 'Status',
-            effective_time: 'Effective Time',
-            effective_state: 'Effective State',
-            input_pla: 'The larger the number, the higher the ranking',
-            took_effect: 'Took Effect',
-            invalid: 'Invalid',
         },
     },
 }

@@ -5,7 +5,7 @@
                 {{ $t(/*通知及公告*/'operation.notices_title') }}
             </div>
             <div class="btns-area">
-                <a-button type="primary">
+                <a-button type="primary" @click="routerChange('add')">
                     {{ $t(/*新增公告*/'operation.new_notice') }}
                 </a-button>
             </div>
@@ -111,15 +111,15 @@ const searchAllRef = ref(null)
 
 const tableColumns = computed(() => {
     let columns = [
-        { title: $t("n.index"), dataIndex: "id", key: "number" },
-        { title: $t("operation.title"), dataIndex: "title", key: "item" },
-        { title: $t("n.content"), dataIndex: "content", key: "item" },
-        { title: $t("n.time"), dataIndex: "create_time", key: "create_time" },
-        { title: $t("operation.effective_time"), dataIndex: "effective_time", key: "create_time" },
-        { title: $t("operation.area"), dataIndex: "area", key: "item" },
-        { title: $t("n.sort"), dataIndex: "sort", key: "input" },
-        { title: $t("operation.effective_state"), key: "effective_state", fixed: "right" },
-        { title: $t("common.operations"), key: "operations", fixed: "right" },
+        { title: $t(/*序号*/"n.index"), dataIndex: "id", key: "number" },
+        { title: $t(/*标题*/"operation.title"), dataIndex: "title", key: "item" },
+        { title: $t(/*内容*/"n.content"), dataIndex: "content", key: "item" },
+        { title: $t(/*创建时间*/"n.time"), dataIndex: "create_time", key: "create_time" },
+        { title: $t(/*生效时间*/"operation.effective_time"), dataIndex: "effective_time", key: "create_time" },
+        { title: $t(/*区域*/"operation.area"), dataIndex: "area", key: "item" },
+        { title: $t(/*排序*/"n.sort"), dataIndex: "sort", key: "input" },
+        { title: $t(/*生效状态*/"operation.effective_state"), key: "effective_state", fixed: "right" },
+        { title: $t(/*操作*/"common.operations"), key: "operations", fixed: "right" },
     ];
     return columns;
 });
@@ -225,6 +225,11 @@ const routerChange = (type, record) => {
                 }
             })
             window.open(routeUrl.href, '_blank')
+            break;
+        case 'add':
+            router.push({
+                path: "/operation/report-edit",                
+            });
             break;
     }
 }
