@@ -56,7 +56,7 @@
                         <a-input 
                             :placeholder="$t('operation.input_pla')" 
                             v-model:value="record.sort"
-                            @blur="onBlur"
+                            @blur="onBlur(record)"
                         />
                     </template>
                     <!-- 操作 -->
@@ -218,6 +218,20 @@ const deleteFetch = (id) => {
         console.log('deleteFetch err', err);
     })       
 }
+
+const updateStatusFetch = (record) => {
+    Core.Api.Operation.updateStatus({
+        id: record.id,
+        status: record.status,
+        sort: record.sort
+    }).then((res) => {
+        console.log('updateStatusFetch res', res);
+        $message.success($t("p.modify_success"))
+        searchAllRef.value.handleSearch();
+    }).catch(err => {
+        console.log('updateStatusFetch err', err);
+    })
+}
 /* Fetch end*/
 
 /* methods start*/
@@ -259,10 +273,10 @@ const handleDelete = (record) => {
 	})   
 }
 const onSwitch = (e, record) => {
-    searchAllRef.value.handleSearch();
+    updateStatusFetch(record);
 }
-const onBlur = () => {
-    searchAllRef.value.handleSearch();
+const onBlur = (record) => {
+    updateStatusFetch(record);
 }
 /* methods end*/
 </script>

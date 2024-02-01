@@ -1010,6 +1010,7 @@ const apiList = {
         detail: ['PostJson','announcement/detail'], // 详情
         delete: ['PostJson','announcement/delete'], // 删除
         save: ['PostJson','announcement/save'], // 新增
+        updateStatus: ['PostJson','announcement/update-status'], // 修改排序和状态
     },
 }; 
 
