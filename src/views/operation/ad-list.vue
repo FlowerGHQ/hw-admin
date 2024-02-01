@@ -48,7 +48,7 @@
                     <!-- 图片 -->
                     <template v-if="column.key === 'img'">
                         <div class="table-img">
-                            <a-image style="border-radius: 4px;" :width="42" :height="42" :src="$Util.imageFilter(record ? record.img : '')"/>
+                            <a-image style="border-radius: 4px; cursor: pointer;" :width="42" :height="42" :src="$Util.imageFilter(record ? record.img : '')"/>
                         </div>
                     </template>
                     <!-- 排序 -->
@@ -56,7 +56,7 @@
                         <a-input 
                             :placeholder="$t('operation.input_pla')" 
                             v-model:value="record.sort"
-                            @blur="onBlur"
+                            @blur="onBlur(record)"
                         />
                     </template>
                     <!-- 操作 -->
@@ -140,11 +140,10 @@ const searchList = ref([
         key: 'operation.instructions'
     },
     {
-        type: "select",
-        value: undefined,
+        type: "input",
+        value: "",
         searchParmas: "area",
         key: 'operation.area',
-        selectMap: Core.Const.OPERATION.OPERATION_TYPE,
     },
     {
         type: "select",
@@ -218,6 +217,20 @@ const deleteFetch = (id) => {
         console.log('deleteFetch err', err);
     })       
 }
+
+const updateStatusFetch = (record) => {
+    Core.Api.Operation.updateStatus({
+        id: record.id,
+        status: record.status,
+        sort: record.sort
+    }).then((res) => {
+        console.log('updateStatusFetch res', res);
+        $message.success($t("p.modify_success"))
+        searchAllRef.value.handleSearch();
+    }).catch(err => {
+        console.log('updateStatusFetch err', err);
+    })
+}
 /* Fetch end*/
 
 /* methods start*/
@@ -259,10 +272,10 @@ const handleDelete = (record) => {
 	})   
 }
 const onSwitch = (e, record) => {
-    searchAllRef.value.handleSearch();
+    updateStatusFetch(record);
 }
-const onBlur = () => {
-    searchAllRef.value.handleSearch();
+const onBlur = (record) => {
+    updateStatusFetch(record);
 }
 /* methods end*/
 </script>
