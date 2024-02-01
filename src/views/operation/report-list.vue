@@ -41,9 +41,18 @@
                             </div>
                         </a-tooltip>
                     </template>
+                    <!-- 内容 -->
+                    <template v-if="column.key === 'content'">
+                        <span v-html="text" class="html-content"></span>
+                    </template>
                     <!-- 提交时间 -->
                     <template v-if="column.key === 'create_time'">
                         {{ text ? $Util.timeFormat(text) : '-' }}
+                    </template>
+                    <!-- 区域 -->
+                    <template v-if="column.key === 'area'">
+                        <span v-if="record.area_type === Core.Const.OPERATION.AREA_TYPE_MAP.ALL">{{ $t('common.all') }}</span>
+                        <span v-else>{{ text }}</span>
                     </template>
                     <!-- 排序 -->
                     <template v-if="column.key === 'input'">
@@ -113,10 +122,10 @@ const tableColumns = computed(() => {
     let columns = [
         { title: $t(/*序号*/"n.index"), dataIndex: "id", key: "number" },
         { title: $t(/*标题*/"operation.title"), dataIndex: "title", key: "item" },
-        { title: $t(/*内容*/"n.content"), dataIndex: "content", key: "item" },
+        { title: $t(/*内容*/"n.content"), dataIndex: "content", key: "content" },
         { title: $t(/*创建时间*/"n.time"), dataIndex: "create_time", key: "create_time" },
         { title: $t(/*生效时间*/"operation.effective_time"), dataIndex: "effect_time", key: "create_time" },
-        { title: $t(/*区域*/"operation.area"), dataIndex: "area", key: "item" },
+        { title: $t(/*区域*/"operation.area"), dataIndex: "area", key: "area" },
         { title: $t(/*排序*/"n.sort"), dataIndex: "sort", key: "input" },
         { title: $t(/*生效状态*/"operation.effective_state"), key: "effective_state", fixed: "right" },
         { title: $t(/*操作*/"common.operations"), key: "operations", fixed: "right" },
@@ -178,10 +187,7 @@ const _tableData = ref([
     },
 ])
 
-onMounted(() => {
-    searchParam.value.type = Core.Const.OPERATION.OPERATION_TYPE_MAP.REPORT
-    search()
-});
+onMounted(() => {});
 /* Fetch start*/
 const request = Core.Api.Operation.list;
 const {
@@ -193,15 +199,15 @@ const {
     refreshTable,
     onPageChange,
     searchParam,
-} = useTable({ request });
+} = useTable({ request, initParam: { type: Core.Const.OPERATION.OPERATION_TYPE_MAP.REPORT } });
 
 const deleteFetch = (id) => {
     Core.Api.Operation.delete({
         id: id,
     }).then((res) => {
         console.log('deleteFetch res', res);
-        $message.success($t("pop_up.delete_success"))
         searchAllRef.value.handleSearch();
+        $message.success($t("pop_up.delete_success"))
     }).catch(err => {
         console.log('deleteFetch err', err);
     })       
@@ -215,8 +221,8 @@ const updateStatusFetch = (record) => {
         type: 1
     }).then((res) => {
         console.log('updateStatusFetch res', res);
-        $message.success($t("p.modify_success"))
         searchAllRef.value.handleSearch();
+        $message.success($t("p.modify_success"))
     }).catch(err => {
         console.log('updateStatusFetch err', err);
     })

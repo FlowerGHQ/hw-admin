@@ -38,7 +38,7 @@ export default {
         successfully_saved: "Successfully saved",
         edit: "Edit",
         please_select: "Please Select",
-        All: "All",
+        all: "All",
         vehicle_no: 'Frame Number',
         vehicle_model: "Vehicle Model",
         status: 'Status',

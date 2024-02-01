@@ -101,7 +101,7 @@ const form = ref({
     id: '',
     type: Core.Const.OPERATION.OPERATION_TYPE_MAP.AD, // 1 公告 2 广告
     area_type: Core.Const.OPERATION.AREA_TYPE_MAP.ALL, // 1 全部 2 部分
-    area: '',
+    area: [],
     sort: '',
     url: '',
     img_desc: '',
@@ -128,7 +128,7 @@ const getReportDetail = (id) => {
         detail.value = res.detail
         Object.assign(form.value, {
             area_type: detail.value.area_type,
-            area: detail.value.area.split(','),
+            area: detail.area ? detail.area.split(',') : [],
             sort: detail.value.sort,
             url: detail.value.url,
             img: detail.value.img ? JSON.parse(detail.value.img) : '',
@@ -150,11 +150,10 @@ const handleSubmit = () => {
     if (checkInput(params)) {
         return
     }
-    if(params.area_type === Core.Const.OPERATION.AREA_TYPE_MAP.PART ) {
-        params.area = params.area.join(',')
-    } else {
-        params.area = ''
+    if(params.area_type === Core.Const.OPERATION.AREA_TYPE_MAP.ALL ) {
+        params.area = []
     }
+    params.area = params.area.join(',')
     params.img = JSON.stringify(params.img)
     Core.Api.Operation.save({
         ...params,

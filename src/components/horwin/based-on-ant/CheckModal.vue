@@ -1,6 +1,6 @@
 <template>
     <a-modal centered :closable="false" v-model:visible="visible" class="continue-modal" :width="320" :footer="null"
-        :after-close="handleModalClose" :bodyStyle="bodyStyle">
+        :bodyStyle="bodyStyle">
         <div class="modal-header">
             {{ $t(/*确定退出吗*/'operation.sure_tip') }}
         </div>

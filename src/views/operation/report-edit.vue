@@ -15,7 +15,7 @@
                                 <a-radio :value="2">部分区域</a-radio>
                             </a-radio-group>
                             <template v-if="form.area_type === 2">
-                                <MyCountryCascader v-model:value="form.area" @handleGetItem="handleGetItem" />
+                                <MyCountryCascader v-model:value="form.area" />
                             </template>
                         </div>
                     </div>
@@ -142,7 +142,7 @@ const detail = reactive({})
 const form = reactive({
     id: '',
     area_type: 1,
-    area: '',
+    area: [],
     show_type: ['1'],
     sort: '',
     title: '',
@@ -199,13 +199,13 @@ const getReportDetail = () => {
         Object.assign(detail, res.detail)
         Object.assign(form, {
             area_type: detail.area_type,
-            area: detail.area.split(','),
-            show_type: detail.show_type.split(','),
+            area: detail.area ? detail.area.split(',') : [],
+            show_type: detail.show_type ? detail.show_type.split(',') : [],
             sort: detail.sort,
             title: detail.title,
             content: detail.content,
-            img: detail.img,
-            attachment: detail.attachment,
+            img: JSON.parse(detail.img),
+            attachment: JSON.parse(detail.attachment),
         })
     }).catch(err => {
         console.log('getReportDetail err', err)
@@ -215,10 +215,11 @@ const getReportDetail = () => {
 }
 const handleSubmit = () => {
     let formNew = Core.Util.deepCopy(form)
-    if (formNew.area_type === 2 && !formNew.area) {//区域校验
+    console.log(formNew.area)
+    if (formNew.area_type === 2 && formNew.area.length === 0) {//区域校验
         return proxy.$message.warning(proxy.$t('n.enter') + ":" + proxy.$t('operation.area'))
     }
-    if (!formNew.show_type) {//展示位置校验
+    if (formNew.show_type.length === 0) {//展示位置校验
         return proxy.$message.warning(proxy.$t('n.enter') + ":" + proxy.$t('operation.display_location'))
     }
     if (!formNew.sort) {//排序校验
@@ -231,12 +232,13 @@ const handleSubmit = () => {
         return proxy.$message.warning(proxy.$t('n.enter') + ":" + proxy.$t('operation.report_content'))
     }
     if (formNew.img.length === 0) {//图片校验
-        return proxy.$message.warning(proxy.$t('n.enter') + ":" + proxy.$t('operation.pic'))
+        return proxy.$message.warning(proxy.$t('n.upload') + ":" + proxy.$t('operation.pic'))
+    }
+    if(formNew.area_type === Core.Const.OPERATION.AREA_TYPE_MAP.ALL) {
+        formNew.area = []
     }
     formNew.show_type = formNew.show_type.join(',')
-    if (formNew.area_type === 2) {
-        formNew.area = formNew.area.join(',')
-    }
+    formNew.area = formNew.area.join(',')
     formNew.img = JSON.stringify(formNew.img)
     formNew.attachment = JSON.stringify(formNew.attachment)
     Core.Api.Operation.save({

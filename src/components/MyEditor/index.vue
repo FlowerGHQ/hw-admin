@@ -1,12 +1,15 @@
 <template>
-    <QuillEditor
-        class="editor-area"
-        ref="quillRef"
-        v-model:content="content"
-        :readOnly="readOnly"
-        :options="myOptions"
-        contentType="html"
-        @update:content="setValue()" />
+    <div class="editor-container">
+        <QuillEditor
+            class="editor-area"
+            ref="quillRef"
+            v-model:content="content"
+            :readOnly="readOnly"
+            :options="myOptions"
+            contentType="html"
+            @update:content="setValue()" />
+        <span class="SizeTiShi">{{ TiLength }} / {{ maxLength }}</span>
+    </div>
 </template>
 
 <script setup>
@@ -20,7 +23,9 @@ import ImageResize from 'quill-image-resize-module'
 // 注册事件
 Quill.register('modules/imageDrop', ImageDrop)
 Quill.register('modules/imageResize', ImageResize)
-import { ref, watch, reactive, toRaw } from "vue";
+import { ref, watch, reactive, toRaw, nextTick, getCurrentInstance } from "vue";
+
+const { proxy } = getCurrentInstance();
 //withDefaults 是一个辅助函数，用于将默认值与传递的值合并
 const props = defineProps({
     modelValue: {
@@ -56,10 +61,19 @@ const myOptions = reactive({
     modules,
     placeholder,
 });
+const maxLength = ref(2000)
+const TiLength = ref(0)
 
 const setValue = () => {
-    const text = toRaw(quillRef.value).getHTML();
+    const text = toRaw(quillRef.value).getHTML() !== '<p><br></p>' ? toRaw(quillRef.value).getHTML() : '';
     emit("update:modelValue", text);
+    TiLength.value = quillRef.value.getText().length - 1
+    if(TiLength.value > maxLength.value){
+        proxy.$message.warning(proxy.$t('operation.with') + maxLength.value + proxy.$t('operation.char'))
+        nextTick(() => {
+            quillRef.value.setText(quillRef.value.getText().slice(0, maxLength.value))
+        })
+    }
 };
 watch(
     () => props.modelValue,
@@ -67,6 +81,11 @@ watch(
         if ((val != null || val != "" || val != "<p><br></p>") &&val) {
             console.log(1);
             content.value = val;
+            if(quillRef.value) {
+                nextTick(() =>{ 
+                    TiLength.value = quillRef.value.getText().length - 1;// 设置字数
+                })
+            }
         }  else {
             console.log(2);
             content.value = "";
@@ -80,4 +99,19 @@ watch(
 );
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.editor-container {
+    position: relative;
+    .SizeTiShi {
+        color: #4E5969;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        z-index: 9;
+    }
+}
+</style>

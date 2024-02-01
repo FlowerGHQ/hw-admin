@@ -44,6 +44,8 @@ export default {
         continue_edit: '继续编辑',
         submit_exit: '提交并退出',
         exit: '退出',
+        with: '最多输入',
+        char: '个字符',
     },
     en: {
         area: 'Area',
@@ -90,5 +92,7 @@ export default {
         continue_edit: 'Continue To Edit',
         submit_exit: 'Submit And Exit',
         exit: 'Exit',
+        with: 'Within',
+        char: 'Characters',
     }
 }
