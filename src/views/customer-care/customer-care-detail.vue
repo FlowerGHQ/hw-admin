@@ -120,7 +120,7 @@
                         class="vehicle-no-style m-t-20"
                     >
                         <div class="col">
-                            <div class="key m-r-16 no-white-space m-r-8 m-t-8">{{ $t("common.vehicle_no") }}、{{ $t("customer-care.mileage") }}</div>
+                            <div class="key m-r-16 m-r-8 m-t-8">{{ $t("common.vehicle_no") }}、{{ $t("customer-care.mileage") }}</div>
                             <div class="value d-f-a">
                                 <div v-for="(item, index) in customerCareDetail.vehicle_list" :key="index" class="vehicle-item m-r-8 m-t-8">
                                     {{ item.vehicle_uid }}({{ item.mileage }}km)
@@ -267,7 +267,7 @@
                                                 ])
                                             "
                                         >
-                                            <a-date-picker class="w-224 m-r-16" v-model:value="customerCareDetail.delivery_time" />
+                                            <a-date-picker class="w-224 m-r-16" v-model:value="customerCareDetail.delivery_time"  :locale="$i18n.locale === 'en' ? localeEn : localeZh"/>
                                             <a-radio-group v-model:value="customerCareDetail.insurance_status">
                                                 <a-radio v-for="(item, index) in Core.Const.CUSTOMER_CARE.GOOD_FAITH" :value="item.value">
                                                     {{ $t(item.t) }}
@@ -306,7 +306,7 @@
                                             <a-input
                                                 class="w-224"
                                                 v-model:value="customerCareDetail.order_sn"
-                                                :placeholder="$t('common.please_enter') + $t('common.vehicle_no')"
+                                                :placeholder="$t('common.please_enter') + $t('customer-care.order_number')"
                                             />
                                         </template>
                                         <template> ({{ customerCareDetail.order_sn }}) </template>
@@ -338,6 +338,7 @@
                             :columns="partsColumns"
                             :data-source="customerCareDetail.part_list"
                             :pagination="false"
+                            :locale="$i18n.locale === 'en' ? localeEn : localeZh"
                             :scroll="{ x: true }"
                         >
                             <template #bodyCell="{ column, text, record }">
@@ -397,7 +398,13 @@
                                 ])
                             "
                         >
-                            <a-table :columns="faultColumns" :data-source="customerCareDetail.vehicle_list" :pagination="false" :scroll="{ x: true }">
+                            <a-table 
+                                :columns="faultColumns" 
+                                :data-source="customerCareDetail.vehicle_list" 
+                                :pagination="false" 
+                                :scroll="{ x: true }"
+                                :locale="$i18n.locale === 'en' ? localeEn : localeZh"
+                            >
                                 <template #bodyCell="{ column, text, record }">
                                     <!-- 故障类型 -->
                                     <template v-if="column.key === 'fault_type'">
@@ -700,11 +707,13 @@ import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import Core from "@/core";
 import { useRouter, useRoute } from "vue-router";
 import dayjs from "dayjs";
-import MyPreviewImageVideo from "./components/MyPreviewImageVideo.vue";
+import MyPreviewImageVideo from "@/components/horwin/based-on-ant/MyPreviewImageVideo.vue";
 import customerCareEdit from "./customer-care-edit.vue";
 import ItemSelect from "@/components/popup-btn/ItemSelect.vue";
 import { message } from "ant-design-vue";
 import MyUploads from "./components/MyUploads.vue";
+import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';
+import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
@@ -1351,7 +1360,6 @@ onMounted(() => {
                             font-weight: 400;
                             width: 100px;
                             text-align: right;
-                            white-space: nowrap;
                         }
                         .value {
                             flex: 1;
@@ -1547,6 +1555,7 @@ onMounted(() => {
                 .my-reply-platform-bottom {
                     display: inline-block;
                     .speech-skill {
+                        display: inline-block;
                         border-radius: 4px;
                         background-color: #66a0ff;
                         color: #fff;

@@ -52,7 +52,7 @@ const apiList = {
         incomingInspection: ['GetJson', 'material-arrival-quality-inspection-order/export'], // 来料检导出
         orderExport: ['GetJson', 'crm-order/export'],
         downloadTemplate: ['GetJson', 'aftermarket/bom/download-aftermarket-bom'], // 二级页面下载导入模板
-
+        enquiryTickeTexport: ['GetJson','enquiry-ticket/export'], // 问询单导出接口
     },
     User: { // 用户
         save: ['PostJson', 'user/save'],
@@ -1019,7 +1019,7 @@ const apiList = {
         // 删除
         deleteCustomer: ['PostJson','user/delete-customer-country'], // 删除
         // 添加
-        addCustomer: ['PostJson','user/save-area'], // 添加
+        addCustomer: ['PostJson','user/save-area'], // 添加        
     }
 };
 
