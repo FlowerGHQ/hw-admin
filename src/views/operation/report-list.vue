@@ -132,11 +132,10 @@ const searchList = ref([
         key: 'operation.title'
     },
     {
-        type: "select",
-        value: undefined,
+        type: "input",
+        value: "",
         searchParmas: "area",
         key: 'operation.area',
-        selectMap: Core.Const.OPERATION.OPERATION_TYPE,
     },
     {
         type: "select",

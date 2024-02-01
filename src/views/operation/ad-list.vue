@@ -48,7 +48,7 @@
                     <!-- 图片 -->
                     <template v-if="column.key === 'img'">
                         <div class="table-img">
-                            <a-image style="border-radius: 4px;" :width="42" :height="42" :src="$Util.imageFilter(record ? record.img : '')"/>
+                            <a-image style="border-radius: 4px; cursor: pointer;" :width="42" :height="42" :src="$Util.imageFilter(record ? record.img : '')"/>
                         </div>
                     </template>
                     <!-- 排序 -->
@@ -140,11 +140,10 @@ const searchList = ref([
         key: 'operation.instructions'
     },
     {
-        type: "select",
-        value: undefined,
+        type: "input",
+        value: "",
         searchParmas: "area",
         key: 'operation.area',
-        selectMap: Core.Const.OPERATION.OPERATION_TYPE,
     },
     {
         type: "select",
