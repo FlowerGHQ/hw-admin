@@ -267,7 +267,11 @@
                                                 ])
                                             "
                                         >
-                                            <a-date-picker class="w-224 m-r-16" v-model:value="customerCareDetail.delivery_time"  :locale="$i18n.locale === 'en' ? localeEn : localeZh"/>
+                                            <a-date-picker
+                                                class="w-224 m-r-16"
+                                                v-model:value="customerCareDetail.delivery_time"
+                                                :locale="$i18n.locale === 'en' ? localeEn : localeZh"
+                                            />
                                             <a-radio-group v-model:value="customerCareDetail.insurance_status">
                                                 <a-radio v-for="(item, index) in Core.Const.CUSTOMER_CARE.GOOD_FAITH" :value="item.value">
                                                     {{ $t(item.t) }}
@@ -398,10 +402,10 @@
                                 ])
                             "
                         >
-                            <a-table 
-                                :columns="faultColumns" 
-                                :data-source="customerCareDetail.vehicle_list" 
-                                :pagination="false" 
+                            <a-table
+                                :columns="faultColumns"
+                                :data-source="customerCareDetail.vehicle_list"
+                                :pagination="false"
                                 :scroll="{ x: true }"
                                 :locale="$i18n.locale === 'en' ? localeEn : localeZh"
                             >
@@ -555,45 +559,45 @@
                                 </div>
                                 <div class="my-reply-platform-bottom">
                                     <div v-if="item.content" class="speech-skill p-10 m-t-10">
-                                        <span>{{ item.content }}</span>
+                                        <div>{{ item.content }}</div>
                                     </div>
-                                    <div v-if="item.file.length > 0" class="reply-platform-attachment m-t-4 p-10">
-                                        <div class="reply-platform-attachment-title">{{ $t("customer-care.attachment") }}:</div>
-                                        <div class="reply-platform-attachment-img m-t d-f-a">
-                                            <template v-for="(itemPath, index) in item.file" :key="index">
-                                                <template v-if="/(image\/|png|jpg|jpeg)/.test(itemPath.type)">
-                                                    <img
-                                                        :class="{ 'm-l-16': index > 0 }"
-                                                        class="attachment-img"
-                                                        :src="itemPath.path"
-                                                        alt=""
-                                                        @click="
-                                                            onViewImage({
-                                                                ...itemPath,
-                                                                file: item.file,
-                                                            })
-                                                        "
-                                                    />
-                                                </template>
-                                                <template v-else-if="/video\/+/.test(itemPath.type)">
-                                                    <!-- 视频 -->
-                                                    <div
-                                                        class="video-container"
-                                                        :class="{ 'm-l-16': index > 0 }"
-                                                        @click="
-                                                            onViewImage({
-                                                                type: 'video/*',
-                                                                path: itemPath.path,
-                                                            })
-                                                        "
-                                                    >
-                                                        <MySvgIcon class="video-icon" icon-class="video-icon" />
-                                                        <div class="time">{{ itemPath.duration || "-" }}{{ itemPath.duration ? "s" : "" }}</div>
-                                                        <div class="bottom-mask">{{ itemPath.name }}</div>
-                                                    </div>
-                                                </template>
+                                </div>
+                                <div v-if="item.file.length > 0" class="reply-platform-attachment m-t-4 p-10">
+                                    <div class="reply-platform-attachment-title">{{ $t("customer-care.attachment") }}:</div>
+                                    <div class="reply-platform-attachment-img m-t d-f-a">
+                                        <template v-for="(itemPath, index) in item.file" :key="index">
+                                            <template v-if="/(image\/|png|jpg|jpeg)/.test(itemPath.type)">
+                                                <img
+                                                    :class="{ 'm-l-16': index > 0 }"
+                                                    class="attachment-img"
+                                                    :src="itemPath.path"
+                                                    alt=""
+                                                    @click="
+                                                        onViewImage({
+                                                            ...itemPath,
+                                                            file: item.file,
+                                                        })
+                                                    "
+                                                />
                                             </template>
-                                        </div>
+                                            <template v-else-if="/video\/+/.test(itemPath.type)">
+                                                <!-- 视频 -->
+                                                <div
+                                                    class="video-container"
+                                                    :class="{ 'm-l-16': index > 0 }"
+                                                    @click="
+                                                        onViewImage({
+                                                            type: 'video/*',
+                                                            path: itemPath.path,
+                                                        })
+                                                    "
+                                                >
+                                                    <MySvgIcon class="video-icon" icon-class="video-icon" />
+                                                    <div class="time">{{ itemPath.duration || "-" }}{{ itemPath.duration ? "s" : "" }}</div>
+                                                    <div class="bottom-mask">{{ itemPath.name }}</div>
+                                                </div>
+                                            </template>
+                                        </template>
                                     </div>
                                 </div>
                             </div>
@@ -712,8 +716,8 @@ import customerCareEdit from "./customer-care-edit.vue";
 import ItemSelect from "@/components/popup-btn/ItemSelect.vue";
 import { message } from "ant-design-vue";
 import MyUploads from "./components/MyUploads.vue";
-import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';
-import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
+import localeEn from "ant-design-vue/es/date-picker/locale/en_US";
+import localeZh from "ant-design-vue/es/date-picker/locale/zh_CN";
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
@@ -1553,9 +1557,7 @@ onMounted(() => {
                 }
 
                 .my-reply-platform-bottom {
-                    display: inline-block;
                     .speech-skill {
-                        display: inline-block;
                         border-radius: 4px;
                         background-color: #66a0ff;
                         color: #fff;
