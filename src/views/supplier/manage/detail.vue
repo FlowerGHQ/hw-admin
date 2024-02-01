@@ -590,12 +590,13 @@
                             <div class="search-col w-50-percentage">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.technical_seniority') }}</div>
                                 <div class="value m-l-8">                                    
-                                    <a-input-number
+                                    <a-input
                                         class="w-100 p-l-0"
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.human_resource.technical_seniority"
                                         :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
+                                        :maxlength="10"
                                     />
                                 </div>
                             </div>
