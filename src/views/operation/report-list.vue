@@ -56,12 +56,12 @@
                     <!-- 操作 -->
                     <template v-if="column.key === 'effective_state'">
                         <div class="effective-state">
-                            <a-switch v-model:checked="record.status" size="small"
+                            <a-switch v-model:checked="record.status" size="small" :checked-value="1" :un-checked-value="2"
                                 @change="(event) => onSwitch(event, record)" />
                             <div 
-                                :class="record.status ? 'switch-state blue' : 'switch-state grey'"
+                                :class="record.status === 1 ? 'switch-state blue' : 'switch-state grey'"
                             >
-                                {{ record.status ? $t(/*已生效*/'operation.took_effect') : $t(/*未生效*/'operation.invalid') }}
+                                {{ record.status === 1 ? $t(/*已生效*/'operation.took_effect') : $t(/*未生效*/'operation.invalid') }}
                             </div>
                         </div>
                     </template>
@@ -211,7 +211,8 @@ const updateStatusFetch = (record) => {
     Core.Api.Operation.updateStatus({
         id: record.id,
         status: record.status,
-        sort: record.sort
+        sort: record.sort,
+        type: 1
     }).then((res) => {
         console.log('updateStatusFetch res', res);
         $message.success($t("p.modify_success"))

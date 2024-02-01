@@ -92,13 +92,18 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
-            <a-button @click="handleSubmit" type="primary">{{ $t('def.submit') }}</a-button>
+            <a-button class="btn-block" @click="modalShow = true">{{ $t('def.cancel') }}</a-button>
+            <a-button class="btn-block" @click="handleSubmit" type="primary">{{ $t('def.submit') }}</a-button>
         </div>
         <!-- 自定义图片预览 -->
         <MyPreviewImageVideo v-model:isClose="isClose" :type="uploadOptions.previewType"
             :previewData="uploadOptions.previewImageVideo">
         </MyPreviewImageVideo>
+        <CheckModal :visible="modalShow" :bodyText="modalText">
+            <a-button type="primary" @click="modalShow = false">{{ form.id ? $t(/*继续编辑*/'operation.continue_edit') :
+                $t(/*继续创建*/'operation.continue_fill') }}</a-button>
+            <a-button @click="routerChange('back')">{{ $t(/*退出*/'operation.exit') }}</a-button>
+        </CheckModal>
     </div>
 </template>
 
@@ -111,6 +116,7 @@ import MyUpload from "@/components/MyUpload/index.vue";
 import MyCountryCascader from '@/components/MyCountryCascader/index.vue';
 import MyEditor from "@/components/MyEditor/index.vue";
 import MyPreviewImageVideo from "@/components/horwin/based-on-ant/MyPreviewImageVideo.vue";
+import CheckModal from '@/components/horwin/based-on-ant/CheckModal.vue';
 
 const imgModules = import.meta.globEager("../../assets/images/operation/*");
 
@@ -124,6 +130,9 @@ onMounted(() => {
 
     if (form.id) {
         getReportDetail();
+        modalText.value = proxy.$t(/*编辑尚未提交，确定退出吗？*/'operation.edit_exit_tip')
+    } else {
+        modalText.value = proxy.$t(/*公告尚未创建成功，确定退出吗？*/'operation.exit_text')
     }
 
 })
@@ -167,6 +176,8 @@ const modules = reactive({
 })
 const locationPreviewList = ['top_message', 'message_aggregation']
 const isClose = ref(false)
+const modalText = ref(undefined)
+const modalShow = ref(false)
 /* state end*/
 
 /* methods start*/
@@ -185,7 +196,7 @@ const getReportDetail = () => {
     Core.Api.Operation.detail({
         id: form.id,
     }).then(res => {
-        detail = res.detail
+        Object.assign(detail, res.detail)
         Object.assign(form, {
             area_type: detail.area_type,
             area: detail.area.split(','),
@@ -204,8 +215,6 @@ const getReportDetail = () => {
 }
 const handleSubmit = () => {
     let formNew = Core.Util.deepCopy(form)
-    formNew.show_type = formNew.show_type.join(',')
-    formNew.area = formNew.area.join(',')
     if (formNew.area_type === 2 && !formNew.area) {//区域校验
         return proxy.$message.warning(proxy.$t('n.enter') + ":" + proxy.$t('operation.area'))
     }
@@ -224,6 +233,12 @@ const handleSubmit = () => {
     if (formNew.img.length === 0) {//图片校验
         return proxy.$message.warning(proxy.$t('n.enter') + ":" + proxy.$t('operation.pic'))
     }
+    formNew.show_type = formNew.show_type.join(',')
+    if (formNew.area_type === 2) {
+        formNew.area = formNew.area.join(',')
+    }
+    formNew.img = JSON.stringify(formNew.img)
+    formNew.attachment = JSON.stringify(formNew.attachment)
     Core.Api.Operation.save({
         ...formNew,
     }).then(() => {
@@ -420,6 +435,13 @@ const getSrcImg = (name, type = "png") => {
     .form-btns {
         padding: 20px;
         text-align: center;
+
+        .btn-block {
+            border-radius: 4px;
+            width: auto;
+            height: 32px;
+            padding: 4px 16px;
+        }
     }
 }
 </style>
