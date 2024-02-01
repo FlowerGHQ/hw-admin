@@ -69,7 +69,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, getCurrentInstance } from 'vue';
+import { onMounted, ref, getCurrentInstance, reactive } from 'vue';
 import Core from '../../core';
 import { useRouter, useRoute } from 'vue-router'
 import MyUpload from "@/components/MyUpload/index.vue";
@@ -100,6 +100,7 @@ const form = ref({
     img_desc: '',
     img: [],
 })
+const detail = reactive({})
 const uploadOptions = ref({
     previewType: "image",
     fileData: [], // 提交的数据
@@ -114,7 +115,15 @@ const getReportDetail = (id) => {
         id: id,
     }).then(res => {
         console.log('getReportDetail res', res);
-        form.value = res.detail
+        detail = res.detail
+        Object.assign(form.value, {
+            area_type: detail.area_type,
+            area: detail.area.split(','),
+            sort: detail.sort,
+            url: detail.url,
+            img: detail.img,
+            img_desc: detail.img_desc,
+        })
     }).catch(err => {
         console.log('getReportDetail err', err)
     }).finally(() => {
@@ -168,7 +177,7 @@ const handlePreview = ({ file, fileList }) => {
     isClose.value = true;
 }
 const checkInput = (form) => {
-    
+
     const { area_type, area, sort, url, img_desc, img } = form;
 
     if (area_type === Core.Const.OPERATION.AREA_TYPE_MAP.PART && !area.length) {
