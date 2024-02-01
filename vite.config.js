@@ -4,6 +4,7 @@ import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import Components from "unplugin-vue-components/vite";
 import AutoImport from "unplugin-auto-import/vite";
 import viteCompression from "vite-plugin-compression";
+import inject from "@rollup/plugin-inject";// 这个库可以实现 webpack.ProvidePlugin({…}) 的方式
 import { AntDesignVueResolver,ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import * as path from "path";
 // 正式环境清除console
@@ -65,7 +66,11 @@ export default defineConfig(({ mode }) => {
                 algorithm: 'gzip', // 压缩算法，可选['gzip'，' brotliccompress '，'deflate '，'deflateRaw']
                 ext: '.gz',
                 deleteOriginFile: false // 不需要删除源文件，nginx会自动根据请求头的accept-encoding进行判断
-            })
+            }),
+            inject({
+                'window.Quill': ['@vueup/vue-quill', 'Quill'],
+                Quill: ['@vueup/vue-quill', 'Quill'],
+            }),
         ],
         resolve: {
             alias: {

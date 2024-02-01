@@ -119,6 +119,10 @@ const props = defineProps({
     type: Array,
     default: () => ["image/jpeg", "image/jpg", "image/png"],
   },
+  defaultPreview: {
+    type: Boolean,
+    default: true,
+  },
 })
 const uploadId = _.uniqueId("upload_")
 const uploadComponent = ref(null)
@@ -128,7 +132,7 @@ const limitNum = computed(() => {
 })
 const previewVisible = ref(false)
 const previewImage = ref("")
-const $emit = defineEmits(["update:value"])
+const $emit = defineEmits(["update:value", "preview"])
 // 判断循环的计数
 const loopCount = ref(0)
 // 校验图片
@@ -185,14 +189,18 @@ const handleDetailChange = ({ file, fileList }) => {
   }
 }
 const handlePreview = (file) => {
-  previewImage.value = file?.response?.data?.filename
-    ? Core.Const.NET.FILE_URL_PREFIX + file.response.data.filename
-    : file?.url
-    ? file.url
-    : file?.thumbUrl
-    ? file.thumbUrl
-    : ""
-  previewVisible.value = true
+  if (props.defaultPreview) {
+    previewImage.value = file?.response?.data?.filename
+      ? Core.Const.NET.FILE_URL_PREFIX + file.response.data.filename
+      : file?.url
+      ? file.url
+      : file?.thumbUrl
+      ? file.thumbUrl
+      : ""
+    previewVisible.value = true
+  } else {
+    $emit("preview", { file, fileList: upload.value.fileList });
+  }
 }
 const handleRemove = (file) => {
   upload.value.fileList = upload.value.fileList.filter(

@@ -12,6 +12,14 @@
 <script setup>
 import { QuillEditor } from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
+import * as Quill from 'quill'
+// 拖拽上传
+import { ImageDrop } from 'quill-image-drop-module'
+// 调整上传图片大小
+import ImageResize from 'quill-image-resize-module'
+// 注册事件
+Quill.register('modules/imageDrop', ImageDrop)
+Quill.register('modules/imageResize', ImageResize)
 import { ref, watch, reactive, toRaw } from "vue";
 //withDefaults 是一个辅助函数，用于将默认值与传递的值合并
 const props = defineProps({
@@ -56,15 +64,13 @@ const setValue = () => {
 watch(
     () => props.modelValue,
     (val) => {
-
-        console.log(val,'-----------');
         if ((val != null || val != "" || val != "<p><br></p>") &&val) {
             console.log(1);
             content.value = val;
         }  else {
             console.log(2);
             content.value = "";
-            toRaw(quillRef.value).setContents(""); // 清空编辑器
+            if(quillRef.value) toRaw(quillRef.value).setContents(""); // 清空编辑器
         }
     },
     {
