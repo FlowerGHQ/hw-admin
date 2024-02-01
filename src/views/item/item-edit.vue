@@ -1412,16 +1412,7 @@ export default {
             this.ladderPriceVisible = true;
             this.activeRow = record;
             this.activeIndex = index;
-            switch (type) {
-                case "EUR":
-                    this.ladderPriceTitle = this.$t("item-edit.EUR_ladder_price");
-                    break;
-                case "USD":
-                    this.ladderPriceTitle = this.$t("item-edit.ESD_ladder_price");
-                    break;
-                default:
-                    break;
-            }
+            this.ladderPriceTitle = this.$t("item-edit.ladder_price_setting");
         },
         // 处理数据（批量修改）
         handleLastLadderData(data) {
