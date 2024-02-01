@@ -49,7 +49,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://10.10.12.65:8889' // my
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.10.12.194:8889' // zwq
-        // URL_POINT = 'http://10.10.12.194:8889'  // zy
+        URL_POINT = 'http://10.10.12.194:8889'  // zy
 
         break;
 }

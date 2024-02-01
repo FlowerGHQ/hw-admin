@@ -1,8 +1,38 @@
 <template>
     <div id="mall-purchase">
+        <!-- 公告 -->
+        <div class="report-body">
+            <div class="report-carousel">
+                <a-carousel arrows autoplay :dots="false" key="report">
+                    <template #prevArrow>
+                        <div class="custom-slick-arrow" style="left: 12.5%; z-index: 1">
+                            <svg-icon icon-class="arrow-left-report" class-name="arrow-left-report" />
+                            <svg-icon icon-class="arrow-left-hover" class-name="arrow-left-hover" />
+                        </div>
+                    </template>
+                    <template #nextArrow>
+                        <div class="custom-slick-arrow" style="right: 12.5%;">
+                            <svg-icon icon-class="arrow-right-report" class-name="arrow-right-report" />
+                            <svg-icon icon-class="arrow-right-hover" class-name="arrow-right-hover" />
+                        </div>
+                    </template>
+                    <div v-for="item in reportList">
+                        <div class="report-item">
+                            <span class="report-text">{{ item }}</span>
+                            <span class="report-more">
+                                <span class="text">
+                                    check more
+                                </span>
+                                <svg-icon icon-class="goto-hover" class-name="goto-hover" />
+                            </span>
+                        </div>
+                    </div>
+                </a-carousel>
+            </div>
+        </div>
         <!-- 轮播图 -->
         <div class="carousel">
-            <a-carousel autoplay dotsClass="purchase-dots">
+            <a-carousel autoplay dotsClass="purchase-dots" key="banner">
                 <div v-for="item in carouselList">
                     <div class="carousel-item">
                         <img class="img" :src="getPurchaseSrc(item.img, 'png')">
@@ -16,7 +46,8 @@
                 <div class="content">
                     <div class="title">{{ $t('purchase.products') }}</div>
                     <div class="products-list">
-                        <div class="products-item hover" v-for="(item, index) in productsList.slice(0, 3)" :key="index" @click="routerChange(item.path, { tabId: item.id })">
+                        <div class="products-item hover" v-for="(item, index) in productsList.slice(0, 3)" :key="index"
+                            @click="routerChange(item.path, { tabId: item.id })">
                             <div class="text">
                                 <p class="name">{{ $t(`purchase.${item.nameLang}`) }}</p>
                                 <p class="mes">{{ $t(`purchase.${item.mesLang}`) }}</p>
@@ -40,7 +71,8 @@
                 <div class="content">
                     <div class="title">{{ $t('purchase.services') }}</div>
                     <div class="services-list">
-                        <div class="services-item hover" v-for="(item, index) in servicesList" :key="index" @click="routerChange(item.path)">
+                        <div class="services-item hover" v-for="(item, index) in servicesList" :key="index"
+                            @click="routerChange(item.path)">
                             <svg-icon :icon-class="item.icon" class-name="services-icon" />
                             <div class="text">
                                 <p class="name">{{ $t(`purchase.${item.nameLang}`) }}</p>
@@ -51,7 +83,7 @@
                 </div>
             </div>
             <!-- 本地交易 -->
-            <!-- <div class="box deals">
+            <div class="box deals">
                 <div class="content">
                     <div class="title">{{ $t('purchase.deals') }}</div>
                     <div class="deals-list">
@@ -72,18 +104,19 @@
                         </div>
                     </div>
                     <div class="btn">
-                        <my-button showRightIcon>
+                        <my-button showRightIcon @click="routerChange('/mall/all-deals')">
                             {{ $t('purchase.check_more') }}
                         </my-button>
                     </div>
                 </div>
-            </div> -->
+            </div>
             <!-- Horwin官方新闻 -->
             <div class="box news">
                 <div class="content">
                     <div class="title">{{ $t('purchase.news') }}</div>
                     <div class="news-list">
-                        <div class="news-item hover" v-for="(item, index) in newsList" :key="index" @click="routerChange('/mall/detail', { id: item.id })">
+                        <div class="news-item hover" v-for="(item, index) in newsList" :key="index"
+                            @click="routerChange('/mall/detail', { id: item.id })">
                             <div class="img-body">
                                 <div class="img">
                                     <img class="news-img" :src="item.img">
@@ -128,6 +161,7 @@ export default {
     data() {
         return {
             Core,
+            reportList: 2,
             carouselList: [
                 { img: 'banner' },
             ],
@@ -153,14 +187,14 @@ export default {
                 // },
             ],
             dealsList: [
-                { 
-                    title: 'Christmas discounts in Europe', 
-                    mes: '20% off all items', 
-                    create_time: 1699276878 
+                {
+                    title: 'Christmas discounts in Europe',
+                    mes: '20% off all items',
+                    create_time: 1699276878
                 },
-                { 
-                    title: 'The new HORWIN Ranger - a new era of e-mobility', 
-                    mes: 'Breathtaking. Inspiring. Groundbreaking. Or just awesome. Describe it as you want. The HORWIN Ranger is state of the art when it comes to e-mobility.', 
+                {
+                    title: 'The new HORWIN Ranger - a new era of e-mobility',
+                    mes: 'Breathtaking. Inspiring. Groundbreaking. Or just awesome. Describe it as you want. The HORWIN Ranger is state of the art when it comes to e-mobility.',
                     create_time: 1699276878
                 },
             ],
@@ -175,7 +209,7 @@ export default {
         }
     },
     watch: {},
-    created() {},
+    created() { },
     mounted() {
         this.getNews()
         setTimeout(() => {
@@ -254,14 +288,16 @@ export default {
 </script>
     
 <style lang="less" scoped>
-#mall-purchase{
+#mall-purchase {
     position: relative;
+
     .container {
         .box {
             .content {
                 padding: 80px 0;
                 margin: 0 auto;
                 width: 75%;
+
                 .title {
                     color: #333;
                     font-size: 32px;
@@ -270,20 +306,25 @@ export default {
                     line-height: normal;
                     margin-bottom: 40px;
                 }
-                > .btn {
+
+                >.btn {
                     .fcc();
                     margin-top: 40px;
+
                     #my-button {
                         padding: 12px 32px;
                     }
                 }
             }
         }
+
         .products {
             background: #F8F8F8;
+
             .products-list {
                 .flex(initial, initial, row);
                 flex-wrap: wrap;
+
                 .products-item {
                     .flex(center, center, column);
                     position: relative;
@@ -294,13 +335,16 @@ export default {
                     background: #FFF;
                     transition: 0.05s;
                     cursor: pointer;
+
                     &:nth-child(3n) {
                         margin-right: 0;
                     }
+
                     .text {
-                            .flex(space-between, center, column);
-                            flex: 1;
-                            .name {
+                        .flex(space-between, center, column);
+                        flex: 1;
+
+                        .name {
                             color: #333;
                             text-align: center;
                             font-size: 32px;
@@ -309,32 +353,39 @@ export default {
                             line-height: normal;
                             margin-bottom: 20px;
                         }
+
                         .mes {
                             color: #999;
                             font-size: 14px;
                             font-style: normal;
                             font-weight: 400;
-                            line-height: 28px; /* 200% */
+                            line-height: 28px;
+                            /* 200% */
                             margin-bottom: 24px;
                             text-align: center;
                         }
+
                         .btn {
                             .flex(center, center, row);
                             width: 100%;
                             text-align: center;
                             margin-bottom: 10px;
+
                             #my-button {
                                 padding: 12px 32px;
                             }
                         }
                     }
+
                     .img-body {
                         width: 100%;
                         overflow: hidden;
+
                         .img {
                             width: 100%;
                             max-width: 453px;
                             aspect-ratio: 1.2;
+
                             .products-img {
                                 width: 100%;
                                 height: 100%;
@@ -345,11 +396,14 @@ export default {
                 }
             }
         }
+
         .services {
             background: rgba(119, 103, 255, .1);
+
             .services-list {
                 .flex(initial, initial, row);
                 flex-wrap: wrap;
+
                 .services-item {
                     .flex(space-between, center, column);
                     width: calc((100% - 80px) / 3);
@@ -357,21 +411,25 @@ export default {
                     background: #FFF;
                     padding: 32px;
                     cursor: pointer;
-                    
+
                     &:nth-child(3n) {
                         margin-right: 0;
                     }
+
                     &:nth-child(n + 4) {
                         margin-top: 40px;
                     }
+
                     .services-icon {
                         width: 48px;
                         height: 48px;
                         margin-bottom: 24px;
                     }
+
                     .text {
                         .flex(space-between, center, column);
                         flex: 1;
+
                         .name {
                             color: #333;
                             text-align: center;
@@ -381,6 +439,7 @@ export default {
                             line-height: normal;
                             margin-bottom: 10px;
                         }
+
                         .mes {
                             color: #999;
                             text-align: center;
@@ -393,29 +452,36 @@ export default {
                 }
             }
         }
+
         .deals {
             background: #FFF;
+
             .deals-list {
                 .flex(initial, initial, column);
                 flex-wrap: wrap;
+
                 .deals-item {
                     .flex(initial, initial, row);
                     margin-right: 40px;
                     background: #FFF;
                     cursor: pointer;
-                    
+
                     &:nth-child(3n) {
                         margin-right: 0;
                     }
+
                     &:nth-child(n + 2) {
                         margin-top: 40px;
                     }
+
                     .img-body {
                         height: 254px;
                         overflow: hidden;
+
                         .img {
                             height: 100%;
                             overflow: hidden;
+
                             .deals-img {
                                 width: 100%;
                                 height: 100%;
@@ -423,29 +489,35 @@ export default {
                             }
                         }
                     }
+
                     .text {
                         .flex(space-between, initial, column);
                         flex: 1;
                         padding: 40px;
                         width: 100%;
-                        background: #FAFAFA;;
+                        background: #FAFAFA;
+                        ;
+
                         .text-title {
                             .ellipsis(1);
                             color: #333;
                             font-size: 18px;
                             font-style: normal;
                             font-weight: 500;
-                            line-height: 28px; /* 155.556% */
+                            line-height: 28px;
+                            /* 155.556% */
                         }
+
                         .text-subtitle {
                             .ellipsis(2);
-                            color: #999;
-                            font-size: 12px;
+                            color: #666;
+                            font-size: 14px;
                             font-style: normal;
                             font-weight: 400;
                             line-height: normal;
                             margin-top: 16px;
                         }
+
                         .time {
                             color: #999;
                             font-size: 12px;
@@ -457,31 +529,38 @@ export default {
                 }
             }
         }
+
         .news {
             background: #F8F8F8;
+
             .news-list {
                 .flex(initial, initial, row);
                 flex-wrap: wrap;
+
                 .news-item {
                     .flex(space-between, center, column);
                     width: calc((100% - 80px) / 3);
                     margin-right: 40px;
                     background: #FFF;
                     cursor: pointer;
-                    
+
                     &:nth-child(3n) {
                         margin-right: 0;
                     }
+
                     &:nth-child(n + 4) {
                         margin-top: 40px;
                     }
+
                     .img-body {
                         width: 100%;
                         overflow: hidden;
+
                         .img {
                             width: 100%;
                             aspect-ratio: 453 / 254;
                             overflow: hidden;
+
                             .news-img {
                                 width: 100%;
                                 height: 100%;
@@ -489,11 +568,13 @@ export default {
                             }
                         }
                     }
+
                     .text {
                         .flex(space-between, initial, column);
                         flex: 1;
                         padding: 40px 32px;
                         width: 100%;
+
                         .text-title {
                             .ellipsis(2);
                             color: #333;
@@ -503,6 +584,7 @@ export default {
                             line-height: normal;
                             margin-bottom: 32px;
                         }
+
                         .mes {
                             color: #999;
                             font-size: 12px;
@@ -515,6 +597,7 @@ export default {
             }
         }
     }
+
     #back-top {
         .flex(center, center, column);
         padding: 14px 12px 19px 12px;
@@ -526,13 +609,17 @@ export default {
         background: #FFF;
         cursor: pointer;
         z-index: 999;
-        .back-top-icon, .back-top-icon-color {
+
+        .back-top-icon,
+        .back-top-icon-color {
             width: 32px;
             height: 32px;
         }
+
         .back-top-icon-color {
             display: none;
         }
+
         .back-top-text {
             color: #666;
             font-size: 12px;
@@ -542,13 +629,16 @@ export default {
             text-transform: capitalize;
             white-space: nowrap;
         }
+
         &:hover {
             .back-top-icon {
                 display: none;
             }
+
             .back-top-icon-color {
                 display: block;
             }
+
             .back-top-text {
                 background: linear-gradient(100deg, #C6F 0%, #66F 100%);
                 background-clip: text;
@@ -557,28 +647,35 @@ export default {
             }
         }
     }
+
     @media (min-width: 820px) {}
+
     @media (max-width: 820px) {}
 }
+
 .hover {
     &:hover {
         box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.08);
+
         .name {
             background: linear-gradient(100deg, #C6F 0%, #66F 100%);
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .img {
             transition: 0.2s;
             transform: scale(1.1);
         }
     }
 }
+
 /* For demo */
 .ant-carousel :deep(.slick-slide) {
     text-align: center;
     overflow: hidden;
+
     .carousel-item {
         .img {
             width: 100%;
@@ -589,7 +686,83 @@ export default {
 }
 
 .ant-carousel :deep(.slick-slide h3) {
-  color: #fff;
+    color: #fff;
+}
+
+.report-body {
+    background: rgba(119, 103, 255, .1);
+
+    .report-carousel {
+        .report-item {
+            .fcc();
+            margin: 0 auto;
+            padding: 0 30px;
+            width: 75%;
+            height: 56px;
+            overflow: hidden;
+
+            .report-text {
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 24px;
+                background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                background-clip: text;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .report-more {
+                margin-left: 16px;
+                cursor: pointer;
+
+                .text {
+                    display: inline-block;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: 14px;
+                    background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                    background-clip: text;
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    position: relative;
+
+                    &::after {
+                        content: '';
+                        width: 100%;
+                        height: 1px;
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                    }
+                }
+
+                .goto-hover {
+                    margin-left: 4px;
+                }
+            }
+        }
+    }
+
+    .arrow-left-report,
+    .arrow-right-report,
+    .arrow-left-hover,
+    .arrow-right-hover {
+        width: 24px;
+        height: 24px;
+    }
+
+    .arrow-left-report,
+    .arrow-right-report {
+        display: inline-block;
+    }
+
+    .arrow-left-hover,
+    .arrow-right-hover {
+        display: none;
+    }
 }
 </style>
 <style lang="less">
@@ -598,6 +771,7 @@ export default {
     background: #E5E5E5;
     opacity: 1;
 }
+
 .ant-carousel .purchase-dots li.slick-active button {
     background: linear-gradient(100deg, #C6F 0%, #66F 100%);
 }

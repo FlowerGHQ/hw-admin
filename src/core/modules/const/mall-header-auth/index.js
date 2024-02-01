@@ -8,6 +8,7 @@ export default  {
         {value:'/mall/favorites'},
         {value:'/mall/search'},
         {value:'/mall/all-articles'},
+        {value:'/mall/all-deals'},
         {value:'/mall/detail'},
     ],
     FOOTER:[
@@ -15,6 +16,7 @@ export default  {
         {value:'/mall/favorites'},
         {value:'/mall/search'},
         {value:'/mall/all-articles'},
+        {value:'/mall/all-deals'},
         {value:'/mall/detail'},
     ],
 }
