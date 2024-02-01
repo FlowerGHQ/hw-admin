@@ -19,10 +19,12 @@ import * as Quill from 'quill'
 // 拖拽上传
 import { ImageDrop } from 'quill-image-drop-module'
 // 调整上传图片大小
-import ImageResize from 'quill-image-resize-module'
+// import ImageResize from 'quill-image-resize-module'
+import 'quill-image-resize-module/image-resize.min.js';
+
 // 注册事件
 Quill.register('modules/imageDrop', ImageDrop)
-Quill.register('modules/imageResize', ImageResize)
+// Quill.register('modules/imageResize', ImageResize)
 import { ref, watch, reactive, toRaw, nextTick, getCurrentInstance } from "vue";
 
 const { proxy } = getCurrentInstance();
