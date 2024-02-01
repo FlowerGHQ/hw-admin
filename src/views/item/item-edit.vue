@@ -1114,6 +1114,7 @@ export default {
     props: {},
     data() {
         return {
+            keyArr:[],
             // 阶梯价格
             labberData: [],
             ladderPriceVisible: false,
@@ -1269,6 +1270,16 @@ export default {
                 } else {
                     this.categoryDisabled = true;
                 }
+            },
+            deep: true,
+            immediate: true,
+        },
+        'specific.list': {
+            handler: function (val, oldVal) {
+               this.keyArr = [];
+               val.forEach((item,index) => {
+                   this.keyArr.push(item.key)
+               })
             },
             deep: true,
             immediate: true,
@@ -2407,7 +2418,11 @@ export default {
                 name_en: "",
                 price: "",
                 fob_eur: "",
+                fob_20gp_eur: "",
+                fob_40qh_eur: "",
                 fob_usd: "",
+                fob_20gp_usd: "",
+                fob_40qh_usd: "",
                 imgsList: [],
             };
             let dataList = []; //规格列表数组
@@ -2451,6 +2466,11 @@ export default {
                     });
                 });
             }
+            console.log("dataList", dataList);
+            dataList.forEach(item=>{
+                item.name = `${this?.form?.name || ''} ${this?.keyArr[0] ? item[this.keyArr[0]].value : ''} ${this?.keyArr[1] ? item[this.keyArr[1]].value : ''} ${this?.keyArr[2] ? item[this.keyArr[2]].value : ''} ${this?.keyArr[3] ? item[this.keyArr[3]].value : ''} ${this?.keyArr[4] ? item[this.keyArr[4]].value : ''} ${this?.keyArr[5] ? item[this.keyArr[5]].value : ''} ${this?.keyArr[6] ? item[this.keyArr[6]].value : ''} ${this?.keyArr[7] ? item[this.keyArr[7]].value : ''} ${this?.keyArr[8] ? item[this.keyArr[8]].value : ''} ${this?.keyArr[9] ? item[this.keyArr[9]].value : ''} ${this?.keyArr[10] ? item[this.keyArr[10]].value : ''} ${this?.keyArr[11] ? item[this.keyArr[11]].value : ''} ${this?.keyArr[12] ? item[this.keyArr[12]].value : ''} ${this?.keyArr[13] ? item[this.keyArr[13]].value : ''} ${this?.keyArr[14] ? item[this.keyArr[14]].value : ''} ${this?.keyArr[15] ? item[this.keyArr[15]].value : ''} ${this?.keyArr[16] ? item[this.keyArr[16]].value : ''} ${this?.keyArr[17] ? item[this.keyArr[17]].value : ''} ${this?.keyArr[18] ? item[this.keyArr[18]].value : ''} ${this?.keyArr[19] ? item[this.keyArr[19]].value : ''}`
+                item.name_en = `${this?.form?.name_en || ''} ${this?.keyArr[0] ? item[this.keyArr[0]].value_en : ''} ${this?.keyArr[1] ? item[this.keyArr[1]].value_en : ''} ${this?.keyArr[2] ? item[this.keyArr[2]].value_en : ''} ${this?.keyArr[3] ? item[this.keyArr[3]].value_en : ''} ${this?.keyArr[4] ? item[this.keyArr[4]].value_en : ''} ${this?.keyArr[5] ? item[this.keyArr[5]].value_en : ''} ${this?.keyArr[6] ? item[this.keyArr[6]].value_en : ''} ${this?.keyArr[7] ? item[this.keyArr[7]].value_en : ''} ${this?.keyArr[8] ? item[this.keyArr[8]].value_en : ''} ${this?.keyArr[9] ? item[this.keyArr[9]].value_en : ''} ${this?.keyArr[10] ? item[this.keyArr[10]].value_en : ''} ${this?.keyArr[11] ? item[this.keyArr[11]].value_en : ''} ${this?.keyArr[12] ? item[this.keyArr[12]].value_en : ''} ${this?.keyArr[13] ? item[this.keyArr[13]].value_en : ''} ${this?.keyArr[14] ? item[this.keyArr[14]].value_en : ''} ${this?.keyArr[15] ? item[this.keyArr[15]].value_en : ''} ${this?.keyArr[16] ? item[this.keyArr[16]].value_en : ''} ${this?.keyArr[17] ? item[this.keyArr[17]].value_en : ''} ${this?.keyArr[18] ? item[this.keyArr[18]].value_en : ''} ${this?.keyArr[19] ? item[this.keyArr[19]].value_en : ''}`
+            })
             this.specific.data = Core.Util.deepCopy(dataList);
         },
         // 批量设置
@@ -2481,7 +2501,8 @@ export default {
                 value: item.zh,
                 value_en: item.en,
             };
-
+            record.name = `${this?.form?.name || ''} ${this?.keyArr[0] ? record[this.keyArr[0]].value : ''} ${this?.keyArr[1] ? record[this.keyArr[1]].value : ''} ${this?.keyArr[2] ? record[this.keyArr[2]].value : ''} ${this?.keyArr[3] ? record[this.keyArr[3]].value : ''} ${this?.keyArr[4] ? record[this.keyArr[4]].value : ''} ${this?.keyArr[5] ? record[this.keyArr[5]].value : ''} ${this?.keyArr[6] ? record[this.keyArr[6]].value : ''} ${this?.keyArr[7] ? record[this.keyArr[7]].value : ''} ${this?.keyArr[8] ? record[this.keyArr[8]].value : ''} ${this?.keyArr[9] ? record[this.keyArr[9]].value : ''} ${this?.keyArr[10] ? record[this.keyArr[10]].value : ''} ${this?.keyArr[11] ? record[this.keyArr[11]].value : ''} ${this?.keyArr[12] ? record[this.keyArr[12]].value : ''} ${this?.keyArr[13] ? record[this.keyArr[13]].value : ''} ${this?.keyArr[14] ? record[this.keyArr[14]].value : ''} ${this?.keyArr[15] ? record[this.keyArr[15]].value : ''} ${this?.keyArr[16] ? record[this.keyArr[16]].value : ''} ${this?.keyArr[17] ? record[this.keyArr[17]].value : ''} ${this?.keyArr[18] ? record[this.keyArr[18]].value : ''} ${this?.keyArr[19] ? record[this.keyArr[19]].value : ''}`
+            record.name_en = `${this?.form?.name_en || ''} ${this?.keyArr[0] ? record[this.keyArr[0]].value_en : ''} ${this?.keyArr[1] ? record[this.keyArr[1]].value_en : ''} ${this?.keyArr[2] ? record[this.keyArr[2]].value_en : ''} ${this?.keyArr[3] ? record[this.keyArr[3]].value_en : ''} ${this?.keyArr[4] ? record[this.keyArr[4]].value_en : ''} ${this?.keyArr[5] ? record[this.keyArr[5]].value_en : ''} ${this?.keyArr[6] ? record[this.keyArr[6]].value_en : ''} ${this?.keyArr[7] ? record[this.keyArr[7]].value_en : ''} ${this?.keyArr[8] ? record[this.keyArr[8]].value_en : ''} ${this?.keyArr[9] ? record[this.keyArr[9]].value_en : ''} ${this?.keyArr[10] ? record[this.keyArr[10]].value_en : ''} ${this?.keyArr[11] ? record[this.keyArr[11]].value_en : ''} ${this?.keyArr[12] ? record[this.keyArr[12]].value_en : ''} ${this?.keyArr[13] ? record[this.keyArr[13]].value_en : ''} ${this?.keyArr[14] ? record[this.keyArr[14]].value_en : ''} ${this?.keyArr[15] ? record[this.keyArr[15]].value_en : ''} ${this?.keyArr[16] ? record[this.keyArr[16]].value_en : ''} ${this?.keyArr[17] ? record[this.keyArr[17]].value_en : ''} ${this?.keyArr[18] ? record[this.keyArr[18]].value_en : ''} ${this?.keyArr[19] ? record[this.keyArr[19]].value_en : ''}`
             let specData = Core.Util.deepCopy(this.specific.data);
             this.validateConfig(specData);
         },
