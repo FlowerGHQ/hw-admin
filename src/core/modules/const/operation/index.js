@@ -14,6 +14,10 @@ const OPERATION = {
     OPERATION_TYPE_MAP: {
         REPORT: 1,
         AD: 2
+    },
+    AREA_TYPE_MAP: {
+        ALL: 1,
+        PART: 2,  
     }
 }
 

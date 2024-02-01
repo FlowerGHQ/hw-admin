@@ -53,7 +53,7 @@
                     </template>
                     <!-- 排序 -->
                     <template v-if="column.key === 'input'">
-                        <a-input 
+                        <a-input-number
                             :placeholder="$t('operation.input_pla')" 
                             v-model:value="record.sort"
                             @blur="onBlur(record)"
