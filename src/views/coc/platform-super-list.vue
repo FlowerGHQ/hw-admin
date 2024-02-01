@@ -28,6 +28,22 @@
 								{{ item }}
 							</span>
 						</template>
+						<template v-else-if="column.key === 'model'">
+							<!-- 蓝色按钮 -->
+							<a-tooltip >
+								<template #title v-if="record.model">
+									<div v-for="(item,index) in record.model.split(',')" :key="index">
+										{{ item }}
+									</div>
+								</template>
+								<a-button
+									type="link"
+									size="small"
+								>
+									{{ record.model || '-'}}
+								</a-button>
+							</a-tooltip>
+						</template>
 						<template v-else-if="column.key === 'delivery_time'">
 							{{ timeFormat(record.effective_start_time) }}
 							~
