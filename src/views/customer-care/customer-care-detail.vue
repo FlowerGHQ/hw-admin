@@ -1342,6 +1342,8 @@ onMounted(() => {
                 color: #1d2129;
                 font-size: 18px;
                 font-weight: 400;
+                width: 100px;
+                text-align: right;
             }
 
             .msg-content {
@@ -1425,6 +1427,8 @@ onMounted(() => {
             color: #1d2129;
             font-size: 18px;
             font-weight: 400;
+            width: 100px;
+            text-align: right;
         }
 
         .inquiry-classification-item {
@@ -1439,6 +1443,7 @@ onMounted(() => {
                 margin-right: 16px;
             }
             .inquiry-classification-value {
+                flex: 1;
                 color: #1d2129;
                 font-size: 14px;
                 font-weight: 400;

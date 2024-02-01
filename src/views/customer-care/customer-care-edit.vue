@@ -155,19 +155,15 @@
                 >
                     <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("customer-care.add_attachment") }}:</div>
                     <div class="value d-f">
-                        <MyUploads                            
-                            v-model:fileList = uploadOptions.fileData                           
+                        <MyUploads  
+                            class="edit"                          
+                            v-model:fileList = uploadOptions.fileData  
+                            :tips="['customer-care.tip1', 'customer-care.tip2', 'customer-care.tip3']"
                             @change="handleDetailChange"
                             @preview="handlePreview"
                             @remove="handleRemove"
                         >
                         </MyUploads>
-
-                        <div class="add-attachment-tip m-l-10">
-                            <div>{{ $t("customer-care.tip1") }}</div>
-                            <div>{{ $t("customer-care.tip2") }}</div>
-                            <div>{{ $t("customer-care.tip3") }}</div>
-                        </div>
                     </div>
                 </div>
             </div>

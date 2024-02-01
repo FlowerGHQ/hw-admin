@@ -29,6 +29,9 @@
 import { Upload, message } from "ant-design-vue";
 import { ref, onMounted, watch, getCurrentInstance } from "vue";
 import Core from "@/core";
+import { useI18n } from "vue-i18n"
+const $t = useI18n().t
+const $locale = useI18n().locale
 
 const { proxy } = getCurrentInstance();
 
@@ -52,6 +55,11 @@ const props = defineProps({
         type: [Number, String],
         default: 10,
     },
+    // 提示文本
+    tips: {
+        type: Object,
+        default: () => [],
+    }
 });
 
 const emits = defineEmits(["update:fileList", "change", "preview", "remove"]);
@@ -119,9 +127,20 @@ watch(
         immediate: true,
     }
 );
+watch(
+    () => $locale.value,
+    (newValue) => {
+        console.log("语言改变", newValue);        
+        removeDomTips()
+        addDomTips()
+    },
+);
 
 onMounted(() => {
     console.log("uploadOptions", uploadOptions.value);
+
+    // 添加提示DOM
+    addDomTips()
 });
 
 /* Methods start */
@@ -139,6 +158,33 @@ const handleRemove = (file) => {
     emits("remove", { file, fileList: uploadOptions.value.fileList });
     emits("update:fileList", uploadOptions.value.fileList);
 };
+// 添加Dom Tip
+const addDomTips = () => {
+    const parentElement = document.querySelector(".edit");
+    const childElement = parentElement ? parentElement.querySelector(".ant-upload-picture-card-wrapper") : undefined;
+    const grandchildElement = childElement ? childElement.querySelector(".ant-upload-list") : undefined;
+
+    if (grandchildElement) {
+        const divs = document.createElement("div");
+        divs.classList.add("add-attachment-tip", "m-l-10");
+
+        let str = ""
+        props.tips.forEach(el => {
+            str += `<div>${ $t(el) }</div>`
+        })
+        divs.innerHTML = str;
+        grandchildElement.appendChild(divs);
+    }
+}
+// 删除DOM结构
+const removeDomTips = () => {
+    const removeDomTips = document.querySelector(".add-attachment-tip");
+    console.log('removeDomTips', removeDomTips);
+
+    if (removeDomTips) {
+        removeDomTips?.remove()
+    }
+}
 /* Methods end */
 </script>
 
@@ -184,7 +230,7 @@ const handleRemove = (file) => {
     }
 }
 
-:deep(.ant-upload-list-item) {    
+:deep(.ant-upload-list-item) {
     padding: 0 !important;
 }
 :deep(.ant-upload-list-item-info) {
@@ -223,5 +269,13 @@ const handleRemove = (file) => {
     box-sizing: border-box;
     padding: 0px !important;
     z-index: 10;
+}
+
+:deep(.add-attachment-tip) {
+    color: #666;
+    font-size: 14px;
+    font-weight: 400;
+    white-space: nowrap;
+    .flex(@j: center, @a: initial, @direction: column);
 }
 </style>

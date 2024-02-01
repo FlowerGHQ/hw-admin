@@ -204,7 +204,7 @@ export default {
         failure_time: "Failure Time",
         cancel_message: "Cancel Message",
         edit_information: "Edit Information",
-        inquiry_list_classification: "Inquiry List Classification",
+        inquiry_list_classification: "Inquiry List Classify",
         classify: "Classify",
         delivery_date: "Delivery Date",
         order_number: "Order Number",
