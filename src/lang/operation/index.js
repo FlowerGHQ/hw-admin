@@ -36,6 +36,14 @@ export default {
         tip_url: '请输入链接',
         tip_img_desc: '请输入图片说明',
         tip_upload: '请上传图片',
+        sure_tip: '确定退出吗？',
+        exit_text: '广告位尚未创建成功，确定退出吗？',
+        edit_exit_tip: '编辑尚未提交，确定退出吗？',
+        continue_fill: '继续填写',
+        exit_creation: '退出创建',
+        continue_edit: '继续编辑',
+        submit_exit: '提交并退出',
+        exit: '退出',
     },
     en: {
         area: 'Area',
@@ -74,5 +82,13 @@ export default {
         tip_url: 'Please enter url',
         tip_img_desc: 'Please enter a picture description',
         tip_upload: 'Please upload pictures',
+        sure_tip: 'Are you sure you want out?',
+        exit_text: 'AD has not been created successfully. Are you sure to exit?',
+        edit_exit_tip: 'Edit not yet submitted, are you sure to quit?',
+        continue_fill: 'Continue To Fill',
+        exit_creation: 'Exit Creation',
+        continue_edit: 'Continue To Edit',
+        submit_exit: 'Submit And Exit',
+        exit: 'Exit',
     }
 }

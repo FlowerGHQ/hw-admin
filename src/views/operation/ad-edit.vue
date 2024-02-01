@@ -58,13 +58,17 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button class="btn-block" @click="routerChange('back')">{{ $t('def.cancel') }}</a-button>
+            <a-button class="btn-block" @click="modalShow = true">{{ $t('def.cancel') }}</a-button>
             <a-button class="btn-block" @click="handleSubmit" type="primary">{{ $t('def.submit') }}</a-button>
         </div>
         <!-- 自定义图片预览 -->
         <MyPreviewImageVideo v-model:isClose="isClose" :type="uploadOptions.previewType"
             :previewData="uploadOptions.previewImageVideo">
         </MyPreviewImageVideo>
+        <CheckModal :visible="modalShow" :bodyText="modalText">
+            <a-button type="primary" @click="modalShow = false">{{ form.id ? $t(/*继续编辑*/'operation.continue_edit') : $t(/*继续创建*/'operation.continue_fill') }}</a-button>
+            <a-button @click="routerChange('back')">{{ $t(/*退出*/'operation.exit') }}</a-button>
+        </CheckModal>
     </div>
 </template>
 
@@ -75,6 +79,7 @@ import { useRouter, useRoute } from 'vue-router'
 import MyUpload from "@/components/MyUpload/index.vue";
 import MyCountryCascader from '@/components/MyCountryCascader/index.vue';
 import MyPreviewImageVideo from "@/components/horwin/based-on-ant/MyPreviewImageVideo.vue";
+import CheckModal from '@/components/horwin/based-on-ant/CheckModal.vue';
 
 const { proxy } = getCurrentInstance();
 const router = useRouter()
@@ -85,8 +90,10 @@ onMounted(() => {
 
     if (form.value.id) {
         getReportDetail(form.value.id);
+        modalText.value = proxy.$t(/*编辑尚未提交，确定退出吗？*/'operation.edit_exit_tip')
+    } else {
+        modalText.value = proxy.$t(/*公告尚未创建成功，确定退出吗？*/'operation.exit_text')
     }
-
 })
 /* state start*/
 const loading = ref(false)
@@ -99,6 +106,7 @@ const form = ref({
     url: '',
     img_desc: '',
     img: [],
+    show_type: 1, // 1 顶部 2 消息合集区
 })
 const detail = reactive({})
 const uploadOptions = ref({
@@ -107,6 +115,8 @@ const uploadOptions = ref({
     previewImageVideo: [],
 });
 const isClose = ref(false)
+const modalText = ref(undefined)
+const modalShow = ref(false)
 /* state end*/
 /* Fetch start*/
 const getReportDetail = (id) => {
@@ -123,6 +133,7 @@ const getReportDetail = (id) => {
             url: detail.url,
             img: detail.img,
             img_desc: detail.img_desc,
+            show_type: detail.show_type,
         })
     }).catch(err => {
         console.log('getReportDetail err', err)
@@ -155,7 +166,7 @@ const routerChange = (type, item) => {
     switch (type) {
         case 'back':    // 详情
             let routeUrl = router.resolve({
-                path: "/operation/report-list",
+                path: "/operation/ad-list",
             })
             window.open(routeUrl.href, '_self')
             break;
