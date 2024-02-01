@@ -125,7 +125,7 @@ const getReportDetail = (id) => {
         id: id,
     }).then(res => {
         console.log('getReportDetail res', res);
-        detail = res.detail
+        Object.assign(detail, res.detail)
         Object.assign(form.value, {
             area_type: detail.area_type,
             area: detail.area.split(','),
