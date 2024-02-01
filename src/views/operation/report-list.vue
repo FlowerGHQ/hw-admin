@@ -232,16 +232,14 @@ const onReset = () => {
     refreshTable()
 }
 const routerChange = (type, record) => {
-    let routeUrl = null
     switch (type) {
         case 'edit':
-            routeUrl = router.resolve({
+            router.push({
                 path: '/operation/report-edit',
                 query: {
                     id: record.id,
                 }
             })
-            window.open(routeUrl.href, '_blank')
             break;
         case 'add':
             router.push({
