@@ -164,13 +164,15 @@ const handleDetailChange = ({ file, fileList }) => {
         let fileArr = [];
         fileList.forEach((item) => {
             item?.response?.data?.filename &&
-                fileArr.push(item?.response?.data?.filename);
+                fileArr.push({
+                  name: item.name,
+                  path: item?.response?.data?.filename,
+                  type: item.type,
+                });
         });
         upload.value.fileSting =
             fileArr.length > 0
-                ? fileArr.length > 1
-                ? fileArr.join(",")
-                : fileArr[0]
+                ? fileArr
                 : "";
         console.log(upload.value.fileSting, 'upload.value.fileSting')
         $emit("update:value", upload.value.fileSting);
@@ -226,24 +228,44 @@ watch(
   () => props.value,
   (val) => {
     if (val) {
-      if (val instanceof Array) return
-      // 讲val 的长度赋值给计数
-      loopCount.value = val.split(",").length
-      let fileList = []
-      val.split(",").forEach((item) => {
-        fileList.push({
-          uid: _.uniqueId("upload_"),
-          name: item,
-          status: "done",
-          url: Core.Const.NET.OSS_POINT + item,
-          response: {
-            code: 0,
-            data: {
-              filename: item,
+       let fileList = []
+      if (val instanceof Array) {
+        // 讲val 的长度赋值给计数
+        loopCount.value = val.length
+        val.forEach((item) => {
+          fileList.push({
+            uid: _.uniqueId("upload_"),
+            name: item.name,
+            status: "done",
+            url: Core.Const.NET.OSS_POINT + item.path,
+            type: item.type,
+            response: {
+              code: 0,
+              data: {
+                filename: item.path,
+              },
             },
-          },
+          })
         })
-      })
+      } else {
+        // 讲val 的长度赋值给计数
+        loopCount.value = val.split(",").length
+        val.split(",").forEach((item) => {
+          fileList.push({
+            uid: _.uniqueId("upload_"),
+            name: item,
+            status: "done",
+            url: Core.Const.NET.OSS_POINT + item,
+            type: item,
+            response: {
+              code: 0,
+              data: {
+                filename: item,
+              },
+            },
+          })
+        })
+      }
       upload.value.fileList = fileList
     }
   },

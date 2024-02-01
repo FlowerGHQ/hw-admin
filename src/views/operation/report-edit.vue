@@ -12,9 +12,9 @@
                         <div class="area-body">
                             <a-radio-group v-model:value="form.area_type" name="radioGroup">
                                 <a-radio :value="1">全部区域</a-radio>
-                                <a-radio :value="2">全部区域</a-radio>
+                                <a-radio :value="2">部分区域</a-radio>
                             </a-radio-group>
-                            <template v-if="areaIndex === '2'">
+                            <template v-if="form.area_type === 2">
                                 <MyCountryCascader v-model:value="form.area" @handleGetItem="handleGetItem" />
                             </template>
                         </div>
@@ -62,7 +62,7 @@
                 <div class="form-item required flex_start">
                     <div class="key">{{ $t('operation.pic') }}</div>
                     <div class="value">
-                        <MyUpload name="add_picList" v-model:value="form.img" showTip :limit="2" :limitSize="10"
+                        <MyUpload name="add_picList" v-model:value="form.img" showTip :limit="1" :limitSize="10"
                             tipPosition="right" :defaultPreview="false" @preview="handlePreview">
                             <template #tip>
                                 <div class="tips">
@@ -139,7 +139,7 @@ const form = reactive({
     title: '',
     type: 1,// 1 公告 2 广告
     content: '',
-    img: [],
+    img: '',
     attachment: [],
 })
 const uploadOptions = ref({
@@ -182,9 +182,20 @@ const routerChange = (type, item) => {
 }
 const getReportDetail = () => {
     loading.value = true;
-    Core.Api.CRMReportIncome.detail({
+    Core.Api.Operation.detail({
         id: form.id,
     }).then(res => {
+        detail = res.detail
+        Object.assign(form, {
+            area_type: detail.area_type,
+            area: detail.area.split(','),
+            show_type: detail.show_type.split(','),
+            sort: detail.sort,
+            title: detail.title,
+            content: detail.content,
+            img: detail.img,
+            attachment: detail.attachment,
+        })
     }).catch(err => {
         console.log('getReportDetail err', err)
     }).finally(() => {
@@ -194,10 +205,26 @@ const getReportDetail = () => {
 const handleSubmit = () => {
     let formNew = Core.Util.deepCopy(form)
     formNew.show_type = formNew.show_type.join(',')
-    if (!formNew.show_type) {
-        return proxy.$message.warning(proxy.$t('n.enter') + ":" + proxy.$t('crm_oi.belong_order'))
+    formNew.area = formNew.area.join(',')
+    if (formNew.area_type === 2 && !formNew.area) {//区域校验
+        return proxy.$message.warning(proxy.$t('n.enter') + ":" + proxy.$t('operation.area'))
     }
-    Core.Api.CRMReportIncome.save({
+    if (!formNew.show_type) {//展示位置校验
+        return proxy.$message.warning(proxy.$t('n.enter') + ":" + proxy.$t('operation.display_location'))
+    }
+    if (!formNew.sort) {//排序校验
+        return proxy.$message.warning(proxy.$t('n.enter') + ":" + proxy.$t('operation.sort'))
+    }
+    if (!formNew.title) {//公告标题校验
+        return proxy.$message.warning(proxy.$t('n.enter') + ":" + proxy.$t('operation.report_title'))
+    }
+    if (!formNew.content) {//公告内容校验
+        return proxy.$message.warning(proxy.$t('n.enter') + ":" + proxy.$t('operation.report_content'))
+    }
+    if (formNew.img.length === 0) {//图片校验
+        return proxy.$message.warning(proxy.$t('n.enter') + ":" + proxy.$t('operation.pic'))
+    }
+    Core.Api.Operation.save({
         ...formNew,
     }).then(() => {
         proxy.$message.success(proxy.$t('pop_up.save_success'))
@@ -280,7 +307,7 @@ const getSrcImg = (name, type = "png") => {
 
                     .ant-input,
                     .ant-input-number {
-                        font-size: 14px;
+                        // font-size: 14px;
                     }
 
                     .upload-wrap {
@@ -374,6 +401,7 @@ const getSrcImg = (name, type = "png") => {
                             border-radius: 4px;
                             border: 1px solid #EAECF1;
                             overflow: hidden;
+                            cursor: pointer;
 
                             &:nth-child(n + 2) {
                                 margin-left: 24px;
@@ -390,6 +418,7 @@ const getSrcImg = (name, type = "png") => {
     }
 
     .form-btns {
+        padding: 20px;
         text-align: center;
     }
 }
