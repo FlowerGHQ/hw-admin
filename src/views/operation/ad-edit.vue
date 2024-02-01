@@ -108,7 +108,7 @@ const form = ref({
     img: [],
     show_type: 1, // 1 顶部 2 消息合集区
 })
-const detail = reactive({})
+const detail = ref({})
 const uploadOptions = ref({
     previewType: "image",
     fileData: [], // 提交的数据
@@ -121,19 +121,19 @@ const modalShow = ref(false)
 /* Fetch start*/
 const getReportDetail = (id) => {
     loading.value = true;
-    Core.Api.CRMReportIncome.detail({
+    Core.Api.Operation.detail({
         id: id,
     }).then(res => {
         console.log('getReportDetail res', res);
-        detail = res.detail
+        detail.value = res.detail
         Object.assign(form.value, {
-            area_type: detail.area_type,
-            area: detail.area.split(','),
-            sort: detail.sort,
-            url: detail.url,
-            img: detail.img,
-            img_desc: detail.img_desc,
-            show_type: detail.show_type,
+            area_type: detail.value.area_type,
+            area: detail.value.area.split(','),
+            sort: detail.value.sort,
+            url: detail.value.url,
+            img: detail.value.img ? JSON.parse(detail.value.img) : '',
+            img_desc: detail.value.img_desc,
+            show_type: detail.value.show_type,
         })
     }).catch(err => {
         console.log('getReportDetail err', err)
@@ -150,12 +150,17 @@ const handleSubmit = () => {
     if (checkInput(params)) {
         return
     }
-    params.area = params.area.join(',')
-    Core.Api.CRMReportIncome.save({
+    if(params.area_type === Core.Const.OPERATION.AREA_TYPE_MAP.PART ) {
+        params.area = params.area.join(',')
+    } else {
+        params.area = ''
+    }
+    params.img = JSON.stringify(params.img)
+    Core.Api.Operation.save({
         ...params,
     }).then(() => {
         proxy.$message.success(proxy.$t('pop_up.save_success'))
-        router.go(-1)
+        routerChange('back');
     }).catch(err => {
         console.log('handleSubmit err:', err)
     })

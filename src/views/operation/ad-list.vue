@@ -23,14 +23,13 @@
         </div>
         <!-- table -->
         <div class="table-container">
-            <a-table :columns="tableColumns" :data-source="_tableData" :scroll="{ x: true }" :loading="loading"
+            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :loading="loading"
                 :row-key="(record) => record.id" :pagination="false">
                 <template #bodyCell="{ column, text, record, index }">
                     <!-- 序号 -->
                     <template v-if="column.key === 'number'">
                         {{ index + 1 }}
                     </template>
-                    <!-- 公司名称 -->
                     <template v-if="column.key === 'item'">
                         <a-tooltip placement="topLeft">
                             <template #title>{{ text }}</template>
@@ -41,6 +40,16 @@
                             </div>
                         </a-tooltip>
                     </template>
+                    <template v-if="column.key === 'area'">
+                        <a-tooltip placement="topLeft">
+                            <template #title>{{ record.area || '全部' }}</template>
+                            <div class="one-spils cursor" :style="{
+                                width: text?.length > 15 ? 7 * 12 + 'px' : '',
+                            }">
+                                {{ record.area || '全部' }}
+                            </div>
+                        </a-tooltip>
+                    </template>
                     <!-- 提交时间 -->
                     <template v-if="column.key === 'create_time'">
                         {{ text ? $Util.timeFormat(text) : '-' }}
@@ -48,7 +57,12 @@
                     <!-- 图片 -->
                     <template v-if="column.key === 'img'">
                         <div class="table-img">
-                            <a-image style="border-radius: 4px; cursor: pointer;" :width="42" :height="42" :src="$Util.imageFilter(record ? record.img : '')"/>
+                            <a-image 
+                                style="border-radius: 4px; cursor: pointer;" 
+                                :width="42" 
+                                :height="42" 
+                                :src="$Util.imageFilter(record ? getImagePath(record) : '')"
+                            />
                         </div>
                     </template>
                     <!-- 排序 -->
@@ -62,12 +76,17 @@
                     <!-- 操作 -->
                     <template v-if="column.key === 'effective_state'">
                         <div class="effective-state">
-                            <a-switch v-model:checked="record.status" size="small"
-                                @change="(event) => onSwitch(event, record)" />
+                            <a-switch
+                                :checkedValue="1"
+                                :unCheckedValue="2"
+                                v-model:checked="record.status" 
+                                size="small"
+                                @change="(event) => onSwitch(event, record)" 
+                            />
                             <div 
-                                :class="record.status ? 'switch-state blue' : 'switch-state grey'"
+                                :class="record.status === 1 ? 'switch-state blue' : 'switch-state grey'"
                             >
-                                {{ record.status ? $t(/*已生效*/'operation.took_effect') : $t(/*未生效*/'operation.invalid') }}
+                                {{ record.status === 1 ? $t(/*已生效*/'operation.took_effect') : $t(/*未生效*/'operation.invalid') }}
                             </div>
                         </div>
                     </template>
@@ -122,9 +141,9 @@ const tableColumns = computed(() => {
         { title: $t(/*创建时间*/"n.time"), dataIndex: "create_time", key: "create_time" },
         { title: $t(/*生效时间*/"operation.effective_time"), dataIndex: "effect_time", key: "create_time" },
         { title: $t(/*图片*/"i.spec_pic"), dataIndex: "img", key: "img" },
-        { title: $t(/*区域*/"operation.area"), dataIndex: "area", key: "item" },
-        { title: $t(/*排序*/"n.sort"), dataIndex: "sort", key: "item" },
-        // { title: $t(/*排序*/"n.sort"), dataIndex: "sort", key: "input" },
+        { title: $t(/*区域*/"operation.area"), dataIndex: "area", key: "area" },
+        // { title: $t(/*排序*/"n.sort"), dataIndex: "sort", key: "item" },
+        { title: $t(/*排序*/"n.sort"), dataIndex: "sort", key: "input" },
         { title: $t(/*链接*/"operation.link"), dataIndex: "url", key: "item" },
         { title: $t(/*生效状态*/"operation.effective_state"), key: "effective_state", fixed: "right" },
         { title: $t(/*操作*/"common.operations"), key: "operations", fixed: "right" },
@@ -153,45 +172,8 @@ const searchList = ref([
         selectMap: Core.Const.OPERATION.OPERATION_TYPE,
     },
 ])
-const _tableData = ref([
-    {
-        id: 1,
-        img_desc: '说明说明说明说明说明说明说明说明',
-        create_time: 1706685629,
-        url: 'www.baidu.com',
-        img: 'img/923af7d80e1957343eb355aca5a4286dc23c70306d4c80351f34c4b76dd78145.jpg',
-        effect_time: 1706685629,
-        area: '中国',
-        sort: 1,
-        status: true,
-    },
-    {
-        id: 2,
-        img_desc: '说明说明说明说明说明说明说明说明',
-        create_time: 1706685629,
-        url: 'www.baidu.com',
-        img: 'img/923af7d80e1957343eb355aca5a4286dc23c70306d4c80351f34c4b76dd78145.jpg',
-        effect_time: 1706685629,
-        area: '中国',
-        sort: 2,
-        status: false,
-    },
-    {
-        id: 3,
-        img_desc: '说明说明说明说明说明说明说明说明',
-        create_time: 1706685629,
-        url: 'www.baidu.com',
-        img: 'img/923af7d80e1957343eb355aca5a4286dc23c70306d4c80351f34c4b76dd78145.jpg',
-        effect_time: 1706685629,
-        area: '中国',
-        sort: 3,
-        status: false,
-    },
-])
 
 onMounted(() => {
-    searchParam.value.type = Core.Const.OPERATION.OPERATION_TYPE_MAP.AD
-    search()
 });
 /* Fetch start*/
 const request = Core.Api.Operation.list;
@@ -204,15 +186,15 @@ const {
     refreshTable,
     onPageChange,
     searchParam,
-} = useTable({ request });
+} = useTable({ request, initParam: { type: Core.Const.OPERATION.OPERATION_TYPE_MAP.AD } });
 
 const deleteFetch = (id) => {
     Core.Api.Operation.delete({
         id: id,
     }).then((res) => {
+        searchAllRef.value.handleSearch();
         console.log('deleteFetch res', res);
         $message.success($t("pop_up.delete_success"))
-        searchAllRef.value.handleSearch();
     }).catch(err => {
         console.log('deleteFetch err', err);
     })       
@@ -224,9 +206,9 @@ const updateStatusFetch = (record) => {
         status: record.status,
         sort: record.sort
     }).then((res) => {
+        searchAllRef.value.handleSearch();
         console.log('updateStatusFetch res', res);
         $message.success($t("p.modify_success"))
-        searchAllRef.value.handleSearch();
     }).catch(err => {
         console.log('updateStatusFetch err', err);
     })
@@ -235,7 +217,7 @@ const updateStatusFetch = (record) => {
 
 /* methods start*/
 const onSearch = (data) => {
-    searchParam.value = { ...data, type: Core.Const.OPERATION.OPERATION_TYPE_MAP.AD }
+    searchParam.value = data
     search()
 }
 const onReset = () => {
@@ -276,6 +258,15 @@ const onSwitch = (e, record) => {
 }
 const onBlur = (record) => {
     updateStatusFetch(record);
+}
+const getImagePath = (record) => {
+    if (record && record.img) {
+        const images = JSON.parse(record.img);
+        if (images.length > 0) {
+            return images[0].path;
+        }
+    }
+    return '';
 }
 /* methods end*/
 </script>

@@ -23,7 +23,7 @@
         </div>
         <!-- table -->
         <div class="table-container">
-            <a-table :columns="tableColumns" :data-source="_tableData" :scroll="{ x: true }" :loading="loading"
+            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :loading="loading"
                 :row-key="(record) => record.id" :pagination="false">
                 <template #bodyCell="{ column, text, record, index }">
                     <!-- 序号 -->
