@@ -12,6 +12,7 @@ import { mallRouters } from './mall'
 import { customerCare } from './distributor-router'
 // 平台方路由
 import { inquiryManagement } from './admin-router'
+import { operationManagement } from './admin-router'
 
 const LOGIN_TYPE = Const.LOGIN.TYPE
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE
@@ -2331,6 +2332,8 @@ const routes = [
 			},
 		]
 	},
+    // 运营管理
+    operationManagement,
 	{ // 回款单
 		path: '/crm-order-income',
 		component: Layout,

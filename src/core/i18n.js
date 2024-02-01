@@ -107,6 +107,7 @@ const messages = {
             continent: '大洲',
             country: '国家',
             enter: '请输入',
+            upload: '请上传',
             area: '地区',
             choose: '请选择',
             time: '创建时间',
@@ -2823,7 +2824,7 @@ const messages = {
             yuan:'元',
             see_detail:'查看详情',
 
-        }
+        },
     },
 
     en: {
@@ -2913,6 +2914,7 @@ const messages = {
             email: 'Mail',
             country: 'Nation',
             enter: 'Please Enter',
+            upload: 'Please Upload',
             area: 'Region',
             choose: 'Please Choose ',
             information: 'Basic Information',
@@ -5723,7 +5725,7 @@ const messages = {
             cancle_top: 'cancle top',
 
 
-        }
+        },
     },
 }
 
