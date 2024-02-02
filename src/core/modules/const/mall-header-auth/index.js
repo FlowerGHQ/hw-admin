@@ -21,6 +21,7 @@ const MALL_HEADER_AUTH = {
         { value: '/mall/peripheral-list/detail' },
         { value: '/mall/promotional-list/detail' },
         { value: '/mall/shopping-bag' },
+        { value: '/mall/deals-preview' },
     ],
     FOOTER: [
         { value: '/mall/index' },
@@ -39,6 +40,7 @@ const MALL_HEADER_AUTH = {
         { value: '/mall/peripheral-list/detail' },
         { value: '/mall/promotional-list/detail' },
         // { value: '/mall/shopping-bag' },
+        { value: '/mall/deals-preview' },
     ],
     TOTOP: [
         { value: '/mall/index' },
