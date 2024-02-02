@@ -32,11 +32,11 @@
                     </template>
                     <template v-if="column.key === 'item'">
                         <a-tooltip placement="topLeft">
-                            <template #title>{{ text }}</template>
+                            <template #title>{{ text || '-' }}</template>
                             <div class="one-spils cursor" :style="{
                                 width: text?.length > 15 ? 7 * 12 + 'px' : '',
                             }">
-                                {{ text }}
+                                {{ text || '-' }}
                             </div>
                         </a-tooltip>
                     </template>
@@ -68,9 +68,12 @@
                     <!-- 排序 -->
                     <template v-if="column.key === 'input'">
                         <a-input-number
+                            style="width: 150px;"
                             :placeholder="$t('operation.input_pla')" 
                             v-model:value="record.sort"
                             @blur="onBlur(record)"
+                            :min="1" 
+                            :precision="0"
                         />
                     </template>
                     <!-- 操作 -->
@@ -123,7 +126,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed, getCurrentInstance } from "vue";
 import Core from "@/core";
 import SearchAll from "@/components/horwin/based-on-ant/SearchAll.vue";
 import { useTable } from '@/hooks/useTable'
@@ -133,6 +136,7 @@ import MySvgIcon from "@/components/MySvgIcon/index.vue";
 const router = useRouter()
 const $t = useI18n().t;
 const searchAllRef = ref(null)
+const { proxy } = getCurrentInstance();
 
 const tableColumns = computed(() => {
     let columns = [
@@ -140,7 +144,7 @@ const tableColumns = computed(() => {
         { title: $t(/*说明*/"operation.instructions"), dataIndex: "img_desc", key: "item" },
         { title: $t(/*创建时间*/"n.time"), dataIndex: "create_time", key: "create_time" },
         { title: $t(/*生效时间*/"operation.effective_time"), dataIndex: "effect_time", key: "create_time" },
-        { title: $t(/*图片*/"i.spec_pic"), dataIndex: "img", key: "img" },
+        { title: $t(/*banner*/"operation.banner_pic"), dataIndex: "img", key: "img" },
         { title: $t(/*区域*/"operation.area"), dataIndex: "area", key: "area" },
         // { title: $t(/*排序*/"n.sort"), dataIndex: "sort", key: "item" },
         { title: $t(/*排序*/"n.sort"), dataIndex: "sort", key: "input" },
@@ -194,13 +198,13 @@ const deleteFetch = (id) => {
     }).then((res) => {
         searchAllRef.value.handleSearch();
         console.log('deleteFetch res', res);
-        $message.success($t("pop_up.delete_success"))
+        proxy.$message.success($t("pop_up.delete_success"))
     }).catch(err => {
         console.log('deleteFetch err', err);
     })       
 }
 
-const updateStatusFetch = (record) => {
+const updateStatusFetch = (record, type) => {
     Core.Api.Operation.updateStatus({
         id: record.id,
         status: record.status,
@@ -208,7 +212,9 @@ const updateStatusFetch = (record) => {
     }).then((res) => {
         searchAllRef.value.handleSearch();
         console.log('updateStatusFetch res', res);
-        $message.success($t("p.modify_success"))
+        if(record.status === 1 && type === 'switch') {
+            proxy.$message.success($t("operation.ad_success_tip"))
+        }
     }).catch(err => {
         console.log('updateStatusFetch err', err);
     })
@@ -252,10 +258,10 @@ const handleDelete = (record) => {
 	})   
 }
 const onSwitch = (e, record) => {
-    updateStatusFetch(record);
+    updateStatusFetch(record, 'switch');
 }
 const onBlur = (record) => {
-    updateStatusFetch(record);
+    updateStatusFetch(record, 'input');
 }
 const getImagePath = (record) => {
     if (record && record.img) {

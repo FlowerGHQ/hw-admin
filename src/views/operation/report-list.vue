@@ -33,17 +33,24 @@
                     <!-- 公司名称 -->
                     <template v-if="column.key === 'item'">
                         <a-tooltip placement="topLeft">
-                            <template #title>{{ text }}</template>
+                            <template #title>{{ text || '-' }}</template>
                             <div class="one-spils cursor" :style="{
                                 width: text?.length > 15 ? 7 * 12 + 'px' : '',
                             }">
-                                {{ text }}
+                                {{ text || '-' }}
                             </div>
                         </a-tooltip>
                     </template>
                     <!-- 内容 -->
                     <template v-if="column.key === 'content'">
-                        <span v-html="text" class="html-content"></span>
+                        <a-tooltip placement="topLeft">
+                            <template #title>{{ record.firstSentence }}</template>
+                            <div class="one-spils cursor" :style="{
+                                width: record.firstSentence?.length > 20 ? 18 + 'rem' : '',
+                            }">
+                                {{ record.firstSentence }}
+                            </div>
+                        </a-tooltip>
                     </template>
                     <!-- 提交时间 -->
                     <template v-if="column.key === 'create_time'">
@@ -57,9 +64,12 @@
                     <!-- 排序 -->
                     <template v-if="column.key === 'input'">
                         <a-input-number 
+                            style="width: 150px;"
                             :placeholder="$t('operation.input_pla')" 
                             v-model:value="record.sort"
                             @blur="onBlur(record)"
+                            :min="1" 
+                            :precision="0"
                         />
                     </template>
                     <!-- 操作 -->
@@ -107,7 +117,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed, getCurrentInstance } from "vue";
 import Core from "@/core";
 import SearchAll from "@/components/horwin/based-on-ant/SearchAll.vue";
 import { useTable } from '@/hooks/useTable'
@@ -117,7 +127,7 @@ import MySvgIcon from "@/components/MySvgIcon/index.vue";
 const router = useRouter()
 const $t = useI18n().t;
 const searchAllRef = ref(null)
-
+const { proxy } = getCurrentInstance();
 const tableColumns = computed(() => {
     let columns = [
         { title: $t(/*序号*/"n.index"), dataIndex: "id", key: "number" },
@@ -154,42 +164,16 @@ const searchList = ref([
         selectMap: Core.Const.OPERATION.OPERATION_TYPE,
     },
 ])
-const _tableData = ref([
-    {
-        id: 1,
-        title: '公告标题公告标题公告标题公告标题公告标题',
-        create_time: 1706685629,
-        content: '公告内容公告内容公告内容公告内容公告内容',
-        effect_time: 1706685629,
-        area: '中国',
-        sort: 1,
-        status: true,
-    },
-    {
-        id: 2,
-        title: '公告标题公告标题公告标题公告标题公告标题',
-        create_time: 1706685629,
-        content: '公告内容公告内容公告内容公告内容公告内容',
-        effect_time: 1706685629,
-        area: '中国',
-        sort: 2,
-        status: false,
-    },
-    {
-        id: 3,
-        title: '公告标题公告标题公告标题公告标题公告标题',
-        create_time: 1706685629,
-        content: '公告内容公告内容公告内容公告内容公告内容',
-        effect_time: 1706685629,
-        area: '中国',
-        sort: 3,
-        status: false,
-    },
-])
 
 onMounted(() => {});
 /* Fetch start*/
 const request = Core.Api.Operation.list;
+const dataCallBack = (res) => {// 处理数据
+    return res.list.map(item => {
+        item.firstSentence = Core.Util.Common.getFirstSentence(item.content)
+        return item
+    })
+}
 const {
     loading,
     tableData,
@@ -199,21 +183,20 @@ const {
     refreshTable,
     onPageChange,
     searchParam,
-} = useTable({ request, initParam: { type: Core.Const.OPERATION.OPERATION_TYPE_MAP.REPORT } });
-
+} = useTable({ request, initParam: { type: Core.Const.OPERATION.OPERATION_TYPE_MAP.REPORT }, dataCallBack: dataCallBack });
 const deleteFetch = (id) => {
     Core.Api.Operation.delete({
         id: id,
     }).then((res) => {
         console.log('deleteFetch res', res);
         searchAllRef.value.handleSearch();
-        $message.success($t("pop_up.delete_success"))
+        proxy.$message.success($t("pop_up.delete_success"))
     }).catch(err => {
         console.log('deleteFetch err', err);
     })       
 }
 
-const updateStatusFetch = (record) => {
+const updateStatusFetch = (record, type) => {
     Core.Api.Operation.updateStatus({
         id: record.id,
         status: record.status,
@@ -222,7 +205,9 @@ const updateStatusFetch = (record) => {
     }).then((res) => {
         console.log('updateStatusFetch res', res);
         searchAllRef.value.handleSearch();
-        $message.success($t("p.modify_success"))
+        if(record.status === 1 && type === 'switch') {
+            proxy.$message.success($t("operation.ad_success_tip"))
+        }
     }).catch(err => {
         console.log('updateStatusFetch err', err);
     })
@@ -266,10 +251,10 @@ const handleDelete = (record) => {
 	})   
 }
 const onSwitch = (e, record) => {
-    updateStatusFetch(record);
+    updateStatusFetch(record, 'switch');
 }
 const onBlur = (record) => {
-    updateStatusFetch(record);
+    updateStatusFetch(record, 'input');
 }
 /* methods end*/
 </script>

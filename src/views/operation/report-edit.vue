@@ -11,8 +11,8 @@
                     <div class="value">
                         <div class="area-body">
                             <a-radio-group v-model:value="form.area_type" name="radioGroup">
-                                <a-radio :value="1">全部区域</a-radio>
-                                <a-radio :value="2">部分区域</a-radio>
+                                <a-radio :value="1">{{ $t(/*全部区域*/'operation.all_areas') }}</a-radio>
+                                <a-radio :value="2">{{ $t(/*部分区域*/'operation.partial_areas') }}</a-radio>
                             </a-radio-group>
                             <template v-if="form.area_type === 2">
                                 <MyCountryCascader v-model:value="form.area" />
@@ -31,7 +31,7 @@
                         </a-checkbox-group>
                         <div class="location-preview">
                             <img :src="getSrcImg(item, 'png')" v-for="item in locationPreviewList" :key="item"
-                                @click="handleLocationPreview">
+                                @click="handleLocationPreview(item)">
                         </div>
                     </div>
                 </div>
@@ -39,8 +39,13 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('operation.sort') }}</div>
                     <div class="value">
-                        <a-input-number style="width: 100%;" :placeholder="$t('operation.sort_placeholder')"
-                            id="inputNumber" v-model:value="form.sort" :min="1" :max="10" />
+                        <a-input-number 
+                            style="width: 100%;" 
+                            :placeholder="$t('operation.sort_placeholder')"
+                            id="inputNumber" v-model:value="form.sort"                             
+                            :min="1" 
+                            :precision="0" 
+                        />
                     </div>
                 </div>
                 <!-- 公告标题 -->
@@ -102,9 +107,9 @@
             :previewData="uploadOptions.previewImageVideo">
         </MyPreviewImageVideo>
         <CheckModal :visible="modalShow" :bodyText="modalText">
+            <a-button @click="routerChange('back')">{{ form.id ? $t(/*退出编辑*/'operation.exit_edit') : $t(/*退出创建*/'operation.exit_creation') }}</a-button>
             <a-button type="primary" @click="modalShow = false">{{ form.id ? $t(/*继续编辑*/'operation.continue_edit') :
                 $t(/*继续创建*/'operation.continue_fill') }}</a-button>
-            <a-button @click="routerChange('back')">{{ $t(/*退出*/'operation.exit') }}</a-button>
         </CheckModal>
     </div>
 </template>
@@ -161,7 +166,7 @@ const uploadOptions = ref({
 const areaIndex = ref('1')
 const modules = reactive({
     toolbar: [
-        ['bold', 'italic', 'underline'], // 加粗 斜体 下划线 删除线
+        ['bold'], // 加粗
         ['image'] // 链接、图片，需要视频的可以加上video
     ],
     // 拖拽上传
@@ -176,7 +181,7 @@ const modules = reactive({
         modules: ['Resize', 'DisplaySize', 'Toolbar']
     },
 })
-const locationPreviewList = ['top_message', 'message_aggregation']
+const locationPreviewList = ref(['top_message', 'message_aggregation'])
 const isClose = ref(false)
 const modalText = ref(undefined)
 const modalShow = ref(false)
@@ -263,11 +268,16 @@ const handleSubmit = () => {
 const onChange = () => {
 
 }
-const handleLocationPreview = () => {
-    const arr = locationPreviewList.map(item => {
+const handleLocationPreview = (e) => {
+    const arr = locationPreviewList.value.map(item => {
         return getSrcImg(item, 'png')
     })
     uploadOptions.value.previewImageVideo = arr;
+    const index = locationPreviewList.value.indexOf(e);
+    if (index !== -1) {
+        const item = uploadOptions.value.previewImageVideo.splice(index, 1)[0];
+        uploadOptions.value.previewImageVideo.unshift(item);
+    }
     isClose.value = true;
 }
 const handlePreview = ({ file, fileList }) => {

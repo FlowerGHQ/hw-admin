@@ -41,4 +41,12 @@ export default {
         let result = ConstData[text] ? ConstData[text]?.t : "-";
         return result;
     },
+    /**
+     * @description 使用正则表达式提取第一句内容
+     */
+    getFirstSentence(html) {
+        var regex = /<[^>]+>/g; // 匹配所有标签
+        var firstSentence = html.replace(regex, "").split(".")[0]; // 去除标签后按"."分隔并获取第一部分
+        return firstSentence
+    },
 };
