@@ -36,7 +36,7 @@
                         {{ $t("n.name") }}
                     </div>
                     <div class="value">
-                        <a-input v-model:value="form.name" :placeholder="$t('def.input')" :maxlength="50" />
+                        <a-input v-model:value="form.name" @change="handleTableNameChange('zh')" :placeholder="$t('def.input')" :maxlength="50" />
                     </div>
                 </div>
                 <!-- 英文名 v-if="this.specific.mode === 1" -->
@@ -45,7 +45,7 @@
                         {{ $t("n.name_en") }}
                     </div>
                     <div class="value">
-                        <a-input v-model:value="form.name_en" :placeholder="$t('def.input')" :maxlength="50" />
+                        <a-input v-model:value="form.name_en" @change="handleTableNameChange('en')" :placeholder="$t('def.input')" :maxlength="50" />
                     </div>
                 </div>
                 <!-- 类型 -->
@@ -1396,6 +1396,25 @@ export default {
         next();
     },
     methods: {
+        handleTableNameChange(type){
+            console.log(this.specific.data)
+            console.log(this.form)
+            switch (type) {
+                case 'zh':
+                    this.specific.data.forEach((item,index) => {
+                        item.name = item.name = `${this?.form?.name || ''} ${this?.keyArr[0] ? item[this.keyArr[0]].value : ''} ${this?.keyArr[1] ? item[this.keyArr[1]].value : ''} `
+                    })
+                    break;
+                case 'en':
+                    this.specific.data.forEach((item,index) => {
+                        item.name_en = item.name_en = `${this?.form?.name_en || ''} ${this?.keyArr[0] ? item[this.keyArr[0]].value_en : ''} ${this?.keyArr[1] ? item[this.keyArr[1]].value_en : ''} `
+                    })
+                    break;
+            
+                default:
+                    break;
+            }
+        },
         // 数字的3位划分
         formatNum(num) {
             // 区分小数点
@@ -2468,8 +2487,8 @@ export default {
             }
             console.log("dataList", dataList);
             dataList.forEach(item=>{
-                item.name = `${this?.form?.name || ''} ${this?.keyArr[0] ? item[this.keyArr[0]].value : ''} ${this?.keyArr[1] ? item[this.keyArr[1]].value : ''} ${this?.keyArr[2] ? item[this.keyArr[2]].value : ''} ${this?.keyArr[3] ? item[this.keyArr[3]].value : ''} ${this?.keyArr[4] ? item[this.keyArr[4]].value : ''} ${this?.keyArr[5] ? item[this.keyArr[5]].value : ''} ${this?.keyArr[6] ? item[this.keyArr[6]].value : ''} ${this?.keyArr[7] ? item[this.keyArr[7]].value : ''} ${this?.keyArr[8] ? item[this.keyArr[8]].value : ''} ${this?.keyArr[9] ? item[this.keyArr[9]].value : ''} ${this?.keyArr[10] ? item[this.keyArr[10]].value : ''} ${this?.keyArr[11] ? item[this.keyArr[11]].value : ''} ${this?.keyArr[12] ? item[this.keyArr[12]].value : ''} ${this?.keyArr[13] ? item[this.keyArr[13]].value : ''} ${this?.keyArr[14] ? item[this.keyArr[14]].value : ''} ${this?.keyArr[15] ? item[this.keyArr[15]].value : ''} ${this?.keyArr[16] ? item[this.keyArr[16]].value : ''} ${this?.keyArr[17] ? item[this.keyArr[17]].value : ''} ${this?.keyArr[18] ? item[this.keyArr[18]].value : ''} ${this?.keyArr[19] ? item[this.keyArr[19]].value : ''}`
-                item.name_en = `${this?.form?.name_en || ''} ${this?.keyArr[0] ? item[this.keyArr[0]].value_en : ''} ${this?.keyArr[1] ? item[this.keyArr[1]].value_en : ''} ${this?.keyArr[2] ? item[this.keyArr[2]].value_en : ''} ${this?.keyArr[3] ? item[this.keyArr[3]].value_en : ''} ${this?.keyArr[4] ? item[this.keyArr[4]].value_en : ''} ${this?.keyArr[5] ? item[this.keyArr[5]].value_en : ''} ${this?.keyArr[6] ? item[this.keyArr[6]].value_en : ''} ${this?.keyArr[7] ? item[this.keyArr[7]].value_en : ''} ${this?.keyArr[8] ? item[this.keyArr[8]].value_en : ''} ${this?.keyArr[9] ? item[this.keyArr[9]].value_en : ''} ${this?.keyArr[10] ? item[this.keyArr[10]].value_en : ''} ${this?.keyArr[11] ? item[this.keyArr[11]].value_en : ''} ${this?.keyArr[12] ? item[this.keyArr[12]].value_en : ''} ${this?.keyArr[13] ? item[this.keyArr[13]].value_en : ''} ${this?.keyArr[14] ? item[this.keyArr[14]].value_en : ''} ${this?.keyArr[15] ? item[this.keyArr[15]].value_en : ''} ${this?.keyArr[16] ? item[this.keyArr[16]].value_en : ''} ${this?.keyArr[17] ? item[this.keyArr[17]].value_en : ''} ${this?.keyArr[18] ? item[this.keyArr[18]].value_en : ''} ${this?.keyArr[19] ? item[this.keyArr[19]].value_en : ''}`
+                item.name = `${this?.form?.name || ''} ${this?.keyArr[0] ? item[this.keyArr[0]].value : ''} ${this?.keyArr[1] ? item[this.keyArr[1]].value : ''}`
+                item.name_en = `${this?.form?.name_en || ''} ${this?.keyArr[0] ? item[this.keyArr[0]].value_en : ''} ${this?.keyArr[1] ? item[this.keyArr[1]].value_en : ''}`
             })
             this.specific.data = Core.Util.deepCopy(dataList);
         },
