@@ -83,6 +83,7 @@ const handleChange = (value) => {
             }
         });
     });
+    console.log("itemData", itemData);
     $emit("handleGetItem", itemData);
     $emit("update:value", arr);
 };
