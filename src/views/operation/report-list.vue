@@ -43,7 +43,14 @@
                     </template>
                     <!-- 内容 -->
                     <template v-if="column.key === 'content'">
-                        <span v-html="text" class="html-content"></span>
+                        <a-tooltip placement="topLeft">
+                            <template #title>{{ record.firstSentence }}</template>
+                            <div class="one-spils cursor" :style="{
+                                width: record.firstSentence?.length > 20 ? 18 + 'rem' : '',
+                            }">
+                                {{ record.firstSentence }}
+                            </div>
+                        </a-tooltip>
                     </template>
                     <!-- 提交时间 -->
                     <template v-if="column.key === 'create_time'">
@@ -161,6 +168,12 @@ const searchList = ref([
 onMounted(() => {});
 /* Fetch start*/
 const request = Core.Api.Operation.list;
+const dataCallBack = (res) => {// 处理数据
+    return res.list.map(item => {
+        item.firstSentence = Core.Util.Common.getFirstSentence(item.content)
+        return item
+    })
+}
 const {
     loading,
     tableData,
@@ -170,8 +183,7 @@ const {
     refreshTable,
     onPageChange,
     searchParam,
-} = useTable({ request, initParam: { type: Core.Const.OPERATION.OPERATION_TYPE_MAP.REPORT } });
-
+} = useTable({ request, initParam: { type: Core.Const.OPERATION.OPERATION_TYPE_MAP.REPORT }, dataCallBack: dataCallBack });
 const deleteFetch = (id) => {
     Core.Api.Operation.delete({
         id: id,

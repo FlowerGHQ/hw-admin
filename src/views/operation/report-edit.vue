@@ -164,7 +164,7 @@ const uploadOptions = ref({
 const areaIndex = ref('1')
 const modules = reactive({
     toolbar: [
-        ['bold', 'italic', 'underline'], // 加粗 斜体 下划线 删除线
+        ['bold'], // 加粗
         ['image'] // 链接、图片，需要视频的可以加上video
     ],
     // 拖拽上传
