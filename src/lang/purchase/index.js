@@ -49,6 +49,7 @@ export default {
         total_operation: '总价/操作',
         variants: '规格',
         series: '系列',
+        check_details: '查看详情',
     },
     en: {
         system: "HORWIN Business Operating System",
@@ -100,6 +101,7 @@ export default {
         total_operation: 'Total/Operation',
         variants: 'Variants',
         series: 'Series',
+        check_details: 'Check Details',
     }
 }
 

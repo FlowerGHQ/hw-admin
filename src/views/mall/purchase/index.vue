@@ -21,7 +21,7 @@
                             <span class="report-text">{{ item.title }}</span>
                             <span class="report-more" @click="routerChange('/mall/deals-detail', { id: item.id })">
                                 <span class="text">
-                                    check more
+                                    {{ $t('purchase.check_details') }}
                                 </span>
                                 <svg-icon icon-class="goto-hover" class-name="goto-hover" />
                             </span>
@@ -34,13 +34,13 @@
         <div class="carousel">
             <a-carousel arrows autoplay dotsClass="purchase-dots" key="banner">
                 <template #prevArrow>
-                    <div class="custom-slick-arrow" style="left: 24px;z-index: 1">
+                    <div class="custom-slick-arrow" style="left: 48px;z-index: 1">
                         <img src="@images/mall/purchase/arrow-ad.png" class="arrow-left-ad">
                         <svg-icon icon-class="arrow-ad-hover" class-name="arrow-left-ad-hover" />
                     </div>
                 </template>
                 <template #nextArrow>
-                    <div class="custom-slick-arrow" style="right: 24px">
+                    <div class="custom-slick-arrow" style="right: 48px">
                         <img src="@images/mall/purchase/arrow-ad.png" class="arrow-right-ad">
                         <svg-icon icon-class="arrow-ad-hover" class-name="arrow-right-ad-hover" />
                     </div>
