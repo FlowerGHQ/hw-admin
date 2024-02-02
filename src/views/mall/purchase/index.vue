@@ -32,7 +32,19 @@
         </div>
         <!-- 轮播图 -->
         <div class="carousel">
-            <a-carousel autoplay dotsClass="purchase-dots" key="banner">
+            <a-carousel arrows autoplay dotsClass="purchase-dots" key="banner">
+                <template #prevArrow>
+                    <div class="custom-slick-arrow" style="left: 24px;z-index: 1">
+                        <img src="@images/mall/purchase/arrow-ad.png" class="arrow-left-ad">
+                        <svg-icon icon-class="arrow-ad-hover" class-name="arrow-left-ad-hover" />
+                    </div>
+                </template>
+                <template #nextArrow>
+                    <div class="custom-slick-arrow" style="right: 24px">
+                        <img src="@images/mall/purchase/arrow-ad.png" class="arrow-right-ad">
+                        <svg-icon icon-class="arrow-ad-hover" class-name="arrow-right-ad-hover" />
+                    </div>
+                </template>
                 <div v-for="item in carouselList">
                     <div class="carousel-item" :class="item.url ? 'pointer' : ''" @click="bannerClick(item.url)">
                         <img class="img" :src="$Util.imageFilter(JSON.parse(item.img)[0].path, 5)">
@@ -263,6 +275,7 @@ export default {
             return purchaseModules[path]?.default || '';
         },
         bannerClick(url) {
+            if (!url) return;
             if (!/^(http:|https:)/i.test(url)) url = "https://" + url;// 没有http自动加上
             window.open(url, '_blank')
         },
@@ -767,6 +780,64 @@ export default {
             }
         }
     }
+}
+
+/* For carousel */
+.carousel {
+
+    .arrow-left-ad,
+    .arrow-right-ad {
+        display: inline-block;
+        height: 48px;
+        width: 48px;
+    }
+
+    .arrow-left-ad-hover,
+    .arrow-right-ad-hover {
+        display: none;
+        height: 48px;
+        width: 48px;
+    }
+
+    .arrow-left-ad,
+    .arrow-left-ad-hover {
+        transform: rotate(180deg);
+    }
+
+    .ant-carousel /deep/.custom-slick-arrow {
+        width: 48px;
+        height: 48px;
+        transform: translateY(-50%);
+
+        &:hover {
+
+            .arrow-left-ad,
+            .arrow-right-ad {
+                display: none;
+            }
+
+            .arrow-left-ad-hover,
+            .arrow-right-ad-hover {
+                display: inline-block;
+            }
+        }
+    }
+
+    .ant-carousel /deep/.custom-slick-arrow {
+        display: none !important;
+    }
+
+    .ant-carousel:hover {
+        /deep/.custom-slick-arrow {
+            display: block !important;
+        }
+    }
+}
+
+.carousel-left,
+.carousel-right {
+    width: 48px;
+    height: 48px;
 }
 </style>
 <style lang="less">
