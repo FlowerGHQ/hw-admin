@@ -57,6 +57,7 @@
                     <!-- 排序 -->
                     <template v-if="column.key === 'input'">
                         <a-input-number 
+                            style="width: 150px;"
                             :placeholder="$t('operation.input_pla')" 
                             v-model:value="record.sort"
                             @blur="onBlur(record)"
@@ -156,38 +157,6 @@ const searchList = ref([
         selectMap: Core.Const.OPERATION.OPERATION_TYPE,
     },
 ])
-const _tableData = ref([
-    {
-        id: 1,
-        title: '公告标题公告标题公告标题公告标题公告标题',
-        create_time: 1706685629,
-        content: '公告内容公告内容公告内容公告内容公告内容',
-        effect_time: 1706685629,
-        area: '中国',
-        sort: 1,
-        status: true,
-    },
-    {
-        id: 2,
-        title: '公告标题公告标题公告标题公告标题公告标题',
-        create_time: 1706685629,
-        content: '公告内容公告内容公告内容公告内容公告内容',
-        effect_time: 1706685629,
-        area: '中国',
-        sort: 2,
-        status: false,
-    },
-    {
-        id: 3,
-        title: '公告标题公告标题公告标题公告标题公告标题',
-        create_time: 1706685629,
-        content: '公告内容公告内容公告内容公告内容公告内容',
-        effect_time: 1706685629,
-        area: '中国',
-        sort: 3,
-        status: false,
-    },
-])
 
 onMounted(() => {});
 /* Fetch start*/
@@ -215,7 +184,7 @@ const deleteFetch = (id) => {
     })       
 }
 
-const updateStatusFetch = (record) => {
+const updateStatusFetch = (record, type) => {
     Core.Api.Operation.updateStatus({
         id: record.id,
         status: record.status,
@@ -224,7 +193,9 @@ const updateStatusFetch = (record) => {
     }).then((res) => {
         console.log('updateStatusFetch res', res);
         searchAllRef.value.handleSearch();
-        proxy.$message.success($t("p.modify_success"))
+        if(record.status === 1 && type === 'switch') {
+            proxy.$message.success($t("operation.ad_success_tip"))
+        }
     }).catch(err => {
         console.log('updateStatusFetch err', err);
     })
@@ -268,10 +239,10 @@ const handleDelete = (record) => {
 	})   
 }
 const onSwitch = (e, record) => {
-    updateStatusFetch(record);
+    updateStatusFetch(record, 'switch');
 }
 const onBlur = (record) => {
-    updateStatusFetch(record);
+    updateStatusFetch(record, 'input');
 }
 /* methods end*/
 </script>

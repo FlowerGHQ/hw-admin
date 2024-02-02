@@ -51,6 +51,8 @@ export default {
         img_desc_tip: '建议使用一段文字说明banner图的内容，便于后期修改。如：中秋放假公告图',
         pic_size_tip: '图片尺寸：1920x720',
         ad_success_tip: '广告位已生效',
+        all_areas: '全部区域',
+        partial_areas: '部分区域',
     },
     en: {
         area: 'Area',
@@ -104,5 +106,7 @@ export default {
         img_desc_tip: 'You are advised to use a paragraph to explain the content of the banner image for later modification. Such as: Mid-Autumn Festival holiday announcement map',
         pic_size_tip: 'Image size: 1920x720',
         ad_success_tip: 'The AD space is in effect',
+        all_areas: 'All Areas',
+        partial_areas: 'Partial Areas',
     }
 }

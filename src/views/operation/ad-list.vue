@@ -68,6 +68,7 @@
                     <!-- 排序 -->
                     <template v-if="column.key === 'input'">
                         <a-input-number
+                            style="width: 150px;"
                             :placeholder="$t('operation.input_pla')" 
                             v-model:value="record.sort"
                             @blur="onBlur(record)"
@@ -203,7 +204,7 @@ const deleteFetch = (id) => {
     })       
 }
 
-const updateStatusFetch = (record) => {
+const updateStatusFetch = (record, type) => {
     Core.Api.Operation.updateStatus({
         id: record.id,
         status: record.status,
@@ -211,7 +212,7 @@ const updateStatusFetch = (record) => {
     }).then((res) => {
         searchAllRef.value.handleSearch();
         console.log('updateStatusFetch res', res);
-        if(record.status === 1) {
+        if(record.status === 1 && type === 'switch') {
             proxy.$message.success($t("operation.ad_success_tip"))
         }
     }).catch(err => {
@@ -257,10 +258,10 @@ const handleDelete = (record) => {
 	})   
 }
 const onSwitch = (e, record) => {
-    updateStatusFetch(record);
+    updateStatusFetch(record, 'switch');
 }
 const onBlur = (record) => {
-    updateStatusFetch(record);
+    updateStatusFetch(record, 'input');
 }
 const getImagePath = (record) => {
     if (record && record.img) {

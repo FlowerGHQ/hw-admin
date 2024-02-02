@@ -11,8 +11,8 @@
                     <div class="value">
                         <div class="area-body">
                             <a-radio-group v-model:value="form.area_type" name="radioGroup">
-                                <a-radio :value="1">全部区域</a-radio>
-                                <a-radio :value="2">部分区域</a-radio>
+                                <a-radio :value="1">{{ $t(/*全部区域*/'operation.all_areas') }}</a-radio>
+                                <a-radio :value="2">{{ $t(/*部分区域*/'operation.partial_areas') }}</a-radio>
                             </a-radio-group>
                             <template v-if="form.area_type === 2">
                                 <MyCountryCascader v-model:value="form.area" />
