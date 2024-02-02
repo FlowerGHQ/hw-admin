@@ -33,11 +33,11 @@
                     <!-- 公司名称 -->
                     <template v-if="column.key === 'item'">
                         <a-tooltip placement="topLeft">
-                            <template #title>{{ text }}</template>
+                            <template #title>{{ text || '-' }}</template>
                             <div class="one-spils cursor" :style="{
                                 width: text?.length > 15 ? 7 * 12 + 'px' : '',
                             }">
-                                {{ text }}
+                                {{ text || '-' }}
                             </div>
                         </a-tooltip>
                     </template>
