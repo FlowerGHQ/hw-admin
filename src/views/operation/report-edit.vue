@@ -31,7 +31,7 @@
                         </a-checkbox-group>
                         <div class="location-preview">
                             <img :src="getSrcImg(item, 'png')" v-for="item in locationPreviewList" :key="item"
-                                @click="handleLocationPreview">
+                                @click="handleLocationPreview(item)">
                         </div>
                     </div>
                 </div>
@@ -174,7 +174,7 @@ const modules = reactive({
         modules: ['Resize', 'DisplaySize', 'Toolbar']
     },
 })
-const locationPreviewList = ['top_message', 'message_aggregation']
+const locationPreviewList = ref(['top_message', 'message_aggregation'])
 const isClose = ref(false)
 const modalText = ref(undefined)
 const modalShow = ref(false)
@@ -253,11 +253,16 @@ const handleSubmit = () => {
 const onChange = () => {
 
 }
-const handleLocationPreview = () => {
-    const arr = locationPreviewList.map(item => {
+const handleLocationPreview = (e) => {
+    const arr = locationPreviewList.value.map(item => {
         return getSrcImg(item, 'png')
     })
     uploadOptions.value.previewImageVideo = arr;
+    const index = locationPreviewList.value.indexOf(e);
+    if (index !== -1) {
+        const item = uploadOptions.value.previewImageVideo.splice(index, 1)[0];
+        uploadOptions.value.previewImageVideo.unshift(item);
+    }
     isClose.value = true;
 }
 const handlePreview = ({ file, fileList }) => {
