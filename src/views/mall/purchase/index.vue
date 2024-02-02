@@ -703,6 +703,7 @@ export default {
             overflow: hidden;
 
             .report-text {
+                .ell();
                 font-size: 14px;
                 font-style: normal;
                 font-weight: 400;
@@ -714,6 +715,7 @@ export default {
             }
 
             .report-more {
+                white-space: nowrap;
                 margin-left: 16px;
                 cursor: pointer;
 

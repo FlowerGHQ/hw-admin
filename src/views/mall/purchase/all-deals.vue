@@ -4,7 +4,7 @@
             <div class="container">
                 <!-- 地方政策列表 -->
                 <div class="deals-list">
-                    <div class="deals-item hover" v-for="(item, index) in dealsList" :key="index"
+                    <div class="deals-item hover" v-for="(item, index) in reportList" :key="index"
                         @click="selectDeals(item.id)">
                         <div class="img-body">
                             <div class="img">
@@ -14,7 +14,7 @@
                         <div class="text">
                             <div>
                                 <p class="text-title" :title="item.title">{{ item.title }}</p>
-                                <p class="text-subtitle" :title="item.mes">{{ item.mes }}</p>
+                                <p class="text-subtitle" :title="item.firstSentence">{{ item.firstSentence }}</p>
                             </div>
                             <p class="time" v-if="lang === 'zh'">{{ $Util.timeFilter(item.create_time, 3) }}</p>
                             <p class="time" v-else>{{ $Util.timeFilter(item.create_time, 6) }}</p>
@@ -42,7 +42,7 @@ export default {
             Core,
             footerHeight: 0,
             // 默认 15 条
-            dealsList: [],
+            reportList: [],
             pagination: {
                 page_size: 15,
                 page: 1,
@@ -71,6 +71,12 @@ export default {
         window.removeEventListener('resize', this.handleWindowResize);
     },
     methods: {
+        // 使用正则表达式提取第一句内容
+        getFirstSentence(html) {
+            var regex = /<[^>]+>/g; // 匹配所有标签
+            var firstSentence = html.replace(regex, "").split(".")[0]; // 去除标签后按"."分隔并获取第一部分
+            return firstSentence
+        },
         // 获取地方政策
         getDeals() {
             if (this.loadingArticle) return
@@ -83,7 +89,11 @@ export default {
                 type: 1
             }
             Core.Api.Operation.list({ ...params }).then(res => {
-                this.dealsList = this.dealsList.concat(res.list)
+                this.reportList = this.reportList.concat(res.list)
+                this.reportList = this.reportList.map(item => {
+                    item.firstSentence = this.getFirstSentence(item.content)
+                    return item
+                })
                 this.pagination.total = res.count
                 this.pagination.total_page = Math.ceil(this.pagination.total / this.pagination.page_size)
             }).catch(err => {
