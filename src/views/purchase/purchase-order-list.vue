@@ -306,6 +306,7 @@ export default {
 
             // 勾选项
             selectedRowKeys: [],
+            statusListData: [],  // tabs数据
         };
     },
     watch: {
@@ -378,6 +379,23 @@ export default {
             if (this.$auth('ADMIN')) {
                 columns.splice(3, 0, {zh: '已转单', en: 'Order transferred', value: '0', color: 'blue',  key: '250'})
             }
+
+            columns.forEach(el => {
+                if (Number(el.key) === 0) {
+                    let total = 0
+
+                    this.statusListData.forEach(item => {
+                        total += item.amount
+                    })
+
+                    el.value = total
+                } else {
+                    const findItem = this.statusListData.find(findItem => Number(findItem.status) === Number(el.key))
+                    if (findItem) {
+                        el.value = findItem.amount
+                    }
+                }
+            })
 
             return columns
         },
@@ -577,20 +595,7 @@ export default {
             Core.Api.Purchase.statusList({
                 search_type: this.search_type
             }).then(res => {
-                let total = 0
-
-                // console.log("获取状态 getStatusStat", res);
-                this.statusList.forEach(statusItem => {
-                    res.status_list.forEach(item => {
-                        if (statusItem.key == item.status) {
-                            statusItem.value = item.amount
-                        }
-                    })
-                })
-                res.status_list.forEach(item => {
-                    total += item.amount
-                })
-                this.statusList[0].value = total
+                this.statusListData = res.status_list
             }).catch(err => {
                 console.log('getStatusStat err:', err)
             })
