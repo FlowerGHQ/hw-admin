@@ -208,12 +208,6 @@ export default {
         this.getCarousel()
     },
     methods: {
-        // 使用正则表达式提取第一句内容
-        getFirstSentence(html) {
-            var regex = /<[^>]+>/g; // 匹配所有标签
-            var firstSentence = html.replace(regex, "").split(".")[0]; // 去除标签后按"."分隔并获取第一部分
-            return firstSentence
-        },
         // 获取banner
         getCarousel() {
             this.loadingCarousel = true
@@ -263,7 +257,7 @@ export default {
                 this.topList = res.list
                 this.reportList = res.list.slice(0, 2)
                 this.reportList = this.reportList.map(item => {
-                    item.firstSentence = this.getFirstSentence(item.content)
+                    item.firstSentence = Core.Util.Common.getFirstSentence(item.content)
                     return item
                 })
             }).catch(err => {
