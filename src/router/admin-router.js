@@ -18,7 +18,7 @@ const inquiryManagement = {
         title_en: 'Inquiry Management',
         icon: 'i_menu_fankuguanli',
         roles: [LOGIN_TYPE.ADMIN],
-        // auth: ["supplier-application.list"],
+        auth: ["enquiry-ticket.list", "enquiry-ticket-category.list", "enquiry-ticket-customer.list"],
     },
     children: [
         {
@@ -28,6 +28,7 @@ const inquiryManagement = {
             meta: {
                 title: '问询单列表',
                 title_en: 'Customer Service Inquiry',
+                auth: ["enquiry-ticket.list"],
             }
         },
         {
@@ -58,6 +59,7 @@ const inquiryManagement = {
             meta: {
                 title: '车型分类管理',
                 title_en: 'Car Model Management',
+                auth: ["enquiry-ticket-category.list"],
             }
         },
         // 账号管理及分配
@@ -68,6 +70,7 @@ const inquiryManagement = {
             meta: {
                 title: '问询单分配',
                 title_en: 'Inquiry Sheet Distribution',
+                auth: ["enquiry-ticket-customer.list"],
             }
         },
     ]

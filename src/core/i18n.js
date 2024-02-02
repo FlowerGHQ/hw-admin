@@ -1907,6 +1907,10 @@ const messages = {
                 'coc': 'COC证书管理',
                 'supplier-application': '供应商管理',
                 'sales-strategy': '销售策略管理',
+                //  新加入2024/2/2
+                'enquiry-ticket': "问询单、客户关怀",
+                'enquiry-ticket-category': "车型分类管理",
+                'enquiry-ticket-customer': "问询单分配",
             },
             'distributor': {
                 'list': '查看分销商列表',
@@ -2251,6 +2255,15 @@ const messages = {
             },
             'sales-strategy': {
                 'list': '销售策略列表'
+            },
+            'enquiry-ticket': {
+                'list': '问询单列表'
+            },
+            'enquiry-ticket-category': {
+                'list': '车型分类列表'
+            },
+            'enquiry-ticket-customer': {
+                'list': '分配列表'
             },
         },
         error_code: {
@@ -4610,6 +4623,9 @@ const messages = {
                 'aftermarket-bom': 'BOM Management',
                 'supplier-application': 'Supplier Application',
                 'sales-strategy': 'Sales Strategy',
+                'enquiry-ticket': "List Of Inquiry Forms, Customer Care",
+                'enquiry-ticket-category': "Classified Management Of Vehicle Models",
+                'enquiry-ticket-customer': "Inquiry Sheet Distribution",
             },
             'distributor': {
                 'list': 'View Distributor List',
@@ -4953,6 +4969,15 @@ const messages = {
             },
             'sales-strategy': {
                 'list': 'Sales Strategy List'
+            },            
+            'enquiry-ticket': {
+                'list': 'List Of Inquiry Forms'
+            },
+            'enquiry-ticket-category': {
+                'list': 'Vehicle Classification List'
+            },
+            'enquiry-ticket-customer': {
+                'list': 'Allocation List'
             },
         },
         error_code: {
