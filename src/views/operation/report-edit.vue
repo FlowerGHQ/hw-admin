@@ -39,8 +39,13 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('operation.sort') }}</div>
                     <div class="value">
-                        <a-input-number style="width: 100%;" :placeholder="$t('operation.sort_placeholder')"
-                            id="inputNumber" v-model:value="form.sort" :min="1" :max="10" />
+                        <a-input-number 
+                            style="width: 100%;" 
+                            :placeholder="$t('operation.sort_placeholder')"
+                            id="inputNumber" v-model:value="form.sort"                             
+                            :min="1" 
+                            :precision="0" 
+                        />
                     </div>
                 </div>
                 <!-- 公告标题 -->
@@ -100,9 +105,9 @@
             :previewData="uploadOptions.previewImageVideo">
         </MyPreviewImageVideo>
         <CheckModal :visible="modalShow" :bodyText="modalText">
+            <a-button @click="routerChange('back')">{{ form.id ? $t(/*退出编辑*/'operation.exit_edit') : $t(/*退出创建*/'operation.exit_creation') }}</a-button>
             <a-button type="primary" @click="modalShow = false">{{ form.id ? $t(/*继续编辑*/'operation.continue_edit') :
                 $t(/*继续创建*/'operation.continue_fill') }}</a-button>
-            <a-button @click="routerChange('back')">{{ $t(/*退出*/'operation.exit') }}</a-button>
         </CheckModal>
     </div>
 </template>

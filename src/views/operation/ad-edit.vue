@@ -22,11 +22,11 @@
                     <div class="key">{{ $t('operation.sort') }}</div>
                     <div class="value">
                         <a-input-number style="width: 100%;" :placeholder="$t('operation.sort_placeholder')"
-                            v-model:value="form.sort" />
+                            v-model:value="form.sort" :min="1" :precision="0" />
                     </div>
                 </div>
                 <!-- 链接 -->
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('operation.link') }}</div>
                     <div class="value">
                         <a-input v-model:value="form.url" :placeholder="$t('def.input')" />
@@ -36,7 +36,7 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('operation.img_desc') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.img_desc" :placeholder="$t('def.input')" />
+                        <a-input v-model:value="form.img_desc" :placeholder="$t('operation.img_desc_tip')" />
                     </div>
                 </div>
                 <!-- 图片 -->
@@ -48,7 +48,7 @@
                             <template #tip>
                                 <div class="tips">
                                     <p>{{ $t('operation.pic_tip1') }}</p>
-                                    <p>{{ $t('operation.pic_tip2') }}</p>
+                                    <p>{{ $t('operation.pic_size_tip') }}</p>
                                     <p>{{ $t('operation.pic_tip3') }}</p>
                                 </div>
                             </template>
@@ -66,8 +66,8 @@
             :previewData="uploadOptions.previewImageVideo">
         </MyPreviewImageVideo>
         <CheckModal :visible="modalShow" :bodyText="modalText">
+            <a-button @click="routerChange('back')">{{ form.id ? $t(/*退出编辑*/'operation.exit_edit') : $t(/*退出创建*/'operation.exit_creation') }}</a-button>
             <a-button type="primary" @click="modalShow = false">{{ form.id ? $t(/*继续编辑*/'operation.continue_edit') : $t(/*继续创建*/'operation.continue_fill') }}</a-button>
-            <a-button @click="routerChange('back')">{{ $t(/*退出*/'operation.exit') }}</a-button>
         </CheckModal>
     </div>
 </template>
@@ -128,7 +128,7 @@ const getReportDetail = (id) => {
         detail.value = res.detail
         Object.assign(form.value, {
             area_type: detail.value.area_type,
-            area: detail.area ? detail.area.split(',') : [],
+            area: detail.value.area ? detail.value.area.split(',') : [],
             sort: detail.value.sort,
             url: detail.value.url,
             img: detail.value.img ? JSON.parse(detail.value.img) : '',
@@ -203,10 +203,10 @@ const checkInput = (form) => {
         proxy.$message.warning(proxy.$t('operation.tip_sort'));
         return true;
     }
-    if (!url) {
-        proxy.$message.warning(proxy.$t('operation.tip_url'));
-        return true;
-    }
+    // if (!url) {
+    //     proxy.$message.warning(proxy.$t('operation.tip_url'));
+    //     return true;
+    // }
     if (!img_desc) {
         proxy.$message.warning(proxy.$t('operation.tip_img_desc'));
         return true;

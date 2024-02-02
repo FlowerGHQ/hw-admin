@@ -60,6 +60,8 @@
                             :placeholder="$t('operation.input_pla')" 
                             v-model:value="record.sort"
                             @blur="onBlur(record)"
+                            :min="1" 
+                            :precision="0"
                         />
                     </template>
                     <!-- 操作 -->
@@ -107,7 +109,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed, getCurrentInstance } from "vue";
 import Core from "@/core";
 import SearchAll from "@/components/horwin/based-on-ant/SearchAll.vue";
 import { useTable } from '@/hooks/useTable'
@@ -117,7 +119,7 @@ import MySvgIcon from "@/components/MySvgIcon/index.vue";
 const router = useRouter()
 const $t = useI18n().t;
 const searchAllRef = ref(null)
-
+const { proxy } = getCurrentInstance();
 const tableColumns = computed(() => {
     let columns = [
         { title: $t(/*序号*/"n.index"), dataIndex: "id", key: "number" },
@@ -207,7 +209,7 @@ const deleteFetch = (id) => {
     }).then((res) => {
         console.log('deleteFetch res', res);
         searchAllRef.value.handleSearch();
-        $message.success($t("pop_up.delete_success"))
+        proxy.$message.success($t("pop_up.delete_success"))
     }).catch(err => {
         console.log('deleteFetch err', err);
     })       
@@ -222,7 +224,7 @@ const updateStatusFetch = (record) => {
     }).then((res) => {
         console.log('updateStatusFetch res', res);
         searchAllRef.value.handleSearch();
-        $message.success($t("p.modify_success"))
+        proxy.$message.success($t("p.modify_success"))
     }).catch(err => {
         console.log('updateStatusFetch err', err);
     })
