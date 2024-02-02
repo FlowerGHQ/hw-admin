@@ -471,7 +471,7 @@
                 </div>
                 <div class="inquiry-classification-value">
                     <div class="communication-process p-10">
-                        <template v-for="(item, index) in comment_list" :key="index">
+                        <template v-for="(item, index) in commentListComputed" :key="index">
                             <!-- 其他回复 -->
 
                             <div
@@ -811,6 +811,9 @@ const faultColumns = computed(() => {
     ];
     return result;
 });
+const commentListComputed = computed(() => {    
+    return comment_list.value.sort((a, b) => a.id - b.id) 
+})
 /* computed end */
 
 /* fetch start */
@@ -954,41 +957,27 @@ const getCommentListFetch = (params = {}) => {
         .commentList(obj)
         .then(async (res) => {
             console.log("评论接口", res);
-            comment_list.value = res.list.map((el) => {
-                return {
-                    ...el,
-                    file: el.file
-                        ? JSON.parse(el.file).map((fileEl) => {
-                              return {
-                                  ...fileEl,
-                                  path: Core.Const.NET.FILE_URL_PREFIX + fileEl.path,
-                              };
-                          })
-                        : [],
-                };
-            });
 
-            // comment_list.value = []
-            // res.list.forEach(async (el) => {
-            //     el.file = el.file ? JSON.parse(el.file) : []
-            //     try {
-            //         await getVideoTime(el.file);
-            //         let obj = {
-            //             ...el,
-            //             file: el.file.map(fileEl => {
-            //                 return {
-            //                     ...fileEl,
-            //                     path: Core.Const.NET.FILE_URL_PREFIX + fileEl.path,
-            //                 }
-            //             })
-            //         }
-            //         // comment_list.value.push(el)
-            //     } catch (error) {
-            //         console.log("error", error);
-            //     }
-            // })
-
-            // console.log("最后的数据11111111111", comment_list.value);
+            comment_list.value = []
+            res.list.forEach(async (el) => {
+                el.file = el.file ? JSON.parse(el.file) : []
+                try {
+                    await getVideoTime(el.file);
+                    let obj = {
+                        ...el,
+                        file: el.file.map(fileEl => {
+                            return {
+                                ...fileEl,
+                                name: fileEl.name.length <= 10 ? fileEl.name : `${fileEl.name.slice(0, 3)}...${fileEl.name.slice(-4)}`,
+                                path: Core.Const.NET.FILE_URL_PREFIX + fileEl.path,
+                            }
+                        })
+                    }
+                    comment_list.value.push(obj)
+                } catch (error) {
+                    console.log("error", error);
+                }
+            })       
         })
         .catch((err) => {
             console.log("问询单标记解决接口 err", err);
