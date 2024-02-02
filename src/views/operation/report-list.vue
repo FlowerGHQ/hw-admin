@@ -170,6 +170,7 @@ onMounted(() => {});
 const request = Core.Api.Operation.list;
 const dataCallBack = (res) => {// 处理数据
     return res.list.map(item => {
+        item.old_sort = Core.Util.deepCopy(item.sort)
         item.firstSentence = Core.Util.Common.getFirstSentence(item.content)
         return item
     })
@@ -254,6 +255,10 @@ const onSwitch = (e, record) => {
     updateStatusFetch(record, 'switch');
 }
 const onBlur = (record) => {
+    if(!record.sort) {
+        // 如果输入为空则赋值之前的排序
+        record.sort = record.old_sort
+    }
     updateStatusFetch(record, 'input');
 }
 /* methods end*/
