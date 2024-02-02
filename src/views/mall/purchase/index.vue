@@ -3,7 +3,7 @@
         <!-- 公告 -->
         <div class="report-body">
             <div class="report-carousel">
-                <a-carousel arrows autoplay :dots="false" key="report">
+                <a-carousel arrows autoplay :dots="false" :key="`report-${lang}`">
                     <template #prevArrow>
                         <div class="custom-slick-arrow" style="left: 12.5%; z-index: 1">
                             <svg-icon icon-class="arrow-left-report" class-name="arrow-left-report" />
@@ -204,6 +204,7 @@ export default {
     created() { },
     mounted() {
         this.getNews()
+        this.getTop()
         this.getDeals()
         this.getCarousel()
     },
@@ -244,18 +245,30 @@ export default {
                 console.log(err)
             })
         },
-        // 获取地方政策
-        getDeals() {
+        // 获取公告
+        getTop() {
             let params = {
                 "page": 1,// 页号
                 "page_size": 3,// 页大小
-                "title": "",
-                "area": "",
+                show_type: '1',
                 type: 1
             }
             Core.Api.Operation.list({ ...params }).then(res => {
                 this.topList = res.list
-                this.reportList = res.list.slice(0, 2)
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+        // 获取地方政策
+        getDeals() {
+            let params = {
+                "page": 1,// 页号
+                "page_size": 2,// 页大小
+                show_type: '2',
+                type: 1
+            }
+            Core.Api.Operation.list({ ...params }).then(res => {
+                this.reportList = res.list
                 this.reportList = this.reportList.map(item => {
                     item.firstSentence = Core.Util.Common.getFirstSentence(item.content)
                     return item
