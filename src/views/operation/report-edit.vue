@@ -39,13 +39,8 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('operation.sort') }}</div>
                     <div class="value">
-                        <a-input-number 
-                            style="width: 100%;" 
-                            :placeholder="$t('operation.sort_placeholder')"
-                            id="inputNumber" v-model:value="form.sort"                             
-                            :min="1" 
-                            :precision="0" 
-                        />
+                        <a-input-number style="width: 100%;" :placeholder="$t('operation.sort_placeholder')"
+                            id="inputNumber" v-model:value="form.sort" :min="1" :precision="0" />
                     </div>
                 </div>
                 <!-- 公告标题 -->
@@ -60,7 +55,7 @@
                     <div class="key">{{ $t('operation.report_content') }}</div>
                     <div class="value">
                         <MyEditor v-model:modelValue="form.content" :modules="modules"
-                            :placeholder="`${$t('operation.enter_content')}...`" />
+                            :placeholder="`${$t('operation.enter_content')}...`" showNumber />
                     </div>
                 </div>
                 <!-- 图片 -->
@@ -105,7 +100,8 @@
             :previewData="uploadOptions.previewImageVideo">
         </MyPreviewImageVideo>
         <CheckModal :visible="modalShow" :bodyText="modalText">
-            <a-button @click="routerChange('back')">{{ form.id ? $t(/*退出编辑*/'operation.exit_edit') : $t(/*退出创建*/'operation.exit_creation') }}</a-button>
+            <a-button @click="routerChange('back')">{{ form.id ? $t(/*退出编辑*/'operation.exit_edit') :
+                $t(/*退出创建*/'operation.exit_creation') }}</a-button>
             <a-button type="primary" @click="modalShow = false">{{ form.id ? $t(/*继续编辑*/'operation.continue_edit') :
                 $t(/*继续创建*/'operation.continue_fill') }}</a-button>
         </CheckModal>
@@ -239,7 +235,7 @@ const handleSubmit = () => {
     if (formNew.img.length === 0) {//图片校验
         return proxy.$message.warning(proxy.$t('n.upload') + ":" + proxy.$t('operation.pic'))
     }
-    if(formNew.area_type === Core.Const.OPERATION.AREA_TYPE_MAP.ALL) {
+    if (formNew.area_type === Core.Const.OPERATION.AREA_TYPE_MAP.ALL) {
         formNew.area = []
     }
     formNew.show_type = formNew.show_type.join(',')
@@ -410,6 +406,7 @@ const getSrcImg = (name, type = "png") => {
                         }
                     }
                 }
+
                 &.area {
                     .key {
                         margin-top: 5px;
