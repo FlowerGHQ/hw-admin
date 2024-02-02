@@ -39,6 +39,8 @@ export default {
         add: '添加',
         detail: '详情',
         submit: '提交',
+        download: '下载',
+        preview: "预览",
     },
     en: {
         operations: "Operations",
@@ -80,5 +82,7 @@ export default {
         add: 'Add',
         detail: 'Detail',
         submit: 'Submit',
+        download: 'Download',
+        preview: "Preview",
     }
 }

@@ -4,7 +4,6 @@ import Data from "../core/data"
 import MallLayout from '../views/mall/layout/index.vue';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE
-const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE
 
 const mallRouters = { // 看板
     path: '/mall',
@@ -56,6 +55,14 @@ const mallRouters = { // 看板
             meta: {
                 title: '公告列表',
                 title_en: 'All Deals',
+            }
+        },
+        {
+            path: 'deals-detail',
+            component: () => import('@/views/mall/purchase/deals-detail.vue'),
+            meta: {
+                title: '公告详情',
+                title_en: 'Report Detail',
             }
         },
         {
@@ -156,6 +163,17 @@ const mallRouters = { // 看板
         },
     ]
 }
+const dealsPreview = {
+    path: '/mall/deals-preview',
+    name: 'dealsPreview',
+    component: () => import('@/views/mall/purchase/deals-detail.vue'),
+    meta: {
+        title: '公告详情',
+        title_en: 'Report Detail',
+        roles: [LOGIN_TYPE.ADMIN],
+    }
+}
 export {
-    mallRouters
+    mallRouters,
+    dealsPreview
 }

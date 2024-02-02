@@ -92,6 +92,8 @@
             </div>
         </div>
         <div class="form-btns">
+            <a-button class="btn-block" @click="routerChange('preview', { type: 'preview' })">{{ $t('common.preview')
+            }}</a-button>
             <a-button class="btn-block" @click="modalShow = true">{{ $t('def.cancel') }}</a-button>
             <a-button class="btn-block" @click="handleSubmit" type="primary">{{ $t('def.submit') }}</a-button>
         </div>
@@ -189,6 +191,14 @@ const routerChange = (type, item) => {
             })
             window.open(routeUrl.href, '_self')
             break;
+        case 'preview':    // 预览
+            Core.Data.setReportData(form);
+            let previewUrl = router.resolve({
+                path: "/mall/deals-preview",
+                query: item
+            })
+            window.open(previewUrl.href, '_blank')
+            break;
     }
 }
 const getReportDetail = () => {
@@ -234,7 +244,7 @@ const handleSubmit = () => {
     if (formNew.img.length === 0) {//图片校验
         return proxy.$message.warning(proxy.$t('n.upload') + ":" + proxy.$t('operation.pic'))
     }
-    if(formNew.area_type === Core.Const.OPERATION.AREA_TYPE_MAP.ALL) {
+    if (formNew.area_type === Core.Const.OPERATION.AREA_TYPE_MAP.ALL) {
         formNew.area = []
     }
     formNew.show_type = formNew.show_type.join(',')

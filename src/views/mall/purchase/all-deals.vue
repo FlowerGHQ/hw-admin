@@ -2,44 +2,13 @@
     <div id="index">
         <section id="article">
             <div class="container">
-                <!-- 轮播图 -->
-                <div class="article-carousel">
-                    <template v-if="carouselList.length > 0">
-                        <a-carousel :arrows="true" :dots="false" :after-change="onChange" autoplay :autoplaySpeed="5000">
-                            <template #prevArrow>
-                                <div class="custom-slick-arrow" style="left: 24px;z-index: 1">
-                                    <img class="carousel-left" src="@images/mall/purchase/arrow-left-s-line.png">
-                                </div>
-                            </template>
-                            <template #nextArrow>
-                                <div class="custom-slick-arrow" style="right: 24px">
-                                    <img class="carousel-right" src="@images/mall/purchase/arrow-right-s-line.png">
-                                </div>
-                            </template>
-
-                            <div style="display: block;" v-for="(item, index) in carouselList" :key="index"
-                                @click="selectArticle(item.id)">
-                                <div class="article-carousel-content">
-                                    <img class="article-carousel-content-img"
-                                        :src="item.banner ? $Util.imageFilter(item.banner) : $Util.imageFilter(item.img)">
-                                    <div class="article-carousel-fixed">
-                                        <div class="article-carousel-fixed-text">
-                                            <p class="text-title">{{ item.topic }}</p>
-                                            <p class="text-sub-title">{{ item.description }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a-carousel>
-                    </template>
-                    <img style="width: 100%;" src="@images/mall/purchase/default-img.png" v-else>
-                </div>
                 <!-- 地方政策列表 -->
                 <div class="deals-list">
-                    <div class="deals-item hover" v-for="(item, index) in dealsList" :key="index">
+                    <div class="deals-item hover" v-for="(item, index) in dealsList" :key="index"
+                        @click="selectDeals(item.id)">
                         <div class="img-body">
                             <div class="img">
-                                <img class="deals-img" src="@/assets/images/mall/purchase/demo.png">
+                                <img class="deals-img" :src="$Util.imageFilter(JSON.parse(item.img)[0].path, 5)">
                             </div>
                         </div>
                         <div class="text">
@@ -72,20 +41,8 @@ export default {
         return {
             Core,
             footerHeight: 0,
-            carouselList: [],
             // 默认 15 条
-            dealsList: [
-                {
-                    title: 'Christmas discounts in Europe',
-                    mes: '20% off all items',
-                    create_time: 1699276878
-                },
-                {
-                    title: 'The new HORWIN Ranger - a new era of e-mobility',
-                    mes: 'Breathtaking. Inspiring. Groundbreaking. Or just awesome. Describe it as you want. The HORWIN Ranger is state of the art when it comes to e-mobility.',
-                    create_time: 1699276878
-                },
-            ],
+            dealsList: [],
             pagination: {
                 page_size: 15,
                 page: 1,
@@ -101,8 +58,7 @@ export default {
         window.addEventListener('resize', this.handleWindowResize)
     },
     mounted() {
-        this.getCarousel()
-        this.getArticle()
+        this.getDeals()
         window.addEventListener('scroll', this.handleScroll)
     },
     computed: {
@@ -115,28 +71,8 @@ export default {
         window.removeEventListener('resize', this.handleWindowResize);
     },
     methods: {
-        // 获取banner
-        getCarousel() {
-            this.loadingCarousel = true
-            let params = {
-                "page": 1,// 页号
-                "page_size": 3,// 页大小
-                "title": "",
-                "area": "",
-                "status": 1,
-                type: 1
-            }
-            Core.Api.Operation.list({ ...params }).then(res => {
-                this.carouselList = res.list
-            }).catch(err => {
-                this.carouselList = []
-                console.log(err)
-            }).finally(() => {
-                this.loadingCarousel = false
-            })
-        },
         // 获取地方政策
-        getArticle() {
+        getDeals() {
             if (this.loadingArticle) return
             this.loadingArticle = true
             let params = {
@@ -144,7 +80,6 @@ export default {
                 "page_size": this.pagination.page_size,// 页大小
                 "title": "",
                 "area": "",
-                "status": 1,
                 type: 1
             }
             Core.Api.Operation.list({ ...params }).then(res => {
@@ -158,8 +93,8 @@ export default {
             })
         },
         onChange() { },
-        selectArticle(id) {
-            this.routerChange('mall/detail', { id })
+        selectDeals(id) {
+            this.routerChange('mall/deals-detail', { id })
         },
         /*== 路由跳转 start ==*/
         routerChange(key, q = {}) {
@@ -175,7 +110,7 @@ export default {
             Core.Util.handleScrollFn(html, this.getData, this.pagination, this.loadingArticle, this.footerHeight)
         },
         getData(params = {}) {
-            this.getArticle()
+            this.getDeals()
         },
         // 窗口大小
         handleWindowResize() {
@@ -273,8 +208,11 @@ export default {
             .deals-item {
                 .flex(initial, initial, row);
                 background: #FFF;
-                margin-top: 40px;
                 cursor: pointer;
+
+                &:nth-child(n + 2) {
+                    margin-top: 40px;
+                }
 
                 .img-body {
                     height: 254px;
@@ -336,6 +274,24 @@ export default {
 
     .empty {
         width: 100%;
+    }
+}
+
+.hover {
+    &:hover {
+        box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.08);
+
+        .name {
+            background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .img {
+            transition: 0.2s;
+            transform: scale(1.1);
+        }
     }
 }
 

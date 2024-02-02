@@ -16,10 +16,10 @@
                             <svg-icon icon-class="arrow-right-hover" class-name="arrow-right-hover" />
                         </div>
                     </template>
-                    <div v-for="item in reportList">
+                    <div v-for="item in topList">
                         <div class="report-item">
-                            <span class="report-text">{{ item }}</span>
-                            <span class="report-more">
+                            <span class="report-text">{{ item.title }}</span>
+                            <span class="report-more" @click="routerChange('/mall/deals-detail', { id: item.id })">
                                 <span class="text">
                                     check more
                                 </span>
@@ -34,8 +34,8 @@
         <div class="carousel">
             <a-carousel autoplay dotsClass="purchase-dots" key="banner">
                 <div v-for="item in carouselList">
-                    <div class="carousel-item">
-                        <img class="img" :src="getPurchaseSrc(item.img, 'png')">
+                    <div class="carousel-item" :class="item.url ? 'pointer' : ''" @click="bannerClick(item.url)">
+                        <img class="img" :src="$Util.imageFilter(JSON.parse(item.img)[0].path, 5)">
                     </div>
                 </div>
             </a-carousel>
@@ -46,7 +46,8 @@
                 <div class="content">
                     <div class="title">{{ $t('purchase.products') }}</div>
                     <div class="products-list">
-                        <div class="products-item hover" v-for="(item, index) in productsList.slice(0, 3)" :key="index" @click="routerChange(item.path)">
+                        <div class="products-item hover" v-for="(item, index) in productsList.slice(0, 3)" :key="index"
+                            @click="routerChange(item.path)">
                             <div class="text">
                                 <p class="name">{{ $t(`purchase.${item.nameLang}`) }}</p>
                                 <p class="mes">{{ $t(`purchase.${item.mesLang}`) }}</p>
@@ -86,16 +87,17 @@
                 <div class="content">
                     <div class="title">{{ $t('purchase.deals') }}</div>
                     <div class="deals-list">
-                        <div class="deals-item hover" v-for="(item, index) in dealsList" :key="index">
+                        <div class="deals-item hover" v-for="(item, index) in reportList" :key="index"
+                            @click="routerChange('/mall/deals-detail', { id: item.id })">
                             <div class="img-body">
                                 <div class="img">
-                                    <img class="deals-img" src="@/assets/images/mall/purchase/demo.png">
+                                    <img class="deals-img" :src="$Util.imageFilter(JSON.parse(item.img)[0].path, 5)">
                                 </div>
                             </div>
                             <div class="text">
                                 <div>
                                     <p class="text-title" :title="item.title">{{ item.title }}</p>
-                                    <p class="text-subtitle" :title="item.mes">{{ item.mes }}</p>
+                                    <p class="text-subtitle" :title="item.firstSentence">{{ item.firstSentence }}</p>
                                 </div>
                                 <p class="time" v-if="lang === 'zh'">{{ $Util.timeFilter(item.create_time, 3) }}</p>
                                 <p class="time" v-else>{{ $Util.timeFilter(item.create_time, 6) }}</p>
@@ -154,10 +156,8 @@ export default {
     data() {
         return {
             Core,
-            reportList: 2,
-            carouselList: [
-                { img: 'banner' },
-            ],
+            topList: [],
+            carouselList: [],
             productsList: Object.values(Core.Const.ITEM.TYPE_MAP),
             servicesList: [
                 {
@@ -179,18 +179,7 @@ export default {
                 //     path: '',
                 // },
             ],
-            dealsList: [
-                {
-                    title: 'Christmas discounts in Europe',
-                    mes: '20% off all items',
-                    create_time: 1699276878
-                },
-                {
-                    title: 'The new HORWIN Ranger - a new era of e-mobility',
-                    mes: 'Breathtaking. Inspiring. Groundbreaking. Or just awesome. Describe it as you want. The HORWIN Ranger is state of the art when it comes to e-mobility.',
-                    create_time: 1699276878
-                },
-            ],
+            reportList: [],
             newsList: [],
         };
     },
@@ -203,8 +192,33 @@ export default {
     created() { },
     mounted() {
         this.getNews()
+        this.getDeals()
+        this.getCarousel()
     },
     methods: {
+        // 使用正则表达式提取第一句内容
+        getFirstSentence(html) {
+            var regex = /<[^>]+>/g; // 匹配所有标签
+            var firstSentence = html.replace(regex, "").split(".")[0]; // 去除标签后按"."分隔并获取第一部分
+            return firstSentence
+        },
+        // 获取banner
+        getCarousel() {
+            this.loadingCarousel = true
+            let params = {
+                "page": 1,// 页号
+                "page_size": 3,// 页大小
+                type: 2
+            }
+            Core.Api.Operation.list({ ...params }).then(res => {
+                this.carouselList = res.list
+            }).catch(err => {
+                this.carouselList = []
+                console.log(err)
+            }).finally(() => {
+                this.loadingCarousel = false
+            })
+        },
         getNews() {
             let params = {
                 "page": 1,// 页号
@@ -224,9 +238,33 @@ export default {
                 console.log(err)
             })
         },
+        // 获取地方政策
+        getDeals() {
+            let params = {
+                "page": 1,// 页号
+                "page_size": 3,// 页大小
+                "title": "",
+                "area": "",
+                type: 1
+            }
+            Core.Api.Operation.list({ ...params }).then(res => {
+                this.topList = res.list
+                this.reportList = res.list.slice(0, 2)
+                this.reportList = this.reportList.map(item => {
+                    item.firstSentence = this.getFirstSentence(item.content)
+                    return item
+                })
+            }).catch(err => {
+                console.log(err)
+            })
+        },
         getPurchaseSrc(name, type = 'png') {
             const path = `../../../assets/images/mall/purchase/${name}.${type}`;
             return purchaseModules[path]?.default || '';
+        },
+        bannerClick(url) {
+            if (!/^(http:|https:)/i.test(url)) url = "https://" + url;// 没有http自动加上
+            window.open(url, '_blank')
         },
         // 路由跳转
         routerChange(routeUrl, item = {}, type = 1) {
@@ -253,7 +291,7 @@ export default {
     .container {
         .box {
             .content {
-                > .btn {
+                >.btn {
                     .fcc();
                     margin-top: 40px;
 
@@ -618,6 +656,10 @@ export default {
 }
 
 /* For demo */
+.pointer {
+    cursor: pointer;
+}
+
 .ant-carousel :deep(.slick-slide) {
     text-align: center;
     overflow: hidden;
@@ -703,11 +745,27 @@ export default {
     .arrow-left-report,
     .arrow-right-report {
         display: inline-block;
+
     }
 
     .arrow-left-hover,
     .arrow-right-hover {
         display: none;
+    }
+
+    .custom-slick-arrow {
+        &:hover {
+
+            .arrow-left-report,
+            .arrow-right-report {
+                display: none;
+            }
+
+            .arrow-left-hover,
+            .arrow-right-hover {
+                display: inline-block;
+            }
+        }
     }
 }
 </style>

@@ -329,6 +329,12 @@ class StorageHandler {
     clearDistributorNewMsg() {
         this.removeItem(Const.DATA.DISTRIBUTOR_NEW_MSG);
     }
+    setReportData(value) {
+        return this.setItem(Const.DATA.REPORT_DATA, value);
+    }
+    getReportData() {
+        return this.getItem(Const.DATA.REPORT_DATA) || undefined;
+    }
 
 }
 
