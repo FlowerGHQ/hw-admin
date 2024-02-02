@@ -6,7 +6,7 @@
         <div class="form-block">
             <div class="form-content">
                 <!-- 区域 -->
-                <div class="form-item required">
+                <div class="form-item required flex_start area">
                     <div class="key">{{ $t('operation.area') }}</div>
                     <div class="value">
                         <div class="area-body">
@@ -314,8 +314,11 @@ const getSrcImg = (name, type = "png") => {
 
                 .value {
                     .area-body {
-                        display: flex;
-                        align-items: center;
+                        .ant-radio-group {
+                            .ant-radio-wrapper {
+                                font-size: 14px;
+                            }
+                        }
                     }
 
                     .tips {
@@ -346,8 +349,7 @@ const getSrcImg = (name, type = "png") => {
                     }
 
                     .cascader-area {
-                        min-width: 224px;
-                        flex: 1;
+                        margin-top: 8px;
                     }
 
                     //富文本编辑器
@@ -406,6 +408,11 @@ const getSrcImg = (name, type = "png") => {
                                 color: #bfbfbf;
                             }
                         }
+                    }
+                }
+                &.area {
+                    .key {
+                        margin-top: 5px;
                     }
                 }
 
