@@ -237,6 +237,21 @@ export default {
             .file-item {
                 .flex(initial, center, row);
                 padding: 0 24px;
+                overflow: hidden;
+                position: relative;
+                &::before {
+                    content: '';
+                    display: inline-block;
+                    position: absolute;
+                    bottom: 0;
+                    left: 88px;
+                    background: #EEE;
+                    width: calc(100% - 88px);
+                    height: 1px;
+                }
+                &:last-child::before {
+                    display: none;
+                }
 
                 .icon {
                     padding: 32px 0;
