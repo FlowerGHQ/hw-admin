@@ -123,6 +123,19 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  ratio: {
+    type: Object,
+    default: () => {
+      return {
+        width: 453,
+        height: 254,
+      }
+    },
+  },
+  ratioLimit: {
+    type: Boolean,
+    default: false,
+  },
 })
 const uploadId = _.uniqueId("upload_")
 const uploadComponent = ref(null)
@@ -136,7 +149,7 @@ const $emit = defineEmits(["update:value", "preview"])
 // 判断循环的计数
 const loopCount = ref(0)
 // 校验图片
-const handleImgCheck = (file, fileList) => {
+const handleImgCheck = async (file, fileList) => {
   const isCanUpType = props.isCanUpType.includes(file.type)
   const isLt = file.size / 1024 / 1024 < props.limitSize
   if (!isCanUpType) {
@@ -146,6 +159,15 @@ const handleImgCheck = (file, fileList) => {
   if (!isLt) {
     message.warning(`${$t("my_upload.picture_smaller")} ${props.limitSize}M!`)
     return false || Upload.LIST_IGNORE
+  }
+  if (props.ratioLimit) {
+    // 创建一个包含文件路径的URL
+    const url = URL.createObjectURL(file);
+    const res = await Core.Util.Common.getRatio(url)
+    if (res.height !== props.ratio.height || res.width !== props.ratio.width) {
+      message.warning(`${$t('n.upload')} ${$t("operation.pic_ratio")}:${props.ratio.width}x${props.ratio.height}`)
+      return false || Upload.LIST_IGNORE
+    }
   }
   return isCanUpType && isLt
 }

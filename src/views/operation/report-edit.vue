@@ -63,7 +63,7 @@
                     <div class="key">{{ $t('operation.pic') }}</div>
                     <div class="value">
                         <MyUpload name="add_picList" v-model:value="form.img" showTip :limit="1" :limitSize="10"
-                            tipPosition="right" :defaultPreview="false" @preview="handlePreview">
+                            tipPosition="right" :defaultPreview="false" ratioLimit :ratio="{ width: 453, height: 254 }" @preview="handlePreview">
                             <template #tip>
                                 <div class="tips">
                                     <p>{{ $t('operation.pic_tip1') }}</p>
