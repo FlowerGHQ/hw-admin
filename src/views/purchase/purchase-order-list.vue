@@ -378,6 +378,7 @@ export default {
             if (this.$auth('ADMIN')) {
                 columns.splice(3, 0, {zh: '已转单', en: 'Order transferred', value: '0', color: 'blue',  key: '250'})
             }
+
             return columns
         },
         // 权限(平台方还是分销商等)
@@ -578,10 +579,10 @@ export default {
             }).then(res => {
                 let total = 0
 
+                // console.log("获取状态 getStatusStat", res);
                 this.statusList.forEach(statusItem => {
-                    statusItem.value = 0;
                     res.status_list.forEach(item => {
-                        if ( statusItem.key == item.status) {
+                        if (statusItem.key == item.status) {
                             statusItem.value = item.amount
                         }
                     })
