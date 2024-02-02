@@ -28,10 +28,7 @@ export default {
 		// 请完善
 		please_complete: '请完善',
 		ladder_price: '设置阶梯价',
-		// EUR阶梯价设置
-		EUR_ladder_price: 'EUR阶梯价格设置',
-		//USD阶梯价设置
-		ESD_ladder_price: 'USD阶梯价格设置',
+		ladder_price_setting: '阶梯价格设置',
 		// 勾选商品可批量设置价格
 		batch_price_all: '勾选商品可批量设置价格',
 		// 批量设置价格
@@ -79,9 +76,7 @@ export default {
 		please_complete: 'Please complete',
 		ladder_price: 'Set ladder price',
 		// EUR阶梯价设置
-		EUR_ladder_price: 'EUR ladder price setting', 
-		// USD阶梯价设置
-		ESD_ladder_price: 'USD ladder price setting',
+		ladder_price_setting: 'ladder price setting', 
 		// 勾选商品可批量设置价格
 		batch_price_all: 'Check the goods to batch set the price',
 		// 批量设置价格

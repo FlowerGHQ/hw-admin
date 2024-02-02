@@ -590,12 +590,13 @@
                             <div class="search-col w-50-percentage">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.technical_seniority') }}</div>
                                 <div class="value m-l-8">                                    
-                                    <a-input-number
+                                    <a-input
                                         class="w-100 p-l-0"
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.human_resource.technical_seniority"
                                         :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
+                                        :maxlength="10"
                                     />
                                 </div>
                             </div>
@@ -2285,7 +2286,7 @@ import { useRoute, useRouter } from "vue-router";
 import Core from "@/core";
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import TimeSearch from "@/components/common/TimeSearch.vue";
-import MyMask from "../../../components/common/MyMask.vue";
+import MyMask from "@/components/horwin/based-on-dom/MyMask.vue";
 import MyUpload from "@/components/MyUpload/index.vue";
 import dayjs from 'dayjs';
 

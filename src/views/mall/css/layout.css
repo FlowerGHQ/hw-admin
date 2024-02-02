@@ -1,0 +1,29 @@
+.content {
+    padding: 80px 0;
+    margin: 0 auto;
+    width: 75%;
+}
+.content > .title {
+    color: #000;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin-bottom: 40px;
+}
+/* 滚动条 */
+::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+}
+
+/* 滚动条 */
+::-webkit-scrollbar-thumb {
+    height: 4px;
+    background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+}
+
+/* 滚动条背景 */
+::-webkit-scrollbar-track {
+    background-color: #EEE;
+}

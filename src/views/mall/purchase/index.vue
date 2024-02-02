@@ -46,8 +46,7 @@
                 <div class="content">
                     <div class="title">{{ $t('purchase.products') }}</div>
                     <div class="products-list">
-                        <div class="products-item hover" v-for="(item, index) in productsList.slice(0, 3)" :key="index"
-                            @click="routerChange(item.path, { tabId: item.id })">
+                        <div class="products-item hover" v-for="(item, index) in productsList.slice(0, 3)" :key="index" @click="routerChange(item.path)">
                             <div class="text">
                                 <p class="name">{{ $t(`purchase.${item.nameLang}`) }}</p>
                                 <p class="mes">{{ $t(`purchase.${item.mesLang}`) }}</p>
@@ -137,11 +136,6 @@
                 </div>
             </div>
         </div>
-        <a id="back-top" :style="{ position: upTopPosition }" @click="back2Top" v-show="showTop">
-            <svg-icon icon-class="purchase-up" class-name="back-top-icon" />
-            <svg-icon icon-class="purchase-up-color" class-name="back-top-icon-color" />
-            <p class="back-top-text">{{ $t('purchase.back_top') }}</p>
-        </a>
     </div>
 </template>
     
@@ -156,7 +150,6 @@ const purchaseModules = import.meta.globEager("@/assets/images/mall/purchase/*")
 export default {
     components: {
         MyButton,
-        SvgIcon
     },
     data() {
         return {
@@ -199,8 +192,6 @@ export default {
                 },
             ],
             newsList: [],
-            upTopPosition: 'fixed',
-            showTop: false
         };
     },
     computed: {
@@ -212,13 +203,6 @@ export default {
     created() { },
     mounted() {
         this.getNews()
-        setTimeout(() => {
-            this.scrollFn() // 首次执行初始化回到顶部按钮位置
-        }, 1000);
-        window.addEventListener('scroll', this.scrollFn)
-    },
-    beforeDestroy() {
-        window.removeEventListener('scroll', this.scrollFn)
     },
     methods: {
         getNews() {
@@ -244,32 +228,6 @@ export default {
             const path = `../../../assets/images/mall/purchase/${name}.${type}`;
             return purchaseModules[path]?.default || '';
         },
-        // 回到顶部
-        back2Top() {
-            const dom = document.getElementById('mall-header')
-            dom.scrollIntoView({
-                behavior: 'smooth'
-            });
-        },
-        // 回到顶部按钮定位
-        scrollFn() {
-            const footerEl = document.querySelector('#mall-footer')
-            //获取页面滚动距离
-            const scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
-            const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-            const scrollBottom = scrollHeight - scrollTop - innerHeight
-            if (scrollBottom > footerEl?.clientHeight) {// 离开footer
-                this.upTopPosition = 'fixed'
-            } else {// 进入footer
-                this.upTopPosition = 'absolute'
-            }
-            // 控制显隐
-            if (scrollTop > 300) {
-                this.showTop = true
-            } else {
-                this.showTop = false
-            }
-        },
         // 路由跳转
         routerChange(routeUrl, item = {}, type = 1) {
             switch (type) {
@@ -286,7 +244,8 @@ export default {
     }
 };
 </script>
-    
+
+<style lang='scss' scoped src='../css/layout.css'></style>
 <style lang="less" scoped>
 #mall-purchase {
     position: relative;
@@ -294,20 +253,7 @@ export default {
     .container {
         .box {
             .content {
-                padding: 80px 0;
-                margin: 0 auto;
-                width: 75%;
-
-                .title {
-                    color: #333;
-                    font-size: 32px;
-                    font-style: normal;
-                    font-weight: 500;
-                    line-height: normal;
-                    margin-bottom: 40px;
-                }
-
-                >.btn {
+                > .btn {
                     .fcc();
                     margin-top: 40px;
 

@@ -272,6 +272,7 @@
 }
 
 .ant-modal {
+
     .ant-modal-content {
         border-radius: 2px;
         overflow: hidden;
@@ -315,6 +316,94 @@
 
             span {
                 white-space: nowrap;
+            }
+            .file-list {
+                display: flex;
+                width: 240px;
+                align-items: center;
+                justify-content: space-between;
+    
+                .file-key {
+                    display: flex;
+                    align-items: center;
+                    .file-name {
+                        margin-left: 10px;
+                    }
+                }
+                .file-value {
+                    cursor: pointer;
+                }
+            }
+            .audit-modal-title {
+                color: #1D2129;
+                font-size: 16px;
+                font-weight: 600;
+            }
+            .audit-modal-head-wrap {
+                padding: 16px 60px;
+                box-sizing: border-box;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                .head-form-item {
+                    display: flex;
+                    align-items: center;
+                    margin-right: 10px;
+                    .head-key {
+                        color:#86909C;
+                        font-size: 14px;
+                    }
+                    .head-value {
+                        color:#1D2129;
+                        font-size: 14px;
+                    }
+                }
+            }
+            .audit-table {
+                margin-top: 19px;
+                .audit-table-footer {
+                    position: relative;
+                    margin-top: 18px;
+                    margin-bottom: 16px;
+                    width: 100%;
+                    display: flex;
+                    justify-content: flex-end;
+                    color: #1D2129;
+                    font-size: 14px;
+                    font-weight: 400;
+        
+                    .add-btn {
+                        position: absolute;
+                        left: 0;
+                    }
+        
+                    .total,
+                    .total-amount {
+                        margin-right: 24px;
+                    }
+                }
+            }
+            .form-item {
+                margin-top: 16px;
+                .key::before {
+                    opacity: 0;
+                    content: '*';
+                    color: @TC_required;
+                    padding-right: 2px;
+                }
+                .key {
+                    color:#1D2129;
+                    font-size: 14px;
+                    font-weight: 400;
+                }
+            
+                &.required {
+            
+                    // 必填标志
+                    .key::before {
+                        opacity: 1;
+                    }
+                }
             }
         }
 
@@ -370,6 +459,222 @@
             margin-left: 0;
             margin-right: 0;
         }
+    }
+
+    .modal-title-wrap {
+        display: flex;
+
+
+        .modal-title-key {
+            color: #86909C;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .modal-title-value {
+            color: #1D2129;
+            font-size: 14px;
+            font-weight: 400;
+            margin-left: 10px;
+        }
+    }
+
+    // 弹框内爆炸图
+    .explored-content {
+        position: relative;
+        z-index: 10;
+        margin-top: 30px;
+        width: 100%;
+
+        * {
+            user-select: none;
+        }
+
+        >.title {
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 22px;
+            color: #000000;
+            margin-bottom: 22px;
+        }
+
+        .carousel-list {
+            width: 700px;
+            max-height: 600px;
+            overflow: hidden;
+
+            .carousel-item {
+                position: relative;
+
+                >img {
+                    width: 700px;
+                    height: 440px;
+                }
+
+                canvas {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                }
+
+                .point-end,
+                .point-start {
+                    position: absolute;
+                    border-radius: 50px;
+                    user-select: none;
+
+                    &:hover {
+                        background-color: @TC_LP;
+                        color: @TC_L;
+                    }
+                }
+
+                .point-start {
+                    width: 8px;
+                    height: 8px;
+                    background-color: @TC_LP;
+                }
+
+                .point-end {
+                    width: 20px;
+                    height: 20px;
+                    line-height: 20px;
+                    text-align: center;
+                    font-size: 12px;
+                    border: 1px solid @TC_LP;
+                    background-color: white;
+                    cursor: pointer;
+                }
+
+                .point-end-select {
+                    background-color: @TC_LP;
+                    color: @TC_L;
+                }
+            }
+        }
+
+        .explore-content {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .component-contain {
+            position: absolute;
+            display: flex;
+            flex-wrap: wrap;
+            z-index: 2;
+            padding: 12px 0;
+            width: 250px;
+            border-radius: 2px;
+            background-color: @primary;
+            border: 1px solid @BG_LP;
+            font-size: 0;
+
+            &:before,
+            &:after {
+                content: "";
+                display: block;
+                border-width: 5px;
+                position: absolute;
+                top: -10px;
+                left: 30px;
+                border-style: solid dashed dashed;
+                border-color: transparent transparent @BG_LP transparent;
+                font-size: 0;
+                line-height: 0;
+            }
+
+            &:after {
+                top: -9px;
+                left: 30px;
+                border-color: transparent transparent @BG_LP transparent;
+            }
+
+            .contain-name {
+                position: relative;
+                padding: 0 16px;
+                width: 100%;
+                height: 20px;
+                line-height: 20px;
+                font-size: 16px;
+                color: @TC_L;
+                text-align: left;
+                overflow: hidden; //超出的文本隐藏
+                text-overflow: ellipsis; //溢出用省略号显示
+                white-space: nowrap;
+
+                .i_skew-bg {
+                    font-size: 16px;
+                    color: @TC_L;
+                    margin-right: 10px;
+                }
+
+                .icon-name {
+                    position: absolute;
+                    top: 0;
+                    left: 26px;
+                    font-style: italic;
+                    font-size: 12px;
+                    font-weight: bold;
+                    color: @TC_LP;
+                    transform-origin: 50% 50%;
+                    transform: scale(90%, 90%);
+                }
+            }
+
+            .contain-type {
+                display: flex;
+                margin-top: 12px;
+                padding: 0 16px;
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .type-left {
+                width: 100%;
+                color: @TC_L;
+                font-size: 16px;
+                overflow: hidden; //超出的文本隐藏
+                text-overflow: ellipsis; //溢出用省略号显示
+                white-space: nowrap;
+            }
+
+            .edit-btn {
+                margin-top: 12px;
+                width: 100%;
+                text-align: right;
+                margin-right: 20px;
+
+                :deep(span) {
+                    color: @primary !important;
+                }
+            }
+        }
+    }
+
+    .fade-enter-active {
+        transition: opacity 0.15s ease;
+    }
+
+    .fade-leave-active {
+        transition: opacity 0.3s ease;
+    }
+
+    .fade-enter-from,
+    .fade-leave-to {
+        opacity: 0;
+    }
+
+    .mt {
+        margin-top: 40px !important;
+    }
+
+    // 图片适配
+    .carouselImg {
+        width: v-bind('mediaWidth') !important;
     }
 
     .modal-footer {
@@ -629,6 +934,18 @@
         &.smell {
             width: 42px;
         }
+    }
+
+    .status-box {
+        .fcc();
+        display: inline-flex;
+        // min-width: 72px;
+        height: 22px;
+        line-height: 22px;
+        border-radius: 2px;
+        font-size: @fz_sm;
+        text-align: center;
+        padding: 0 12px;
     }
 }
 
@@ -1368,6 +1685,10 @@ p {
         color: #000022;
         line-height: 25px;
         font-size: @fz_lg;
+        &.fl-js {
+            display: flex;
+            justify-content: space-between;
+        }
 
         .ant-tag {
             margin-left: 12px;

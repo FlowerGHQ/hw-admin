@@ -10,7 +10,7 @@
         :width="860"
         ellipsis
         :title="ladderPriceTitle"
-        wrapClassName="ladder-modal"
+        :wrapClassName="{'ladder-modal':!batchSetVisible,'no-footer':batchSetVisible}"
         @ok="handleComfirmLadderPrice"
         @cancel="handleCancelLadderPrice">
         <!-- footer -->
@@ -559,7 +559,9 @@ watch(
     width: 100%;
     height: 100%;
 }
-:deep(.ladder-modal) {
+:deep(.ladder-modal),
+:deep(.no-footer)
+{
     .ant-modal {
         .ant-modal-content {
             border-radius: 4px;
@@ -691,6 +693,15 @@ watch(
                 }
             }
         }
+    }
+}
+:deep(.no-footer){
+    .ant-modal-footer {
+        display: none !important;
+        transition: all 0.3s ease-in-out;
+    }
+    .ant-modal-body{
+        height: calc(598px + 68px) !important;
     }
 }
 

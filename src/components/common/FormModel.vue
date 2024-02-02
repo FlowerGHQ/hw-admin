@@ -144,7 +144,7 @@ export default {
         margin-top: 1px;
         &.be-entering {
             border-bottom: 1px solid #EEE;
-            caret-color: linear-gradient(100deg, #C6F 0%, #66F 100%);
+            caret-color: #C6F;
         }
         &.not-enter {
             border-bottom: 1px solid #EEE;
@@ -210,7 +210,7 @@ export default {
         width: 100%;
         &.be-entering {
             border-bottom: 1px solid #EEE;
-            caret-color: linear-gradient(100deg, #C6F 0%, #66F 100%);
+            caret-color: #C6F;
         }
         &.not-enter {
             border-bottom: 1px solid #EEE;
@@ -378,7 +378,7 @@ export default {
             // margin-top: 1px;
             &.be-entering {
                 border-bottom: 1px solid #EEE;
-                caret-color: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                caret-color: #C6F;
             }
             &.not-enter {
                 border-bottom: 1px solid #EEE;

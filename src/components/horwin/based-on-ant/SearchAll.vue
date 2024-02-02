@@ -119,6 +119,27 @@
                             </div>
                         </div>
                     </a-col>
+                    <!-- 时间选择器 -->
+                    <a-col v-if="item.type === 'time-range'" :xs="24" :sm="24" :xl="11" :xxl="8" class="search-box">
+                        <div class="item-box">
+                            <div class="key-box">
+                                {{ $t(item.key) }}
+                            </div>
+                            <div class="value-box">
+                                <a-range-picker
+                                    v-model:value="item.value"
+                                    valueFormat='X'
+                                    @keydown.enter="handleSearch"
+                                    :format="item.format || 'YYYY-MM-DD'" 
+                                    :show-time="item.defaultTime"
+                                    :valueFormat="item.valueFormat || 'X'"
+                                    :allow-clear='false'
+                                    :placeholder="[$t('crm_def.start_time'),$t('crm_def.end_time')]">
+                                    <template #suffixIcon><i class="icon i_calendar"/></template>
+                                </a-range-picker>
+                            </div>
+                        </div>
+                    </a-col>
                 </template>
             </slot>
             <slot name="time"></slot>
@@ -202,6 +223,12 @@ export default {
             const resultParams = {};
             this.options.forEach((el) => {
                 resultParams[el.searchParmas] = el.value;
+                // 时间的处理
+                if (el.type === "time-range") {
+                    resultParams[el.searchParmas[0]] = el.value[0];
+                    resultParams[el.searchParmas [1]] = el.value[1];
+                    delete resultParams[el.searchParmas];
+                }
             });
             this.$emit("search", resultParams);
         },
@@ -259,6 +286,9 @@ export default {
         justify-content: flex-end;
         margin-left: 10px;
     }
+}
+:deep(.ant-input-affix-wrapper) {
+    border-radius: 0px 4px 4px 0px;
 }
 .m-l-5 {
     margin-left: 5px;

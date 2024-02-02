@@ -127,6 +127,13 @@ const searchList = ref([
         key: 'supply-chain.supplier_type',
         selectMap: Core.Const.SUPPLAY.SUPPLAY_TYPE,
     },
+    {
+        type:'time-range',
+        value: [],
+        searchParmas: ['begin_time', 'end_time'],
+        key: 'supply-chain.submission_time',
+        defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_E
+    }
 ])
 
 onMounted(() => {});

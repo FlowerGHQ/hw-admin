@@ -497,7 +497,7 @@ export default {
                     break;
                 case 'edit':  // 购物车
                     routeUrl = this.$router.resolve({
-                        path: "/purchase/item-collect",
+                        path: "/mall/shopping-bag",
                         query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_self')

@@ -119,6 +119,10 @@ const props = defineProps({
     type: Array,
     default: () => ["image/jpeg", "image/jpg", "image/png"],
   },
+  defaultPreview: {
+    type: Boolean,
+    default: true,
+  },
 })
 const uploadId = _.uniqueId("upload_")
 const uploadComponent = ref(null)
@@ -128,7 +132,7 @@ const limitNum = computed(() => {
 })
 const previewVisible = ref(false)
 const previewImage = ref("")
-const $emit = defineEmits(["update:value"])
+const $emit = defineEmits(["update:value", "preview"])
 // 判断循环的计数
 const loopCount = ref(0)
 // 校验图片
@@ -160,13 +164,15 @@ const handleDetailChange = ({ file, fileList }) => {
         let fileArr = [];
         fileList.forEach((item) => {
             item?.response?.data?.filename &&
-                fileArr.push(item?.response?.data?.filename);
+                fileArr.push({
+                  name: item.name,
+                  path: item?.response?.data?.filename,
+                  type: item.type,
+                });
         });
         upload.value.fileSting =
             fileArr.length > 0
-                ? fileArr.length > 1
-                ? fileArr.join(",")
-                : fileArr[0]
+                ? fileArr
                 : "";
         console.log(upload.value.fileSting, 'upload.value.fileSting')
         $emit("update:value", upload.value.fileSting);
@@ -185,14 +191,18 @@ const handleDetailChange = ({ file, fileList }) => {
   }
 }
 const handlePreview = (file) => {
-  previewImage.value = file?.response?.data?.filename
-    ? Core.Const.NET.FILE_URL_PREFIX + file.response.data.filename
-    : file?.url
-    ? file.url
-    : file?.thumbUrl
-    ? file.thumbUrl
-    : ""
-  previewVisible.value = true
+  if (props.defaultPreview) {
+    previewImage.value = file?.response?.data?.filename
+      ? Core.Const.NET.FILE_URL_PREFIX + file.response.data.filename
+      : file?.url
+      ? file.url
+      : file?.thumbUrl
+      ? file.thumbUrl
+      : ""
+    previewVisible.value = true
+  } else {
+    $emit("preview", { file, fileList: upload.value.fileList });
+  }
 }
 const handleRemove = (file) => {
   upload.value.fileList = upload.value.fileList.filter(
@@ -218,24 +228,44 @@ watch(
   () => props.value,
   (val) => {
     if (val) {
-      if (val instanceof Array) return
-      // 讲val 的长度赋值给计数
-      loopCount.value = val.split(",").length
-      let fileList = []
-      val.split(",").forEach((item) => {
-        fileList.push({
-          uid: _.uniqueId("upload_"),
-          name: item,
-          status: "done",
-          url: Core.Const.NET.OSS_POINT + item,
-          response: {
-            code: 0,
-            data: {
-              filename: item,
+       let fileList = []
+      if (val instanceof Array) {
+        // 讲val 的长度赋值给计数
+        loopCount.value = val.length
+        val.forEach((item) => {
+          fileList.push({
+            uid: _.uniqueId("upload_"),
+            name: item.name,
+            status: "done",
+            url: Core.Const.NET.OSS_POINT + item.path,
+            type: item.type,
+            response: {
+              code: 0,
+              data: {
+                filename: item.path,
+              },
             },
-          },
+          })
         })
-      })
+      } else {
+        // 讲val 的长度赋值给计数
+        loopCount.value = val.split(",").length
+        val.split(",").forEach((item) => {
+          fileList.push({
+            uid: _.uniqueId("upload_"),
+            name: item,
+            status: "done",
+            url: Core.Const.NET.OSS_POINT + item,
+            type: item,
+            response: {
+              code: 0,
+              data: {
+                filename: item,
+              },
+            },
+          })
+        })
+      }
       upload.value.fileList = fileList
     }
   },

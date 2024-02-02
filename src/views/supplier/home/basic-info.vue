@@ -546,11 +546,11 @@
                                 <a-col :span="12">
                                     <!-- 技术工龄 -->
                                     <a-form-item :label="$t('supply-chain.technical_seniority')">
-                                        <a-input-number
+                                        <a-input
                                             v-model:value="formState.human_resource.technical_seniority"
                                             :placeholder="$t('def.input')"
-                                            :min="0">
-                                        </a-input-number>
+                                            :maxlength="10">
+                                        </a-input>
                                     </a-form-item>
                                 </a-col>
                             </a-row>

@@ -67,19 +67,88 @@ const mallRouters = { // 看板
             }
         },
         {
+            path: 'shopping-bag',
+            component: () => import('@/views/mall/purchase/shopping-bag.vue'),
+            meta: {
+                title: '购物车',
+                title_en: 'Shopping Bag',
+            }
+        },
+        {
             path: 'vehicle-list',
             component: () => import('@/views/mall/purchase/vehicle/vehicle-list.vue'),
             meta: {
-                title: '所有车型',
+                title: '所有整车',
                 title_en: 'All Vehicle Models',
+                item_type: 1, //商品分类：1.整车；2.零部件；3.周边；4.广宣品
             },
             children: [
                 {
                     path: 'detail',
                     component: () => import('@/views/mall/purchase/vehicle/vehicle-detail.vue'),
                     meta: {
-                        title: '文章详情',
+                        title: '整车详情',
                         title_en: 'Vehicle Detail',
+                        hideParentTemplate: true
+                    }
+                },
+            ]
+        },
+        {
+            path: 'accessories-list',
+            component: () => import('@/views/mall/purchase/vehicle/vehicle-list.vue'),
+            meta: {
+                title: '所有配件',
+                title_en: 'All Accessories',
+                item_type: 2, //商品分类：1.整车；2.零部件；3.周边；4.广宣品
+            },
+            children: [
+                {
+                    path: 'detail',
+                    component: () => import('@/views/mall/purchase/vehicle/vehicle-detail.vue'),
+                    meta: {
+                        title: '配件详情',
+                        title_en: 'Accessories Detail',
+                        hideParentTemplate: true
+                    }
+                },
+            ]
+        },
+        {
+            path: 'peripheral-list',
+            component: () => import('@/views/mall/purchase/vehicle/vehicle-list.vue'),
+            meta: {
+                title: '所有周边件',
+                title_en: 'All Peripheral Products',
+                item_type: 3, //商品分类：1.整车；2.零部件；3.周边；4.广宣品
+            },
+            children: [
+                {
+                    path: 'detail',
+                    component: () => import('@/views/mall/purchase/vehicle/vehicle-detail.vue'),
+                    meta: {
+                        title: '周边件详情',
+                        title_en: 'Peripheral Products Detail',
+                        hideParentTemplate: true
+                    }
+                },
+            ]
+        },
+        {
+            path: 'promotional-list',
+            component: () => import('@/views/mall/purchase/vehicle/vehicle-list.vue'),
+            meta: {
+                title: '所有广宣品',
+                title_en: 'All Promotional Products',
+                item_type: 4, //商品分类：1.整车；2.零部件；3.周边；4.广宣品
+            },
+            children: [
+                {
+                    path: 'detail',
+                    component: () => import('@/views/mall/purchase/vehicle/vehicle-detail.vue'),
+                    meta: {
+                        title: '广宣品详情',
+                        title_en: 'Promotional Products Detail',
                         hideParentTemplate: true
                     }
                 },

@@ -3,16 +3,16 @@ import Util from "../core/utils"
 import Data from "../core/data"
 
 import Layout from '../views/layout/index.vue';
-import MallLayout from '../views/mall/layout/index.vue';
 
 // 供应商路由
 import { supplyManage, supplyRouters } from './supply-router'
 // 新分销商路由
 import { mallRouters } from './mall'
-// // 分销商路由
-// import { customerCare } from './distributor-router'
-// // 平台方路由
-// import { inquiryManagement } from './admin-router'
+// 分销商路由
+import { customerCare } from './distributor-router'
+// 平台方路由
+import { inquiryManagement } from './admin-router'
+import { operationManagement } from './admin-router'
 
 const LOGIN_TYPE = Const.LOGIN.TYPE
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE
@@ -41,7 +41,7 @@ switch (NOW_LOGIN_TYPE) {
     default:
         break;
 }
-/** 
+/**
 * @params type 这个权限是 销售/售后/生产/CRM 路口的权限 整个模块
 * @params meta.roles 这个权限是 在平台方 / 分销商 / 零售商 / 门店 下显示的权限
 * @params meta.auth 这个权限是在系统那边配置每一个用户或者角色的权限显示与否
@@ -92,9 +92,9 @@ const routes = [
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION],
         meta: {
             title: '商城',
-            title_en: 'Store',
-            icon: 'i_s_dashboard', 
-            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],  
+            title_en: 'Data Board',
+            icon: 'i_s_dashboard',
+            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
         },
         children: [
             {
@@ -390,7 +390,7 @@ const routes = [
     { // 采购管理 - 经销商端 && 门店端 && 分销商端
         path: '/purchase',
         component: Layout,
-        redirect: '/purchase/item-list',
+        redirect: '/purchase/purchase-order-list',
         name: 'PurchaseManagement',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
         meta: {
@@ -409,6 +409,7 @@ const routes = [
                     title_en: 'Purchase',
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
 	                auth: ["item.list"],
+                    hidden: true
                 }
             },
             {
@@ -431,6 +432,7 @@ const routes = [
                     title: '购物车',
                     title_en: 'Shopping cart',
 	                auth: ["purchase-order.save"],
+                    hidden: true
                 }
             },
             {
@@ -582,7 +584,7 @@ const routes = [
             {
                 path: 'item-bom',
                 name: 'ItemBom',
-                component: () => import('@/views/item/item-bom.vue'),                
+                component: () => import('@/views/item/item-bom.vue'),
                 meta: {
                     title: 'BOM管理',
                     title_en: 'BOM Management',
@@ -644,7 +646,42 @@ const routes = [
             },
         ]
     },
-
+    { // 三包管理 - 平台端
+        path: '/warranty',
+        component: Layout,
+        redirect: '/warranty/time-config',
+        name: 'Warranty',
+        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
+        meta: {
+            title: '三包管理',
+            title_en: 'Warranty Management',
+            icon: 'i_s_temp',
+            roles: [LOGIN_TYPE.ADMIN],
+            // auth: ['warranty.time-config','warranty.list'],
+        },
+        children: [
+            {
+                path: 'warranty-time-config',
+                name: 'warrantyConfig',
+                component: () => import('@/views/warranty/time-config.vue'),
+                meta: {
+                    title: '生效时间',
+                    title_en: 'Effective Time',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+            {
+                path: 'warranty-list',
+                name: 'WarrantyList',
+                component: () => import('@/views/warranty/warranty-list.vue'),
+                meta: {
+                    title: '三包时长',
+                    title_en: 'Warranty Duration',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+        ]
+    },
     // { // 售后管理 - 平台 && 分销
     //     path: '/aftersales-supply',
     //     component: Layout,
@@ -820,6 +857,7 @@ const routes = [
                 name: 'RepairAuditList',
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
+                    hidden: true,
                     title: '待审工单',
                     title_en: 'Pending warranty claim',
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
@@ -832,6 +870,7 @@ const routes = [
                 name: 'RepairReditList',
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
+                    hidden: true,
                     title: '待改工单',
                     title_en: 'Pending warranty claim',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
@@ -844,6 +883,7 @@ const routes = [
                 name: 'RepairInvoiceList',
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
+                    hidden: true,
                     title: '待审核故障件',
                     title_en: 'Pending defective parts',
                     roles: [LOGIN_TYPE.ADMIN],
@@ -856,6 +896,7 @@ const routes = [
                 name: 'RepairFaultList',
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
+                    hidden: true,
                     title: '待入库故障件',
                     title_en: 'Wait recall parts',
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
@@ -869,14 +910,15 @@ const routes = [
                 component: () => import('@/views/repair/repair-edit.vue'),
                 meta: {
                     hidden: true,
-                    title: '维修单编辑',
+                    title: '新增工单',
+                    title_en: 'New Work Order',
                     parent: '/repair/repair-list',
                     roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
                     auth: ['repair-order.save'],
                 }
             },
             {
-                path: 'repair-detail',
+                path: 'repair-detail-fix',
                 name: 'RepairDetail',
                 component: () => import('@/views/repair/repair-detail.vue'),
                 meta: {
@@ -908,11 +950,22 @@ const routes = [
                     auth: ['fault.list'],
                 }
             },
+            {
+                path: 'repair-detail',
+                name: 'RepairDetailFix',
+                component: () => import('@/views/repair/repair-detail-fix.vue'),
+                meta: {
+                    hidden: true,
+                    title: '维修单详情',
+                    parent: '/repair/repair-list',
+                    auth: ['repair-order.detail'],
+                }
+            },
         ]
     },
     // 客户关怀
-	// customerCare,
-    // inquiryManagement,
+	customerCare,
+    inquiryManagement,
 
     /*{ // 零售商管理 - 零售商端
         path: '/agent/agent-detail-sp',
@@ -2279,6 +2332,8 @@ const routes = [
 			},
 		]
 	},
+    // 运营管理
+    operationManagement,
 	{ // 回款单
 		path: '/crm-order-income',
 		component: Layout,
