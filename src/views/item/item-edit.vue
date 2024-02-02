@@ -1350,9 +1350,8 @@ export default {
                     }
                 }
             }else{
-                flag = false;
+                flag = true;
             }
-           
             return flag
         },
         saveDarftShow() {
@@ -1760,7 +1759,7 @@ export default {
                 // 校验检查
                 this.isValidate = true;
                 if (
-                    typeof this.checkFormInput(form, specData, attrDef,categoryMessage) ===
+                    typeof this.checkFormInput(form, specData, attrDef) ===
                     "function" 
                 ) {
                     console.log("checkFormInput err");
@@ -1881,19 +1880,10 @@ export default {
                 });
         },
         // 保存时检查表单输入
-        checkFormInput(form, specData, attrDef, categoryMessage) {
+        checkFormInput(form, specData, attrDef) {
             // 如果是整车并且是多规格校验分类
             if (form.type === this.itemTypeMap['1']?.key && this.specific.mode === 2) {
-                // 查看
-                if (categoryMessage && categoryMessage.length > 0) {
-                    for (let i = 0; i < categoryMessage.length; i++) {
-                        if(categoryMessage[i].desc === '' || categoryMessage[i].desc_en === '' || categoryMessage[i].desc === '<p><br></p>' || categoryMessage[i].desc_en === '<p><br></p>'){
-                            return this.$message.warning(
-                                `${this.$t("item-edit.please_complete")}(${this.$t("item-edit.category_description")})`
-                            );
-                        }
-                    }
-                } else if (this.isDesEmpty) {
+                 if (this.isDesEmpty) {
                     return this.$message.warning(
                         `${this.$t("item-edit.please_complete")}(${this.$t("item-edit.category_description")})`
                     );
@@ -2270,6 +2260,8 @@ export default {
             }
         },
         handleDescripttion() {
+            console.log("categoryMessage",this.categoryMessage);
+            console.log("category_index",this.category_index);
             let item = this.specific.list.filter((i) => i.id === this.category_index)[0];
             item.option = _.cloneDeep(this.categoryMessage);
             if (item.key.trim() && item.name.trim()) {
@@ -2485,11 +2477,26 @@ export default {
                     });
                 });
             }
-            console.log("dataList", dataList);
-            dataList.forEach(item=>{
+            dataList.forEach((item,index)=>{
                 item.name = `${this?.form?.name || ''} ${this?.keyArr[0] ? item[this.keyArr[0]].value : ''} ${this?.keyArr[1] ? item[this.keyArr[1]].value : ''}`
                 item.name_en = `${this?.form?.name_en || ''} ${this?.keyArr[0] ? item[this.keyArr[0]].value_en : ''} ${this?.keyArr[1] ? item[this.keyArr[1]].value_en : ''}`
+                this.specific.data.forEach((it,id) => {
+                    if(id === index){
+                        console.log('item',item);
+                        // 遍历对象
+                        for (let key in item) {
+                            if(!item[key]){
+                                item[key] = it[key];
+                            }
+                            // 图片
+                            if(key === 'imgsList'){
+                                item[key] = it[key];
+                            }
+                        }
+                    }
+                });
             })
+            console.log("dataList", dataList);
             this.specific.data = Core.Util.deepCopy(dataList);
         },
         // 批量设置
