@@ -36,7 +36,6 @@ const quillRef = ref(null);
 const myOptions = reactive({
     modules: {
         toolbar: [
-            ["bold", "underline", "italic"], // toggled buttons
             [{ list: "bullet" }],
         ],
     },
