@@ -42,12 +42,11 @@ const addParentCode = (arr, parentCode, parentName, parentEnName) => {
         item.parentName = parentName;
         item.parentEnName = parentEnName;
         item.label = $locale.value === "zh" ? item.name : item.name_en;
-        item.value = $locale.value === "zh" ? item.name : item.name_en;
+        item.value = item.name;
         if (item.children && item.children.length) {
             addParentCode(item.children, item.code, item.name, item.name_en);
         }
     });
-    console.log(arr)
     return arr;
 };
 const getCountryOptions = () => {
