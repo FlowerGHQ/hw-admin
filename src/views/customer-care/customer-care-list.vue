@@ -700,9 +700,9 @@ const editCommentAuth = (type) => {
     let result = false    
 
     if (isDistributerAdmin.value) {
-        result = true
-    } else {
         result = type
+    } else {
+        result = true
     }
     return result
 }

@@ -650,6 +650,7 @@ const handlePreview = ({ file, fileList }) => {
         isClose.value = true;
     } else if (/application\/pdf/.test(file.type))  { 
         console.log("application/pdf(pdf预览)", Core.Util.imageFilter(file.response?.data?.filename, 4));
+        window.open(Core.Util.imageFilter(file.response?.data?.filename, 4), '_blank')
         
     } else if (/^application\/+/.test(file.type)) {
 

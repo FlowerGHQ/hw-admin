@@ -144,34 +144,7 @@
                         <div class="col">
                             <div class="key m-r-16">{{ $t("customer-care.attachment") }}</div>
                             <div class="value d-f-a cursor">
-                                <template v-for="(item, index) in customerCareDetail.attachment_list" :key="index">
-                                    <template v-if="/(image\/|png|jpg|jpeg)/.test(item.type)">
-                                        <img
-                                            :class="{ 'm-l-16': index > 0 }"
-                                            class="attachment-img"
-                                            :src="item.path"
-                                            alt=""
-                                            @click="onViewImage(item)"
-                                        />
-                                    </template>
-                                    <template v-else-if="/video\/+/.test(item.type)">
-                                        <!-- 视频 -->
-                                        <div
-                                            class="video-container"
-                                            :class="{ 'm-l-16': index > 0 }"
-                                            @click="
-                                                onViewImage({
-                                                    type: 'video/*',
-                                                    path: item.path,
-                                                })
-                                            "
-                                        >
-                                            <MySvgIcon class="video-icon" icon-class="video-icon" />
-                                            <div class="time">{{ item.duration || "-" }}{{ item.duration ? "s" : "" }}</div>
-                                            <div class="bottom-mask">{{ item.name }}</div>
-                                        </div>
-                                    </template>
-                                </template>
+                                <staticPreviewList :attachment_list="customerCareDetail.attachment_list" @view="onViewImage"> </staticPreviewList>
                                 <template v-if="customerCareDetail.attachment_list.length === 0">
                                     <span class="custom-not-uploaded">{{ $t("supply-chain.not_uploaded") }}</span>
                                 </template>
@@ -181,11 +154,11 @@
                 </div>
             </div>
             <!-- 按钮 v-if="editCommentAuth($auth('enquiry-ticket.edit'))" -->
-            <div 
+            <div
                 v-if="
-                    editCommentAuth($auth('enquiry-ticket.edit'))/*先判断是否有权限*/ && 
-                    Number(customerCareDetail.status) !== Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED/*已解决*/
-                " 
+                    editCommentAuth($auth('enquiry-ticket.edit')) /*先判断是否有权限*/ &&
+                    Number(customerCareDetail.status) !== Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*已解决*/
+                "
                 class="detail-btn m-t-20"
             >
                 <a-button @click="onBtn('msg-edit')">
@@ -499,40 +472,8 @@
                                     </div>
                                     <div v-if="item.file.length > 0" class="reply-platform-attachment m-t-4 p-10">
                                         <div class="reply-platform-attachment-title">{{ $t("customer-care.attachment") }}:</div>
-                                        <div class="reply-platform-attachment-img m-t d-f-a cursor">
-                                            <template v-for="(itemPath, index) in item.file" :key="index">
-                                                <template v-if="/(image\/|png|jpg|jpeg)/.test(itemPath.type)">
-                                                    <img
-                                                        :class="{ 'm-l-16': index > 0 }"
-                                                        class="attachment-img"
-                                                        :src="itemPath.path"
-                                                        alt=""
-                                                        @click="
-                                                            onViewImage({
-                                                                ...itemPath,
-                                                                file: item.file,
-                                                            })
-                                                        "
-                                                    />
-                                                </template>
-                                                <template v-else-if="/video\/+/.test(itemPath.type)">
-                                                    <!-- 视频 -->
-                                                    <div
-                                                        class="video-container"
-                                                        :class="{ 'm-l-16': index > 0 }"
-                                                        @click="
-                                                            onViewImage({
-                                                                type: 'video/*',
-                                                                path: itemPath.path,
-                                                            })
-                                                        "
-                                                    >
-                                                        <MySvgIcon class="video-icon" icon-class="video-icon" />
-                                                        <div class="time">{{ itemPath.duration || "-" }}{{ itemPath.duration ? "s" : "" }}</div>
-                                                        <div class="bottom-mask">{{ itemPath.name }}</div>
-                                                    </div>
-                                                </template>
-                                            </template>
+                                        <div class="reply-platform-attachment-img m-t d-f-a cursor">                                            
+                                            <staticPreviewList :attachment_list="item.file" :file="item.file" @view="onViewImage"></staticPreviewList>
                                         </div>
                                     </div>
                                 </div>
@@ -562,40 +503,8 @@
                                 </div>
                                 <div v-if="item.file.length > 0" class="reply-platform-attachment m-t-4 p-10">
                                     <div class="reply-platform-attachment-title">{{ $t("customer-care.attachment") }}:</div>
-                                    <div class="reply-platform-attachment-img m-t d-f-a">
-                                        <template v-for="(itemPath, index) in item.file" :key="index">
-                                            <template v-if="/(image\/|png|jpg|jpeg)/.test(itemPath.type)">
-                                                <img
-                                                    :class="{ 'm-l-16': index > 0 }"
-                                                    class="attachment-img"
-                                                    :src="itemPath.path"
-                                                    alt=""
-                                                    @click="
-                                                        onViewImage({
-                                                            ...itemPath,
-                                                            file: item.file,
-                                                        })
-                                                    "
-                                                />
-                                            </template>
-                                            <template v-else-if="/video\/+/.test(itemPath.type)">
-                                                <!-- 视频 -->
-                                                <div
-                                                    class="video-container"
-                                                    :class="{ 'm-l-16': index > 0 }"
-                                                    @click="
-                                                        onViewImage({
-                                                            type: 'video/*',
-                                                            path: itemPath.path,
-                                                        })
-                                                    "
-                                                >
-                                                    <MySvgIcon class="video-icon" icon-class="video-icon" />
-                                                    <div class="time">{{ itemPath.duration || "-" }}{{ itemPath.duration ? "s" : "" }}</div>
-                                                    <div class="bottom-mask">{{ itemPath.name }}</div>
-                                                </div>
-                                            </template>
-                                        </template>
+                                    <div class="reply-platform-attachment-img m-t d-f-a">                                        
+                                        <staticPreviewList :attachment_list="item.file" :file="item.file" @view="onViewImage"></staticPreviewList>
                                     </div>
                                 </div>
                             </div>
@@ -716,6 +625,7 @@ import { message } from "ant-design-vue";
 import MyUploads from "./components/MyUploads.vue";
 import localeEn from "ant-design-vue/es/date-picker/locale/en_US";
 import localeZh from "ant-design-vue/es/date-picker/locale/zh_CN";
+import staticPreviewList from "./components/staticPreviewList.vue";
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
@@ -809,9 +719,9 @@ const faultColumns = computed(() => {
     ];
     return result;
 });
-const commentListComputed = computed(() => {    
-    return comment_list.value.sort((a, b) => a.id - b.id) 
-})
+const commentListComputed = computed(() => {
+    return comment_list.value.sort((a, b) => a.id - b.id);
+});
 /* computed end */
 
 /* fetch start */
@@ -956,26 +866,26 @@ const getCommentListFetch = (params = {}) => {
         .then(async (res) => {
             console.log("评论接口", res);
 
-            comment_list.value = []
+            comment_list.value = [];
             res.list.forEach(async (el) => {
-                el.file = el.file ? JSON.parse(el.file) : []
+                el.file = el.file ? JSON.parse(el.file) : [];
                 try {
                     await getVideoTime(el.file);
                     let obj = {
                         ...el,
-                        file: el.file.map(fileEl => {
+                        file: el.file.map((fileEl) => {
                             return {
                                 ...fileEl,
                                 name: fileEl.name.length <= 10 ? fileEl.name : `${fileEl.name.slice(0, 3)}...${fileEl.name.slice(-4)}`,
                                 path: Core.Const.NET.FILE_URL_PREFIX + fileEl.path,
-                            }
-                        })
-                    }
-                    comment_list.value.push(obj)
+                            };
+                        }),
+                    };
+                    comment_list.value.push(obj);
                 } catch (error) {
                     console.log("error", error);
                 }
-            })       
+            });
         })
         .catch((err) => {
             console.log("问询单标记解决接口 err", err);
@@ -1013,9 +923,16 @@ const onViewImage = (item) => {
 
     if (/video\/+/.test(item.type)) {
         // 视频都是单个的
+        console.log("video/*(视频预览)");
+
+        uploadOptions.value.previewImageVideo = []
         uploadOptions.value.previewType = "video";
         uploadOptions.value.previewImageVideo = [item.path];
-    } else {
+        isClose.value = true;
+
+    } else if (/(image\/|png|jpg|jpeg)/.test(item.type)) {
+
+        console.log("image/*(照片预览)");
         uploadOptions.value.previewType = "image";
         if (item.file?.length > 0) {
             // 留言下的附件
@@ -1042,9 +959,19 @@ const onViewImage = (item) => {
                 }
             });
         }
+
+        isClose.value = true;
+    } else if (/application\/pdf/.test(item.type)) {
+        console.log("application/pdf(pdf预览)", item.path);
+        window.open(item.path, '_blank')
+
+    } else if (/^application\/+/.test(item.type)) {
+        console.log("文件", item.path);
+
+        // office online (PDF 支持预览)
+        let url = 'http://view.officeapps.live.com/op/view.aspx?src=' + item.path
+        window.open(url, '_blank')
     }
-    console.log("previewImageVideo", uploadOptions.value.previewImageVideo);
-    isClose.value = true;
 };
 // 按钮事件
 const customeCareEdit = ref(null);
@@ -1202,26 +1129,34 @@ const handlePreview = ({ file, fileList }) => {
         uploadOptions.value.previewType = "video";
         uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(file.response?.data?.filename, 4));
         isClose.value = true;
-        return;
-    }
-
-    uploadOptions.value.previewType = "image";
-    uploadOptions.value.previewImageVideo = [];
-    fileList.forEach((el) => {
-        // console.log("输出的东西", el.response);
-        if (el.response) {
-            if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
-                if (file.uid === el.uid) {
-                    // 让预览的哪张图片在第一张
-                    uploadOptions.value.previewImageVideo.unshift(Core.Util.imageFilter(file.response?.data?.filename, 1));
-                } else {
-                    uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(file.response?.data?.filename, 1));
+    } else if (/(image\/|png|jpg|jpeg)/.test(file.type)) {
+        console.log("image/*(照片预览)");
+        uploadOptions.value.previewType = "image";
+        uploadOptions.value.previewImageVideo = [];
+        fileList.forEach((el) => {
+            // console.log("输出的东西", el.response);
+            if (el.response) {
+                if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
+                    if (file.uid === el.uid) {
+                        // 让预览的哪张图片在第一张
+                        uploadOptions.value.previewImageVideo.unshift(Core.Util.imageFilter(file.response?.data?.filename, 1));
+                    } else {
+                        uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(file.response?.data?.filename, 1));
+                    }
                 }
             }
-        }
-    });
-    console.log("结果", uploadOptions.value.previewImageVideo);
-    isClose.value = true;
+        });
+        console.log("结果", uploadOptions.value.previewImageVideo);
+        isClose.value = true;
+    } else if (/application\/pdf/.test(file.type)) {
+        console.log("application/pdf(pdf预览)", Core.Util.imageFilter(file.response?.data?.filename, 4));
+        window.open(Core.Util.imageFilter(file.response?.data?.filename, 4), "_blank");
+    } else if (/^application\/+/.test(file.type)) {
+        console.log("文件", Core.Util.imageFilter(file.response?.data?.filename, 4));
+        // office online (PDF 支持预览)
+        let url = "http://view.officeapps.live.com/op/view.aspx?src=" + Core.Util.imageFilter(file.response?.data?.filename, 4);
+        window.open(url, "_blank");
+    }
 };
 const handleRemove = ({ file, fileList }) => {
     console.log("删除", fileList);
@@ -1274,16 +1209,15 @@ const videoItemPromise = (src) => {
 
 // 分销商 不需要编辑和留言功能
 const editCommentAuth = (type) => {
-
-    let result = false    
+    let result = false;
 
     if (isDistributerAdmin.value) {
-        result = true
+        result = type;
     } else {
-        result = type
+        result = true;
     }
-    return result
-}
+    return result;
+};
 /* methods end */
 
 watch(
@@ -1713,6 +1647,41 @@ onMounted(() => {
         text-align: center;
     }
 }
+
+// pdf格式 Excel格式
+.pdf-container,
+.file-container {
+    width: 80px;
+    height: 80px;
+    background-color: #e9edf4;
+    border-radius: 4px;
+    position: relative;
+
+    .pdf-file-icon {
+        width: 42px;
+        height: 42px;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 8px;
+    }
+
+    .bottom-mask {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 22px;
+        line-height: 22px;
+        border-radius: 0px 0px 4px 4px;
+        background: rgba(29, 33, 41, 0.6);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 400;
+        text-align: center;
+    }
+}
+
 .line {
     position: relative;
     right: 10px;
