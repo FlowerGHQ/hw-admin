@@ -65,7 +65,7 @@
         <MyPreviewImageVideo v-model:isClose="isClose" :type="uploadOptions.previewType"
             :previewData="uploadOptions.previewImageVideo">
         </MyPreviewImageVideo>
-        <CheckModal :visible="modalShow" :bodyText="modalText">
+        <CheckModal :visible="modalShow" :bodyText="modalText" :key="`modal-${lang}`">
             <a-button @click="routerChange('back')">{{ form.id ? $t(/*退出编辑*/'operation.exit_edit') : $t(/*退出创建*/'operation.exit_creation') }}</a-button>
             <a-button type="primary" @click="modalShow = false">{{ form.id ? $t(/*继续编辑*/'operation.continue_edit') : $t(/*继续创建*/'operation.continue_fill') }}</a-button>
         </CheckModal>
@@ -73,7 +73,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, getCurrentInstance, reactive } from 'vue';
+import { onMounted, ref, getCurrentInstance, reactive, computed, watch } from 'vue';
 import Core from '../../core';
 import { useRouter, useRoute } from 'vue-router'
 import MyUpload from "@/components/MyUpload/index.vue";
@@ -88,6 +88,17 @@ const route = useRoute()
 onMounted(() => {
     form.value.id = Number(route.query.id) || 0
 
+    if (form.value.id) {
+        getReportDetail(form.value.id);
+        modalText.value = proxy.$t(/*编辑尚未提交，确定退出吗？*/'operation.edit_exit_tip')
+    } else {
+        modalText.value = proxy.$t(/*公告尚未创建成功，确定退出吗？*/'operation.exit_text')
+    }
+})
+const lang = computed(() => {
+    return proxy.$store.state.lang;
+})
+watch(lang, (newV) => {
     if (form.value.id) {
         getReportDetail(form.value.id);
         modalText.value = proxy.$t(/*编辑尚未提交，确定退出吗？*/'operation.edit_exit_tip')

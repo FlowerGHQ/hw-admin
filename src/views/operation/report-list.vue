@@ -25,6 +25,16 @@
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :loading="loading"
                 :row-key="(record) => record.id" :pagination="false">
+                <template #headerCell="{ column }">
+                    <!-- 排序 -->
+                    <template v-if="column.key === 'input'">
+                        {{ column.title }}
+                        <a-tooltip>
+                            <template #title>{{ $t('operation.input_pla') }}</template>
+                            <MySvgIcon icon-class="info" class-name="icon-info" />
+                        </a-tooltip>
+                    </template>
+                </template>
                 <template #bodyCell="{ column, text, record, index }">
                     <!-- 序号 -->
                     <template v-if="column.key === 'number'">
@@ -59,13 +69,22 @@
                     <!-- 区域 -->
                     <template v-if="column.key === 'area'">
                         <span v-if="record.area_type === Core.Const.OPERATION.AREA_TYPE_MAP.ALL">{{ $t('common.all') }}</span>
-                        <span v-else>{{ text }}</span>
+                        <span v-else>
+                            <a-tooltip placement="topLeft">
+                                <template #title>{{ text }}</template>
+                                <div class="one-spils cursor" :style="{
+                                    width: text.length > 20 ? 18 + 'rem' : '',
+                                }">
+                                    {{ text }}
+                                </div>
+                            </a-tooltip>
+                        </span>
                     </template>
                     <!-- 排序 -->
                     <template v-if="column.key === 'input'">
                         <a-input-number 
-                            style="width: 150px;"
-                            :placeholder="$t('operation.input_pla')" 
+                            style="width: 110px;"
+                            :placeholder="$t('common.please_enter')" 
                             v-model:value="record.sort"
                             @blur="onBlur(record)"
                             :min="1" 
@@ -272,6 +291,10 @@ const onBlur = (record) => {
             font-size: 18px;
             font-weight: 600;
         }
+    }
+
+    .icon-info {
+        cursor: pointer;
     }
 
     .effective-state {

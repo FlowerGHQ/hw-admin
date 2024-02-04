@@ -55,7 +55,7 @@
                     <div class="key">{{ $t('operation.report_content') }}</div>
                     <div class="value">
                         <MyEditor v-model:modelValue="form.content" :modules="modules"
-                            :placeholder="`${$t('operation.enter_content')}...`" showNumber />
+                            :placeholder="`${$t('operation.enter_content')}...`" showNumber :key="`editor-${lang}`" />
                     </div>
                 </div>
                 <!-- 图片 -->
@@ -109,7 +109,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref, getCurrentInstance } from 'vue';
+import { onMounted, reactive, ref, getCurrentInstance, computed, watch } from 'vue';
 import Core from '../../core';
 import { useRouter, useRoute } from 'vue-router'
 
@@ -136,6 +136,17 @@ onMounted(() => {
         modalText.value = proxy.$t(/*公告尚未创建成功，确定退出吗？*/'operation.exit_text')
     }
 
+})
+const lang = computed(() => {
+    return proxy.$store.state.lang;
+})
+watch(lang, (newV) => {
+    if (form.id) {
+        getReportDetail(form.value.id);
+        modalText.value = proxy.$t(/*编辑尚未提交，确定退出吗？*/'operation.edit_exit_tip')
+    } else {
+        modalText.value = proxy.$t(/*公告尚未创建成功，确定退出吗？*/'operation.exit_text')
+    }
 })
 /* state start*/
 const loading = ref(false)

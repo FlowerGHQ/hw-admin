@@ -25,6 +25,16 @@
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :loading="loading"
                 :row-key="(record) => record.id" :pagination="false">
+                <template #headerCell="{ column }">
+                    <!-- 排序 -->
+                    <template v-if="column.key === 'input'">
+                        {{ column.title }}
+                        <a-tooltip>
+                            <template #title>{{ $t('operation.input_pla') }}</template>
+                            <MySvgIcon icon-class="info" class-name="icon-info" />
+                        </a-tooltip>
+                    </template>
+                </template>
                 <template #bodyCell="{ column, text, record, index }">
                     <!-- 序号 -->
                     <template v-if="column.key === 'number'">
@@ -41,14 +51,17 @@
                         </a-tooltip>
                     </template>
                     <template v-if="column.key === 'area'">
-                        <a-tooltip placement="topLeft">
-                            <template #title>{{ record.area || '全部' }}</template>
-                            <div class="one-spils cursor" :style="{
-                                width: text?.length > 15 ? 7 * 12 + 'px' : '',
-                            }">
-                                {{ record.area || '全部' }}
-                            </div>
-                        </a-tooltip>
+                        <span v-if="record.area_type === Core.Const.OPERATION.AREA_TYPE_MAP.ALL">{{ $t('common.all') }}</span>
+                        <span v-else>
+                            <a-tooltip placement="topLeft">
+                                <template #title>{{ text }}</template>
+                                <div class="one-spils cursor" :style="{
+                                    width: text.length > 20 ? 18 + 'rem' : '',
+                                }">
+                                    {{ text }}
+                                </div>
+                            </a-tooltip>
+                        </span>
                     </template>
                     <!-- 提交时间 -->
                     <template v-if="column.key === 'create_time'">
@@ -68,8 +81,8 @@
                     <!-- 排序 -->
                     <template v-if="column.key === 'input'">
                         <a-input-number
-                            style="width: 150px;"
-                            :placeholder="$t('operation.input_pla')" 
+                            style="width: 110px;"
+                            :placeholder="$t('common.please_enter')" 
                             v-model:value="record.sort"
                             @blur="onBlur(record)"
                             :min="1" 
