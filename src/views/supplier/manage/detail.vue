@@ -587,7 +587,7 @@
                         </div>
                         <div class="level-search-row">
                             <!-- 技术工龄 -->
-                            <div class="search-col w-50-percentage">
+                            <div class="search-col w-50-percentage technical_seniority">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.technical_seniority') }}</div>
                                 <div class="value m-l-8">                                    
                                     <a-input
@@ -598,6 +598,7 @@
                                         :disabled="!isEdit"
                                         :maxlength="10"
                                     />
+                                    <span class="unit-addon">{{ $t('supply-chain.year') }}</span>  
                                 </div>
                             </div>
                         </div>
@@ -3243,6 +3244,32 @@ const onBack = () => {
         text-align: center;
         padding: 18px 0px;
         box-sizing: border-box;
+    }
+}
+.technical_seniority{
+    .value{
+        display: flex;
+        align-items: center;
+        height: 100%;
+        .ant-input{
+            border-radius: 4px 0 0 4px  !important;
+            padding: 4px 11px !important;
+        }
+        .unit-addon{
+            background-color: #f2f2f2;
+            color: #808fa6;
+            text-align: center;
+            font-size: 14px;
+            border-color: #eaecf1;
+            box-sizing: border-box;
+            padding: 0 11px;
+            height: 100%;
+            border: 1px solid #d9d9d9;
+            display: flex;
+            align-items: center;
+            border-radius: 0 4px 4px 0;
+            border-left: none;
+        }
     }
 }
 

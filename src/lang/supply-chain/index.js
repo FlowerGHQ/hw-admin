@@ -1,5 +1,7 @@
 export default {
   zh: {
+    // 年
+    year: "年",
     // 万元
     ten_thousand_yuan: "万元",
     type_supply: "供应类型",
@@ -296,6 +298,8 @@ export default {
     please_upload_business_license_photos: "请上传营业执照照片",
   },
   en: {
+    // 年
+    year: "Year",
     ten_thousand_yuan:"TEN THOUSAND YUAN",
     type_supply: "Type Supply",
     contact: "Contact",
