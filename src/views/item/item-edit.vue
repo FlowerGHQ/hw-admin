@@ -715,11 +715,16 @@
                                                 record.fob_40qh_eur
                                             ">
                                             <div class="show-ladder-item" @click="openLadderPrice('EUR',record,index)">
-                                                <div class="show-ladder-item-title">{{ $t("item-edit.sample") }} :</div>
+                                                <div class="show-ladder-item-title">
+                                                    {{ $t("item-edit.quantity_40HQ") }} :
+                                                </div>
                                                 <div class="show-ladder-item-content">
-                                                    {{ `€ ${formatNum(record.fob_eur)}`}}
+                                                    {{
+                                                        `€ ${formatNum(record.fob_40qh_eur)}`
+                                                    }}
                                                 </div>
                                             </div>
+
                                             <div class="show-ladder-item" @click="openLadderPrice('EUR',record,index)">
                                                 <div class="show-ladder-item-title">
                                                     {{ $t("item-edit.quantity_20GP") }} :
@@ -731,15 +736,12 @@
                                                 </div>
                                             </div>
                                             <div class="show-ladder-item" @click="openLadderPrice('EUR',record,index)">
-                                                <div class="show-ladder-item-title">
-                                                    {{ $t("item-edit.quantity_40HQ") }} :
-                                                </div>
+                                                <div class="show-ladder-item-title">{{ $t("item-edit.sample") }} :</div>
                                                 <div class="show-ladder-item-content">
-                                                    {{
-                                                        `€ ${formatNum(record.fob_40qh_eur)}`
-                                                    }}
+                                                    {{ `€ ${formatNum(record.fob_eur)}`}}
                                                 </div>
                                             </div>
+
                                         </div>
                                         <!-- 设置阶梯价格按钮 -->
                                         <a-button
@@ -772,9 +774,11 @@
                                                 record.fob_40qh_usd
                                             ">
                                             <div class="show-ladder-item" @click="openLadderPrice('USD',record,index)">
-                                                <div class="show-ladder-item-title">{{ $t("item-edit.sample") }} :</div>
+                                                <div class="show-ladder-item-title">
+                                                    {{ $t("item-edit.quantity_40HQ") }} :
+                                                </div>
                                                 <div class="show-ladder-item-content">
-                                                    {{ `$ ${formatNum(record.fob_usd)}` }}
+                                                    {{ `€ ${formatNum(record.fob_40qh_usd)}` }}
                                                 </div>
                                             </div>
                                             <div class="show-ladder-item" @click="openLadderPrice('USD',record,index)">
@@ -788,13 +792,12 @@
                                                 </div>
                                             </div>
                                             <div class="show-ladder-item" @click="openLadderPrice('USD',record,index)">
-                                                <div class="show-ladder-item-title">
-                                                    {{ $t("item-edit.quantity_40HQ") }} :
-                                                </div>
+                                                <div class="show-ladder-item-title">{{ $t("item-edit.sample") }} :</div>
                                                 <div class="show-ladder-item-content">
-                                                    {{ `€ ${formatNum(record.fob_40qh_usd)}` }}
+                                                    {{ `$ ${formatNum(record.fob_usd)}` }}
                                                 </div>
                                             </div>
+
                                         </div>
                                         <a-button
                                             v-else-if="
