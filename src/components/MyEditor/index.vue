@@ -8,7 +8,7 @@
             :options="myOptions"
             contentType="html"
             @update:content="setValue()" />
-        <span class="SizeTiShi">{{ TiLength }} / {{ maxLength }}</span>
+        <span class="SizeTiShi" v-if="showNumber">{{ TiLength }} / {{ maxLength }}</span>
     </div>
 </template>
 
@@ -51,7 +51,16 @@ const props = defineProps({
                 ],
             }
         }
-    }
+    },
+    // 是否显示计数
+    showNumber: {
+        type: Boolean,
+        default: false,
+    },
+    maxLength: {
+        type: Number,
+        default: 2000,
+    },
 });
 const emit = defineEmits(["update:modelValue"]);
 
@@ -62,18 +71,19 @@ const myOptions = reactive({
     modules,
     placeholder,
 });
-const maxLength = ref(2000)
 const TiLength = ref(0)
 
 const setValue = () => {
     const text = toRaw(quillRef.value).getHTML() !== '<p><br></p>' ? toRaw(quillRef.value).getHTML() : '';
     emit("update:modelValue", text);
-    TiLength.value = quillRef.value.getText().length - 1
-    if(TiLength.value > maxLength.value){
-        proxy.$message.warning(proxy.$t('operation.with') + maxLength.value + proxy.$t('operation.char'))
-        nextTick(() => {
-            quillRef.value.setText(quillRef.value.getText().slice(0, maxLength.value))
-        })
+    if(props.showNumber) {
+        TiLength.value = quillRef.value.getText().length - 1
+        if(TiLength.value > props.maxLength){
+            proxy.$message.warning(proxy.$t('operation.with') + props.maxLength + proxy.$t('operation.char'))
+            nextTick(() => {
+                quillRef.value.setText(quillRef.value.getText().slice(0, props.maxLength))
+            })
+        }
     }
 };
 watch(
@@ -82,9 +92,9 @@ watch(
         console.log(val);
         if ((val != null || val != "" || val != "<p><br></p>") &&val) {
             content.value = val;
-            if(quillRef.value) {
+            if(props.showNumber && quillRef.value) {
                 nextTick(() =>{
-                TiLength.value = quillRef.value.getText().length - 1;// 设置字数
+                    TiLength.value = quillRef.value.getText().length - 1;// 设置字数
                 })
             }
         }

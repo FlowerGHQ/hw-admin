@@ -49,4 +49,22 @@ export default {
         var firstSentence = html.replace(regex, "").split(".")[0]; // 去除标签后按"."分隔并获取第一部分
         return firstSentence
     },
+    /**
+     * @description 获取图片比例
+     */
+    getRatio(url) {
+        return new Promise((resolve, reject) => {
+            // 创建一个新的 Image() 对象
+            var img = new Image();
+            // 设置图片源路径
+            img.src = url; // 这里需要将 image.jpg 替换为真正的图片路径
+            // 当图片加载完成后触发 onload 事件
+            img.onload = function () {
+                resolve({
+                    width: this.naturalWidth,
+                    height: this.naturalHeight
+                })
+            };
+        })
+    },
 };

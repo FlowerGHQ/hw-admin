@@ -25,6 +25,16 @@
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :loading="loading"
                 :row-key="(record) => record.id" :pagination="false">
+                <template #headerCell="{ column }">
+                    <!-- 排序 -->
+                    <template v-if="column.key === 'input'">
+                        {{ column.title }}
+                        <a-tooltip>
+                            <template #title>{{ $t('operation.input_pla') }}</template>
+                            <MySvgIcon icon-class="info" class-name="icon-info" />
+                        </a-tooltip>
+                    </template>
+                </template>
                 <template #bodyCell="{ column, text, record, index }">
                     <!-- 序号 -->
                     <template v-if="column.key === 'number'">
@@ -41,14 +51,17 @@
                         </a-tooltip>
                     </template>
                     <template v-if="column.key === 'area'">
-                        <a-tooltip placement="topLeft">
-                            <template #title>{{ record.area || '全部' }}</template>
-                            <div class="one-spils cursor" :style="{
-                                width: text?.length > 15 ? 7 * 12 + 'px' : '',
-                            }">
-                                {{ record.area || '全部' }}
-                            </div>
-                        </a-tooltip>
+                        <span v-if="record.area_type === Core.Const.OPERATION.AREA_TYPE_MAP.ALL">{{ $t('common.all') }}</span>
+                        <span v-else>
+                            <a-tooltip placement="topLeft">
+                                <template #title>{{ text }}</template>
+                                <div class="one-spils cursor" :style="{
+                                    width: text.length > 20 ? 18 + 'rem' : '',
+                                }">
+                                    {{ text }}
+                                </div>
+                            </a-tooltip>
+                        </span>
                     </template>
                     <!-- 提交时间 -->
                     <template v-if="column.key === 'create_time'">
@@ -59,8 +72,8 @@
                         <div class="table-img">
                             <a-image 
                                 style="border-radius: 4px; cursor: pointer;" 
-                                :width="42" 
-                                :height="42" 
+                                :width="96" 
+                                :height="36" 
                                 :src="$Util.imageFilter(record ? getImagePath(record) : '')"
                             />
                         </div>
@@ -68,8 +81,8 @@
                     <!-- 排序 -->
                     <template v-if="column.key === 'input'">
                         <a-input-number
-                            style="width: 150px;"
-                            :placeholder="$t('operation.input_pla')" 
+                            style="width: 110px;"
+                            :placeholder="$t('common.please_enter')" 
                             v-model:value="record.sort"
                             @blur="onBlur(record)"
                             :min="1" 
@@ -181,6 +194,12 @@ onMounted(() => {
 });
 /* Fetch start*/
 const request = Core.Api.Operation.list;
+const dataCallBack = (res) => {// 处理数据
+    return res.list.map(item => {
+        item.old_sort = Core.Util.deepCopy(item.sort)
+        return item
+    })
+}
 const {
     loading,
     tableData,
@@ -190,7 +209,7 @@ const {
     refreshTable,
     onPageChange,
     searchParam,
-} = useTable({ request, initParam: { type: Core.Const.OPERATION.OPERATION_TYPE_MAP.AD } });
+} = useTable({ request, initParam: { type: Core.Const.OPERATION.OPERATION_TYPE_MAP.AD }, dataCallBack: dataCallBack });
 
 const deleteFetch = (id) => {
     Core.Api.Operation.delete({
@@ -261,6 +280,10 @@ const onSwitch = (e, record) => {
     updateStatusFetch(record, 'switch');
 }
 const onBlur = (record) => {
+    if(!record.sort) {
+        // 如果输入为空则赋值之前的排序
+        record.sort = record.old_sort
+    }
     updateStatusFetch(record, 'input');
 }
 const getImagePath = (record) => {

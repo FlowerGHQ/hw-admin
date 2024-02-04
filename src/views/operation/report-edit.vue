@@ -6,7 +6,7 @@
         <div class="form-block">
             <div class="form-content">
                 <!-- 区域 -->
-                <div class="form-item required">
+                <div class="form-item required flex_start area">
                     <div class="key">{{ $t('operation.area') }}</div>
                     <div class="value">
                         <div class="area-body">
@@ -39,13 +39,8 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('operation.sort') }}</div>
                     <div class="value">
-                        <a-input-number 
-                            style="width: 100%;" 
-                            :placeholder="$t('operation.sort_placeholder')"
-                            id="inputNumber" v-model:value="form.sort"                             
-                            :min="1" 
-                            :precision="0" 
-                        />
+                        <a-input-number style="width: 100%;" :placeholder="$t('operation.sort_placeholder')"
+                            id="inputNumber" v-model:value="form.sort" :min="1" :precision="0" />
                     </div>
                 </div>
                 <!-- 公告标题 -->
@@ -60,7 +55,7 @@
                     <div class="key">{{ $t('operation.report_content') }}</div>
                     <div class="value">
                         <MyEditor v-model:modelValue="form.content" :modules="modules"
-                            :placeholder="`${$t('operation.enter_content')}...`" />
+                            :placeholder="`${$t('operation.enter_content')}...`" showNumber :key="`editor-${lang}`" />
                     </div>
                 </div>
                 <!-- 图片 -->
@@ -68,7 +63,7 @@
                     <div class="key">{{ $t('operation.pic') }}</div>
                     <div class="value">
                         <MyUpload name="add_picList" v-model:value="form.img" showTip :limit="1" :limitSize="10"
-                            tipPosition="right" :defaultPreview="false" @preview="handlePreview">
+                            tipPosition="right" :defaultPreview="false" ratioLimit :ratio="{ width: 453, height: 254 }" @preview="handlePreview">
                             <template #tip>
                                 <div class="tips">
                                     <p>{{ $t('operation.pic_tip1') }}</p>
@@ -107,7 +102,8 @@
             :previewData="uploadOptions.previewImageVideo">
         </MyPreviewImageVideo>
         <CheckModal :visible="modalShow" :bodyText="modalText">
-            <a-button @click="routerChange('back')">{{ form.id ? $t(/*退出编辑*/'operation.exit_edit') : $t(/*退出创建*/'operation.exit_creation') }}</a-button>
+            <a-button @click="routerChange('back')">{{ form.id ? $t(/*退出编辑*/'operation.exit_edit') :
+                $t(/*退出创建*/'operation.exit_creation') }}</a-button>
             <a-button type="primary" @click="modalShow = false">{{ form.id ? $t(/*继续编辑*/'operation.continue_edit') :
                 $t(/*继续创建*/'operation.continue_fill') }}</a-button>
         </CheckModal>
@@ -115,7 +111,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref, getCurrentInstance } from 'vue';
+import { onMounted, reactive, ref, getCurrentInstance, computed, watch } from 'vue';
 import Core from '../../core';
 import { useRouter, useRoute } from 'vue-router'
 
@@ -142,6 +138,17 @@ onMounted(() => {
         modalText.value = proxy.$t(/*公告尚未创建成功，确定退出吗？*/'operation.exit_text')
     }
 
+})
+const lang = computed(() => {
+    return proxy.$store.state.lang;
+})
+watch(lang, (newV) => {
+    if (form.id) {
+        getReportDetail(form.id);
+        modalText.value = proxy.$t(/*编辑尚未提交，确定退出吗？*/'operation.edit_exit_tip')
+    } else {
+        modalText.value = proxy.$t(/*公告尚未创建成功，确定退出吗？*/'operation.exit_text')
+    }
 })
 /* state start*/
 const loading = ref(false)
@@ -326,8 +333,11 @@ const getSrcImg = (name, type = "png") => {
 
                 .value {
                     .area-body {
-                        display: flex;
-                        align-items: center;
+                        .ant-radio-group {
+                            .ant-radio-wrapper {
+                                font-size: 14px;
+                            }
+                        }
                     }
 
                     .tips {
@@ -358,8 +368,7 @@ const getSrcImg = (name, type = "png") => {
                     }
 
                     .cascader-area {
-                        min-width: 224px;
-                        flex: 1;
+                        margin-top: 8px;
                     }
 
                     //富文本编辑器
@@ -418,6 +427,12 @@ const getSrcImg = (name, type = "png") => {
                                 color: #bfbfbf;
                             }
                         }
+                    }
+                }
+
+                &.area {
+                    .key {
+                        margin-top: 5px;
                     }
                 }
 
