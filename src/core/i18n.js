@@ -2257,7 +2257,9 @@ const messages = {
                 'list': '销售策略列表'
             },
             'enquiry-ticket': {
-                'list': '问询单列表'
+                'list': '问询单列表',
+                'edit': '编辑权限',
+                'comment': '留言权限',
             },
             'enquiry-ticket-category': {
                 'list': '车型分类列表'
@@ -4971,7 +4973,9 @@ const messages = {
                 'list': 'Sales Strategy List'
             },            
             'enquiry-ticket': {
-                'list': 'List Of Inquiry Forms'
+                'list': 'List Of Inquiry Forms',
+                'edit': 'Edit Permissions',
+                'comment': 'Message Permission',
             },
             'enquiry-ticket-category': {
                 'list': 'Vehicle Classification List'

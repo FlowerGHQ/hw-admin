@@ -180,8 +180,14 @@
                     </div>
                 </div>
             </div>
-            <!-- 按钮 -->
-            <div v-if="Number(customerCareDetail.status) !== Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED" class="detail-btn m-t-20">
+            <!-- 按钮 v-if="editCommentAuth($auth('enquiry-ticket.edit'))" -->
+            <div 
+                v-if="
+                    editCommentAuth($auth('enquiry-ticket.edit'))/*先判断是否有权限*/ && 
+                    Number(customerCareDetail.status) !== Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED/*已解决*/
+                " 
+                class="detail-btn m-t-20"
+            >
                 <a-button @click="onBtn('msg-edit')">
                     {{ msgVisible ? $t("customer-care.cancel_message") : $t("customer-care.edit_information") }}
                 </a-button>
@@ -238,24 +244,16 @@
                                 </a-radio>
                             </a-radio-group>
 
-                            <!-- 善意索赔 和 开箱损 -->
-                            <div
-                                v-if="
-                                    !$Util.Common.returnTypeBool(customerCareDetail.claim_type, [
-                                        Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.GENERALCLAIM,
-                                        0,
-                                    ])
-                                "
-                                class="good-faith-claims p-10 m-t-8"
-                            >
+                            <!-- 普通索赔 、善意索赔、开箱损 -->
+                            <div class="good-faith-claims p-10 m-t-8">
                                 <div class="good-faith-claims-title">
                                     {{ $t($Util.Common.returnTranslation(customerCareDetail.claim_type, Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO)) }}
                                 </div>
                                 <div class="good-faith-claims-time">
                                     <template
                                         v-if="
-                                            $Util.Common.returnTypeBool(customerCareDetail.claim_type, [
-                                                Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.BONAFIDECLAIM /*善意索赔*/,
+                                            !$Util.Common.returnTypeBool(customerCareDetail.claim_type, [
+                                                Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.UNPACKINGDAMAGE /*开箱损*/,
                                             ])
                                         "
                                     >
@@ -1273,6 +1271,19 @@ const videoItemPromise = (src) => {
         video.remove();
     });
 };
+
+// 分销商 不需要编辑和留言功能
+const editCommentAuth = (type) => {
+
+    let result = false    
+
+    if (isDistributerAdmin.value) {
+        result = true
+    } else {
+        result = type
+    }
+    return result
+}
 /* methods end */
 
 watch(
