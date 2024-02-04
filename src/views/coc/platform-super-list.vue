@@ -197,8 +197,8 @@ const getTableData = () => {
         loading.value = false;
         tableData.value = res.list;
         tableData.value.forEach((item) => {
-            item.model = item.item_list.map((item) => item.name).join(",");
-            item.model_en = item.item_list.map((item) => item.name_en).join(",");
+            item.model =  item.item_list ?  item.item_list.map((item) => item.name).join(",") : "-";
+            item.model_en =item.item_list ? item.item_list.map((item) => item.name_en).join(",") : '-';
         });
         console.log(tableData.value);
         channelPagination.total = res.count;
