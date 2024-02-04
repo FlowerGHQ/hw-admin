@@ -83,7 +83,6 @@
             v-model:visible="bomVisible"
             :title="$t('coc.coc_apply_vehicle')"
             :getContainer="getContainer"
-            :footer="null"
             :width="540"
             class="sale-bom-modal">
             <div class="bom-item-list" v-for="(item,index) in bomModalData" :key="item.id">
@@ -103,6 +102,10 @@
                     <a-empty v-else />
                 </div>
             </div>
+            <!-- footer -->
+            <template #footer>
+                <a-button  type="primary"   class="edit-btn" @click="bomCencel">{{ $t("coc.coc_edit") }}</a-button>
+            </template>
         </a-modal>
     </div>
 </template>
@@ -186,7 +189,7 @@ const recordItem = ref({});
 // 是否禁用 true:禁用 false:不禁用
 const isDisable = ref(false);
 const modalRef = ref(null);
-
+const openRecord = ref({})
 // 获取列表数据
 const getTableData = () => {
     loading.value = true;
@@ -253,6 +256,7 @@ const handleDelete = (record) => {
 const openBomModal = (record) => {
     bomVisible.value = true;
    	bomModalData.value = record.item_list;
+    openRecord.value = record;
 	bomModalData.value.forEach(item=>{
 		item.isShowContent = true;
 	})
@@ -263,6 +267,11 @@ const getContainer = () => {
 };
 const handleHideContent = (item) => {
 	item.isShowContent = !item.isShowContent;
+};
+
+const bomCencel = () => {
+    bomVisible.value = false;
+    handleModal('edit', openRecord.value)
 };
 
 onMounted(() => {
@@ -357,6 +366,17 @@ onMounted(() => {
                     }
                 }
             }
+        }
+       }
+       .ant-modal-footer{
+        text-align: center;
+        padding: 20px 0;
+        height: auto;
+        .edit-btn{
+            border-radius: 4px !important;
+            min-width: auto;
+            height: 32px;
+            padding: 4px 16px;
         }
        }
     }
