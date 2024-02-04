@@ -30,7 +30,7 @@
                         <template v-else-if="column.key === 'model'">
                             <!-- 销售bom -->
                             <span class="accessory_list" @click="openBomModal(record)">
-                                {{ $i18n.locale === "zh" ? record.model : record.model_en}}
+                                {{ $locale === "zh" ? record.model : record.model_en}}
                             </span>
                         </template>
                         <template v-else-if="column.key === 'delivery_time'">
@@ -51,7 +51,7 @@
                                     border: '1px solid ' + Core.Const.COC.CER_STATUS[record.state].color,
                                     fontWeight: '600',
                                 }">
-                                {{ Core.Const.COC.CER_STATUS[record.state][$i18n.locale] }}
+                                {{ Core.Const.COC.CER_STATUS[record.state][$locale] }}
                             </a-tag>
                         </template>
                         <template v-else-if="column.key === 'operation'">
@@ -88,7 +88,7 @@
             class="sale-bom-modal">
             <div class="bom-item-list" v-for="(item,index) in bomModalData" :key="item.id">
                 <div class="shop"  @click="handleHideContent(item)">
-                    {{ $i18n.locale === "zh" ? item.name : item.name_en }}
+                    {{ $locale === "zh" ? item.name : item.name_en }}
                 </div>
                 <div class="bom"  v-if="item.isShowContent">
                     <div
@@ -97,7 +97,7 @@
                         :key="item.id"
                         v-if="item?.set_item_list && item.set_item_list.length > 0">
                         <div class="bom-item-name">
-                            {{ $i18n.locale === "zh" ? item.name : item.name_en }}
+                            {{ $locale === "zh" ? item.name : item.name_en }}
                         </div>
                     </div>
                     <a-empty v-else />
@@ -119,12 +119,13 @@ const deleteCocTemplate = Api.COC.deleteCocTemplate;
 import TemplateMoudal from "./components/template-modal.vue";
 // 引用i18n
 import { useI18n } from "vue-i18n";
-import { ref, reactive, onMounted, computed, getCurrentInstance } from "vue";
+import { ref, reactive, onMounted,watch , computed, getCurrentInstance } from "vue";
 const { proxy } = getCurrentInstance();
 const $t = useI18n().t;
 const $i18n = useI18n();
 const $message = proxy.$message;
 let loading = ref(false);
+const $locale = useI18n().locale;
 // 定义tablele数据
 const tableData = ref([]);
 // 定义变量
