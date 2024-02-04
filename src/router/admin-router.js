@@ -78,7 +78,7 @@ const operationManagement = {
     component: Layout,
     redirect: '/operation/report-list',
     name: 'Operation',
-    type: [ROUTER_TYPE.CRM],
+    type: [ROUTER_TYPE.SALES],
     meta: {
         title: '运营管理',
         title_en: 'Operation Management',

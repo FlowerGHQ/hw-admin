@@ -19,7 +19,7 @@
                     <div v-for="item in topList">
                         <div class="report-item">
                             <span class="report-text">{{ item.title }}</span>
-                            <span class="report-more" @click="routerChange('/mall/deals-detail', { id: item.id })">
+                            <span class="report-more" @click="routerChange('/mall/deals-detail', { id: item.id }, 2)">
                                 <span class="text">
                                     {{ $t('purchase.check_details') }}
                                 </span>
@@ -100,7 +100,7 @@
                     <div class="title">{{ $t('purchase.deals') }}</div>
                     <div class="deals-list">
                         <div class="deals-item hover" v-for="(item, index) in reportList" :key="index"
-                            @click="routerChange('/mall/deals-detail', { id: item.id })">
+                            @click="routerChange('/mall/deals-detail', { id: item.id }, 2)">
                             <div class="img-body">
                                 <div class="img">
                                     <img class="deals-img" :src="$Util.imageFilter(JSON.parse(item.img)[0].path, 5)">
@@ -294,6 +294,13 @@ export default {
                         path: routeUrl,
                         query: item
                     })
+                    break;
+                case 2:
+                    const path = this.$router.resolve({
+                        path: routeUrl,
+                        query: item
+                    })
+                    window.open(path, '_blank')
                     break;
                 default:
                     break;
