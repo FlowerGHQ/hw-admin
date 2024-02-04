@@ -300,7 +300,7 @@ export default {
                         path: routeUrl,
                         query: item
                     })
-                    window.open(path, '_blank')
+                    window.open(path.href, '_blank')
                     break;
                 default:
                     break;
