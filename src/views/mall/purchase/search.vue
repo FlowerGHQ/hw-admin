@@ -18,7 +18,7 @@
                     <!-- 零配件 -->
                     <div class="list-body" v-if="sparepartsList.length !== 0">
                         <p class="list-body-title">
-                            {{ $t('mall.spareparts') }}({{ sparepartsList.length }})
+                            {{ $t('mall.accessories') }}({{ sparepartsList.length }})
                         </p>
                         <div class="list-item" v-for="(item, index) in sparepartsList" :key="item.id">
                             <ProductsCard :record="item" @handlechange="getCarList" />
@@ -203,18 +203,11 @@ const executeFetchList = () => {
 /* fetch end */
 </script>
 
+<style lang='scss' scoped src='../css/layout.css'></style>
 <style lang="less" scoped>
 #search {
     .content {
-        padding: 80px 0;
-        margin: 0 auto;
-        width: 75%;
-        .title {
-            color: #000;
-            font-size: 24px;
-            font-style: normal;
-            font-weight: 500;
-            line-height: normal;
+        title {
             margin-bottom: 24px;
         }
         .body {

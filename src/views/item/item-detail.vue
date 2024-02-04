@@ -170,7 +170,7 @@ export default {
             coverImageList: [],
             detailImageList: [],
             specImageList: [],
-            currentSpecId: 0,
+            currentSpecId: null,
             nameList: [
                 { key: '1', value: 'aa' },
                 { key: '2', value: 'bb' },
@@ -367,14 +367,11 @@ export default {
                 if (this.specific.data.length) {
                     this.specific.data[0].onClick = true
                     this.currentSpecId = Number(this.specific.data[0].id)
-
-                    console.log('this.specific.data----------------', this.specific.data[0].id)
                 }
                 this.$nextTick(() => {
                     //获取table和table-header高度
                     this.initHeight()
                 })
-                console.log('getSpecList this.specific.data:', data)
                 this.getSpecImg();
             }).catch(err => {
                 console.log('getSpecList err', err)

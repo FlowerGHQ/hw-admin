@@ -1,5 +1,5 @@
 <template>
-    <div id="mall-footer">
+    <div id="mall-footer" :style="{ pointerEvents: isPreview ? 'none' : 'unset' }">
         <!-- <div class="content" style="height: 97px;">
             <div class="menu-one menu">
                 <span class="menu-item tab-animate" :class="menuIndex === index ? 'active' : ''" v-for="(item, index) in menuListOne" :key="index" @click="menuChange(index, item.path)">
@@ -34,7 +34,8 @@ export default {
             Core,
             menuListOne: Core.Const.LOGINMALL.FOOTERMENUONE,
             menuList: Core.Const.LOGINMALL.FOOTERMENU,
-            menuIndex: ''
+            menuIndex: '',
+            isPreview: false,
         };
     },
     computed: {},
@@ -56,7 +57,12 @@ export default {
         },
     },
     created() {},
-    mounted() {},
+    mounted() {
+        if (this.$route.path === '/preview/deals-preview') {// 如果是预览页则禁用点击 且不继续往下执行
+            this.isPreview = true;
+            return;
+        };
+    },
     methods: {
         menuChange(index, path) {
             this.menuIndex = index

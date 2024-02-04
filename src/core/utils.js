@@ -6,6 +6,7 @@ import dayjs from "dayjs"
 import weekday from "dayjs/plugin/weekday"
 import localeData from "dayjs/plugin/localeData"
 import Image from './modules/units/image'
+import Number from './modules/units/number'
 import Common from './modules/units/common'
 
 dayjs.extend(weekday)
@@ -529,10 +530,10 @@ const Util = {
     }
     if (to === "zh") {
       let attr = attr_list.map((i) => i.value)
-      return attr.join(" ")
+      return attr.join(" / ")
     } else {
       let attr = attr_list.map((i) => i.value_en)
-      return attr.join(" ")
+      return attr.join(" / ")
     }
   },
   itemFlagEntityFilter(val, to = "zh") {
@@ -542,37 +543,71 @@ const Util = {
   },
   /* =============== 商品 ================ */
 
-  /* =============== 维修单 ================ */
-  repairStatusFilter(val, to = "key") {
-    const MAP = Const.REPAIR.STATUS_MAP
-    let value = MAP[val + ""] || {}
-    return value[to] || "-"
-  },
-  repairTypeFilter(val, to = "key") {
-    const MAP = Const.REPAIR.DEVICE_LIST_OBJ
-    let value = MAP[val + ""] || {}
-    return value[to] || "-"
-  },
-  repairChannelFilter(val, to = "key") {
-    const MAP = Const.REPAIR.CHANNEL_MAP
-    let value = MAP[val] || {}
-    return value[to] || "-"
-  },
-  repairMethodFilter(val, to = "key") {
-    const MAP = Const.REPAIR.METHOD_MAP
-    let value = MAP[val] || {}
-    return value[to] || "-"
-  },
-  repairServiceFilter(val, to = "key") {
-    const MAP = Const.REPAIR.SERVICE_TYPE_MAP
-    let value = MAP[val] || {}
-    return value[to] || "-"
-  },
-  repairPriorityFilter(val, to = "key") {
-    const MAP = Const.REPAIR.PRIORITY_MAP
-    let value = MAP[val + ""] || {}
-    return value[to] || "-"
-  },
+
+    /* =============== 维修单 ================ */
+    repairStatusFilter(val, to = 'key') {
+        const MAP = Const.REPAIR.NEW_STATUS_MAP
+        switch (to) {
+            case 'key':
+                return MAP[val + ''] || {}
+            case 'color':
+                return MAP[val + '']?.color || 'gray'
+        }
+    },
+    repairAllStatusFilter(val, to = 'key') {
+        const MAP = Const.REPAIR.STATUS_MAP
+        switch (to) {
+            case 'key':
+                return MAP[val + ''] || {}
+            case 'color':
+                return MAP[val + '']?.color || 'grey'
+        }
+    },
+    repairNewTypeFilter(val) {
+        const MAP = Const.REPAIR.CATEGORY_LIST_MAP
+        let value = MAP[val + ''] || {}
+        return value || '-'
+    },
+    repairLogTypeFilter(val) {
+        const MAP = Const.REPAIR.LOG_MAP
+        let value = MAP[val + ''] || {}
+        return value || '-'
+    },
+    repairTypeFilter(val, to = 'key') {
+        const MAP = Const.REPAIR.DEVICE_LIST_OBJ
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
+    },
+    repairChannelFilter(val, to = 'key') {
+        const MAP = Const.REPAIR.CHANNEL_MAP
+        let value = MAP[val] || {}
+        return value[to] || '-'
+    },
+    repairMethodFilter(val, to = 'key') {
+        const MAP = Const.REPAIR.METHOD_MAP
+        let value = MAP[val] || {}
+        return value[to] || '-'
+    },
+    repairServiceFilter(val, to = 'key') {
+        const MAP = Const.REPAIR.SERVICE_TYPE_MAP
+        let value = MAP[val] || {}
+        return value[to] || '-'
+    },
+    repairPayMethodFilter(val, to = 'key') {
+        const MAP = Const.REPAIR.PAYMETHOD_TYPE_MAP
+        let value = MAP[val] || {}
+        return value[to] || '-'
+    },
+    repairCategoryTypeFilter(val, to = 'key') {
+        const MAP = Const.REPAIR.CATEGORY_TYPE_MAP
+        let value = MAP[val] || {}
+        return value[to] || '-'
+    },
+    repairPriorityFilter(val, to = 'key') {
+        const MAP = Const.REPAIR.PRIORITY_MAP
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
+    },
 
   deviceTypeFilter(val, to = "zh") {
     const MAP = Const.REPAIR.DEVICE_LIST_OBJ
@@ -587,12 +622,17 @@ const Util = {
         const MAP = Const.REPAIR.FAULT_OPTIONS_MAP
         return MAP[val] || '未知'
     }, */
-  actionLogTypeFilter(val, to = "zh") {
-    const MAP = Const.ACTION_LOG.TYPE_MAP
-    let item = MAP[val + ""] || {}
-    return item[to] || ""
-  },
-  /* =============== 维修单 ================ */
+    actionLogTypeFilter(val, to = 'zh') {
+        const MAP = Const.ACTION_LOG.TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    threePagFilter(val, to = 'key') {
+        const MAP = Const.REPAIR.SERVICE_TYPE_MAP
+        let value = MAP[val] || {}
+        return value[to] || '-'
+    },
+    /* =============== 维修单 ================ */
 
   /* =============== 采购单 && 售后管理 && 退款管理 ================ */
   purchaseStatusFilter(val, to = "text") {
@@ -1393,6 +1433,30 @@ const Util = {
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
+    CRMTestDriveSourceFilter(val, to = 'zh') {
+        const MAP = Const.test_drive.appointment_channel
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== 三包 ================ */
+    warrantyStatusFilter(val, to = 'zh') {
+        // const MAP = Const.WARRANTY.STATUS_MAP
+        // const COLOR_MAP = Const.WARRANTY.STATUS_COLOR_MAP
+        // switch (to) {
+        //     case 'zh':
+        //         let item = MAP[val + ''] || {}
+        //         return item[to] || ''
+        //     case 'en':
+        //         let en_item = MAP[val + ''] || {}
+        //         return en_item[to] || ''
+        //     case 'color':
+        //         return COLOR_MAP[val + ''] || 'grey'
+        // }
+        const MAP = Const.WARRANTY.STATUS_MAP
+        let value = MAP[val] || {}
+        return value[to] || '-'
+    },
+    /* =============== 三包 ================ */
     /* =============== 试驾单 ================ */
     /* =============== 待办事项 ================ */
     CRMToDoStatusFilter(val, to = 'zh') {
@@ -1412,7 +1476,7 @@ const Util = {
         const MAP = Const.INTENTION.TYPE_MAP
         switch (to) {
             case 'key':
-                try {                    
+                try {
                     return MAP[val + ''].key || {}
                 } catch (error) {
                     return ""
@@ -1485,7 +1549,7 @@ const Util = {
   },
   /* ======== 传参数的时候删除自己不需要的字段 ========== */
 
-  /* ======== 百分比 ========== 
+  /* ======== 百分比 ==========
         denominator  // 分母
         numerator // 分子
     */
@@ -1553,7 +1617,7 @@ const Util = {
         const MAP = Const.RETAIL.STORE_STATUS
         let item = MAP[val + ''] || {}
         return item[to] || ''
-    },    
+    },
     /**
      * 计算时间 返回days，hours, minutes
      * @param {*} startTimestamp  // 开始时间
@@ -1562,14 +1626,14 @@ const Util = {
     calculateTimeDifference(startTimestamp, endTimestamp) {
         const start = dayjs.unix(startTimestamp);
         const end = dayjs.unix(endTimestamp);
-      
+
         const diffInSeconds = end.diff(start, 'second');
-      
+
         const days = Math.floor(diffInSeconds / (24 * 60 * 60));
         const hours = Math.floor((diffInSeconds % (24 * 60 * 60)) / (60 * 60));
         const minutes = Math.floor((diffInSeconds % (60 * 60)) / 60);
-      
-        return { days, hours, minutes };      
+
+        return { days, hours, minutes };
     },
     // 跟进方式标签状态
     tabStatus(val, to = 'zh') {
@@ -1710,7 +1774,9 @@ const Util = {
     // 公共样式
     Common,
     // 照片逻辑
-    Image
+    Image,
+    // 数字处理
+    Number,
 
 }
 export default Util

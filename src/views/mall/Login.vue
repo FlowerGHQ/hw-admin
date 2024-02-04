@@ -35,9 +35,9 @@
             </div>
         </div>
         <div class="login-container">
-            <div class="form-title">{{ user_type_list.length > 1 ? $t('mall.choose_identity') : $t('mall.account_login') }}</div>
+            <div class="form-title">{{ token ? $t('mall.choose_identity') : $t('mall.account_login') }}</div>
             <div class="form-content">
-                <template v-if="user_type_list.length > 1">
+                <template v-if="token && user_type_list > 0">
                     <div class="user-list">
                         <div class="user-item" v-for="item in user_type_list" :key="item" @click="handleLogin(item)">
                             {{ Core.Const.USER.TYPE_MAP[item][lang] }}
@@ -109,18 +109,20 @@
                         </my-button>
                     </div>
                 </template>
-                <div class="more-login">
-                    <span class="more-login-text">
-                        {{ $t('mall.more_login') }}
-                    </span>
-                </div>
-                <div class="select-login" @click="changeMethods">
-                    <svg-icon icon-class="phone-black-icon" class-name="phone-black-icon" v-if="login_methods === 1" />
-                    <svg-icon icon-class="phone-icon" class-name="phone-icon" v-if="login_methods === 1" />
-                    <svg-icon icon-class="user-black-icon" class-name="user-black-icon" v-if="login_methods === 2" />
-                    <svg-icon icon-class="user-icon" class-name="user-icon" v-if="login_methods === 2" />
-                    <span>{{ login_methods === 2 ? $t('mall.user_name_login') : $t('mall.phone_login') }}</span>
-                </div>
+                <template v-if="!token">
+                    <div class="more-login">
+                        <span class="more-login-text">
+                            {{ $t('mall.more_login') }}
+                        </span>
+                    </div>
+                    <div class="select-login" @click="changeMethods">
+                        <svg-icon icon-class="phone-black-icon" class-name="phone-black-icon" v-if="login_methods === 1" />
+                        <svg-icon icon-class="phone-icon" class-name="phone-icon" v-if="login_methods === 1" />
+                        <svg-icon icon-class="user-black-icon" class-name="user-black-icon" v-if="login_methods === 2" />
+                        <svg-icon icon-class="user-icon" class-name="user-icon" v-if="login_methods === 2" />
+                        <span>{{ login_methods === 2 ? $t('mall.user_name_login') : $t('mall.phone_login') }}</span>
+                    </div>
+                </template>
             </div>
         </div>
         <div class="login-footer">
@@ -200,7 +202,8 @@ export default {
             countdown: null, // 倒计时
             countdownTime: null, // 定时器记录
             user_type: '',
-            user_type_list: []
+            user_type_list: [],
+            token: Core.Data.getToken()
         };
     },
     watch: {},
@@ -309,8 +312,7 @@ export default {
         },
         // 类型选择事件
         async handleLogin(user_type) {
-            let token = Core.Data.getToken();
-            if (token) {
+            if (this.token) {
                 this.switchUserFetch(user_type)
             } else {
                 let obj = Core.Data.getLoginMes();
@@ -877,7 +879,7 @@ export default {
     }
 }
 .ant-input {
-   caret-color: #C6F; /* 将光标颜色设为红色 */
+    caret-color: #C6F; /* 光标颜色 */
 }
 input.ant-input {
     border: none;

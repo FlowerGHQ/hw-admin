@@ -36,7 +36,7 @@
                         {{ $t("n.name") }}
                     </div>
                     <div class="value">
-                        <a-input v-model:value="form.name" :placeholder="$t('def.input')" :maxlength="50" />
+                        <a-input v-model:value="form.name" @change="handleTableNameChange('zh')" :placeholder="$t('def.input')" :maxlength="50" />
                     </div>
                 </div>
                 <!-- 英文名 v-if="this.specific.mode === 1" -->
@@ -45,7 +45,7 @@
                         {{ $t("n.name_en") }}
                     </div>
                     <div class="value">
-                        <a-input v-model:value="form.name_en" :placeholder="$t('def.input')" :maxlength="50" />
+                        <a-input v-model:value="form.name_en" @change="handleTableNameChange('en')" :placeholder="$t('def.input')" :maxlength="50" />
                     </div>
                 </div>
                 <!-- 类型 -->
@@ -715,11 +715,16 @@
                                                 record.fob_40qh_eur
                                             ">
                                             <div class="show-ladder-item" @click="openLadderPrice('EUR',record,index)">
-                                                <div class="show-ladder-item-title">{{ $t("item-edit.sample") }} :</div>
+                                                <div class="show-ladder-item-title">
+                                                    {{ $t("item-edit.quantity_40HQ") }} :
+                                                </div>
                                                 <div class="show-ladder-item-content">
-                                                    {{ `€ ${formatNum(record.fob_eur)}`}}
+                                                    {{
+                                                        `€ ${formatNum(record.fob_40qh_eur)}`
+                                                    }}
                                                 </div>
                                             </div>
+
                                             <div class="show-ladder-item" @click="openLadderPrice('EUR',record,index)">
                                                 <div class="show-ladder-item-title">
                                                     {{ $t("item-edit.quantity_20GP") }} :
@@ -731,15 +736,12 @@
                                                 </div>
                                             </div>
                                             <div class="show-ladder-item" @click="openLadderPrice('EUR',record,index)">
-                                                <div class="show-ladder-item-title">
-                                                    {{ $t("item-edit.quantity_40HQ") }} :
-                                                </div>
+                                                <div class="show-ladder-item-title">{{ $t("item-edit.sample") }} :</div>
                                                 <div class="show-ladder-item-content">
-                                                    {{
-                                                        `€ ${formatNum(record.fob_40qh_eur)}`
-                                                    }}
+                                                    {{ `€ ${formatNum(record.fob_eur)}`}}
                                                 </div>
                                             </div>
+
                                         </div>
                                         <!-- 设置阶梯价格按钮 -->
                                         <a-button
@@ -772,9 +774,11 @@
                                                 record.fob_40qh_usd
                                             ">
                                             <div class="show-ladder-item" @click="openLadderPrice('USD',record,index)">
-                                                <div class="show-ladder-item-title">{{ $t("item-edit.sample") }} :</div>
+                                                <div class="show-ladder-item-title">
+                                                    {{ $t("item-edit.quantity_40HQ") }} :
+                                                </div>
                                                 <div class="show-ladder-item-content">
-                                                    {{ `$ ${formatNum(record.fob_usd)}` }}
+                                                    {{ `€ ${formatNum(record.fob_40qh_usd)}` }}
                                                 </div>
                                             </div>
                                             <div class="show-ladder-item" @click="openLadderPrice('USD',record,index)">
@@ -788,13 +792,12 @@
                                                 </div>
                                             </div>
                                             <div class="show-ladder-item" @click="openLadderPrice('USD',record,index)">
-                                                <div class="show-ladder-item-title">
-                                                    {{ $t("item-edit.quantity_40HQ") }} :
-                                                </div>
+                                                <div class="show-ladder-item-title">{{ $t("item-edit.sample") }} :</div>
                                                 <div class="show-ladder-item-content">
-                                                    {{ `€ ${formatNum(record.fob_40qh_usd)}` }}
+                                                    {{ `$ ${formatNum(record.fob_usd)}` }}
                                                 </div>
                                             </div>
+
                                         </div>
                                         <a-button
                                             v-else-if="
@@ -1114,6 +1117,7 @@ export default {
     props: {},
     data() {
         return {
+            keyArr:[],
             // 阶梯价格
             labberData: [],
             ladderPriceVisible: false,
@@ -1259,6 +1263,7 @@ export default {
                 imgs: []
             },
             goodsDraftData: {},
+
         };
     },
     watch: {
@@ -1269,6 +1274,16 @@ export default {
                 } else {
                     this.categoryDisabled = true;
                 }
+            },
+            deep: true,
+            immediate: true,
+        },
+        'specific.list': {
+            handler: function (val, oldVal) {
+               this.keyArr = [];
+               val.forEach((item,index) => {
+                   this.keyArr.push(item.key)
+               })
             },
             deep: true,
             immediate: true,
@@ -1339,9 +1354,8 @@ export default {
                     }
                 }
             }else{
-                flag = false;
+                flag = true;
             }
-           
             return flag
         },
         saveDarftShow() {
@@ -1385,6 +1399,25 @@ export default {
         next();
     },
     methods: {
+        handleTableNameChange(type){
+            console.log(this.specific.data)
+            console.log(this.form)
+            switch (type) {
+                case 'zh':
+                    this.specific.data.forEach((item,index) => {
+                        item.name = item.name = `${this?.form?.name || ''} ${this?.keyArr[0] ? item[this.keyArr[0]].value : ''} ${this?.keyArr[1] ? item[this.keyArr[1]].value : ''} `
+                    })
+                    break;
+                case 'en':
+                    this.specific.data.forEach((item,index) => {
+                        item.name_en = item.name_en = `${this?.form?.name_en || ''} ${this?.keyArr[0] ? item[this.keyArr[0]].value_en : ''} ${this?.keyArr[1] ? item[this.keyArr[1]].value_en : ''} `
+                    })
+                    break;
+            
+                default:
+                    break;
+            }
+        },
         // 数字的3位划分
         formatNum(num) {
             // 区分小数点
@@ -1730,7 +1763,7 @@ export default {
                 // 校验检查
                 this.isValidate = true;
                 if (
-                    typeof this.checkFormInput(form, specData, attrDef,categoryMessage) ===
+                    typeof this.checkFormInput(form, specData, attrDef) ===
                     "function" 
                 ) {
                     console.log("checkFormInput err");
@@ -1851,19 +1884,10 @@ export default {
                 });
         },
         // 保存时检查表单输入
-        checkFormInput(form, specData, attrDef, categoryMessage) {
+        checkFormInput(form, specData, attrDef) {
             // 如果是整车并且是多规格校验分类
             if (form.type === this.itemTypeMap['1']?.key && this.specific.mode === 2) {
-                // 查看
-                if (categoryMessage && categoryMessage.length > 0) {
-                    for (let i = 0; i < categoryMessage.length; i++) {
-                        if(categoryMessage[i].desc === '' || categoryMessage[i].desc_en === '' || categoryMessage[i].desc === '<p><br></p>' || categoryMessage[i].desc_en === '<p><br></p>'){
-                            return this.$message.warning(
-                                `${this.$t("item-edit.please_complete")}(${this.$t("item-edit.category_description")})`
-                            );
-                        }
-                    }
-                } else if (this.isDesEmpty) {
+                 if (this.isDesEmpty) {
                     return this.$message.warning(
                         `${this.$t("item-edit.please_complete")}(${this.$t("item-edit.category_description")})`
                     );
@@ -2240,6 +2264,8 @@ export default {
             }
         },
         handleDescripttion() {
+            console.log("categoryMessage",this.categoryMessage);
+            console.log("category_index",this.category_index);
             let item = this.specific.list.filter((i) => i.id === this.category_index)[0];
             item.option = _.cloneDeep(this.categoryMessage);
             if (item.key.trim() && item.name.trim()) {
@@ -2407,7 +2433,11 @@ export default {
                 name_en: "",
                 price: "",
                 fob_eur: "",
+                fob_20gp_eur: "",
+                fob_40qh_eur: "",
                 fob_usd: "",
+                fob_20gp_usd: "",
+                fob_40qh_usd: "",
                 imgsList: [],
             };
             let dataList = []; //规格列表数组
@@ -2451,6 +2481,26 @@ export default {
                     });
                 });
             }
+            dataList.forEach((item,index)=>{
+                item.name = `${this?.form?.name || ''} ${this?.keyArr[0] ? item[this.keyArr[0]].value : ''} ${this?.keyArr[1] ? item[this.keyArr[1]].value : ''}`
+                item.name_en = `${this?.form?.name_en || ''} ${this?.keyArr[0] ? item[this.keyArr[0]].value_en : ''} ${this?.keyArr[1] ? item[this.keyArr[1]].value_en : ''}`
+                this.specific.data.forEach((it,id) => {
+                    if(id === index){
+                        console.log('item',item);
+                        // 遍历对象
+                        for (let key in item) {
+                            if(!item[key]){
+                                item[key] = it[key];
+                            }
+                            // 图片
+                            if(key === 'imgsList'){
+                                item[key] = it[key];
+                            }
+                        }
+                    }
+                });
+            })
+            console.log("dataList", dataList);
             this.specific.data = Core.Util.deepCopy(dataList);
         },
         // 批量设置
@@ -2481,7 +2531,8 @@ export default {
                 value: item.zh,
                 value_en: item.en,
             };
-
+            record.name = `${this?.form?.name || ''} ${this?.keyArr[0] ? record[this.keyArr[0]].value : ''} ${this?.keyArr[1] ? record[this.keyArr[1]].value : ''} ${this?.keyArr[2] ? record[this.keyArr[2]].value : ''} ${this?.keyArr[3] ? record[this.keyArr[3]].value : ''} ${this?.keyArr[4] ? record[this.keyArr[4]].value : ''} ${this?.keyArr[5] ? record[this.keyArr[5]].value : ''} ${this?.keyArr[6] ? record[this.keyArr[6]].value : ''} ${this?.keyArr[7] ? record[this.keyArr[7]].value : ''} ${this?.keyArr[8] ? record[this.keyArr[8]].value : ''} ${this?.keyArr[9] ? record[this.keyArr[9]].value : ''} ${this?.keyArr[10] ? record[this.keyArr[10]].value : ''} ${this?.keyArr[11] ? record[this.keyArr[11]].value : ''} ${this?.keyArr[12] ? record[this.keyArr[12]].value : ''} ${this?.keyArr[13] ? record[this.keyArr[13]].value : ''} ${this?.keyArr[14] ? record[this.keyArr[14]].value : ''} ${this?.keyArr[15] ? record[this.keyArr[15]].value : ''} ${this?.keyArr[16] ? record[this.keyArr[16]].value : ''} ${this?.keyArr[17] ? record[this.keyArr[17]].value : ''} ${this?.keyArr[18] ? record[this.keyArr[18]].value : ''} ${this?.keyArr[19] ? record[this.keyArr[19]].value : ''}`
+            record.name_en = `${this?.form?.name_en || ''} ${this?.keyArr[0] ? record[this.keyArr[0]].value_en : ''} ${this?.keyArr[1] ? record[this.keyArr[1]].value_en : ''} ${this?.keyArr[2] ? record[this.keyArr[2]].value_en : ''} ${this?.keyArr[3] ? record[this.keyArr[3]].value_en : ''} ${this?.keyArr[4] ? record[this.keyArr[4]].value_en : ''} ${this?.keyArr[5] ? record[this.keyArr[5]].value_en : ''} ${this?.keyArr[6] ? record[this.keyArr[6]].value_en : ''} ${this?.keyArr[7] ? record[this.keyArr[7]].value_en : ''} ${this?.keyArr[8] ? record[this.keyArr[8]].value_en : ''} ${this?.keyArr[9] ? record[this.keyArr[9]].value_en : ''} ${this?.keyArr[10] ? record[this.keyArr[10]].value_en : ''} ${this?.keyArr[11] ? record[this.keyArr[11]].value_en : ''} ${this?.keyArr[12] ? record[this.keyArr[12]].value_en : ''} ${this?.keyArr[13] ? record[this.keyArr[13]].value_en : ''} ${this?.keyArr[14] ? record[this.keyArr[14]].value_en : ''} ${this?.keyArr[15] ? record[this.keyArr[15]].value_en : ''} ${this?.keyArr[16] ? record[this.keyArr[16]].value_en : ''} ${this?.keyArr[17] ? record[this.keyArr[17]].value_en : ''} ${this?.keyArr[18] ? record[this.keyArr[18]].value_en : ''} ${this?.keyArr[19] ? record[this.keyArr[19]].value_en : ''}`
             let specData = Core.Util.deepCopy(this.specific.data);
             this.validateConfig(specData);
         },
@@ -3469,7 +3520,6 @@ export default {
         height: 32px;
         border-radius: 4px;
     }
-
     .bottom-box {
         background-color: #f0f2f5;
         width: 100%;

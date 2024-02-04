@@ -28,8 +28,8 @@ const apiList = {
     Export: { // 导出
         purchaseExport: ['PostJson', 'purchase-order/export'],
         purchaseTemplateExport: ['PostJson', 'purchase-order/export-template'], // 采购单模版导出
-        purchaseOrderExport: ['PostJson', 'purchase-order/export-order'], // 采购单模版导出
-        repairExport: ['PostJson', 'repair/export-repair-order-record'],
+	    purchaseOrderExport: ['PostJson', 'purchase-order/export-order'], // 采购单模版导出
+        repairExport: ['PostJson', 'repair-order/export-repair-order-record'],
         invoiceOutExport: ['PostJson', 'invoice/export-out-invoice'],//导出
         invoiceInExport: ['PostJson', 'invoice/export-in-invoice'],//导出
         invoiceDetailExport: ['PostJson', 'invoice/export-detail'],//导出
@@ -52,7 +52,7 @@ const apiList = {
         incomingInspection: ['GetJson', 'material-arrival-quality-inspection-order/export'], // 来料检导出
         orderExport: ['GetJson', 'crm-order/export'],
         downloadTemplate: ['GetJson', 'aftermarket/bom/download-aftermarket-bom'], // 二级页面下载导入模板
-
+        enquiryTickeTexport: ['GetJson','enquiry-ticket/export'], // 问询单导出接口
     },
     User: { // 用户
         save: ['PostJson', 'user/save'],
@@ -64,7 +64,6 @@ const apiList = {
         listGroup: ['PostJson', 'user/list-group'],
         setPlatformAdmin: ['PostJson', 'user/set-platform-admin'],
         checkAdmin: ['PostJson', 'user/check-admin'], // 检查用户是否是超级管理员
-
     },
     Account: {
         list: ['PostJson', 'account/list'], // 账户列表
@@ -216,26 +215,33 @@ const apiList = {
         detailByUid: ['PostJson', 'transfer-order/detail-by-uid'], // 取消调货单
     },
     Repair: { // 维修单
-        list: ['PostJson', 'repair/list'], // 列表
-        create: ['PostJson', 'repair/save'], // 列表
-        hand: ['PostJson', 'repair/hand'], // 列表
-        detail: ['PostJson', 'repair/detail'], // 工单详情
-        check: ['PostJson', 'repair/check'], // 确认
-        audit: ['PostJson', 'repair/audit'], // 审批
-        delete: ['PostJson', 'repair/delete'], // 审批
-        statusList: ['PostJson', 'repair/status-list'], // 保存
-        repair: ['PostJson', 'repair/repair'], // 维修结束
-        secondDoor: ['PostJson', 'repair/second-door'], // 二次上门
-        settlement: ['PostJson', 'repair/settlement'], // 结算
-        transfer: ['PostJson', 'repair/transfer'], // 维修结束
-        update: ['PostJson', 'repair/update'], // 维修结束
-        post: ['PostJson', 'repair/post-for-transfer'], // 增加快递
-        export: ['PostJson', 'repair/export-repair-order-record'], // 导出
-        detailByUid: ['PostJson', 'repair/detail-by-uid'],
-        pay: ['PostJson', 'repair/pay'],
-        stock: ['PostJson', 'repair/save-to-invoice'], //入库
-        remark: ['PostJson', 'repair/remark'], //入库
+        list: ['PostJson', 'repair-order/list'], // 列表
+	    create: ['PostJson', 'repair-order/save'], // 新建工单
+	    hand: ['PostJson', 'repair-order/hand'],
+        detail: ['GetJson', 'repair-order/detail'], // 工单详情
+	    check: ['PostJson', 'repair-order/check'], // 确认
+	    audit: ['PostJson', 'repair-order/audit'], // 审批
+	    delete: ['PostJson', 'repair-order/delete'], // 审批
+        statusList: ['PostJson', 'repair-order/status-list'], // 保存
+	    repair: ['PostJson', 'repair-order/repair'], // 维修结束
+	    secondDoor: ['PostJson', 'repair-order/second-door'], // 二次上门
+	    settlement: ['PostJson', 'repair-order/settlement'], // 结算
+	    transfer: ['PostJson', 'repair-order/transfer'], // 维修结束
+	    update: ['PostJson', 'repair-order/update'], // 维修结束
+	    post: ['PostJson', 'repair-order/post-for-transfer'], // 增加快递
+	    export: ['PostJson', 'repair-order/export-repair-order-record'], // 导出
+        detailByUid: ['PostJson', 'repair-order/detail-by-uid'],
+        pay: ['PostJson', 'repair-order/pay'],
+        stock: ['PostJson', 'repair-order/save-to-invoice'], //入库
+	    remark: ['PostJson', 'repair-order/remark'], //入库
         settleDetail: ['PostJson', 'clearing-order/detail-by-source'], //结算单
+        saveVehicleList: ['PostJson', 'repair-order/vehicle/list'],
+        getItemCategory: ['Post', 'item-category/list/type'], // 获取故障分类
+        getItemStatus:['PostJson', 'warranty-config/list/item/status'], // 根据商品信息查询商品状态7
+        balance: ['PostJson', 'repair-order/get/balance'], // 获取账户余额
+        cancel: ['PostJson', 'repair-order/cancel'], // 取消工单
+        void: ['PostJson', 'repair-order/voided'], // 作废工单
+        getBalance: ['PostJson', 'repair-order/get/balance']
     },
     RepairItem: { // 维修单
         saveList: ['PostJson', 'repair-order-item/save-list'], // 列表
@@ -259,9 +265,9 @@ const apiList = {
         getItemComponent: ['PostJson', 'item/item-component-set-list'], // 查询爆炸图列表
         bindItemComponent: ['PostJson', 'item/bind-item-component'], // 绑定零部件
         deleteItemComponent: ['PostJson', 'item/delete-item-component'], // 解绑零部件
-        saveSalesAreaByCategory: ['PostJson', 'item/save-sales-area-by-category'], // 解绑零部件
-        ItemAccessoryModify: ['PostJson', 'item-accessory/modify'], // 商品详情上传配件修改数量
-
+	    saveSalesAreaByCategory: ['PostJson', 'item/save-sales-area-by-category'], // 解绑零部件
+	    ItemAccessoryModify: ['PostJson', 'item-accessory/modify'], // 商品详情上传配件修改数量
+        ItemCategory: ['PostJson', 'item-category/primary/list'], // 获取商品分类一级分类tab列表
     },
     ItemAccessory: { // 商品
         // save: ['PostJson', 'item-accessory/save'],   // 单选
@@ -289,6 +295,7 @@ const apiList = {
         save: ['PostJson', 'item-category/save'],
         update: ['PostJson', 'item-category/update'],
         tree: ['PostJson', 'item-category/tree'],
+        treeList: ['PostJson', 'item-category/list/tree'],  // 三包管理 - 商品详情
         delete: ['PostJson', 'item-category/delete'],
         detail: ['PostJson', 'item-category/detail'],
         // 是否显示爆炸图
@@ -329,6 +336,7 @@ const apiList = {
 
         // 备注
         remark: ['PostJson', 'shopping-cart/remark'],
+        switchItem: ['PostJson', 'shopping-cart/switch-item'],// 切换商品
 
     },
     Favorite: { // 收藏夹
@@ -801,7 +809,6 @@ const apiList = {
         carTotalStatistics: ['PostJson', 'crm-dashboard/car-total-statistics'],// 个人 - 销售简报
         customerTotalStatistics: ['PostJson', 'crm-dashboard/customer-total-statistics'],// 个人 - 销售简报
         transformationStatistics: ['PostJson', 'crm-dashboard/transformation-statistics'],// 转化分析
-
         employeesSalesStatistics: ['PostJson', 'crm-dashboard/employees-sales-statistics'],// 个人 - 销售简报
     },
 
@@ -830,8 +837,17 @@ const apiList = {
         repairOrder: ['PostJson', 'data-board/repair-order'],
         repairRank: ['PostJson', 'data-board/fault_rank'],
     },
+    // 三包
+    Warranty: {
+        saveTime: ['PostJson', 'warranty-config/save/effect-time'], // 设置三包生效时间
+        categoryList: ['PostJson', 'warranty-config/list/category'], // 根据商品分类展示列表
+        warrantyConfigSave: ['PostJson', 'warranty-config/save'], // 三包管理的新增或修改
+        itemList: ['PostJson', 'warranty-config/list/item'], // 根据商品列表展示列表
+        updateLogList: ['PostJson', 'warranty-config/list/update-log'], // 查询三包管理变更记录
+        getTimeDetail: ['PostJson', 'warranty-config/get/effect-time'], // 获取三包设置生效时间详情
+    },
     // 投票统计
-    VoteData: { 
+    VoteData: {
         getActivityId: ['PostJson', 'vote/activity/current'], // get 活动Id
         cityStatistics: ['PostJson', 'vote/activity/statistics/city'], // 投票城市统计
         sourceStatistics: ['PostJson', 'vote/activity/statistics/source'], // 投票来源统计
@@ -842,24 +858,24 @@ const apiList = {
     RETAIL: {
         // 门店管理接口
         storeList: ['PostJson', 'store/list'],              // 门店-门店列表
-        editStore:['PostJson', 'store/save'],               // 编辑-创建门店
-        deleteStore:['PostJson','store/delete'],            // 删除-门店
-        storeDetail:['Get','store/detail'],                 // 门店-详情
-        storeUserList:['PostJson','store/user/list'],       // 门店-人员（获取）
-        addStoreUser:['PostJson','store/user/add'],         // 门店-添加人员
-        deleteStoreUser:['PostJson','store/user/delete'],   // 门店-添加人员
-        // 区域管理接口          
+        editStore: ['PostJson', 'store/save'],               // 编辑-创建门店
+        deleteStore: ['PostJson', 'store/delete'],            // 删除-门店
+        storeDetail: ['Get', 'store/detail'],                 // 门店-详情
+        storeUserList: ['PostJson', 'store/user/list'],       // 门店-人员（获取）
+        addStoreUser: ['PostJson', 'store/user/add'],         // 门店-添加人员
+        deleteStoreUser: ['PostJson', 'store/user/delete'],   // 门店-添加人员
+        // 区域管理接口
         regionsList: ['PostJson', 'group/city/list'],       // 门店-区域列表/crm/1/store/list
-        deleteRegion:['PostJson', 'group/city/delete'],     // 删除区域
-        detailRegion:['Get', 'group/city/detail'],          // 区域-详情
-        saveRegion:['PostJson', 'group/city/save'],         // 区域-更新
+        deleteRegion: ['PostJson', 'group/city/delete'],     // 删除区域
+        detailRegion: ['Get', 'group/city/detail'],          // 区域-详情
+        saveRegion: ['PostJson', 'group/city/save'],         // 区域-更新
         // 人员管理接口
-        personList:['PostJson', 'user/list'],               // 人员列表（添加店长可用）
-        deletePersonList:['PostJson', 'user/delete'],       // 删除人员
+        personList: ['PostJson', 'user/list'],               // 人员列表（添加店长可用）
+        deletePersonList: ['PostJson', 'user/delete'],       // 删除人员
         externalList: ['PostJson', 'out/user/list'],        // 人员列表(外部【飞书】)
         addPerson: ['PostJson', 'out/user/save'],           // 添加人员(外部【飞书】)
         personDetail: ['Get', 'store/user/detail'],         // 人员信息详情
-        personUpdate: ['PostJson', 'store/user/save'],      // 人员信息更新 
+        personUpdate: ['PostJson', 'store/user/save'],      // 人员信息更新
 
         // 车辆管理接口
         // 订单管理接口
@@ -872,8 +888,8 @@ const apiList = {
         updateTrackingNumber: ['PostJson', 'app-waybill/save'],         // 更新快递单号
         logisticsRecords: ['PostJson', 'app-waybill-log/list'],         // 物流信息修改记录
         statusCount:['PostJson','app-order/count'],                     // 订单状态数量统计
-        seePhone:['PostJson','app-order/show-phone'],                   // 查看手机号   
-        wayillDetail:['PostJson','app-waybill/detail'],                   // 物流详情   
+        seePhone:['PostJson','app-order/show-phone'],                   // 查看手机号
+        wayillDetail:['PostJson','app-waybill/detail'],                   // 物流详情
     },
     CustomService: {
         list: ['PostJson', 'customer-service/customer/list'],
@@ -958,7 +974,7 @@ const apiList = {
         changeBomList: ['PostJson', 'bom-log/list'], // bom设变列表
         changeCount: ['PostJson', 'bom-log/count-by-type'], // bom设变统计
         bindCategory: ['PostJson', 'aftermarket/bom/bind-category'], // 给Bom商品绑定分类 （覆盖）
-        addBindCategory: ['PostJson', 'aftermarket/bom/add-bind-category'], // 给Bom商品添加（不覆盖）-绑定分类 
+        addBindCategory: ['PostJson', 'aftermarket/bom/add-bind-category'], // 给Bom商品添加（不覆盖）-绑定分类
         parsingImportFile: ['PostJson', 'aftermarket/bom/parsing-import-file'], // 二级页面解析导入表格情况返回
         importBindBomItem: ['PostJson', 'aftermarket/bom/import-bind-bom-item'], // 保存导入成功表格情况返回
     },
@@ -1004,7 +1020,14 @@ const apiList = {
         deleteCustomer: ['PostJson','user/delete-customer-country'], // 删除
         // 添加
         addCustomer: ['PostJson','user/save-area'], // 添加
-    }
+    },
+    Operation: {
+        list: ['PostJson','announcement/list'], // 列表
+        detail: ['PostJson','announcement/detail'], // 详情
+        delete: ['PostJson','announcement/delete'], // 删除
+        save: ['PostJson','announcement/save'], // 新增
+        updateStatus: ['PostJson','announcement/update-status'], // 修改排序和状态
+    },
 }; 
 
 export default new Api(baseUrl, apiList);

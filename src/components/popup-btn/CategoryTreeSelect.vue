@@ -1,13 +1,7 @@
 <template>
-    <a-tree-select class="CategoryTreeSelect"
-                   v-model:value="value"
-                   :placeholder="$t('def.select')"
-                   :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-                   :tree-data="treeData"
-                   @select='handleSelect'
-                   :replace-fields="fieldNames"
-                   tree-default-expand-all
-    />
+    <a-tree-select class="CategoryTreeSelect" v-model:value="value" :placeholder="$t('def.select')"
+        :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }" :tree-data="treeData" @select='handleSelect'
+        :field-names="fieldNames" tree-default-expand-all />
 </template>
 
 <script>
@@ -30,9 +24,6 @@ export default {
             type: Number,
             default: 1,
         },
-       /* placeholder: {
-            type: String,
-        },*/
         type: {
             type: String,
             default: 'item', //商品
@@ -42,9 +33,9 @@ export default {
     data() {
         return {
             treeData: [],
-            fieldNames:{},
+            fieldNames: {},
             value: undefined,
-            form:{},
+            form: {},
         }
     },
     watch: {
@@ -67,17 +58,20 @@ export default {
             immediate: true,
             handler(n) {
                 console.log('$i18n.locale', n)
-                let fieldNames = { label: 'name_en', value: 'id' , children: 'children', }
+                let fieldNames = { label: 'name_en', value: 'id', children: 'children', }
                 switch (n) {
                     case 'zh': fieldNames.label = 'name'; break;
                     case 'en': fieldNames.label = 'name_en'; break;
+                    default:
+                        fieldNames.label = 'name'; // 设置默认值
+                        break;
                 }
                 this.fieldNames = fieldNames
             }
         },
     },
     computed: {},
-    created() {},
+    created() { },
     mounted() {
         this.getFirstItemCategory(this.parentId)
         console.log('mounted this.categoryId:', this.categoryId)
@@ -91,62 +85,30 @@ export default {
         },
         getFirstItemCategory() {
             let key = ''
+            let api = 'tree'
             switch (this.type) {
                 case 'item':
                     key = 'ItemCategory'
-                    this.form = {parent_id: this.parentId}
-                    ; break
+                    this.form = { parent_id: this.parentId }; 
+                    break;
+                case 'list-item':
+                    key = 'ItemCategory'
+                    api = 'treeList'
+                    this.form = { parent_id: this.parentId }; 
+                    break;
                 case 'material':
                     key = 'MaterialCategory'
                     this.form = {
                         parent_id: this.parentId,
                         type: this.inventoryType,
-                    }
-                    ; break
+                    }; 
+                    break;
             }
-            Core.Api[key].tree({...this.form}).then(res => {
-                // let list = res.list.map(item => (
-                //     // id: item.id,
-                //     // parent_id: this.parentId,
-                //     // key: item.id,
-                //     // value: item.id,
-                //     // title: item.name,
-                //     // config: item.config,
-                //     // children: item.children,
-                //     this.getItemCategoryChildren(item)
-                // ))
+            Core.Api[key][api]({ ...this.form }).then(res => {
                 this.treeData = res.list
                 console.log("treeData", this.treeData)
             })
         },
-        // async getItemCategory(parent_id, treeNode, resolve) {
-        //     let key = ''
-        //     switch (this.type) {
-        //         case 'item': key = 'ItemCategory'; break
-        //         case 'material': key = 'MaterialCategory'; break
-        //     }
-        //     let {list} = await Core.Api[key].tree({parent_id})
-        //     console.log('list:', list)
-        //     list = list.map(item => ({
-        //         id: item.id,
-        //         parent_id: parent_id,
-        //         key: item.id,
-        //         value: item.id,
-        //         title: item.name,
-        //         isLeaf: !item.has_children,
-        //     }))
-        //     treeNode.dataRef.children = list
-        //     resolve(list)
-        //     return list
-        // },
-        // onLoadData(treeNode) {
-        //     console.log('treeNode:', treeNode)
-        //     let parent_id = treeNode.dataRef.id
-        //     return new Promise(resolve => {
-        //         this.getItemCategory(parent_id, treeNode, resolve)
-        //     });
-        // },
-
         handleSelect(value, node, extra) {
             console.log('handleSelect value, node, extra:', value, node, extra)
             this.$emit('change', value, node)
