@@ -142,7 +142,7 @@ const lang = computed(() => {
 })
 watch(lang, (newV) => {
     if (form.id) {
-        getReportDetail(form.value.id);
+        getReportDetail(form.id);
         modalText.value = proxy.$t(/*编辑尚未提交，确定退出吗？*/'operation.edit_exit_tip')
     } else {
         modalText.value = proxy.$t(/*公告尚未创建成功，确定退出吗？*/'operation.exit_text')
