@@ -225,8 +225,8 @@ export default {
                 resultParams[el.searchParmas] = el.value;
                 // 时间的处理
                 if (el.type === "time-range") {
-                    resultParams[el.searchParmas[0]] = el.value[0];
-                    resultParams[el.searchParmas [1]] = el.value[1];
+                    resultParams[el.searchParmas[0]] = el?.value[0] ?? undefined;
+                    resultParams[el.searchParmas [1]] = el?.value[1] ?? undefined;
                     delete resultParams[el.searchParmas];
                 }
             });
@@ -236,6 +236,9 @@ export default {
         handleSearchReset() {
             this.options.forEach((el) => {
                 el.value = undefined;
+                if (el.type === "time-range") {
+                    el.value = [];
+                }
             });
             console.log("重置", this.options);
             

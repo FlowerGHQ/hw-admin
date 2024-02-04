@@ -153,6 +153,7 @@ const {
 
 /* methods start*/
 const onSearch = (data) => {
+    console.log(data)
     searchParam.value = data
     search()
 }
