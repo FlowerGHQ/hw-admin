@@ -7,7 +7,7 @@ import Layout from '../views/layout/index.vue';
 // 供应商路由
 import { supplyManage, supplyRouters } from './supply-router'
 // 新分销商路由
-import { mallRouters } from './mall'
+import { mallRouters, dealsPreview } from './mall'
 // 分销商路由
 import { customerCare } from './distributor-router'
 // 平台方路由
@@ -84,6 +84,7 @@ const routes = [
     //     }
     // },
     mallRouters,
+    dealsPreview,
     { // 看板
         path: '/dashboard',
         component: Layout,

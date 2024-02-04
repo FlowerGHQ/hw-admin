@@ -1,5 +1,5 @@
 <template>
-    <div id="mall-header">
+    <div id="mall-header" :style="{ pointerEvents: isPreview ? 'none' : 'unset' }">
         <div id="header-item">
             <div class="header-content content">
                 <div class="text">
@@ -237,6 +237,7 @@ export default {
             user_type_list: [],
             menuIndex: '',
             car_type_index: '',
+            isPreview: false
         };
     },
     computed: {
@@ -308,6 +309,10 @@ export default {
         this.user_type_list = Core.Data.getUserTypeList();
     },
     mounted() {
+        if (this.$route.path === '/preview/deals-preview') {// 如果是预览页则禁用点击 且不继续往下执行
+            this.isPreview = true;
+            return;
+        };
         this.getShopCartList()
     },
     methods: {

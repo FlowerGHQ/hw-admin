@@ -199,7 +199,7 @@ const routerChange = (type, item) => {
         case 'preview':    // 预览
             Core.Data.setReportData(form);
             let previewUrl = router.resolve({
-                path: "/mall/deals-preview",
+                path: "/preview/deals-preview",
                 query: item
             })
             window.open(previewUrl.href, '_blank')

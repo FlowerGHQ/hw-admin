@@ -161,17 +161,31 @@ const mallRouters = { // 看板
                 },
             ]
         },
+    ]
+}
+const dealsPreview = {
+    path: '/preview',
+    component: MallLayout,
+    name: 'Preview',
+    meta: {
+        title: '商城',
+        title_en: 'Store',
+        icon: 'i_s_dashboard',
+        roles: [LOGIN_TYPE.ADMIN],
+        hidden: true
+    },
+    children: [
         {
             path: 'deals-preview',
             component: () => import('@/views/mall/purchase/deals-detail.vue'),
             meta: {
                 title: '公告详情',
                 title_en: 'Report Detail',
-                roles: [LOGIN_TYPE.ADMIN],
             }
         },
     ]
 }
 export {
-    mallRouters
+    mallRouters,
+    dealsPreview
 }
