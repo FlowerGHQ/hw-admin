@@ -197,7 +197,9 @@ const routerChange = (type, item) => {
             window.open(routeUrl.href, '_self')
             break;
         case 'preview':    // 预览
-            Core.Data.setReportData(form);
+            Core.Data.setReportData(Object.assign(form, {
+                create_time: detail?.create_time,
+            }));
             let previewUrl = router.resolve({
                 path: "/preview/deals-preview",
                 query: item
