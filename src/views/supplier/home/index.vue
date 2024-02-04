@@ -25,38 +25,28 @@
                             <a-menu style="text-align: center">
                                 <a-menu-item @click="handleEditShow">
                                     <a-button type="link" class="menu-item-btn">{{ $t("n.password") }}</a-button>
-                                    <a-modal
-                                        v-model:visible="passShow"
-                                        :title="$t('n.password')"
-                                        class="password-edit-modal"
-                                        :after-close="handleEditClose"
-                                    >
+                                    <a-modal v-model:visible="passShow" :title="$t('n.password')"
+                                        class="password-edit-modal" :after-close="handleEditClose">
                                         <div class="form-title">
                                             <div class="form-item required">
                                                 <div class="key">{{ $t("n.old") }}:</div>
                                                 <div class="value">
-                                                    <a-input-password
-                                                        :placeholder="$t('def.input')"
-                                                        v-model:value="form.old_password"
-                                                    />
+                                                    <a-input-password :placeholder="$t('def.input')"
+                                                        v-model:value="form.old_password" />
                                                 </div>
                                             </div>
                                             <div class="form-item required">
                                                 <div class="key">{{ $t("n.new") }}:</div>
                                                 <div class="value">
-                                                    <a-input-password
-                                                        v-model:value="form.password"
-                                                        :placeholder="$t('def.input')"
-                                                    />
+                                                    <a-input-password v-model:value="form.password"
+                                                        :placeholder="$t('def.input')" />
                                                 </div>
                                             </div>
                                             <div class="form-item required">
                                                 <div class="key">{{ $t("n.double") }}:</div>
                                                 <div class="value">
-                                                    <a-input-password
-                                                        v-model:value="form.new_password"
-                                                        :placeholder="$t('n.double')"
-                                                    />
+                                                    <a-input-password v-model:value="form.new_password"
+                                                        :placeholder="$t('n.double')" />
                                                 </div>
                                             </div>
                                         </div>
@@ -87,13 +77,10 @@
                 <!-- 已经上传并且没走到成功那一步 -->
                 <div class="setp-bar" v-if="setp !== 2">
                     <template v-for="(item, index) in setpObject" :key="index">
-                        <div
-                            class="setp-base-style setp-text"
-                            :style="{
-                                backgroundImage: 'url(' + item.bg + ')',
-                                color: item.text_color,
-                            }"
-                        >
+                        <div class="setp-base-style setp-text" :style="{
+                            backgroundImage: 'url(' + item.bg + ')',
+                            color: item.text_color,
+                        }">
                             <SvgIcon class="icon-style" :icon-class="item.icon" />
                             <span>{{ $t(item.t) }}</span>
                         </div>
@@ -129,19 +116,11 @@
                 </div>
             </a-layout-content>
         </a-layout>
-        <a-modal
-            v-model:visible="visible"
-            :keyboard="false"
-            :maskClosable="false"
-            class="promise-book-modal"
-            width="860px"
-            :getContainer="
-                () => {
+        <a-modal v-model:visible="visible" :keyboard="false" :maskClosable="false" class="promise-book-modal" width="860px"
+            :getContainer="() => {
                     return suppluChain;
                 }
-            "
-            centered
-        >
+                " centered>
             <!-- title -->
             <template #title> 请阅读《廉洁承诺书》和《保密和不竞争协议》 </template>
             <!-- body -->
@@ -153,14 +132,10 @@
             <!-- footer -->
             <template #footer>
                 <!-- 已阅读，发送申请 -->
-                <a-button
-                    type="primary"
-                    :class="{
-                        'btn-disabled': countTime != 0,
-                        'read-btn': countTime == 0,
-                    }"
-                    @click="handleSubmitOk"
-                >
+                <a-button type="primary" :class="{
+                    'btn-disabled': countTime != 0,
+                    'read-btn': countTime == 0,
+                }" @click="handleSubmitOk">
                     {{ $t("supply-chain.read_and_send_application") }}
                     <div class="time-area" v-if="countTime != 0">
                         (
@@ -433,13 +408,14 @@ const handleEditShow = () => {
     passShow.value = true;
 };
 const handleLogout = () => {
-    if (Number(Core.Data.getLoginType()) === Core.Const.USER.TYPE.SUPPLIER) {
-        $router.replace(`/login?user_type=${Core.Data.getLoginType()}`);
-    } else {
-        $router.replace(`/login`);
-    }
     Core.Api.Common.logout().then(() => {
+        localStorage.clear()
         $store.dispatch("SUPPLY_CHAIN/clearAll");
+        if (Number(Core.Data.getLoginType()) === Core.Const.USER.TYPE.SUPPLIER) {
+            $router.replace(`/login?user_type=${Core.Data.getLoginType()}`);
+        } else {
+            $router.replace(`/login`);
+        }
     });
 };
 const handleEditSubmit = () => {
@@ -494,7 +470,7 @@ watch(
         }
         contentMain.value && (contentMain.value.scrollTop = 0);
 
-        
+
     }
 );
 
@@ -525,8 +501,10 @@ onBeforeUnmount(() => {
     height: 100vh;
     display: flex;
     flex-direction: column;
+
     :deep(.ant-layout) {
         flex: 1;
+
         .ant-layout-header {
             height: 80px;
             border-bottom: 1px solid #e5e6eb;
@@ -633,17 +611,20 @@ onBeforeUnmount(() => {
                 color: @TC_header_name;
             }
         }
+
         .ant-layout-content {
             flex: 1;
             padding: 20px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
+
             .setp-bar {
                 display: flex;
                 height: 52px;
                 line-height: 52px;
                 width: 100%;
+
                 .setp-base-style {
                     width: 50%;
                     background-size: 100% 100%;
@@ -661,21 +642,25 @@ onBeforeUnmount(() => {
                     margin-right: 4px;
                 }
             }
+
             .content-main {
                 flex: 1;
                 margin-top: 15px;
                 overflow-y: scroll;
                 background-color: #ffffff;
                 border-radius: 6px;
+
                 // 滚动条样式
                 &::-webkit-scrollbar {
                     width: 8px;
                     height: 8px;
                 }
+
                 &::-webkit-scrollbar-thumb {
                     border-radius: 10px;
                     background: #c0c4cc;
                 }
+
                 &::-webkit-scrollbar-track {
                     border-radius: 10px;
                     background: #fff;
@@ -685,6 +670,7 @@ onBeforeUnmount(() => {
             .supply-chain-footer {
                 min-height: 68px;
                 width: calc(100%);
+
                 .btn-area {
                     display: flex;
                     padding: 18px 0px;
@@ -693,11 +679,13 @@ onBeforeUnmount(() => {
                     border-top: 1px solid #f2f3f5;
                     background: #fff;
                 }
+
                 .promise-book {
                     background-color: #fff;
                     padding: 20px;
                     text-align: center;
                     color: #1d2129;
+
                     .promise-text {
                         color: #0061ff;
                     }
@@ -705,21 +693,26 @@ onBeforeUnmount(() => {
             }
         }
     }
+
     :deep(.promise-book-modal) {
+
         //header
         .ant-modal-header {
             color: #1d2129;
             font-size: 16px;
             font-weight: 500;
         }
+
         .ant-modal-body {
             // ul清除默认样式
             padding: 20px;
+
             ul {
                 padding-left: 0;
                 list-style: none;
                 color: #666;
             }
+
             .promise-book {
                 .promise-book-title {
                     height: 34px;
@@ -729,15 +722,18 @@ onBeforeUnmount(() => {
                     align-items: center;
                     padding: 9px 10px;
                     margin-bottom: 10px;
+
                     img {
                         margin-right: 4px;
                     }
                 }
             }
         }
+
         // footer
         .ant-modal-footer {
             text-align: center;
+
             .btn-disabled,
             .read-btn {
                 border-radius: 4px;
@@ -747,6 +743,7 @@ onBeforeUnmount(() => {
                 color: #fff;
                 cursor: not-allowed;
             }
+
             .read-btn {
                 cursor: pointer;
                 opacity: 1;

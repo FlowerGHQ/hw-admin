@@ -21,7 +21,7 @@ const errorHandle = (status, message = i18n.global.t('error_code.unknown')) => {
             window.location.href = window.location.href.split('#')[0] + `#/login`            
         }
 
-        localStorage.clear()
+        Data.clearSpecificItem();
         return showMessage(i18n.global.t('error_code.expire'));
     }
     if (message.includes('timeout')) {

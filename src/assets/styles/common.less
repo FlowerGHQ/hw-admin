@@ -117,6 +117,133 @@
     }
 }
 
+/* 首页编辑样式 */
+.edit-container-new-edit {
+
+    // 编辑页
+    background: @BG_N;
+    box-sizing: border-box;
+    border-radius: 6px;
+    position: relative;
+
+    .form-block-box {
+        
+    // 新增页 分块
+    margin: 0 20px 20px;
+    background: #F8FAFC;
+    border-radius: 6px;
+    overflow: hidden;
+    padding-top: 58px;
+        
+    .form-block {
+        // 新增页 分块
+        // margin: 0 20px 20px;
+        background: #F8FAFC;
+        // border-radius: 6px;
+        box-sizing: border-box;
+        padding: 0px 0 8px 0;
+        display: flex;
+
+        .form-title {
+            width: 174px;
+            text-align: right;
+            box-sizing: border-box;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 20px;
+            color: #363D42;
+        }
+
+        .form-content {
+            width: 78%;
+            margin-left: 78px;
+
+        }
+
+        .form-item {
+            margin-bottom: 16px;
+            position: relative;
+
+            .key {
+                min-width: 126px;
+                color: #8090A6;
+                text-align: right;
+                padding-right: 8px;
+            }
+
+            .value {
+                width: calc(~'100% - 86px');
+                max-width: 650px;
+            }
+
+            .sp {
+                position: relative;
+                font-size: 12px;
+                margin-left: 14px;
+
+                .ant-btn {
+                    font-size: 12px;
+                }
+            }
+
+            &.rich_text {
+                .value {
+                    max-width: calc(100% - 100px);
+                }
+            }
+        }
+    }
+
+    }
+    // 子列样式
+    .form-content-item-column {
+
+        display: flex;
+        width: calc(100% + 86px);
+
+        .item-column-block-box {
+
+            box-sizing: border-box;
+            padding: 0px 0 8px 0;
+            flex:1;
+
+            .item-column-title-box {
+                .title {
+                    color: #8090A6;
+                    font-size: 16px;
+                    font-weight: 500;
+                    width: 126px;
+                    text-align: right;
+                    padding-right: 8px;
+                }
+            }
+            .item-column-title {
+                
+                min-width: 126px;
+                color: #8090A6;
+                text-align: right;
+                padding-right: 8px;
+            }
+
+            .item-column-value {
+                width: calc(~'100% - 86px');
+                max-width: 650px;
+            }
+
+            .item-column-block {
+                margin-bottom: 16px;
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+
+    // 子列表格样式
+    .form-content-item-table {
+        
+    }
+}
+
 // padding 样式
 .p-4 {
     padding: 4px;

@@ -4,9 +4,9 @@
         <div class="base-msg">
             <div class="d-f-a-b">
                 <div class="base-msg-left d-f-a">
-                    <div class="sn no-white-space">问询单号 {{ customerCareDetail.uid }}</div>
-                    <div class="no-white-space m-r-8 color-4E5969">客户:</div>
-                    <div>{{ customerCareDetail.submit_user_name || "-" }}/{{ customerCareDetail.country || "-" }}</div>
+                    <div class="sn no-white-space">{{ $t("customer-care.inquiry_number") }} {{ customerCareDetail.uid }}</div>
+                    <div class="no-white-space m-r-8 color-4E5969">{{ $t("customer-care.customer") }}:</div>
+                    <div class="color-4E5969">{{ customerCareDetail.submit_user_name || "-" }}/{{ customerCareDetail.country || "-" }}</div>
                 </div>
                 <div
                     class="base-msg-right status-style"
@@ -46,22 +46,18 @@
                         "
                     />
                     <span class="m-l-4">
-                        {{
-                            Core.Const.CUSTOMER_CARE.ORDER_STATUS[customerCareDetail.status]
-                                ? $t(Core.Const.CUSTOMER_CARE.ORDER_STATUS[customerCareDetail.status].t)
-                                : "-"
-                        }}
+                        {{ $t($Util.Common.returnTranslation(customerCareDetail.status, Core.Const.CUSTOMER_CARE.ORDER_STATUS)) }}
                     </span>
                 </div>
             </div>
             <!-- 详细信息 -->
             <div class="detail-msg">
-                <div class="msg-title">详细信息</div>
+                <div class="msg-title">{{ $t("customer-care.detailed_information") }}</div>
                 <div class="msg-content m-t-20">
                     <!-- 问询类型 -->
                     <div class="type-style">
                         <div class="col d-f-a">
-                            <div class="key m-r-16">问询类型</div>
+                            <div class="key m-r-16">{{ $t("customer-care.inquiry_type") }}</div>
                             <div
                                 class="value inquiry-category-style"
                                 :class="[
@@ -81,40 +77,53 @@
                                     ]),
                                 ]"
                             >
-                                {{
-                                    Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE[customerCareDetail.type]
-                                        ? $t(Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE[customerCareDetail.type].t)
-                                        : "-"
-                                }}
+                                {{ $t($Util.Common.returnTranslation(customerCareDetail.type, Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE)) }}
                             </div>
                         </div>
                         <div class="col">
-                            <div class="key m-r-16">创建时间</div>
+                            <div class="key m-r-16">{{ $t("common.create_time") /*创建时间*/ }}</div>
                             <div class="value">
-                                {{ $Util.timeFilter(customerCareDetail.create_time, 3) }}
+                                {{ $Util.timeFilter(customerCareDetail.create_time, 2) }}
                             </div>
                         </div>
-                        <div class="col">
-                            <div class="key m-r-16">故障时间</div>
+                        <div
+                            class="col"
+                            v-if="
+                                !$Util.Common.returnTypeBool(customerCareDetail.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION])
+                            "
+                        >
+                            <div class="key m-r-16">{{ $t("customer-care.failure_time") /*故障时间*/ }}</div>
                             <div class="value">
-                                {{ $Util.timeFilter(customerCareDetail.fault_time, 3) }}
+                                {{ $Util.timeFilter(customerCareDetail.fault_time, 2) }}
                             </div>
                         </div>
                         <div class="col">
-                            <div class="key m-r-16">车型</div>
+                            <div class="key m-r-16">{{ $t("common.vehicle_model") /*车型*/ }}</div>
                             <div class="value">
                                 {{ $i18n.locale === "en" ? customerCareDetail.category?.name_en || "-" : customerCareDetail.category?.name || "-" }}
                             </div>
                         </div>
+                        <div
+                            class="col"
+                            v-if="
+                                $Util.Common.returnTypeBool(customerCareDetail.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION])
+                            "
+                        >
+                            <div class="key m-r-16">{{ $t("customer-care.mileage") /*公里数*/ }}</div>
+                            <div class="value">{{ customerCareDetail.mileage || "0" }}km</div>
+                        </div>
                     </div>
 
                     <!-- 车架号与公里数 -->
-                    <div class="vehicle-no-style m-t-20">
+                    <div
+                        v-if="$Util.Common.returnTypeBool(customerCareDetail.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION])"
+                        class="vehicle-no-style m-t-20"
+                    >
                         <div class="col">
-                            <div class="key m-r-16 no-white-space m-r-8 m-t-8">车架号、公里数</div>
+                            <div class="key m-r-16 m-r-8 m-t-8">{{ $t("common.vehicle_no") }}、{{ $t("customer-care.mileage") }}</div>
                             <div class="value d-f-a">
                                 <div v-for="(item, index) in customerCareDetail.vehicle_list" :key="index" class="vehicle-item m-r-8 m-t-8">
-                                    {{ item.vehicle_uid }}({{ item.mileage }})
+                                    {{ item.vehicle_uid }}({{ item.mileage }}km)
                                 </div>
                             </div>
                         </div>
@@ -123,7 +132,7 @@
                     <!-- 问题描述 -->
                     <div class="problem-description-style m-t-20">
                         <div class="col">
-                            <div class="key m-r-16">问题描述</div>
+                            <div class="key m-r-16">{{ $t("customer-care.problem_description") }}</div>
                             <div class="value">
                                 {{ customerCareDetail.description }}
                             </div>
@@ -134,7 +143,7 @@
                     <div class="attachment-style m-t-20">
                         <div class="col">
                             <div class="key m-r-16">{{ $t("customer-care.attachment") }}</div>
-                            <div class="value">
+                            <div class="value d-f-a cursor">
                                 <template v-for="(item, index) in customerCareDetail.attachment_list" :key="index">
                                     <template v-if="/(image\/|png|jpg|jpeg)/.test(item.type)">
                                         <img
@@ -147,19 +156,24 @@
                                     </template>
                                     <template v-else-if="/video\/+/.test(item.type)">
                                         <!-- 视频 -->
-                                        <img
+                                        <div
+                                            class="video-container"
                                             :class="{ 'm-l-16': index > 0 }"
-                                            class="attachment-img"
-                                            src="@images/item/video_default.svg"
-                                            alt=""
                                             @click="
                                                 onViewImage({
                                                     type: 'video/*',
                                                     path: item.path,
                                                 })
                                             "
-                                        />
+                                        >
+                                            <MySvgIcon class="video-icon" icon-class="video-icon" />
+                                            <div class="time">{{ item.duration || "-" }}{{ item.duration ? "s" : "" }}</div>
+                                            <div class="bottom-mask">{{ item.name }}</div>
+                                        </div>
                                     </template>
+                                </template>
+                                <template v-if="customerCareDetail.attachment_list.length === 0">
+                                    <span class="custom-not-uploaded">{{ $t("supply-chain.not_uploaded") }}</span>
                                 </template>
                             </div>
                         </div>
@@ -169,7 +183,7 @@
             <!-- 按钮 -->
             <div v-if="Number(customerCareDetail.status) !== Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED" class="detail-btn m-t-20">
                 <a-button @click="onBtn('msg-edit')">
-                    {{ msgVisible ? "取消信息" : "编辑信息" }}
+                    {{ msgVisible ? $t("customer-care.cancel_message") : $t("customer-care.edit_information") }}
                 </a-button>
             </div>
         </div>
@@ -177,11 +191,11 @@
         <!-- 问询单归类 -->
         <div class="inquiry-classification m-t-16">
             <template v-if="isDistributerAdmin">
-                <div class="inquiry-classification-title">问询单归类</div>
+                <div class="inquiry-classification-title">{{ $t("customer-care.inquiry_list_classification") }}</div>
 
                 <!-- 归类 -->
-                <div class="inquiry-classification-item m-t-16">
-                    <div class="inquiry-classification-key m-t-4">归类</div>
+                <div class="inquiry-classification-item m-t-16 m-b-30">
+                    <div class="inquiry-classification-key m-t-4">{{ $t("customer-care.classify") }}</div>
                     <div
                         class="inquiry-classification-value"
                         :class="{
@@ -199,17 +213,13 @@
                         >
                             <a-radio-group v-model:value="customerCareDetail.purpose">
                                 <a-radio v-for="(item, index) in Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE" :value="item.value">
-                                    {{ $t(item.t) }}
+                                    {{ $t(item.t) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 </a-radio>
                             </a-radio-group>
                         </template>
                         <template v-else>
                             <span>
-                                {{
-                                    Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE[customerCareDetail.purpose]
-                                        ? $t(Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE[customerCareDetail.purpose].t)
-                                        : "-"
-                                }}
+                                {{ $t($Util.Common.returnTranslation(customerCareDetail.purpose, Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE)) }}
                             </span>
                         </template>
                         <br />
@@ -236,14 +246,10 @@
                                         0,
                                     ])
                                 "
-                                class="good-faith-claims p-10 m-t-16"
+                                class="good-faith-claims p-10 m-t-8"
                             >
                                 <div class="good-faith-claims-title">
-                                    {{
-                                        Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO[customerCareDetail.claim_type]
-                                            ? $t(Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO[customerCareDetail.claim_type].t)
-                                            : "-"
-                                    }}
+                                    {{ $t($Util.Common.returnTranslation(customerCareDetail.claim_type, Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO)) }}
                                 </div>
                                 <div class="good-faith-claims-time">
                                     <template
@@ -253,7 +259,7 @@
                                             ])
                                         "
                                     >
-                                        <span class="time-name m-r-8">发货日期</span>
+                                        <span class="time-name m-r-8">{{ $t("customer-care.delivery_date") }}</span>
                                         <template
                                             v-if="
                                                 !$Util.Common.returnTypeBool(customerCareDetail.status, [
@@ -261,7 +267,11 @@
                                                 ])
                                             "
                                         >
-                                            <a-date-picker class="w-224 m-r-16" v-model:value="customerCareDetail.delivery_time" />
+                                            <a-date-picker
+                                                class="w-224 m-r-16"
+                                                v-model:value="customerCareDetail.delivery_time"
+                                                :locale="$i18n.locale === 'en' ? localeEn : localeZh"
+                                            />
                                             <a-radio-group v-model:value="customerCareDetail.insurance_status">
                                                 <a-radio v-for="(item, index) in Core.Const.CUSTOMER_CARE.GOOD_FAITH" :value="item.value">
                                                     {{ $t(item.t) }}
@@ -272,9 +282,12 @@
                                             <span>{{ dayjs(customerCareDetail.delivery_time).format("YYYY-MM-DD HH:mm") }}</span>
                                             <span class="m-l-4">
                                                 {{
-                                                    Core.Const.CUSTOMER_CARE.GOOD_FAITH[customerCareDetail.insurance_status]
-                                                        ? $t(Core.Const.CUSTOMER_CARE.GOOD_FAITH[customerCareDetail.insurance_status].t)
-                                                        : "-"
+                                                    $t(
+                                                        $Util.Common.returnTranslation(
+                                                            customerCareDetail.insurance_status,
+                                                            Core.Const.CUSTOMER_CARE.GOOD_FAITH
+                                                        )
+                                                    )
                                                 }}
                                             </span>
                                         </template>
@@ -286,7 +299,7 @@
                                             ])
                                         "
                                     >
-                                        <span class="time-name m-r-8">订单号</span>
+                                        <span class="time-name m-r-8">{{ $t("customer-care.order_number") }}</span>
                                         <template
                                             v-if="
                                                 !$Util.Common.returnTypeBool(customerCareDetail.status, [
@@ -297,7 +310,7 @@
                                             <a-input
                                                 class="w-224"
                                                 v-model:value="customerCareDetail.order_sn"
-                                                :placeholder="$t('common.please_enter') + $t('common.vehicle_no')"
+                                                :placeholder="$t('common.please_enter') + $t('customer-care.order_number')"
                                             />
                                         </template>
                                         <template> ({{ customerCareDetail.order_sn }}) </template>
@@ -309,8 +322,8 @@
                 </div>
 
                 <!-- 部件 -->
-                <div class="inquiry-classification-item m-t-30">
-                    <div class="inquiry-classification-key">部件</div>
+                <div class="inquiry-classification-item">
+                    <div class="inquiry-classification-key">{{ $t("customer-care.parts") }}</div>
                     <div class="inquiry-classification-value">
                         <ItemSelect
                             v-if="
@@ -329,6 +342,7 @@
                             :columns="partsColumns"
                             :data-source="customerCareDetail.part_list"
                             :pagination="false"
+                            :locale="$i18n.locale === 'en' ? localeEn : localeZh"
                             :scroll="{ x: true }"
                         >
                             <template #bodyCell="{ column, text, record }">
@@ -338,7 +352,7 @@
                                 </template>
                                 <!-- 类型 -->
                                 <template v-if="column.key === 'type'">
-                                    {{ Core.Const.CUSTOMER_CARE.PART_STATUS[text] ? $t(Core.Const.CUSTOMER_CARE.PART_STATUS[text].t) : "-" }}
+                                    {{ $t($Util.Common.returnTranslation(text, Core.Const.CUSTOMER_CARE.PART_STATUS)) }}
                                 </template>
                                 <!-- 数量 -->
                                 <template v-if="column.key === 'amount'">
@@ -349,7 +363,13 @@
                                             ])
                                         "
                                     >
-                                        <a-input-number v-model:value="record.amount" defaultValue="1" :placeholder="$t('common.please_enter')" />
+                                        <a-input-number
+                                            v-model:value="record.amount"
+                                            defaultValue="1"
+                                            :placeholder="$t('common.please_enter')"
+                                            min="0"
+                                            max="9999999"
+                                        />
                                     </template>
                                 </template>
                             </template>
@@ -382,7 +402,13 @@
                                 ])
                             "
                         >
-                            <a-table :columns="faultColumns" :data-source="customerCareDetail.vehicle_list" :pagination="false" :scroll="{ x: true }">
+                            <a-table
+                                :columns="faultColumns"
+                                :data-source="customerCareDetail.vehicle_list"
+                                :pagination="false"
+                                :scroll="{ x: true }"
+                                :locale="$i18n.locale === 'en' ? localeEn : localeZh"
+                            >
                                 <template #bodyCell="{ column, text, record }">
                                     <!-- 故障类型 -->
                                     <template v-if="column.key === 'fault_type'">
@@ -402,7 +428,7 @@
                                             </a-radio-group>
                                         </template>
                                         <template v-else>
-                                            {{ Core.Const.CUSTOMER_CARE.FAULT_TYPE[text] ? $t(Core.Const.CUSTOMER_CARE.FAULT_TYPE[text].t) : "-" }}
+                                            {{ $t($Util.Common.returnTranslation(text, Core.Const.CUSTOMER_CARE.FAULT_TYPE)) }}
                                         </template>
                                     </template>
                                 </template>
@@ -431,11 +457,7 @@
                                 </a-radio-group>
                             </template>
                             <template v-else>
-                                {{
-                                    Core.Const.CUSTOMER_CARE.FAULT_TYPE[customerCareDetail.status]
-                                        ? $t(Core.Const.CUSTOMER_CARE.FAULT_TYPE[customerCareDetail.status].t)
-                                        : "-"
-                                }}
+                                {{ $t($Util.Common.returnTranslation(customerCareDetail.status, Core.Const.CUSTOMER_CARE.FAULT_TYPE)) }}
                             </template>
                         </template>
                     </div>
@@ -466,7 +488,7 @@
                                     </div>
                                     <div class="other-reply-platform-name">
                                         <div class="name">
-                                            {{ isDistributerAdmin ? "分销商留言" : "平台方留言" }}
+                                            {{ isDistributerAdmin ? $t("customer-care.distributor_message") : $t("customer-care.admin_message") }}
                                         </div>
                                         <div class="time">
                                             {{ $Util.timeFilter(item.create_time) }}
@@ -474,12 +496,12 @@
                                     </div>
                                 </div>
                                 <div class="other-reply-platform-bottom">
-                                    <div class="speech-skill p-10 m-t-10">
+                                    <div v-if="item.content" class="speech-skill p-10 m-t-10">
                                         <span>{{ item.content }}</span>
                                     </div>
                                     <div v-if="item.file.length > 0" class="reply-platform-attachment m-t-4 p-10">
                                         <div class="reply-platform-attachment-title">{{ $t("customer-care.attachment") }}:</div>
-                                        <div class="reply-platform-attachment-img m-t">
+                                        <div class="reply-platform-attachment-img m-t d-f-a cursor">
                                             <template v-for="(itemPath, index) in item.file" :key="index">
                                                 <template v-if="/(image\/|png|jpg|jpeg)/.test(itemPath.type)">
                                                     <img
@@ -497,18 +519,20 @@
                                                 </template>
                                                 <template v-else-if="/video\/+/.test(itemPath.type)">
                                                     <!-- 视频 -->
-                                                    <img
+                                                    <div
+                                                        class="video-container"
                                                         :class="{ 'm-l-16': index > 0 }"
-                                                        class="attachment-img"
-                                                        src="@images/item/video_default.svg"
-                                                        alt=""
                                                         @click="
                                                             onViewImage({
                                                                 type: 'video/*',
                                                                 path: itemPath.path,
                                                             })
                                                         "
-                                                    />
+                                                    >
+                                                        <MySvgIcon class="video-icon" icon-class="video-icon" />
+                                                        <div class="time">{{ itemPath.duration || "-" }}{{ itemPath.duration ? "s" : "" }}</div>
+                                                        <div class="bottom-mask">{{ itemPath.name }}</div>
+                                                    </div>
                                                 </template>
                                             </template>
                                         </div>
@@ -526,7 +550,7 @@
                             >
                                 <div class="my-reply-platform-top">
                                     <div class="my-reply-platform-name m-r-8">
-                                        <div class="name">我的回复</div>
+                                        <div class="name">{{ $t("customer-care.my_reply") }}</div>
                                         <div class="time">{{ $Util.timeFilter(item.create_time) }}</div>
                                     </div>
                                     <div class="my-reply-platform-avatar">
@@ -534,44 +558,46 @@
                                     </div>
                                 </div>
                                 <div class="my-reply-platform-bottom">
-                                    <div class="speech-skill p-10 m-t-10">
-                                        <span>{{ item.content }}</span>
+                                    <div v-if="item.content" class="speech-skill p-10 m-t-10">
+                                        <div>{{ item.content }}</div>
                                     </div>
-                                    <div v-if="item.file.length > 0" class="reply-platform-attachment m-t-4 p-10">
-                                        <div class="reply-platform-attachment-title">{{ $t("customer-care.attachment") }}:</div>
-                                        <div class="reply-platform-attachment-img m-t">
-                                            <template v-for="(itemPath, index) in item.file" :key="index">
-                                                <template v-if="/(image\/|png|jpg|jpeg)/.test(itemPath.type)">
-                                                    <img
-                                                        :class="{ 'm-l-16': index > 0 }"
-                                                        class="attachment-img"
-                                                        :src="itemPath.path"
-                                                        alt=""
-                                                        @click="
-                                                            onViewImage({
-                                                                ...itemPath,
-                                                                file: item.file,
-                                                            })
-                                                        "
-                                                    />
-                                                </template>
-                                                <template v-else-if="/video\/+/.test(itemPath.type)">
-                                                    <!-- 视频 -->
-                                                    <img
-                                                        :class="{ 'm-l-16': index > 0 }"
-                                                        class="attachment-img"
-                                                        src="@images/item/video_default.svg"
-                                                        alt=""
-                                                        @click="
-                                                            onViewImage({
-                                                                type: 'video/*',
-                                                                path: itemPath.path,
-                                                            })
-                                                        "
-                                                    />
-                                                </template>
+                                </div>
+                                <div v-if="item.file.length > 0" class="reply-platform-attachment m-t-4 p-10">
+                                    <div class="reply-platform-attachment-title">{{ $t("customer-care.attachment") }}:</div>
+                                    <div class="reply-platform-attachment-img m-t d-f-a">
+                                        <template v-for="(itemPath, index) in item.file" :key="index">
+                                            <template v-if="/(image\/|png|jpg|jpeg)/.test(itemPath.type)">
+                                                <img
+                                                    :class="{ 'm-l-16': index > 0 }"
+                                                    class="attachment-img"
+                                                    :src="itemPath.path"
+                                                    alt=""
+                                                    @click="
+                                                        onViewImage({
+                                                            ...itemPath,
+                                                            file: item.file,
+                                                        })
+                                                    "
+                                                />
                                             </template>
-                                        </div>
+                                            <template v-else-if="/video\/+/.test(itemPath.type)">
+                                                <!-- 视频 -->
+                                                <div
+                                                    class="video-container"
+                                                    :class="{ 'm-l-16': index > 0 }"
+                                                    @click="
+                                                        onViewImage({
+                                                            type: 'video/*',
+                                                            path: itemPath.path,
+                                                        })
+                                                    "
+                                                >
+                                                    <MySvgIcon class="video-icon" icon-class="video-icon" />
+                                                    <div class="time">{{ itemPath.duration || "-" }}{{ itemPath.duration ? "s" : "" }}</div>
+                                                    <div class="bottom-mask">{{ itemPath.name }}</div>
+                                                </div>
+                                            </template>
+                                        </template>
                                     </div>
                                 </div>
                             </div>
@@ -584,8 +610,9 @@
                                 ])
                             "
                         >
+                            <div class="line m-t-10"></div>
                             <!-- 输入框 -->
-                            <div class="m-t-20">
+                            <div class="m-t-10">
                                 <a-textarea
                                     v-model:value="customerCareDetail.content"
                                     :placeholder="$t('common.please_enter') + $t('customer-care.leave_message')"
@@ -602,6 +629,9 @@
                                 <div class="add-attachment-upload m-t-4">
                                     <MyUploads
                                         v-model:fileList="uploadOptions.fileData"
+                                        :options="{
+                                            maxCount: 3,
+                                        }"
                                         @change="handleDetailChange"
                                         @preview="handlePreview"
                                         @remove="handleRemove"
@@ -611,7 +641,7 @@
                                     <div class="add-attachment-tip m-l-10">
                                         <div>{{ $t("customer-care.tip1") }}</div>
                                         <div>{{ $t("customer-care.tip2") }}</div>
-                                        <div>{{ $t("customer-care.tip3") }}</div>
+                                        <div>{{ $t("customer-care.tip4") }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -634,14 +664,14 @@
                 :style="{ 'border-top': isDistributerAdmin ? '1px solid #f2f3f5' : '0px' }"
             >
                 <div v-if="isDistributerAdmin">
-                    <a-button @click="onBtn('inquiry-classification-cancel')">取消</a-button>
-                    <a-button @click="onBtn('inquiry-classification-sumbit')" type="primary">提交</a-button>
+                    <a-button @click="onBtn('inquiry-classification-cancel')">{{ $t("common.cancel") /*取消*/ }}</a-button>
+                    <a-button @click="onBtn('inquiry-classification-sumbit')" type="primary">{{ $t("common.submit") /*提交*/ }}</a-button>
                 </div>
                 <div class="problem-tips" @click="onBtn('exclamation-point')">
                     <a-tooltip placement="topRight">
-                        <template #title> 点击后，该问询单表示处理完成 </template>
+                        <template #title> {{ $t("customer-care.deal_tips") }} </template>
                         <div class="cursor">
-                            <span class="m-r-4">问题已解决</span>
+                            <span class="m-r-4">{{ $t("customer-care.problem_solved") }}</span>
                             <MySvgIcon icon-class="exclamation-point" />
                         </div>
                     </a-tooltip>
@@ -656,7 +686,7 @@
         <!-- 编辑信息弹窗 -->
         <a-modal
             v-model:visible="msgVisible"
-            title="编辑资料"
+            :title="$t('customer-care.editing_data')"
             width="800px"
             :destroyOnClose="true"
             @ok="onBtn('msg-sumbit')"
@@ -681,11 +711,13 @@ import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import Core from "@/core";
 import { useRouter, useRoute } from "vue-router";
 import dayjs from "dayjs";
-import MyPreviewImageVideo from "./components/MyPreviewImageVideo.vue";
+import MyPreviewImageVideo from "@/components/horwin/based-on-ant/MyPreviewImageVideo.vue";
 import customerCareEdit from "./customer-care-edit.vue";
 import ItemSelect from "@/components/popup-btn/ItemSelect.vue";
 import { message } from "ant-design-vue";
 import MyUploads from "./components/MyUploads.vue";
+import localeEn from "ant-design-vue/es/date-picker/locale/en_US";
+import localeZh from "ant-design-vue/es/date-picker/locale/zh_CN";
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
@@ -790,19 +822,31 @@ const getDetailFetch = (params = {}) => {
     };
     Core.Api.inquiry_sheet
         .detail(obj)
-        .then((res) => {
+        .then(async (res) => {
             console.log("详情接口 success", res.detail);
             customerCareDetail.value = res.detail;
 
             customerCareDetail.value.delivery_time = customerCareDetail.value.delivery_time ? dayjs.unix(res.detail?.delivery_time) : undefined; // 回显时间转换格式
 
+            try {
+                await getVideoTime(res.detail.attachment_list);
+            } catch (error) {
+                console.log("error", error);
+            }
+
             customerCareDetail.value.attachment_list = res.detail.attachment_list.map((el) => {
+                // console.log(el.name);
+                // console.log(el.name.slice(0, 3));
+                // console.log(el.name.slice(-5));
                 return {
                     id: el.id,
+                    name: el.name.length <= 10 ? el.name : `${el.name.slice(0, 3)}...${el.name.slice(-4)}`,
                     type: el.type,
                     path: Core.Const.NET.OSS_POINT + el.path,
+                    duration: el.duration,
                 };
             });
+            console.log("最后的数据", customerCareDetail.value);
 
             partDisabledChecked.value = [];
             customerCareDetail.value.part_list = res.detail?.part_list.map((el) => {
@@ -843,7 +887,7 @@ const getSortingTypeFetch = (params = {}) => {
         }
 
         if (Number(customerCareDetail.value.type) === Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY) {
-            obj["fault_type"] = customerCareDetail.value.insurance_status; // 电池类下的故障分类
+            obj["fault_type"] = customerCareDetail.value.fault_type; // 电池类下的故障分类
         } else {
             obj["vehicle_list"] = customerCareDetail.value.vehicle_list; // 咨询和故障类下的故障分类
         }
@@ -908,7 +952,7 @@ const getCommentListFetch = (params = {}) => {
     };
     Core.Api.inquiry_sheet
         .commentList(obj)
-        .then((res) => {
+        .then(async (res) => {
             console.log("评论接口", res);
             comment_list.value = res.list.map((el) => {
                 return {
@@ -923,6 +967,28 @@ const getCommentListFetch = (params = {}) => {
                         : [],
                 };
             });
+
+            // comment_list.value = []
+            // res.list.forEach(async (el) => {
+            //     el.file = el.file ? JSON.parse(el.file) : []
+            //     try {
+            //         await getVideoTime(el.file);
+            //         let obj = {
+            //             ...el,
+            //             file: el.file.map(fileEl => {
+            //                 return {
+            //                     ...fileEl,
+            //                     path: Core.Const.NET.FILE_URL_PREFIX + fileEl.path,
+            //                 }
+            //             })
+            //         }
+            //         // comment_list.value.push(el)
+            //     } catch (error) {
+            //         console.log("error", error);
+            //     }
+            // })
+
+            // console.log("最后的数据11111111111", comment_list.value);
         })
         .catch((err) => {
             console.log("问询单标记解决接口 err", err);
@@ -1033,7 +1099,7 @@ const onBtn = (type) => {
             });
             let saveCommentParams = {
                 file: inquiryFile.length > 0 ? JSON.stringify(inquiryFile) : undefined,
-                content: customerCareDetail.value.content,
+                content: customerCareDetail.value.content?.trim(),
             };
 
             let promiseAll = [getBindPartFetch(), getSortingTypeFetch()];
@@ -1081,18 +1147,24 @@ const onBtn = (type) => {
 
             let saveComment = {
                 file: sendingFile.length > 0 ? JSON.stringify(sendingFile) : undefined,
-                content: customerCareDetail.value.content,
+                content: customerCareDetail.value.content?.trim(),
             };
-            saveCommentFetch(saveComment)
-                .then((res) => {
-                    message.success(proxy.$t("common.sucesss"));
-                    getCommentListFetch();
-                    customerCareDetail.value.content = undefined;
-                    uploadOptions.value.fileData = [];
-                })
-                .catch((err) => {
-                    console.log("saveCommentFetch_err", err);
-                });
+
+            if (saveComment.file || saveComment.content) {
+                saveCommentFetch(saveComment)
+                    .then((res) => {
+                        message.success(proxy.$t("common.sucesss"));
+                        getCommentListFetch();
+                        customerCareDetail.value.content = undefined;
+                        uploadOptions.value.fileData = [];
+                    })
+                    .catch((err) => {
+                        console.log("saveCommentFetch_err", err);
+                    });
+            } else {
+                message.success(proxy.$t("customer-care.no_content"));
+            }
+
             break;
     }
 };
@@ -1166,6 +1238,51 @@ const handlePreview = ({ file, fileList }) => {
 };
 const handleRemove = ({ file, fileList }) => {
     console.log("删除", fileList);
+};
+// 获取视频的时长
+const getVideoTime = (data) => {
+    // console.log("获取视频的时长", data);
+    return new Promise((resolve, reject) => {
+        const arrs = data.map((el) => {
+            if (/^video\/+/.test(el.type)) {
+                return videoItemPromise(Core.Const.NET.OSS_POINT + el.path)
+                    .then((res) => {
+                        el.duration = res;
+                        console.log("改变", el);
+                    })
+                    .catch((err) => {
+                        console.error("哪个视频出错", err);
+                    });
+            }
+        });
+
+        // 所有的promise对象完成了走 resolve
+        Promise.all(arrs)
+            .then(() => {
+                resolve();
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+};
+const videoItemPromise = (src) => {
+    const video = document.createElement("video");
+    video.src = src;
+
+    return new Promise((resolve, reject) => {
+        video.addEventListener("loadeddata", function () {
+            resolve(video.duration.toFixed(2));
+        });
+
+        video.addEventListener("error", function () {
+            // console.log("监听视频出错", src);
+            reject(src);
+        });
+        // 加载视频的元数据
+        video.load();
+        video.remove();
+    });
 };
 /* methods end */
 
@@ -1249,6 +1366,7 @@ onMounted(() => {
                             text-align: right;
                         }
                         .value {
+                            flex: 1;
                             color: #1d2129;
                             font-size: 14px;
                             font-weight: 400;
@@ -1257,7 +1375,7 @@ onMounted(() => {
                                 width: 80px;
                                 height: 80px;
                                 border-radius: 4px;
-                                border: 1px solid rgba(0, 0, 0, 0.5);
+                                border: 1px solid #d9d9d9;
                                 object-fit: cover;
                             }
                         }
@@ -1274,6 +1392,9 @@ onMounted(() => {
                         background: #f2f3f5;
                         padding: 0 4px;
                         box-sizing: border-box;
+                        color: #1d2129;
+                        font-size: 14px;
+                        font-weight: 400;
                     }
                 }
                 .problem-description-style {
@@ -1354,6 +1475,7 @@ onMounted(() => {
             .communication-process-other-reply,
             .communication-process-my-reply {
                 .reply-platform-attachment {
+                    border-radius: 4px;
                     background-color: #fff;
                     .reply-platform-attachment-title {
                         color: #1d2129;
@@ -1365,7 +1487,7 @@ onMounted(() => {
                             width: 80px;
                             height: 80px;
                             border-radius: 4px;
-                            border: 1px solid rgba(0, 0, 0, 0.5);
+                            border: 1px solid #d9d9d9;
                             object-fit: cover;
                         }
                     }
@@ -1398,6 +1520,7 @@ onMounted(() => {
                 .other-reply-platform-bottom {
                     display: inline-block;
                     .speech-skill {
+                        display: inline-block;
                         border-radius: 4px;
                         background-color: #fff;
                         color: #1d2129;
@@ -1434,7 +1557,6 @@ onMounted(() => {
                 }
 
                 .my-reply-platform-bottom {
-                    display: inline-block;
                     .speech-skill {
                         border-radius: 4px;
                         background-color: #66a0ff;
@@ -1499,7 +1621,7 @@ onMounted(() => {
 .status-style {
     box-sizing: border-box;
     border-radius: 4px;
-    padding: 13px;
+    padding: 8px 16px;
     box-sizing: border-box;
 
     &.deal {
@@ -1544,6 +1666,56 @@ onMounted(() => {
     justify-content: center;
 }
 
+// 视频样式
+.video-container {
+    width: 80px;
+    height: 80px;
+    background-color: #e9edf4;
+    border-radius: 4px;
+    position: relative;
+
+    .video-icon {
+        width: 32px;
+        height: 23px;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 16px;
+    }
+
+    .time {
+        color: v#4E5969;
+        font-size: 10px;
+        font-weight: 400;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 38px;
+    }
+
+    .bottom-mask {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 22px;
+        line-height: 22px;
+        border-radius: 0px 0px 4px 4px;
+        background: rgba(29, 33, 41, 0.6);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 400;
+        text-align: center;
+    }
+}
+.line {
+    position: relative;
+    right: 10px;
+    width: calc(100% + 20px);
+    height: 1px;
+    background-color: #f7f8fa;
+    box-shadow: 0px -1px 0px 0px #eaecf1 inset;
+}
 .d-f-a {
     display: flex;
     align-items: center;
@@ -1560,5 +1732,8 @@ onMounted(() => {
 
 .w-224 {
     width: 224px;
+}
+.custom-not-uploaded {
+    color: #666;
 }
 </style>

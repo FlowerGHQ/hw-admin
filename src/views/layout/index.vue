@@ -30,8 +30,8 @@
                         </a-radio-button>
                     </a-radio-group>
                 </div>
-                <div class="header-right">                    
-                    <a-button class="lang-switch" type="link" @click="handleLangSwitch(lang =='zh' ? 'en' : 'zh')">
+                <div class="header-right">
+                    <a-button class="lang-switch" type="link" @click="handleLangSwitch(lang == 'zh' ? 'en' : 'zh')">
                         <i class="icon" :class="lang == 'zh' ? 'i_zh-en' : 'i_en-zh'" />
                     </a-button>
                     <a-divider type="vertical" />
@@ -41,7 +41,7 @@
                         </a-badge>
                     </a-button>
                     <a-divider class="PC" type="vertical" />
-                    <a-tag class="PC" color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType][$i18n.locale] }}</a-tag>                    
+                    <a-tag class="PC" color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType][$i18n.locale] }}</a-tag>
                     <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
                         <a-button class="user-info" type="link">
                             <a-avatar class="user-avatar PC" :src="$Util.imageFilter(user.avatar, 3)" :size='30'>
@@ -53,10 +53,11 @@
                         <template #overlay>
                             <a-menu style="text-align: center;">
                                 <a-menu-item @click="handleEditShow">
-                                    <a-button type="link" class="menu-item-btn">{{ $t('n.password')/*修改密码*/ }}</a-button>                                    
+                                    <a-button type="link" class="menu-item-btn">{{ $t('n.password')/*修改密码*/ }}</a-button>
                                 </a-menu-item>
                                 <a-menu-item @click="$router.push('/login')" v-if="user_type_list.length > 1">
-                                    <a-button type="link" class="menu-item-btn">{{ $t('mall.switch_identity')/*切换身份*/ }}</a-button>
+                                    <a-button type="link" class="menu-item-btn">{{ $t('mall.switch_identity')/*切换身份*/
+                                    }}</a-button>
                                 </a-menu-item>
                                 <a-menu-divider class="menu_divider" v-if="user_type_list.length > 1" />
                                 <a-menu-item @click="handleLogout">
@@ -75,13 +76,11 @@
                         :inlineCollapsed='collapsed' :inlineIndent='8'>
                         <template v-for="item of showList">
                             <!-- 这个是只有当个导航栏 -->
-                            <a-menu-item 
-                                v-if="$auth(...item.auth) && item.not_sub_menu" 
-                                :key="item.path"
-                                @click="handleLink(item.path)"
-                            >
-                                <i class='icon' :class="item.meta.icon"/>
-                                <span :class="{ 'collapsed-title': collapsed }">{{ lang == 'zh' ? item.meta.title : item.meta.title_en }}</span>
+                            <a-menu-item v-if="$auth(...item.auth) && item.not_sub_menu" :key="item.path"
+                                @click="handleLink(item.path)">
+                                <i class='icon' :class="item.meta.icon" />
+                                <span :class="{ 'collapsed-title': collapsed }">{{ lang == 'zh' ? item.meta.title :
+                                    item.meta.title_en }}</span>
                             </a-menu-item>
                             <!-- 有二级导航栏的 -->
                             <a-sub-menu v-else-if="$auth(...item.auth)" :key="item.path">
@@ -92,14 +91,10 @@
                                     </span>
                                 </template>
                                 <template v-for="i of item.children">
-                                    <template 
-                                        v-if="$auth(...i.auth) && isExistArr(i.meta?.admin_module, tabPosition)
-                                        /*判断子children meta.admin_module admin中四大模块*/"
-                                    >
-                                        <a-menu-item
-                                            :key="item.path + '/' + i.path" 
-                                            @click="handleLink(item.path + '/' + i.path)"
-                                        >
+                                    <template v-if="$auth(...i.auth) && isExistArr(i.meta?.admin_module, tabPosition)
+                                                                            /*判断子children meta.admin_module admin中四大模块*/">
+                                        <a-menu-item :key="item.path + '/' + i.path"
+                                            @click="handleLink(item.path + '/' + i.path)">
                                             <span>{{ lang == 'zh' ? i.meta.title : i.meta.title_en }}</span>
                                         </a-menu-item>
                                     </template>
@@ -118,28 +113,25 @@
         </a-layout>
 
         <!-- 修改密码弹窗 -->
-        <a-modal v-model:visible="passShow" :title="$t('n.password')"
-            class="password-edit-modal" :after-close="handleEditClose">
+        <a-modal v-model:visible="passShow" :title="$t('n.password')" class="password-edit-modal"
+            :after-close="handleEditClose">
             <div class="form-title">
                 <div class="form-item required">
                     <div class="key">{{ $t('n.old') }}:</div>
                     <div class="value">
-                        <a-input-password :placeholder="$t('def.input')"
-                            v-model:value="form.old_password" />
+                        <a-input-password :placeholder="$t('def.input')" v-model:value="form.old_password" />
                     </div>
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('n.new') }}:</div>
                     <div class="value">
-                        <a-input-password v-model:value="form.password"
-                            :placeholder="$t('def.input')" />
+                        <a-input-password v-model:value="form.password" :placeholder="$t('def.input')" />
                     </div>
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('n.double') }}:</div>
                     <div class="value">
-                        <a-input-password v-model:value="form.new_password"
-                            :placeholder="$t('n.double')" />
+                        <a-input-password v-model:value="form.new_password" :placeholder="$t('n.double')" />
                     </div>
                 </div>
             </div>
@@ -149,7 +141,7 @@
                 <a-button @click="passShow = false">{{ $t('def.cancel') }}</a-button>
             </template>
         </a-modal>
-        
+
     </a-config-provider>
 </template>
     
@@ -200,7 +192,7 @@ export default {
         }
     },
     computed: {
-        showList() {            
+        showList() {
             let showList
             let LOGIN_TYPE = Core.Const.USER.TYPE
             switch (this.loginType) {
@@ -222,17 +214,17 @@ export default {
 
             // 选择模块进行路由过滤ADMIN的时候的权限
             if (this.loginType === LOGIN_TYPE.ADMIN) {
-                let newShowList = []                
-                SIDER.ADMIN.forEach(item => {       
+                let newShowList = []
+                SIDER.ADMIN.forEach(item => {
                     if (item.type != undefined ? item.type.indexOf(this.tabPosition) != -1 : true) {
                         newShowList.push(item)
                     }
                 })
 
                 showList = newShowList;
-                
+
                 // 是否只在超级管理员显示，普通平台方不展示
-                if (!Core.Data.getManager()) {                    
+                if (!Core.Data.getManager()) {
                     let superList = Core.Util.deepCopy(showList)  // 为了防止影响之前的数据
                     let result = superList.filter(first => {
                         let firstMeta = first.meta
@@ -261,11 +253,11 @@ export default {
             immediate: true,
             handler(n) {
                 // console.log("输出的路由", n);
-                let meta = n.meta || {}                
-                let not_sub_menu = n.matched.length > 1 ? n.matched[0].meta.not_sub_menu : n.meta.not_sub_menu                
+                let meta = n.meta || {}
+                let not_sub_menu = n.matched.length > 1 ? n.matched[0].meta.not_sub_menu : n.meta.not_sub_menu
 
                 let path = n.path.split('/').slice(1)
-                
+
                 if (n.meta.parent) {
                     this.selectedKeys = [this.getPathNoQuery(n.meta.parent)]
                 } else if (not_sub_menu) {
@@ -330,7 +322,7 @@ export default {
                     break;
                 case 'shop_cart':
                     routeUrl = this.$router.resolve({
-                        path: "/purchase/item-collect",
+                        path: "/mall/shopping-bag",
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -359,13 +351,13 @@ export default {
         },
 
         handleLogout() {
-            if (Number(Core.Data.getLoginType()) === Core.Const.USER.TYPE.SUPPLIER) {
-                this.$router.replace(`/login?user_type=${ Core.Data.getLoginType() }`);
-            } else {
-                this.$router.replace(`/login`);
-            }
             Core.Api.Common.logout().then(() => {
-                localStorage.clear()
+                Core.Data.clearSpecificItem();
+                if (Number(Core.Data.getLoginType()) === Core.Const.USER.TYPE.SUPPLIER) {
+                    this.$router.replace(`/login?user_type=${Core.Data.getLoginType()}`);
+                } else {
+                    this.$router.replace(`/login`);
+                }
             })
         },
 
@@ -447,7 +439,7 @@ export default {
                 case this.ROUTER_TYPE.CRM:
                     this.$router.replace('/crm-dashboard');
                     break;
-            
+
                 default:
                     break;
             }
@@ -472,7 +464,7 @@ export default {
         },
         // 判断一个值是否在这个数组中
         isExistArr(arr, value) {
-            if(!arr) return true  // 默认arr不传 全部显示
+            if (!arr) return true  // 默认arr不传 全部显示
             // 传了arr 数据走下面逻辑
             const Arr = arr || []
             const result = Arr.includes(value)
@@ -718,6 +710,7 @@ export default {
                     }
                 }
             }
+
             .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-submenu-arrow {
                 color: #1890ff;
             }
@@ -742,9 +735,11 @@ export default {
         height: 100%;
         // height: calc(~"100% - 38px");
         overflow-y: scroll;
+
         &::-webkit-scrollbar {
             width: 6px;
         }
+
         &::-webkit-scrollbar-thumb {
             background-color: #6E7C94;
             border-radius: 3px;
@@ -774,5 +769,6 @@ export default {
             }
         }
     }
-}</style>
+}
+</style>
     

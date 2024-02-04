@@ -1263,6 +1263,7 @@ export default {
                 imgs: []
             },
             goodsDraftData: {},
+
         };
     },
     watch: {
@@ -3519,7 +3520,6 @@ export default {
         height: 32px;
         border-radius: 4px;
     }
-
     .bottom-box {
         background-color: #f0f2f5;
         width: 100%;

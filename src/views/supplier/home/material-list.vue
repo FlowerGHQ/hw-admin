@@ -39,7 +39,9 @@
                                                 v-model:value="formState.registered_capital"
                                                 :placeholder="$t('supply-chain.please_enter')"
                                                 :maxlength="15"
-                                                name="registered_capital">
+                                                min="0"
+                                                name="registered_capital"
+                                            >
                                                 <template #addonAfter>
                                                     <span> {{ $t("supply-chain.ten_thousand_yuan") }} </span>
                                                 </template>
@@ -692,6 +694,11 @@ onMounted(() => {
             color: #1d2129;
             font-size: 14px;
             font-weight: 500;
+        }
+    }
+    .content-area{
+        .col-area{
+            flex-wrap: wrap;
         }
     }
 }

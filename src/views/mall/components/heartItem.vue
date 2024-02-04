@@ -7,7 +7,7 @@
             share：爱心
             top：置顶
         使用示例
-            <heartItem type="flag" />
+            <HeartItem type="flag" />
      -->
     <div class="heart-img cursor" :style="{padding }" @click="clickFn">
         
@@ -41,7 +41,7 @@
 <script>
 import SvgIcon from "@/components/MySvgIcon/index.vue";
 export default {
-    name: 'heartItem',
+    name: 'HeartItem',
     components: {
         SvgIcon
     },

@@ -21,12 +21,11 @@
 import axios from 'axios';
 import Core from '@/core';
 import MyButton from '@/components/common/MyButton.vue';
-import heartItem from '../components/heartItem.vue';
 import SvgIcon from "@/components/MySvgIcon/index.vue";
 
 export default {
     components: {
-        MyButton, heartItem, SvgIcon
+        MyButton, SvgIcon
     },
     data() {
         return {

@@ -18,9 +18,9 @@
             <div class="image-inner" v-if="uploadOptions.fileList.length < uploadOptions.maxCount">
                 <img src="../../../assets/images/upload/add.png" class="upload-add" alt="" />
             </div>
-            <!-- <template #removeIcon>
+            <template #removeIcon>
                 <img src="../../../assets/images/upload/close.png" class="upload-close" alt="" />
-            </template> -->
+            </template>
         </a-upload>
     </div>
 </template>
@@ -81,7 +81,7 @@ const uploadOptions = ref({
         console.log("sizeM", sizeM);
 
         if (/^video\/+/.test(file.type)) {
-            uploadOptions.value.data.type = 'video'
+            uploadOptions.value.data.type = "video";
             // 视频 50M
             if (sizeM > props.videoLimit) {
                 isLt = false;
@@ -89,7 +89,7 @@ const uploadOptions = ref({
                 return false || Upload.LIST_IGNORE;
             }
         } else if (/^image\/+/.test(file.type)) {
-            uploadOptions.value.data.type = 'img'
+            uploadOptions.value.data.type = "img";
             // 照片 10M
             if (sizeM > props.imageLimit) {
                 isLt = false;
@@ -137,7 +137,7 @@ const handleRemove = (file) => {
     uploadOptions.value.fileList = uploadOptions.value.fileList.filter((item) => item.uid !== file.uid);
 
     emits("remove", { file, fileList: uploadOptions.value.fileList });
-    $emit("update:fileList", uploadOptions.value.fileList)
+    emits("update:fileList", uploadOptions.value.fileList);
 };
 /* Methods end */
 </script>
@@ -156,9 +156,9 @@ const handleRemove = (file) => {
             height: 100%;
         }
     }
-    ::deep(.ant-upload-list-picture-card) {
+    :deep(.ant-upload-list-picture-card) {
         display: flex;
-        justify-content: center;
+        // justify-content: center;
         flex-wrap: wrap;
     }
     :deep(.ant-upload.ant-upload-select-picture-card) {
@@ -167,7 +167,7 @@ const handleRemove = (file) => {
         border-radius: 4px;
         border: 1px dashed #eaecf1;
         background: #fff;
-        margin: 0;           
+        margin: 0;
     }
 
     :deep(.ant-upload-list-picture-card-container) {
@@ -182,5 +182,46 @@ const handleRemove = (file) => {
         pointer-events: initial !important;
         opacity: 1 !important;
     }
+}
+
+:deep(.ant-upload-list-item) {    
+    padding: 0 !important;
+}
+:deep(.ant-upload-list-item-info) {
+    // 关闭遮罩层
+    &::before {
+        display: none;
+    }
+}
+
+::v-deep(.ant-upload-list-item-actions) {
+    width: 100%;
+    height: 100%;
+}
+
+// 关闭的按钮
+:deep(.upload-close) {
+    width: 20px;
+    height: 20px;
+    margin-top: 4px;
+}
+// 小眼睛
+::v-deep(.anticon-eye) {
+    position: absolute;
+    width: 100% !important;
+    height: 100%;
+    left: -5px;
+    opacity: 0;
+    display: inline-block;
+    margin: 0 !important;
+}
+
+::v-deep(.ant-upload-list-item-card-actions-btn) {
+    position: absolute;
+    right: 0;
+    top: 0;
+    box-sizing: border-box;
+    padding: 0px !important;
+    z-index: 10;
 }
 </style>

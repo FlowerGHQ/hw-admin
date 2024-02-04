@@ -17,6 +17,7 @@ import langMessage from '@/lang'
  * s: 门店
  * ar: 销售区域
  * dis: 试驾单
+ * wt: 三包管理
  */
 const messages = {
     zh: {
@@ -97,16 +98,16 @@ const messages = {
         n: {
             index: '序号',
             name: '名称',
-            name_en: '英文名',
             state: '状态',
             type: '类型',
-            flag_entity: '实例编码',            
+            flag_entity: '实例编码',
             contact: '联系人',
             phone: '手机号',
             email: '邮箱',
             continent: '大洲',
             country: '国家',
             enter: '请输入',
+            upload: '请上传',
             area: '地区',
             choose: '请选择',
             time: '创建时间',
@@ -230,6 +231,7 @@ const messages = {
             cover_pic: '请上传封面',
             detail_pic: '请上传详情图',
             upload_pic: '上传图片',
+            upload_pic: '上传图片',
             size_prompt_cover: '封面尺寸建议800X800,最多可传9张',
             size_prompt_detail: '详情图尺寸建议宽度为800，单张图片大小2M内，最多上传10张',
             file_prompt_detail: '附件支持上传图片、视频、音频、PDF等格式',
@@ -273,7 +275,7 @@ const messages = {
             new_fault: '新增故障',
             repair: '维修工单',
             repair_list: '维修工单列表',
-            repair_detail: '维修详情',
+            repair_detail: '工单详情',
             repair_create: '新增工单',
             repair_edit: '编辑工单',
             work_order: '待审工单',
@@ -382,6 +384,45 @@ const messages = {
             Percentage_exceeds: '抵扣百分比不能超出百分之百',
             Amount_exceeds: '抵扣金额不能超出总金额',
             check_attachment: '请上传附件！',
+            payment_method: '赔付方式',
+            car_type: '车型',
+            category_type: '工单类型',
+            three_pack_aging: '三包时效',
+            km_travelled: '行驶公里数',
+            top_long_tip: '请将每辆车行驶的公里数填写在列表内，方便审核',
+            tooltip_text: '系统未检测到的车架号',
+            records: '条记录',
+            filtered_duplicate: '已过滤重复',
+            Execute_intermediate: '执行中工单',
+            spec_tip: '其中特殊车架号为系统未录入的车架号',
+            fault_type: '故障种类',
+            fault_types: '故障类型',
+            total_amount: '总金额',
+            available_balance: '可用余额',
+            submit_work_order: '提交工单',
+            fault_selection: '故障选择',
+            process_result: '处理结果',
+            repair_info: '工单信息',
+            repair_account_type: '工单帐类',
+            operation_content: '操作内容',
+            operating_time: '操作时间',
+            filtered: '已过滤',
+            duplicate_frame: '重复的车架号',
+            tip: '提示',
+            tip_desc: '工单执行中，请先完成上一条工单后再添加',
+            enter: '请完善必填信息!',
+            cancel_repair: '取消工单',
+            cancel_content: '当前工单取消后，可再次编辑并重新提交工单，也可以选择作废该工单',
+            canceld_status: '已取消',
+            failed_audit: '审核不通过',
+            void: '作废',
+            void_text: '当前工单作废后，不可再次编辑',
+            successful_cancellation: '作废成功',
+            view_order: '查看订单',
+            submit_successfully: '提交成功',
+            grey_tip: '一行一个车架号',
+            start_stop_time: '起止时间',
+            to: '至',
         },
         d: { // 分销商
             distributor_detail: '分销商详情',
@@ -584,7 +625,7 @@ const messages = {
             no_search_list: '暂无满足搜索条件的商品',
             no_bom_list: '暂无爆炸图列表',
             pcs: '个',
-            pcs2: '件',         
+            pcs2: '件',
             uploaded: '上传成功',
             sure_export: '确认要导出吗？',
             item_favorite: '该商品已在收藏夹中',
@@ -624,6 +665,8 @@ const messages = {
             confirm_changes: '确认修改',
             source_type: '来源',
             synchronization_time: '同步时间',
+            commodity_quantity: '商品数量',
+            edit_bom: '编辑BOM图',
             data_source: '数据来源',
             pop_delete_tip: '确定要删除商品',
             pop_delete_spec: '确定要删除规格',
@@ -1229,7 +1272,10 @@ const messages = {
             enter_sn: '请输入序号',
             advanced_search: '高级搜索',
             stow: '收起',
-            special: '特殊'
+            special: '特殊',
+            enter_customer_name: '请输入客户姓名',
+            enter_item_name: '请输入商品名称',
+            enter_mile: '请输入里程数',
         },
         pop_up: {
             reason: '原因',
@@ -1848,9 +1894,26 @@ const messages = {
             business: '商机',
             contract_order: '合同订单',
             receipt: '回款单',
-
-
-
+        },
+        wt: {
+            effective_time: '生效时间',
+            reason: '根据',
+            postpone: '顺延',
+            effect_days: '天后生效',
+            warranty_management: '三包管理',
+            select_type: '选择类型',
+            warranty_period: '三包期限',
+            month: '个月',
+            or: '或',
+            product_type: '商品类型',
+            product_sort: '商品分类',
+            before_change: '变更前',
+            after_change: '变更后',
+            change_time: '变更时间',
+            classification_commodity: '按商品分类',
+            set_deadline: '设置期限',
+            item_name: '商品名称',
+            max_range: '已超出最大范围',
         },
         // 权限
         authority: {
@@ -2242,7 +2305,7 @@ const messages = {
                 'test-report': "测试数据",
             },
             'coc': {
-                'template': 'COC模板',                
+                'template': 'COC模板',
             },
             'aftermarket-bom': {
                 'list': '售后BOM列表'
@@ -2666,14 +2729,14 @@ const messages = {
             refundable_amount: "应退金额",  // Refundable amount
             refundable_amount: "实退金额",  // Refundable amount
             approval_time: "审核通过时间",  // Approval time
-            refund_time: "退款时间",   // Refund time  
-            record_information: "记录信息",  // Record information                       
-            modified_model: "修改车型", // Modified model        
-            modified_version: "修改版本",  // Modified version       
-            modify_color: "修改颜色", // Modify color        
-            total_price: "总价",     // Total price    
-            vehicle_status: "车辆状态", // Vehicle status        
-            modification_time: "修改时间",  // Modification time   
+            refund_time: "退款时间",   // Refund time
+            record_information: "记录信息",  // Record information
+            modified_model: "修改车型", // Modified model
+            modified_version: "修改版本",  // Modified version
+            modify_color: "修改颜色", // Modify color
+            total_price: "总价",     // Total price
+            vehicle_status: "车辆状态", // Vehicle status
+            modification_time: "修改时间",  // Modification time
 
             personnel_list: '人员列表', // Personnel list
             personnel_detail: '人员详情', // Personnel detail
@@ -2761,7 +2824,7 @@ const messages = {
             yuan:'元',
             see_detail:'查看详情',
 
-        }
+        },
     },
 
     en: {
@@ -2851,6 +2914,7 @@ const messages = {
             email: 'Mail',
             country: 'Nation',
             enter: 'Please Enter',
+            upload: 'Please Upload',
             area: 'Region',
             choose: 'Please Choose ',
             information: 'Basic Information',
@@ -3128,6 +3192,45 @@ const messages = {
             Percentage_exceeds: 'The deduction percentage cannot exceed 100%',
             Amount_exceeds: 'The deduction amount cannot exceed the total amount',
             check_attachment: 'Please upload the attachment!',
+            payment_method: 'Payment Method',
+            car_type: 'Car Type',
+            category_type: 'Type',
+            three_pack_aging: 'Three-pack Aging',
+            km_travelled: 'Kilometres Travelled',
+            top_long_tip: 'Please fill in the number of kilometres travelled by each vehicle in the list for easy review',
+            tooltip_text: 'Frame number not detected by the system',
+            records: 'Record (s)',
+            filtered_duplicate: 'Filtered Duplicate',
+            Execute_intermediate: 'Execute intermediate work order',
+            spec_tip: 'The special frame number is the frame number not recorded in the system',
+            fault_type: 'Fault Type',
+            fault_types: 'Fault Type',
+            total_amount: 'Total Amount',
+            available_balance: 'Available Balance',
+            submit_work_order: 'Submit',
+            fault_selection: 'Fault Selection',
+            process_result: 'Processing Result',
+            repair_info: 'Mailtenance Information',
+            repair_account_type: 'Work order accounting class',
+            operation_content: 'Operation content',
+            operating_time: 'Operation time',
+            filtered: 'Filtered',
+            duplicate_frame: 'Duplicate Frame Number',
+            tip: 'Tip',
+            tip_desc: 'During work order execution, complete the previous work order before adding it',
+            enter: 'Please complete the required information!',
+            cancel_repair: 'Cancel Repair Order',
+            cancel_content: 'After the current work order is cancelled, you can edit and resubmit the work order again, or you can choose to cancel the work order',
+            canceld_status: 'Canceled',
+            failed_audit: 'Fail the audit',
+            void: 'Void',
+            void_text: 'After the current ticket is invalid, it cannot be edited again',
+            successful_cancellation: 'Successful Cancellation',
+            view_order: 'View order',
+            submit_successfully: 'Submit Successfully!',
+            grey_tip: 'One frame number for each line',
+            start_stop_time: 'Start-Stop Time',
+            to: 'to',
         },
         d: {
             distributor_detail: 'Distributor Details',
@@ -3370,6 +3473,8 @@ const messages = {
             confirm_changes: 'Confirm Changes',
             source_type: 'source',
             synchronization_time: 'Synchronization Time',
+            commodity_quantity: 'Commodity Quantity',
+            edit_bom: 'Edit BOM Diagram',
             data_source: 'Data Source',
             pop_delete_tip: 'Make sure to delete the item',
             pop_delete_spec: 'Make sure you want to delete the specifications',
@@ -3728,7 +3833,7 @@ const messages = {
             pay_amount: 'Actual Amount Paid',
             time_payment: 'Time Of Payment',
             buyer: 'Buyer',
-            marker: 'Remark',            
+            marker: 'Remark',
             strip: 'Article',
             quotation: 'Offer',
             auditText: 'The final price and quantity shall be determined after sales review',
@@ -3961,6 +4066,9 @@ const messages = {
             advanced_search: 'Advanced Search',
             stow: 'Stow',
             special: 'Special',
+            enter_customer_name: 'Please Enter The Customer Name',
+            enter_item_name: 'Please Enter The Product Name',
+            enter_mile: 'Please Enter The Mileage',
         },
         pop_up: {
             reason: 'Reason',
@@ -4560,7 +4668,27 @@ const messages = {
             contract_order: 'Contract Order',
             receipt: 'Receipt',
         },
-        // 权限
+        wt: {
+            effective_time: 'Effective Time',
+            reason: 'On The Basis Of',
+            postpone: 'Postpone',
+            effect_days: 'Take Effect Days Later',
+            warranty_management: 'Warranty Management',
+            select_type: 'Select Type',
+            warranty_period: 'Warranty Period',
+            month: 'month',
+            or: 'or',
+            product_type: 'Product Type',
+            product_sort: 'Product Sort',
+            before_change: 'Before Change',
+            after_change: 'After Change',
+            change_time: 'Change Time',
+            classification_commodity: 'Classification by commodity',
+            set_deadline: 'Set A Deadline',
+            item_name: 'Product Name',
+            max_range: 'Max Range',
+        },
+            // 权限
         authority: {
             title: {
                 'distributor': 'Distributor Management',
@@ -4945,7 +5073,7 @@ const messages = {
                 'test-report': "Test data",
             },
             'coc': {
-                'template': 'Coc Template',                
+                'template': 'Coc Template',
             },
             'aftermarket-bom': {
                 'list': 'Aftermarket Bom List'
@@ -5369,8 +5497,8 @@ const messages = {
             role_authority:"Role Authority",
             age:"Age",
             workwear_size:"Workwear Size",
-            male:'Male',           
-            female:'Female',  
+            male:'Male',
+            female:'Female',
             role:'role',
             person_or_name:"Person or name",
             search_identity:"Search for identity",
@@ -5434,7 +5562,7 @@ const messages = {
 
         },
         // 零售业务
-        retail:{            
+        retail:{
             vehicle_list:'Vehicle List',
             view:'View',
             delete:'Delete',
@@ -5476,15 +5604,15 @@ const messages = {
             sign_an_agreement:"Sign An Agreement",
             experience_hall:"Experience Hall",
             vehicle_detail:"Vehicle Detail",
-            
+
             use:"Use",
-            test_drive:"Test Drive",            
+            test_drive:"Test Drive",
             order_list:'Order List',
             detail:"Detail",
             paid:"Paid",
             to_be_paid:"To Be Paid",
             apply_refund:"Apply for unsubscribe/refund",
-            unsubscribed_refunded:"Unsubscribed/refunded", 
+            unsubscribed_refunded:"Unsubscribed/refunded",
             search_vehicle:"Search Vehicle",
             unsubscribe_review:"Unsubscribe Review",
             view_reason:"View Reason",
@@ -5511,26 +5639,26 @@ const messages = {
             vehicle_model:"Vehicle Model",
             order_amount:"Order Amount",
             amount_paid:"Amount Paid",
-            configuration_item:"Configuration Item",            
+            configuration_item:"Configuration Item",
             price:"Price",
-            preferential_policy:"Preferential Policy",            
+            preferential_policy:"Preferential Policy",
             payment_status:"ayment statusv",
             amount_actually_paid:"Amount actually paid",
             payment_method:"Payment method",
             order_number:"Order number",
             time_of_payment:"Time of payment",
-            unsubscribe_phase:"Unsubscribe phase", 
-            initiator:"initiator", 
-            request_cancellation_time:"Request cancellation time", 
-            refundable_amount:"Refundable amount", 
-            refundable_amount:"Refundable amount", 
-            approval_time:"Approval time", 
-            refund_time:"Refund time",  
-            record_information:"Record information", 
+            unsubscribe_phase:"Unsubscribe phase",
+            initiator:"initiator",
+            request_cancellation_time:"Request cancellation time",
+            refundable_amount:"Refundable amount",
+            refundable_amount:"Refundable amount",
+            approval_time:"Approval time",
+            refund_time:"Refund time",
+            record_information:"Record information",
             modified_model:"Modified model",
-            modified_version:"Modified version", 
+            modified_version:"Modified version",
             modify_color:"Modify color",
-            total_price:"Total price ",    
+            total_price:"Total price ",
             vehicle_status:"Vehicle status ",
             modification_time:"Modification time",
 
@@ -5542,7 +5670,7 @@ const messages = {
             add_personnel:"Add Personnel",
             area:'Area',
             number_of_bound_threads:"Number Of Bound Threads",
-            start_date:"Start Date",            
+            start_date:"Start Date",
             add_time:"Add Time",
             edit:"Edit",
             phone1:"Phone",
@@ -5556,8 +5684,8 @@ const messages = {
             age:"Age",
             workwear_size:"Workwear Size",
             person_type:"Person Type",
-            male:'Male',           
-            female:'Female',  
+            male:'Male',
+            female:'Female',
             role:'role',
             person_or_name:"Person or name",
             search_identity:"Search for identity",
@@ -5597,7 +5725,7 @@ const messages = {
             cancle_top: 'cancle top',
 
 
-        }
+        },
     },
 }
 

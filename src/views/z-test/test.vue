@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="test">
         <MyMask 
             :isClose="isClose" 
             :isClickMaskClose="false" 
@@ -15,10 +15,12 @@
 </template>
 
 <script>
+import MyMask from "@/components/horwin/based-on-dom/MyMask.vue";
 export default {
     name: 'CustomerCare',
     components: {
-        TimeSearch
+        TimeSearch,
+        MyMask,
     },
     props: {},
     data() {
@@ -308,5 +310,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+.test{
+    
+}
 </style>

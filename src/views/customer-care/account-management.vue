@@ -3,7 +3,7 @@
         <div class="list-container">
             <!-- 头部 -->
             <div class="title-container">
-                <div class="title-area">{{ $t("customer-care.account_management_and_distribution") }}</div>
+                <div class="title-area">{{ $t("customer-care.inquiry_sheet_distribution") }}</div>
             </div>
             <div class="search">
                 <SearchAll :options="searchList" @search="onSearch" @reset="onReset" :isShowMore="false"> </SearchAll>
@@ -38,7 +38,7 @@
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'setting'">
-                            <div class="default-accout" v-if="index === 0">-</div>
+                            <div class="default-accout" v-if="record.area === '其他'">-</div>
                             <div class="other-accout" v-else>
                                 <a-button type="link" size="small" @click="handleEdit('edit', record)">
                                     <!-- 编辑 -->
@@ -59,6 +59,7 @@
             :title="modalTitle"
             :visible="editVisibilty"
             destroyOnClose
+            centered
             :ok-text="t('customer-care.confirm')"
             :cancel-text="t('customer-care.cancel')"
             @cancel="handleCancel"
@@ -70,7 +71,7 @@
                         v-model:value="formState.username"
                         placeholder="请选择客服账号"
                         :disabled="openType === 'edit'">
-                        <a-select-option v-for="item in allAccount" :key="id" :value="item.username">
+                        <a-select-option v-for="item in otherAccount" :key="id" :value="item.username">
                             {{ item.username }}
                         </a-select-option>
                     </a-select>
@@ -203,6 +204,11 @@ const formState = ref({
     org_type: 10,
 });
 const allAccount = ref([]);
+const otherAccount = computed(()=>{
+    return allAccount.value.filter((item)=>{
+        return item.area !== '其他';
+    })
+})
 
 const formRef = ref(null);
 const activeRecord = ref({});

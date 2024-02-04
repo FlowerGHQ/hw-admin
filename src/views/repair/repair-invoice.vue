@@ -79,7 +79,7 @@
                 </template>
             </a-table>
         </div>
-    </div>F
+    </div>
     <div class="btn-area">
         <a-button type="primary" @click="routerChange('export')">{{ $t('r.download') }}</a-button>
         <a-button type="primary" @click="routerChange('back')" ghost>{{ $t('r.details') }}</a-button>

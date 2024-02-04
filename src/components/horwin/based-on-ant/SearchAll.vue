@@ -290,6 +290,9 @@ export default {
         margin-left: 10px;
     }
 }
+:deep(.ant-input-affix-wrapper) {
+    border-radius: 0px 4px 4px 0px;
+}
 .m-l-5 {
     margin-left: 5px;
 }

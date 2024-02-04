@@ -13,7 +13,7 @@
             <div class="form-content" :class="{ 'w-100': !isDetailEnter ? false : true }">
                 <!-- 分销商账号 -->
                 <div v-if="isDistributerAdmin" class="form-item required">
-                    <div class="key t-r">{{ $t("customer-care.distributor_account_number") }}:</div>
+                    <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("customer-care.distributor_account_number") }}:</div>
                     <div class="value">
                         <a-input
                             v-model:value="formParams.org_name"
@@ -23,10 +23,13 @@
                 </div>
                 <!-- 问询单类型 -->
                 <div class="form-item required">
-                    <div class="key t-r">{{ $t("customer-care.inquiry_form_type") }}:</div>
+                    <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("customer-care.inquiry_form_type") }}:</div>
                     <div class="value">
-                        <a-radio-group v-model:value="formParams.type">
-                            <a-radio v-for="(item, index) in Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE" :value="item.value">
+                        <a-radio-group v-model:value="formParams.type" @change="onFormParamsType">
+                            <a-radio 
+                                v-for="(item, index) in Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE" 
+                                :value="item.value"
+                            >
                                 {{ $t(item.t) }}
                             </a-radio>
                         </a-radio-group>
@@ -37,14 +40,14 @@
                     v-if="!$Util.Common.returnTypeBool(formParams.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION])"
                     class="form-item required"
                 >
-                    <div class="key t-r">{{ $t("customer-care.failure_date") }}:</div>
+                    <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("customer-care.failure_date") }}:</div>
                     <div class="value">
-                        <a-date-picker class="w-370" v-model:value="formParams.fault_time" />
+                        <a-date-picker class="w-370" v-model:value="formParams.fault_time" :locale="$i18n.locale === 'en' ? localeEn : localeZh" />
                     </div>
                 </div>
                 <!-- 车型 -->
                 <div class="form-item required">
-                    <div class="key t-r">{{ $t("common.vehicle_model") }}:</div>
+                    <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("common.vehicle_model") }}:</div>
                     <div class="value">
                         <a-tree-select 
                             v-model:value="formParams.category_id" 
@@ -62,7 +65,7 @@
                     v-if="$Util.Common.returnTypeBool(formParams.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION])"
                     class="form-item d-f-s required"
                 >
-                    <div class="key t-r">{{ $t("common.vehicle_no") }}:</div>
+                    <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("common.vehicle_no") }}:</div>
                     <div class="value">
                         <a-table
                             :columns="vehicle_column"
@@ -70,6 +73,7 @@
                             :scroll="{ x: true }"
                             :row-key="(record) => record.id"
                             :pagination="false"
+                            :locale="$i18n.locale === 'en' ? localeEn : localeZh"
                             class="specific-table"
                         >
                             <template #headerCell="{ title, column }">
@@ -83,11 +87,11 @@
                                 </template>
                                 <!-- 公里数 -->
                                 <template v-if="column.key === 'mileage'">
-                                    <a-input-number 
+                                    <a-input-number                                         
                                         v-model:value="record.mileage"
                                         :placeholder="$t('common.please_enter') + $t('customer-care.mileage')" 
-                                        :min="0"
-                                        :max="9999999"
+                                        min="0"
+                                        max="9999999"
                                     >
                                         <template #addonAfter>
                                             <span>KM</span>
@@ -104,8 +108,8 @@
                             </template>
                         </a-table>
 
-                        <a-button class="m-t-16" type="primary" ghost @click="onAddBtn('add-data')">
-                            {{ $t("supply-chain.add_opponents") }}
+                        <a-button class="m-t-10" type="primary" ghost @click="onAddBtn('add-data')">
+                            {{ $t("common.add") }}
                         </a-button>
                     </div>
                 </div>
@@ -114,13 +118,14 @@
                     v-if="$Util.Common.returnTypeBool(formParams.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION])"
                     class="form-item"
                 >
-                    <div class="key t-r">{{ $t("customer-care.mileage") }}:</div>
+                    <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("customer-care.mileage") }}:</div>
                     <div class="value">                        
                         <a-input-number 
+                            class="w-100"
                             v-model:value="formParams.mileage"
                             :placeholder="$t('common.please_enter') + $t('customer-care.mileage')" 
-                            :min="0"
-                            :max="9999999"
+                            min="0"
+                            max="9999999"
                         >
                             <template #addonAfter>
                                 <span>KM</span>
@@ -130,13 +135,14 @@
                 </div>
                 <!-- 问题描述 -->
                 <div class="form-item d-f-s required">
-                    <div class="key t-r">{{ $t("customer-care.problem_description") }}:</div>
+                    <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("customer-care.problem_description") }}:</div>
                     <div class="value">
                         <a-textarea
                             v-model:value="formParams.description"
                             :placeholder="$t('common.please_enter') + $t('customer-care.problem_description')"
                             allow-clear
-                            :maxlength="20000"
+                            :autosize="{ minRows: 4, maxRows: 6 }"
+                            :maxlength="2000"
                         />
                     </div>
                 </div>
@@ -147,7 +153,7 @@
                         required: $Util.Common.returnTypeBool(formParams.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY])
                     }"
                 >
-                    <div class="key t-r">{{ $t("customer-care.add_attachment") }}:</div>
+                    <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("customer-care.add_attachment") }}:</div>
                     <div class="value d-f">
                         <MyUploads                            
                             v-model:fileList = uploadOptions.fileData                           
@@ -168,7 +174,7 @@
         </div>
         <div v-if="!isDetailEnter" class="form-btns footer-btn">
             <a-button @click="onAddBtn('back')">{{ $t("def.cancel") }}</a-button>
-            <a-button @click="handleSubmit" type="primary">{{ $t("def.sure") }}</a-button>
+            <a-button @click="handleSubmit" type="primary">{{ $t("common.submit") }}</a-button>
         </div>
 
         <!-- 自定义图片预览 -->
@@ -185,9 +191,11 @@ import { ref, watch, computed, getCurrentInstance, onMounted } from "vue";
 import Core from "@/core";
 import { useRouter, useRoute } from "vue-router";
 import { Upload, message } from "ant-design-vue";
-import MyPreviewImageVideo from "./components/MyPreviewImageVideo.vue";
+import MyPreviewImageVideo from "@/components/horwin/based-on-ant/MyPreviewImageVideo.vue";
 import MyUploads from "./components/MyUploads.vue";
 import dayjs from 'dayjs'
+import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';
+import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
@@ -230,7 +238,7 @@ const formParams = ref({
     fault_time: undefined, // 故障日期
     category_id: undefined, // 车型
     description: undefined, // 问题描述
-    attachment_list: undefined, // 附件列表
+    attachment_list: [], // 附件列表
     vehicle_list: [
         {
             vehicle_uid: "",
@@ -345,10 +353,13 @@ const getDetailFetch = (params = {}) => {
                             type: el.type,
                         }) 
                     })                    
+                } else if(key === 'vehicle_list'){
+                    formParams.value[key] = res.detail[key].length > 0 ? res.detail[key] : [{ vehicle_uid: "", mileage: "" }]
                 } else {
                     formParams.value[key] = res.detail[key]
                 }
             }
+            console.log("最后的结果", formParams.value);
         })
         .catch((err) => {
             console.log("详情接口 err", err);
@@ -357,7 +368,7 @@ const getDetailFetch = (params = {}) => {
 // 获取车型接口
 const getVehicleTreeFetch = (params = {}) => {
     const obj = {
-        parent_id: 0, // 写死
+        parent_id: 1, // 写死
         depth: 2, // 深度
         type: 20, // 10商品管理 20表示车辆管理
         page: 0,
@@ -409,29 +420,43 @@ const handleSubmit = () => {
        
     // 校验的数据
     // 公共的(私有的需要在checkFormInput中添加)
-    const publicCheckForm = {
-        'org_name': "", // 分销商名称
+    let publicCheckForm = {        
         'type': "", // 问询单类型
         'category_id': "", // 车型
         'description': "", // 问题描述
     }
+
+    if (isDistributerAdmin.value) {
+        // 平台方的时候出现
+        publicCheckForm['org_name'] = "" // 分销商名称
+    }    
+
+    formParams.value.attachment_list = []
+    uploadOptions.value.fileData.forEach(el => {
+        formParams.value.attachment_list.push({
+            name: el.name, // 附件名称
+            path: el.response?.data?.filename, // 附件url
+            type: el.type, // 附件类型
+        })
+    })
+
+    console.log("formParams.value", formParams.value);
 
     if (checkFormInput(publicCheckForm, formParams.value)) return
     // 上面是检查的
 
     const submitForm = {
         ...formParams.value,     
-        fault_time: dayjs().unix(formParams.value.fault_time)   
-    }   
+        fault_time: dayjs().unix(formParams.value.fault_time) || undefined
+    }
 
-    submitForm.attachment_list = []
-    uploadOptions.value.fileData.forEach(el => {
-        submitForm.attachment_list.push({
-            name: el.name, // 附件名称
-            path: el.response?.data?.filename, // 附件url
-            type: el.type, // 附件类型
-        })
+    // 将 mileage 转换为小数点后两位
+    submitForm.mileage = submitForm.mileage ? submitForm.mileage.toFixed(2) : undefined,
+    submitForm.vehicle_list?.forEach(el => {
+        el.mileage = el.mileage ? el.mileage.toFixed(2) : undefined
     })
+
+
     console.log('submitForm', submitForm);
 
     if (route.query?.id) {
@@ -477,7 +502,7 @@ const checkFormInput = (publicCheckForm, sourceData) => {
         ...privateParams,
         ...publicCheckForm,
     }
-    // console.log("sourceData", sourceData);
+    console.log("sourceData", sourceData);
     let result = []
     for (const key in checkForm) {
         let keys = checkForm[key]
@@ -485,8 +510,9 @@ const checkFormInput = (publicCheckForm, sourceData) => {
 
         if (keys instanceof Array) {
             if (key === 'attachment_list') {
+                // console.log("输出的东西", sourceData[key]);
                 // 附件
-                if (sourceData[key].length === 0) {
+                if (sourceData[key]?.length === 0) {
                     result.push(`${key}`)
                 }
                 continue
@@ -531,13 +557,13 @@ const checkFormInput = (publicCheckForm, sourceData) => {
                 tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.failure_date') + ')'
                 break;
             case "category_id":
-                // tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('common.vehicle_model') + ')'
+                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('common.vehicle_model') + ')'
                 break;
             case "description":
                 tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.problem_description') + ')'
                 break;
             case "attachment_list":
-                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.add_attachment') + ')'
+                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.text_upload') + ')'
                 break;
             case "mileage":
                 tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.mileage') + ')'
@@ -581,12 +607,12 @@ const handlePreview = ({ file, fileList }) => {
     fileList.forEach((el) => {
         // console.log("输出的东西", el.response);
         if (el.response) {
-            if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
+            if (/(image\/|png|jpg|jpeg)/.test(el.type)) {                
                 if (file.uid === el.uid) {
                     // 让预览的哪张图片在第一张
-                    uploadOptions.value.previewImageVideo.unshift(Core.Util.imageFilter(file.response?.data?.filename, 1));
+                    uploadOptions.value.previewImageVideo.unshift(Core.Util.imageFilter(el.response?.data?.filename, 1));
                 } else {
-                    uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(file.response?.data?.filename, 1));
+                    uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(el.response?.data?.filename, 1));
                 }
             }
         }
@@ -596,6 +622,30 @@ const handlePreview = ({ file, fileList }) => {
 }
 const handleRemove = ({ file, fileList }) => {
     console.log("删除", fileList);     
+}
+// 问询单类型切换
+const onFormParamsType = (e) => {    
+    console.log("formParams.type", formParams.value.type);
+    switch (Number(formParams.value.type)) {
+        case Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION:
+            // 故障
+            formParams.value.vehicle_list = [
+                {
+                    vehicle_uid: "",
+                    mileage: "",
+                },
+            ]
+            Core.Util.deleteParamsFilter(formParams.value, ['mileage']);
+            break;
+        case Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION:
+            // 咨询
+            Core.Util.deleteParamsFilter(formParams.value, ['fault_time', 'vehicle_list']);
+            break;
+        case Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY:
+            // 电池
+            Core.Util.deleteParamsFilter(formParams.value, ['vehicle_list']);
+            break;
+    }
 }
 /* methods end*/
 
@@ -701,6 +751,10 @@ onMounted(() => {
         background: #fff;
     }
 }
+// 上传时候的文字
+:deep(.ant-upload-list-item-thumbnail) {
+    white-space: nowrap;
+}
 
 .w-370 {
     width: 370px;
@@ -738,6 +792,10 @@ onMounted(() => {
 // 详情用这个组件过来的
 .w-100 {
     width: 100% !important;
+}
+
+.w-180 {
+    width: 180px !important;
 }
 
 .msg-detail-form-block {
