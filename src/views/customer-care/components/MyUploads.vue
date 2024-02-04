@@ -77,12 +77,13 @@ const uploadOptions = ref({
         type: "img",
     },
     listType: "picture-card",
-    accept: "image/jpeg, image/jpg, image/png, video/*",
+    accept: "image/jpeg, image/jpg, image/png, video/*, application/*",
     maxCount: 9,
     multiple: true,
     showUploadList: true,
     // 检查
     beforeUpload: function (file, fileList) {
+        console.log("file", file);
         let isLt = true;
         const sizeM = file.size / 1024 / 1024;
 
@@ -104,6 +105,8 @@ const uploadOptions = ref({
                 message.warning(proxy.$t("common.please_upload_less_than") + "10M" + proxy.$t("common.file"));
                 return false || Upload.LIST_IGNORE;
             }
+        } else if (/^application\/+/.test(file.type)) { 
+            // .pdf .excel
         } else {
             message.warning(proxy.$t("common.file_incorrect"));
             return false || Upload.LIST_IGNORE;

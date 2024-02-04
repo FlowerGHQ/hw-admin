@@ -14,11 +14,17 @@
                 <!-- 分销商账号 -->
                 <div v-if="isDistributerAdmin" class="form-item required">
                     <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("customer-care.distributor_account_number") }}:</div>
-                    <div class="value">
-                        <a-input
+                    <div class="value">                        
+                        <a-select
                             v-model:value="formParams.org_name"
-                            :placeholder="$t('common.please_enter') + $t('customer-care.distributor_account_number')"
-                        />
+                            :field-names="{ label: 'name', value: 'name' }"
+                            :placeholder="$t('common.please_enter') + $t('customer-care.distributor_account_number')"                                                       
+                            style="width: 100%"
+                            :options="distributorFindList"
+                            show-search
+                            @search="onFetchUser"
+                        >
+                        </a-select>
                     </div>
                 </div>
                 <!-- 问询单类型 -->
@@ -193,6 +199,8 @@ import dayjs from 'dayjs'
 import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';
 import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
 
+import { debounce } from 'lodash'
+
 const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
@@ -243,6 +251,14 @@ const formParams = ref({
     ], // 车架信息
     mileage: undefined, // 公里数
 });
+const distributorFindList = ref([
+    // {        
+    //     name: 1
+    // },
+    // {        
+    //     name: 2
+    // },
+])  // 分销商账号list
 
 
 
@@ -378,6 +394,22 @@ const getVehicleTreeFetch = (params = {}) => {
         })
         .catch((err) => {
             console.log("获取车型接口 err", err);
+        });
+}
+// 获取分销商账号
+const getFindListFetch = (params = {}) => {
+    const obj = {
+        // search_key: "",
+        ...params,
+    };
+    Core.Api.inquiry_sheet
+        .distributorFindList(obj)
+        .then((res) => {
+            // console.log("获取分销商账号 success", res.list);
+            distributorFindList.value = res.list
+        })
+        .catch((err) => {
+            console.log("获取分销商账号 err", err);
         });
 }
 /* fetch end*/
@@ -591,30 +623,41 @@ const handlePreview = ({ file, fileList }) => {
     console.log("预览", file, fileList);
 
     if (/^video\/+/.test(file.type)) {
+        console.log("video/*(视频预览)");
+
         uploadOptions.value.previewImageVideo = []
         uploadOptions.value.previewType = 'video';
         uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(file.response?.data?.filename, 4))
         isClose.value = true;
-        return;
-    }
-    
-    uploadOptions.value.previewType = 'image';
-    uploadOptions.value.previewImageVideo = [];
-    fileList.forEach((el) => {
-        // console.log("输出的东西", el.response);
-        if (el.response) {
-            if (/(image\/|png|jpg|jpeg)/.test(el.type)) {                
-                if (file.uid === el.uid) {
-                    // 让预览的哪张图片在第一张
-                    uploadOptions.value.previewImageVideo.unshift(Core.Util.imageFilter(el.response?.data?.filename, 1));
-                } else {
-                    uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(el.response?.data?.filename, 1));
+    } else if (/(image\/|png|jpg|jpeg)/.test(file.type)) {
+        console.log("image/*(照片预览)");
+
+        uploadOptions.value.previewType = 'image';
+        uploadOptions.value.previewImageVideo = [];
+        fileList.forEach((el) => {
+            if (el.response) {
+                if (/(image\/|png|jpg|jpeg)/.test(el.type)) {                
+                    if (file.uid === el.uid) {
+                        // 让预览的哪张图片在第一张
+                        uploadOptions.value.previewImageVideo.unshift(Core.Util.imageFilter(el.response?.data?.filename, 1));
+                    } else {
+                        uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(el.response?.data?.filename, 1));
+                    }
                 }
             }
-        }
-    });
-    console.log("结果", uploadOptions.value.previewImageVideo);
-    isClose.value = true;
+        });
+        console.log("结果", uploadOptions.value.previewImageVideo);
+        isClose.value = true;
+    } else if (/application\/pdf/.test(file.type))  { 
+        console.log("application/pdf(pdf预览)", Core.Util.imageFilter(file.response?.data?.filename, 4));
+        
+    } else if (/^application\/+/.test(file.type)) {
+
+        console.log("文件", Core.Util.imageFilter(file.response?.data?.filename, 4));        
+        // office online (PDF 支持预览)
+        let url = 'http://view.officeapps.live.com/op/view.aspx?src=' + Core.Util.imageFilter(file.response?.data?.filename, 4)
+        window.open(url, '_blank')
+    }    
 }
 const handleRemove = ({ file, fileList }) => {
     console.log("删除", fileList);     
@@ -643,6 +686,11 @@ const onFormParamsType = (e) => {
             break;
     }
 }
+const onFetchUser = debounce(value => {
+    // console.log("onFetchUser", value);
+    getFindListFetch({ 'search_key': value }) 
+}, 500)
+
 /* methods end*/
 
 // 暴露方法出去
@@ -669,14 +717,18 @@ watch(
 );
 
 onMounted(() => {   
-    getVehicleTreeFetch()
-
+    getVehicleTreeFetch()    
     if (route.query?.id) {
         getDetailFetch(
             {
                 id: route.query?.id
             }
         )
+    }
+
+    if (isDistributerAdmin) {
+        // 平台方调用
+        getFindListFetch()
     }
 })
 </script>
