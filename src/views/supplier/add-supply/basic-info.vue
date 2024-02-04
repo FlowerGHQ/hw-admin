@@ -544,13 +544,14 @@
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col :span="12">
-                                    <!-- 技术工龄 -->
-                                    <a-form-item :label="$t('supply-chain.technical_seniority')">
-                                        <a-input-number
+                                     <!-- 技术工龄 -->
+                                     <a-form-item :label="$t('supply-chain.technical_seniority')" class="technical_seniority">
+                                        <a-input
                                             v-model:value="formState.human_resource.technical_seniority"
                                             :placeholder="$t('def.input')"
-                                            :min="0">
-                                        </a-input-number>
+                                            :maxlength="10">
+                                        </a-input>
+                                        <span class="unit-addon">{{ $t('supply-chain.year') }}</span>  
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -3114,7 +3115,35 @@ onMounted(() => {
 :deep(.ant-form-item) {
     margin-bottom: 16px;
 }
-
+:deep(.technical_seniority){
+    .ant-form-item-control{
+        .ant-form-item-control-input{
+            .ant-form-item-control-input-content{
+                display: flex;
+                align-items: center;
+                height: 100%;
+                .ant-input{
+                    border-radius: 4px 0 0 4px  !important;
+                }
+                .unit-addon{
+                    background-color: #f2f2f2;
+                    color: #808fa6;
+                    text-align: center;
+                    font-size: 14px;
+                    border-color: #eaecf1;
+                    box-sizing: border-box;
+                    padding: 0 11px;
+                    height: 100%;
+                    border: 1px solid #d9d9d9;
+                    display: flex;
+                    align-items: center;
+                    border-radius: 0 4px 4px 0;
+                    border-left: none;
+                }
+            }
+        }
+    }
+}
 .form-content-item-table {
     margin-left: 140px;
 

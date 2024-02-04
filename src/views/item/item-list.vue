@@ -193,15 +193,15 @@
                             </template>
                             <!-- sales_area_list -->
                             <template v-if="column.key === 'sales_area_list'">
-                                <a-tooltip placement="top">
+                                <a-tooltip placement="topLeft">
                                     <span class="sales_area_list">
                                         <span class="sales_area_item" v-for="(sales, index) in record.sales_area_list">
-                                            {{ `${sales.continent}/${sales.name}` }}
+                                            {{$i18n.locale === "zh" ? sales.name : sales.name_en}}
                                         </span>
                                     </span>
                                     <template #title>
                                         <div v-for="(sales, index) in record.sales_area_list">
-                                            {{ `${sales.continent}/${sales.name}` }}
+                                            {{ $i18n.locale === "zh" ? sales.country : sales.country_en }}
                                         </div>
                                     </template>
                                 </a-tooltip>
@@ -307,6 +307,7 @@ import SearchAll from "@/components/horwin/based-on-ant/SearchAll.vue";
 import TimeSearch from "@/components/common/TimeSearch.vue";
 import CategoryTreeSelect from "@/components/popup-btn/CategoryTreeSelect.vue";
 import CategoryTree from "./components/TreeSelect.vue";
+import { split } from "lodash";
 const ITEM = Core.Const.ITEM;
 export default {
     name: "ItemList",

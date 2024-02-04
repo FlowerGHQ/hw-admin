@@ -58,6 +58,8 @@ export default {
             // 地区
             areaList: [],
             area: {
+                continent:'',
+                continent_en: '',
                 country: '',
                 country_en: '',
                 country_code: '',
@@ -128,11 +130,12 @@ export default {
         },
         handleGetItem(item) {
             this.area = {
+                continent: item.map(obj => obj.parentName).join(","),
+                continent_en:item.map(obj => obj.parentEnName).join(","),
                 country: item.map(obj => obj.name).join(","),
                 country_en: item.map(obj => obj.name_en).join(","),
                 country_code: item.map(obj => obj.code).join(",")
             }
-            console.log('handleGetItem------------',this.area);
             
         }
 

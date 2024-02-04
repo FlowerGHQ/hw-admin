@@ -54,7 +54,8 @@ export default {
     coc_delete_confirm_content: '删除后将无法恢复，请谨慎操作',
     // 生成成功
     coc_generate_success: '生成成功',
-    // 生成失败
+    // 修改
+    coc_edit: '修改',
 
   },
   en: {
@@ -105,5 +106,6 @@ export default {
     // 生成成功
     coc_generate_success: 'Generate Success',
     // 生成失败
+    coc_edit: 'Edit',
   }
 }
