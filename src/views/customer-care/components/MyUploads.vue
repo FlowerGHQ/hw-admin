@@ -107,6 +107,7 @@ const uploadOptions = ref({
             }
         } else if (/^application\/+/.test(file.type)) { 
             // .pdf .excel
+            uploadOptions.value.data.not_attachment = true
         } else {
             message.warning(proxy.$t("common.file_incorrect"));
             return false || Upload.LIST_IGNORE;
