@@ -42,7 +42,8 @@ export default defineConfig(({ mode }) => {
             //   关闭文件计算
             reportCompressedSize: false,
             //   关闭生成map文件 可以达到缩小打包体积
-            sourcemap: false, // 这个生产环境一定要关闭，不然打包的产物会很大,sourcemap是生成map文件，用于调试的
+            // sourcemap: 开发环境下默认开启，生产环境下默认关闭，因为生产环境下 sourcemap 会暴露源码，所以建议关闭。开发环境下建议开启，方便调试。
+            sourcemap: mode === "development" ? "inline" : false,
         },
         plugins: [
             vue(),
