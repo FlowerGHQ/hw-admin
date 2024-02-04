@@ -30,7 +30,7 @@
                         <template v-else-if="column.key === 'model'">
                             <!-- 销售bom -->
                             <span class="accessory_list" @click="openBomModal(record)">
-                                {{ record.model }}
+                                {{ $i18n.locale === "zh" ? record.model : record.model_en}}
                             </span>
                         </template>
                         <template v-else-if="column.key === 'delivery_time'">
@@ -193,9 +193,13 @@ const getTableData = () => {
         page: channelPagination.page,
         pageSize: channelPagination.pageSize,
     }).then((res) => {
-        console.log(res);
         loading.value = false;
         tableData.value = res.list;
+        tableData.value.forEach((item) => {
+            item.model = item.item_list.map((item) => item.name).join(",");
+            item.model_en = item.item_list.map((item) => item.name_en).join(",");
+        });
+        console.log(tableData.value);
         channelPagination.total = res.count;
     });
 };
