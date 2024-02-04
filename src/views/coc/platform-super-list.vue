@@ -369,9 +369,13 @@ onMounted(() => {
        }
        .ant-modal-footer{
         text-align: center;
+        padding: 20px 0;
+        height: auto;
         .edit-btn{
-            height: auto !important;
             border-radius: 4px !important;
+            min-width: auto;
+            height: 32px;
+            padding: 4px 16px;
         }
        }
     }
