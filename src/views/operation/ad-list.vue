@@ -72,8 +72,8 @@
                         <div class="table-img">
                             <a-image 
                                 style="border-radius: 4px; cursor: pointer;" 
-                                :width="42" 
-                                :height="42" 
+                                :width="96" 
+                                :height="36" 
                                 :src="$Util.imageFilter(record ? getImagePath(record) : '')"
                             />
                         </div>
