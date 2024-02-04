@@ -14,7 +14,7 @@
             </section>
             <div class="download" v-if="detail?.attachment && detail?.attachment.length > 0">
                 <div class="title">
-                    Related documents
+                    {{ $t('purchase.related_documents') }}
                 </div>
                 <div class="file-body">
                     <div class="file-item" v-for="item in detail?.attachment">

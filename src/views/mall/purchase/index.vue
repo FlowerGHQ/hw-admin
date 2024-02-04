@@ -3,7 +3,7 @@
         <!-- 公告 -->
         <div class="report-body">
             <div class="report-carousel">
-                <a-carousel arrows autoplay :dots="false" :key="`report-${lang}`">
+                <a-carousel arrows autoplay :autoplaySpeed="6000" :dots="false" :key="`report-${lang}`">
                     <template #prevArrow>
                         <div class="custom-slick-arrow" style="left: 12.5%; z-index: 1">
                             <svg-icon icon-class="arrow-left-report" class-name="arrow-left-report" />
@@ -32,7 +32,7 @@
         </div>
         <!-- 轮播图 -->
         <div class="carousel">
-            <a-carousel arrows autoplay dotsClass="purchase-dots" key="banner">
+            <a-carousel arrows autoplay :autoplaySpeed="6000" dotsClass="purchase-dots" key="banner">
                 <template #prevArrow>
                     <div class="custom-slick-arrow" style="left: 48px;z-index: 1">
                         <img src="@images/mall/purchase/arrow-ad.png" class="arrow-left-ad">

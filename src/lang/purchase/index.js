@@ -50,6 +50,7 @@ export default {
         variants: '规格',
         series: '系列',
         check_details: '查看详情',
+        related_documents: '附件',
     },
     en: {
         system: "HORWIN Business Operating System",
@@ -102,6 +103,7 @@ export default {
         variants: 'Variants',
         series: 'Series',
         check_details: 'Check Details',
+        related_documents: 'Related Documents',
     }
 }
 
