@@ -755,7 +755,7 @@ const getDetailFetch = (params = {}) => {
                 // console.log(el.name.slice(-5));
                 return {
                     id: el.id,
-                    name: el.name.length <= 10 ? el.name : `${el.name.slice(0, 3)}...${el.name.slice(-4)}`,
+                    name: el.name.length <= 10 ? el.name : `${el.name.slice(0, 3)}...${el.name.slice(-5)}`,
                     type: el.type,
                     path: Core.Const.NET.OSS_POINT + el.path,
                     duration: el.duration,
@@ -880,7 +880,7 @@ const getCommentListFetch = (params = {}) => {
                         file: el.file.map((fileEl) => {
                             return {
                                 ...fileEl,
-                                name: fileEl.name.length <= 10 ? fileEl.name : `${fileEl.name.slice(0, 3)}...${fileEl.name.slice(-4)}`,
+                                name: fileEl.name.length <= 10 ? fileEl.name : `${fileEl.name.slice(0, 3)}...${fileEl.name.slice(-5)}`,
                                 path: Core.Const.NET.FILE_URL_PREFIX + fileEl.path,
                             };
                         }),
