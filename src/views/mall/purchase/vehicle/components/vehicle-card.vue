@@ -12,7 +12,14 @@
                 <p class="code" v-if="record.set_id">{{ record.children_number }} {{ $t('purchase.variants') }}</p>
             </div>
             <div class="btn">
-                <p class="price">{{ currency }}{{ minPrice }} ~ {{ currency }}{{ maxPrice }}</p>
+                <!-- 整车 -->
+                <template v-if="record?.type === 1">
+                    <p class="price">{{ currency }}{{ minPrice }} ~ {{ currency }}{{ maxPrice }}</p>
+                </template>
+                <!-- 整车以外 -->
+                <template v-else>
+                    <p class="price">{{ currency }}{{ $Util.countFilter(!paramPrice ? record?.fob_eur : record?.fob_usd) }}</p>
+                </template>
                 <my-button showRightIcon padding="12px 32px" font="14px" @click.native="routerChange()">
                     {{ $t('purchase.order_now') }}
                 </my-button>
