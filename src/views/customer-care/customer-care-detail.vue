@@ -574,7 +574,11 @@
                     <a-button @click="onBtn('inquiry-classification-cancel')">{{ $t("common.cancel") /*取消*/ }}</a-button>
                     <a-button @click="onBtn('inquiry-classification-sumbit')" type="primary">{{ $t("common.submit") /*提交*/ }}</a-button>
                 </div>
-                <div class="problem-tips" @click="onBtn('exclamation-point')">
+                <div 
+                    class="problem-tips" 
+                    :class="{ 'm-b-20': !isDistributerAdmin }"
+                    @click="onBtn('exclamation-point')"
+                >
                     <a-tooltip placement="topRight">
                         <template #title> {{ $t("customer-care.deal_tips") }} </template>
                         <div class="cursor">

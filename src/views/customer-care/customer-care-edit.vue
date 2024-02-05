@@ -14,16 +14,21 @@
                 <!-- 分销商账号 -->
                 <div v-if="isDistributerAdmin" class="form-item required">
                     <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("customer-care.distributor_account_number") }}:</div>
-                    <div class="value">                        
+                    <div class="value">
                         <a-select
                             v-model:value="formParams.org_name"
-                            :field-names="{ label: 'name', value: 'name' }"
-                            :placeholder="$t('common.please_enter') + $t('customer-care.distributor_account_number')"                                                       
+                            :placeholder="$t('common.please_enter') + $t('customer-care.distributor_account_number')"
                             style="width: 100%"
-                            :options="distributorFindList"
                             show-search
+                            :filter-option="false"
                             @search="onFetchUser"
                         >
+                            <template v-for="(item, index) in distributorFindList">
+                                <a-select-option :value="item.name">
+                                    ({{ $i18n.locale === "en" ? item.country_en || "-" : item.country || "-" }})
+                                    {{ item.name }}
+                                </a-select-option>
+                            </template>
                         </a-select>
                     </div>
                 </div>
@@ -32,10 +37,7 @@
                     <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("customer-care.inquiry_form_type") }}:</div>
                     <div class="value">
                         <a-radio-group v-model:value="formParams.type" @change="onFormParamsType">
-                            <a-radio 
-                                v-for="(item, index) in Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE" 
-                                :value="item.value"
-                            >
+                            <a-radio v-for="(item, index) in Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE" :value="item.value">
                                 {{ $t(item.t) }}
                             </a-radio>
                         </a-radio-group>
@@ -55,8 +57,8 @@
                 <div class="form-item required">
                     <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("common.vehicle_model") }}:</div>
                     <div class="value">
-                        <a-tree-select 
-                            v-model:value="formParams.category_id" 
+                        <a-tree-select
+                            v-model:value="formParams.category_id"
                             allow-clear
                             show-search
                             tree-default-expand-all
@@ -93,9 +95,9 @@
                                 </template>
                                 <!-- 公里数 -->
                                 <template v-if="column.key === 'mileage'">
-                                    <a-input-number                                         
+                                    <a-input-number
                                         v-model:value="record.mileage"
-                                        :placeholder="$t('common.please_enter') + $t('customer-care.mileage')" 
+                                        :placeholder="$t('common.please_enter') + $t('customer-care.mileage')"
                                         min="0"
                                         max="9999999"
                                     >
@@ -125,11 +127,11 @@
                     class="form-item"
                 >
                     <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("customer-care.mileage") }}:</div>
-                    <div class="value">                        
-                        <a-input-number 
+                    <div class="value">
+                        <a-input-number
                             class="w-100"
                             v-model:value="formParams.mileage"
-                            :placeholder="$t('common.please_enter') + $t('customer-care.mileage')" 
+                            :placeholder="$t('common.please_enter') + $t('customer-care.mileage')"
                             min="0"
                             max="9999999"
                         >
@@ -153,17 +155,17 @@
                     </div>
                 </div>
                 <!-- 添加附件 -->
-                <div 
+                <div
                     class="form-item d-f-s"
                     :class="{
-                        required: $Util.Common.returnTypeBool(formParams.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY])
+                        required: $Util.Common.returnTypeBool(formParams.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY]),
                     }"
                 >
                     <div class="key t-r" :class="{ 'w-180': $i18n.locale === 'en' }">{{ $t("customer-care.add_attachment") }}:</div>
                     <div class="value d-f">
-                        <MyUploads  
-                            class="edit"                          
-                            v-model:fileList = uploadOptions.fileData  
+                        <MyUploads
+                            class="edit"
+                            v-model:fileList="uploadOptions.fileData"
                             :tips="['customer-care.tip1', 'customer-care.tip2', 'customer-care.tip3']"
                             @change="handleDetailChange"
                             @preview="handlePreview"
@@ -180,10 +182,7 @@
         </div>
 
         <!-- 自定义图片预览 -->
-        <MyPreviewImageVideo 
-            v-model:isClose="isClose" 
-            :type="uploadOptions.previewType"
-            :previewData="uploadOptions.previewImageVideo"> 
+        <MyPreviewImageVideo v-model:isClose="isClose" :type="uploadOptions.previewType" :previewData="uploadOptions.previewImageVideo">
         </MyPreviewImageVideo>
     </div>
 </template>
@@ -195,11 +194,11 @@ import { useRouter, useRoute } from "vue-router";
 import { Upload, message } from "ant-design-vue";
 import MyPreviewImageVideo from "@/components/horwin/based-on-ant/MyPreviewImageVideo.vue";
 import MyUploads from "./components/MyUploads.vue";
-import dayjs from 'dayjs'
-import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';
-import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
+import dayjs from "dayjs";
+import localeEn from "ant-design-vue/es/date-picker/locale/en_US";
+import localeZh from "ant-design-vue/es/date-picker/locale/zh_CN";
 
-import { debounce } from 'lodash'
+import { debounce } from "lodash";
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
@@ -209,7 +208,7 @@ const isDistributerAdmin = ref(false); // 根据路由判断其是用在分销�
 
 const uploadOptions = ref({
     previewType: "image",
-    fileData: [], // 提交的数据    
+    fileData: [], // 提交的数据
     // previewImageVideo
     // "https://horwin.oss-cn-hangzhou.aliyuncs.com//img/ba37a2f6f160d68d31f1a96b4a17f2b068b6cee17e6c7b96db51ba5016ef1df0.png", "https://horwin.oss-cn-hangzhou.aliyuncs.com//img/ba37a2f6f160d68d31f1a96b4a17f2b068b6cee17e6c7b96db51ba5016ef1df0.png"
     previewImageVideo: [],
@@ -218,24 +217,24 @@ const uploadOptions = ref({
 const props = defineProps({
     // 详情点击进来
     isDetailEnter: {
-        type: Boolean
-    }
-}) 
+        type: Boolean,
+    },
+});
 
 // 判断是照片还是视频查看
 const isClose = ref(false);
 const treeData = ref([
     {
-        label: 'parent 1',
-        value: '1',
+        label: "parent 1",
+        value: "1",
         children: [
             {
-                label: 'parent 2',
-                value: '2',
-            }
+                label: "parent 2",
+                value: "2",
+            },
         ],
-    }
-])
+    },
+]);
 const formParams = ref({
     org_name: undefined, // 分销商名称
     type: Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION, // 问询单类型
@@ -252,15 +251,13 @@ const formParams = ref({
     mileage: undefined, // 公里数
 });
 const distributorFindList = ref([
-    // {        
+    // {
     //     name: 1
     // },
-    // {        
+    // {
     //     name: 2
     // },
-])  // 分销商账号list
-
-
+]); // 分销商账号list
 
 /* computed start*/
 const vehicle_column = computed(() => {
@@ -291,11 +288,11 @@ const saveFetch = (params = {}) => {
             console.log(res);
             if (isDistributerAdmin.value) {
                 router.push({
-                    path: "/inquiry-management/list",                
+                    path: "/inquiry-management/list",
                 });
             } else {
                 router.push({
-                    path: "/customer-care/list",                
+                    path: "/customer-care/list",
                 });
             }
         })
@@ -318,21 +315,21 @@ const modifyFetch = (params = {}) => {
                     if (isDistributerAdmin.value) {
                         // 平台方
                         router.push({
-                            path: "/inquiry-management/list",                
+                            path: "/inquiry-management/list",
                         });
                     } else {
                         router.push({
-                            path: "/customer-care/list",                
+                            path: "/customer-care/list",
                         });
                     }
                 }
-                resolve(true)
+                resolve(true);
             })
             .catch((err) => {
                 console.log("保存接口", err);
-                resolve(true)
+                resolve(true);
             });
-    })
+    });
 };
 // 详情接口
 const getDetailFetch = (params = {}) => {
@@ -344,31 +341,30 @@ const getDetailFetch = (params = {}) => {
         .then((res) => {
             console.log("详情接口 success", res.detail);
             for (const key in res.detail) {
-                if (key === 'fault_time') {
-                    formParams.value[key] = res.detail[key] > 0 ? dayjs.unix(res.detail[key]) : undefined                    
-                } else if (key === 'attachment_list') {
+                if (key === "fault_time") {
+                    formParams.value[key] = res.detail[key] > 0 ? dayjs.unix(res.detail[key]) : undefined;
+                } else if (key === "attachment_list") {
+                    uploadOptions.value.fileData = [];
 
-                    uploadOptions.value.fileData = []
-
-                    res.detail[key].forEach(el => {
+                    res.detail[key].forEach((el) => {
                         uploadOptions.value.fileData.push({
                             name: el.name,
                             percent: 100,
-                            status: 'done',
+                            status: "done",
                             thumbUrl: Core.Const.NET.FILE_URL_PREFIX + el.path,
                             url: Core.Const.NET.FILE_URL_PREFIX + el.path,
                             response: {
                                 data: {
-                                    filename: el.path
-                                }
+                                    filename: el.path,
+                                },
                             },
                             type: el.type,
-                        }) 
-                    })                    
-                } else if(key === 'vehicle_list'){
-                    formParams.value[key] = res.detail[key].length > 0 ? res.detail[key] : [{ vehicle_uid: "", mileage: "" }]
+                        });
+                    });
+                } else if (key === "vehicle_list") {
+                    formParams.value[key] = res.detail[key].length > 0 ? res.detail[key] : [{ vehicle_uid: "", mileage: "" }];
                 } else {
-                    formParams.value[key] = res.detail[key]
+                    formParams.value[key] = res.detail[key];
                 }
             }
             console.log("最后的结果", formParams.value);
@@ -376,7 +372,7 @@ const getDetailFetch = (params = {}) => {
         .catch((err) => {
             console.log("详情接口 err", err);
         });
-}
+};
 // 获取车型接口
 const getVehicleTreeFetch = (params = {}) => {
     const obj = {
@@ -386,16 +382,15 @@ const getVehicleTreeFetch = (params = {}) => {
         page: 0,
         ...params,
     };
-    Core.Api.ItemCategory
-        .tree(obj)
+    Core.Api.ItemCategory.tree(obj)
         .then((res) => {
             console.log("获取车型接口 success", res.list);
-            treeData.value = res.list
+            treeData.value = res.list;
         })
         .catch((err) => {
             console.log("获取车型接口 err", err);
         });
-}
+};
 // 获取分销商账号
 const getFindListFetch = (params = {}) => {
     const obj = {
@@ -406,12 +401,12 @@ const getFindListFetch = (params = {}) => {
         .distributorFindList(obj)
         .then((res) => {
             // console.log("获取分销商账号 success", res.list);
-            distributorFindList.value = res.list
+            distributorFindList.value = res.list;
         })
         .catch((err) => {
             console.log("获取分销商账号 err", err);
         });
-}
+};
 /* fetch end*/
 
 /* methods start*/
@@ -429,12 +424,12 @@ const onAddBtn = (type, record, index) => {
         case "back":
             if (!isDistributerAdmin.value) {
                 router.push({
-                    path: "/inquiry-management/list",                
+                    path: "/inquiry-management/list",
                 });
             } else {
                 // 平台方
                 router.push({
-                    path: "/inquiry-management/list",                
+                    path: "/inquiry-management/list",
                 });
             }
             break;
@@ -444,172 +439,166 @@ const onAddBtn = (type, record, index) => {
     }
 };
 // 提交
-const handleSubmit = () => {    
-       
+const handleSubmit = () => {
     // 校验的数据
     // 公共的(私有的需要在checkFormInput中添加)
-    let publicCheckForm = {        
-        'type': "", // 问询单类型
-        'category_id': "", // 车型
-        'description': "", // 问题描述
-    }
+    let publicCheckForm = {
+        type: "", // 问询单类型
+        category_id: "", // 车型
+        description: "", // 问题描述
+    };
 
     if (isDistributerAdmin.value) {
         // 平台方的时候出现
-        publicCheckForm['org_name'] = "" // 分销商名称
-    }    
+        publicCheckForm["org_name"] = ""; // 分销商名称
+    }
 
-    formParams.value.attachment_list = []
-    uploadOptions.value.fileData.forEach(el => {
+    formParams.value.attachment_list = [];
+    uploadOptions.value.fileData.forEach((el) => {
         formParams.value.attachment_list.push({
             name: el.name, // 附件名称
             path: el.response?.data?.filename, // 附件url
             type: el.type, // 附件类型
-        })
-    })
+        });
+    });
 
     console.log("formParams.value", formParams.value);
 
-    if (checkFormInput(publicCheckForm, formParams.value)) return
+    if (checkFormInput(publicCheckForm, formParams.value)) return;
     // 上面是检查的
 
     const submitForm = {
-        ...formParams.value,     
-        fault_time: dayjs().unix(formParams.value.fault_time) || undefined
-    }
+        ...formParams.value,
+        fault_time: dayjs().unix(formParams.value.fault_time) || undefined,
+    };
 
     // 将 mileage 转换为小数点后两位
-    submitForm.mileage = submitForm.mileage ? submitForm.mileage.toFixed(2) : undefined,
-    submitForm.vehicle_list?.forEach(el => {
-        el.mileage = el.mileage ? el.mileage.toFixed(2) : undefined
-    })
+    (submitForm.mileage = submitForm.mileage ? submitForm.mileage.toFixed(2) : undefined),
+        submitForm.vehicle_list?.forEach((el) => {
+            el.mileage = el.mileage ? el.mileage.toFixed(2) : undefined;
+        });
 
-
-    console.log('submitForm', submitForm);
+    console.log("submitForm", submitForm);
 
     if (route.query?.id) {
         // 修改
-        return modifyFetch(Core.Util.searchFilter(submitForm))
+        return modifyFetch(Core.Util.searchFilter(submitForm));
     } else {
-        // 新增    
-        saveFetch(Core.Util.searchFilter(submitForm))
+        // 新增
+        saveFetch(Core.Util.searchFilter(submitForm));
     }
 };
 // 检查 sourceData(元素数据) checkForm(检查的元素)
 const checkFormInput = (publicCheckForm, sourceData) => {
-    
     // 私有的
-    let privateParams = {}    
-    
+    let privateParams = {};
+
     switch (formParams.value.type) {
         case Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION:
             // 故障
-            privateParams = {                               
-                fault_time: "", // 故障日期                
+            privateParams = {
+                fault_time: "", // 故障日期
                 vehicle_list: [
                     {
                         vehicle_uid: null,
                         mileage: null,
                     },
-                ], // 车架信息                
-            }
-        break;
+                ], // 车架信息
+            };
+            break;
         case Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION:
-            // 咨询            
-        break;
+            // 咨询
+            break;
         case Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY:
             // 电池
             privateParams = {
-                fault_time: "", // 故障日期                
+                fault_time: "", // 故障日期
                 attachment_list: [], // 附件
-            }
-        break;
+            };
+            break;
     }
 
     let checkForm = {
         ...privateParams,
         ...publicCheckForm,
-    }
+    };
     console.log("sourceData", sourceData);
-    let result = []
+    let result = [];
     for (const key in checkForm) {
-        let keys = checkForm[key]
-        
+        let keys = checkForm[key];
 
         if (keys instanceof Array) {
-            if (key === 'attachment_list') {
+            if (key === "attachment_list") {
                 // console.log("输出的东西", sourceData[key]);
                 // 附件
                 if (sourceData[key]?.length === 0) {
-                    result.push(`${key}`)
+                    result.push(`${key}`);
                 }
-                continue
+                continue;
             }
-
 
             for (const el of sourceData[key]) {
                 // 这里是必填项的参数循环 判断数据里面哪些参数是必填的
 
-                for (const arrItem in keys[0]) {                    
+                for (const arrItem in keys[0]) {
                     // console.log("el", el[arrItem]);
                     // console.log("arrItem", arrItem);
-                    if(!el[arrItem]) {                     
-                        result.push(`${key}`)
+                    if (!el[arrItem]) {
+                        result.push(`${key}`);
                     }
                 }
-            }            
+            }
             // 判断 数组
         } else if (keys instanceof Object) {
-            
-        } else if (typeof keys === "string" || typeof keys === "number" || typeof keys === "boolean" || typeof keys === 'undefined') {
-            // | 字符串 | 数字 | 布尔            
-            if(!sourceData[key]) {
-                result.push(`${key}`)
+        } else if (typeof keys === "string" || typeof keys === "number" || typeof keys === "boolean" || typeof keys === "undefined") {
+            // | 字符串 | 数字 | 布尔
+            if (!sourceData[key]) {
+                result.push(`${key}`);
             }
-        }        
+        }
     }
 
     console.log("结果", [...new Set(result)]);
 
-    let tips = null
-    for (const key of [...new Set(result)]) { 
-        console.log("key", key);     
+    let tips = null;
+    for (const key of [...new Set(result)]) {
+        console.log("key", key);
         switch (key) {
             case "org_name":
-                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.distributor_account_number') + ')'
+                tips = proxy.$t("common.please_complete_info") + "(" + proxy.$t("customer-care.distributor_account_number") + ")";
                 break;
             case "type":
-                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.inquiry_form_type') + ')'
+                tips = proxy.$t("common.please_complete_info") + "(" + proxy.$t("customer-care.inquiry_form_type") + ")";
                 break;
             case "fault_time":
-                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.failure_date') + ')'
+                tips = proxy.$t("common.please_complete_info") + "(" + proxy.$t("customer-care.failure_date") + ")";
                 break;
             case "category_id":
-                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('common.vehicle_model') + ')'
+                tips = proxy.$t("common.please_complete_info") + "(" + proxy.$t("common.vehicle_model") + ")";
                 break;
             case "description":
-                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.problem_description') + ')'
+                tips = proxy.$t("common.please_complete_info") + "(" + proxy.$t("customer-care.problem_description") + ")";
                 break;
             case "attachment_list":
-                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.text_upload') + ')'
+                tips = proxy.$t("common.please_complete_info") + "(" + proxy.$t("customer-care.text_upload") + ")";
                 break;
             case "mileage":
-                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('customer-care.mileage') + ')'
+                tips = proxy.$t("common.please_complete_info") + "(" + proxy.$t("customer-care.mileage") + ")";
                 break;
             case "vehicle_list":
-                tips = proxy.$t('common.please_complete_info') + '(' + proxy.$t('common.vehicle_no') + ')'
+                tips = proxy.$t("common.please_complete_info") + "(" + proxy.$t("common.vehicle_no") + ")";
                 break;
         }
     }
-        
-    return tips ? message.warning(tips) : false
-}
+
+    return tips ? message.warning(tips) : false;
+};
 // 上传组件事件
 const handleDetailChange = ({ file, fileList }) => {
     console.log("输出文件", file, fileList);
     if (file.status === "done") {
         // 上传成功
-        if (file.response.code === 0) {            
+        if (file.response.code === 0) {
             uploadOptions.value.fileData = fileList;
         } else {
             // 上传失败
@@ -618,25 +607,25 @@ const handleDetailChange = ({ file, fileList }) => {
     } else if (file.status === "error") {
         message.error(proxy.$t("common.upload_fail"));
     }
-}
+};
 const handlePreview = ({ file, fileList }) => {
     console.log("预览", file, fileList);
 
     if (/^video\/+/.test(file.type)) {
         console.log("video/*(视频预览)");
 
-        uploadOptions.value.previewImageVideo = []
-        uploadOptions.value.previewType = 'video';
-        uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(file.response?.data?.filename, 4))
+        uploadOptions.value.previewImageVideo = [];
+        uploadOptions.value.previewType = "video";
+        uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(file.response?.data?.filename, 4));
         isClose.value = true;
     } else if (/(image\/|png|jpg|jpeg)/.test(file.type)) {
         console.log("image/*(照片预览)");
 
-        uploadOptions.value.previewType = 'image';
+        uploadOptions.value.previewType = "image";
         uploadOptions.value.previewImageVideo = [];
         fileList.forEach((el) => {
             if (el.response) {
-                if (/(image\/|png|jpg|jpeg)/.test(el.type)) {                
+                if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
                     if (file.uid === el.uid) {
                         // 让预览的哪张图片在第一张
                         uploadOptions.value.previewImageVideo.unshift(Core.Util.imageFilter(el.response?.data?.filename, 1));
@@ -648,23 +637,21 @@ const handlePreview = ({ file, fileList }) => {
         });
         console.log("结果", uploadOptions.value.previewImageVideo);
         isClose.value = true;
-    } else if (/application\/pdf/.test(file.type))  { 
+    } else if (/application\/pdf/.test(file.type)) {
         console.log("application/pdf(pdf预览)", Core.Util.imageFilter(file.response?.data?.filename, 4));
-        window.open(Core.Util.imageFilter(file.response?.data?.filename, 4), '_blank')
-        
+        window.open(Core.Util.imageFilter(file.response?.data?.filename, 4), "_blank");
     } else if (/^application\/+/.test(file.type)) {
-
-        console.log("文件", Core.Util.imageFilter(file.response?.data?.filename, 4));        
+        console.log("文件", Core.Util.imageFilter(file.response?.data?.filename, 4));
         // office online (PDF 支持预览)
-        let url = 'http://view.officeapps.live.com/op/view.aspx?src=' + Core.Util.imageFilter(file.response?.data?.filename, 4)
-        window.open(url, '_blank')
-    }    
-}
+        let url = "http://view.officeapps.live.com/op/view.aspx?src=" + Core.Util.imageFilter(file.response?.data?.filename, 4);
+        window.open(url, "_blank");
+    }
+};
 const handleRemove = ({ file, fileList }) => {
-    console.log("删除", fileList);     
-}
+    console.log("删除", fileList);
+};
 // 问询单类型切换
-const onFormParamsType = (e) => {    
+const onFormParamsType = (e) => {
     console.log("formParams.type", formParams.value.type);
     switch (Number(formParams.value.type)) {
         case Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION:
@@ -674,30 +661,30 @@ const onFormParamsType = (e) => {
                     vehicle_uid: "",
                     mileage: "",
                 },
-            ]
-            Core.Util.deleteParamsFilter(formParams.value, ['mileage']);
+            ];
+            Core.Util.deleteParamsFilter(formParams.value, ["mileage"]);
             break;
         case Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION:
             // 咨询
-            Core.Util.deleteParamsFilter(formParams.value, ['fault_time', 'vehicle_list']);
+            Core.Util.deleteParamsFilter(formParams.value, ["fault_time", "vehicle_list"]);
             break;
         case Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY:
             // 电池
-            Core.Util.deleteParamsFilter(formParams.value, ['vehicle_list']);
+            Core.Util.deleteParamsFilter(formParams.value, ["vehicle_list"]);
             break;
     }
-}
-const onFetchUser = debounce(value => {
+};
+const onFetchUser = debounce((value) => {
     // console.log("onFetchUser", value);
-    getFindListFetch({ 'search_key': value }) 
-}, 500)
+    getFindListFetch({ 'search_key': value })
+}, 500);
 
 /* methods end*/
 
 // 暴露方法出去
 defineExpose({
-    handleSubmit
-})
+    handleSubmit,
+});
 
 watch(
     () => router.currentRoute.value,
@@ -717,21 +704,19 @@ watch(
     }
 );
 
-onMounted(() => {   
-    getVehicleTreeFetch()    
+onMounted(() => {
+    getVehicleTreeFetch();
     if (route.query?.id) {
-        getDetailFetch(
-            {
-                id: route.query?.id
-            }
-        )
+        getDetailFetch({
+            id: route.query?.id,
+        });
     }
 
-    if (isDistributerAdmin) {
+    if (isDistributerAdmin.value) {
         // 平台方调用
-        getFindListFetch()
+        getFindListFetch();
     }
-})
+});
 </script>
 
 <style lang="less" scoped>
@@ -855,5 +840,4 @@ onMounted(() => {
     padding: 0;
     box-sizing: border-box;
 }
-
 </style>
