@@ -187,9 +187,17 @@
                             <template v-if="column.key === 'flag_entity'">
                                 {{ $Util.itemFlagEntityFilter(text, $i18n.locale) }}
                             </template>
-                            <template v-if="column.key === 'fob_money'">
+                            <template v-if="column.dataIndex === 'fob_eur'">
                                 <span v-if="text >= 0">{{ column.unit }}</span>
-                                {{ $Util.countFilter(text) }}
+                                {{ $Util.countFilter(record.min_fob_eur) }} ~
+                                <span v-if="text >= 0">{{ column.unit }}</span>
+                                {{ $Util.countFilter(record.max_fob_eur) }}
+                            </template>
+                            <template v-if="column.dataIndex === 'fob_usd'">
+                                <span v-if="text >= 0">{{ column.unit }}</span>
+                                {{ $Util.countFilter(record.min_fob_usd) }} ~
+                                <span v-if="text >= 0">{{ column.unit }}</span>
+                                {{ $Util.countFilter(record.max_fob_usd) }}
                             </template>
                             <!-- sales_area_list -->
                             <template v-if="column.key === 'sales_area_list'">

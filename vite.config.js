@@ -62,7 +62,7 @@ export default defineConfig(({ mode }) => {
             }),
             viteCompression({
                 verbose: true, // 是否在控制台中输出压缩结果
-                disable: false, // 是否禁用该插件
+                disable: mode === "development", // 是否禁用此插件（仅在生产构建中启用）
                 threshold: 10240, // 如果体积大于阈值，将被压缩，单位为b，体积过小时请不要压缩，以免适得其反
                 algorithm: 'gzip', // 压缩算法，可选['gzip'，' brotliccompress '，'deflate '，'deflateRaw']
                 ext: '.gz',
