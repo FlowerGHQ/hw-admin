@@ -1484,8 +1484,12 @@ const handleCreateOrder = () => {
         overflow-y: auto;
         padding-top: 40px;
         padding-bottom: 72px;
+        &::-webkit-scrollbar {
+            width: 0;
+        }
 
         .vehicle-body-series {
+            margin-bottom: 40px;
             .series-cards {
                 .flex(initial, initial, row);
                 overflow-x: auto;

@@ -184,7 +184,6 @@ onMounted(() => {
 // 获取数据
 const getData = () => {
     getItemDetail()
-    getSameSeriesList()
 }
 // 选择系列
 const selectSeries = (i) => {
@@ -256,6 +255,7 @@ const getItemDetail = () => {
         let detail = res.detail || {}
         detail.sales_area_name = detail.sales_area_list ? detail.sales_area_list.map(i => i.name).join(' , ') : ''
         Object.assign(vehicle_mes, detail) //logo封面，imgs详情图
+        getSameSeriesList()
         if (detail.set_id) {
             getListBySet();
             const q = {
@@ -312,7 +312,7 @@ const getCarList = (q, type) => {
 // 获取同系列整车
 const getSameSeriesList = () => {
     const params = {
-        "type": 1, //1.整车；2.零部件/物料；3.周边；4.广宣品
+        "type": vehicle_mes.type, //1.整车；2.零部件/物料；3.周边；4.广宣品
         "page": 1,
         "page_size": 4,// 取5个
         "flag_random_order": 1, //是否随机排序
@@ -400,6 +400,7 @@ const getShopCartList = () => {
                                 .flex(initial, center, row);
                                 float: right;
                                 cursor: pointer;
+                                margin-top: 13px;
 
                                 .favorites-icon {
                                     height: 18px;
@@ -432,7 +433,7 @@ const getShopCartList = () => {
                     .single-bottom {
 
                         .price {
-                            .flex(space-between, flex-end, row);
+                            .flex(space-between, center, row);
 
                             .price-content {
                                 .price-text {
@@ -715,6 +716,30 @@ const getShopCartList = () => {
                         margin-top: 40px;
                     }
                 }
+            }
+        }
+    }
+}
+
+@media (max-width: 1200px) {
+    #vehicle-detail .content .same-series .same-series-list {
+        .same-series-item {
+            width: calc((100% - 40px) / 3);
+
+            &:not(:nth-child(4n + 1)) {
+                margin-left: 0px;
+            }
+
+            &:not(:nth-child(-n + 4)) {
+                margin-top: 0px;
+            }
+
+            &:not(:nth-child(3n + 1)) {
+                margin-left: 20px;
+            }
+
+            &:not(:nth-child(-n + 3)) {
+                margin-top: 20px;
             }
         }
     }

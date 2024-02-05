@@ -188,16 +188,28 @@
                                 {{ $Util.itemFlagEntityFilter(text, $i18n.locale) }}
                             </template>
                             <template v-if="column.dataIndex === 'fob_eur'">
-                                <span v-if="text >= 0">{{ column.unit }}</span>
-                                {{ $Util.countFilter(record.min_fob_eur) }} ~
-                                <span v-if="text >= 0">{{ column.unit }}</span>
-                                {{ $Util.countFilter(record.max_fob_eur) }}
+                                <template v-if="record.type === 1">
+                                    <span v-if="text >= 0">{{ column.unit }}</span>
+                                    {{ $Util.countFilter(record.min_fob_eur) }} ~
+                                    <span v-if="text >= 0">{{ column.unit }}</span>
+                                    {{ $Util.countFilter(record.max_fob_eur) }}
+                                </template>
+                                <template v-else>
+                                    <span v-if="text >= 0">{{ column.unit }}</span>
+                                    {{ paramPrice ? $Util.countFilter(record.fob_eur) : $Util.countFilter(record.fob_usd) }}
+                                </template>
                             </template>
                             <template v-if="column.dataIndex === 'fob_usd'">
-                                <span v-if="text >= 0">{{ column.unit }}</span>
-                                {{ $Util.countFilter(record.min_fob_usd) }} ~
-                                <span v-if="text >= 0">{{ column.unit }}</span>
-                                {{ $Util.countFilter(record.max_fob_usd) }}
+                                <template v-if="record.type === 1">
+                                    <span v-if="text >= 0">{{ column.unit }}</span>
+                                    {{ $Util.countFilter(record.min_fob_usd) }} ~
+                                    <span v-if="text >= 0">{{ column.unit }}</span>
+                                    {{ $Util.countFilter(record.max_fob_usd) }}
+                                </template>
+                                <template v-else>
+                                    <span v-if="text >= 0">{{ column.unit }}</span>
+                                    {{ paramPrice ? $Util.countFilter(record.fob_eur) : $Util.countFilter(record.fob_usd) }}
+                                </template>
                             </template>
                             <!-- sales_area_list -->
                             <template v-if="column.key === 'sales_area_list'">
@@ -414,6 +426,7 @@ export default {
                     placeholder: "n.choose",
                 }, // 商品状态
             ],
+            paramPrice: false
         };
     },
     watch: {},
@@ -497,6 +510,11 @@ export default {
         const dom = this.$refs.bigBox; // this.$refs.bigBox 返回是VueComponent对象
         this.observer = new ResizeObserver(this.handleResize); //  监听宽度变化
         this.observer.observe(dom, { box: "border-box" });
+        if (Core.Data.getCurrency() === 'EUR') {
+            this.paramPrice = false
+        } else {
+            this.paramPrice = true
+        }
     },
     beforeDestroy() {
         window.removeEventListener("resize", this.handleResize);

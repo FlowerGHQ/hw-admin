@@ -95,7 +95,7 @@
                 </div>
             </div>
             <!-- 本地交易 -->
-            <div class="box deals">
+            <div class="box deals" v-if="reportList.length > 0">
                 <div class="content">
                     <div class="title">{{ $t('purchase.deals') }}</div>
                     <div class="deals-list">
