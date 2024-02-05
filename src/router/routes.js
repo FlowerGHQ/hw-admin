@@ -647,42 +647,42 @@ const routes = [
             },
         ]
     },
-    { // 三包管理 - 平台端
-        path: '/warranty',
-        component: Layout,
-        redirect: '/warranty/time-config',
-        name: 'Warranty',
-        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
-        meta: {
-            title: '三包管理',
-            title_en: 'Warranty Management',
-            icon: 'i_s_temp',
-            roles: [LOGIN_TYPE.ADMIN],
-            // auth: ['warranty.time-config','warranty.list'],
-        },
-        children: [
-            {
-                path: 'warranty-time-config',
-                name: 'warrantyConfig',
-                component: () => import('@/views/warranty/time-config.vue'),
-                meta: {
-                    title: '生效时间',
-                    title_en: 'Effective Time',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-            {
-                path: 'warranty-list',
-                name: 'WarrantyList',
-                component: () => import('@/views/warranty/warranty-list.vue'),
-                meta: {
-                    title: '三包时长',
-                    title_en: 'Warranty Duration',
-                    roles: [LOGIN_TYPE.ADMIN],
-                }
-            },
-        ]
-    },
+    // { // 三包管理 - 平台端
+    //     path: '/warranty',
+    //     component: Layout,
+    //     redirect: '/warranty/time-config',
+    //     name: 'Warranty',
+    //     type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
+    //     meta: {
+    //         title: '三包管理',
+    //         title_en: 'Warranty Management',
+    //         icon: 'i_s_temp',
+    //         roles: [LOGIN_TYPE.ADMIN],
+    //         // auth: ['warranty.time-config','warranty.list'],
+    //     },
+    //     children: [
+    //         {
+    //             path: 'warranty-time-config',
+    //             name: 'warrantyConfig',
+    //             component: () => import('@/views/warranty/time-config.vue'),
+    //             meta: {
+    //                 title: '生效时间',
+    //                 title_en: 'Effective Time',
+    //                 roles: [LOGIN_TYPE.ADMIN],
+    //             }
+    //         },
+    //         {
+    //             path: 'warranty-list',
+    //             name: 'WarrantyList',
+    //             component: () => import('@/views/warranty/warranty-list.vue'),
+    //             meta: {
+    //                 title: '三包时长',
+    //                 title_en: 'Warranty Duration',
+    //                 roles: [LOGIN_TYPE.ADMIN],
+    //             }
+    //         },
+    //     ]
+    // },
     // { // 售后管理 - 平台 && 分销
     //     path: '/aftersales-supply',
     //     component: Layout,
