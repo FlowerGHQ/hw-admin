@@ -17,7 +17,7 @@ const customerCare = {
         title_en: 'Customer Care',
         icon: 'i_menu_fankuguanli',
         roles: [LOGIN_TYPE.DISTRIBUTOR],
-        // auth: ["supplier-application.list"],
+        auth: ["enquiry-ticket.list"],
     },
     children: [
         {
@@ -27,6 +27,7 @@ const customerCare = {
             meta: {
                 title: '客服问询单',
                 title_en: 'Customer Service Inquiry',
+                auth: ["enquiry-ticket.list"],
             }
         },
         {
