@@ -223,11 +223,11 @@
                                 <span class="m-l-4">{{ $t("common.detail") }}</span>
                             </a-button>
                             <template v-if="!$Util.Common.returnTypeBool(record.status, [Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED])">
-                                <a-button type="link" @click="routerChange('edit', record)">
+                                <a-button v-if="editCommentAuth($auth('enquiry-ticket.edit'))" type="link" @click="routerChange('edit', record)">
                                     <MySvgIcon icon-class="common-edit" />
                                     <span class="m-l-4">{{ $t("common.edit") }}</span>
                                 </a-button>
-                                <a-button type="link" @click="routerChange('msg', record)">
+                                <a-button v-if="editCommentAuth($auth('enquiry-ticket.comment'))" type="link" @click="routerChange('msg', record)">
                                     <MySvgIcon icon-class="common-leave" />
                                     <span class="m-l-4">{{ $t("customer-care.leave_message") }}</span>
                                 </a-button>
@@ -270,6 +270,7 @@ const USER_TYPE = Core.Const.USER.TYPE;
 import TimeSearch from "@/components/common/TimeSearch.vue";
 import { useRouter, useRoute } from "vue-router";
 import { message } from "ant-design-vue";
+import { result } from "lodash";
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
@@ -580,6 +581,9 @@ const routerChange = (type, record) => {
                     query: { id: record.id },
                 });
                 window.open(routeUrl.href, "_blank");
+
+                storageFn(Core.Data.getDistributorNewMsg(), "setDistributorNewMsg", record);
+
                 break;
             case "msg": // 留言
                 routeUrl = router.resolve({
@@ -617,6 +621,8 @@ const routerChange = (type, record) => {
                     query: { id: record.id },
                 });
                 window.open(routeUrl.href, "_blank");
+
+                storageFn(Core.Data.getAdminNewMsg(), "setAdminNewMsg", record);
                 break;
             case "msg": // 留言
                 routeUrl = router.resolve({
@@ -686,6 +692,19 @@ const handleExportIn = () => {
     let exportUrl = Core.Api.Export.enquiryTickeTexport({ ...Core.Util.searchFilter(searchParam.value) })    
     console.log("exportUrl", exportUrl);
     window.open(exportUrl, '_blank')
+}
+
+// 分销商 不需要编辑和留言功能
+const editCommentAuth = (type) => {
+
+    let result = false    
+
+    if (isDistributerAdmin.value) {
+        result = type
+    } else {
+        result = true
+    }
+    return result
 }
 
 /* methods end*/

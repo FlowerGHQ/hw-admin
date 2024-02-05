@@ -1092,6 +1092,10 @@ let Const = {
         { list: [], select: [], key: 'coc', name: 'COC证书管理' },
         { list: [], select: [], key: 'supplier-application', name: '供应商管理' },
         { list: [], select: [], key: 'sales-strategy', name: '销售策略管理' },
+        // 新加入2024/2/2
+        { list: [], select: [], key: 'enquiry-ticket', name: '问询单列表、客户关怀' },
+        { list: [], select: [], key: 'enquiry-ticket-category', name: '车型分类管理' },
+        { list: [], select: [], key: 'enquiry-ticket-customer', name: '问询单分配' },
     ],
 
     ATTACHMENT: {

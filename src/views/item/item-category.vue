@@ -8,7 +8,7 @@
                     }}</a-button>
                 </div>
             </div>
-            <div class="tabs-container colorful">
+            <!-- <div class="tabs-container colorful">
                 <a-tabs v-model:activeKey="searchForm.parent_id" @change='handleTabSearch'>
                     <a-tab-pane :key="item.id" v-for="item of statusList">
                         <template #tab>
@@ -16,7 +16,7 @@
                         </template>
                     </a-tab-pane>
                 </a-tabs>
-            </div>
+            </div> -->
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :loading="loading"
                     :row-key="record => record.id" :pagination='false' v-model:expandedRowKeys='expandedRowKeys'
@@ -135,7 +135,7 @@ export default {
             salesAreaIds: [],
             statusList: [],
             searchForm: {
-                parent_id: 1
+                parent_id: 0
             },            
         };
     },
@@ -153,7 +153,7 @@ export default {
     },
     mounted() {
         this.getDataByParent(this.searchForm.parent_id);
-        this.getStatusList();
+        // this.getStatusList();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -250,9 +250,9 @@ export default {
                 type:10
             }
 
-            if (foundObj) {
-                this.editForm.type = foundObj.type;
-            }
+            // if (foundObj) {
+            //     this.editForm.type = foundObj.type;
+            // }
             console.log('parent', parent);
             console.log('this.editForm:', this.editForm);
             this.parentNode= parent;

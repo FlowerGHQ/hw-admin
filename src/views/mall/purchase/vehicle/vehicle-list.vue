@@ -167,4 +167,30 @@ const getCarList = (q, reset = false) => {
         }
     }
 }
+
+
+@media (max-width: 1200px) {
+    #vehicle-list .content .list {
+        .item {
+            width: calc((100% - 40px) / 3);
+            margin-right: 20px;
+
+            &:nth-child(4n) {
+                margin-right: 0;
+            }
+
+            &:nth-child(n + 5) {
+                margin-top: 20px;
+            }
+
+            &:nth-child(3n) {
+                margin-right: 0;
+            }
+
+            &:nth-child(n + 4) {
+                margin-top: 20px;
+            }
+        }
+    }
+}
 </style>
