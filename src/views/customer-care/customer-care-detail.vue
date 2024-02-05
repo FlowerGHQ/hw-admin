@@ -211,6 +211,7 @@
                                     ])
                                 "
                                 v-model:value="customerCareDetail.claim_type"
+                                @change="onClaim"
                             >
                                 <a-radio v-for="(item, index) in Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO" :value="item.value">
                                     {{ $t(item.t) }}
@@ -452,6 +453,7 @@
                                         : Number(item.org_type) === Core.Const.USER.TYPE.ADMIN
                                 "
                                 class="communication-process-other-reply m-t-30"
+                                id="leave"
                             >
                                 <div class="other-reply-platform-top">
                                     <div class="other-reply-platform-avatar m-r-8">
@@ -486,6 +488,7 @@
                                         : Number(item.org_type) === Core.Const.USER.TYPE.DISTRIBUTOR
                                 "
                                 class="communication-process-my-reply m-t-30"
+                                id="leave"
                             >
                                 <div class="my-reply-platform-top">
                                     <div class="my-reply-platform-name m-r-8">
@@ -790,13 +793,12 @@ const getSortingTypeFetch = (params = {}) => {
             ...params,
         };
 
-        if (Number(customerCareDetail.value.purpose) === Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE_MAP.CLAIMCOMPENSATION /*索赔*/) {
+        if (Number(customerCareDetail.value.purpose) === Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE_MAP.CLAIMCOMPENSATION /*普通索赔*/) {
             obj["claim_type"] = customerCareDetail.value.claim_type;
+            obj["delivery_time"] = dayjs(customerCareDetail.value.delivery_time).unix();
+            obj["insurance_status"] = customerCareDetail.value.insurance_status;
 
-            if (Number(customerCareDetail.value.claim_type) === Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.BONAFIDECLAIM /*善意索赔*/) {
-                obj["delivery_time"] = dayjs(customerCareDetail.value.delivery_time).unix();
-                obj["insurance_status"] = customerCareDetail.value.insurance_status;
-            } else if (Number(customerCareDetail.value.claim_type) === Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.UNPACKINGDAMAGE /*开箱损*/) {
+            if (Number(customerCareDetail.value.claim_type) === Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP.UNPACKINGDAMAGE /*开箱损*/) {
                 obj["order_sn"] = customerCareDetail.value.order_sn;
             }
         }
@@ -1222,6 +1224,14 @@ const editCommentAuth = (type) => {
     }
     return result;
 };
+
+// 普通索赔 、善意索赔、开箱损
+const onClaim = (value) => {
+    console.log("普通索赔 、善意索赔、开箱损", customerCareDetail.value.claim_type);
+    // customerCareDetail.value.insurance_status = undefined
+    // customerCareDetail.value.delivery_time = undefined
+    // customerCareDetail.value.order_sn = undefined
+}
 /* methods end */
 
 watch(
