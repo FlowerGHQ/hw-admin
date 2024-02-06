@@ -62,7 +62,7 @@
                 <div class="form-item required flex_start">
                     <div class="key">{{ $t('operation.pic') }}</div>
                     <div class="value">
-                        <MyUpload name="add_picList" v-model:value="form.img" showTip :limit="1" :limitSize="10"
+                        <MyUpload name="add_picList" v-model:value="form.img" showTip :limit="1" :limitSize="10" :valueType="2"
                             tipPosition="right" :defaultPreview="false" ratioLimit :ratio="{ width: 453, height: 254 }" @preview="handlePreview">
                             <template #tip>
                                 <div class="tips">
@@ -79,7 +79,7 @@
                     <div class="key">{{ $t('operation.add_attachments') }}</div>
                     <div class="value">
                         <MyUpload name="add_attachments" :tip="'123\n123'" v-model:value="form.attachment" showTip
-                            :limit="3" :limitSize="50" tipPosition="right" accept=".pdf" :isCanUpType="['application/pdf']">
+                            :limit="3" :limitSize="50" :valueType="2" tipPosition="right" accept=".pdf" :isCanUpType="['application/pdf']">
                             <template #tip>
                                 <div class="tips">
                                     <p>{{ $t('operation.attachments_tip1') }}</p>
@@ -162,7 +162,7 @@ const form = reactive({
     title: '',
     type: 1,// 1 公告 2 广告
     content: '',
-    img: '',
+    img: [],
     attachment: [],
 })
 const uploadOptions = ref({

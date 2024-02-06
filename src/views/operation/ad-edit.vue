@@ -43,7 +43,7 @@
                 <div class="form-item required flex_start">
                     <div class="key">{{ $t('operation.pic') }}</div>
                     <div class="value">
-                        <MyUpload name="add_picList" v-model:value="form.img" showTip :limit="1" :limitSize="10"
+                        <MyUpload name="add_picList" v-model:value="form.img" showTip :limit="1" :limitSize="10" :valueType="2"
                             tipPosition="right" :defaultPreview="false" ratioLimit :ratio="{ width: 1920, height: 720 }" @preview="handlePreview">
                             <template #tip>
                                 <div class="tips">
@@ -142,7 +142,7 @@ const getReportDetail = (id) => {
             area: detail.value.area ? detail.value.area.split(',') : [],
             sort: detail.value.sort,
             url: detail.value.url,
-            img: detail.value.img ? JSON.parse(detail.value.img) : '',
+            img: detail.value.img ? JSON.parse(detail.value.img) : [],
             img_desc: detail.value.img_desc,
             show_type: detail.value.show_type,
         })

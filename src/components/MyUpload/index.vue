@@ -99,6 +99,11 @@ const props = defineProps({
     type: [String, Array],
     default: () => [],
   },
+  // 值类型 默认字符串 , 分割:1string, 2array
+  valueType: {
+    type: Number,
+    default: 1,
+  },
   showTip: {
     type: Boolean,
     default: true,
@@ -185,21 +190,26 @@ const handleDetailChange = ({ file, fileList }) => {
         console.log(fileList, 'fileList')
         let fileArr = [];
         fileList.forEach((item) => {
+          if(props.valueType === 1) {
+            fileArr.push(item?.response?.data?.filename)
+          } else if(props.valueType === 2) {
             item?.response?.data?.filename &&
                 fileArr.push({
                   name: item.name,
                   path: item?.response?.data?.filename,
                   type: item.type,
                 });
+          }
         });
         upload.value.fileSting =
             fileArr.length > 0
-                ? fileArr
-                : "";
+              ? props.valueType === 1
+                ? fileArr.join(",")
+                : fileArr
+                  : "";
         console.log(upload.value.fileSting, 'upload.value.fileSting')
         $emit("update:value", upload.value.fileSting);
       }
-      
       // 上传成功
       upload.value.fileList = fileList
    
@@ -232,15 +242,24 @@ const handleRemove = (file) => {
   )
   let fileArr = []
   upload.value.fileList.forEach((item) => {
-    item?.response?.data?.filename &&
-      fileArr.push(item?.response?.data?.filename)
+    if(props.valueType === 1) {
+      item?.response?.data?.filename &&
+        fileArr.push(item?.response?.data?.filename)
+      } else if(props.valueType === 2) {
+        item?.response?.data?.filename &&
+            fileArr.push({
+              name: item.name,
+              path: item?.response?.data?.filename,
+              type: item.type,
+            });
+      }
   })
   upload.value.fileSting =
     fileArr.length > 0
-      ? fileArr.length > 1
+      ? props.valueType === 1
         ? fileArr.join(",")
-        : fileArr[0]
-      : ""
+        : fileArr
+          : "";
 //   计数，为了解决删除图片时，上传的图片还没返回的问题
     loopCount.value--
   $emit("update:value", upload.value.fileSting)
@@ -278,6 +297,7 @@ watch(
             name: item,
             status: "done",
             url: Core.Const.NET.OSS_POINT + item,
+            thumbUrl: Core.Const.NET.OSS_POINT + item,
             type: item,
             response: {
               code: 0,
