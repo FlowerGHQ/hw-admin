@@ -38,7 +38,7 @@
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'setting'">
-                            <div class="default-accout" v-if="record.area === '其他'">-</div>
+                            <div class="default-accout" v-if="record.role_name === '默认客服'">-</div>
                             <div class="other-accout" v-else>
                                 <a-button type="link" size="small" @click="handleEdit('edit', record)">
                                     <!-- 编辑 -->
