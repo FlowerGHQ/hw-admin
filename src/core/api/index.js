@@ -215,33 +215,26 @@ const apiList = {
         detailByUid: ['PostJson', 'transfer-order/detail-by-uid'], // 取消调货单
     },
     Repair: { // 维修单
-        list: ['PostJson', 'repair-order/list'], // 列表
-	    create: ['PostJson', 'repair-order/save'], // 新建工单
-	    hand: ['PostJson', 'repair-order/hand'],
-        detail: ['GetJson', 'repair-order/detail'], // 工单详情
-	    check: ['PostJson', 'repair-order/check'], // 确认
-	    audit: ['PostJson', 'repair-order/audit'], // 审批
-	    delete: ['PostJson', 'repair-order/delete'], // 审批
-        statusList: ['PostJson', 'repair-order/status-list'], // 保存
-	    repair: ['PostJson', 'repair-order/repair'], // 维修结束
-	    secondDoor: ['PostJson', 'repair-order/second-door'], // 二次上门
-	    settlement: ['PostJson', 'repair-order/settlement'], // 结算
-	    transfer: ['PostJson', 'repair-order/transfer'], // 维修结束
-	    update: ['PostJson', 'repair-order/update'], // 维修结束
-	    post: ['PostJson', 'repair-order/post-for-transfer'], // 增加快递
-	    export: ['PostJson', 'repair-order/export-repair-order-record'], // 导出
-        detailByUid: ['PostJson', 'repair-order/detail-by-uid'],
-        pay: ['PostJson', 'repair-order/pay'],
-        stock: ['PostJson', 'repair-order/save-to-invoice'], //入库
-	    remark: ['PostJson', 'repair-order/remark'], //入库
+        list: ['PostJson', 'repair/list'], // 列表
+	    create: ['PostJson', 'repair/save'], // 新建工单
+	    hand: ['PostJson', 'repair/hand'],
+        detail: ['GetJson', 'repair/detail'], // 工单详情
+	    check: ['PostJson', 'repair/check'], // 确认
+	    audit: ['PostJson', 'repair/audit'], // 审批
+	    delete: ['PostJson', 'repair/delete'], // 审批
+        statusList: ['PostJson', 'repair/status-list'], // 保存
+	    repair: ['PostJson', 'repair/repair'], // 维修结束
+	    secondDoor: ['PostJson', 'repair/second-door'], // 二次上门
+	    settlement: ['PostJson', 'repair/settlement'], // 结算
+	    transfer: ['PostJson', 'repair/transfer'], // 维修结束
+	    update: ['PostJson', 'repair/update'], // 维修结束
+	    post: ['PostJson', 'repair/post-for-transfer'], // 增加快递
+	    export: ['PostJson', 'repair/export-repair-order-record'], // 导出
+        detailByUid: ['PostJson', 'repair/detail-by-uid'],
+        pay: ['PostJson', 'repair/pay'],
+        stock: ['PostJson', 'repair/save-to-invoice'], //入库
+	    remark: ['PostJson', 'repair/remark'], //入库
         settleDetail: ['PostJson', 'clearing-order/detail-by-source'], //结算单
-        saveVehicleList: ['PostJson', 'repair-order/vehicle/list'],
-        getItemCategory: ['Post', 'item-category/list/type'], // 获取故障分类
-        getItemStatus:['PostJson', 'warranty-config/list/item/status'], // 根据商品信息查询商品状态7
-        balance: ['PostJson', 'repair-order/get/balance'], // 获取账户余额
-        cancel: ['PostJson', 'repair-order/cancel'], // 取消工单
-        void: ['PostJson', 'repair-order/voided'], // 作废工单
-        getBalance: ['PostJson', 'repair-order/get/balance']
     },
     RepairItem: { // 维修单
         saveList: ['PostJson', 'repair-order-item/save-list'], // 列表
