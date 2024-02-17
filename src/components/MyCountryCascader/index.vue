@@ -9,6 +9,7 @@
         :placeholder="$t('n.choose')"
         @change="handleChange"
         id="cascader"
+        :popper-class="'cascader-area-popper'"
     />
 </template>
 
@@ -188,6 +189,31 @@ onMounted(() => {
         border-radius: 4px;
         .el-input__wrapper {
             border-color: rgb(82, 175, 252) !important;
+        }
+    }
+}
+.cascader-area-popper {
+    .el-checkbox.is-disabled {
+        .el-checkbox__input.is-disabled {
+            .el-checkbox__inner {
+                &::after {
+                    transform: rotate(45deg) scaleY(1) !important;
+                    border-color: var(--el-checkbox-input-border) !important;
+                    box-sizing: content-box;
+                    content: '';
+                    border: 1px solid transparent;
+                    border-left: 0;
+                    border-top: 0;
+                    height: 7px;
+                    left: 4px;
+                    position: absolute;
+                    top: 1px;
+                    transform: rotate(45deg) scaleY(0);
+                    width: 3px;
+                    transition: transform 0.15s ease-in 50ms !important;
+                    transform-origin: center;
+                }
+            }
         }
     }
 }
