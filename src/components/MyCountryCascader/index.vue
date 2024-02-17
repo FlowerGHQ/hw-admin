@@ -7,9 +7,8 @@
         filterable
         class="cascader-area"
         :placeholder="$t('n.choose')"
-        @change="handleChange(value, true)"
+        @change="handleChange"
         id="cascader"
-        @remove-tag="handleChange(value, false)"
     />
 </template>
 
@@ -52,6 +51,13 @@ const addParentCode = (arr, parentCode, parentName, parentEnName) => {
         item.parentCode = parentCode;
         item.parentName = parentName;
         item.parentEnName = parentEnName;
+        console.log('bindArea.value', $props.defaultList);
+        // 如果不包含在绑定的值里面并且不在默认值里面
+        if (!bindArea.value.includes(item.name) || $props.defaultList.includes(item.name)) {
+            item.disabled = false;
+        } else {
+            item.disabled = true;
+        }
         item.label = $locale.value === 'zh' ? item.name : item.name_en;
         item.value = item.name;
         if (item.children && item.children.length) {
@@ -89,34 +95,22 @@ const clearSearch = () => {
         console.warn('input不存在');
     }
 };
-
-// 提示信息值提示一边
-const messageNumer = ref(0);
 // 检测是否选择的值已经被绑定
-const checkBind = (value, bindArea, type) => {
-    // 判断是新增还是删除
-    let isAdd = type;
+const checkBind = (value, bindArea) => {
     let arr = [];
-    for (let i = 0; i < value.length; i++) {
-        if (!bindArea.includes(value[i][1]) || $props.defaultList.includes(value[i][1])) {
-            arr.push(value[i]);
-        } else {
-            isAdd && messageNumer.value++;
-            (isAdd && messageNumer.value === 1 && message.warning($t('sales-area.bind_area_warning'))) ||
-                (!isAdd && messageNumer.value === 0 && message.warning($t('sales-area.bind_area_warning')));
-            arr = arr.concat(value.slice(i + 1));
+    console.log('props.value', $props.value);
+    value.forEach(item => {
+        console.log('item', item);
+        if (!bindArea.includes(item[1])) {
         }
-    }
+    });
+    console.log('arr', arr);
+    message.warning($t('sales-area.bind_area_warning'));
     return arr;
 };
 // 触发获取
-const handleChange = (value, type) => {
-    messageNumer.value = 0;
+const handleChange = value => {
     clearSearch();
-    // 检测是否选择的值已经被绑定
-    let getBindValue = checkBind(value, bindArea.value, type);
-    value = getBindValue;
-    console.log('value', value);
     // 默认传递国家数据
     let arr = [];
     value.forEach(item => {
@@ -143,6 +137,7 @@ const getBindValue = () => {
             res.list.forEach(item => {
                 bindArea.value = bindArea.value.concat(item.country.split(','));
             });
+            console.log('bindArea', bindArea.value);
         } else {
             bindArea.value = [];
         }
