@@ -1,6 +1,6 @@
 export default {
     zh: {
-        system: 'HORWIN业务操作系统',
+        system: 'BOS',
         account_login: '登录',
         conditions: '条款和条件',
         legal: '隐私',
@@ -38,11 +38,11 @@ export default {
         phone_login: '手机号码/验证码登录',
     },
     en: {
-        system: 'HORWIN Business Operating System',
+        system: 'BOS',
         account_login: 'Log In',
         conditions: 'terms & conditions',
         legal: 'legal',
-        about: '© 2023 | HORWIN Inc',
+        about: '© 2024 | HORWIN Inc',
         hi: 'Hi',
         welcome: 'welcome to HORWIN business operating system',
         Vampireuknow: 'Vampireuknow',

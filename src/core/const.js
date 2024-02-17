@@ -256,7 +256,7 @@ let Const = {
             { lang: 'news', path: '/mall/all-articles' },
             // { lang: 'local_deals' },
         ],
-        FOOTERMENU: [{ lang: 'conditions' }, { lang: 'legal' }],
+        // FOOTERMENU: [{ lang: 'conditions' }, { lang: 'legal' }],
     },
     FLAG: {
         YES: 1,
