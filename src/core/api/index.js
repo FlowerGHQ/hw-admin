@@ -29,7 +29,7 @@ const apiList = {
         purchaseExport: ['PostJson', 'purchase-order/export'],
         purchaseTemplateExport: ['PostJson', 'purchase-order/export-template'], // 采购单模版导出
 	    purchaseOrderExport: ['PostJson', 'purchase-order/export-order'], // 采购单模版导出
-        repairExport: ['PostJson', 'repair-order/export-repair-order-record'],
+        repairExport: ['PostJson', 'repair/export-repair-order-record'],
         invoiceOutExport: ['PostJson', 'invoice/export-out-invoice'],//导出
         invoiceInExport: ['PostJson', 'invoice/export-in-invoice'],//导出
         invoiceDetailExport: ['PostJson', 'invoice/export-detail'],//导出
