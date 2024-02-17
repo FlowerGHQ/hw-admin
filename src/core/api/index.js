@@ -327,6 +327,8 @@ const apiList = {
         save: ['PostJson', 'sales-area/save'],
         delete: ['PostJson', 'sales-area/delete'],
         detail: ['PostJson', 'sales-area/detail'],
+        // 获取销售区域列表
+        listAll: ['PostJson', 'sales-area/bind-list'],
     },
     SalesAreaItem: {
         //销售区域商品管理

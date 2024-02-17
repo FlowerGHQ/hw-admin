@@ -73,7 +73,7 @@
                         <!-- 策略类型 -->
                         <a-row :gutter="18">
                             <a-col :xs="24" :sm="24" :md="24" :lg="22" :xl="18" :xxl="12" :xxxl="12">
-                                <a-form-item label="销售类型" name="type">
+                                <!-- <a-form-item label="销售类型" name="type">
                                     <a-select
                                         v-model:value="formState.type"
                                         :disabled="type === 'details' ? true : false"
@@ -81,6 +81,21 @@
                                         :options="strategyTypeOptions"
                                         @change="handleClearVaild"
                                     />
+                                </a-form-item> -->
+                                <!-- 单选框 -->
+                                <a-form-item label="销售类型" name="type">
+                                    <a-radio-group
+                                        v-model:value="formState.type"
+                                        :disabled="type === 'details' ? true : false"
+                                        @change="handleClearVaild"
+                                    >
+                                        <a-radio
+                                            v-for="(item, index) in strategyTypeOptions"
+                                            :key="index"
+                                            :value="item.value"
+                                            >{{ item.label }}</a-radio
+                                        >
+                                    </a-radio-group>
                                 </a-form-item>
                             </a-col>
                         </a-row>
@@ -117,14 +132,18 @@
                                             </a-input-number>
                                         </div>
                                         <div class="number">
-                                            <span> 送 </span>
+                                            <span> 赠送 </span>
                                             <a-input-number
                                                 v-model:value="formState.rule.quantity_bonus"
                                                 :disabled="type === 'details' ? true : false"
                                                 :placeholder="$t('def.p_set')"
                                                 style="max-width: 300px; flex: 1"
                                                 :min="1"
-                                            />
+                                            >
+                                                <template #addonAfter>
+                                                    <span class="unit"> 份 </span>
+                                                </template>
+                                            </a-input-number>
                                         </div>
                                     </div>
                                     <div class="gift-rules-first" v-else-if="formState.type == 2">
@@ -954,9 +973,19 @@ onMounted(() => {
                             white-space: nowrap;
                             margin-right: 8px;
                         }
+                        .ant-input-number,
+                        .ant-input-number-group-wrapper {
+                            flex: 1;
+                        }
                     }
-                    .number {
-                        margin-right: 0;
+                    .threshold {
+                        min-width: 30%;
+                    }
+                    // div 除了label-gift
+                    > div:not(.label-gift) {
+                        &:last-child {
+                            margin-right: 0;
+                        }
                     }
                 }
             }

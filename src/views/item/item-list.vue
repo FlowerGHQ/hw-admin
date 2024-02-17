@@ -112,7 +112,7 @@
                         <template #bodyCell="{ column, text, record }">
                             <!-- 名称 -->
                             <template v-if="column.key === 'detail'">
-                                <div style="width: 200px" class="table-img afs">
+                                <div style="width: 200px" class="table-img">
                                     <a-image
                                         class="image"
                                         :width="55"

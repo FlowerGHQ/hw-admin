@@ -238,6 +238,11 @@
                 "code": "VNM",
                 "name": "越南",
                 "name_en": "Vietnam"
+            },
+            {
+                "code": "AE",
+                "name": "阿联酋",
+                "name_en": "United Arab Emirates"
             }
         ]
     },
@@ -452,9 +457,64 @@
                 "name_en": "Switzerland"
             },
             {
-                "code": "SCG",
-                "name": "塞尔维亚,黑山",
-                "name_en": "Serbia,Montenegro"
+                "code": "SRB",
+                "name": "塞尔维亚",
+                "name_en": "Serbia"
+            },
+            {
+                "code": "MNE",
+                "name": "黑山",
+                "name_en": "Montenegro"
+            },
+            {
+                "code": "SVK",
+                "name": "斯洛伐克",
+                "name_en": "Slovakia"
+            },
+            {
+                "code": "SVN",
+                "name": "斯洛文尼亚",
+                "name_en": "Slovenia"
+            },
+            {
+                "code": "SJM",
+                "name": "斯瓦尔巴和扬马廷",
+                "name_en": "Svalbard and Jan Mayen"
+            },
+            {
+                "code": "UKR",
+                "name": "乌克兰",
+                "name_en": "Ukraine"
+            },
+            {
+                "code": "ESP",
+                "name": "西班牙",
+                "name_en": "Spain"
+            },
+            {
+                "code": "GRC",
+                "name": "希腊",
+                "name_en": "Greece"
+            },
+            {
+                "code": "HUN",
+                "name": "匈牙利",
+                "name_en": "Hungary"
+            },
+            {
+                "code": "ITA",
+                "name": "意大利",
+                "name_en": "Italy"
+            },
+            {
+                "code": "GBR",
+                "name": "英国",
+                "name_en": "United Kingdom"
+            },
+            {
+                "code": "JEY",
+                "name": "泽西岛",
+                "name_en": "Jersey"
             },
             {
                 "code": "SMR",

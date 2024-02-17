@@ -41,7 +41,7 @@ export default {
         // 编辑资料
         edit_data: '编辑资料',
         // 请选择赠送地区
-        please_select_the_gift_area: '请选择赠送地区',
+        please_select_the_gift_area: '请选择地区',
         // please_select_the_gift_item
         please_select_the_gift_item: '请选择赠送商品',
         // 销售策略
@@ -102,7 +102,7 @@ export default {
         // 编辑资料
         edit_data: 'Edit Data',
         //  请选择赠送地区
-        please_select_the_gift_area: 'Please Select The Gift Area',
+        please_select_the_gift_area: 'Please Select The Area',
         // please_select_the_gift_item
         please_select_the_gift_item: 'Please Select The Gift Item',
         // 销售策略

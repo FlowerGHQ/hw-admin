@@ -7,7 +7,9 @@
         filterable
         class="cascader-area"
         :placeholder="$t('n.choose')"
-        @change="handleChange"
+        @change="handleChange(value, true)"
+        id="cascader"
+        @remove-tag="handleChange(value, false)"
     />
 </template>
 
@@ -20,19 +22,27 @@
 import axios from 'axios';
 import { ref, computed, getCurrentInstance, watch, onMounted, h } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { message } from 'ant-design-vue';
+import Core from '../../core';
 const $locale = useI18n().locale;
+const $t = useI18n().t;
 const $emit = defineEmits(['update:value', 'handleGetItem']);
 const $props = defineProps({
     value: {
         type: Array,
         default: () => [],
     },
+    defaultList: {
+        type: Array,
+        default: () => [],
+    },
 });
-console.log($locale.value);
 
 // 前端获取所有大洲及国家的json文件
 const countryOptions = ref([]);
 const props = { multiple: true };
+// 已经绑定的值
+const bindArea = ref([]);
 const targetCountryOptions = computed(() => {
     return addParentCode(countryOptions.value, '', '', '');
 });
@@ -67,13 +77,46 @@ const flatten = arr => {
     });
     return result;
 };
+// 清空搜索框的值
+const clearSearch = () => {
+    let input = document.querySelector('.el-cascader__search-input');
+    if (input) {
+        input.value = '';
+        // 触发input事件，以通知Vue更新
+        const event = new Event('input', { bubbles: true }); //bubbles: true 事件会冒泡
+        input.dispatchEvent(event);
+    } else {
+        console.warn('input不存在');
+    }
+};
+// 检测是否选择的值已经被绑定
+const checkBind = (value, bindArea, type) => {
+    // 判断是新增还是删除
+    let isAdd = type;
+    let arr = [];
+    for (let i = 0; i < value.length; i++) {
+        if (!bindArea.includes(value[i][1]) || $props.defaultList.includes(value[i][1])) {
+            arr.push(value[i]);
+        } else {
+            isAdd && message.warning($t('sales-area.bind_area_warning'));
+            return arr;
+        }
+    }
+    return arr;
+};
 // 触发获取
-const handleChange = value => {
+const handleChange = (value, type) => {
+    clearSearch();
+    // 检测是否选择的值已经被绑定
+    let getBindValue = checkBind(value, bindArea.value, type);
+    value = getBindValue;
+    console.log('value', value);
     // 默认传递国家数据
     let arr = [];
     value.forEach(item => {
         arr.push(item[1]);
     });
+    // 所有数据扁平化
     let allData = flatten(countryOptions.value);
     // 找到对应arr的name
     let itemData = [];
@@ -84,13 +127,25 @@ const handleChange = value => {
             }
         });
     });
-    console.log('itemData', itemData);
     $emit('handleGetItem', itemData);
     $emit('update:value', arr);
+};
+// 获取已经绑定的值
+const getBindValue = () => {
+    Core.Api.SalesArea.listAll().then(res => {
+        if (res.list && res.list.length > 0) {
+            res.list.forEach(item => {
+                bindArea.value = bindArea.value.concat(item.country.split(','));
+            });
+        } else {
+            bindArea.value = [];
+        }
+    });
 };
 
 onMounted(() => {
     getCountryOptions();
+    getBindValue();
 });
 </script>
 <style lang="less">

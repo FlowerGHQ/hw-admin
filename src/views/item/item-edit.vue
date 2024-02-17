@@ -679,7 +679,9 @@
                                                 >
                                             </a-upload>
                                             <div
-                                                class="imgList-box"
+                                                :class="`imgList-box imgList-box-${index}`"
+                                                @mouseover="handleHoverImg(record, index)"
+                                                @mouseleave="handleLeaveImg(record, index)"
                                                 v-if="record.imgsList && record.imgsList.length > 0"
                                             >
                                                 <img
@@ -1464,6 +1466,16 @@ export default {
         next();
     },
     methods: {
+        handleHoverImg(record, index) {
+            let dom = document.querySelector(`.imgList-box-${index}`);
+            // dom下的class为close-pic的元素显示
+            dom.querySelector('.close-pic').style.opacity = 1;
+        },
+        handleLeaveImg(record, index) {
+            let dom = document.querySelector(`.imgList-box-${index}`);
+            // dom下的class为close-pic的元素隐藏
+            dom.querySelector('.close-pic').style.opacity = 0;
+        },
         handleTableNameChange(type) {
             console.log(this.specific.data);
             console.log(this.form);
@@ -3255,6 +3267,8 @@ export default {
         }
 
         .imgList-box {
+            display: flex;
+            align-items: center;
             .img-pic {
                 width: 36px;
                 height: 36px;
@@ -3269,6 +3283,7 @@ export default {
                 flex-shrink: 0;
                 cursor: pointer;
                 margin-left: 8px;
+                opacity: 0;
             }
         }
     }
@@ -3382,14 +3397,14 @@ export default {
 }
 :deep(.ant-input-wrapper) {
     .ant-input-group-addon:nth-of-type(1) {
-        background-color: #fff;
+        background-color: #fafafa;
     }
 }
 .not-white-space {
     white-space: nowrap;
 }
 .appearance-font {
-    color: #1d2129 !important;
+    // color: #1d2129 !important;
     font-family: PingFang SC;
     margin-top: 5px;
 }
@@ -3550,9 +3565,17 @@ export default {
 .ant-input-group-wrapper {
     :deep(.ant-input-group-addon) {
         color: #8090a6;
+        background-color: #fafafa !important;
         .l-w-h-style-unit {
-            color: #8090a6;
+            color: #8090a6 !important;
         }
+    }
+}
+.ant-input-number-group-addon {
+    color: #8090a6;
+    background-color: #fafafa !important;
+    .l-w-h-style-unit {
+        color: #8090a6 !important;
     }
 }
 
