@@ -30,13 +30,13 @@ const apiList = {
         // 导出
         purchaseExport: ['PostJson', 'purchase-order/export'],
         purchaseTemplateExport: ['PostJson', 'purchase-order/export-template'], // 采购单模版导出
-        purchaseOrderExport: ['PostJson', 'purchase-order/export-order'], // 采购单模版导出
-        repairExport: ['PostJson', 'repair-order/export-repair-order-record'],
-        invoiceOutExport: ['PostJson', 'invoice/export-out-invoice'], //导出
-        invoiceInExport: ['PostJson', 'invoice/export-in-invoice'], //导出
-        invoiceDetailExport: ['PostJson', 'invoice/export-detail'], //导出
-        materialPurchaseExport: ['PostJson', '/material-purchase-order/export'], //导出
-        ItemCollectExport: ['PostJson', '/shopping-cart/download-import-template'], //导出
+	    purchaseOrderExport: ['PostJson', 'purchase-order/export-order'], // 采购单模版导出
+        repairExport: ['PostJson', 'repair/export-repair-order-record'],
+        invoiceOutExport: ['PostJson', 'invoice/export-out-invoice'],//导出
+        invoiceInExport: ['PostJson', 'invoice/export-in-invoice'],//导出
+        invoiceDetailExport: ['PostJson', 'invoice/export-detail'],//导出
+        materialPurchaseExport: ['PostJson', '/material-purchase-order/export'],//导出
+        ItemCollectExport: ['PostJson', '/shopping-cart/download-import-template'],//导出
         feedbackTemplateExport: ['PostJson', 'feedback/export-template'], // 采购单模版导出
 
         exportOrderPrice: ['GetJson', 'purchase-order/export-item-price'], // 采购数据导出
