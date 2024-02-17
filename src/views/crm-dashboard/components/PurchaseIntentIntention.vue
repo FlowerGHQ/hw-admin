@@ -1,31 +1,29 @@
 <template>
     <div class="list-container">
         <div class="title">
-            <span>{{$t('crm_dash.purchase_intention')}}</span>
+            <span>{{ $t('crm_dash.purchase_intention') }}</span>
         </div>
 
         <!-- echarts -->
         <div class="table-container">
-            <div id="PurchaseIntentchartId" class="chart" ref='PurchaseIntentchartId'></div>
+            <div id="PurchaseIntentchartId" class="chart" ref="PurchaseIntentchartId"></div>
         </div>
-
 
         <!-- </div> -->
     </div>
 </template>
 
 <script>
-import { Chart } from '@antv/g2'
-import Core from "../../../core";
+import { Chart } from '@antv/g2';
+import Core from '../../../core';
 
 export default {
     name: 'Cards',
-    components: {
-    },
+    components: {},
     props: {
         searchForm: {
             type: Object,
-            default: () => { }
+            default: () => {},
         },
     },
     data() {
@@ -33,7 +31,6 @@ export default {
             currentTab: '',
             myChart: null,
             boStatisticsChart: {},
-
         };
     },
     watch: {
@@ -41,36 +38,32 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                this.testDriveIntentStatistics()
-            }
+                this.testDriveIntentStatistics();
+            },
         },
-
     },
     computed: {
         lang() {
-            return this.$store.state.lang
+            return this.$store.state.lang;
         },
     },
-    created() {
-    },
+    created() {},
     mounted() {
         // const ths = this;
         // window.onresize =  () => {
         //     ths.resetChart();
         // }
         // this.drawBoStatisticsChart(this.tableData)
-        this.testDriveIntentStatistics()
-
-
+        this.testDriveIntentStatistics();
     },
     beforeUnmount() {
-        this.$refs.PurchaseIntentchartId.innerHTML = ''
+        this.$refs.PurchaseIntentchartId.innerHTML = '';
     },
     methods: {
         drawBoStatisticsChart(data) {
             if (this.boStatisticsChart.destroy) {
-                console.log('drawPurchaseChart destroy:')
-                this.boStatisticsChart.destroy()
+                console.log('drawPurchaseChart destroy:');
+                this.boStatisticsChart.destroy();
             }
             const chart = new Chart({
                 container: 'PurchaseIntentchartId',
@@ -78,16 +71,17 @@ export default {
                 height: 260,
                 width: 600,
             });
-            chart.axis('value',{ // 隐藏y轴线
+            chart.axis('value', {
+                // 隐藏y轴线
                 grid: {
                     line: {
                         type: 'line',
                         style: {
-                            lineDash: [5, 5, 5] ,
-                        }
-                    }
-                }
-            })
+                            lineDash: [5, 5, 5],
+                        },
+                    },
+                },
+            });
             chart.data(data);
             // chart.scale('type', {
             //     nice: true,
@@ -111,10 +105,10 @@ export default {
             //         '</li>',
             // });
             chart.axis('type', {
-                tickLine: null
+                tickLine: null,
             });
             chart.tooltip({
-                showTitle:false,
+                showTitle: false,
                 showMarkers: false,
                 itemTpl:
                     '<li style="margin-bottom:4px;list-style-type:none;padding: 0;">' +
@@ -124,13 +118,15 @@ export default {
                     '</li>',
             });
             chart
-            .interval().position('type*value').color('rgb(99,149,249)')
-            .color('type',[ '#6395f9', '#657798', '#62daab'])
+                .interval()
+                .position('type*value')
+                .color('rgb(99,149,249)')
+                .color('type', ['#6395f9', '#657798', '#62daab']);
             // chart.interval()
-                // .adjust('stack')
-                // .position('value')
-                // .color('type')
-                // .shape('slice-shape');
+            // .adjust('stack')
+            // .position('value')
+            // .color('type')
+            // .shape('slice-shape');
 
             // chart.interaction('element-active');
             // chart
@@ -147,34 +143,37 @@ export default {
             //         offsetY: -20,
             //     })
             chart.render();
-            this.boStatisticsChart = chart
+            this.boStatisticsChart = chart;
         },
         testDriveIntentStatistics() {
             this.loading = true;
             Core.Api.CRMDashboard.purchaseIntentStatistics({
-                ...this.searchForm
-            }).then(res => {
-                console.log('getTableData err', res)
-                // this.testDriveIntentList = res.list;
-                const dv = []
-                res.list.forEach(res => {
-                    if(res.type !== 0){
-                        if(res.type !== 40){
-                        dv.push({ type: this.$Util.CRMCustomerPurchaseIntentChartFilter(res.type, this.lang), value: res.value })
+                ...this.searchForm,
+            })
+                .then(res => {
+                    console.log('getTableData err', res);
+                    // this.testDriveIntentList = res.list;
+                    const dv = [];
+                    res.list.forEach(res => {
+                        if (res.type !== 0) {
+                            if (res.type !== 40) {
+                                dv.push({
+                                    type: this.$Util.CRMCustomerPurchaseIntentChartFilter(res.type, this.lang),
+                                    value: res.value,
+                                });
+                            }
                         }
-                    }
+                    });
+                    this.drawBoStatisticsChart(dv);
                 })
-                this.drawBoStatisticsChart(dv)
-
-            }).catch(err => {
-                console.log('getTableData err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        }
-
-
-    }
+                .catch(err => {
+                    console.log('getTableData err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
+    },
 };
 </script>
 
@@ -208,8 +207,8 @@ export default {
     }
 
     .tab-current {
-        border: 1px solid #006EF9;
-        color: #006EF9;
+        border: 1px solid #006ef9;
+        color: #006ef9;
     }
 }
 
@@ -228,7 +227,7 @@ export default {
     }
 
     .form-value {
-        color: #006EF9;
+        color: #006ef9;
         font-size: 20px;
     }
 }

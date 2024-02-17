@@ -1,8 +1,14 @@
 <template>
     <div class="DeliveryLogs">
         <div class="panel-content table-container no-mg">
-            <a-table :columns="invoicColumns" :data-source="invoiceList" :scroll="{ x: true }"
-                :row-key="record => record.id" :pagination="channelPagination" @change="handleTableChange">
+            <a-table
+                :columns="invoicColumns"
+                :data-source="invoiceList"
+                :scroll="{ x: true }"
+                :row-key="record => record.id"
+                :pagination="channelPagination"
+                @change="handleTableChange"
+            >
                 <template #bodyCell="{ column, text, record }">
                     <template v-if="column.key === 'org'">
                         {{ $Util.userTypeFilter(text.org_type, $i18n.locale) }}·{{ text.org_name }}
@@ -14,10 +20,7 @@
                         {{ $Util.invoiceStatusFilter(text, $i18n.locale) }}
                     </template>
                     <template v-if="column.key === 'uid'">
-                        <a-button type="link" @click="routerChange('detail', record)">{{
-                            text || '-'
-                        }}
-                        </a-button>
+                        <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }} </a-button>
                     </template>
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
@@ -27,22 +30,29 @@
                     </template>
                     <template v-if="column.key === 'operation'">
                         <!-- 物流信息 -->
-                        <a-button type='link' @click="handleWaybillShow(record.id)">{{
-                            $t('p.logistics')
-                        }}
-                        </a-button>
+                        <a-button type="link" @click="handleWaybillShow(record.id)">{{ $t('p.logistics') }} </a-button>
                         <template
-                            v-if="$auth('ADMIN') && $auth('purchase-order.export') && type == Core.Const.STOCK_RECORD.TYPE.OUT && detail.type == Core.Const.PURCHASE.TYPE.PRE_SALES">
-                            <a-button type='link' @click="handleExportIn(record.id)"><i class="icon i_download" />{{
-                                $t('p.export_purchase') }}
+                            v-if="
+                                $auth('ADMIN') &&
+                                $auth('purchase-order.export') &&
+                                type == Core.Const.STOCK_RECORD.TYPE.OUT &&
+                                detail.type == Core.Const.PURCHASE.TYPE.PRE_SALES
+                            "
+                        >
+                            <a-button type="link" @click="handleExportIn(record.id)"
+                                ><i class="icon i_download" />{{ $t('p.export_purchase') }}
                             </a-button>
-                            <a-button type='link' @click="handleUpdatePI(record)">{{ $t('p.update_PI') }}
-                            </a-button>
+                            <a-button type="link" @click="handleUpdatePI(record)">{{ $t('p.update_PI') }} </a-button>
                         </template>
                         <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
-                            <a-button type='link'
-                                v-if="type === Core.Const.STOCK_RECORD.TYPE.OUT && record.status === Core.Const.STOCK_RECORD.STATUS.CLOSE"
-                                @click="handleDeliverShow(record)">{{ $t('p.confirm_delivery') }}
+                            <a-button
+                                type="link"
+                                v-if="
+                                    type === Core.Const.STOCK_RECORD.TYPE.OUT &&
+                                    record.status === Core.Const.STOCK_RECORD.STATUS.CLOSE
+                                "
+                                @click="handleDeliverShow(record)"
+                                >{{ $t('p.confirm_delivery') }}
                             </a-button>
                             <!-- <a-button type='link'
                                 @click="handleDeliverShow(record)">{{ $t('p.confirm_delivery') }}
@@ -50,33 +60,52 @@
                         </template>
                         <template v-if="authOrg(detail.org_id, detail.org_type)">
                             <!-- 确认收货 -->
-                            <a-button type='link'
-                                v-if="type === Core.Const.STOCK_RECORD.TYPE.OUT && record.status === Core.Const.STOCK_RECORD.STATUS.DELIVERY"
-                                @click="handleTakeDeliverShow(record.id)">
+                            <a-button
+                                type="link"
+                                v-if="
+                                    type === Core.Const.STOCK_RECORD.TYPE.OUT &&
+                                    record.status === Core.Const.STOCK_RECORD.STATUS.DELIVERY
+                                "
+                                @click="handleTakeDeliverShow(record.id)"
+                            >
                                 {{ $t('p.confirm_the_take_delivery') }}
                             </a-button>
                             <!-- 收货明细 -->
-                            <a-button type='link' v-if="type === Core.Const.STOCK_RECORD.TYPE.OUT && displayIn"
-                                @click="handleModalShow(record.id)">{{ $t('p.take_delivery_detail') }}
+                            <a-button
+                                type="link"
+                                v-if="type === Core.Const.STOCK_RECORD.TYPE.OUT && displayIn"
+                                @click="handleModalShow(record.id)"
+                                >{{ $t('p.take_delivery_detail') }}
                             </a-button>
                         </template>
-
                     </template>
                 </template>
             </a-table>
         </div>
         <!-- 收货明细弹框 -->
-        <a-modal v-model:visible="modalShow" :title="$t('p.take_delivery_detail')" width='860px'>
+        <a-modal v-model:visible="modalShow" :title="$t('p.take_delivery_detail')" width="860px">
             <div class="modal-content">
                 <div class="table-container">
-                    <ItemTable :columns="tableColumns" :data-source="tableData" :loading='modalLoading' v-if="modalShow" />
+                    <ItemTable
+                        :columns="tableColumns"
+                        :data-source="tableData"
+                        :loading="modalLoading"
+                        v-if="modalShow"
+                    />
                 </div>
             </div>
             <template #footer>
                 <div class="modal-footer">
                     <div class="paging-area">
-                        <a-pagination v-if="!purchaseId" show-less-items :hide-on-single-page='false' :total="total"
-                            :current="currPage" :default-page-size='pageSize' @change="pageChange" />
+                        <a-pagination
+                            v-if="!purchaseId"
+                            show-less-items
+                            :hide-on-single-page="false"
+                            :total="total"
+                            :current="currPage"
+                            :default-page-size="pageSize"
+                            @change="pageChange"
+                        />
                     </div>
                     <div class="btn-area">
                         <a-button type="primary" @click="modalShow = false">{{ $t('def.sure') }}</a-button>
@@ -85,7 +114,7 @@
             </template>
         </a-modal>
         <!-- 物流信息弹框 -->
-        <a-modal v-model:visible="waybillShow" :title="$t('n.delivery_logs')" width='860px'>
+        <a-modal v-model:visible="waybillShow" :title="$t('n.delivery_logs')" width="860px">
             <div class="modal-content">
                 <!-- <div class="info-item" v-if="detail.org_type === USER_TYPE.AGENT || detail.org_type === USER_TYPE.STORE">
                     <div class="key">{{ $t('p.delivery_method') }}</div>
@@ -94,13 +123,16 @@
                 <!-- 发货方式 -->
                 <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
                     <div class="key">{{ $t('p.delivery_method') }}</div>
-                    <div class="value">{{ $Util.purchaseDeliveryMethodFilter(logisticsInfoDetail?.express_type, $i18n.locale) || '-' }}
+                    <div class="value">
+                        {{ $Util.purchaseDeliveryMethodFilter(logisticsInfoDetail?.express_type, $i18n.locale) || '-' }}
                     </div>
                 </div>
                 <!-- 发货港口 -->
                 <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
                     <div class="key">{{ $t('p.shipping_port') }}</div>
-                    <div class="value">{{ ($i18n.locale === 'zh' ? logisticsInfoDetail?.port : logisticsInfoDetail?.port_en) || '-' }}</div>
+                    <div class="value">
+                        {{ ($i18n.locale === 'zh' ? logisticsInfoDetail?.port : logisticsInfoDetail?.port_en) || '-' }}
+                    </div>
                 </div>
                 <!-- 发货仓库 -->
                 <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
@@ -125,7 +157,9 @@
                 <!-- 费用 -->
                 <div class="info-item">
                     <div class="key">{{ $t('d.cost') }}</div>
-                    <div class="value">{{ detail.currency === 'EUR' ? '€' : '$' }} {{ logisticsInfoDetail?.post_fee / 100.0 || '-' }}</div>
+                    <div class="value">
+                        {{ detail.currency === 'EUR' ? '€' : '$' }} {{ logisticsInfoDetail?.post_fee / 100.0 || '-' }}
+                    </div>
                 </div>
                 <!-- 发货单号 -->
                 <div class="info-item" v-if="detail.waybill">
@@ -145,10 +179,13 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('wa.warehouse') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.warehouse_id" :placeholder="$t('def.select')" :disabled="!!isProd">
-                            <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">{{
-                                item.name
-                            }}
+                        <a-select
+                            v-model:value="form.warehouse_id"
+                            :placeholder="$t('def.select')"
+                            :disabled="!!isProd"
+                        >
+                            <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id"
+                                >{{ item.name }}
                             </a-select-option>
                         </a-select>
                     </div>
@@ -165,8 +202,8 @@
                         <div class="key">{{ $t('p.delivery_method') }}</div>
                         <div class="value">
                             <a-select v-model:value="express_type" :placeholder="$t('def.select')">
-                                <a-select-option v-for="item of courierTypeList" :key="item.value"
-                                    :value="item.value">{{ item[$i18n.locale] }}
+                                <a-select-option v-for="item of courierTypeList" :key="item.value" :value="item.value"
+                                    >{{ item[$i18n.locale] }}
                                 </a-select-option>
                             </a-select>
                         </div>
@@ -176,8 +213,11 @@
                         <div class="key">{{ $t('p.shipping_port') }}:</div>
                         <div class="value">
                             <a-select v-model:value="port" :placeholder="$t('def.select')" @change="handleSelectPort">
-                                <a-select-option v-for="portItem of portTypeList" :key="portItem.value"
-                                    :value="portItem[$i18n.locale]">{{ portItem[$i18n.locale] }}
+                                <a-select-option
+                                    v-for="portItem of portTypeList"
+                                    :key="portItem.value"
+                                    :value="portItem[$i18n.locale]"
+                                    >{{ portItem[$i18n.locale] }}
                                 </a-select-option>
                             </a-select>
                         </div>
@@ -205,8 +245,13 @@
                     <div class="form-item required">
                         <div class="key">{{ $t('wb.delivery_time') }}:</div>
                         <div class="value">
-                            <a-date-picker v-model:value="form.delivery_time" valueFormat='YYYY-MM-DD'
-                                :show-time="defaultTime" :placeholder="$t('wb.choose_delivery_time')" format="YYYY/MM/DD">
+                            <a-date-picker
+                                v-model:value="form.delivery_time"
+                                valueFormat="YYYY-MM-DD"
+                                :show-time="defaultTime"
+                                :placeholder="$t('wb.choose_delivery_time')"
+                                format="YYYY/MM/DD"
+                            >
                                 <template #suffixIcon><i class="icon i_calendar" /></template>
                             </a-date-picker>
                         </div>
@@ -218,8 +263,11 @@
                         <div class="key">{{ $t('p.ship') }}</div>
                         <div class="value">
                             <a-select v-model:value="form.receive_type" :placeholder="$t('def.select')">
-                                <a-select-option v-for="receive of receiveTypeList" :key="receive.value"
-                                    :value="receive.value">{{ receive.name }}
+                                <a-select-option
+                                    v-for="receive of receiveTypeList"
+                                    :key="receive.value"
+                                    :value="receive.value"
+                                    >{{ receive.name }}
                                 </a-select-option>
                             </a-select>
                         </div>
@@ -237,8 +285,14 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('p.freight') }}:</div>
                     <div class="value">
-                        <a-input-number v-model:value="form.freight" placeholder="0.00" style="width: 120px" :min="0.00"
-                            :precision="2" :prefix="`${$Util.priceUnitFilter(detail.currency)}`" />
+                        <a-input-number
+                            v-model:value="form.freight"
+                            placeholder="0.00"
+                            style="width: 120px"
+                            :min="0.0"
+                            :precision="2"
+                            :prefix="`${$Util.priceUnitFilter(detail.currency)}`"
+                        />
                     </div>
                 </div>
                 <!-- 提单号 -->
@@ -252,7 +306,13 @@
                 <div class="form-item">
                     <div class="key">{{ $t('p.remark') }}:</div>
                     <div class="value">
-                        <a-textarea :rows="4" v-model:value="form.remark" :placeholder="$t('def.input')" :maxlength="500" showCount />
+                        <a-textarea
+                            :rows="4"
+                            v-model:value="form.remark"
+                            :placeholder="$t('def.input')"
+                            :maxlength="500"
+                            showCount
+                        />
                     </div>
                 </div>
             </div>
@@ -277,8 +337,14 @@
                 <div class="form-item">
                     <div class="key">{{ $t('d.cost') }}</div>
                     <div class="value">
-                        <a-input-number v-model:value="form.freight" placeholder="0.00" style="width: 120px" :min="0.00"
-                            :precision="2" :prefix="`${$Util.priceUnitFilter(detail.currency)}`" />
+                        <a-input-number
+                            v-model:value="form.freight"
+                            placeholder="0.00"
+                            style="width: 120px"
+                            :min="0.0"
+                            :precision="2"
+                            :prefix="`${$Util.priceUnitFilter(detail.currency)}`"
+                        />
                     </div>
                 </div>
                 <div class="form-item">
@@ -287,7 +353,6 @@
                         <a-input v-model:value="form.remark" :placeholder="$t('def.input')" />
                     </div>
                 </div>
-
             </div>
         </a-modal>
     </div>
@@ -301,11 +366,11 @@ const WAYBILL = Core.Const.WAYBILL;
 const PURCHASE = Core.Const.PURCHASE;
 
 import ItemTable from '@/components/table/ItemTable.vue';
-import dayjs from "dayjs";
-import $Util from "../../../core/utils";
+import dayjs from 'dayjs';
+import $Util from '../../../core/utils';
 
 export default {
-    name: "DeliveryLogs",
+    name: 'DeliveryLogs',
     components: {
         ItemTable,
     },
@@ -319,7 +384,7 @@ export default {
         },
         displayIn: {
             type: Boolean,
-        }
+        },
     },
     data() {
         return {
@@ -381,7 +446,7 @@ export default {
                 showQuickJumper: true, // 是否可以快速跳转至某页
                 showSizeChanger: true, // 是否可以改变 pageSize
                 total: 0,
-                showTotal: (total) => `${this.$t('n.all_total')} ${total} ${this.$t('in.total')}`
+                showTotal: total => `${this.$t('n.all_total')} ${total} ${this.$t('in.total')}`,
             }, // 分页数据
             warehouseOptions: [], // 发货仓库列表
             port: undefined, // 港口中文
@@ -394,72 +459,73 @@ export default {
             let columns = [
                 { title: this.$t('in.sn'), dataIndex: 'uid', key: 'uid' },
                 { title: this.$t('n.state'), dataIndex: 'status' },
-            ]
+            ];
             if (this.type == Core.Const.STOCK_RECORD.TYPE.OUT) {
                 columns.push(
                     { title: this.$t('p.delivery_method'), dataIndex: 'receive_type', key: 'receive_type' },
                     { title: this.$t('p.shipping_port'), dataIndex: 'port' },
-                    { title: this.$t('n.operator'), dataIndex: ['apply_user', "account", "name"], key: 'item' },
+                    { title: this.$t('n.operator'), dataIndex: ['apply_user', 'account', 'name'], key: 'item' },
                     { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time' },
-                    { title: this.$t('def.operate'), key: 'operation', fixed: 'right' }
-                )
+                    { title: this.$t('def.operate'), key: 'operation', fixed: 'right' },
+                );
             } else {
                 columns.push(
                     { title: this.$t('p.delivery_method'), dataIndex: 'receive_type', key: 'receive_type' },
                     { title: this.$t('p.shipping_port'), dataIndex: 'port' },
-                    { title: this.$t('n.operator'), dataIndex: ['apply_user', "account", "name"], key: 'item' },
+                    { title: this.$t('n.operator'), dataIndex: ['apply_user', 'account', 'name'], key: 'item' },
                     { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time' },
-                    { title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
-                )
+                    { title: this.$t('def.operate'), key: 'operation', fixed: 'right' },
+                );
             }
-            return columns
+            return columns;
         },
         tableColumns() {
             let columns = [
                 { title: this.$t('n.name'), dataIndex: 'item_name', key: 'name' },
-                { title: this.$t('i.code'), dataIndex: "item_code", key: 'item' },
+                { title: this.$t('i.code'), dataIndex: 'item_code', key: 'item' },
                 { title: this.$t('i.deliver_amount'), dataIndex: 'amount', key: 'count' },
-            ]
-            return columns
+            ];
+            return columns;
         },
     },
     mounted() {
         this.getInvoiceList();
         this.getWarehouseList();
         this.handleWarehouseSearch();
-        console.log('detail', this.detail.currency)
+        console.log('detail', this.detail.currency);
     },
     methods: {
         /*== FETCH start==*/
         // 仓库列表Fetch
         getWarehouseList() {
             Core.Api.Warehouse.listAll().then(res => {
-                this.warehouseList = res.list
-            })
+                this.warehouseList = res.list;
+            });
         },
         /*== FETCH end==*/
         routerChange(type, item = {}) {
-            console.log(item)
-            let routeUrl = ''
+            console.log(item);
+            let routeUrl = '';
             switch (type) {
-                case 'detail':    // 详情
+                case 'detail': // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/warehouse/invoice-detail",
-                        query: { id: item.id }
-                    })
-                    window.open(routeUrl.href, '_blank')
+                        path: '/warehouse/invoice-detail',
+                        query: { id: item.id },
+                    });
+                    window.open(routeUrl.href, '_blank');
                     break;
             }
         },
         authOrg(orgId, orgType) {
             // console.log('org', this.loginOrgId === orgId && this.loginOrgType === orgType)
             if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
-                return true
+                return true;
             } else {
-                return false
+                return false;
             }
         },
-        getInvoiceList(params = {}) {  // 获取 发货记录
+        getInvoiceList(params = {}) {
+            // 获取 发货记录
             this.loading = true;
             // console.log("getInvoiceList type", this.type)
             Core.Api.Invoice.listByPurchase({
@@ -469,53 +535,57 @@ export default {
                 status: -1,
                 page_size: this.channelPagination.pageSize,
                 page: this.channelPagination.current,
-                ...params
-            }).then(res => {
-                // console.log("getInvoiceList res", this.type, res)
-                this.channelPagination.total = res.count
-                this.invoiceList = res.list
-                if (this.invoiceList.length) {
-                    this.activeKey = ['DeliveryLogs']
-                }
-            }).catch(err => {
-                console.log('getInvoiceList err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+                ...params,
+            })
+                .then(res => {
+                    // console.log("getInvoiceList res", this.type, res)
+                    this.channelPagination.total = res.count;
+                    this.invoiceList = res.list;
+                    if (this.invoiceList.length) {
+                        this.activeKey = ['DeliveryLogs'];
+                    }
+                })
+                .catch(err => {
+                    console.log('getInvoiceList err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         // 获取仓库列表
         handleWarehouseSearch() {
             Core.Api.Warehouse.list({
-                page_size: 100
+                page_size: 100,
             }).then(res => {
-                this.warehouseOptions = res.list
-            })
+                this.warehouseOptions = res.list;
+            });
         },
         handleModalShow(id) {
             this.modalShow = true;
-            this.invoiceId = id
-            this.pageChange(1)
+            this.invoiceId = id;
+            this.pageChange(1);
         },
         handleDeliverShow(item) {
             this.deliverShow = true;
             this.form = Core.Util.deepCopy(item);
-            this.form.freight = Core.Util.countFilter(this.form.freight)
-            this.invoiceId = item.id
+            this.form.freight = Core.Util.countFilter(this.form.freight);
+            this.invoiceId = item.id;
             Core.Api.Invoice.detail({
-                id: item.id
+                id: item.id,
             }).then(res => {
                 console.log('detail res', res);
-                this.warehouseName = res.detail?.warehouse?.name
-            })
+                this.warehouseName = res.detail?.warehouse?.name;
+            });
         },
         handleTakeDeliverShow(id) {
             this.takeDeliverShow = true;
-            this.invoiceId = id
+            this.invoiceId = id;
         },
 
-        pageChange(curr) {  // 页码改变
-            this.currPage = curr
-            this.getTableData()
+        pageChange(curr) {
+            // 页码改变
+            this.currPage = curr;
+            this.getTableData();
         },
         getTableData(params = {}) {
             this.modalLoading = true;
@@ -523,66 +593,72 @@ export default {
                 invoice_id: this.invoiceId,
                 page: this.currPage,
                 page_size: this.pageSize,
-                ...params
-            }).then(res => {
-                this.total = res.count
-                this.tableData = res.list
-            }).catch(err => {
-                // console.log('getTableData err', err)
-            }).finally(() => {
-                this.modalLoading = false;
-            });
+                ...params,
+            })
+                .then(res => {
+                    this.total = res.count;
+                    this.tableData = res.list;
+                })
+                .catch(err => {
+                    // console.log('getTableData err', err)
+                })
+                .finally(() => {
+                    this.modalLoading = false;
+                });
         },
         // 确认收货
         handleTakeDeliver() {
-            console.log("rowSelection", this.selectedRowItems)
+            console.log('rowSelection', this.selectedRowItems);
             let form = Core.Util.deepCopy(this.form);
             const param = {
                 id: this.orderId,
                 invoice_id: this.invoiceId,
                 remark: form.remark,
-            }
-            console.log(this.id)
+            };
+            console.log(this.id);
             let adminRequire = [
                 { key: 'warehouse_id', msg: this.$t('e.select_warehouse') },
                 // { key: 'target_type', msg: '请选择类型' },
             ];
             for (let index in adminRequire) {
-                let key = adminRequire[index].key
+                let key = adminRequire[index].key;
                 if (!this.form[key]) {
-                    return this.$message.warning(adminRequire[index].msg)
+                    return this.$message.warning(adminRequire[index].msg);
                 } else {
                     param[key] = form[key];
                 }
             }
-            Core.Api.Purchase.takeDeliver(param).then(res => {
-                this.$message.success(this.$t('p.received'))
-                this.takeDeliverShow = false
-                this.getInvoiceList({ page: 1 });
-                this.$emit('Submit')
-            }).catch(err => {
-                console.log('handleDeliver err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+            Core.Api.Purchase.takeDeliver(param)
+                .then(res => {
+                    this.$message.success(this.$t('p.received'));
+                    this.takeDeliverShow = false;
+                    this.getInvoiceList({ page: 1 });
+                    this.$emit('Submit');
+                })
+                .catch(err => {
+                    console.log('handleDeliver err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         handleWaybillShow(id) {
-            this.handleWaybillClear()
-            this.target_id = id
-            this.getInvoiceList({ page: 1 })
+            this.handleWaybillClear();
+            this.target_id = id;
+            this.getInvoiceList({ page: 1 });
             this.getWaybillInfo();
             this.waybillShow = true;
             Core.Api.Invoice.detail({
-                id: id
+                id: id,
             }).then(res => {
                 console.log('detail res', res);
-                this.logisticsInfoDetail = res.detail?.waybill
-                this.logisticsHouse = res.detail?.warehouse.name
+                this.logisticsInfoDetail = res.detail?.waybill;
+                this.logisticsHouse = res.detail?.warehouse.name;
                 // console.log('this.logisticsInfoDetail', this.logisticsInfoDetail);
-            })
+            });
         },
         handleWaybillClear() {
-            this.form = Core.Util.deepCopy(this.$options.data().form)
+            this.form = Core.Util.deepCopy(this.$options.data().form);
             this.waybillShow = false;
         },
         handleSelectPort(value) {
@@ -597,9 +673,9 @@ export default {
         },
         // 确认发货
         handleDeliver() {
-            console.log("rowSelection", this.selectedRowItems)
+            console.log('rowSelection', this.selectedRowItems);
             let form = Core.Util.deepCopy(this.form);
-            form.delivery_time = form.delivery_time ? dayjs(form.delivery_time).unix() : 0
+            form.delivery_time = form.delivery_time ? dayjs(form.delivery_time).unix() : 0;
             const param = {
                 id: this.orderId,
                 invoice_id: this.invoiceId,
@@ -608,7 +684,7 @@ export default {
                 port_en: this.port_en,
                 express_type: this.express_type,
                 // warehouse_id: this.warehouse_id
-            }
+            };
             let adminRequire = [];
 
             if (this.$auth('ADMIN')) {
@@ -618,55 +694,58 @@ export default {
                     // { key: 'express_type', msg: this.$t('def.enter') },
                     { key: 'lading_bill_no', msg: this.$t('wb.lading_bill_no') },
                     { key: 'freight', msg: this.$t('p.enter_freight') },
-                ]
+                ];
                 param['waybill'] = form['waybill'];
             } else if (this.$auth('DISTRIBUTOR')) {
                 adminRequire = [
                     { key: 'receive_type', msg: this.$t('p.choose_receive') },
                     { key: 'freight', msg: this.$t('p.enter_freight') },
-                ]
+                ];
                 param['waybill_uid'] = form['waybill_uid'];
             }
             for (let index in adminRequire) {
-                let key = adminRequire[index].key
+                let key = adminRequire[index].key;
                 if (!this.form[key]) {
-                    return this.$message.warning(adminRequire[index].msg)
+                    return this.$message.warning(adminRequire[index].msg);
                 } else {
                     param[key] = form[key];
                 }
             }
             if (!this.port) {
-                return this.$message.warning(this.$t('p.enter_harbor'))
+                return this.$message.warning(this.$t('p.enter_harbor'));
             }
             if (!this.express_type) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('def.enter'));
             }
             // if (!this.warehouse_id) {
             //     return this.$message.warning(this.$t('def.enter'))
             // }
-            param['freight'] = Math.round(param['freight'] * 100)
-            param['item_list'] = this.selectedRowItems
+            param['freight'] = Math.round(param['freight'] * 100);
+            param['item_list'] = this.selectedRowItems;
             console.log('param', param);
-            Core.Api.Purchase.deliver(Core.Util.searchFilter(param)).then(res => {
-                this.$message.success(this.$t('p.shipped'))
-                this.deliverShow = false
-                this.getInvoiceList({ page: 1 });
-                this.$emit('Submit')
-                this.handleWaybillClear()
-            }).catch(err => {
-                console.log('handleDeliver err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+            Core.Api.Purchase.deliver(Core.Util.searchFilter(param))
+                .then(res => {
+                    this.$message.success(this.$t('p.shipped'));
+                    this.deliverShow = false;
+                    this.getInvoiceList({ page: 1 });
+                    this.$emit('Submit');
+                    this.handleWaybillClear();
+                })
+                .catch(err => {
+                    console.log('handleDeliver err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         // 修改PI
         UpdatePI() {
-            console.log("rowSelection", this.selectedRowItems)
+            console.log('rowSelection', this.selectedRowItems);
             let form = Core.Util.deepCopy(this.form);
             const param = {
                 id: form.id,
                 remark: form.remark,
-            }
+            };
             let adminRequire = [];
 
             if (this.$auth('ADMIN')) {
@@ -674,45 +753,51 @@ export default {
                     { key: 'delivery_address', msg: this.$t('p.fill_address') },
                     { key: 'port', msg: this.$t('p.enter_harbor') },
                     { key: 'freight', msg: this.$t('p.enter_freight') },
-                ]
+                ];
             }
             for (let index in adminRequire) {
-                let key = adminRequire[index].key
+                let key = adminRequire[index].key;
                 if (!this.form[key]) {
-                    return this.$message.warning(adminRequire[index].msg)
+                    return this.$message.warning(adminRequire[index].msg);
                 } else {
                     param[key] = form[key];
                 }
             }
-            param['freight'] = Math.round(param['freight'] * 100)
-            Core.Api.Invoice.updatePI(param).then(res => {
-                this.$message.success(this.$t('p.modify_success'))
-                this.PIShow = false
-                this.getInvoiceList({ page: 1 });
-                this.$emit('Submit')
-                this.handleWaybillClear()
-
-            }).catch(err => {
-                console.log('handleDeliver err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+            param['freight'] = Math.round(param['freight'] * 100);
+            Core.Api.Invoice.updatePI(param)
+                .then(res => {
+                    this.$message.success(this.$t('p.modify_success'));
+                    this.PIShow = false;
+                    this.getInvoiceList({ page: 1 });
+                    this.$emit('Submit');
+                    this.handleWaybillClear();
+                })
+                .catch(err => {
+                    console.log('handleDeliver err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
-        getWaybillInfo() {  // 获取 发货记录
+        getWaybillInfo() {
+            // 获取 发货记录
             this.loading = true;
             Core.Api.Waybill.detailByTarget({
                 target_id: this.target_id,
                 target_type: Core.Const.WAYBILL.TARGET_TYPE.PURCHASE_ORDER,
                 type: Core.Const.WAYBILL.TYPE.OUT,
                 // source_type: Core.Const.STOCK_RECORD.SOURCE_TYPE.ITEM_PURCHASE,
-            }).then(res => {
-                console.log("getInvoiceList res", res)
-                this.waybillDetail = res.detail
-            }).catch(err => {
-                console.log('getInvoiceList err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+            })
+                .then(res => {
+                    console.log('getInvoiceList res', res);
+                    this.waybillDetail = res.detail;
+                })
+                .catch(err => {
+                    console.log('getInvoiceList err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         // 导出订单
         handleExportIn(id) {
@@ -720,53 +805,53 @@ export default {
                 id: id, // 订单id
                 currency: '',
                 id_type: 1,
-                language: this.$i18n.locale === 'en' ? 1 : 0
+                language: this.$i18n.locale === 'en' ? 1 : 0,
             };
 
             this.exportDisabled = true;
             let exportUrl = Core.Api.Export.purchaseTemplateExport(params);
-            console.log("handlePurchaseExport _exportUrl", exportUrl)
-            window.open(exportUrl, '_blank')
+            console.log('handlePurchaseExport _exportUrl', exportUrl);
+            window.open(exportUrl, '_blank');
             this.exportDisabled = false;
         },
         handleUpdatePI(item) {
-            this.form = Core.Util.deepCopy(item)
-            this.form.freight = Core.Util.countFilter(this.form.freight)
+            this.form = Core.Util.deepCopy(item);
+            this.form.freight = Core.Util.countFilter(this.form.freight);
             this.PIShow = true;
         },
         handleWaybillSearch() {
             if (this.form.waybill == null) {
-                return
+                return;
             }
             Core.Api.Waybill.detailByUidNoException({ uid: this.form.waybill }).then(res => {
                 if (res.detail == null) {
-                    return
+                    return;
                 }
-                this.form = res.detail
-                this.form.waybill = res.detail.uid
-                this.form.delivery_address = res.detail.sender_address
-                this.form.freight = res.detail.post_fee / 100.0
-                this.form.delivery_time = $Util.timeFilter(res.detail.delivery_time)
-                this.$message.success("查询到该物流单号已存在，已根据原有物流信息填充表格")
-            })
+                this.form = res.detail;
+                this.form.waybill = res.detail.uid;
+                this.form.delivery_address = res.detail.sender_address;
+                this.form.freight = res.detail.post_fee / 100.0;
+                this.form.delivery_time = $Util.timeFilter(res.detail.delivery_time);
+                this.$message.success('查询到该物流单号已存在，已根据原有物流信息填充表格');
+            });
         },
 
         // 分页事件
         handleTableChange(pagination, filters, sorter) {
-            const pager = { ...this.channelPagination }
-            pager.current = pagination.current
+            const pager = { ...this.channelPagination };
+            pager.current = pagination.current;
             if (pagination.pageSize !== this.channelPagination.pageSize) {
-                pager.current = 1
-                pager.pageSize = pagination.pageSize
+                pager.current = 1;
+                pager.pageSize = pagination.pageSize;
             }
-            this.channelPagination = pager
+            this.channelPagination = pager;
             this.getInvoiceList({
                 page_size: this.channelPagination.pageSize,
-                page: this.channelPagination.current
-            })
-        }
+                page: this.channelPagination.current,
+            });
+        },
     },
-}
+};
 </script>
 
 <style lang="less">

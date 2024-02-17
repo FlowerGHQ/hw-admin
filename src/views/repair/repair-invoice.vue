@@ -1,94 +1,111 @@
 <template>
-<div id="RepairInvoice" class='list-container'>
-    <div class="content">
-        <div class="title-content">
-            <div class="title">{{ $t('r.settlement_list') }}</div>
-            <p>{{ $t('r.warranty') }}</p>
-            <span>{{ $Util.repairServiceFilter(detail.service_type,  $i18n.locale) }}</span>
-            <p>{{ $t('r.serial_number') }}</p>
-            <span>{{detail.uid || '-'}}</span>
-            <p>{{ $t('r.date') }}</p>
-            <span>{{$Util.timeFormat(detail.create_time, 'YYYY/MM/DD') || '-'}}</span>
-        </div>
-        <div class="info-content">
-            <div class="info-block">
-                <div class="title">{{ $t('r.client') }}</div>
-                <p>{{ $t('n.customer_name') }}：{{detail.customer_name}}</p>
-                <p>{{ $t('search.vehicle_no') }}：{{detail.vehicle_no}}</p>
-                <p>{{ $t('r.repair_date') }}：{{$Util.timeFormat(detail.create_time)}}</p>
-                <div class="title">{{ $t('n.phone') }}</div>
-                <p>{{detail.customer_phone}}</p>
+    <div id="RepairInvoice" class="list-container">
+        <div class="content">
+            <div class="title-content">
+                <div class="title">{{ $t('r.settlement_list') }}</div>
+                <p>{{ $t('r.warranty') }}</p>
+                <span>{{ $Util.repairServiceFilter(detail.service_type, $i18n.locale) }}</span>
+                <p>{{ $t('r.serial_number') }}</p>
+                <span>{{ detail.uid || '-' }}</span>
+                <p>{{ $t('r.date') }}</p>
+                <span>{{ $Util.timeFormat(detail.create_time, 'YYYY/MM/DD') || '-' }}</span>
             </div>
-            <div class="info-block">
-                <div class="title">{{ $t('r.shop') }}</div>
-                <p>{{detail.repair_name}}</p>
-                <div class="title">{{ $t('n.phone') }}</div>
-                <p>{{detail.repair_phone}}</p>
+            <div class="info-content">
+                <div class="info-block">
+                    <div class="title">{{ $t('r.client') }}</div>
+                    <p>{{ $t('n.customer_name') }}：{{ detail.customer_name }}</p>
+                    <p>{{ $t('search.vehicle_no') }}：{{ detail.vehicle_no }}</p>
+                    <p>{{ $t('r.repair_date') }}：{{ $Util.timeFormat(detail.create_time) }}</p>
+                    <div class="title">{{ $t('n.phone') }}</div>
+                    <p>{{ detail.customer_phone }}</p>
+                </div>
+                <div class="info-block">
+                    <div class="title">{{ $t('r.shop') }}</div>
+                    <p>{{ detail.repair_name }}</p>
+                    <div class="title">{{ $t('n.phone') }}</div>
+                    <p>{{ detail.repair_phone }}</p>
+                </div>
+                <div class="info-block">
+                    <div class="title">{{ $t('r.man') }}</div>
+                    <p>{{ $t('e.name') }}：{{ detail.repair_user_name }}</p>
+                    <p>{{ $t('r.repair_way') }}：{{ $Util.repairChannelFilter(detail.channel, $i18n.locale) }}</p>
+                    <div class="title">{{ $t('n.phone') }}</div>
+                    <p>{{ detail.repair_user_phone }}</p>
+                </div>
             </div>
-            <div class="info-block">
-                <div class="title">{{ $t('r.man') }}</div>
-                <p>{{ $t('e.name') }}：{{detail.repair_user_name}}</p>
-                <p>{{ $t('r.repair_way') }}：{{$Util.repairChannelFilter(detail.channel, $i18n.locale)}}</p>
-                <div class="title">{{ $t('n.phone') }}</div>
-                <p>{{detail.repair_user_phone}}</p>
+            <div class="item-content">
+                <a-table
+                    :columns="tableColumns"
+                    :data-source="tableData"
+                    :scroll="{ x: true }"
+                    :row-key="record => record.id"
+                    :pagination="false"
+                >
+                    <template #headerCell="{ title }">
+                        {{ $t(title) }}
+                    </template>
+                    <template #bodyCell="{ column, text, record }">
+                        <template v-if="column.key === 'item'">
+                            {{ text || '-' }}
+                        </template>
+                        <template v-if="column.dataIndex === 'item_fault_id'">
+                            {{ faultMap[text] }}
+                        </template>
+                        <template v-if="column.dataIndex === 'amount'"> {{ text }} {{ $t('in.item') }} </template>
+                        <template v-if="column.dataIndex === 'price'"> € {{ $Util.countFilter(text) }} </template>
+                        <template v-if="column.dataIndex === 'sum_price'">
+                            € {{ $Util.countFilter(record.price * record.amount) }}
+                        </template>
+                        <template v-if="column.dataIndex === 'man_hour'">
+                            {{ $Util.countFilter(text) }}{{ $t('i.hours') }}
+                        </template>
+                    </template>
+                    <template #summary>
+                        <a-table-summary>
+                            <a-table-summary-row>
+                                <a-table-summary-cell :index="0" :col-span="2"></a-table-summary-cell>
+                                <a-table-summary-cell :index="1" :col-span="3">
+                                    <div class="sum-price" v-if="detail.service_type === SERVICE_TYPE.OUT_REPAIR_TIME">
+                                        <div class="row">
+                                            <p>{{ $t('r.parts_cost') }}</p>
+                                            <span>€{{ $Util.countFilter(sum_price) }}</span>
+                                        </div>
+                                        <div class="row">
+                                            <p>{{ $t('r.hour') }}</p>
+                                            <span>€{{ $Util.countFilter(settle.man_hour_money) }}</span>
+                                        </div>
+                                        <div class="row">
+                                            <p>{{ $t('i.total_price') }}</p>
+                                            <span>€{{ $Util.countFilter(sum_price + settle.man_hour_money) }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="sum-price" v-else>
+                                        <div class="row">
+                                            <p>{{ $t('i.total_price') }}</p>
+                                            <span>€{{ $Util.countFilter(sum_price) }}</span>
+                                        </div>
+                                        <div class="row">
+                                            <p>{{ $t('r.amount_paid') }}</p>
+                                            <span>€0</span>
+                                        </div>
+                                    </div>
+                                </a-table-summary-cell>
+                            </a-table-summary-row>
+                        </a-table-summary>
+                    </template>
+                </a-table>
             </div>
         </div>
-        <div class="item-content">
-            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                :row-key="record => record.id"  :pagination='false'>
-                <template #headerCell="{title}">
-                    {{ $t(title) }}
-                </template>
-                <template #bodyCell="{ column, text, record }">
-                    <template v-if="column.key === 'item'">
-                        {{ text || '-'}}
-                    </template>
-                    <template v-if="column.dataIndex === 'item_fault_id'">
-                        {{ faultMap[text] }}
-                    </template>
-                    <template v-if="column.dataIndex === 'amount'">
-                        {{ text }} {{ $t('in.item') }}
-                    </template>
-                    <template v-if="column.dataIndex === 'price'">
-                        € {{ $Util.countFilter(text) }}
-                    </template>
-                    <template v-if="column.dataIndex === 'sum_price'">
-                        € {{ $Util.countFilter(record.price * record.amount) }}
-                    </template>
-                    <template v-if="column.dataIndex === 'man_hour'">
-                        {{ $Util.countFilter(text) }}{{ $t('i.hours') }}
-                    </template>
-                </template>
-                <template #summary>
-                    <a-table-summary>
-                        <a-table-summary-row>
-                            <a-table-summary-cell :index="0" :col-span="2"></a-table-summary-cell>
-                            <a-table-summary-cell :index="1" :col-span="3">
-                                <div class="sum-price" v-if="detail.service_type === SERVICE_TYPE.OUT_REPAIR_TIME">
-                                    <div class="row"><p>{{ $t('r.parts_cost') }}</p> <span>€{{$Util.countFilter(sum_price)}}</span></div>
-                                    <div class="row"><p>{{ $t('r.hour') }}</p> <span>€{{$Util.countFilter(settle.man_hour_money)}}</span></div>
-                                    <div class="row"><p>{{ $t('i.total_price') }}</p> <span>€{{$Util.countFilter(sum_price + settle.man_hour_money)}}</span></div>
-                                </div>
-                                <div class="sum-price" v-else>
-                                    <div class="row"><p>{{ $t('i.total_price') }}</p> <span>€{{$Util.countFilter(sum_price)}}</span></div>
-                                    <div class="row"><p>{{ $t('r.amount_paid') }}</p><span>€0</span></div>
-                                </div>
-                            </a-table-summary-cell>
-                        </a-table-summary-row>
-                    </a-table-summary>
-                </template>
-            </a-table>
+        F
+        <div class="btn-area">
+            <a-button type="primary" @click="routerChange('export')">{{ $t('r.download') }}</a-button>
+            <a-button type="primary" @click="routerChange('back')" ghost>{{ $t('r.details') }}</a-button>
         </div>
-    </div>F
-    <div class="btn-area">
-        <a-button type="primary" @click="routerChange('export')">{{ $t('r.download') }}</a-button>
-        <a-button type="primary" @click="routerChange('back')" ghost>{{ $t('r.details') }}</a-button>
     </div>
-</div>
 </template>
 <script>
 import Core from '../../core';
-const SERVICE_TYPE = Core.Const.REPAIR.SERVICE_TYPE
+const SERVICE_TYPE = Core.Const.REPAIR.SERVICE_TYPE;
 export default {
     name: 'RepairInvoice',
     components: {},
@@ -105,56 +122,56 @@ export default {
             settle: {},
 
             tableData: [],
-            faultMap: {}
-        }
+            faultMap: {},
+        };
     },
     watch: {},
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: 'r.fault_name', dataIndex: 'item_fault_id'},
-                {title: 'r.material', dataIndex: ['item', 'name'], key: 'item'},
-                {title: 'i.amount', dataIndex: 'amount'},
-                {title: 'i.unit_price', dataIndex: 'price'},
-                {title: 'i.total_price', dataIndex: 'sum_price'},
-                {title: 'i.hours', dataIndex: 'man_hour'}
-            ]
+                { title: 'r.fault_name', dataIndex: 'item_fault_id' },
+                { title: 'r.material', dataIndex: ['item', 'name'], key: 'item' },
+                { title: 'i.amount', dataIndex: 'amount' },
+                { title: 'i.unit_price', dataIndex: 'price' },
+                { title: 'i.total_price', dataIndex: 'sum_price' },
+                { title: 'i.hours', dataIndex: 'man_hour' },
+            ];
             if (this.detail.service_type === SERVICE_TYPE.IN_REPAIR_TIME) {
-                tableColumns.pop()
+                tableColumns.pop();
             }
-            return tableColumns
+            return tableColumns;
         },
         sum_price() {
-            let sum = 0
+            let sum = 0;
             this.tableData.forEach(item => {
-                sum += item.amount * item.price
-            })
-            return sum
-        }
+                sum += item.amount * item.price;
+            });
+            return sum;
+        },
     },
     mounted() {
-        this.id = Number(this.$route.query.id) || 0
+        this.id = Number(this.$route.query.id) || 0;
         this.getRepairDetail();
         this.getSettleDetail();
         this.getTableData();
     },
     methods: {
         routerChange(type, item = {}) {
-            let routeUrl
+            let routeUrl;
             switch (type) {
-                case 'export':  // 导出页面
+                case 'export': // 导出页面
                     routeUrl = this.$router.resolve({
-                        path: "/repair/invoice-download",
+                        path: '/repair/invoice-download',
                         query: { id: this.id },
-                    })
-                    window.open(routeUrl.href, '_self')
+                    });
+                    window.open(routeUrl.href, '_self');
                     break;
-                case 'back':  // 编辑
+                case 'back': // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/repair/repair-detail",
+                        path: '/repair/repair-detail',
                         query: { id: this.id },
-                    })
-                    window.open(routeUrl.href, '_self')
+                    });
+                    window.open(routeUrl.href, '_self');
                     break;
             }
         },
@@ -163,15 +180,18 @@ export default {
             this.loading = true;
             Core.Api.Repair.detail({
                 id: this.id,
-            }).then(res => {
-                console.log('getRepairDetail res', res)
-                this.detail = res
-                this.getFaultData()
-            }).catch(err => {
-                console.log('getRepairDetail err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+            })
+                .then(res => {
+                    console.log('getRepairDetail res', res);
+                    this.detail = res;
+                    this.getFaultData();
+                })
+                .catch(err => {
+                    console.log('getRepairDetail err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         // 获取结算单详情
         getSettleDetail() {
@@ -179,9 +199,9 @@ export default {
                 source_type: 10,
                 source_id: this.id,
             }).then(res => {
-                console.log('getSettleDetail res:', res)
-                this.settle = res.detail
-            })
+                console.log('getSettleDetail res:', res);
+                this.settle = res.detail;
+            });
         },
 
         getFaultData() {
@@ -189,40 +209,45 @@ export default {
             Core.Api.Fault.list({
                 org_id: this.detail.org_id,
                 org_type: this.detail.org_type,
-            }).then(res => {
-                console.log("getFaultData res:", res)
-                let list = res.list;
-                let map = {};
-                for (const item of list) {
-                    map[item.id] = item.name
-                }
-                console.log('getFaultData faultMap:', map)
-                this.faultMap = map;
-            }).catch(err => {
-                console.log('getFaultData err:', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+            })
+                .then(res => {
+                    console.log('getFaultData res:', res);
+                    let list = res.list;
+                    let map = {};
+                    for (const item of list) {
+                        map[item.id] = item.name;
+                    }
+                    console.log('getFaultData faultMap:', map);
+                    this.faultMap = map;
+                })
+                .catch(err => {
+                    console.log('getFaultData err:', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
-        getTableData() {  // 获取 表格 数据
+        getTableData() {
+            // 获取 表格 数据
             this.loading = true;
             Core.Api.RepairItem.list({
-                repair_order_id: this.id
-            }).then(res => {
-                console.log("getTableData res", res)
-                this.tableData = res.list;
-            }).catch(err => {
-                console.log('getTableData err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+                repair_order_id: this.id,
+            })
+                .then(res => {
+                    console.log('getTableData res', res);
+                    this.tableData = res.list;
+                })
+                .catch(err => {
+                    console.log('getTableData err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
 
-
         // 打印
-        handleExport() {
-        }
-    }
+        handleExport() {},
+    },
 };
 </script>
 
@@ -232,11 +257,11 @@ export default {
     box-sizing: border-box;
     .content {
         border-radius: 1px;
-        border: 1px solid #E6EAEE;
+        border: 1px solid #e6eaee;
         padding: 30px 32px 100px;
         box-sizing: border-box;
         .title-content {
-            background: #F8FAFC;
+            background: #f8fafc;
             padding: 35px 0 32px 50px;
             box-sizing: border-box;
             font-size: 12px;
@@ -277,7 +302,7 @@ export default {
                 p {
                     font-size: 12px;
                     line-height: 17px;
-                    color: #8090A6;
+                    color: #8090a6;
                     + p {
                         margin-top: 8px;
                     }
@@ -293,7 +318,7 @@ export default {
             }
             .ant-table {
                 th.ant-table-cell {
-                    background-color: #F8FAFC !important;
+                    background-color: #f8fafc !important;
                 }
             }
             .ant-table-summary {
@@ -317,13 +342,15 @@ export default {
                     width: 100%;
                     height: 20px;
                     line-height: 20px;
-                    p, span {
+                    p,
+                    span {
                         font-size: 12px;
                         color: #000022;
                         font-weight: 400;
                     }
                     &:last-child {
-                        p, span {
+                        p,
+                        span {
                             font-weight: 500;
                         }
                     }

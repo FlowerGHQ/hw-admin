@@ -6,7 +6,6 @@
  * @Description: 请填写简介
  */
 export default {
-
     zh: {
         // 支付单号
         order_number: '支付单号',
@@ -33,5 +32,5 @@ export default {
         // 订单编号
         order_number_1: 'Order Number',
         payment_time: 'Payment Time',
-    }
-}
+    },
+};

@@ -18,10 +18,14 @@
                     <div class="day-item">
                         <div class="panel">
                             <div class="top">
-                                <span class="item-title">{{ $Util.CRMActionRecordTypeMapFilter(item.type, $i18n.locale) ||
-                                    '-' }}</span>
-                                <span class="item-time"><i class=""
-                                        style="color:blue" />{{ $Util.timeFilter(item.create_time) || '-' }}</span>
+                                <span class="item-title">{{
+                                    $Util.CRMActionRecordTypeMapFilter(item.type, $i18n.locale) || '-'
+                                }}</span>
+                                <span class="item-time"
+                                    ><i class="" style="color: blue" />{{
+                                        $Util.timeFilter(item.create_time) || '-'
+                                    }}</span
+                                >
                             </div>
                             <div class="content">
                                 <div class="line">{{ item.content }}</div>
@@ -40,7 +44,7 @@
 
 <script>
 import Core from '../../../core';
-const USER_TYPE = Core.Const.USER.TYPE
+const USER_TYPE = Core.Const.USER.TYPE;
 
 export default {
     name: 'ActionRecord',
@@ -51,13 +55,12 @@ export default {
         },
         targetId: {
             type: Number,
-            default: 0
+            default: 0,
         },
         targetType: {
             type: Number,
-            default: 0
+            default: 0,
         },
-
     },
     data() {
         return {
@@ -91,13 +94,13 @@ export default {
     watch: {},
     computed: {
         lang() {
-            return this.$store.state.lang
+            return this.$store.state.lang;
         },
     },
     mounted() {
         if (this.targetType == Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.ORDER) {
-            this.searchType = this.searchType.slice(1)
-            this.activeType = '2'
+            this.searchType = this.searchType.slice(1);
+            this.activeType = '2';
         }
 
         this.getCrmActionRecordTableData();
@@ -107,9 +110,9 @@ export default {
             let today = this.$Util.timeFormat(new Date().value() / 1000, 'YYYY/MM/DD');
             let day = this.$Util.timeFormat(time, 'YYYY/MM/DD');
             if (today === day) {
-                return `今天 ${this.$Util.timeFormat(time, 'mm:ss')}`
+                return `今天 ${this.$Util.timeFormat(time, 'mm:ss')}`;
             } else {
-                return this.$Util.timeFormat(time, 'YYYY/MM/DD mm:ss')
+                return this.$Util.timeFormat(time, 'YYYY/MM/DD mm:ss');
             }
         },
         // 切换类型
@@ -117,136 +120,240 @@ export default {
             this.activeType = item.key;
         },
         // 点击添加{{ this.$Util.CRMOrderYesNoFilter(1,this.lang) }}
-        clickAdd() { },
+        clickAdd() {},
         // 点击编辑
-        clickEidt() { },
+        clickEidt() {},
         // 点击搜索
         clickSearch(key) {
             console.log('click search >>', key);
         },
-        pageChange(curr) {    // 页码改变
-            this.currPage = curr
-            this.getTableData()
+        pageChange(curr) {
+            // 页码改变
+            this.currPage = curr;
+            this.getTableData();
         },
-        pageSizeChange(current, size) {    // 页码尺寸改变
-            console.log('pageSizeChange size:', size)
-            this.pageSize = size
-            this.getTableData()
+        pageSizeChange(current, size) {
+            // 页码尺寸改变
+            console.log('pageSizeChange size:', size);
+            this.pageSize = size;
+            this.getTableData();
         },
-        getCRMTrackRecordTableData() {    // 获取 跟进记录
+        getCRMTrackRecordTableData() {
+            // 获取 跟进记录
             this.loading = true;
             Core.Api.CRMTrackRecord.list({
                 target_id: this.targetId,
                 target_type: this.targetType,
                 page: this.currPage,
-                page_size: this.pageSize
-            }).then(res => {
-                console.log("getTableData res", res)
-                this.total = res.count;
-                this.tableData = res.list;
-            }).catch(err => {
-                console.log('getTableData err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+                page_size: this.pageSize,
+            })
+                .then(res => {
+                    console.log('getTableData res', res);
+                    this.total = res.count;
+                    this.tableData = res.list;
+                })
+                .catch(err => {
+                    console.log('getTableData err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
-        getCrmActionRecordTableData() {    // 获取 表格 数据
+        getCrmActionRecordTableData() {
+            // 获取 表格 数据
             this.loading = true;
             Core.Api.CrmActionRecord.list({
                 target_id: this.targetId,
                 target_type: this.targetType,
                 page: this.currPage,
-                page_size: this.pageSize
-            }).then(res => {
-                console.log("getTableData res", res)
-                this.total = res.count;
-                res.list.forEach(it => {
-                    it.content = this.actionParsing(it.type, it, it.operator_name)
+                page_size: this.pageSize,
+            })
+                .then(res => {
+                    console.log('getTableData res', res);
+                    this.total = res.count;
+                    res.list.forEach(it => {
+                        it.content = this.actionParsing(it.type, it, it.operator_name);
+                    });
+                    console.log('getTableData res2', res);
+                    this.recordTableData = res.list;
                 })
-                console.log("getTableData res2", res)
-                this.recordTableData = res.list;
-            }).catch(err => {
-                console.log('getTableData err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+                .catch(err => {
+                    console.log('getTableData err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         actionParsing(type, record, user) {
             const content = record.content;
-            if (content === "") {
-                return ""
+            if (content === '') {
+                return '';
             }
-            let item = {}
+            let item = {};
             try {
-                item = JSON.parse(content)
+                item = JSON.parse(content);
             } catch (e) {
-                console.log("e", e)
+                console.log('e', e);
             }
             // console.log("type", type)
-            console.log("item9999", item)
+            console.log('item9999', item);
             if (type >= 1000 && type < 2000) {
                 switch (type) {
-                    case this.TYPE.CREATE_CUSTOMER: return " 创建了该客户"; break;
-                    case this.TYPE.DELETE_CUSTOMER: return " 将该客户删除了"; break;
-                    case this.TYPE.OBTAIN_CUSTOMER: return " 领取了该客户"; break;
-                    case this.TYPE.RETURN_POOL: return " 将该客户退回了公海"; break;
-                    case this.TYPE.CREATE_ORDER_INCOME: return " 创建了新的回款单"; break;
-                    case this.TYPE.DELETE_ORDER_INCOME: return " 删除了回款单"; break;
-                    case this.TYPE.AUDIT_PASS: return "审核人 " + user + " 审核通过"; break;
-                    case this.TYPE.AUDIT_REFUSE: return "审核人 " + user + " 审核未通过"; break;
-                    case this.TYPE.MODIFYING_REGION: return item.old_value === ''? `将区域更新为【${item.new_value||""}】`:`将区域【${item.old_value||''}】更新为【${item.new_value||''}】`; break;
+                    case this.TYPE.CREATE_CUSTOMER:
+                        return ' 创建了该客户';
+                        break;
+                    case this.TYPE.DELETE_CUSTOMER:
+                        return ' 将该客户删除了';
+                        break;
+                    case this.TYPE.OBTAIN_CUSTOMER:
+                        return ' 领取了该客户';
+                        break;
+                    case this.TYPE.RETURN_POOL:
+                        return ' 将该客户退回了公海';
+                        break;
+                    case this.TYPE.CREATE_ORDER_INCOME:
+                        return ' 创建了新的回款单';
+                        break;
+                    case this.TYPE.DELETE_ORDER_INCOME:
+                        return ' 删除了回款单';
+                        break;
+                    case this.TYPE.AUDIT_PASS:
+                        return '审核人 ' + user + ' 审核通过';
+                        break;
+                    case this.TYPE.AUDIT_REFUSE:
+                        return '审核人 ' + user + ' 审核未通过';
+                        break;
+                    case this.TYPE.MODIFYING_REGION:
+                        return item.old_value === ''
+                            ? `将区域更新为【${item.new_value || ''}】`
+                            : `将区域【${item.old_value || ''}】更新为【${item.new_value || ''}】`;
+                        break;
                 }
             } else if (type >= 2000 && type < 3000) {
                 switch (type) {
-                    case this.TYPE.DISTRIBUTE_CUSTOMER: return user + " 将客户分配给了: " + item.user_name; break;
-                    case this.TYPE.CUSTOMER_TO_OTHERS: return user + " 将客户移交给了: " + item.user_name; break;
-                    case this.TYPE.CREATE_BO: return user + " 创建了新的商机：" + item.bo_name; break;
-                    case this.TYPE.DELETE_BO: return user + " 删除了商机：" + item.bo_name; break;
-                    case this.TYPE.UPDATE_BO_STATUS: return user + " 更新了商机阶段：" + item.bo_status; break;
-                    case this.TYPE.BO_TO_OTHERS: return user + " 将商机移交给了: " + item.user_name; break;
-                    case this.TYPE.CREATE_ORDER: return user + " 创建了新的合同订单: " + item.order_name; break;
-                    case this.TYPE.DELETE_ORDER: return user + " 删除了合同订单: " + item.order_name; break;
-                    case this.TYPE.REFUND: return user + " 向客户退款: " + item.money + " 元"; break;
-                    case this.TYPE.CANCEL_REFUND: return user + " 取消退款: " + item.money + " 元"; break;
-                    case this.TYPE.CREATE_CONTACT: return user + " 创建了新的联系人: " + item.contact_name; break;
-                    case this.TYPE.ADD_CONTACT: return user + " 添加了联系人: " + item.contact_name; break;
-                    case this.TYPE.DELETE_CONTACT: return user + " 删除了联系人: " + item.contact_name; break;
-                    case this.TYPE.ADD_MEMBER: return user + " 添加团队成员: " + item.user_name; break;
-                    case this.TYPE.DELETE_MEMBER: return user + " 删除团队成员: " + item.user_name; break;
-                    case this.TYPE.UPDATE_MEMBER: return user + " 修改团队成员 " + item.user_name + "的权限"; break;
-                    case this.TYPE.ADD_TRACK_RECORD: return user + " 添加了新的跟进记录：" + item.track_content; break;
-                    case this.TYPE.DELETE_TRACK_RECORD: return user + " 删除了跟进记录：" + item.track_content; break;
+                    case this.TYPE.DISTRIBUTE_CUSTOMER:
+                        return user + ' 将客户分配给了: ' + item.user_name;
+                        break;
+                    case this.TYPE.CUSTOMER_TO_OTHERS:
+                        return user + ' 将客户移交给了: ' + item.user_name;
+                        break;
+                    case this.TYPE.CREATE_BO:
+                        return user + ' 创建了新的商机：' + item.bo_name;
+                        break;
+                    case this.TYPE.DELETE_BO:
+                        return user + ' 删除了商机：' + item.bo_name;
+                        break;
+                    case this.TYPE.UPDATE_BO_STATUS:
+                        return user + ' 更新了商机阶段：' + item.bo_status;
+                        break;
+                    case this.TYPE.BO_TO_OTHERS:
+                        return user + ' 将商机移交给了: ' + item.user_name;
+                        break;
+                    case this.TYPE.CREATE_ORDER:
+                        return user + ' 创建了新的合同订单: ' + item.order_name;
+                        break;
+                    case this.TYPE.DELETE_ORDER:
+                        return user + ' 删除了合同订单: ' + item.order_name;
+                        break;
+                    case this.TYPE.REFUND:
+                        return user + ' 向客户退款: ' + item.money + ' 元';
+                        break;
+                    case this.TYPE.CANCEL_REFUND:
+                        return user + ' 取消退款: ' + item.money + ' 元';
+                        break;
+                    case this.TYPE.CREATE_CONTACT:
+                        return user + ' 创建了新的联系人: ' + item.contact_name;
+                        break;
+                    case this.TYPE.ADD_CONTACT:
+                        return user + ' 添加了联系人: ' + item.contact_name;
+                        break;
+                    case this.TYPE.DELETE_CONTACT:
+                        return user + ' 删除了联系人: ' + item.contact_name;
+                        break;
+                    case this.TYPE.ADD_MEMBER:
+                        return user + ' 添加团队成员: ' + item.user_name;
+                        break;
+                    case this.TYPE.DELETE_MEMBER:
+                        return user + ' 删除团队成员: ' + item.user_name;
+                        break;
+                    case this.TYPE.UPDATE_MEMBER:
+                        return user + ' 修改团队成员 ' + item.user_name + '的权限';
+                        break;
+                    case this.TYPE.ADD_TRACK_RECORD:
+                        return user + ' 添加了新的跟进记录：' + item.track_content;
+                        break;
+                    case this.TYPE.DELETE_TRACK_RECORD:
+                        return user + ' 删除了跟进记录：' + item.track_content;
+                        break;
                     // case this.TYPE.ADD_LABEL: return user + " 添加了标签: " + item.label; break;
                     // case this.TYPE.DELETE_LABEL: return user + " 删除了标签: " + item.label; break;
-                    case this.TYPE.CREATE_TEST_DRIVE_ORDER: return user + " 新建试驾单，试驾时间：" + this.$Util.timeFilter(item.time); break;
-                    case this.TYPE.DELETE_TEST_DRIVE_ORDER: return user + " 删除试驾单，原定试驾时间：：" + this.$Util.timeFilter(item.time); break;
-                    case this.TYPE.TEST_DRIVE_FINISH: return user + " 完成试驾：" + item.track_content; break;
-                    case this.TYPE.TEST_DRIVE_CANCEL: return user + " 取消试驾，原定试驾时间：：" + this.$Util.timeFilter(item.time); break;
-                    case this.TYPE.TEST_DRIVE_EXPIRED: return user + " 试驾过期，原定试驾时间：：" + this.$Util.timeFilter(item.time); break;
-                    case this.TYPE.CREATE_PORTRAIT: return user + "新建用户画像";
-                    case this.TYPE.DELETE_PORTRAIT: return user + " 删除用户画像"; break;
+                    case this.TYPE.CREATE_TEST_DRIVE_ORDER:
+                        return user + ' 新建试驾单，试驾时间：' + this.$Util.timeFilter(item.time);
+                        break;
+                    case this.TYPE.DELETE_TEST_DRIVE_ORDER:
+                        return user + ' 删除试驾单，原定试驾时间：：' + this.$Util.timeFilter(item.time);
+                        break;
+                    case this.TYPE.TEST_DRIVE_FINISH:
+                        return user + ' 完成试驾：' + item.track_content;
+                        break;
+                    case this.TYPE.TEST_DRIVE_CANCEL:
+                        return user + ' 取消试驾，原定试驾时间：：' + this.$Util.timeFilter(item.time);
+                        break;
+                    case this.TYPE.TEST_DRIVE_EXPIRED:
+                        return user + ' 试驾过期，原定试驾时间：：' + this.$Util.timeFilter(item.time);
+                        break;
+                    case this.TYPE.CREATE_PORTRAIT:
+                        return user + '新建用户画像';
+                    case this.TYPE.DELETE_PORTRAIT:
+                        return user + ' 删除用户画像';
+                        break;
                 }
             } else if (type >= 3000 && type < 4000) {
-                item = item.content
-                let con = ""
+                item = item.content;
+                let con = '';
                 item.forEach(it => {
-                  switch (it.key) {
-                    case "crm_o.pay_address" :
-                        if(!it.old_value) {
-                            con += "将 " + this.$t(it.key)+" 从【 】更新为【" + this.valueParsing(it.key, it.new_value) + "】, "
-                        } else if (!it.new_value) {
-                            con += "将 " + this.$t(it.key)+" 从【" + this.valueParsing(it.key, it.old_value ? it.old_value : '') + "】更新为【 】, "
-                        } else {
-                            con += "将 " + this.$t(it.key)+" 从【" + this.valueParsing(it.key, it.old_value ? it.old_value : '') + "】更新为【" + this.valueParsing(it.key, it.new_value) + "】, "
-                        }
-                        break;
-                    // case "crm_t.contact_customer_id" :
-                    // case "crm_c.group" :
-                    //       con += "将 " + this.$t(it.key)+" 从【" + record.old_value + "】更新为【" + record.new_value + "】, "; break;
-                    default :  con += "将 " + this.$t(it.key)+" 从【" + this.valueParsing(it.key, it.old_value) + "】更新为【" + this.valueParsing(it.key, it.new_value) + "】, "
-                  }
-                })
-                return con
+                    switch (it.key) {
+                        case 'crm_o.pay_address':
+                            if (!it.old_value) {
+                                con +=
+                                    '将 ' +
+                                    this.$t(it.key) +
+                                    ' 从【 】更新为【' +
+                                    this.valueParsing(it.key, it.new_value) +
+                                    '】, ';
+                            } else if (!it.new_value) {
+                                con +=
+                                    '将 ' +
+                                    this.$t(it.key) +
+                                    ' 从【' +
+                                    this.valueParsing(it.key, it.old_value ? it.old_value : '') +
+                                    '】更新为【 】, ';
+                            } else {
+                                con +=
+                                    '将 ' +
+                                    this.$t(it.key) +
+                                    ' 从【' +
+                                    this.valueParsing(it.key, it.old_value ? it.old_value : '') +
+                                    '】更新为【' +
+                                    this.valueParsing(it.key, it.new_value) +
+                                    '】, ';
+                            }
+                            break;
+                        // case "crm_t.contact_customer_id" :
+                        // case "crm_c.group" :
+                        //       con += "将 " + this.$t(it.key)+" 从【" + record.old_value + "】更新为【" + record.new_value + "】, "; break;
+                        default:
+                            con +=
+                                '将 ' +
+                                this.$t(it.key) +
+                                ' 从【' +
+                                this.valueParsing(it.key, it.old_value) +
+                                '】更新为【' +
+                                this.valueParsing(it.key, it.new_value) +
+                                '】, ';
+                    }
+                });
+                return con;
                 // switch (type) {
                 //     case this.TYPE.REVISE_CUSTOMER: return user + " 将客户分配给了 "; break;
                 //     case this.TYPE.REVISE_CONTACT: return user + " 将客户分配给了 "; break;
@@ -284,65 +391,99 @@ export default {
             //         console.log("con", user + Core.Util.CRMActionRecordTypeMapFilter(type, this.lang) + con)
             //         return user + con
             // }
-            return item
+            return item;
         },
         valueParsing(key, value) {
-           
             switch (key) {
                 // 客户
-                case "crm_c.type": return this.$Util.CRMCustomerTypeFilter(value, this.lang)
-                case "crm_c.level": return this.$Util.CRMCustomerLevelFilter(value, this.lang)
-                case "crm_c.industry": return this.$Util.CRMCustomerIndustryFilter(value, this.lang)
-                case "crm_c.gender": return this.$Util.CRMCustomerGenderFilter(value, this.lang)
-                case "crm_c.marital_status": return this.$Util.CRMCustomerMaritalStatusFilter(value, this.lang)
-                case "crm_c.company_size": return this.$Util.CRMCompanySizeMapMapFilter(value, this.lang)
-                case "crm_c.purchase_intent": return this.$Util.CRMCustomerPurchaseIntentFilter(value, this.lang)
-                case "crm_c.test_drive_intent": return this.$Util.CRMCustomerTestDriveIntentFilter(value, this.lang)
+                case 'crm_c.type':
+                    return this.$Util.CRMCustomerTypeFilter(value, this.lang);
+                case 'crm_c.level':
+                    return this.$Util.CRMCustomerLevelFilter(value, this.lang);
+                case 'crm_c.industry':
+                    return this.$Util.CRMCustomerIndustryFilter(value, this.lang);
+                case 'crm_c.gender':
+                    return this.$Util.CRMCustomerGenderFilter(value, this.lang);
+                case 'crm_c.marital_status':
+                    return this.$Util.CRMCustomerMaritalStatusFilter(value, this.lang);
+                case 'crm_c.company_size':
+                    return this.$Util.CRMCompanySizeMapMapFilter(value, this.lang);
+                case 'crm_c.purchase_intent':
+                    return this.$Util.CRMCustomerPurchaseIntentFilter(value, this.lang);
+                case 'crm_c.test_drive_intent':
+                    return this.$Util.CRMCustomerTestDriveIntentFilter(value, this.lang);
 
                 // 商机
-                case "crm_b.source": return this.$Util.CRMBoSourceMapFilter(value, this.lang)
-                case "crm_b.track_status": return this.$Util.CRMTrackStatusMapFilter(value, this.lang)
-                case "crm_b.lost_reason": return this.$Util.CRMBoLostReasonFilter(value, this.lang)
+                case 'crm_b.source':
+                    return this.$Util.CRMBoSourceMapFilter(value, this.lang);
+                case 'crm_b.track_status':
+                    return this.$Util.CRMTrackStatusMapFilter(value, this.lang);
+                case 'crm_b.lost_reason':
+                    return this.$Util.CRMBoLostReasonFilter(value, this.lang);
                 // 订单
-                case "crm_o.type" : return this.$Util.CRMOrderTypeFilter(value, this.lang)
-                case "crm_o.status" : return this.$Util.CRMOrderStatusFilter(value, this.lang)
-                case "crm_o.pay_address" : return this.$Util.CRMAddressLogFilter(value, this.lang)
+                case 'crm_o.type':
+                    return this.$Util.CRMOrderTypeFilter(value, this.lang);
+                case 'crm_o.status':
+                    return this.$Util.CRMOrderStatusFilter(value, this.lang);
+                case 'crm_o.pay_address':
+                    return this.$Util.CRMAddressLogFilter(value, this.lang);
                 // 回款单
-                case "crm_oi.type": return this.$Util.CRMOrderIncomeTypeFilter(value, this.lang)
-                case "crm_oi.status": return this.$Util.CRMOrderIncomeStatusFilter(value, this.lang)
-                case "crm_oi.payment_type": return this.$Util.CRMOrderIncomePaymentTypeFilter(value, this.lang)
+                case 'crm_oi.type':
+                    return this.$Util.CRMOrderIncomeTypeFilter(value, this.lang);
+                case 'crm_oi.status':
+                    return this.$Util.CRMOrderIncomeStatusFilter(value, this.lang);
+                case 'crm_oi.payment_type':
+                    return this.$Util.CRMOrderIncomePaymentTypeFilter(value, this.lang);
                 // 退款记录
-                case "crm_r.type": return this.$Util.CRMRefundRecordTypeMapFilter(value, this.lang)
+                case 'crm_r.type':
+                    return this.$Util.CRMRefundRecordTypeMapFilter(value, this.lang);
                 // 跟进记录
-                case "crm_t.type": return this.$Util.CRMTrackRecordFilter(value, this.lang)
-                case "crm_t.track_time": return this.$Util.timeFilter(value)
-                case "crm_t.next_track_time": return this.$Util.timeFilter(value)
-                case "crm_t.intent": return this.$Util.CRMTrackRecordIntentFilter(value, this.lang)
+                case 'crm_t.type':
+                    return this.$Util.CRMTrackRecordFilter(value, this.lang);
+                case 'crm_t.track_time':
+                    return this.$Util.timeFilter(value);
+                case 'crm_t.next_track_time':
+                    return this.$Util.timeFilter(value);
+                case 'crm_t.intent':
+                    return this.$Util.CRMTrackRecordIntentFilter(value, this.lang);
 
                 // 试驾单
-                case "crm_d.test_drive_time": return this.$Util.timeFilter(value)
+                case 'crm_d.test_drive_time':
+                    return this.$Util.timeFilter(value);
 
                 // 用户画像
-                case "crm_c_p.buy_type": return this.$Util.CRMTestDriveBuyTypeMapFilter(value, this.lang)
-                case "crm_c_p.travel_range": return this.$Util.CRMTestDriveTravelRangeMapFilter(value, this.lang)
-                case "crm_c_p.driver_license": return this.$Util.CRMTestDriveDriverLicenseMapFilter(value, this.lang)
-                case "crm_c_p.moto_tour_intention": return this.$Util.CRMTestDriveMotoExpMapFilter(value, this.lang)
-                case "crm_c_p.pay_attention_to": return this.$Util.CRMTestDrivePayAttentionToMapFilter(value, this.lang)
-                case "crm_c_p.green_energy_understand": return this.$Util.CRMTestDriveGreenEnergyUnderstandMapFilter(value, this.lang)
-                case "crm_c_p.electric_two_wheeler_understand": return this.$Util.CRMTestDriveElectricTwoWheelerUnderstandMapFilter(value, this.lang)
-                case "crm_c_p.rental_demand": return this.$Util.CRMTestDriveRentalDemandMapFilter(value, this.lang)
-                case "crm_c_p.green_car_owner": return this.$Util.CRMTestDriveGreenCarOwnerMapFilter(value, this.lang)
-                case "crm_c_p.ride_exp": return this.$Util.CRMRidingFilter(value, this.lang)
-                case "crm_c_p.flag_seek_cooperation": return this.$Util.CRMTestDriveMotoExpMapFilter(value, this.lang)
-                case "crm_c_p.flag_kol": return this.$Util.CRMTestDriveMotoExpMapFilter(value, this.lang)
-                case "crm_c_p.moto_owner": return this.$Util.CRMTestDriveMotoExpMapFilter(value, this.lang)
-                case "crm_c_p.driver_license": return this.$Util.CRMTestDriveMotoExpMapFilter(value, this.lang)
-
+                case 'crm_c_p.buy_type':
+                    return this.$Util.CRMTestDriveBuyTypeMapFilter(value, this.lang);
+                case 'crm_c_p.travel_range':
+                    return this.$Util.CRMTestDriveTravelRangeMapFilter(value, this.lang);
+                case 'crm_c_p.driver_license':
+                    return this.$Util.CRMTestDriveDriverLicenseMapFilter(value, this.lang);
+                case 'crm_c_p.moto_tour_intention':
+                    return this.$Util.CRMTestDriveMotoExpMapFilter(value, this.lang);
+                case 'crm_c_p.pay_attention_to':
+                    return this.$Util.CRMTestDrivePayAttentionToMapFilter(value, this.lang);
+                case 'crm_c_p.green_energy_understand':
+                    return this.$Util.CRMTestDriveGreenEnergyUnderstandMapFilter(value, this.lang);
+                case 'crm_c_p.electric_two_wheeler_understand':
+                    return this.$Util.CRMTestDriveElectricTwoWheelerUnderstandMapFilter(value, this.lang);
+                case 'crm_c_p.rental_demand':
+                    return this.$Util.CRMTestDriveRentalDemandMapFilter(value, this.lang);
+                case 'crm_c_p.green_car_owner':
+                    return this.$Util.CRMTestDriveGreenCarOwnerMapFilter(value, this.lang);
+                case 'crm_c_p.ride_exp':
+                    return this.$Util.CRMRidingFilter(value, this.lang);
+                case 'crm_c_p.flag_seek_cooperation':
+                    return this.$Util.CRMTestDriveMotoExpMapFilter(value, this.lang);
+                case 'crm_c_p.flag_kol':
+                    return this.$Util.CRMTestDriveMotoExpMapFilter(value, this.lang);
+                case 'crm_c_p.moto_owner':
+                    return this.$Util.CRMTestDriveMotoExpMapFilter(value, this.lang);
+                case 'crm_c_p.driver_license':
+                    return this.$Util.CRMTestDriveMotoExpMapFilter(value, this.lang);
             }
-            return value
-        }
-
-    }
+            return value;
+        },
+    },
 };
 </script>
 
@@ -400,7 +541,7 @@ export default {
 
                 // border: 1px solid red;
                 &:before {
-                    content: "";
+                    content: '';
                     position: absolute;
                     // top: 5px;
                     left: 0;
@@ -411,13 +552,13 @@ export default {
                 }
 
                 &:after {
-                    content: "";
+                    content: '';
                     position: absolute;
                     left: 4px;
                     top: 14px;
                     width: 1px;
                     height: 100%;
-                    border-left: 2px solid #F8FAFC;
+                    border-left: 2px solid #f8fafc;
                 }
 
                 .tag-bg {
@@ -432,7 +573,7 @@ export default {
                     font-size: 12px;
 
                     &:before {
-                        content: "";
+                        content: '';
                         position: absolute;
                         left: -10px;
                         width: 0;
@@ -446,7 +587,7 @@ export default {
                 .panel {
                     padding: 12px;
                     width: 100%;
-                    background-color: #F8FAFC;
+                    background-color: #f8fafc;
 
                     .top {
                         .flex(space-between, center, row);
@@ -494,7 +635,5 @@ export default {
             }
         }
     }
-
 }
-
 </style>

@@ -22,8 +22,9 @@
                         <a-checkbox-group v-model:value="CheckGroupValue" @change="handleCheckChange">
                             <a-row v-if="options.length != 0">
                                 <a-col :span="24" v-for="item in checkBoxOptions">
-                                    <a-checkbox v-if="item.key !== 'operation'"
-                                        :value="item.dataIndex">{{ $t(item.title) }}</a-checkbox>
+                                    <a-checkbox v-if="item.key !== 'operation'" :value="item.dataIndex">{{
+                                        $t(item.title)
+                                    }}</a-checkbox>
                                 </a-col>
                             </a-row>
                         </a-checkbox-group>
@@ -42,98 +43,98 @@
         </div>
     </div>
 </template>
- 
+
 <script setup>
-import { ref } from "@vue/reactivity"
-import { computed, onMounted } from "@vue/runtime-core"
+import { ref } from '@vue/reactivity';
+import { computed, onMounted } from '@vue/runtime-core';
 
 const props = defineProps({
     title: {
         type: String,
-        default: '显示这些字段'
+        default: '显示这些字段',
     },
     width: {
         type: String,
-        default: '240px'
+        default: '240px',
     },
     height: {
         type: String,
-        default: '300px'
+        default: '300px',
     },
     options: {
         type: Array,
-        default: () => []
+        default: () => [],
     },
     dataOptions: {
         type: Array,
-        default: () => []
-    }
-})
+        default: () => [],
+    },
+});
 
-const emits = defineEmits(['configOptions'])
+const emits = defineEmits(['configOptions']);
 
 /* data */
-const CheckGroupValue = ref([])
+const CheckGroupValue = ref([]);
 /* 多选选项数组 */
-const checkBoxOptions = ref([])
+const checkBoxOptions = ref([]);
 
-const isCheckOptions = ref([])
+const isCheckOptions = ref([]);
 /* computed */
 // 计算中间选择内容的高度
 const contentHeight = computed(() => {
-    return props.height.replace(/px/g, '') - 60
-})
+    return props.height.replace(/px/g, '') - 60;
+});
 
 // 选项改变的回调
-function handleCheckChange(){
-    console.log('CheckGroupValue:',CheckGroupValue.value);
+function handleCheckChange() {
+    console.log('CheckGroupValue:', CheckGroupValue.value);
 }
 
 // 保存配置
-function submitCheck(){
-    props.options.forEach( e =>{
-        CheckGroupValue.value.forEach( v =>{
-            if(v === e.dataIndex){
-                isCheckOptions.value.push(e)
-            }            
-        })
-        if(e.key == "operation"){
-            isCheckOptions.value.push(e)
+function submitCheck() {
+    props.options.forEach(e => {
+        CheckGroupValue.value.forEach(v => {
+            if (v === e.dataIndex) {
+                isCheckOptions.value.push(e);
+            }
+        });
+        if (e.key == 'operation') {
+            isCheckOptions.value.push(e);
         }
-    })
-    emits('configOptions',isCheckOptions.value)
+    });
+    emits('configOptions', isCheckOptions.value);
 }
 
 // 重置配置
-function resetCheck(){
+function resetCheck() {
     // checkBoxOptions.value.forEach( val =>{
     //     if(val.key !== 'operation'){
     //         CheckGroupValue.value.push(val.dataIndex)
     //     }
     // })
-    CheckGroupValue.value = []
-    console.log('CheckGroupValue',CheckGroupValue.value);
+    CheckGroupValue.value = [];
+    console.log('CheckGroupValue', CheckGroupValue.value);
 }
 
 /* methods */
 onMounted(() => {
     console.log('options', props.options);
-    checkBoxOptions.value = props.options
-    console.log('props.dataOptions',props.dataOptions);
-    if(props.dataOptions.length){
-        props.dataOptions.forEach( item =>{
-            CheckGroupValue.value.push(item.dataIndex)
-        })
-    }else{
-        props.options.forEach( val =>{
-            CheckGroupValue.value.push(val.dataIndex)
-        })
+    checkBoxOptions.value = props.options;
+    console.log('props.dataOptions', props.dataOptions);
+    if (props.dataOptions.length) {
+        props.dataOptions.forEach(item => {
+            CheckGroupValue.value.push(item.dataIndex);
+        });
+    } else {
+        props.options.forEach(val => {
+            CheckGroupValue.value.push(val.dataIndex);
+        });
     }
-    console.log('CheckGroupValue.value',CheckGroupValue.value);
-})
+    console.log('CheckGroupValue.value', CheckGroupValue.value);
+});
 </script>
- 
-<style lang='less' scoped>
+
+<style lang="less" scoped>
 /*
     定位样式可以在外面引用组件自己定位
     例  <ColumnConfiguration v-if="ConfigurationBool" class="Configuration-style"/> 
@@ -181,9 +182,9 @@ onMounted(() => {
         justify-content: end;
         height: 60px;
         border-top: 1px solid #f0f0f0;
-        .btn-mr{
+        .btn-mr {
             margin-right: 20px;
         }
     }
 }
-</style>  
+</style>

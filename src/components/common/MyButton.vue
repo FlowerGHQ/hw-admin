@@ -1,52 +1,57 @@
 <template>
-    <div id="my-button" :class="[disabled ? 'disabled' : '', type]" :style="{ padding: padding,fontSize: font,margin: margin }" @click="clickFn">
+    <div
+        id="my-button"
+        :class="[disabled ? 'disabled' : '', type]"
+        :style="{ padding: padding, fontSize: font, margin: margin }"
+        @click="clickFn"
+    >
         <span class="my-button-text">
             <slot></slot>
         </span>
         <template v-if="showRightIcon">
             <!-- <svg-icon icon-class="arrow-left-color" class-name="right-icon" v-if="type === 'default'"/> -->
-            <svg-icon icon-class="arrow-left" class-name="right-icon"/>
+            <svg-icon icon-class="arrow-left" class-name="right-icon" />
         </template>
     </div>
 </template>
 
 <script>
-import SvgIcon from "@/components/SvgIcon/index.vue";
+import SvgIcon from '@/components/SvgIcon/index.vue';
 export default {
     name: 'MyButton',
     components: {
-        SvgIcon
+        SvgIcon,
     },
     props: {
         // 边距
         padding: {
             type: String,
-            default: '12px 24px'
+            default: '12px 24px',
         },
         // 类型
         type: {
             type: String,
-            default: 'default'
+            default: 'default',
         },
         disabled: {
             type: Boolean,
-            default: false
+            default: false,
         },
         font: {
             type: String,
-            default: '16px'
+            default: '16px',
         },
         margin: {
             type: String,
-            default: ''
+            default: '',
         },
         showRightIcon: {
             type: Boolean,
-            default: false
+            default: false,
         },
     },
     data() {
-        return {}
+        return {};
     },
     watch: {},
     computed: {},
@@ -54,10 +59,10 @@ export default {
     mounted() {},
     methods: {
         clickFn() {
-            this.$emit('clickFn')
-        }
+            this.$emit('clickFn');
+        },
     },
-}
+};
 </script>
 <style lang="less" scoped>
 #my-button {
@@ -76,50 +81,49 @@ export default {
             width: 20px;
         }
     }
-
 }
 .default {
-    border: 1px solid #C6F;
+    border: 1px solid #c6f;
     background: transparent;
-    background: linear-gradient(100deg, #C6F 0%, #66F 100%);
-    border-image: linear-gradient(100deg, #C6F 0%, #66F 100%) 1;
+    background: linear-gradient(100deg, #c6f 0%, #66f 100%);
+    border-image: linear-gradient(100deg, #c6f 0%, #66f 100%) 1;
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     .my-button-text {
-        background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+        background: linear-gradient(100deg, #c6f 0%, #66f 100%);
         background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-align: center;
     }
     &:hover {
-        background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+        background: linear-gradient(100deg, #c6f 0%, #66f 100%);
         .my-button-text {
             -webkit-text-fill-color: #fff;
         }
     }
 }
 .white {
-    border: 1px solid #FFF;
+    border: 1px solid #fff;
     .my-button-text {
-        color: #FFF;
+        color: #fff;
         text-align: center;
     }
     &:hover {
-        background: linear-gradient(100deg, #C6F 0%, #66F 100%);
-        border: 1px solid linear-gradient(100deg, #C6F 0%, #66F 100%);
+        background: linear-gradient(100deg, #c6f 0%, #66f 100%);
+        border: 1px solid linear-gradient(100deg, #c6f 0%, #66f 100%);
     }
 }
 .primary {
-    background: linear-gradient(100deg, #C6F 0%, #66F 100%);
-    border: 1px solid linear-gradient(100deg, #C6F 0%, #66F 100%);
+    background: linear-gradient(100deg, #c6f 0%, #66f 100%);
+    border: 1px solid linear-gradient(100deg, #c6f 0%, #66f 100%);
     .my-button-text {
         color: #fff;
     }
     &:active {
-        background: linear-gradient(100deg, #E0A1FF 0%, #8B8BFF 100%);
-        border: 1px solid linear-gradient(100deg, #C6F 0%, #66F 100%);
+        background: linear-gradient(100deg, #e0a1ff 0%, #8b8bff 100%);
+        border: 1px solid linear-gradient(100deg, #c6f 0%, #66f 100%);
     }
 }
 .disabled {

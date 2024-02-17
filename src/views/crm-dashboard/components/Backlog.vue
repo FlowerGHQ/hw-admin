@@ -15,7 +15,8 @@
                             </div>
                             <div class="right">
                                 <div :class="[item.status === STATUS.TIME_OUT ? 'status-red' : 'status']">
-                                    <i class="icon i_point1"></i>{{ $Util.CRMToDoStatusFilter(item.status, $i18n.locale) }}
+                                    <i class="icon i_point1"></i
+                                    >{{ $Util.CRMToDoStatusFilter(item.status, $i18n.locale) }}
                                 </div>
                                 <div class="time">{{ $Util.timeFilter(item.next_track_time, 3) }}</div>
                             </div>
@@ -39,7 +40,8 @@
                             </div>
                             <div class="right">
                                 <div :class="[item.status === STATUS.TIME_OUT ? 'status-red' : 'status']">
-                                    <i class="icon i_point1"></i>{{ $Util.CRMToDoStatusFilter(item.status, $i18n.locale) }}
+                                    <i class="icon i_point1"></i
+                                    >{{ $Util.CRMToDoStatusFilter(item.status, $i18n.locale) }}
                                 </div>
                                 <div class="time">{{ $Util.timeFilter(item.next_track_time, 3) }}</div>
                             </div>
@@ -103,9 +105,7 @@
                     </div>
                 </a-tab-pane>
             </a-tabs>
-
         </div>
-
     </div>
 </template>
 
@@ -114,12 +114,11 @@ import Core from '../../../core';
 
 export default {
     name: 'Card',
-    components: {
-    },
+    components: {},
     props: {
         searchForm: {
             type: Object,
-            default: ()=> {}
+            default: () => {},
         },
     },
     data() {
@@ -129,7 +128,7 @@ export default {
             STATUS: Core.Const.CRM_TODO.STATUS,
             customerList: [],
             boList: [],
-            testDriveList:{},
+            testDriveList: {},
             pageSize: 5,
             followList: [
                 {
@@ -159,48 +158,44 @@ export default {
                     info: '11.30需要跟进该客户，客户意向较大，促成订单较稳定，11.30需要跟进该客户，客户意向较大，促成订单较稳定',
                     time: '2022-06-13',
                     status: '待跟进',
-                }
-            ]
+                },
+            ],
         };
     },
-    watch: {
-    },
-    computed: {
-    },
-    created() {
-    },
+    watch: {},
+    computed: {},
+    created() {},
     mounted() {
-        this.toDoList()
+        this.toDoList();
     },
-    beforeUnmount() {
-    },
+    beforeUnmount() {},
     methods: {
         toDoList() {
-            switch (this.activeKey){
-                case "customer":
+            switch (this.activeKey) {
+                case 'customer':
                     Core.Api.CRMCustomer.toDoList({
                         search_type: this.SEARCH_TYPE.PRIVATE,
-                        page_size : this.pageSize
+                        page_size: this.pageSize,
                     }).then(res => {
-                        this.customerList = res.list
-                    })
+                        this.customerList = res.list;
+                    });
                     break;
-                case "pool_customer":
+                case 'pool_customer':
                     Core.Api.CRMCustomer.toDoList({
                         search_type: this.SEARCH_TYPE.POOL,
-                        page_size : this.pageSize
+                        page_size: this.pageSize,
                     }).then(res => {
-                        this.customerList = res.list
-                    })
+                        this.customerList = res.list;
+                    });
                     break;
-                case "bo":
+                case 'bo':
                     Core.Api.CRMBo.toDoList({
-                        page_size : this.pageSize
+                        page_size: this.pageSize,
                     }).then(res => {
-                        this.boList = res.list
-                    })
+                        this.boList = res.list;
+                    });
                     break;
-                case "testDrive": // 试驾单
+                case 'testDrive': // 试驾单
                     // Core.Api.CRMBo.toDoList({
                     //     page_size : this.pageSize
                     // }).then(res => {
@@ -208,38 +203,37 @@ export default {
                     // })
                     break;
             }
-
         },
         routerChange(type, item) {
-            let routeUrl = ""
+            let routeUrl = '';
             switch (type) {
-                case 'my':    // 我的客户
+                case 'my': // 我的客户
                     routeUrl = this.$router.resolve({
-                        path: "/crm-customer/private-customer-list",
-                    })
-                    window.open(routeUrl.href, '_self')
+                        path: '/crm-customer/private-customer-list',
+                    });
+                    window.open(routeUrl.href, '_self');
                     break;
-                case 'unallocated':  // 未分配客户
+                case 'unallocated': // 未分配客户
                     routeUrl = this.$router.resolve({
-                        path: "/crm-customer/customer-list",
-                    })
-                    window.open(routeUrl.href, '_self')
+                        path: '/crm-customer/customer-list',
+                    });
+                    window.open(routeUrl.href, '_self');
                     break;
-                case 'bo':  // 商机
+                case 'bo': // 商机
                     routeUrl = this.$router.resolve({
-                        path: "/crm-bo/bo-list",
-                    })
-                    window.open(routeUrl.href, '_self')
+                        path: '/crm-bo/bo-list',
+                    });
+                    window.open(routeUrl.href, '_self');
                     break;
-                case 'test':  // 试驾单
+                case 'test': // 试驾单
                     routeUrl = this.$router.resolve({
-                        path: "/crm-test-drive-order/order-income-list",
-                    })
-                    window.open(routeUrl.href, '_self')
+                        path: '/crm-test-drive-order/order-income-list',
+                    });
+                    window.open(routeUrl.href, '_self');
                     break;
             }
         },
-    }
+    },
 };
 </script>
 
@@ -270,7 +264,7 @@ export default {
     }
     .bottom {
         .item {
-            border-top: 1px dashed #DEDEDE;
+            border-top: 1px dashed #dedede;
             .fsb();
             padding: 13px 0 12px;
             &:nth-of-type(1) {
@@ -302,14 +296,14 @@ export default {
                 font-size: 14px;
                 .status {
                     font-weight: 500;
-                    color: #6BCB76;
+                    color: #6bcb76;
                     .i_point1 {
                         margin-right: 5px;
                     }
                 }
-                .status-red{
+                .status-red {
                     font-weight: 500;
-                    color: #E13C39;
+                    color: #e13c39;
                     .i_point1 {
                         margin-right: 5px;
                     }
@@ -323,7 +317,7 @@ export default {
                 }
             }
         }
-        
+
         .empty-item {
             width: 100%;
             height: 180px;
@@ -331,7 +325,9 @@ export default {
                 width: 100%;
                 .fjc();
                 font-size: 14px;
-                font-family: PingFang SC-Regular, PingFang SC;
+                font-family:
+                    PingFang SC-Regular,
+                    PingFang SC;
                 font-weight: 400;
                 color: #666666;
                 margin-top: 70px;
@@ -344,13 +340,15 @@ export default {
             .add-btn {
                 width: 58px;
                 height: 26px;
-                background-color: #4977EE;
+                background-color: #4977ee;
                 border-radius: 4px 4px 4px 4px;
                 .fcc();
                 font-size: 14px;
-                font-family: PingFang SC-Regular, PingFang SC;
+                font-family:
+                    PingFang SC-Regular,
+                    PingFang SC;
                 font-weight: 400;
-                color: #FFFFFF;
+                color: #ffffff;
                 margin-top: 13px;
                 cursor: pointer;
             }

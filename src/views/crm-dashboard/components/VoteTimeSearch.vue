@@ -3,40 +3,47 @@
         <div class="search-Filter">
             <a-radio-group v-model:value="day" class="time-type" @change="handleTimeTypeChange">
                 <a-radio-button :class="[day === 1 ? 'type-item active' : 'type-item']" :value="1">当天</a-radio-button>
-                <a-radio-button :class="[day === 2 ? 'type-item active' : 'type-item']" :value="2">近7日</a-radio-button>
-                <a-radio-button :class="[day === 3 ? 'type-item active' : 'type-item']" :value="3">近30日</a-radio-button>
+                <a-radio-button :class="[day === 2 ? 'type-item active' : 'type-item']" :value="2"
+                    >近7日</a-radio-button
+                >
+                <a-radio-button :class="[day === 3 ? 'type-item active' : 'type-item']" :value="3"
+                    >近30日</a-radio-button
+                >
             </a-radio-group>
-            <a-range-picker v-model:value="time" @change="handleChange()" :allowClear="false"
-                :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]" ref="TimeSearch" />
+            <a-range-picker
+                v-model:value="time"
+                @change="handleChange()"
+                :allowClear="false"
+                :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]"
+                ref="TimeSearch"
+            />
         </div>
     </div>
 </template>
-  
-<script>
-import Core from "../../../core";
-import dayjs from "dayjs";
-import "../../../assets/iconfont/iconfont";
-export default {
-    name: "Card",
-    components: {
 
-    },
+<script>
+import Core from '../../../core';
+import dayjs from 'dayjs';
+import '../../../assets/iconfont/iconfont';
+export default {
+    name: 'Card',
+    components: {},
     props: {
         searchForm: {
             type: Object,
-            default: () => { },
+            default: () => {},
         },
         activity_id: {
             type: Number,
-            default: 0   
-        }
+            default: 0,
+        },
     },
     data() {
         return {
             day: 1,
             searchForm: {
-                begin_time: "",
-                end_time: "",
+                begin_time: '',
+                end_time: '',
             },
             time: [],
         };
@@ -44,8 +51,7 @@ export default {
     watch: {},
     computed: {},
     created() {},
-    mounted() {
-    },
+    mounted() {},
     beforeUnmount() {},
     methods: {
         // 时间转换
@@ -69,23 +75,23 @@ export default {
             this.searchForm.end_time = this.time[1].unix(); // 获取结束时间的时间戳
             console.log('this.searchForm.begin_time', this.searchForm.begin_time);
             console.log('this.searchForm.end_time', this.searchForm.end_time);
-            this.searchForm.activity_id = this.activity_id
-            this.$emit("select", this.searchForm);
+            this.searchForm.activity_id = this.activity_id;
+            this.$emit('select', this.searchForm);
         },
         handleChange() {
             let begin_time = dayjs(this.time[0]);
             let end_time = dayjs(this.time[1]);
             let searchForm = this.$Util.deepCopy(this.searchForm);
-            searchForm.begin_time = begin_time.startOf("day").unix();
-            searchForm.end_time = end_time.endOf("day").unix();
+            searchForm.begin_time = begin_time.startOf('day').unix();
+            searchForm.end_time = end_time.endOf('day').unix();
             this.searchForm = searchForm;
-            searchForm.activity_id = this.activity_id
-            this.$emit("select", searchForm);
+            searchForm.activity_id = this.activity_id;
+            this.$emit('select', searchForm);
         },
     },
 };
 </script>
-  
+
 <style lang="less" scoped>
 .container {
     width: 100%;
@@ -174,7 +180,7 @@ export default {
 
                 &:hover,
                 &.active {
-                    color: #0061FF;
+                    color: #0061ff;
                     box-shadow: none;
                     // border-radius: 0;
                     // border: 1px solid#0061FF;
@@ -184,4 +190,3 @@ export default {
     }
 }
 </style>
-  

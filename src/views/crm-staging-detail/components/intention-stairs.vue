@@ -4,17 +4,17 @@
             {{ intentionType }}
         </div>
         <div class="intention-stairs">
-            <img :src="getImageByStatus(status)" alt="">
+            <img :src="getImageByStatus(status)" alt="" />
         </div>
     </div>
 </template>
 
 <script>
-import Core from '../../../core'
-const IMG_MAP = Core.Const.INTENTION.IMG_MAP
-const TYPE_MAP = Core.Const.INTENTION.TYPE_MAP
+import Core from '../../../core';
+const IMG_MAP = Core.Const.INTENTION.IMG_MAP;
+const TYPE_MAP = Core.Const.INTENTION.TYPE_MAP;
 export default {
-    name: "IntentionStairs",
+    name: 'IntentionStairs',
     props: {
         /* 
             status 四种状态
@@ -26,45 +26,45 @@ export default {
         */
         status: {
             type: Number,
-            default: 10
+            default: 10,
         },
     },
     data() {
         return {
             Core,
-            IMG_MAP,            
+            IMG_MAP,
         };
     },
     computed: {
         intentionType() {
-            return Core.Util.intentionTypeFilter(this.status, 'key')
+            return Core.Util.intentionTypeFilter(this.status, 'key');
         },
     },
     methods: {
-        getImageByStatus(status) {        
+        getImageByStatus(status) {
             try {
-                return IMG_MAP[TYPE_MAP[status].img_url]
+                return IMG_MAP[TYPE_MAP[status].img_url];
             } catch (error) {
-                return false
-            }            
+                return false;
+            }
         },
     },
-}
+};
 </script>
 <style lang="less" scoped>
 .status-panel {
     .intention-status {
-        color: #FAAD14;
+        color: #faad14;
         font-size: 10px;
         text-align: right;
     }
 
     .intention-stairs {
         display: flex;
-        justify-content: flex-end; 
+        justify-content: flex-end;
         margin-top: 2px;
 
-        >img {
+        > img {
             width: 40px;
             height: 6px;
         }

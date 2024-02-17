@@ -3,7 +3,7 @@
         <div class="login-header">
             <div class="content">
                 <div class="text">
-                    <img class="img" src="@/assets/images/mall/login/icon.svg" alt="HORWIN">
+                    <img class="img" src="@/assets/images/mall/login/icon.svg" alt="HORWIN" />
                     <span>{{ $t('mall.system') }}</span>
                 </div>
                 <div class="header-right">
@@ -11,15 +11,23 @@
                         <i class="icon" :class="lang =='zh' ? 'i_zh-en' : 'i_en-zh'"/>
                     </a-button> -->
                     <span>
-                        <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom" @visibleChange="langDropDownChange">
+                        <a-dropdown
+                            :trigger="['click']"
+                            overlay-class-name="action-menu"
+                            placement="bottom"
+                            @visibleChange="langDropDownChange"
+                        >
                             <div class="mt-user-switch" @click.prevent>
                                 <svg-icon icon-class="header-lang-icon" class-name="mt-user-icon" />
                                 <!-- 当前语言 -->
                                 <span class="mt-header-lang-text tab-animate">{{ currentAreaType }}</span>
-                                <svg-icon icon-class="header-expand-icon" :class-name="langShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" />
+                                <svg-icon
+                                    icon-class="header-expand-icon"
+                                    :class-name="langShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'"
+                                />
                             </div>
                             <template #overlay>
-                                <a-menu style="bottom: 0px; position: relative;">
+                                <a-menu style="bottom: 0px; position: relative">
                                     <a-menu-item key="0" @click="handleLangSwitch('en')">
                                         <a class="menu_text">EN</a>
                                     </a-menu-item>
@@ -57,50 +65,62 @@
                     <!-- 手机号登录 -->
                     <template v-if="login_methods === 2">
                         <!-- 手机号 -->
-                        <FormModel 
-                            key="phone" 
+                        <FormModel
+                            key="phone"
                             @handleValid="handleChangePhoneValid"
-                            :unValid="unPhoneValid" 
-                            type="Basic" 
+                            :unValid="unPhoneValid"
+                            type="Basic"
                             :placeholder="$t('mall.enter_phone')"
-                            @keydownEnter="handleFocusCode" 
+                            @keydownEnter="handleFocusCode"
                             :value="loginPhoneForm.phone"
-                            @input="loginPhoneForm.phone = $event.target.value" 
+                            @input="loginPhoneForm.phone = $event.target.value"
                         />
                         <!-- 验证码 -->
                         <div class="web-value">
-                            <input ref="code" @focus="handleCodeFocus" :placeholder="$t('mall.enter_code')" v-model="loginPhoneForm.code" :class="codeInputClassName" type="text">
-                            <button :class="['web-verification', loginPhoneForm.phone ? 'can-hover' : 'grey']" v-if="!countdown" @click="sendCode">
-                                {{ $t(/*发送验证码*/'mall.verification_code') }}
+                            <input
+                                ref="code"
+                                @focus="handleCodeFocus"
+                                :placeholder="$t('mall.enter_code')"
+                                v-model="loginPhoneForm.code"
+                                :class="codeInputClassName"
+                                type="text"
+                            />
+                            <button
+                                :class="['web-verification', loginPhoneForm.phone ? 'can-hover' : 'grey']"
+                                v-if="!countdown"
+                                @click="sendCode"
+                            >
+                                {{ $t(/*发送验证码*/ 'mall.verification_code') }}
                             </button>
-                            <button class="web-verification grey" v-else disabled>{{ $t(/*已发送*/'mall.sented')
-                            }}({{ countdown }})</button>
+                            <button class="web-verification grey" v-else disabled>
+                                {{ $t(/*已发送*/ 'mall.sented') }}({{ countdown }})
+                            </button>
                         </div>
                     </template>
                     <!-- 密码登录 -->
                     <template v-else>
                         <!-- 用户名 -->
-                        <FormModel 
-                            key="username" 
+                        <FormModel
+                            key="username"
                             @handleValid="handleChangeUserNameValid"
-                            :unValid="unUserNameValid" 
-                            type="Basic" 
+                            :unValid="unUserNameValid"
+                            type="Basic"
                             :placeholder="$t('n.username')"
-                            @keydownEnter="handleFocusPwd" 
+                            @keydownEnter="handleFocusPwd"
                             :value="loginForm.username"
-                            @input="loginForm.username = $event.target.value" 
+                            @input="loginForm.username = $event.target.value"
                         />
                         <!-- 密码 -->
-                        <FormModel 
-                            key="password" 
+                        <FormModel
+                            key="password"
                             @handleValid="handleChangePassWordValid"
-                            :unValid="unPassWordValid" 
-                            type="Password" 
+                            :unValid="unPassWordValid"
+                            type="Password"
                             :placeholder="$t('n.enter_password')"
-                            @keydownEnter="handleAccount" 
+                            @keydownEnter="handleAccount"
                             :value="loginForm.password"
                             @input="loginForm.password = $event.target.value"
-                            ref="password-input" 
+                            ref="password-input"
                         />
                     </template>
                     <div class="login-btn" @click="handleAccount">
@@ -116,9 +136,17 @@
                         </span>
                     </div>
                     <div class="select-login" @click="changeMethods">
-                        <svg-icon icon-class="phone-black-icon" class-name="phone-black-icon" v-if="login_methods === 1" />
+                        <svg-icon
+                            icon-class="phone-black-icon"
+                            class-name="phone-black-icon"
+                            v-if="login_methods === 1"
+                        />
                         <svg-icon icon-class="phone-icon" class-name="phone-icon" v-if="login_methods === 1" />
-                        <svg-icon icon-class="user-black-icon" class-name="user-black-icon" v-if="login_methods === 2" />
+                        <svg-icon
+                            icon-class="user-black-icon"
+                            class-name="user-black-icon"
+                            v-if="login_methods === 2"
+                        />
                         <svg-icon icon-class="user-icon" class-name="user-icon" v-if="login_methods === 2" />
                         <span>{{ login_methods === 2 ? $t('mall.user_name_login') : $t('mall.phone_login') }}</span>
                     </div>
@@ -146,17 +174,17 @@ import Core from '@/core';
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
 import enUS from 'ant-design-vue/lib/locale-provider/en_US';
 import jsapi from '@/core/jsapi';
-import SvgIcon from "@/components/SvgIcon/index.vue";
-import FormModel from "@/components/common/FormModel.vue";
+import SvgIcon from '@/components/SvgIcon/index.vue';
+import FormModel from '@/components/common/FormModel.vue';
 import MyButton from '@/components/common/MyButton.vue';
-const TYPE = Core.Const.LOGIN.TYPE
-const TYPE_MAP = Core.Const.LOGIN.TYPE_MAP
+const TYPE = Core.Const.LOGIN.TYPE;
+const TYPE_MAP = Core.Const.LOGIN.TYPE_MAP;
 export default {
     name: 'Login',
     components: {
         SvgIcon,
         FormModel,
-        MyButton
+        MyButton,
     },
     props: {},
     data() {
@@ -203,7 +231,7 @@ export default {
             countdownTime: null, // 定时器记录
             user_type: '',
             user_type_list: [],
-            token: Core.Data.getToken()
+            token: Core.Data.getToken(),
         };
     },
     watch: {},
@@ -220,57 +248,59 @@ export default {
             }
         },
         lang() {
-            return this.$store.state.lang
-        }
+            return this.$store.state.lang;
+        },
     },
     created() {
-        this.user_type = Number(this.$route.query?.user_type)
-        const lang = Core.Data.getLang()
-        if (lang === "" || lang === null){
-            Core.Data.setLang("zh")
+        this.user_type = Number(this.$route.query?.user_type);
+        const lang = Core.Data.getLang();
+        if (lang === '' || lang === null) {
+            Core.Data.setLang('zh');
         }
-        this.handleLangSwitch(Core.Data.getLang())
+        this.handleLangSwitch(Core.Data.getLang());
         // Core.Data.clearUserTypeList();// 用于测试
         this.user_type_list = Core.Data.getUserTypeList();
     },
     mounted() {
-        this.fsLogin()
+        this.fsLogin();
         if (Number(this.$route.query?.user_type) === Core.Const.USER.TYPE.SUPPLIER) {
             // 供应链的时候自动切换到手机中
-            this.login_methods = 2
+            this.login_methods = 2;
         }
     },
     unmounted() {
-        clearInterval(this.countdownTime)
-        this.countdownTime = null
+        clearInterval(this.countdownTime);
+        this.countdownTime = null;
     },
     methods: {
         /* Fetch start*/
         // 检查是否是超级管理员
         isAdminFetch(parmas) {
             // 分销商不调用
-            if (Core.Data.getLoginType() === Core.Const.USER.TYPE.DISTRIBUTOR) return
+            if (Core.Data.getLoginType() === Core.Const.USER.TYPE.DISTRIBUTOR) return;
             let obj = {
-                ...parmas
-            }
-            Core.Api.User.checkAdmin(obj).then(res => {
-                Core.Logger.log("参数", obj, "是否是超级管理员", res)
-                Core.Data.setManager(res.status)
-            }).catch(err => {
-                Core.Logger.warn("参数", obj, "是否是超级管理员", err)
-            })
+                ...parmas,
+            };
+            Core.Api.User.checkAdmin(obj)
+                .then(res => {
+                    Core.Logger.log('参数', obj, '是否是超级管理员', res);
+                    Core.Data.setManager(res.status);
+                })
+                .catch(err => {
+                    Core.Logger.warn('参数', obj, '是否是超级管理员', err);
+                });
         },
         /* Fetch end*/
         fsLogin() {
             if (window.h5sdk) {
-                jsapi.apiAuth();                
+                jsapi.apiAuth();
             }
         },
         handleFocusCode() {
-            this.$refs['code'].focus()
+            this.$refs['code'].focus();
         },
         handleFocusPwd() {
-            this.$refs['password-input'].focus()
+            this.$refs['password-input'].focus();
         },
         // 必填项检查
         checkInput(form, type) {
@@ -278,244 +308,271 @@ export default {
             if (type === 1) {
                 this.unUserNameValid = !form.username;
                 this.unPassWordValid = !form.password;
-                allValid = form.username && form.password
+                allValid = form.username && form.password;
             } else if (type === 2) {
                 this.unPhoneValid = !form.phone;
                 this.unValidCode = !form.code;
                 this.codeInputStatus = form.code ? 'entered' : 'err-enter';
-                allValid = form.phone && form.code
+                allValid = form.phone && form.code;
             }
             return allValid;
         },
         // 登录点击事件
         handleAccount() {
-            let type = this.login_methods
-            let obj = {}
-            let form = {}
+            let type = this.login_methods;
+            let obj = {};
+            let form = {};
             if (type === 1) {
-                form = Core.Util.deepCopy(this.loginForm)
+                form = Core.Util.deepCopy(this.loginForm);
                 if (!this.checkInput(form, type)) return;
                 obj = {
                     ...form,
                     type: Core.Const.COMMON.LOGIN_TYPE.PWD,
-                }
+                };
             } else if (type === 2) {
-                form = Core.Util.deepCopy(this.loginPhoneForm)
+                form = Core.Util.deepCopy(this.loginPhoneForm);
                 if (!this.checkInput(form, type)) return;
                 obj = {
                     ...form,
                     type: Core.Const.COMMON.LOGIN_TYPE.CODE,
-                    
-                }
+                };
             }
-            this.checkAccountFetch(obj, type)
+            this.checkAccountFetch(obj, type);
         },
         // 类型选择事件
         async handleLogin(user_type) {
             if (this.token) {
-                this.switchUserFetch(user_type)
+                this.switchUserFetch(user_type);
             } else {
                 let obj = Core.Data.getLoginMes();
-                obj.user_type = user_type
-                this.loginFetch(obj, obj.type)
+                obj.user_type = user_type;
+                this.loginFetch(obj, obj.type);
             }
         },
         // 校验登录账号接口
         checkAccountFetch(params = {}, type) {
             let obj = {
-                ...params
-            }
-            if (this.user_type === TYPE.SUPPLIER) { // 手机号临时用户-供应商
-                Core.Api.Common.loginByTempUser({ ...obj, temp_user_type: 10, /* 临时用户类型：10.供应商 */  }).then(res => {
-                    console.log('handleLogins apiName res', res)
+                ...params,
+            };
+            if (this.user_type === TYPE.SUPPLIER) {
+                // 手机号临时用户-供应商
+                Core.Api.Common.loginByTempUser({ ...obj, temp_user_type: 10 /* 临时用户类型：10.供应商 */ }).then(
+                    res => {
+                        console.log('handleLogins apiName res', res);
 
-                    Core.Data.setToken(res.token);
-                    // Core.Data.setUser(res.user.account);
+                        Core.Data.setToken(res.token);
+                        // Core.Data.setUser(res.user.account);
 
-                    Core.Data.setLoginType(TYPE.SUPPLIER);  // 设置登录方的数字
-                    let loginType = TYPE_MAP[TYPE.SUPPLIER]
-                    Core.Data.setUserType(loginType); // 设置登录方的文字
+                        Core.Data.setLoginType(TYPE.SUPPLIER); // 设置登录方的数字
+                        let loginType = TYPE_MAP[TYPE.SUPPLIER];
+                        Core.Data.setUserType(loginType); // 设置登录方的文字
 
-                    // 手机登录跳转供应链页面
-                    this.$router.push('/supply-home')
-                })
-            } else { // 其他用户
+                        // 手机登录跳转供应链页面
+                        this.$router.push('/supply-home');
+                    },
+                );
+            } else {
+                // 其他用户
                 Core.Api.Common.checkAccount(obj).then(res => {
                     Core.Data.setLoginMes(obj);
                     Core.Data.setUserTypeList(res?.user_type_list);
-                    this.user_type_list = res?.user_type_list
-                    if (this.user_type_list.length === 1) {// 如果类型只有一种则跳过选择直接登录
-                        this.handleLogin(this.user_type_list[0])
+                    this.user_type_list = res?.user_type_list;
+                    if (this.user_type_list.length === 1) {
+                        // 如果类型只有一种则跳过选择直接登录
+                        this.handleLogin(this.user_type_list[0]);
                     }
-                })
+                });
             }
         },
         // 登录接口
         loginFetch(params = {}, type) {
             let obj = {
-                ...params
-            }
+                ...params,
+            };
 
-            Core.Api.Common.selectUser(obj).then(res => {
-                console.log('handleLogins apiName res', res)
+            Core.Api.Common.selectUser(obj)
+                .then(res => {
+                    console.log('handleLogins apiName res', res);
 
-                Core.Data.setToken(res.token);
-                Core.Data.setUser(res.user.account);
+                    Core.Data.setToken(res.token);
+                    Core.Data.setUser(res.user.account);
 
-                Core.Data.setLoginType(res.user.type);  // 设置登录方的数字
-                let loginType = TYPE_MAP[res.user.type]
-                Core.Data.setUserType(loginType); // 设置登录方的文字
+                    Core.Data.setLoginType(res.user.type); // 设置登录方的数字
+                    let loginType = TYPE_MAP[res.user.type];
+                    Core.Data.setUserType(loginType); // 设置登录方的文字
 
-                // 手机登录跳转供应链页面
-                if (res.user.type === TYPE.SUPPLIER) {
-                    this.$router.push('/supply-home')
-                    return
-                }
+                    // 手机登录跳转供应链页面
+                    if (res.user.type === TYPE.SUPPLIER) {
+                        this.$router.push('/supply-home');
+                        return;
+                    }
 
-                Core.Data.setOrgId(res.user.org_id); // 组织的id
-                Core.Data.setOrgType(res.user.org_type); // 组织的类型
-                Core.Data.setCurrency(res.user.currency); // 账号的单位
+                    Core.Data.setOrgId(res.user.org_id); // 组织的id
+                    Core.Data.setOrgType(res.user.org_type); // 组织的类型
+                    Core.Data.setCurrency(res.user.currency); // 账号的单位
 
-                this.getAuthority(res.user.id, res.user.type, loginType, res.user.role_id, res.user.flag_admin, res.user.flag_group_customer_admin);
-                this.isAdminFetch()
+                    this.getAuthority(
+                        res.user.id,
+                        res.user.type,
+                        loginType,
+                        res.user.role_id,
+                        res.user.flag_admin,
+                        res.user.flag_group_customer_admin,
+                    );
+                    this.isAdminFetch();
 
-                // 登录成功清除登录传参信息
-                Core.Data.clearLoginMes();
-            }).catch(err => {
-                console.log('handleLogins apiName err', err)
-            })
+                    // 登录成功清除登录传参信息
+                    Core.Data.clearLoginMes();
+                })
+                .catch(err => {
+                    console.log('handleLogins apiName err', err);
+                });
         },
         // 切换身份接口
         switchUserFetch(user_type) {
-            Core.Api.Common.switchUser({ user_type }).then(res => {
-                console.log('handleLogins apiName res', res)
+            Core.Api.Common.switchUser({ user_type })
+                .then(res => {
+                    console.log('handleLogins apiName res', res);
 
-                Core.Data.setToken(res.token);
-                Core.Data.setUser(res.user.account);
+                    Core.Data.setToken(res.token);
+                    Core.Data.setUser(res.user.account);
 
-                Core.Data.setLoginType(res.user.type);  // 设置登录方的数字
-                let loginType = TYPE_MAP[res.user.type]
-                Core.Data.setUserType(loginType); // 设置登录方的文字
+                    Core.Data.setLoginType(res.user.type); // 设置登录方的数字
+                    let loginType = TYPE_MAP[res.user.type];
+                    Core.Data.setUserType(loginType); // 设置登录方的文字
 
-                // 手机登录跳转供应链页面
-                if (res.user.type === TYPE.SUPPLIER) {
-                    this.$router.push('/supply-home')
-                    return
-                }
+                    // 手机登录跳转供应链页面
+                    if (res.user.type === TYPE.SUPPLIER) {
+                        this.$router.push('/supply-home');
+                        return;
+                    }
 
-                Core.Data.setOrgId(res.user.org_id); // 组织的id
-                Core.Data.setOrgType(res.user.org_type); // 组织的类型
-                Core.Data.setCurrency(res.user.currency); // 账号的单位
+                    Core.Data.setOrgId(res.user.org_id); // 组织的id
+                    Core.Data.setOrgType(res.user.org_type); // 组织的类型
+                    Core.Data.setCurrency(res.user.currency); // 账号的单位
 
-                this.getAuthority(res.user.id, res.user.type, loginType, res.user.role_id, res.user.flag_admin, res.user.flag_group_customer_admin);
-                this.isAdminFetch()
-            }).catch(err => {
-                console.log('handleLogins apiName err', err)
-            })
+                    this.getAuthority(
+                        res.user.id,
+                        res.user.type,
+                        loginType,
+                        res.user.role_id,
+                        res.user.flag_admin,
+                        res.user.flag_group_customer_admin,
+                    );
+                    this.isAdminFetch();
+                })
+                .catch(err => {
+                    console.log('handleLogins apiName err', err);
+                });
         },
 
         async getAuthority(userId, userType, loginType, roleId, flag_admin, flagGroupCustomerAdmin) {
-            Core.Data.setAuthority('')
-            let authorityMap = {}
-            authorityMap[loginType] = true
+            Core.Data.setAuthority('');
+            let authorityMap = {};
+            authorityMap[loginType] = true;
             if (flag_admin) {
-                authorityMap['MANAGER'] = true
+                authorityMap['MANAGER'] = true;
             }
-            if (flagGroupCustomerAdmin){
-                authorityMap['MANAGER_GROUP'] = true
+            if (flagGroupCustomerAdmin) {
+                authorityMap['MANAGER_GROUP'] = true;
             }
 
             Core.Api.Authority.authUserAll({
                 user_id: userId,
-                user_type: userType
-            }).then(res => {
-                let list = res.list                
-                for (const item of list) {
-                    authorityMap[item.key] = true
-                }
-            }).finally(() => {
-                Core.Data.setAuthority(authorityMap)
-                if (userType === Core.Const.USER.TYPE.ADMIN){
-                    setTimeout(() => {
-                        this.$router.replace({ path: '/distributor', query: {from: 'login'} })
-                    }, 1000)
-                } else {
-                    setTimeout(() => {
-                        this.$router.replace({ path: '/mall/index', query: {from: 'login'} })
-                    }, 1000)
-                }
+                user_type: userType,
             })
+                .then(res => {
+                    let list = res.list;
+                    for (const item of list) {
+                        authorityMap[item.key] = true;
+                    }
+                })
+                .finally(() => {
+                    Core.Data.setAuthority(authorityMap);
+                    if (userType === Core.Const.USER.TYPE.ADMIN) {
+                        setTimeout(() => {
+                            this.$router.replace({ path: '/distributor', query: { from: 'login' } });
+                        }, 1000);
+                    } else {
+                        setTimeout(() => {
+                            this.$router.replace({ path: '/mall/index', query: { from: 'login' } });
+                        }, 1000);
+                    }
+                });
         },
-        sendCode() {  //发送验证码
+        sendCode() {
+            //发送验证码
             // 防止多次点击
-            if (this.countdownTime)  return
+            if (this.countdownTime) return;
 
             if (!this.loginPhoneForm.phone) {
-                return this.$message.warning(`${this.$t('n.enter')}${this.$t('n.phone')}`)
+                return this.$message.warning(`${this.$t('n.enter')}${this.$t('n.phone')}`);
             }
 
             this.getPhoneCodeFetch({
-                type: 1,  // 短信类型：1.登录注册
+                type: 1, // 短信类型：1.登录注册
                 phone: this.loginPhoneForm.phone,
-            })
-            this.countdown = 60
-            this.countdown--
+            });
+            this.countdown = 60;
+            this.countdown--;
             this.countdownTime = setInterval(() => {
-                this.countdown--
-                if(this.countdown === 0) {
-                    clearInterval(this.countdownTime)
-                    this.countdownTime = null
-                    this.countdown = null
+                this.countdown--;
+                if (this.countdown === 0) {
+                    clearInterval(this.countdownTime);
+                    this.countdownTime = null;
+                    this.countdown = null;
                 }
-            }, 1000)
+            }, 1000);
         },
         // 获取验证码
         getPhoneCodeFetch(params = {}) {
             let obj = {
-                ...params
-            }
-            Core.Api.Common.phoneCode(obj).then(res => {
-              console.log("getPhoneCodeFetchs res", res);
-            }).catch(err => {
-                console.log("getPhoneCodeFetchs err", err);
-            })
+                ...params,
+            };
+            Core.Api.Common.phoneCode(obj)
+                .then(res => {
+                    console.log('getPhoneCodeFetchs res', res);
+                })
+                .catch(err => {
+                    console.log('getPhoneCodeFetchs err', err);
+                });
         },
         handleLangSwitch(lang) {
             this.$store.commit('switchLang', lang);
             this.$i18n.locale = this.$store.state.lang;
             if (this.$i18n.locale === 'zh') {
-                this.currentAreaType = '中文'
+                this.currentAreaType = '中文';
             } else {
                 this.currentAreaType = this.$i18n.locale.toUpperCase();
             }
-            this.langShow = false
+            this.langShow = false;
         },
         // 语言下拉菜单是否展示
         langDropDownChange(e) {
-            this.langShow = e
+            this.langShow = e;
         },
         handleChangeUserNameValid() {
-            this.unUserNameValid = false
+            this.unUserNameValid = false;
         },
         handleChangePassWordValid() {
-            this.unPassWordValid = false
+            this.unPassWordValid = false;
         },
         handleChangePhoneValid() {
-            this.unPhoneValid = false
+            this.unPhoneValid = false;
         },
         // 验证码输入框聚焦
         handleCodeFocus() {
-            this.codeInputStatus = 'be-entering'
+            this.codeInputStatus = 'be-entering';
         },
         // 切换登录方法
         changeMethods() {
             if (this.login_methods === 1) {
-                this.login_methods = 2
+                this.login_methods = 2;
             } else if (this.login_methods === 2) {
-                this.login_methods = 1
+                this.login_methods = 1;
             }
         },
-    }
+    },
 };
 </script>
 
@@ -550,7 +607,7 @@ export default {
                     font-style: normal;
                     line-height: 120%; /* 21.6px */
                     &::before {
-                        content: "|";
+                        content: '|';
                         padding: 0 16px;
                     }
                 }
@@ -564,7 +621,7 @@ export default {
                 }
                 .mt-user-switch {
                     cursor: pointer;
-                    >img {
+                    > img {
                         width: 28px;
                         height: 28px;
                         border-radius: 50%;
@@ -584,7 +641,7 @@ export default {
                         margin-right: 8px;
                     }
                     .mt-header-lang-text {
-                        color: #FFF;
+                        color: #fff;
                         font-size: 12px;
                         font-style: normal;
                         font-weight: 400;
@@ -594,8 +651,10 @@ export default {
                     }
                     .mt-triangle-icon {
                         font-size: 18px;
-                        transition: transform 0.3s ease, top 0.3s ease;
-                        fill: #FFF;
+                        transition:
+                            transform 0.3s ease,
+                            top 0.3s ease;
+                        fill: #fff;
                         &.expand {
                             transform: rotate(180deg);
                         }
@@ -649,35 +708,42 @@ export default {
                 text-align: center;
                 font-size: 14px;
                 background: #666;
-                border: 1px solid #EEE;
+                border: 1px solid #eee;
                 background-clip: text;
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 line-height: 24px;
                 padding: 10px 0;
                 transition: color 0.3s ease;
-                .phone-icon, .phone-icon-black, .pwd-icon, .pwd-black-icon {
+                .phone-icon,
+                .phone-icon-black,
+                .pwd-icon,
+                .pwd-black-icon {
                     width: 20px;
                     height: 20px;
                     margin-right: 4px;
                 }
-                .phone-icon, .pwd-icon {
+                .phone-icon,
+                .pwd-icon {
                     display: none;
                 }
-                .phone-icon-black, .pwd-black-icon {
+                .phone-icon-black,
+                .pwd-black-icon {
                     display: inline-block;
                 }
             }
             .active {
-                border: 1px solid #C6F;
-                background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                border: 1px solid #c6f;
+                background: linear-gradient(100deg, #c6f 0%, #66f 100%);
                 background-clip: text;
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
-                .phone-icon, .pwd-icon {
+                .phone-icon,
+                .pwd-icon {
                     display: inline-block;
                 }
-                .phone-black-icon, .pwd-black-icon {
+                .phone-black-icon,
+                .pwd-black-icon {
                     display: none;
                 }
             }
@@ -698,7 +764,7 @@ export default {
                 font-weight: 400;
                 line-height: 150%; /* 21px */
                 // letter-spacing: 0.56px;
-                color: #BFBFBF;
+                color: #bfbfbf;
             }
             input:focus {
                 outline: none;
@@ -712,26 +778,26 @@ export default {
                 font-style: normal;
                 // letter-spacing: 0.56px;
                 &.not-enter {
-                    border-bottom: 1px solid #DFDFDF;
+                    border-bottom: 1px solid #dfdfdf;
                     font-weight: 400;
                 }
                 &.be-entering {
-                    border-bottom: 1px solid #BFBFBF;
+                    border-bottom: 1px solid #bfbfbf;
                     color: #333;
                     font-weight: 400;
-                    caret-color: #C6F;
+                    caret-color: #c6f;
                 }
                 &.entered {
-                    border-bottom: 1px solid #DFDFDF;
+                    border-bottom: 1px solid #dfdfdf;
                     color: #333;
                     font-weight: 400;
                 }
                 &.err-enter {
-                    border-bottom: 1px solid #FF0000;
+                    border-bottom: 1px solid #ff0000;
                     color: #333;
                     font-weight: 400;
                     &::-webkit-input-placeholder {
-                        color: #FF0000;
+                        color: #ff0000;
                     }
                 }
             }
@@ -749,7 +815,7 @@ export default {
                     cursor: not-allowed; /* 鼠标样式为禁用状态 */
                 }
                 &.can-hover:hover {
-                    background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                    background: linear-gradient(100deg, #c6f 0%, #66f 100%);
                     background-clip: text;
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
@@ -765,12 +831,12 @@ export default {
                 font-weight: 400;
                 line-height: 150%; /* 21px */
                 padding: 16px;
-                border: 1px solid #EEE;
+                border: 1px solid #eee;
                 margin-bottom: 16px;
                 cursor: pointer;
                 &:hover {
-                    border: 1px solid #C6F;
-                    background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                    border: 1px solid #c6f;
+                    background: linear-gradient(100deg, #c6f 0%, #66f 100%);
                     background-clip: text;
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
@@ -785,7 +851,7 @@ export default {
             margin: 40px 0 24px 0;
             position: relative;
             &::before {
-                content: "";
+                content: '';
                 position: absolute;
                 top: 50%;
                 left: 0;
@@ -793,7 +859,7 @@ export default {
                 display: inline-block;
                 height: 1px;
                 width: 100%;
-                background: #EEEEEE;
+                background: #eeeeee;
                 z-index: 0;
             }
             .more-login-text {
@@ -806,7 +872,7 @@ export default {
                 font-weight: 400;
                 line-height: 22px; /* 183.333% */
                 z-index: 1;
-                background: #FFF;
+                background: #fff;
             }
         }
         .select-login {
@@ -822,30 +888,37 @@ export default {
                 line-height: 22px; /* 183.333% */
             }
             cursor: pointer;
-            
-            .phone-icon, .phone-black-icon, .user-icon, .user-black-icon {
+
+            .phone-icon,
+            .phone-black-icon,
+            .user-icon,
+            .user-black-icon {
                 width: 20px;
                 height: 20px;
                 margin-right: 4px;
             }
-            .phone-icon, .user-icon {
+            .phone-icon,
+            .user-icon {
                 display: none;
             }
-            .phone-black-icon, .user-black-icon {
+            .phone-black-icon,
+            .user-black-icon {
                 display: inline-block;
             }
             &:hover {
-                border: 1px solid #C6F;
+                border: 1px solid #c6f;
                 background: transparent;
-                background: linear-gradient(100deg, #C6F 0%, #66F 100%);
-                border-image: linear-gradient(100deg, #C6F 0%, #66F 100%) 1;
+                background: linear-gradient(100deg, #c6f 0%, #66f 100%);
+                border-image: linear-gradient(100deg, #c6f 0%, #66f 100%) 1;
                 background-clip: text;
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
-                .phone-icon, .user-icon {
+                .phone-icon,
+                .user-icon {
                     display: inline-block;
                 }
-                .phone-black-icon, .user-black-icon {
+                .phone-black-icon,
+                .user-black-icon {
                     display: none;
                 }
             }
@@ -879,7 +952,7 @@ export default {
     }
 }
 .ant-input {
-    caret-color: #C6F; /* 光标颜色 */
+    caret-color: #c6f; /* 光标颜色 */
 }
 input.ant-input {
     border: none;
@@ -923,7 +996,7 @@ input.ant-input {
         justify-content: center;
         text-align: center;
         &:hover {
-            background-color: #EEE;
+            background-color: #eee;
         }
         .ant-dropdown-menu-title-content {
             padding: 0 10px;
@@ -945,4 +1018,3 @@ input.ant-input {
 }
 // dropdown end
 </style>
-    

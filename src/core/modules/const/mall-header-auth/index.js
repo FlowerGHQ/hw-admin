@@ -60,5 +60,5 @@ const MALL_HEADER_AUTH = {
         { value: '/mall/promotional-list/detail' },
         { value: '/mall/shopping-bag' },
     ],
-}
-export default MALL_HEADER_AUTH
+};
+export default MALL_HEADER_AUTH;

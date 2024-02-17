@@ -92,18 +92,26 @@
                                 {{ $t(item.key) }}
                             </div>
                             <div class="value-box">
-                                <a-select v-model:value="item.value" :placeholder="$t(`${item.placeholder || 'def.input'}`)">
+                                <a-select
+                                    v-model:value="item.value"
+                                    :placeholder="$t(`${item.placeholder || 'def.input'}`)"
+                                >
                                     <a-select-option v-for="(val, key) in item.selectMap" :key="key" :value="val.value">
-                                        {{
-                                            val[$i18n.locale] || $t(val.t)
-                                        }}
+                                        {{ val[$i18n.locale] || $t(val.t) }}
                                     </a-select-option>
                                 </a-select>
                             </div>
                         </div>
                     </a-col>
-                    <a-col v-else-if="(item.type === 'select-search-multiple')" :xs="24" :sm="24" :xl="11" :xxl="8" class="search-box" >
-                        <div  class="item-box">
+                    <a-col
+                        v-else-if="item.type === 'select-search-multiple'"
+                        :xs="24"
+                        :sm="24"
+                        :xl="11"
+                        :xxl="8"
+                        class="search-box"
+                    >
+                        <div class="item-box">
                             <div class="key-box">
                                 {{ $t(item.key) }}
                             </div>
@@ -111,10 +119,11 @@
                                 <a-select
                                     v-model:value="item.value"
                                     :options="item.selectMap"
-                                    :mode="item.multiple?'multiple':''"
+                                    :mode="item.multiple ? 'multiple' : ''"
                                     show-search
                                     :filter-option="filterOption"
-                                    :placeholder="$t(`${ item.placeholder || 'def.input' }`)">
+                                    :placeholder="$t(`${item.placeholder || 'def.input'}`)"
+                                >
                                 </a-select>
                             </div>
                         </div>
@@ -128,14 +137,15 @@
                             <div class="value-box">
                                 <a-range-picker
                                     v-model:value="item.value"
-                                    valueFormat='X'
+                                    valueFormat="X"
                                     @keydown.enter="handleSearch"
-                                    :format="item.format || 'YYYY-MM-DD'" 
+                                    :format="item.format || 'YYYY-MM-DD'"
                                     :show-time="item.defaultTime"
                                     :valueFormat="item.valueFormat || 'X'"
-                                    :allow-clear='false'
-                                    :placeholder="[$t('crm_def.start_time'),$t('crm_def.end_time')]">
-                                    <template #suffixIcon><i class="icon i_calendar"/></template>
+                                    :allow-clear="false"
+                                    :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]"
+                                >
+                                    <template #suffixIcon><i class="icon i_calendar" /></template>
                                 </a-range-picker>
                             </div>
                         </div>
@@ -147,14 +157,16 @@
         </a-row>
         <div class="btn-area-box">
             <slot name="pre_btn"></slot>
-            <a-button @click="handleSearchReset" :disabled="disabled" v-if="isShowButton">{{ $t("def.reset") }}</a-button>
+            <a-button @click="handleSearchReset" :disabled="disabled" v-if="isShowButton">{{
+                $t('def.reset')
+            }}</a-button>
             <a-button @click="handleSearch" :disabled="disabled" type="primary" v-if="isShowButton">
-                {{ $t("def.search") }}
+                {{ $t('def.search') }}
             </a-button>
 
             <!-- 缩起和展开 -->
             <a-button type="link" @click="moreSearch" v-if="isShowMore">
-                {{ isShow ? $t("def.stow") : $t("def.unfold") }}
+                {{ isShow ? $t('def.stow') : $t('def.unfold') }}
                 <i class="icon i_xialajiantouxiao m-l-5" v-if="!isShow"></i>
                 <i class="icon i_shouqijiantouxiao m-l-5" v-else></i>
             </a-button>
@@ -164,9 +176,9 @@
 </template>
 
 <script>
-import Core from "@/core";
+import Core from '@/core';
 export default {
-    name: "SearchAll",
+    name: 'SearchAll',
     props: {
         options: {
             type: Array,
@@ -207,58 +219,56 @@ export default {
         // 如果需要展开收起
         if (this.isShowMore) {
             // 获取DOM结构个数
-            this.searchDom = document.querySelectorAll(".search-box");
+            this.searchDom = document.querySelectorAll('.search-box');
             this.getSearchItem();
         }
     },
-    beforeDestroy() {
-        
-    },
-    methods:{
-        filterOption(input,option){
+    beforeDestroy() {},
+    methods: {
+        filterOption(input, option) {
             return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
         },
         // 查询
         handleSearch() {
             const resultParams = {};
-            this.options.forEach((el) => {
+            this.options.forEach(el => {
                 resultParams[el.searchParmas] = el.value;
                 // 时间的处理
-                if (el.type === "time-range") {
+                if (el.type === 'time-range') {
                     resultParams[el.searchParmas[0]] = el?.value[0] ?? undefined;
-                    resultParams[el.searchParmas [1]] = el?.value[1] ?? undefined;
+                    resultParams[el.searchParmas[1]] = el?.value[1] ?? undefined;
                     delete resultParams[el.searchParmas];
                 }
             });
-            this.$emit("search", resultParams);
+            this.$emit('search', resultParams);
         },
         // 重置
         handleSearchReset() {
-            this.options.forEach((el) => {
+            this.options.forEach(el => {
                 el.value = undefined;
-                if (el.type === "time-range") {
+                if (el.type === 'time-range') {
                     el.value = [];
                 }
             });
-            console.log("重置", this.options);
-            
-            this.$emit("reset");
+            console.log('重置', this.options);
+
+            this.$emit('reset');
         },
         // 展开更多
         moreSearch() {
             this.isShow = !this.isShow;
-            this.$emit("freshPageHeight");
+            this.$emit('freshPageHeight');
 
             /* 展开-设置显示 */
             if (this.isShow) {
-                this.getSearchItem("block");
+                this.getSearchItem('block');
                 return;
             }
             /* 非展开-设置隐藏 */
             this.getSearchItem();
         },
         // 更改dom显隐
-        getSearchItem(type = "none") {
+        getSearchItem(type = 'none') {
             this.searchDom.forEach((el, index) => {
                 if (index > this.preSentationNumber) {
                     el.style.display = type;

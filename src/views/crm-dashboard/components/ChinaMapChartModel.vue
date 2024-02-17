@@ -3,13 +3,11 @@
         <!-- title -->
         <div class="title">
             <div>{{ title }}</div>
-            <div class="detail-title" @click="goToDetail('detail')">
-                详情
-            </div>
+            <div class="detail-title" @click="goToDetail('detail')">详情</div>
         </div>
         <!-- echarts -->
         <div class="table-container" v-if="!isEmpty">
-            <div id="ChinaMapChartId" class="chart" ref='ChinaMapChartId'></div>
+            <div id="ChinaMapChartId" class="chart" ref="ChinaMapChartId"></div>
             <div class="legend-container">
                 <div class="legend-wrap" v-for="item in legendList">
                     <div class="legend-block">
@@ -22,27 +20,24 @@
         </div>
         <div class="table-container jus" v-if="isEmpty">
             <div class="empty-wrap">
-                <img src="../../../assets/images/dashboard/emptyData.png" alt="">
-                <div class="empty-desc">
-                    暂无数据
-                </div>
+                <img src="../../../assets/images/dashboard/emptyData.png" alt="" />
+                <div class="empty-desc">暂无数据</div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import { Chart } from '@antv/g2'
-import Core from "../../../core";
+import { Chart } from '@antv/g2';
+import Core from '../../../core';
 
 export default {
     name: 'Cards',
-    components: {
-    },
+    components: {},
     props: {
         searchForm: {
             type: Object,
-            default: () => { }
+            default: () => {},
         },
     },
     data() {
@@ -63,31 +58,28 @@ export default {
                 if (this.searchForm.activity_id) {
                     this.getChinaMapChartData();
                 }
-            }
+            },
         },
-
     },
     computed: {
         lang() {
-            return this.$store.state.lang
+            return this.$store.state.lang;
         },
     },
-    created() {
-
-    },
+    created() {},
     mounted() {
         if (this.searchForm.activity_id) {
-           this.getChinaMapChartData();
+            this.getChinaMapChartData();
         }
     },
     beforeUnmount() {
-        this.$refs.ChinaMapChartId.innerHTML = ''
+        this.$refs.ChinaMapChartId.innerHTML = '';
     },
     methods: {
         async drawMap(data) {
-            console.log(document.getElementById('ChinaMapChartId'))
+            console.log(document.getElementById('ChinaMapChartId'));
             if (this.boStatisticsChart.destroy) {
-                this.boStatisticsChart.destroy()
+                this.boStatisticsChart.destroy();
             }
             /* mock */
             // const data = [
@@ -108,7 +100,7 @@ export default {
                 container: 'ChinaMapChartId',
                 autoFit: true,
                 height: 430,
-                padding: [10, 20, 0, 50]
+                padding: [10, 20, 0, 50],
             });
             chart.data(data);
             chart.scale({
@@ -139,7 +131,19 @@ export default {
                 .interval()
                 .position('type*value')
                 .size(26)
-                .color('type', ['#001A66', '#00288C', '#0039B3', '#004CD9', '#0061FF', '#3381FF', '#66A0FF', '#99C0FF', '#CCDFFF', '#E6EFFF', '#F3F8FF'])
+                .color('type', [
+                    '#001A66',
+                    '#00288C',
+                    '#0039B3',
+                    '#004CD9',
+                    '#0061FF',
+                    '#3381FF',
+                    '#66A0FF',
+                    '#99C0FF',
+                    '#CCDFFF',
+                    '#E6EFFF',
+                    '#F3F8FF',
+                ])
                 .label('value', {
                     style: {
                         fill: '#8d8d8d',
@@ -149,7 +153,7 @@ export default {
             chart.interaction('element-active');
             chart.render();
 
-            this.boStatisticsChart = chart
+            this.boStatisticsChart = chart;
         },
         async getChinaMapChartData() {
             try {
@@ -170,45 +174,57 @@ export default {
                 for (const city in cityMap) {
                     formattedData.push({ type: city === '0' ? '未知ip' : city, value: cityMap[city] });
                 }
-                const color = ['#001A66', '#00288C', '#0039B3', '#004CD9', '#0061FF', '#3381FF', '#66A0FF', '#99C0FF', '#CCDFFF', '#E6EFFF', '#F3F8FF'] // 配置项的颜色
-                this.legendList = formattedData
+                const color = [
+                    '#001A66',
+                    '#00288C',
+                    '#0039B3',
+                    '#004CD9',
+                    '#0061FF',
+                    '#3381FF',
+                    '#66A0FF',
+                    '#99C0FF',
+                    '#CCDFFF',
+                    '#E6EFFF',
+                    '#F3F8FF',
+                ]; // 配置项的颜色
+                this.legendList = formattedData;
                 this.legendList.forEach((item, index) => {
-                    item.color = color[index + 1]
-                    if(item.type === '0') {
-                        item.type = '未知ip'
+                    item.color = color[index + 1];
+                    if (item.type === '0') {
+                        item.type = '未知ip';
                     }
-                })
-                this.legendList = this.legendList.sort((a, b) => b.value - a.value).slice(0, 10)
+                });
+                this.legendList = this.legendList.sort((a, b) => b.value - a.value).slice(0, 10);
                 if (!formattedData.length) {
-                    this.isEmpty = true
+                    this.isEmpty = true;
                 } else {
-                    this.isEmpty = false
+                    this.isEmpty = false;
                     this.drawMap(formattedData.sort((a, b) => b.value - a.value).slice(0, 10));
                 }
             } catch (error) {
                 console.log('Error in getChinaMapChartData err', error);
-                this.$message.warning('数据无法加载，请稍后重试！')
+                this.$message.warning('数据无法加载，请稍后重试！');
             }
         },
         goToDetail(type) {
-            let routeUrl = ''
+            let routeUrl = '';
             switch (type) {
-                case 'detail':    // 编辑
+                case 'detail': // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/crm-dashboard/vote-detail",
+                        path: '/crm-dashboard/vote-detail',
                         query: {
                             title: this.title,
                             api_name: 'cityStatistics',
                             begin_time: this.searchForm.begin_time,
                             end_time: this.searchForm.end_time,
-                            column_type: Core.Const.VOTE.TYPE.AREA
-                        }
-                    })
-                    window.open(routeUrl.href, '_blank')
+                            column_type: Core.Const.VOTE.TYPE.AREA,
+                        },
+                    });
+                    window.open(routeUrl.href, '_blank');
                     break;
             }
-        }
-    }
+        },
+    },
 };
 </script>
 
@@ -232,7 +248,7 @@ export default {
 
     .detail-title {
         cursor: pointer;
-        color: #0061FF;
+        color: #0061ff;
         font-size: 14px;
         font-style: normal;
         font-weight: 400;
@@ -241,7 +257,7 @@ export default {
 
 .chart {
     width: 500px;
-    height: auto
+    height: auto;
 }
 
 .table-container {
@@ -259,14 +275,14 @@ export default {
         justify-content: center;
         align-items: center;
 
-        >img {
+        > img {
             width: 280px;
         }
 
         .empty-desc {
             margin-top: 10px;
             font-size: 14px;
-            color: #86909C;
+            color: #86909c;
         }
     }
 
@@ -295,14 +311,14 @@ export default {
                 }
 
                 .legend-key {
-                    color: #4E5969;
+                    color: #4e5969;
                     font-size: 14px;
                     font-weight: 400;
                 }
             }
 
             .legend-value {
-                color: #1D2129;
+                color: #1d2129;
                 font-size: 14px;
                 font-weight: 600;
             }

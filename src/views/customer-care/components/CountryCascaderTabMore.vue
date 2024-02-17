@@ -7,14 +7,15 @@
         filterable
         class="cascader-area"
         :placeholder="$t('n.choose')"
-        @change="handleChange" />
+        @change="handleChange"
+    />
 </template>
 
 <script setup>
-import Core from "@/core";
-import axios from "axios";
-import { ref, computed, getCurrentInstance, watch, onMounted, h } from "vue";
-const $emit = defineEmits(["update:value"]);
+import Core from '@/core';
+import axios from 'axios';
+import { ref, computed, getCurrentInstance, watch, onMounted, h } from 'vue';
+const $emit = defineEmits(['update:value']);
 const $props = defineProps({
     value: {
         type: Array,
@@ -28,7 +29,7 @@ const props = { multiple: true };
 
 // 给大洲的所有子元素添加父级code,并且添加一个全选
 const addParentCode = (arr, parentCode, parentName) => {
-    arr.forEach((item) => {
+    arr.forEach(item => {
         item.parentCode = parentCode;
         item.parentName = parentName;
         item.label = item.name;
@@ -40,15 +41,15 @@ const addParentCode = (arr, parentCode, parentName) => {
     return arr;
 };
 const getCountryOptions = () => {
-    axios.get("/ext/continent-country.json").then((response) => {
+    axios.get('/ext/continent-country.json').then(response => {
         console.log(response.data);
-        countryOptions.value = addParentCode(response.data, "", "");
+        countryOptions.value = addParentCode(response.data, '', '');
         console.log(countryOptions.value);
     });
 };
 // 触发获取
-const handleChange = (value) => {
-    $emit("update:value", value);
+const handleChange = value => {
+    $emit('update:value', value);
 };
 
 onMounted(() => {
@@ -61,9 +62,8 @@ onMounted(() => {
     .el-input {
         // 清除所有的样式边框，boxshadow
         .el-input__wrapper {
-            box-shadow: none  !important;
-            border: 1px solid #EAECF2;
-           
+            box-shadow: none !important;
+            border: 1px solid #eaecf2;
         }
     }
     .el-cascader__tags {
@@ -76,12 +76,11 @@ onMounted(() => {
         }
     }
     &:hover {
-       .el-input{
-              .el-input__wrapper{
-                border-color: #409EFF !important;
-              }
-       }
+        .el-input {
+            .el-input__wrapper {
+                border-color: #409eff !important;
+            }
+        }
     }
-    
 }
 </style>

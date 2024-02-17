@@ -2,30 +2,27 @@
     <div class="submit-success">
         <div class="container">
             <div class="icon">
-                <img
-                    class="icon-img"
-                    src="../../../assets//images/supply-chain/suceess.png"
-                    alt="" />
+                <img class="icon-img" src="../../../assets//images/supply-chain/suceess.png" alt="" />
             </div>
             <div class="title">
-                {{ $t("supply-chain.information_submitted_successfully") }}
+                {{ $t('supply-chain.information_submitted_successfully') }}
             </div>
 
             <div class="btn" @click="onBtn">
-                <a-button>{{ $t("supply-chain.view_or_edit_data") }}</a-button>
+                <a-button>{{ $t('supply-chain.view_or_edit_data') }}</a-button>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
-import { useStore } from "vuex";
+import { computed, ref } from 'vue';
+import { useStore } from 'vuex';
 const $store = useStore();
 
 // 跳转
 const onBtn = async () => {
-    $store.dispatch("SUPPLY_CHAIN/setStep", 0);
+    $store.dispatch('SUPPLY_CHAIN/setStep', 0);
 };
 </script>
 

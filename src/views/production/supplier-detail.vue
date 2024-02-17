@@ -1,10 +1,14 @@
 <template>
-    <div id='SupplierDetail' class='list-container'>
-        <div class='title-container'>
-            <div class='title-area'>供应商详情</div>
+    <div id="SupplierDetail" class="list-container">
+        <div class="title-container">
+            <div class="title-area">供应商详情</div>
             <div class="btns-area">
-                <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('supplier.save')"><i class="icon i_edit"/>编辑</a-button>
-                <a-button type="danger" ghost @click="handleDelete(id)" v-if="$auth('supplier.delete')"><i class="icon i_close_c"/>删除</a-button>
+                <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('supplier.save')"
+                    ><i class="icon i_edit" />编辑</a-button
+                >
+                <a-button type="danger" ghost @click="handleDelete(id)" v-if="$auth('supplier.delete')"
+                    ><i class="icon i_close_c" />删除</a-button
+                >
             </div>
         </div>
         <div class="gray-panel">
@@ -56,8 +60,8 @@
         </div>
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
-                 <a-tab-pane key="MaterialList" tab="供应物料">
-                    <MaterialList :supplierId="id" :materialId="material_id" v-if="activeKey === 'MaterialList'"/>
+                <a-tab-pane key="MaterialList" tab="供应物料">
+                    <MaterialList :supplierId="id" :materialId="material_id" v-if="activeKey === 'MaterialList'" />
                 </a-tab-pane>
             </a-tabs>
         </div>
@@ -66,7 +70,7 @@
 
 <script>
 import Core from '../../core';
-import MaterialList from './components/MaterialList.vue'
+import MaterialList from './components/MaterialList.vue';
 
 export default {
     name: 'SupplierDetail',
@@ -82,7 +86,7 @@ export default {
             material_id: '',
             detail: {},
             activeKey: '',
-        }
+        };
     },
     watch: {},
     computed: {},
@@ -97,14 +101,14 @@ export default {
                 case 'edit': // 编辑
                     routeUrl = this.$router.resolve({
                         path: '/production/supplier-edit',
-                        query: {id: this.id},
+                        query: { id: this.id },
                     });
                     window.open(routeUrl.href, '_self');
                     break;
                 case 'list': // 列表
                     routeUrl = this.$router.resolve({
                         path: '/production/supplier-list',
-                        query: {id: this.id},
+                        query: { id: this.id },
                     });
                     window.open(routeUrl.href, '_self');
                     break;
@@ -114,15 +118,18 @@ export default {
             this.loading = true;
             Core.Api.Supplier.detail({
                 id: this.id,
-            }).then((res) => {
-                console.log('getSupplierDetail res', res);
-                this.detail = res.detail
-                this.activeKey = 'MaterialList'
-            }).catch((err) => {
-                console.log('getSupplierDetail err', err);
-            }).finally(() => {
-                this.loading = false;
-            });
+            })
+                .then(res => {
+                    console.log('getSupplierDetail res', res);
+                    this.detail = res.detail;
+                    this.activeKey = 'MaterialList';
+                })
+                .catch(err => {
+                    console.log('getSupplierDetail err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         handleDelete(id) {
             let _this = this;
@@ -132,11 +139,12 @@ export default {
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Supplier.delete({id})
+                    Core.Api.Supplier.delete({ id })
                         .then(() => {
                             _this.$message.success(_this.$t('pop_up.delete_success'));
                             _this.routerChange('list');
-                        }).catch((err) => {
+                        })
+                        .catch(err => {
                             console.log('handleDelete err', err);
                         });
                 },
@@ -146,7 +154,7 @@ export default {
 };
 </script>
 
-<style lang='less'>
+<style lang="less">
 #SupplierDetail {
     .desc-title {
         .title-area {

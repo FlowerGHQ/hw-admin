@@ -3,15 +3,19 @@
         <div class="title-container">
             <div class="title-area">{{ $t('no.detail') }}</div>
             <div class="btns-area" v-if="$auth('ADMIN')">
-                <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('message.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
-                <a-button type="danger" ghost @click="handleDelete()"><i class="icon i_delete" v-if="$auth('message.delete')"/>{{ $t('def.delete') }}</a-button>
+                <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('message.save')"
+                    ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
+                >
+                <a-button type="danger" ghost @click="handleDelete()"
+                    ><i class="icon i_delete" v-if="$auth('message.delete')" />{{ $t('def.delete') }}</a-button
+                >
             </div>
         </div>
         <div class="gray-panel">
             <div class="panel-content">
-                <h1 class="title"> {{ detail.title }} </h1>
+                <h1 class="title">{{ detail.title }}</h1>
                 <div class="desc-title">
-                    <div class="key"><span v-html='detail.content'></span></div>
+                    <div class="key"><span v-html="detail.content"></span></div>
                 </div>
             </div>
         </div>
@@ -41,26 +45,26 @@ export default {
     watch: {},
     computed: {},
     created() {
-        this.notice_id = Number(this.$route.query.id) || 0
+        this.notice_id = Number(this.$route.query.id) || 0;
         this.getNoticeDetail();
     },
     methods: {
         routerChange(type) {
-            let routeUrl = ''
+            let routeUrl = '';
             switch (type) {
-                case 'edit':  // 编辑
+                case 'edit': // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/system/notice-edit",
-                        query: {id: this.notice_id}
-                    })
-                    window.open(routeUrl.href, '_self')
+                        path: '/system/notice-edit',
+                        query: { id: this.notice_id },
+                    });
+                    window.open(routeUrl.href, '_self');
                     break;
-                case 'list':  // 列表
+                case 'list': // 列表
                     routeUrl = this.$router.resolve({
-                        path: "/system/notice-list",
-                        query: {id: this.notice_id}
-                    })
-                    window.open(routeUrl.href, '_self')
+                        path: '/system/notice-list',
+                        query: { id: this.notice_id },
+                    });
+                    window.open(routeUrl.href, '_self');
                     break;
             }
         },
@@ -68,14 +72,17 @@ export default {
             this.loading = true;
             Core.Api.Notice.detail({
                 id: this.notice_id,
-            }).then(res => {
-                console.log('getNoticeDetail res', res)
-                this.detail = res.detail
-            }).catch(err => {
-                console.log('getNoticeDetail err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+            })
+                .then(res => {
+                    console.log('getNoticeDetail res', res);
+                    this.detail = res.detail;
+                })
+                .catch(err => {
+                    console.log('getNoticeDetail err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
 
         // 删除消息
@@ -87,16 +94,18 @@ export default {
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.Notice.delete({id:_this.notice_id}).then(() => {
-                        _this.$message.success(_this.$t('pop_up.delete_success'));
-                        _this.routerChange('list');
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
+                    Core.Api.Notice.delete({ id: _this.notice_id })
+                        .then(() => {
+                            _this.$message.success(_this.$t('pop_up.delete_success'));
+                            _this.routerChange('list');
+                        })
+                        .catch(err => {
+                            console.log('handleDelete err', err);
+                        });
                 },
             });
         },
-    }
+    },
 };
 </script>
 
@@ -111,4 +120,3 @@ export default {
     }
 }
 </style>
-

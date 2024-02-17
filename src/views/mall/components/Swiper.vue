@@ -4,16 +4,23 @@
             <div class="preview-img" v-if="previewImg">
                 <Magnifier :activePicUrl="$Util.imageFilter(previewImg, 5)" />
             </div>
-            <img class="preview-img" :src="$Util.imageFilter(previewImg, 5)" alt="" v-else>
+            <img class="preview-img" :src="$Util.imageFilter(previewImg, 5)" alt="" v-else />
         </div>
         <div class="swiper-content" v-if="swiperList.length > 1">
             <div class="swiper-body">
-                <swiper :modules="modules" :slidesPerView="mySwiperOption.slidesPerView"
-                    :navigation="mySwiperOption.navigation">
+                <swiper
+                    :modules="modules"
+                    :slidesPerView="mySwiperOption.slidesPerView"
+                    :navigation="mySwiperOption.navigation"
+                >
                     <swiper-slide v-for="(item, i) in swiperList" :key="i" @click="selectSwiper(item, i)">
                         <div class="swiper-img">
-                            <img class="img" :class="swiperIndex === i ? 'active' : ''"
-                                :src="$Util.imageFilter(item.path, 5)" alt="">
+                            <img
+                                class="img"
+                                :class="swiperIndex === i ? 'active' : ''"
+                                :src="$Util.imageFilter(item.path, 5)"
+                                alt=""
+                            />
                         </div>
                     </swiper-slide>
                 </swiper>
@@ -31,11 +38,11 @@
 </template>
 
 <script setup>
-import SvgIcon from "@/components/MySvgIcon/index.vue";
-import Magnifier from "./Magnifier.vue";
-import { Swiper, SwiperSlide } from "vue-awesome-swiper";
+import SvgIcon from '@/components/MySvgIcon/index.vue';
+import Magnifier from './Magnifier.vue';
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import 'swiper/css';
-import { Navigation } from "swiper";
+import { Navigation } from 'swiper';
 import { ref, onMounted, reactive } from 'vue';
 const props = defineProps({
     mySwiperOption: {
@@ -47,33 +54,33 @@ const props = defineProps({
                 navigation: {
                     nextEl: '.swiper-button-next',
                     prevEl: '.swiper-button-pre',
-                }
-            }
+                },
+            };
         },
     },
     swiperList: {
         type: Array,
         default: () => [],
     },
-})
+});
 
-const modules = [Navigation]
-const previewImg = ref(props.swiperList[0]?.path || '')
-const swiperIndex = ref(0)
+const modules = [Navigation];
+const previewImg = ref(props.swiperList[0]?.path || '');
+const swiperIndex = ref(0);
 
 // 选择图片
 const selectSwiper = (item, i) => {
-    swiperIndex.value = i
-    previewImg.value = item?.path
-}
+    swiperIndex.value = i;
+    previewImg.value = item?.path;
+};
 // 输出组件的方法，让外部组件可以调用
 defineExpose({
     selectSwiper,
-})
+});
 </script>
 <style lang="less" scoped>
 #Swiper {
-    background: #FFF;
+    background: #fff;
 
     .preview {
         .preview-img {
@@ -86,7 +93,7 @@ defineExpose({
 
     .swiper-content {
         padding: 24px 72px;
-        border-top: 1px solid #EEE;
+        border-top: 1px solid #eee;
         position: relative;
 
         .swiper-img {
@@ -99,11 +106,11 @@ defineExpose({
                 aspect-ratio: 1;
                 object-fit: cover;
                 user-select: none;
-                border: 1px solid #EEE;
+                border: 1px solid #eee;
                 cursor: pointer;
 
                 &.active {
-                    border: 1px solid #C6F;
+                    border: 1px solid #c6f;
                 }
             }
         }
@@ -128,7 +135,6 @@ defineExpose({
             }
 
             &:hover {
-
                 .swiper-button-pre-svg,
                 .swiper-button-next-svg {
                     display: none;

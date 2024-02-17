@@ -1,102 +1,117 @@
 <template>
-<div id="Analytics">
-    <div class="banner-header">
-        <img src="../../assets/images/default_banner-one.png" class="banner-bg">
-        <p class="banner-title">{{ $t('n.search_title') }}</p>
-        <a-input v-model:value="searchValue" :placeholder="$t('n.search_placeholder')" class="banner-search" allowClear :maxlength="99" @pressEnter="hadleSearch">
-            <template #prefix>
-                <search-outlined class="search" @click="hadleSearch"/>
-            </template>
-            <template #suffix>
-                <arrow-right-outlined class="arrow" @click="hadleSearch"/>
-            </template>
-        </a-input>
-    </div>
-    <div class="banner-cards">
-        <div class="banner-card" v-for="(banner,i) in bannerList" :key="i" @click="routerChange('item',banner.first_level)">
-            <template v-if="banner.first_level ==='1'">
-                <img src="../../assets/images/default_banner-five.jpeg" class="card-bg">
-                <arrow-right-outlined type="user" class="arrow-black"/>
-            </template>
-            <template v-if="banner.first_level ==='2'">
-                <img src="../../assets/images/default_banner-five.png" class="card-bg">
-                <arrow-right-outlined type="user" class="arrow-black"/>
-            </template>
-            <template v-if="banner.first_level ==='3'">
-                <img src="../../assets/images/default_banner-two.png" class="card-bg">
-                <p class="title">{{ $i18n.locale === 'zh' ? banner.content : banner.content_en }}</p>
-                <p class="info">{{ $i18n.locale === 'zh' ? banner.name : banner.name_en }}</p>
-                <arrow-right-outlined type="user" class="arrow"/>
-            </template>
+    <div id="Analytics">
+        <div class="banner-header">
+            <img src="../../assets/images/default_banner-one.png" class="banner-bg" />
+            <p class="banner-title">{{ $t('n.search_title') }}</p>
+            <a-input
+                v-model:value="searchValue"
+                :placeholder="$t('n.search_placeholder')"
+                class="banner-search"
+                allowClear
+                :maxlength="99"
+                @pressEnter="hadleSearch"
+            >
+                <template #prefix>
+                    <search-outlined class="search" @click="hadleSearch" />
+                </template>
+                <template #suffix>
+                    <arrow-right-outlined class="arrow" @click="hadleSearch" />
+                </template>
+            </a-input>
         </div>
-    </div>
-    <div class="service">
-        <div class="service-left card">
-            <div class="service-title">{{ $t('n.service') }}</div>
-            <div class="service-content service">
-                <div class="service-list" v-for="(service,index) in servicelist" :key="index">
-                    <img :src="serviceSrc(service.imgUrl)" alt="" class="service-img">
-                    <p class="service-info">{{ $i18n.locale === 'zh' ? service.name : service.name_en }}</p>
-                </div>
+        <div class="banner-cards">
+            <div
+                class="banner-card"
+                v-for="(banner, i) in bannerList"
+                :key="i"
+                @click="routerChange('item', banner.first_level)"
+            >
+                <template v-if="banner.first_level === '1'">
+                    <img src="../../assets/images/default_banner-five.jpeg" class="card-bg" />
+                    <arrow-right-outlined type="user" class="arrow-black" />
+                </template>
+                <template v-if="banner.first_level === '2'">
+                    <img src="../../assets/images/default_banner-five.png" class="card-bg" />
+                    <arrow-right-outlined type="user" class="arrow-black" />
+                </template>
+                <template v-if="banner.first_level === '3'">
+                    <img src="../../assets/images/default_banner-two.png" class="card-bg" />
+                    <p class="title">{{ $i18n.locale === 'zh' ? banner.content : banner.content_en }}</p>
+                    <p class="info">{{ $i18n.locale === 'zh' ? banner.name : banner.name_en }}</p>
+                    <arrow-right-outlined type="user" class="arrow" />
+                </template>
             </div>
         </div>
-        <div class="service-right card">
-            <div class="service-title">{{ $t('n.unread_num') }}</div>
-            <div class="service-content">
-                <div class="notice-list" v-for="unread in unreadList" :key="unread.id">
-                    <div class="notice-header">
-                        <p class="notice-title">{{ unread.title }}</p>
-                        <p class="notice-content">{{ unread.title }}</p>
-                        <p class="more" @click="routerChange('notice')">{{ $t('n.detail') }}<right-outlined class="arrow"/></p>
+        <div class="service">
+            <div class="service-left card">
+                <div class="service-title">{{ $t('n.service') }}</div>
+                <div class="service-content service">
+                    <div class="service-list" v-for="(service, index) in servicelist" :key="index">
+                        <img :src="serviceSrc(service.imgUrl)" alt="" class="service-img" />
+                        <p class="service-info">{{ $i18n.locale === 'zh' ? service.name : service.name_en }}</p>
                     </div>
-                    <div class="notice-contents">{{ unread.content }}</div>
-                    <p class="time">{{ $Util.timeFilter(unread.create_time) }}</p>
+                </div>
+            </div>
+            <div class="service-right card">
+                <div class="service-title">{{ $t('n.unread_num') }}</div>
+                <div class="service-content">
+                    <div class="notice-list" v-for="unread in unreadList" :key="unread.id">
+                        <div class="notice-header">
+                            <p class="notice-title">{{ unread.title }}</p>
+                            <p class="notice-content">{{ unread.title }}</p>
+                            <p class="more" @click="routerChange('notice')">
+                                {{ $t('n.detail') }}<right-outlined class="arrow" />
+                            </p>
+                        </div>
+                        <div class="notice-contents">{{ unread.content }}</div>
+                        <p class="time">{{ $Util.timeFilter(unread.create_time) }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="list-cards">
+            <div class="list-card" v-for="(recom, i) in recommendlist" :key="i">
+                <div class="list-img">
+                    <img src="../../assets/images/default_banner-three.png" class="img" />
+                    <div class="date">
+                        <p class="day">{{ $Util.timeFilter(recom.date, 3).split('-')[2] }}</p>
+                        <p class="month">{{ $Util.timeFilter(recom.date, 3).split('-')[1] }}</p>
+                    </div>
+                </div>
+                <div class="list-content">
+                    <p class="title">{{ $i18n.locale === 'zh' ? recom.name : recom.name_en }}</p>
+                    <p class="labels">
+                        <span class="label" v-for="(label, index) in recom.labels" :key="index">{{
+                            $i18n.locale === 'zh' ? label.name : label.name_en
+                        }}</span>
+                    </p>
+                    <div class="btn">
+                        <a-button type="primary">{{ $t('n.more') }}</a-button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="list-cards">
-        <div class="list-card" v-for="recom,i in recommendlist" :key="i">
-            <div class="list-img">
-                <img src="../../assets/images/default_banner-three.png" class="img">
-                <div class="date">
-                    <p class="day">{{ $Util.timeFilter(recom.date,3).split('-')[2] }}</p>
-                    <p class="month">{{ $Util.timeFilter(recom.date,3).split('-')[1] }}</p>
-                </div>
-            </div>
-            <div class="list-content">
-                <p class="title">{{ $i18n.locale === 'zh' ? recom.name : recom.name_en }}</p>
-                <p class="labels">
-                    <span class="label" v-for="label,index in recom.labels" :key="index">{{ $i18n.locale === 'zh' ? label.name : label.name_en }}</span>
-                </p>
-                <div class="btn">
-                    <a-button type="primary">{{ $t('n.more') }}</a-button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 </template>
 <script>
-
 import Core from '../../core';
 import { SearchOutlined, ArrowRightOutlined, RightOutlined } from '@ant-design/icons-vue';
 
-const serviceModules = import.meta.globEager ("../../assets/images/service/*")
+const serviceModules = import.meta.globEager('../../assets/images/service/*');
 
 export default {
     name: 'Analytics',
     components: {
         SearchOutlined,
         ArrowRightOutlined,
-        RightOutlined
+        RightOutlined,
     },
     data() {
         return {
             unread: {
                 master: '',
                 org: '',
-                list: []
+                list: [],
             },
             // 搜索内容
             searchValue: '',
@@ -122,7 +137,7 @@ export default {
                     content: '内容 内容',
                     content_en: 'Content content',
                     first_level: '3',
-                }
+                },
             ],
             // 待定数据
             pendingList: [
@@ -205,9 +220,9 @@ export default {
                         {
                             name: '标签',
                             name_en: 'TAG',
-                        }
+                        },
                     ],
-                    date: '1023000'
+                    date: '1023000',
                 },
                 {
                     name: 'HORWIN合作伙伴活动2022',
@@ -224,11 +239,11 @@ export default {
                         {
                             name: '标签',
                             name_en: 'TAG',
-                        }
+                        },
                     ],
-                    date: '1000000'
+                    date: '1000000',
                 },
-                 {
+                {
                     name: 'HORWIN合作伙伴活动2022',
                     name_en: 'HORWIN PARTNER EVENT 2022',
                     labels: [
@@ -243,76 +258,80 @@ export default {
                         {
                             name: '标签',
                             name_en: 'TAG',
-                        }
+                        },
                     ],
-                    date: '1230340'
-                }
+                    date: '1230340',
+                },
             ],
-        }
+        };
     },
     mounted() {
-        this.getUnreadCount()
+        this.getUnreadCount();
     },
     computed: {
         unreadList() {
-            return this.unread.list.slice(0,2)
-        }
+            return this.unread.list.slice(0, 2);
+        },
     },
     methods: {
-        serviceSrc(name, type ='png'){
-            let path = `../../assets/images/service/${name}.${type}`;		
-            return serviceModules[path]?.default
+        serviceSrc(name, type = 'png') {
+            let path = `../../assets/images/service/${name}.${type}`;
+            return serviceModules[path]?.default;
         },
         routerChange(type, first_level_id) {
-            let routeUrl = ''
+            let routeUrl = '';
             switch (type) {
-                case 'item' :
+                case 'item':
                     routeUrl = this.$router.resolve({
-                        path: "/mall/vehicle-list",
+                        path: '/mall/vehicle-list',
                         // query: {
                         //     first_level_id : first_level_id
                         // }
-                    })
-                    window.open(routeUrl.href, '_self')
+                    });
+                    window.open(routeUrl.href, '_self');
                     break;
-                case 'notice':        //系统
+                case 'notice': //系统
                     routeUrl = this.$router.resolve({
-                        path: "/system/notice-list",
-                    })
-                    window.open(routeUrl.href, '_self')
+                        path: '/system/notice-list',
+                    });
+                    window.open(routeUrl.href, '_self');
                     break;
             }
         },
-        getUnreadCount() {    // 获取 未读消息数 数据
-            let CATEGORY = Core.Const.NOTICE.CATEGORY
+        getUnreadCount() {
+            // 获取 未读消息数 数据
+            let CATEGORY = Core.Const.NOTICE.CATEGORY;
             Core.Api.Notice.list({
-                category: CATEGORY.ORG
-            }).then(res => {
-                this.unread.org = res.un_count;
-                this.unread.list.push(...res.list);
-            }).catch(err => {
-                console.log('getUnreadCount err', err)
+                category: CATEGORY.ORG,
             })
+                .then(res => {
+                    this.unread.org = res.un_count;
+                    this.unread.list.push(...res.list);
+                })
+                .catch(err => {
+                    console.log('getUnreadCount err', err);
+                });
             Core.Api.Notice.list({
-                category: CATEGORY.MASTER
-            }).then(res => {
-                this.unread.master = res.un_count;
-                this.unread.list.push(...res.list);
-            }).catch(err => {
-                console.log('getUnreadCount err', err)
+                category: CATEGORY.MASTER,
             })
+                .then(res => {
+                    this.unread.master = res.un_count;
+                    this.unread.list.push(...res.list);
+                })
+                .catch(err => {
+                    console.log('getUnreadCount err', err);
+                });
         },
         hadleSearch() {
-            if(this.searchValue.length) {
-                console.log(this.searchValue)
+            if (this.searchValue.length) {
+                console.log(this.searchValue);
                 // 请求数据
             } else {
                 this.$message.error(this.$t('n.enter_search'));
             }
         },
-
-    }
-}
+    },
+};
 </script>
 <style lang="less" scoped>
 #Analytics {
@@ -334,10 +353,10 @@ export default {
             transform: translateX(-50%);
             font-size: 24px;
             font-weight: bold;
-            color:  @white;
+            color: @white;
             width: 100%;
             text-align: center;
-            .ell()
+            .ell();
         }
         .banner-search {
             width: 50%;
@@ -345,7 +364,7 @@ export default {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%,-50%);
+            transform: translate(-50%, -50%);
         }
     }
     .banner-cards {
@@ -364,7 +383,7 @@ export default {
             > p {
                 position: absolute;
                 width: calc(100 - 20%);
-                .ell()
+                .ell();
             }
             .title {
                 top: 10%;
@@ -372,7 +391,7 @@ export default {
                 font-size: @fz_lg;
                 font-weight: bold;
                 color: @white;
-                opacity: .8;
+                opacity: 0.8;
             }
             .info {
                 top: 20%;
@@ -394,7 +413,7 @@ export default {
                 font-size: @fz_lg;
                 font-weight: bold;
                 color: #000;
-                opacity: .8;
+                opacity: 0.8;
             }
             .info-black {
                 top: 20%;
@@ -417,7 +436,7 @@ export default {
         .title {
             font-size: @fz_bs;
             font-weight: bold;
-            color: #323C4D;
+            color: #323c4d;
             .badge {
                 margin-left: 10px;
             }
@@ -442,7 +461,7 @@ export default {
                         font-weight: 500;
                     }
                     p {
-                        .ell()
+                        .ell();
                     }
                     .info {
                         font-weight: 500;
@@ -479,7 +498,7 @@ export default {
         .service-title {
             font-size: @fz_bs;
             font-weight: bold;
-            color: #323C4D;
+            color: #323c4d;
         }
         .service-content {
             margin-top: 22px;
@@ -497,7 +516,7 @@ export default {
             margin-bottom: 55px;
             display: flex;
             align-items: center;
-            background: #FAFBFC;
+            background: #fafbfc;
             border-radius: 4px 4px 4px 4px;
             padding: 14px;
             box-sizing: border-box;
@@ -510,7 +529,7 @@ export default {
                 width: calc(100% - 46px);
                 .ell();
                 font-weight: bold;
-                color: #606C80;
+                color: #606c80;
             }
         }
         .notice-list {
@@ -523,9 +542,9 @@ export default {
                 .notice-title {
                     font-size: @fz_bs;
                     font-weight: 500;
-                    color: #1EB4D1;
+                    color: #1eb4d1;
                     margin-right: 14px;
-                    background: #E5FAFF;
+                    background: #e5faff;
                     padding: 0 4px;
                     border-radius: 2px;
                 }
@@ -540,10 +559,10 @@ export default {
                     margin-left: 25px;
                     font-size: @fz_bs;
                     font-weight: 500;
-                    color: #2563EB;
+                    color: #2563eb;
                     .fsb();
                     .arrow {
-                        color: #A2A2A2;
+                        color: #a2a2a2;
                         font-size: @fz_sm;
                         margin-left: 8px;
                     }
@@ -554,7 +573,7 @@ export default {
                 width: 100%;
                 .ell();
                 font-weight: 500;
-                color: #A9A9A9;
+                color: #a9a9a9;
             }
             .time {
                 margin-top: 10px;
@@ -588,12 +607,12 @@ export default {
                     .day {
                         font-size: @fz_lg;
                         font-weight: normal;
-                        color: #566A7F;
+                        color: #566a7f;
                     }
                     .month {
                         font-size: @fz_13;
                         font-weight: bold;
-                        color: #2563EB;
+                        color: #2563eb;
                     }
                 }
             }
@@ -604,19 +623,19 @@ export default {
                 .title {
                     font-size: @fz_lg;
                     font-weight: 400;
-                    color: #323C4C;
-                    .ell()
+                    color: #323c4c;
+                    .ell();
                 }
                 .labels {
                     width: 100%;
                     display: flex;
                     margin-top: 12px;
                     .label {
-                        background: rgba(37, 99, 235, .16);
+                        background: rgba(37, 99, 235, 0.16);
                         border-radius: 4px;
                         font-size: @fz_13;
                         font-weight: 400;
-                        color: #2563EB;
+                        color: #2563eb;
                         margin-right: 12px;
                         padding: 2px 16px;
                     }
@@ -636,21 +655,21 @@ export default {
 }
 .green {
     .text {
-        color: #367AFF;
+        color: #367aff;
     }
     > div {
-        border-left-color: #367AFF;
+        border-left-color: #367aff;
     }
-    background: linear-gradient(94deg, rgba(54, 122, 255, .3) 0%, rgba(54,122,255,0) 40%);
+    background: linear-gradient(94deg, rgba(54, 122, 255, 0.3) 0%, rgba(54, 122, 255, 0) 40%);
 }
 .red {
     .text {
-        color: #FF0000;
+        color: #ff0000;
     }
     > div {
-        border-left-color: #FF0000;
+        border-left-color: #ff0000;
     }
-    background: linear-gradient(90deg, rgba(255,0,0,.3) 0%, rgba(255,0,0,0) 40%);
+    background: linear-gradient(90deg, rgba(255, 0, 0, 0.3) 0%, rgba(255, 0, 0, 0) 40%);
 }
 :deep(.ant-badge-count) {
     background-color: rgba(255, 204, 215, 1);
@@ -664,7 +683,7 @@ export default {
 }
 .banner-search {
     border: none;
-    background-color: rgba(255, 255, 255, .26);
+    background-color: rgba(255, 255, 255, 0.26);
     padding: 4px 30px;
     border-radius: 33px;
 }
@@ -684,7 +703,7 @@ export default {
     font-size: 20px;
     margin-right: 20px;
     color: #fff;
-    opacity: .6;
+    opacity: 0.6;
     &:hover {
         color: #fff;
         opacity: 1;

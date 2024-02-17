@@ -9,7 +9,7 @@
                 <input
                     @focus="handleInputFocus"
                     @blur="handleInputBlur"
-                    :value="internalValue" 
+                    :value="internalValue"
                     :placeholder="placeholder"
                     :class="inputClassName"
                     type="text"
@@ -28,7 +28,7 @@
                 <input
                     @focus="handleInputFocus"
                     @blur="handleInputBlur"
-                    :value="internalValue" 
+                    :value="internalValue"
                     :placeholder="placeholder"
                     :class="inputClassName"
                     type="password"
@@ -44,33 +44,40 @@
 <script>
 export default {
     props: {
-        value: { // 输入框的值
+        value: {
+            // 输入框的值
             type: String,
             default: '',
         },
-        type: { // 表单类型
+        type: {
+            // 表单类型
             type: String,
             default: 'Basic',
         },
-        placeholder: { // 输入框占位符
+        placeholder: {
+            // 输入框占位符
             type: String,
             default: 'Please Enter',
         },
-        formKey: { // label
+        formKey: {
+            // label
             type: String,
             required: false,
         },
-        unValid: { // 通用验证判断
+        unValid: {
+            // 通用验证判断
             type: Boolean,
-            default: false
+            default: false,
         },
-        lastBool: { // 是否为最后一项 样式不同
+        lastBool: {
+            // 是否为最后一项 样式不同
             type: Boolean,
-            default: false
+            default: false,
         },
-        isGetDef: { // 是否需要获取默认值
+        isGetDef: {
+            // 是否需要获取默认值
             type: Boolean,
-            default: false
+            default: false,
         },
     },
     data() {
@@ -87,11 +94,11 @@ export default {
             area: {
                 country: '',
                 city: '',
-                province: ''
+                province: '',
             },
             state: undefined,
             stateOptions: [],
-        }
+        };
     },
     computed: {
         inputClassName() {
@@ -109,17 +116,16 @@ export default {
     mounted() {},
     methods: {
         handleInputFocus() {
-            this.inputStatus = 'be-entering'
-            this.$emit('handleValid')
+            this.inputStatus = 'be-entering';
+            this.$emit('handleValid');
         },
         handleInputBlur() {
-            if(this.value) {
-                this.inputStatus = 'entered'
-                this.$emit('handleValid')
-
+            if (this.value) {
+                this.inputStatus = 'entered';
+                this.$emit('handleValid');
             } else {
-                this.inputStatus = 'not-enter'
-                this.$emit('handleValid')
+                this.inputStatus = 'not-enter';
+                this.$emit('handleValid');
             }
         },
         updateValue(event) {
@@ -131,8 +137,8 @@ export default {
             this.$emit('keydownEnter');
         },
         focus() {
-            this.$refs['inputRef'].focus()
-        }
+            this.$refs['inputRef'].focus();
+        },
     },
 };
 </script>
@@ -143,16 +149,16 @@ export default {
         margin-right: 10px;
         margin-top: 1px;
         &.be-entering {
-            border-bottom: 1px solid #EEE;
-            caret-color: #C6F;
+            border-bottom: 1px solid #eee;
+            caret-color: #c6f;
         }
         &.not-enter {
-            border-bottom: 1px solid #EEE;
+            border-bottom: 1px solid #eee;
         }
         &.err-enter {
-            border-bottom: 1px solid #FF0000;
+            border-bottom: 1px solid #ff0000;
             &::-webkit-input-placeholder {
-                color: #FF0000;
+                color: #ff0000;
             }
         }
         .ant-select-selection {
@@ -184,12 +190,12 @@ export default {
 
         .ant-select-selection:focus {
             box-shadow: none;
-            border-bottom: 1px solid #BFBFBF;
+            border-bottom: 1px solid #bfbfbf;
         }
 
         .ant-select-selection:active {
             box-shadow: none;
-            border-bottom: 1px solid #BFBFBF;
+            border-bottom: 1px solid #bfbfbf;
         }
 
         .ant-select-open {
@@ -209,16 +215,16 @@ export default {
         // margin-top: 1px;
         width: 100%;
         &.be-entering {
-            border-bottom: 1px solid #EEE;
-            caret-color: #C6F;
+            border-bottom: 1px solid #eee;
+            caret-color: #c6f;
         }
         &.not-enter {
-            border-bottom: 1px solid #EEE;
+            border-bottom: 1px solid #eee;
         }
         &.err-enter {
-            border-bottom: 1px solid #FF0000;
+            border-bottom: 1px solid #ff0000;
             &::-webkit-input-placeholder {
-                color: #FF0000;
+                color: #ff0000;
             }
         }
         .ant-select-selection {
@@ -250,12 +256,12 @@ export default {
 
         .ant-select-selection:focus {
             box-shadow: none;
-            border-bottom: 1px solid #BFBFBF;
+            border-bottom: 1px solid #bfbfbf;
         }
 
         .ant-select-selection:active {
             box-shadow: none;
-            border-bottom: 1px solid #BFBFBF;
+            border-bottom: 1px solid #bfbfbf;
         }
 
         .ant-select-open {
@@ -280,7 +286,7 @@ export default {
         line-height: 150%;
         margin-bottom: 4px;
         &.orange {
-            color: #FF0000;
+            color: #ff0000;
         }
     }
     .web-value {
@@ -299,10 +305,10 @@ export default {
             font-weight: 400;
             line-height: 150%; /* 21px */
             // letter-spacing: 0.56px;
-            color: #BFBFBF;
+            color: #bfbfbf;
         }
         /* 解决浏览器自带input:-internal-autofill-selected背景色样式问题 */
-        input { 
+        input {
             box-shadow: inset 0 0 0 1000px white !important;
         }
 
@@ -316,28 +322,28 @@ export default {
             // letter-spacing: 0.56px;
 
             &.not-enter {
-                border-bottom: 1px solid #EEE;
+                border-bottom: 1px solid #eee;
                 font-weight: 400;
             }
 
             &.be-entering {
-                border-bottom: 1px solid #BFBFBF;
+                border-bottom: 1px solid #bfbfbf;
                 color: #333;
                 font-weight: 400;
-                caret-color: #C6F;
+                caret-color: #c6f;
             }
 
             &.entered {
-                border-bottom: 1px solid #EEE;
+                border-bottom: 1px solid #eee;
                 color: #333;
                 font-weight: 400;
             }
 
             &.err-enter {
-                border-bottom: 1px solid #FF0000;
+                border-bottom: 1px solid #ff0000;
                 font-weight: 400;
                 &::-webkit-input-placeholder {
-                    color: #FF0000;
+                    color: #ff0000;
                 }
             }
         }
@@ -372,21 +378,20 @@ export default {
             }
         }
         .selection {
-            
             height: 32px;
             margin-right: 10px;
             // margin-top: 1px;
             &.be-entering {
-                border-bottom: 1px solid #EEE;
-                caret-color: #C6F;
+                border-bottom: 1px solid #eee;
+                caret-color: #c6f;
             }
             &.not-enter {
-                border-bottom: 1px solid #EEE;
+                border-bottom: 1px solid #eee;
             }
             &.err-enter {
-                border-bottom: 1px solid #FF0000;
+                border-bottom: 1px solid #ff0000;
                 &::-webkit-input-placeholder {
-                    color: #FF0000;
+                    color: #ff0000;
                 }
             }
             .ant-select-selection {
@@ -396,7 +401,6 @@ export default {
 
             .ant-select {
                 color: #333333;
-
             }
 
             .ant-select-selection__rendered {
@@ -419,12 +423,12 @@ export default {
 
             .ant-select-selection:focus {
                 box-shadow: none;
-                border-bottom: 1px solid #BFBFBF;
+                border-bottom: 1px solid #bfbfbf;
             }
 
             .ant-select-selection:active {
                 box-shadow: none;
-                border-bottom: 1px solid #BFBFBF;
+                border-bottom: 1px solid #bfbfbf;
             }
 
             .ant-select-open {

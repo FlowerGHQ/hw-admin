@@ -1,7 +1,6 @@
-
 export default {
     zh: {
-        system: "HORWIN业务操作系统",
+        system: 'HORWIN业务操作系统',
         account_login: '登录',
         conditions: '条款和条件',
         legal: '隐私',
@@ -53,7 +52,7 @@ export default {
         related_documents: '附件',
     },
     en: {
-        system: "HORWIN Business Operating System",
+        system: 'HORWIN Business Operating System',
         account_login: 'Log In',
         conditions: 'terms & conditions',
         legal: 'legal',
@@ -104,6 +103,5 @@ export default {
         series: 'Series',
         check_details: 'Check Details',
         related_documents: 'Related Documents',
-    }
-}
-
+    },
+};

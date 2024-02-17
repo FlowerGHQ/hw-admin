@@ -3,15 +3,14 @@
         <div class="step-item" v-for="item in stepsaOption" :key="item.id">
             <div class="step-item-icon-line">
                 <div class="step-item-icon">
-                    <img
-                        :src="current >= item.id ? item.activeImg : item.img"
-                        alt="" />
+                    <img :src="current >= item.id ? item.activeImg : item.img" alt="" />
                     <div
                         :class="{
                             'step-item-title': true,
                             'step-item-title-active': current >= item.id,
-                        }">
-                        {{$t( item.title) }}
+                        }"
+                    >
+                        {{ $t(item.title) }}
                     </div>
                 </div>
                 <div class="step-item-line">
@@ -19,14 +18,11 @@
                         v-if="item.id !== 2"
                         :src="
                             current >= item.id + 1
-                                ? getAassetsFile(
-                                      '../../../../assets/images/supply-chain/line-active.png'
-                                  )
-                                : getAassetsFile(
-                                      '../../../../assets/images/supply-chain/line.png'
-                                  )
+                                ? getAassetsFile('../../../../assets/images/supply-chain/line-active.png')
+                                : getAassetsFile('../../../../assets/images/supply-chain/line.png')
                         "
-                        alt="" />
+                        alt=""
+                    />
                 </div>
             </div>
         </div>
@@ -34,12 +30,12 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from "vue";
-import { useI18n } from "vue-i18n";
+import { ref, reactive, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 const $i18n = useI18n();
 const $t = $i18n.t;
 const $lang = $i18n.locale;
-const $emit = defineEmits(["update:value"]);
+const $emit = defineEmits(['update:value']);
 const $props = defineProps({
     ActiveCurrent: {
         type: Number,
@@ -51,38 +47,30 @@ const current = computed({
         console.log($props.ActiveCurrent);
         return $props.ActiveCurrent;
     },
-    set: (val) => $emit("update:value", val),
+    set: val => $emit('update:value', val),
 });
-const getAassetsFile = (url) => {
+const getAassetsFile = url => {
     return new URL(url, import.meta.url).href;
 };
 const stepsaOption = reactive([
     {
         id: 0,
-        title: "supply-chain.basic_info",
-        img: getAassetsFile(
-            "../../../../assets/images/supply-chain/step1-active.png"
-        ),
-        activeImg: getAassetsFile(
-            "../../../../assets/images/supply-chain/step1-active.png"
-        ),
+        title: 'supply-chain.basic_info',
+        img: getAassetsFile('../../../../assets/images/supply-chain/step1-active.png'),
+        activeImg: getAassetsFile('../../../../assets/images/supply-chain/step1-active.png'),
     },
     {
         id: 1,
-        title: "supply-chain.material_list",
-        content: "Second-content",
-        img: getAassetsFile("../../../../assets/images/supply-chain/step2.png"),
-        activeImg: getAassetsFile(
-            "../../../../assets/images/supply-chain/step2-active.png"
-        ),
+        title: 'supply-chain.material_list',
+        content: 'Second-content',
+        img: getAassetsFile('../../../../assets/images/supply-chain/step2.png'),
+        activeImg: getAassetsFile('../../../../assets/images/supply-chain/step2-active.png'),
     },
     {
         id: 2,
-        title: "supply-chain.submit",
-        img: getAassetsFile("../../../../assets/images/supply-chain/step3.png"),
-        activeImg: getAassetsFile(
-            "../../../../assets/images/supply-chain/step3-active.png"
-        ),
+        title: 'supply-chain.submit',
+        img: getAassetsFile('../../../../assets/images/supply-chain/step3.png'),
+        activeImg: getAassetsFile('../../../../assets/images/supply-chain/step3-active.png'),
     },
 ]);
 </script>

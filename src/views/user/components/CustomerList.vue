@@ -2,14 +2,22 @@
     <div id="CustomerList" class="UserRole gray-panel no-margin">
         <div class="panel-content">
             <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
-                    <template #headerCell="{title}">
+                <a-table
+                    :columns="tableColumns"
+                    :data-source="tableData"
+                    :scroll="{ x: true }"
+                    :row-key="record => record.id"
+                    :pagination="false"
+                >
+                    <template #headerCell="{ title }">
                         {{ $t(title) }}
                     </template>
-                    <template #bodyCell="{ column, text , record }">
+                    <template #bodyCell="{ column, text, record }">
                         <template v-if="column.key === 'detail'">
-                            <a-tooltip placement="top" :title='text'>
-                                <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
+                            <a-tooltip placement="top" :title="text">
+                                <a-button type="link" @click="routerChange('detail', record)">{{
+                                    text || '-'
+                                }}</a-button>
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'item'">
@@ -17,18 +25,29 @@
                         </template>
                         <template v-if="column.key === 'phone'">
                             <div v-if="text !== ''" class="phone-hover">
-                                {{record.phone_country_code}} {{ text || '-' }}
-                                <a-button type="link" v-if="!record.flag_eyes" class="switch" @click="handleChecking(record)"><i class="icon i_eyes"/></a-button>
+                                {{ record.phone_country_code }} {{ text || '-' }}
+                                <a-button
+                                    type="link"
+                                    v-if="!record.flag_eyes"
+                                    class="switch"
+                                    @click="handleChecking(record)"
+                                    ><i class="icon i_eyes"
+                                /></a-button>
                             </div>
                             <template v-else>
                                 {{ text || '-' }}
                             </template>
-
                         </template>
                         <template v-if="column.key === 'email'">
                             <div v-if="text !== ''" class="phone-hover">
                                 {{ text || '-' }}
-                                <a-button type="link" v-if="!record.flag_eyes" class="switch" @click="handleChecking(record)"><i class="icon i_eyes"/></a-button>
+                                <a-button
+                                    type="link"
+                                    v-if="!record.flag_eyes"
+                                    class="switch"
+                                    @click="handleChecking(record)"
+                                    ><i class="icon i_eyes"
+                                /></a-button>
                             </div>
                             <template v-else>
                                 {{ text || '-' }}
@@ -44,48 +63,49 @@
                             {{ $Util.addressFilter(record, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'creator_name'">
-                            {{ record.create_user?  record.create_user.name || '-' : '-' }}
+                            {{ record.create_user ? record.create_user.name || '-' : '-' }}
                         </template>
                         <template v-if="column.key === 'own_user_name'">
-                            {{ record.own_user? record.own_user.name || '-' : '-' }}
+                            {{ record.own_user ? record.own_user.name || '-' : '-' }}
                         </template>
 
                         <template v-if="column.key === 'source_type'">
                             {{ $Util.CRMCustomerSourceTypeFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.dataIndex === 'label_list'">
-                            <a-tag v-for="item in record.label_list" color="blue" class="customer-tag" >{{lang ==="zh" ? item.label : item.label_en}}</a-tag>
+                            <a-tag v-for="item in record.label_list" color="blue" class="customer-tag">{{
+                                lang === 'zh' ? item.label : item.label_en
+                            }}</a-tag>
                         </template>
 
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-
-                            <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('crm-customer.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
+                            <a-button
+                                type="link"
+                                @click="routerChange('detail', record)"
+                                v-if="$auth('crm-customer.detail')"
+                                ><i class="icon i_detail" />{{ $t('def.detail') }}</a-button
+                            >
                         </template>
                     </template>
                 </a-table>
-
-
-
-
             </div>
             <div class="paging-container with-operate">
                 <a-pagination
                     v-model:current="currPage"
-                    :page-size='pageSize'
+                    :page-size="pageSize"
                     :total="total"
                     show-quick-jumper
                     show-size-changer
                     show-less-items
                     :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
-                    :hide-on-single-page='false'
+                    :hide-on-single-page="false"
                     :pageSizeOptions="['10', '20', '30', '40']"
                     @change="pageChange"
                     @showSizeChange="pageSizeChange"
                 />
-
             </div>
         </div>
     </div>
@@ -104,8 +124,8 @@ export default {
         detail: {
             type: Object,
             default: () => {
-                return {}
-            }
+                return {};
+            },
         },
         type: {
             type: String,
@@ -133,8 +153,8 @@ export default {
             // 搜索
             searchForm: {
                 name: undefined,
-                phone:undefined,
-                level:undefined,
+                phone: undefined,
+                level: undefined,
                 begin_time: undefined,
                 end_time: undefined,
                 type: undefined,
@@ -143,106 +163,110 @@ export default {
             },
         };
     },
-    watch: {
-    },
+    watch: {},
     computed: {
         tableColumns() {
             let columns = [
-                {title: 'n.name', dataIndex: 'name', key: 'detail', sorter: true},
-                {title: 'n.phone', dataIndex: 'phone', key: 'phone', sorter: true},
-                {title: 'n.email', dataIndex: 'email', key: 'email', sorter: true},
-                {title: 'sl.label', dataIndex: 'label_list', key: 'label_list'},
+                { title: 'n.name', dataIndex: 'name', key: 'detail', sorter: true },
+                { title: 'n.phone', dataIndex: 'phone', key: 'phone', sorter: true },
+                { title: 'n.email', dataIndex: 'email', key: 'email', sorter: true },
+                { title: 'sl.label', dataIndex: 'label_list', key: 'label_list' },
 
                 // {title: 'n.continent', dataIndex: 'continent', key:'item'},
-                {title: 'crm_c.level', dataIndex: 'level', key: 'level', sorter: true},
-                {title: 'crm_c.type', dataIndex: 'type', key: 'type', sorter: true},
-                {title: 'r.creator_name', dataIndex: 'create_user_id', key: 'creator_name', sorter: true},
-                {title: 'crm_c.group', dataIndex: 'group_name', key: 'group_name'},
-                {title: 'crm_c.order_success_count', dataIndex: 'order_count', key: 'order_count'},
-                {title: 'ad.specific_address', dataIndex: 'address', sorter: true},
-                {title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true},
-                {title: 'crm_c.source_type', dataIndex: 'source_type', key: 'source_type', sorter: true},
-                {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
-                {title: 'def.operate', key: 'operation', fixed: 'right'},
-            ]
+                { title: 'crm_c.level', dataIndex: 'level', key: 'level', sorter: true },
+                { title: 'crm_c.type', dataIndex: 'type', key: 'type', sorter: true },
+                { title: 'r.creator_name', dataIndex: 'create_user_id', key: 'creator_name', sorter: true },
+                { title: 'crm_c.group', dataIndex: 'group_name', key: 'group_name' },
+                { title: 'crm_c.order_success_count', dataIndex: 'order_count', key: 'order_count' },
+                { title: 'ad.specific_address', dataIndex: 'address', sorter: true },
+                { title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true },
+                { title: 'crm_c.source_type', dataIndex: 'source_type', key: 'source_type', sorter: true },
+                { title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true },
+                { title: 'def.operate', key: 'operation', fixed: 'right' },
+            ];
             if (this.operMode === 'private' || this.operMode === 'region') {
                 columns.splice(5, 0, {
                     title: 'crm_b.own_user_name',
-                    dataIndex: "own_user_id",
+                    dataIndex: 'own_user_id',
                     key: 'own_user_name',
-                    sorter: true
-                })
+                    sorter: true,
+                });
             }
-            return columns
-        }
+            return columns;
+        },
     },
     mounted() {
         this.getTableData();
     },
     methods: {
         routerChange(type, item = {}) {
-            let routeUrl = ''
+            let routeUrl = '';
             switch (type) {
-                case 'detail':    // 编辑
+                case 'detail': // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/crm-customer/customer-detail",
-                        query: {id: item.id}
-                    })
-                    window.open(routeUrl.href, '_self')
+                        path: '/crm-customer/customer-detail',
+                        query: { id: item.id },
+                    });
+                    window.open(routeUrl.href, '_self');
                     break;
             }
         },
-        pageChange(curr) {  // 页码改变
-            this.currPage = curr
-            this.getTableData()
+        pageChange(curr) {
+            // 页码改变
+            this.currPage = curr;
+            this.getTableData();
         },
-        pageSizeChange(current, size) {  // 页码尺寸改变
-            console.log('pageSizeChange size:', size)
-            this.pageSize = size
-            this.getTableData()
+        pageSizeChange(current, size) {
+            // 页码尺寸改变
+            console.log('pageSizeChange size:', size);
+            this.pageSize = size;
+            this.getTableData();
         },
-        getTableData() {    // 获取 表格 数据
+        getTableData() {
+            // 获取 表格 数据
             this.loading = true;
 
-            this.searchForm.status = this.CRM_STATUS.CUSTOMER
-            this.searchForm.search_type = this.SEARCH_TYPE.PRIVATE_CUSTOMER_BY_OTHER_USER
+            this.searchForm.status = this.CRM_STATUS.CUSTOMER;
+            this.searchForm.search_type = this.SEARCH_TYPE.PRIVATE_CUSTOMER_BY_OTHER_USER;
 
             Core.Api.CRMCustomer.list({
                 ...this.searchForm,
                 user_id: this.userId,
                 order_by_fields: this.orderByFields,
                 page: this.currPage,
-                page_size: this.pageSize
-            }).then(res => {
-                console.log("getTableData res:", res)
-                this.total = res.count;
-                this.tableData = res.list;
-            }).catch(err => {
-                console.log('getTableData err:', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+                page_size: this.pageSize,
+            })
+                .then(res => {
+                    console.log('getTableData res:', res);
+                    this.total = res.count;
+                    this.tableData = res.list;
+                })
+                .catch(err => {
+                    console.log('getTableData err:', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         getRoleList() {
-            console.log(this.detail)
+            console.log(this.detail);
             Core.Api.Authority.roleList({
                 org_id: this.detail.org_id,
                 org_type: this.detail.org_type,
             }).then(res => {
                 res.list.forEach(role => {
-                    this.tableData.forEach(it =>{
-                        if (role.id == it.role_id){
-                            role.disabled = true
+                    this.tableData.forEach(it => {
+                        if (role.id == it.role_id) {
+                            role.disabled = true;
                         }
                     });
                 });
-                this.roleList = res.list
-
-            })
+                this.roleList = res.list;
+            });
         },
         handleRoleShow() {
             this.roleShow = true;
-            this.getRoleList()
+            this.getRoleList();
             /*if (item) {
                 this.form.resource_type = item.resource_type
                 this.form.resource_id = item.resource_id
@@ -250,25 +274,26 @@ export default {
         },
         handleRoleClose() {
             this.roleShow = false;
-            Object.assign(this.form, this.$options.data().form)
+            Object.assign(this.form, this.$options.data().form);
         },
         handleRoleSubmit() {
-            let form = Core.Util.deepCopy(this.form)
-            form.user_id = this.detail.id
+            let form = Core.Util.deepCopy(this.form);
+            form.user_id = this.detail.id;
             if (!form.role_id) {
-                return this.$message.warning(this.$t('u.choose_role'))
+                return this.$message.warning(this.$t('u.choose_role'));
             }
 
-            Core.Api.Authority.allotRole(form).then(() => {
-                this.$message.success(this.$t('pop_up.save_success'))
-                this.handleRoleClose();
-                this.getTableData();
-            }).catch(err => {
-                console.log('handleStockAddSubmit err:', err)
-            })
+            Core.Api.Authority.allotRole(form)
+                .then(() => {
+                    this.$message.success(this.$t('pop_up.save_success'));
+                    this.handleRoleClose();
+                    this.getTableData();
+                })
+                .catch(err => {
+                    console.log('handleStockAddSubmit err:', err);
+                });
         },
         handleDelete(item) {
-
             let _this = this;
             this.$confirm({
                 title: _this.$t('u.sure_delete_role'),
@@ -277,29 +302,29 @@ export default {
                 cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Authority.deleteUserRole({
-                        id:item.id
-                    }).then(() => {
-                        _this.$message.success(_this.$t('pop_up.delete_success'));
-                        _this.getTableData();
-                    }).catch(err => {
-                        console.log("handleDelete -> err", err);
+                        id: item.id,
                     })
+                        .then(() => {
+                            _this.$message.success(_this.$t('pop_up.delete_success'));
+                            _this.getTableData();
+                        })
+                        .catch(err => {
+                            console.log('handleDelete -> err', err);
+                        });
                 },
             });
         },
-        handleChecking(item){
+        handleChecking(item) {
             Core.Api.CRMCustomer.checking({
-                id:item.id
+                id: item.id,
             }).then(res => {
-                item.phone = res.detail.phone
-                item.email = res.detail.email
-                item.flag_eyes = true
-                console.log(res)
-
-            })
+                item.phone = res.detail.phone;
+                item.email = res.detail.email;
+                item.flag_eyes = true;
+                console.log(res);
+            });
         },
     },
 };
 </script>
-<style lang="less">
-</style>
+<style lang="less"></style>

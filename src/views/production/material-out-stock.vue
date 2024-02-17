@@ -3,7 +3,8 @@
         <div class="title-container">
             <div class="title-area">{{ $t('i.material_out_stock') }}</div>
         </div>
-        <div class="form-block"> <!-- 基本信息 -->
+        <div class="form-block">
+            <!-- 基本信息 -->
             <div class="form-title">
                 <div class="title"></div>
             </div>
@@ -13,21 +14,20 @@
                     <div class="value">
                         <a-select
                             v-model:value="warehouse_id"
-                            :placeholder="$t('def.input')+$t('n.warehouse')"
+                            :placeholder="$t('def.input') + $t('n.warehouse')"
                             @search="handleWarehouseSearch"
                             @change="handleWarehouseChange"
                         >
-                            <a-select-option v-for=" item in warehouseOptions" :key="item.id" :value="item.id">
+                            <a-select-option v-for="item in warehouseOptions" :key="item.id" :value="item.id">
                                 {{ item.name }}
                             </a-select-option>
                         </a-select>
-
                     </div>
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('in.outbound_o') }}</div>
                     <div class="value">
-                        <a-input v-model:value="invoice_uid" @blur="handleWarehouseByMaterialChange"/>
+                        <a-input v-model:value="invoice_uid" @blur="handleWarehouseByMaterialChange" />
                     </div>
                 </div>
 
@@ -57,14 +57,22 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('p.code') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.code"  @blur="handleSearch"/>
+                        <a-input v-model:value="form.code" @blur="handleSearch" />
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">{{ $t('wa.uid') }}</div>
                     <div class="value">
-                        <a-select v-model:value="form.warehouse_location_id" :placeholder="$t('def.select')" @change="handleWarehouseChange">
-                            <a-select-option v-for=" item in warehouseLocationOptions" :key="item.warehouse_location_id" :value="item.warehouse_location_id">
+                        <a-select
+                            v-model:value="form.warehouse_location_id"
+                            :placeholder="$t('def.select')"
+                            @change="handleWarehouseChange"
+                        >
+                            <a-select-option
+                                v-for="item in warehouseLocationOptions"
+                                :key="item.warehouse_location_id"
+                                :value="item.warehouse_location_id"
+                            >
                                 {{ item.warehouse_location_uid }}
                             </a-select-option>
                         </a-select>
@@ -74,50 +82,55 @@
                 <div class="form-item">
                     <div class="key">{{ $t('def.remark') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.remark" disabled/>
+                        <a-input v-model:value="form.remark" disabled />
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">{{ $t('wa.current_stock') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.stock.stock" disabled/>
+                        <a-input v-model:value="form.stock.stock" disabled />
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">{{ $t('wa.stock_change') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.stock.updateTime" disabled/>
+                        <a-input v-model:value="form.stock.updateTime" disabled />
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">{{ $t('wa.need_out_amount') }}</div>
                     <div class="value">
-                        <a-input type="number" v-model:value="form.amount" disabled/>
+                        <a-input type="number" v-model:value="form.amount" disabled />
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">{{ $t('wa.outbounded') }}</div>
                     <div class="value">
-                        <a-input type="number" v-model:value="form.confirm_amount" disabled/>
+                        <a-input type="number" v-model:value="form.confirm_amount" disabled />
                     </div>
                 </div>
                 <div>
                     <div class="form-item">
                         <div class="key">{{ $t('wa.minimum') }}</div>
                         <div class="value">
-                            <a-input type="number" v-model:value="form.smallest_packaging" disabled/>
+                            <a-input type="number" v-model:value="form.smallest_packaging" disabled />
                         </div>
                     </div>
                     <div class="form-item">
                         <div class="key">{{ $t('wa.package') }}</div>
                         <div class="value">
-                            <a-input type="number" v-model:value="form.packaging_amount" @blur="handlePackagingAmount" :placeholder="$t('def.input')+$t('wa.package')"/>
+                            <a-input
+                                type="number"
+                                v-model:value="form.packaging_amount"
+                                @blur="handlePackagingAmount"
+                                :placeholder="$t('def.input') + $t('wa.package')"
+                            />
                         </div>
                     </div>
                     <div class="form-item">
                         <div class="key">{{ $t('wa.outbound') }}</div>
                         <div class="value">
-                            <a-input type="number" v-model:value="form.inventory_amount" disabled/>
+                            <a-input type="number" v-model:value="form.inventory_amount" disabled />
                         </div>
                     </div>
                 </div>
@@ -132,10 +145,10 @@
 
 <script>
 import Core from '../../core';
-import CategoryTreeSelect from '../../components/popup-btn/CategoryTreeSelect.vue'
+import CategoryTreeSelect from '../../components/popup-btn/CategoryTreeSelect.vue';
 
-const TARGET_TYPE_MAP = Core.Const.ITEM.TARGET_TYPE_MAP
-const STOCK_RECORD = Core.Const.STOCK_RECORD
+const TARGET_TYPE_MAP = Core.Const.ITEM.TARGET_TYPE_MAP;
+const STOCK_RECORD = Core.Const.STOCK_RECORD;
 
 export default {
     name: 'MaterialOutStock',
@@ -168,7 +181,7 @@ export default {
                 packaging_amount: '',
                 inventory_amount: '',
                 invoice_id: '',
-                uid:'',
+                uid: '',
                 stock: {
                     stock: '',
                     updateTime: '',
@@ -182,160 +195,158 @@ export default {
             warehouseOptions: [],
             warehouseLocationOptions: [],
             invoiceOptions: [],
-
         };
     },
     watch: {},
     computed: {},
-    created() {
-    },
+    created() {},
     mounted() {
         this.handleWarehouseSearch();
     },
     methods: {
         routerChange(type, item) {
-            let routeUrl
+            let routeUrl;
             switch (type) {
                 case 'back':
-                    this.$router.go(-1)
+                    this.$router.go(-1);
                     break;
-                case 'detail':  // 详情
+                case 'detail': // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/item/item-detail",
-                        query: {id: item.id}
-                    })
-                    window.open(routeUrl.href, '_self')
+                        path: '/item/item-detail',
+                        query: { id: item.id },
+                    });
+                    window.open(routeUrl.href, '_self');
                     break;
             }
         },
         handleSearch() {
-
             this.form.target_id = '';
             this.form.target_type = '';
             this.warehouseLocationOptions = [];
-            this.form.warehouse_location_id = ''
+            this.form.warehouse_location_id = '';
             this.form.remark = '';
             this.form.stock.stock = '';
             this.form.stock.updateTime = '';
             this.form.amount = '';
             this.form.confirm_amount = '';
             this.form.smallest_packaging = '';
-            if (!this.form.code){
-                return ;
+            if (!this.form.code) {
+                return;
             }
             let codeName = this.form.code;
             let smallest_packaging = 1;
-            if(this.form.code.indexOf("*") > 0){
-                let codes = this.form.code.split('*')
+            if (this.form.code.indexOf('*') > 0) {
+                let codes = this.form.code.split('*');
                 codeName = codes[0];
                 smallest_packaging = codes[1];
             }
 
-
-            this.form.smallest_packaging = smallest_packaging
-            Core.Api.Item.detailByCode({code: codeName}).then(res => {
-                if (res.detail.type != Core.Const.ITEM.TYPE.COMPONENT){
+            this.form.smallest_packaging = smallest_packaging;
+            Core.Api.Item.detailByCode({ code: codeName }).then(res => {
+                if (res.detail.type != Core.Const.ITEM.TYPE.COMPONENT) {
                     this.form.target_id = res.detail.id;
-                    this.form.target_type = Core.Const.WAREHOUSE_TRANSFER.COMMODITY_TYPE.ITEM
-                    this.form.stock_target_type = Core.Const.STOCK.TARGET_TYPE.ITEM
+                    this.form.target_type = Core.Const.WAREHOUSE_TRANSFER.COMMODITY_TYPE.ITEM;
+                    this.form.stock_target_type = Core.Const.STOCK.TARGET_TYPE.ITEM;
                 } else {
                     this.form.target_id = res.detail.material.id;
-                    this.form.target_type = Core.Const.WAREHOUSE_TRANSFER.COMMODITY_TYPE.MATERIALS
-                    this.form.stock_target_type = Core.Const.STOCK.TARGET_TYPE.MATERIAL
+                    this.form.target_type = Core.Const.WAREHOUSE_TRANSFER.COMMODITY_TYPE.MATERIALS;
+                    this.form.stock_target_type = Core.Const.STOCK.TARGET_TYPE.MATERIAL;
                 }
                 // this.form.id = res.detail.id;
                 this.form.flag_entity = res.detail.flag_entity;
-                this.handleWarehouseChange()
-            })
+                this.handleWarehouseChange();
+            });
         },
         handleWarehouseLocationSearch() {
-            console.log("handleWarehouseLocationSearch")
+            console.log('handleWarehouseLocationSearch');
             if (!this.warehouse_id) {
-                console.log(1)
-                return
+                console.log(1);
+                return;
             }
             if (!this.form.target_id) {
-                console.log(1)
-                return
+                console.log(1);
+                return;
             }
             Core.Api.WarehouseLocationStock.list({
                 warehouse_id: this.warehouse_id,
                 target_id: this.form.target_id,
                 target_type: this.form.stock_target_type,
             }).then(res => {
-                this.warehouseLocationOptions = res.list
-            })
+                this.warehouseLocationOptions = res.list;
+            });
             Core.Api.Stock.detail({
                 warehouse_id: this.warehouse_id,
                 target_id: this.form.target_id,
                 target_type: this.form.stock_target_type,
             }).then(res => {
-                console.log("res.stock",res.stock)
-                this.form.stock.stock = res.stock.stock
-                this.form.stock.updateTime = this.$Util.timeFormat(res.stock.updateTime != undefined ? res.stock.updateTime: res.stock.createTime)
-            })
+                console.log('res.stock', res.stock);
+                this.form.stock.stock = res.stock.stock;
+                this.form.stock.updateTime = this.$Util.timeFormat(
+                    res.stock.updateTime != undefined ? res.stock.updateTime : res.stock.createTime,
+                );
+            });
         },
         handleWarehouseLocationStockSearch() {
             if (!this.form.warehouse_location_id) {
-                console.log(1)
-                return
+                console.log(1);
+                return;
             }
             if (!this.form.target_id) {
-                console.log(1)
-                return
+                console.log(1);
+                return;
             }
             Core.Api.WarehouseLocationStock.detailByWarehouseId({
                 warehouse_location_id: this.form.warehouse_location_id,
                 target_id: this.form.target_id,
                 target_type: this.form.stock_target_type,
             }).then(res => {
-                this.form.stock.stock = res.amount
+                this.form.stock.stock = res.amount;
                 // this.form.stock.updateTime = this.$Util.timeFormat(res.stock.updateTime != undefined ? res.stock.updateTime: res.stock.createTime)
-            })
+            });
         },
 
         handleWarehouseSearch(name) {
-            Core.Api.Warehouse.list({name: name, page_size: 100}).then(res => {
-                this.warehouseOptions = res.list
-            })
+            Core.Api.Warehouse.list({ name: name, page_size: 100 }).then(res => {
+                this.warehouseOptions = res.list;
+            });
         },
-        handleWarehouseChange(){
+        handleWarehouseChange() {
             this.handleWarehouseByMaterialChange();
             this.handleWarehouseLocationSearch();
-            this.handleWarehouseLocationStockSearch()
+            this.handleWarehouseLocationStockSearch();
         },
         handleWarehouseByMaterialChange() {
-            this.uid = ""
+            this.uid = '';
 
             if (!this.form.target_id) {
-                console.log(1)
-                return
+                console.log(1);
+                return;
             }
             if (!this.warehouse_id) {
-                console.log(2)
-                return
+                console.log(2);
+                return;
             }
 
             if (!this.invoice_uid) {
-                console.log(1)
-                return
+                console.log(1);
+                return;
             }
             Core.Api.Invoice.detailByItemUid({
                 uid: this.invoice_uid,
                 target_id: this.form.target_id,
                 target_type: this.form.target_type,
-                warehouse_id: this.warehouse_id
+                warehouse_id: this.warehouse_id,
             }).then(res => {
-                this.form.amount = res.amount
-                this.form.confirm_amount = res.confirm_amount
-                this.invoice_id = res.invoice_id
-            })
+                this.form.amount = res.amount;
+                this.form.confirm_amount = res.confirm_amount;
+                this.invoice_id = res.invoice_id;
+            });
         },
-        handlePackagingAmount(){
+        handlePackagingAmount() {
             if (!this.form.smallest_packaging) {
-                return
+                return;
             }
-            this.form.inventory_amount = this.form.smallest_packaging * this.form.packaging_amount
+            this.form.inventory_amount = this.form.smallest_packaging * this.form.packaging_amount;
         },
         // handleInvoiceSearch(name) {
         //     Core.Api.Invoice.list({uid: name}).then(res => {
@@ -373,12 +384,9 @@ export default {
         //     this.getItemDetail();
         // },
 
-
-
-
         handleSubmit() {
             if (!this.form.amount) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('def.enter'));
             }
             let _this = this;
             this.$confirm({
@@ -394,24 +402,24 @@ export default {
                         type: STOCK_RECORD.TYPE.OUT,
                         count: _this.form.inventory_amount,
                         source_type: STOCK_RECORD.SOURCE_FORM.INVOICE,
-                        invoice_id: _this.invoice_id
-                    }).then((res) => {
-
-                        _this.$message.success(_this.$t('pop_up.operate'))
-                        _this.clear();
-                        _this.handleWarehouseChange();
-                    }).catch(err => {
-                        console.log("handleComplete err", err);
+                        invoice_id: _this.invoice_id,
                     })
+                        .then(res => {
+                            _this.$message.success(_this.$t('pop_up.operate'));
+                            _this.clear();
+                            _this.handleWarehouseChange();
+                        })
+                        .catch(err => {
+                            console.log('handleComplete err', err);
+                        });
                 },
             });
         },
         clear() {
-            Object.assign(this.form, this.$options.data().form)
+            Object.assign(this.form, this.$options.data().form);
         },
-    }
+    },
 };
 </script>
 
-<style lang="less">
-</style>
+<style lang="less"></style>

@@ -1,44 +1,68 @@
 <template>
     <div class="list-container">
         <div class="title">
-            <span>{{$t('crm_dash.fol_statistics')}}</span>
+            <span>{{ $t('crm_dash.fol_statistics') }}</span>
         </div>
         <div class="table-container">
-            <a-row :gutter="[20,0]">
-                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+            <a-row :gutter="[20, 0]">
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.track_count") }}</span>
-                        <span class="form-value">{{  this.form.track_count || '-' }}</span>
+                        <span class="form-label"
+                            ><i class="icon i_s_customer" style="margin-right: 16px" />{{
+                                $t('crm_dash.track_count')
+                            }}</span
+                        >
+                        <span class="form-value">{{ this.form.track_count || '-' }}</span>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.call_count") }}</span>
-                        <span class="form-value">{{  this.form.call_count || '-' }}</span>
+                        <span class="form-label"
+                            ><i class="icon i_s_customer" style="margin-right: 16px" />{{
+                                $t('crm_dash.call_count')
+                            }}</span
+                        >
+                        <span class="form-value">{{ this.form.call_count || '-' }}</span>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.visit_count") }}</span>
-                        <span class="form-value">{{  this.form.visit_count || '-' }}</span>
+                        <span class="form-label"
+                            ><i class="icon i_s_customer" style="margin-right: 16px" />{{
+                                $t('crm_dash.visit_count')
+                            }}</span
+                        >
+                        <span class="form-value">{{ this.form.visit_count || '-' }}</span>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.pool_count") }}</span>
-                        <span class="form-value">{{  this.form.pool_count || '-' }}</span>
+                        <span class="form-label"
+                            ><i class="icon i_s_customer" style="margin-right: 16px" />{{
+                                $t('crm_dash.pool_count')
+                            }}</span
+                        >
+                        <span class="form-value">{{ this.form.pool_count || '-' }}</span>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.customer_count") }}</span>
-                        <span class="form-value">{{  this.form.customer_count || '-' }}</span>
+                        <span class="form-label"
+                            ><i class="icon i_s_customer" style="margin-right: 16px" />{{
+                                $t('crm_dash.customer_count')
+                            }}</span
+                        >
+                        <span class="form-value">{{ this.form.customer_count || '-' }}</span>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.bo_count") }}</span>
-                        <span class="form-value">{{  this.form.bo_count || '-' }}</span>
+                        <span class="form-label"
+                            ><i class="icon i_s_customer" style="margin-right: 16px" />{{
+                                $t('crm_dash.bo_count')
+                            }}</span
+                        >
+                        <span class="form-value">{{ this.form.bo_count || '-' }}</span>
                     </div>
                 </a-col>
             </a-row>
@@ -48,16 +72,15 @@
 
 <script>
 import Core from '../../../core';
-import { Chart } from '@antv/g2'
+import { Chart } from '@antv/g2';
 
 export default {
     name: 'Card',
-    components: {
-    },
+    components: {},
     props: {
         searchForm: {
             type: Object,
-            default: ()=> {}
+            default: () => {},
         },
     },
     data() {
@@ -69,8 +92,7 @@ export default {
                 pool_count: '',
                 customer_count: '',
                 bo_count: '',
-            }
-
+            },
         };
     },
     watch: {
@@ -78,34 +100,29 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                this.trackStatistics()
-            }
+                this.trackStatistics();
+            },
         },
-
     },
-    computed: {
-    },
-    created() {
-    },
+    computed: {},
+    created() {},
     mounted() {
-        this.trackStatistics()
+        this.trackStatistics();
     },
     methods: {
         trackStatistics() {
             Core.Api.CRMDashboard.trackStatistics({
-                ...this.searchForm
+                ...this.searchForm,
             }).then(res => {
-                this.form.track_count = res.track_count
-                this.form.call_count = res.call_count
-                this.form.visit_count = res.visit_count
-                this.form.pool_count = res.pool_count
-                this.form.customer_count = res.customer_count
-                this.form.bo_count = res.bo_count
-
-            })
+                this.form.track_count = res.track_count;
+                this.form.call_count = res.call_count;
+                this.form.visit_count = res.visit_count;
+                this.form.pool_count = res.pool_count;
+                this.form.customer_count = res.customer_count;
+                this.form.bo_count = res.bo_count;
+            });
         },
-
-    }
+    },
 };
 </script>
 
@@ -135,8 +152,8 @@ export default {
         }
     }
     .tab-current {
-        border: 1px solid #006EF9;
-        color: #006EF9;
+        border: 1px solid #006ef9;
+        color: #006ef9;
     }
 }
 .contain {
@@ -151,7 +168,7 @@ export default {
         font-size: 14px;
     }
     .form-value {
-        color: #006EF9;
+        color: #006ef9;
         font-size: 20px;
     }
 }

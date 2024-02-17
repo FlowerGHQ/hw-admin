@@ -4,7 +4,7 @@
             {{ $t('db.order_total') }}
         </div>
         <div class="flex-total">
-            <img class="img" src="../../../assets/images/dashboard/total.png" alt="">
+            <img class="img" src="../../../assets/images/dashboard/total.png" alt="" />
             <div :class="[isCar ? 'total active' : 'total']">
                 {{ count }}
             </div>
@@ -17,21 +17,20 @@ import Core from '../../../core';
 
 export default {
     name: 'Card',
-    components: {
-    },
+    components: {},
     props: {
         searchForm: {
             type: Object,
-            default: () => { }
+            default: () => {},
         },
         isCar: {
             type: Boolean,
-            default: () => false
+            default: () => false,
         },
         count: {
             type: Number,
-            default: () => 0
-        }
+            default: () => 0,
+        },
     },
     data() {
         return {
@@ -40,14 +39,11 @@ export default {
         };
     },
     watch: {},
-    computed: {
-    },
-    created() {
-    },
+    computed: {},
+    created() {},
     mounted() {},
-    beforeUnmount() {
-    },
-    methods: {}
+    beforeUnmount() {},
+    methods: {},
 };
 </script>
 
@@ -61,17 +57,17 @@ export default {
         font-weight: 600;
         color: #333333;
         &.active {
-            color: #DC6E38;
+            color: #dc6e38;
         }
     }
 
     .flex-total {
         width: 100%;
-        display: flex;        
+        display: flex;
         align-items: center;
         margin-top: 50px;
-        
-        .img {            
+
+        .img {
             width: 38px;
             height: 38px;
         }
@@ -82,7 +78,7 @@ export default {
             font-weight: 600;
             color: #333333;
             &.active {
-                color: #DC6E38;
+                color: #dc6e38;
             }
         }
     }

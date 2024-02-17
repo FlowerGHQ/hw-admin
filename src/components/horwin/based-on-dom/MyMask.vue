@@ -17,7 +17,7 @@
             </template>
         </MyMask>
     -->
-    <view v-if="isClose" class="page-container mask" @click="onMask">                
+    <view v-if="isClose" class="page-container mask" @click="onMask">
         <slot>
             <div class="mask-center">
                 <slot name="center">
@@ -29,32 +29,32 @@
 </template>
 
 <script>
-    // vue 需要 2.7.0 以上的版本
-    export default {
-        props: {
-            // 显示遮罩框
-            isClose: {
-                type: Boolean,
-                default: true
-            },
-            // 是否点击遮罩层不关闭
-            isClickMaskClose: {
-                type: Boolean,
-                default: false
-            }
+// vue 需要 2.7.0 以上的版本
+export default {
+    props: {
+        // 显示遮罩框
+        isClose: {
+            type: Boolean,
+            default: true,
         },
-        setup(props, { emit }){
-            // 关闭这个
-            const onMask = () => {
-                if(props.isClickMaskClose) return
-                emit("close", false)
-            }
+        // 是否点击遮罩层不关闭
+        isClickMaskClose: {
+            type: Boolean,
+            default: false,
+        },
+    },
+    setup(props, { emit }) {
+        // 关闭这个
+        const onMask = () => {
+            if (props.isClickMaskClose) return;
+            emit('close', false);
+        };
 
-            return {
-                onMask
-            }
-        }
-    }
+        return {
+            onMask,
+        };
+    },
+};
 </script>
 
 <style lang="less" scoped>
@@ -64,7 +64,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 999999;
 
     .mask-center {

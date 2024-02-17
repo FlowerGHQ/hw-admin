@@ -1,34 +1,29 @@
-import Const from "./const";
+import Const from './const';
 
 function isLocalStorageUsable() {
-    const localStorageTestKey = "__localStorage_support_test";
-    const localStorageTestValue = "test";
+    const localStorageTestKey = '__localStorage_support_test';
+    const localStorageTestValue = 'test';
     let isSupport = false;
 
     try {
         localStorage.setItem(localStorageTestKey, localStorageTestValue);
-        if (
-            localStorage.getItem(localStorageTestKey) === localStorageTestValue
-        ) {
+        if (localStorage.getItem(localStorageTestKey) === localStorageTestValue) {
             isSupport = true;
         }
         localStorage.removeItem(localStorageTestKey);
         return isSupport;
     } catch (e) {
-        if (
-            e.name === "QuotaExceededError" ||
-            e.name === "NS_ERROR_DOM_QUOTA_REACHED"
-        ) {
-            console.warn("localStorage 存储已达上限！");
+        if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+            console.warn('localStorage 存储已达上限！');
         } else {
-            console.warn("当前浏览器不支持 localStorage！");
+            console.warn('当前浏览器不支持 localStorage！');
         }
         return isSupport;
     }
 }
 
 function normalizeKey(key) {
-    if (typeof key !== "string") {
+    if (typeof key !== 'string') {
         console.warn(`${key} used as a key, but it is not a string.`);
         key = String(key);
     }
@@ -66,7 +61,7 @@ class StorageHandler {
                     const FINAL_KEY = `${Const.DATA.KEY_PREFIX}${key}`;
                     localStorage.setItem(FINAL_KEY, valueString);
                 } catch (e) {
-                    console.log("e", e);
+                    console.log('e', e);
                 }
             });
         }
@@ -87,9 +82,9 @@ class StorageHandler {
     /**
      * @params(excludeData) 排除这两个不需要清除的
      * Core.Data.clearSpecificItem();  使用
-    */    
+     */
     clearSpecificItem(excludeData = ['ADMIN_NEW_MSG', 'DISTRIBUTOR_NEW_MSG']) {
-        for (const key in Const.DATA) {            
+        for (const key in Const.DATA) {
             if (!excludeData.includes(key)) {
                 this.removeItem(Const.DATA[key]);
             }
@@ -222,13 +217,13 @@ class StorageHandler {
         this.setItem(Const.DATA.SUPPLY_CHAIN, value);
     }
     getSupplyChain() {
-        return this.getItem(Const.DATA.SUPPLY_CHAIN) || "";
+        return this.getItem(Const.DATA.SUPPLY_CHAIN) || '';
     }
     setSupplyDraftChain(value) {
         this.setItem(Const.DATA.SUPPLY_Daft_CHAIN, value);
     }
     getSupplyDraftChain() {
-        return this.getItem(Const.DATA.SUPPLY_Daft_CHAIN) || "";
+        return this.getItem(Const.DATA.SUPPLY_Daft_CHAIN) || '';
     }
     // 设置第几步
     setStep(value) {
@@ -335,7 +330,6 @@ class StorageHandler {
     getReportData() {
         return this.getItem(Const.DATA.REPORT_DATA) || undefined;
     }
-
 }
 
 export default new StorageHandler();

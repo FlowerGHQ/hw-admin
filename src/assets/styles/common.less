@@ -1,7 +1,7 @@
 /* 搜索项样式 */
 .search-container-new {
     .item-box {
-        display: flex;        
+        display: flex;
 
         .key-box {
             padding: 0px 10px;
@@ -9,35 +9,32 @@
             display: flex;
             align-items: center;
 
-            color:  #1D2129;
+            color: #1d2129;
             font-size: 14px;
             font-weight: 400;
-            border: 1px solid #E2E2EA;
-            border-radius: 4px 0px 0px 4px ;
+            border: 1px solid #e2e2ea;
+            border-radius: 4px 0px 0px 4px;
             border-right: none;
-            background-color: #FFFFFF;
-
+            background-color: #ffffff;
         }
-        
-        .value-box {
 
+        .value-box {
             flex: 1;
             overflow: hidden;
 
-            >.ant-input,
-            >.ant-select,
-            >.ant-select-selector,
-            >.ant-picker,
-            >.ant-cascader-picker,
-            >.ant-select-single,
-            >.ant-select-show-arrow {
+            > .ant-input,
+            > .ant-select,
+            > .ant-select-selector,
+            > .ant-picker,
+            > .ant-cascader-picker,
+            > .ant-select-single,
+            > .ant-select-show-arrow {
                 width: 100%;
                 border-radius: 0px 4px 4px 0px !important;
             }
-            .ant-select:not(.ant-select-customize-input) .ant-select-selector{
+            .ant-select:not(.ant-select-customize-input) .ant-select-selector {
                 border-radius: 0px 4px 4px 0px !important;
             }
-            
         }
     }
 }
@@ -52,10 +49,10 @@
         align-items: center;
         font-size: 14px;
         font-weight: 400;
-        margin-top: 16px;        
+        margin-top: 16px;
         .key {
             color: #1d2129;
-            // white-space: nowrap;            
+            // white-space: nowrap;
         }
         .key-default-w {
             width: 80px; // 默认宽度
@@ -67,8 +64,8 @@
         // 必选图标
         &.required {
             .key::before {
-                content: "*";
-                color: #EB4141;
+                content: '*';
+                color: #eb4141;
                 // margin-right: 4px;
                 vertical-align: middle;
             }
@@ -101,8 +98,8 @@
         // 必选图标
         &.required {
             .key::before {
-                content: "*";
-                color: #EB4141;
+                content: '*';
+                color: #eb4141;
                 // margin-right: 4px;
                 vertical-align: middle;
             }
@@ -119,7 +116,6 @@
 
 /* 首页编辑样式 */
 .edit-container-new-edit {
-
     // 编辑页
     background: @BG_N;
     box-sizing: border-box;
@@ -127,89 +123,84 @@
     position: relative;
 
     .form-block-box {
-        
-    // 新增页 分块
-    margin: 0 20px 20px;
-    background: #F8FAFC;
-    border-radius: 6px;
-    overflow: hidden;
-    padding-top: 58px;
-        
-    .form-block {
         // 新增页 分块
-        // margin: 0 20px 20px;
-        background: #F8FAFC;
-        // border-radius: 6px;
-        box-sizing: border-box;
-        padding: 0px 0 8px 0;
-        display: flex;
+        margin: 0 20px 20px;
+        background: #f8fafc;
+        border-radius: 6px;
+        overflow: hidden;
+        padding-top: 58px;
 
-        .form-title {
-            width: 174px;
-            text-align: right;
+        .form-block {
+            // 新增页 分块
+            // margin: 0 20px 20px;
+            background: #f8fafc;
+            // border-radius: 6px;
             box-sizing: border-box;
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 20px;
-            color: #363D42;
-        }
+            padding: 0px 0 8px 0;
+            display: flex;
 
-        .form-content {
-            width: 78%;
-            margin-left: 78px;
-
-        }
-
-        .form-item {
-            margin-bottom: 16px;
-            position: relative;
-
-            .key {
-                min-width: 126px;
-                color: #8090A6;
+            .form-title {
+                width: 174px;
                 text-align: right;
-                padding-right: 8px;
+                box-sizing: border-box;
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 20px;
+                color: #363d42;
             }
 
-            .value {
-                width: calc(~'100% - 86px');
-                max-width: 650px;
+            .form-content {
+                width: 78%;
+                margin-left: 78px;
             }
 
-            .sp {
+            .form-item {
+                margin-bottom: 16px;
                 position: relative;
-                font-size: 12px;
-                margin-left: 14px;
 
-                .ant-btn {
-                    font-size: 12px;
+                .key {
+                    min-width: 126px;
+                    color: #8090a6;
+                    text-align: right;
+                    padding-right: 8px;
                 }
-            }
 
-            &.rich_text {
                 .value {
-                    max-width: calc(100% - 100px);
+                    width: calc(~'100% - 86px');
+                    max-width: 650px;
+                }
+
+                .sp {
+                    position: relative;
+                    font-size: 12px;
+                    margin-left: 14px;
+
+                    .ant-btn {
+                        font-size: 12px;
+                    }
+                }
+
+                &.rich_text {
+                    .value {
+                        max-width: calc(100% - 100px);
+                    }
                 }
             }
         }
-    }
-
     }
     // 子列样式
     .form-content-item-column {
-
         display: flex;
         width: calc(100% + 86px);
 
         .item-column-block-box {
-
             box-sizing: border-box;
             padding: 0px 0 8px 0;
-            flex:1;
+            flex: 1;
 
             .item-column-title-box {
                 .title {
-                    color: #8090A6;
+                    color: #8090a6;
                     font-size: 16px;
                     font-weight: 500;
                     width: 126px;
@@ -218,9 +209,8 @@
                 }
             }
             .item-column-title {
-                
                 min-width: 126px;
-                color: #8090A6;
+                color: #8090a6;
                 text-align: right;
                 padding-right: 8px;
             }
@@ -240,7 +230,6 @@
 
     // 子列表格样式
     .form-content-item-table {
-        
     }
 }
 
@@ -394,14 +383,14 @@
 .tab-animate {
     position: relative;
     &::before {
-        content: "";
+        content: '';
         position: absolute;
         left: 0;
         bottom: 0;
         display: inline-block;
         width: 0%;
         height: 1px;
-        background: #FFF;
+        background: #fff;
         border-radius: 1px;
         transition: width 0.3s;
     }
@@ -432,7 +421,7 @@
 
     .form-block {
         // 新增页 分块
-        background: #F8FAFC;
+        background: #f8fafc;
         border-radius: 6px;
         display: flex;
         margin: 0 20px;
@@ -446,7 +435,7 @@
             box-sizing: border-box;
             font-weight: 500;
             line-height: 20px;
-            color: #363D42;
+            color: #363d42;
             padding-right: 2em;
         }
 
@@ -454,14 +443,14 @@
             width: 78%;
 
             .form-item {
-                position: relative;                
-    
+                position: relative;
+
                 .key {
                     min-width: 86px;
-                    color: #8090A6;
+                    color: #8090a6;
                     margin-right: 8px;
                 }
-    
+
                 .value {
                     width: calc(~'100% - 86px');
                     max-width: 650px;
@@ -470,18 +459,18 @@
                 // 必选图标
                 &.required {
                     .key::before {
-                        content: "*";
-                        color: #EB4141;
+                        content: '*';
+                        color: #eb4141;
                         vertical-align: middle;
                         margin-right: 4px;
                     }
                 }
             }
-        }        
+        }
     }
 
     .form-btns {
-        border: 1px solid #EDF1F4;
+        border: 1px solid #edf1f4;
         padding: 18px 0;
     }
 }

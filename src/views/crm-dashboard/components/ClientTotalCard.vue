@@ -4,7 +4,7 @@
             {{ $t('db.custom_total') }}
         </div>
         <div class="flex-total">
-            <img class="img" src="../../../assets/images/dashboard/people.png" alt="">
+            <img class="img" src="../../../assets/images/dashboard/people.png" alt="" />
             <div :class="[isPeople ? 'total active' : 'total']">
                 {{ count }}
             </div>
@@ -17,21 +17,20 @@ import Core from '../../../core';
 
 export default {
     name: 'Card',
-    components: {
-    },
+    components: {},
     props: {
         searchForm: {
             type: Object,
-            default: () => { }
+            default: () => {},
         },
         isPeople: {
             type: Boolean,
-            default: () => false
+            default: () => false,
         },
         count: {
             type: Number,
-            default: () => 0
-        }
+            default: () => 0,
+        },
     },
     data() {
         return {
@@ -39,16 +38,12 @@ export default {
             total: '256,648',
         };
     },
-    watch: {
-    },
-    computed: {
-    },
-    created() {
-    },
-    mounted() { },
-    beforeUnmount() {
-    },
-    methods: {}
+    watch: {},
+    computed: {},
+    created() {},
+    mounted() {},
+    beforeUnmount() {},
+    methods: {},
 };
 </script>
 
@@ -63,13 +58,13 @@ export default {
         font-weight: 600;
         color: #333333;
         &.active {
-            color: #346EF2;
+            color: #346ef2;
         }
     }
 
     .flex-total {
         width: 100%;
-        display: flex;        
+        display: flex;
         align-items: center;
         margin-top: 50px;
 
@@ -84,7 +79,7 @@ export default {
             font-weight: 600;
             color: #333333;
             &.active {
-                color: #346EF2;
+                color: #346ef2;
             }
         }
     }

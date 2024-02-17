@@ -1,7 +1,13 @@
 <template>
     <div>
-        <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id"
-            :pagination='false' @change="getTableDataSorter">
+        <a-table
+            :columns="tableColumns"
+            :data-source="tableData"
+            :scroll="{ x: true }"
+            :row-key="record => record.id"
+            :pagination="false"
+            @change="getTableDataSorter"
+        >
             <template #headerCell="{ title }">
                 {{ $t(title) }}
             </template>
@@ -18,8 +24,13 @@
                     {{ text || '-' }}
                 </template>
                 <template v-if="column.key === 'status'">
-                    {{ groupStatusTableData[text] !== undefined ? lang === 'zh' ? groupStatusTableData[text].zh :
-                        groupStatusTableData[text].en : "" }}
+                    {{
+                        groupStatusTableData[text] !== undefined
+                            ? lang === 'zh'
+                                ? groupStatusTableData[text].zh
+                                : groupStatusTableData[text].en
+                            : ''
+                    }}
                 </template>
                 <template v-if="column.key === 'time'">
                     {{ $Util.timeFilter(text) }}
@@ -29,8 +40,9 @@
                 </template>
 
                 <template v-if="column.key === 'operation'">
-                    <a-button type="link" @click="routerChange('detail', record)" v-if="$auth('customer.detail')"><i
-                            class="icon i_detail" />{{ $t('def.detail') }}</a-button>
+                    <a-button type="link" @click="routerChange('detail', record)" v-if="$auth('customer.detail')"
+                        ><i class="icon i_detail" />{{ $t('def.detail') }}</a-button
+                    >
                     <!--                        <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('customer.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>-->
                     <!--                        <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('customer.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>-->
                 </template>
@@ -40,16 +52,12 @@
 </template>
 
 <script>
-
 export default {
-
-    name: "StoreList",
+    name: 'StoreList',
     data() {
-        return {}
+        return {};
     },
-    watch: {
-
-    },
+    watch: {},
     computed: {
         tableColumns() {
             let columns = [
@@ -60,21 +68,16 @@ export default {
                 { title: 'retail.use_status', dataIndex: 'estimated_deal_time', key: 'estimated_deal_time' },
                 { title: 'retail.warehousing_time', dataIndex: 'estimated_deal_time', key: 'estimated_deal_time' },
                 { title: 'def.operate', key: 'operation', fixed: 'right' },
-            ]
-            return columns
+            ];
+            return columns;
         },
         lang() {
-            return this.$store.state.lang
-        }
+            return this.$store.state.lang;
+        },
     },
-    mounted() {
-
-    },
-    methods: {
-
-    }
-
-}
+    mounted() {},
+    methods: {},
+};
 </script>
 
 <style lang="less" scoped>

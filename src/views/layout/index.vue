@@ -1,9 +1,9 @@
 <template>
-    <a-config-provider :locale="zhCN" :autoInsertSpaceInButton='false'>
+    <a-config-provider :locale="zhCN" :autoInsertSpaceInButton="false">
         <!-- 头部布局 -->
         <a-layout id="Layout" :class="lang">
             <a-layout-header class="layout-header">
-                <div class="header-left" :class="{ 'collapsed': collapsed }">
+                <div class="header-left" :class="{ collapsed: collapsed }">
                     <img src="@images/header-logo2.png" class="logo" @click="collapsed = !collapsed" alt="浩万" />
                 </div>
                 <div class="header-center" v-if="loginType === Core.Const.USER.TYPE.ADMIN">
@@ -41,22 +41,27 @@
                         </a-badge>
                     </a-button>
                     <a-divider class="PC" type="vertical" />
-                    <a-tag class="PC" color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType][$i18n.locale] }}</a-tag>
-                    <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
+                    <a-tag class="PC" color="blue" style="font-size: 12px">{{
+                        USER_TYPE[loginType][$i18n.locale]
+                    }}</a-tag>
+                    <a-dropdown :trigger="['click']" overlay-class-name="account-action-menu">
                         <a-button class="user-info" type="link">
-                            <a-avatar class="user-avatar PC" :src="$Util.imageFilter(user.avatar, 3)" :size='30'>
+                            <a-avatar class="user-avatar PC" :src="$Util.imageFilter(user.avatar, 3)" :size="30">
                                 <template #icon><i class="icon i_user" /></template>
                             </a-avatar>
                             <span class="user-name">{{ user.name }}</span>
                         </a-button>
 
                         <template #overlay>
-                            <a-menu style="text-align: center;">
+                            <a-menu style="text-align: center">
                                 <a-menu-item @click="handleEditShow">
-                                    <a-button type="link" class="menu-item-btn">{{ $t('n.password')/*修改密码*/ }}</a-button>
+                                    <a-button type="link" class="menu-item-btn">{{
+                                        $t('n.password') /*修改密码*/
+                                    }}</a-button>
                                 </a-menu-item>
                                 <a-menu-item @click="$router.push('/login')" v-if="user_type_list.length > 1">
-                                    <a-button type="link" class="menu-item-btn">{{ $t('mall.switch_identity')/*切换身份*/
+                                    <a-button type="link" class="menu-item-btn">{{
+                                        $t('mall.switch_identity') /*切换身份*/
                                     }}</a-button>
                                 </a-menu-item>
                                 <a-menu-divider class="menu_divider" v-if="user_type_list.length > 1" />
@@ -70,31 +75,52 @@
             </a-layout-header>
             <!-- 内容区域 -->
             <a-layout class="layout-container">
-                <a-layout-sider class="layout-sider" v-model:collapsed="collapsed" :width="200" :collapsedWidth='64'
-                    theme='light'>
-                    <a-menu theme="light" v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" mode="inline"
-                        :inlineCollapsed='collapsed' :inlineIndent='8'>
+                <a-layout-sider
+                    class="layout-sider"
+                    v-model:collapsed="collapsed"
+                    :width="200"
+                    :collapsedWidth="64"
+                    theme="light"
+                >
+                    <a-menu
+                        theme="light"
+                        v-model:openKeys="openKeys"
+                        v-model:selectedKeys="selectedKeys"
+                        mode="inline"
+                        :inlineCollapsed="collapsed"
+                        :inlineIndent="8"
+                    >
                         <template v-for="item of showList">
                             <!-- 这个是只有当个导航栏 -->
-                            <a-menu-item v-if="$auth(...item.auth) && item.not_sub_menu" :key="item.path"
-                                @click="handleLink(item.path)">
-                                <i class='icon' :class="item.meta.icon" />
-                                <span :class="{ 'collapsed-title': collapsed }">{{ lang == 'zh' ? item.meta.title :
-                                    item.meta.title_en }}</span>
+                            <a-menu-item
+                                v-if="$auth(...item.auth) && item.not_sub_menu"
+                                :key="item.path"
+                                @click="handleLink(item.path)"
+                            >
+                                <i class="icon" :class="item.meta.icon" />
+                                <span :class="{ 'collapsed-title': collapsed }">{{
+                                    lang == 'zh' ? item.meta.title : item.meta.title_en
+                                }}</span>
                             </a-menu-item>
                             <!-- 有二级导航栏的 -->
                             <a-sub-menu v-else-if="$auth(...item.auth)" :key="item.path">
                                 <template #title>
-                                    <i class='icon' :class="item.meta.icon" />
+                                    <i class="icon" :class="item.meta.icon" />
                                     <span v-show="!collapsed">
                                         {{ lang == 'zh' ? item.meta.title : item.meta.title_en }}
                                     </span>
                                 </template>
                                 <template v-for="i of item.children">
-                                    <template v-if="$auth(...i.auth) && isExistArr(i.meta?.admin_module, tabPosition)
-                                                                            /*判断子children meta.admin_module admin中四大模块*/">
-                                        <a-menu-item :key="item.path + '/' + i.path"
-                                            @click="handleLink(item.path + '/' + i.path)">
+                                    <template
+                                        v-if="
+                                            $auth(...i.auth) && isExistArr(i.meta?.admin_module, tabPosition)
+                                            /*判断子children meta.admin_module admin中四大模块*/
+                                        "
+                                    >
+                                        <a-menu-item
+                                            :key="item.path + '/' + i.path"
+                                            @click="handleLink(item.path + '/' + i.path)"
+                                        >
                                             <span>{{ lang == 'zh' ? i.meta.title : i.meta.title_en }}</span>
                                         </a-menu-item>
                                     </template>
@@ -113,8 +139,12 @@
         </a-layout>
 
         <!-- 修改密码弹窗 -->
-        <a-modal v-model:visible="passShow" :title="$t('n.password')" class="password-edit-modal"
-            :after-close="handleEditClose">
+        <a-modal
+            v-model:visible="passShow"
+            :title="$t('n.password')"
+            class="password-edit-modal"
+            :after-close="handleEditClose"
+        >
             <div class="form-title">
                 <div class="form-item required">
                     <div class="key">{{ $t('n.old') }}:</div>
@@ -136,15 +166,13 @@
                 </div>
             </div>
             <template #footer>
-                <a-button key="back" @click="handleEditSubmit" type="primary">{{ $t('def.sure')
-                }}</a-button>
+                <a-button key="back" @click="handleEditSubmit" type="primary">{{ $t('def.sure') }}</a-button>
                 <a-button @click="passShow = false">{{ $t('def.cancel') }}</a-button>
             </template>
         </a-modal>
-
     </a-config-provider>
 </template>
-    
+
 <script>
 import Core from '../../core';
 import { SIDER } from '../../router/routes';
@@ -183,69 +211,77 @@ export default {
                 org: '',
             },
             tabPosition: 1, // 顶部的 销售 售后 生产 CRM权限
-            user_type_list: []
+            user_type_list: [],
         };
     },
     provide() {
         return {
-            setIndex: this.setIndex
-        }
+            setIndex: this.setIndex,
+        };
     },
     computed: {
         showList() {
-            let showList
-            let LOGIN_TYPE = Core.Const.USER.TYPE
+            let showList;
+            let LOGIN_TYPE = Core.Const.USER.TYPE;
             switch (this.loginType) {
-                case LOGIN_TYPE.ADMIN: showList = SIDER.ADMIN; break;
-                case LOGIN_TYPE.DISTRIBUTOR: showList = SIDER.DISTRIBUTOR; break;
-                case LOGIN_TYPE.AGENT: showList = SIDER.AGENT; break;
-                case LOGIN_TYPE.STORE: showList = SIDER.STORE; break;
+                case LOGIN_TYPE.ADMIN:
+                    showList = SIDER.ADMIN;
+                    break;
+                case LOGIN_TYPE.DISTRIBUTOR:
+                    showList = SIDER.DISTRIBUTOR;
+                    break;
+                case LOGIN_TYPE.AGENT:
+                    showList = SIDER.AGENT;
+                    break;
+                case LOGIN_TYPE.STORE:
+                    showList = SIDER.STORE;
+                    break;
             }
             showList.forEach(item => {
-                item.auth = item.meta ? (item.meta.auth || []) : [];
-                item.not_sub_menu = item.meta ? (item.meta.not_sub_menu || false) : false;
+                item.auth = item.meta ? item.meta.auth || [] : [];
+                item.not_sub_menu = item.meta ? item.meta.not_sub_menu || false : false;
                 if (item.children) {
                     item.children = item.children.map(i => {
-                        i.auth = i.meta ? (i.meta.auth || []) : [];
-                        return i
-                    })
+                        i.auth = i.meta ? i.meta.auth || [] : [];
+                        return i;
+                    });
                 }
-            })
+            });
 
             // 选择模块进行路由过滤ADMIN的时候的权限
             if (this.loginType === LOGIN_TYPE.ADMIN) {
-                let newShowList = []
+                let newShowList = [];
                 SIDER.ADMIN.forEach(item => {
                     if (item.type != undefined ? item.type.indexOf(this.tabPosition) != -1 : true) {
-                        newShowList.push(item)
+                        newShowList.push(item);
                     }
-                })
+                });
 
                 showList = newShowList;
 
                 // 是否只在超级管理员显示，普通平台方不展示
                 if (!Core.Data.getManager()) {
-                    let superList = Core.Util.deepCopy(showList)  // 为了防止影响之前的数据
+                    let superList = Core.Util.deepCopy(showList); // 为了防止影响之前的数据
                     let result = superList.filter(first => {
-                        let firstMeta = first.meta
+                        let firstMeta = first.meta;
                         if (first.children) {
                             let children = first.children.filter(second => {
-                                let secondMeta = second.meta
-                                return !secondMeta.super_admin_show
-                            })
-                            first.children = children
+                                let secondMeta = second.meta;
+                                return !secondMeta.super_admin_show;
+                            });
+                            first.children = children;
                         }
-                        return !firstMeta.super_admin_show
-                    })
+                        return !firstMeta.super_admin_show;
+                    });
 
-                    showList = result
+                    showList = result;
                 }
             }
-            return showList
+            return showList;
         },
         lang() {
-            return this.$store.state.lang
-        }
+            return this.$store.state.lang;
+        },
     },
     watch: {
         $route: {
@@ -253,98 +289,105 @@ export default {
             immediate: true,
             handler(n) {
                 // console.log("输出的路由", n);
-                let meta = n.meta || {}
-                let not_sub_menu = n.matched.length > 1 ? n.matched[0].meta.not_sub_menu : n.meta.not_sub_menu
+                let meta = n.meta || {};
+                let not_sub_menu = n.matched.length > 1 ? n.matched[0].meta.not_sub_menu : n.meta.not_sub_menu;
 
-                let path = n.path.split('/').slice(1)
+                let path = n.path.split('/').slice(1);
 
                 if (n.meta.parent) {
-                    this.selectedKeys = [this.getPathNoQuery(n.meta.parent)]
+                    this.selectedKeys = [this.getPathNoQuery(n.meta.parent)];
                 } else if (not_sub_menu) {
-                    this.selectedKeys = [this.getPathNoQuery('/' + path[0])]
+                    this.selectedKeys = [this.getPathNoQuery('/' + path[0])];
                 } else {
-                    this.selectedKeys = [this.getPathNoQuery(n.fullPath)]  // 例如 '/distributor/purchase-order-list'
+                    this.selectedKeys = [this.getPathNoQuery(n.fullPath)]; // 例如 '/distributor/purchase-order-list'
                 }
 
-                this.openKeys = [`/${path[0]}`]
-
+                this.openKeys = [`/${path[0]}`];
 
                 if (!meta.hidden || (this.breadcrumbList[0] && this.breadcrumbList[0].key !== path[0])) {
-                    this.breadcrumbList = [{ text: meta.title, path: n.path, key: path[0] }]
+                    this.breadcrumbList = [{ text: meta.title, path: n.path, key: path[0] }];
                 } else {
-                    this.breadcrumbList.push({ text: meta.title, path: n.path, key: path[0] })
+                    this.breadcrumbList.push({ text: meta.title, path: n.path, key: path[0] });
                 }
-            }
+            },
         },
         $lang: {
             deep: true,
             immediate: true,
             handler(n) {
                 switch (n) {
-                    case 'zh': this.locale = zhCN; break;
-                    case 'en': this.locale = enUS; break;
+                    case 'zh':
+                        this.locale = zhCN;
+                        break;
+                    case 'en':
+                        this.locale = enUS;
+                        break;
                 }
-            }
-        }
+            },
+        },
     },
     created() {
         this.user_type_list = Core.Data.getUserTypeList();
     },
     mounted() {
-        this.loginType = Core.Data.getLoginType()
-        console.log(this.loginType)
+        this.loginType = Core.Data.getLoginType();
+        console.log(this.loginType);
         this.getUnreadCount();
-        if (Core.Data.getLang() === "" || Core.Data.getLang() === null) {
-            Core.Data.setLang("zh")
+        if (Core.Data.getLang() === '' || Core.Data.getLang() === null) {
+            Core.Data.setLang('zh');
         }
-        this.$i18n.locale = Core.Data.getLang()
-        this.$store.state.lang = Core.Data.getLang()
-        this.tabPosition = Core.Data.getTabPosition() || 1
+        this.$i18n.locale = Core.Data.getLang();
+        this.$store.state.lang = Core.Data.getLang();
+        this.tabPosition = Core.Data.getTabPosition() || 1;
         if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
             this.handleRouterSwitch();
         }
 
         // 监听页面窗口
-        window.onresize = this.handleWindowResize
+        window.onresize = this.handleWindowResize;
         if (window.innerWidth <= 830) {
-            this.collapsed = true
+            this.collapsed = true;
         }
     },
     methods: {
         routerChange(type) {
-            let routeUrl = ''
+            let routeUrl = '';
             switch (type) {
-                case 'notice':        //系统
+                case 'notice': //系统
                     routeUrl = this.$router.resolve({
-                        path: "/system/notice-list",
-                    })
-                    window.open(routeUrl.href, '_self')
+                        path: '/system/notice-list',
+                    });
+                    window.open(routeUrl.href, '_self');
                     break;
                 case 'shop_cart':
                     routeUrl = this.$router.resolve({
-                        path: "/mall/shopping-bag",
-                    })
-                    window.open(routeUrl.href, '_self')
+                        path: '/mall/shopping-bag',
+                    });
+                    window.open(routeUrl.href, '_self');
                     break;
-
             }
         },
-        getUnreadCount() {    // 获取 未读消息数 数据
-            let CATEGORY = Core.Const.NOTICE.CATEGORY
+        getUnreadCount() {
+            // 获取 未读消息数 数据
+            let CATEGORY = Core.Const.NOTICE.CATEGORY;
             Core.Api.Notice.list({
-                category: CATEGORY.ORG
-            }).then(res => {
-                this.unread.org = res.un_count;
-            }).catch(err => {
-                console.log('getUnreadCount err', err)
+                category: CATEGORY.ORG,
             })
+                .then(res => {
+                    this.unread.org = res.un_count;
+                })
+                .catch(err => {
+                    console.log('getUnreadCount err', err);
+                });
             Core.Api.Notice.list({
-                category: CATEGORY.MASTER
-            }).then(res => {
-                this.unread.master = res.un_count;
-            }).catch(err => {
-                console.log('getUnreadCount err', err)
+                category: CATEGORY.MASTER,
             })
+                .then(res => {
+                    this.unread.master = res.un_count;
+                })
+                .catch(err => {
+                    console.log('getUnreadCount err', err);
+                });
         },
         handleLink(path) {
             this.$router.push(path);
@@ -358,7 +401,7 @@ export default {
                 } else {
                     this.$router.replace(`/login`);
                 }
-            })
+            });
         },
 
         handleEditShow() {
@@ -371,69 +414,71 @@ export default {
                 password: '',
                 new_password: '',
                 old_password: '',
-            }
+            };
         },
         handleEditSubmit() {
-            let form = Core.Util.deepCopy(this.form)
-            console.log('handleLogin form:', form)
+            let form = Core.Util.deepCopy(this.form);
+            console.log('handleLogin form:', form);
             if (!form.old_password) {
-                return this.$message.warning(this.$t('u.old_password'))
+                return this.$message.warning(this.$t('u.old_password'));
             }
             if (!form.password) {
-                return this.$message.warning(this.$t('u.new_password'))
+                return this.$message.warning(this.$t('u.new_password'));
             }
             if (!form.new_password) {
-                return this.$message.warning(this.$t('u.again'))
+                return this.$message.warning(this.$t('u.again'));
             }
             if (this.form.new_password !== this.form.password) {
-                this.$message.warning(this.$t('u.not'))
-                return
+                this.$message.warning(this.$t('u.not'));
+                return;
             }
 
             this.loading = true;
-            Core.Api.Common.updatePwd(this.form).then(() => {
-                this.$message.success(this.$t('pop_up.save_success'))
-                this.handleEditClose();
-            }).catch(err => {
-                console.log('handleSubmit err:', err)
-            })
+            Core.Api.Common.updatePwd(this.form)
+                .then(() => {
+                    this.$message.success(this.$t('pop_up.save_success'));
+                    this.handleEditClose();
+                })
+                .catch(err => {
+                    console.log('handleSubmit err:', err);
+                });
         },
 
         // 中英文切换
         handleLangSwitch(lang) {
-            console.log('handleLangSwitch')
-            this.$store.commit('switchLang', lang)
-            this.$i18n.locale = this.$store.state.lang
-            console.log('this.$i18n.locale', this.$i18n.locale)
+            console.log('handleLangSwitch');
+            this.$store.commit('switchLang', lang);
+            this.$i18n.locale = this.$store.state.lang;
+            console.log('this.$i18n.locale', this.$i18n.locale);
         },
         // 切换顶部的 销售 售后 生产 CRM权限操作
         handleRouterSwitch() {
             if (Core.Data.getTabPosition() === this.tabPosition) {
-                return
+                return;
             }
-            Core.Data.setTabPosition(this.tabPosition)
-            console.log("tabPosition", this.tabPosition)
+            Core.Data.setTabPosition(this.tabPosition);
+            console.log('tabPosition', this.tabPosition);
 
             switch (this.tabPosition) {
                 case this.ROUTER_TYPE.SALES:
                     if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
-                        this.$router.replace({ path: '/distributor', query: { from: 'login' } })
+                        this.$router.replace({ path: '/distributor', query: { from: 'login' } });
                     } else {
-                        this.$router.replace({ path: '/dashboard/index', query: { from: 'login' } })
+                        this.$router.replace({ path: '/dashboard/index', query: { from: 'login' } });
                     }
                     break;
                 case this.ROUTER_TYPE.AFTER:
                     if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
-                        this.$router.replace({ path: '/distributor' })
+                        this.$router.replace({ path: '/distributor' });
                     } else {
-                        this.$router.replace({ path: '/dashboard/index' })
+                        this.$router.replace({ path: '/dashboard/index' });
                     }
                     break;
                 case this.ROUTER_TYPE.PRODUCTION:
                     if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
-                        this.$router.replace({ path: '/entity' })
+                        this.$router.replace({ path: '/entity' });
                     } else {
-                        this.$router.replace({ path: '/dashboard/index' })
+                        this.$router.replace({ path: '/dashboard/index' });
                     }
                     break;
                 case this.ROUTER_TYPE.CRM:
@@ -448,32 +493,32 @@ export default {
         // 监听窗口变化
         handleWindowResize(e) {
             if (window.innerWidth <= 830) {
-                this.collapsed = true
+                this.collapsed = true;
             } else {
-                this.collapsed = false
+                this.collapsed = false;
             }
         },
         setIndex(tabPosition, selectedKeys) {
-            this.tabPosition = tabPosition
-            this.selectedKeys = selectedKeys
-            Core.Data.setTabPosition(this.tabPosition)
+            this.tabPosition = tabPosition;
+            this.selectedKeys = selectedKeys;
+            Core.Data.setTabPosition(this.tabPosition);
         },
         // 获取无参数路径
         getPathNoQuery(path) {
-            return path.split('?')[0]
+            return path.split('?')[0];
         },
         // 判断一个值是否在这个数组中
         isExistArr(arr, value) {
-            if (!arr) return true  // 默认arr不传 全部显示
+            if (!arr) return true; // 默认arr不传 全部显示
             // 传了arr 数据走下面逻辑
-            const Arr = arr || []
-            const result = Arr.includes(value)
-            return result  // true为显示 false 为不显示
-        }
-    }
+            const Arr = arr || [];
+            const result = Arr.includes(value);
+            return result; // true为显示 false 为不显示
+        },
+    },
 };
 </script>
-    
+
 <style lang="less">
 .ant-menu-inline-collapsed-tooltip {
     i.icon {
@@ -493,7 +538,7 @@ export default {
 
     .layout-header {
         height: 64px;
-        background: #FFFFFF;
+        background: #ffffff;
         border-bottom: 1px solid rgba(82, 91, 103, 0.2);
         padding: 0 20px;
         .fsb();
@@ -534,7 +579,6 @@ export default {
                 }
             }
 
-
             .ant-radio-button-wrapper:focus {
                 border: 0px;
             }
@@ -546,7 +590,7 @@ export default {
             }
 
             .ant-radio-button-wrapper-checked {
-                background-color: #F3F6F8;
+                background-color: #f3f6f8;
                 border: 0px;
             }
         }
@@ -686,7 +730,7 @@ export default {
                     box-shadow: 0 0 0 0;
 
                     &:hover {
-                        background-color: #F2F8FF;
+                        background-color: #f2f8ff;
                     }
 
                     .ant-menu-submenu-arrow {
@@ -741,12 +785,13 @@ export default {
         }
 
         &::-webkit-scrollbar-thumb {
-            background-color: #6E7C94;
+            background-color: #6e7c94;
             border-radius: 3px;
         }
     }
 
-    @media (min-width: 820px) {}
+    @media (min-width: 820px) {
+    }
 
     @media (max-width: 820px) {
         .layout-header {
@@ -771,4 +816,3 @@ export default {
     }
 }
 </style>
-    

@@ -8,8 +8,8 @@
                     <div class="value">
                         <div class="area-body">
                             <a-radio-group v-model:value="form.area_type" name="radioGroup">
-                                <a-radio :value="1">{{ $t(/*全部区域*/'operation.all_areas') }}</a-radio>
-                                <a-radio :value="2">{{ $t(/*部分区域*/'operation.partial_areas') }}</a-radio>
+                                <a-radio :value="1">{{ $t(/*全部区域*/ 'operation.all_areas') }}</a-radio>
+                                <a-radio :value="2">{{ $t(/*部分区域*/ 'operation.partial_areas') }}</a-radio>
                             </a-radio-group>
                             <template v-if="form.area_type === 2">
                                 <MyCountryCascader v-model:value="form.area" />
@@ -21,8 +21,13 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('operation.sort') }}</div>
                     <div class="value">
-                        <a-input-number style="width: 100%;" :placeholder="$t('operation.sort_placeholder')"
-                            v-model:value="form.sort" :min="1" :precision="0" />
+                        <a-input-number
+                            style="width: 100%"
+                            :placeholder="$t('operation.sort_placeholder')"
+                            v-model:value="form.sort"
+                            :min="1"
+                            :precision="0"
+                        />
                     </div>
                 </div>
                 <!-- 链接 -->
@@ -43,8 +48,19 @@
                 <div class="form-item required flex_start">
                     <div class="key">{{ $t('operation.pic') }}</div>
                     <div class="value">
-                        <MyUpload name="add_picList" v-model:value="form.img" showTip :limit="1" :limitSize="10" :valueType="2"
-                            tipPosition="right" :defaultPreview="false" ratioLimit :ratio="{ width: 1920, height: 720 }" @preview="handlePreview">
+                        <MyUpload
+                            name="add_picList"
+                            v-model:value="form.img"
+                            showTip
+                            :limit="1"
+                            :limitSize="10"
+                            :valueType="2"
+                            tipPosition="right"
+                            :defaultPreview="false"
+                            ratioLimit
+                            :ratio="{ width: 1920, height: 720 }"
+                            @preview="handlePreview"
+                        >
                             <template #tip>
                                 <div class="tips">
                                     <p>{{ $t('operation.pic_tip1') }}</p>
@@ -62,12 +78,19 @@
             <a-button class="btn-block" @click="handleSubmit" type="primary">{{ $t('def.submit') }}</a-button>
         </div>
         <!-- 自定义图片预览 -->
-        <MyPreviewImageVideo v-model:isClose="isClose" :type="uploadOptions.previewType"
-            :previewData="uploadOptions.previewImageVideo">
+        <MyPreviewImageVideo
+            v-model:isClose="isClose"
+            :type="uploadOptions.previewType"
+            :previewData="uploadOptions.previewImageVideo"
+        >
         </MyPreviewImageVideo>
         <CheckModal :visible="modalShow" :bodyText="modalText" :key="`modal-${lang}`">
-            <a-button @click="routerChange('back')">{{ form.id ? $t(/*退出编辑*/'operation.exit_edit') : $t(/*退出创建*/'operation.exit_creation') }}</a-button>
-            <a-button type="primary" @click="modalShow = false">{{ form.id ? $t(/*继续编辑*/'operation.continue_edit') : $t(/*继续创建*/'operation.continue_fill') }}</a-button>
+            <a-button @click="routerChange('back')">{{
+                form.id ? $t(/*退出编辑*/ 'operation.exit_edit') : $t(/*退出创建*/ 'operation.exit_creation')
+            }}</a-button>
+            <a-button type="primary" @click="modalShow = false">{{
+                form.id ? $t(/*继续编辑*/ 'operation.continue_edit') : $t(/*继续创建*/ 'operation.continue_fill')
+            }}</a-button>
         </CheckModal>
     </div>
 </template>
@@ -75,39 +98,39 @@
 <script setup>
 import { onMounted, ref, getCurrentInstance, reactive, computed, watch } from 'vue';
 import Core from '../../core';
-import { useRouter, useRoute } from 'vue-router'
-import MyUpload from "@/components/MyUpload/index.vue";
+import { useRouter, useRoute } from 'vue-router';
+import MyUpload from '@/components/MyUpload/index.vue';
 import MyCountryCascader from '@/components/MyCountryCascader/index.vue';
-import MyPreviewImageVideo from "@/components/horwin/based-on-ant/MyPreviewImageVideo.vue";
+import MyPreviewImageVideo from '@/components/horwin/based-on-ant/MyPreviewImageVideo.vue';
 import CheckModal from '@/components/horwin/based-on-ant/CheckModal.vue';
 
 const { proxy } = getCurrentInstance();
-const router = useRouter()
-const route = useRoute()
+const router = useRouter();
+const route = useRoute();
 
 onMounted(() => {
-    form.value.id = Number(route.query.id) || 0
+    form.value.id = Number(route.query.id) || 0;
 
     if (form.value.id) {
         getReportDetail(form.value.id);
-        modalText.value = proxy.$t(/*编辑尚未提交，确定退出吗？*/'operation.edit_exit_tip')
+        modalText.value = proxy.$t(/*编辑尚未提交，确定退出吗？*/ 'operation.edit_exit_tip');
     } else {
-        modalText.value = proxy.$t(/*公告尚未创建成功，确定退出吗？*/'operation.exit_text')
+        modalText.value = proxy.$t(/*公告尚未创建成功，确定退出吗？*/ 'operation.exit_text');
     }
-})
+});
 const lang = computed(() => {
     return proxy.$store.state.lang;
-})
-watch(lang, (newV) => {
+});
+watch(lang, newV => {
     if (form.value.id) {
         getReportDetail(form.value.id);
-        modalText.value = proxy.$t(/*编辑尚未提交，确定退出吗？*/'operation.edit_exit_tip')
+        modalText.value = proxy.$t(/*编辑尚未提交，确定退出吗？*/ 'operation.edit_exit_tip');
     } else {
-        modalText.value = proxy.$t(/*公告尚未创建成功，确定退出吗？*/'operation.exit_text')
+        modalText.value = proxy.$t(/*公告尚未创建成功，确定退出吗？*/ 'operation.exit_text');
     }
-})
+});
 /* state start*/
-const loading = ref(false)
+const loading = ref(false);
 const form = ref({
     id: '',
     type: Core.Const.OPERATION.OPERATION_TYPE_MAP.AD, // 1 公告 2 广告
@@ -118,79 +141,84 @@ const form = ref({
     img_desc: '',
     img: [],
     show_type: 1, // 1 顶部 2 消息合集区
-})
-const detail = ref({})
+});
+const detail = ref({});
 const uploadOptions = ref({
-    previewType: "image",
+    previewType: 'image',
     fileData: [], // 提交的数据
     previewImageVideo: [],
 });
-const isClose = ref(false)
-const modalText = ref(undefined)
-const modalShow = ref(false)
+const isClose = ref(false);
+const modalText = ref(undefined);
+const modalShow = ref(false);
 /* state end*/
 /* Fetch start*/
-const getReportDetail = (id) => {
+const getReportDetail = id => {
     loading.value = true;
     Core.Api.Operation.detail({
         id: id,
-    }).then(res => {
-        console.log('getReportDetail res', res);
-        detail.value = res.detail
-        Object.assign(form.value, {
-            area_type: detail.value.area_type,
-            area: detail.value.area ? detail.value.area.split(',') : [],
-            sort: detail.value.sort,
-            url: detail.value.url,
-            img: detail.value.img ? JSON.parse(detail.value.img) : [],
-            img_desc: detail.value.img_desc,
-            show_type: detail.value.show_type,
+    })
+        .then(res => {
+            console.log('getReportDetail res', res);
+            detail.value = res.detail;
+            Object.assign(form.value, {
+                area_type: detail.value.area_type,
+                area: detail.value.area ? detail.value.area.split(',') : [],
+                sort: detail.value.sort,
+                url: detail.value.url,
+                img: detail.value.img ? JSON.parse(detail.value.img) : [],
+                img_desc: detail.value.img_desc,
+                show_type: detail.value.show_type,
+            });
         })
-    }).catch(err => {
-        console.log('getReportDetail err', err)
-    }).finally(() => {
-        loading.value = false;
-    });
-}
+        .catch(err => {
+            console.log('getReportDetail err', err);
+        })
+        .finally(() => {
+            loading.value = false;
+        });
+};
 const handleSubmit = () => {
-    let params = Core.Util.deepCopy(form.value)
+    let params = Core.Util.deepCopy(form.value);
     if (params.id === 0) {
         delete params.id;
     }
     console.log('params', params);
     if (checkInput(params)) {
-        return
+        return;
     }
-    if(params.area_type === Core.Const.OPERATION.AREA_TYPE_MAP.ALL ) {
-        params.area = []
+    if (params.area_type === Core.Const.OPERATION.AREA_TYPE_MAP.ALL) {
+        params.area = [];
     }
-    params.area = params.area.join(',')
-    params.img = JSON.stringify(params.img)
+    params.area = params.area.join(',');
+    params.img = JSON.stringify(params.img);
     Core.Api.Operation.save({
         ...params,
-    }).then(() => {
-        proxy.$message.success(proxy.$t('pop_up.save_success'))
-        routerChange('back');
-    }).catch(err => {
-        console.log('handleSubmit err:', err)
     })
-}
+        .then(() => {
+            proxy.$message.success(proxy.$t('pop_up.save_success'));
+            routerChange('back');
+        })
+        .catch(err => {
+            console.log('handleSubmit err:', err);
+        });
+};
 /* Fetch end*/
 /* methods start*/
 const routerChange = (type, item) => {
     switch (type) {
-        case 'back':    // 详情
+        case 'back': // 详情
             let routeUrl = router.resolve({
-                path: "/operation/ad-list",
-            })
-            window.open(routeUrl.href, '_self')
+                path: '/operation/ad-list',
+            });
+            window.open(routeUrl.href, '_self');
             break;
     }
-}
+};
 const handlePreview = ({ file, fileList }) => {
     uploadOptions.value.previewType = 'image';
     uploadOptions.value.previewImageVideo = [];
-    fileList.forEach((el) => {
+    fileList.forEach(el => {
         if (el.response) {
             if (file.uid === el.uid) {
                 // 让预览的哪张图片在第一张
@@ -201,9 +229,8 @@ const handlePreview = ({ file, fileList }) => {
         }
     });
     isClose.value = true;
-}
-const checkInput = (form) => {
-
+};
+const checkInput = form => {
     const { area_type, area, sort, url, img_desc, img } = form;
 
     if (area_type === Core.Const.OPERATION.AREA_TYPE_MAP.PART && !area.length) {
@@ -257,7 +284,7 @@ const checkInput = (form) => {
                     }
 
                     .tips {
-                        >p {
+                        > p {
                             color: #666;
                             font-size: 14px;
                             font-style: normal;
@@ -293,7 +320,7 @@ const checkInput = (form) => {
                         background: #f2f3f5;
                         padding: 10px;
                         font-size: 12px;
-                        border-color: #EAECF1 !important;
+                        border-color: #eaecf1 !important;
 
                         .ql-formats {
                             &:nth-child(1) {
@@ -323,8 +350,8 @@ const checkInput = (form) => {
                     .ql-container.ql-snow {
                         border-radius: 0px 0px 3px 3px;
                         flex: 1;
-                        border-color: #EAECF1 !important;
-                        background: #FFF;
+                        border-color: #eaecf1 !important;
+                        background: #fff;
 
                         .ql-editor {
                             padding: 10px;
@@ -364,11 +391,11 @@ const checkInput = (form) => {
                         left: 0;
                         transform: translateY(100%);
 
-                        >img {
+                        > img {
                             width: 142px;
                             height: 67px;
                             border-radius: 4px;
-                            border: 1px solid #EAECF1;
+                            border: 1px solid #eaecf1;
                             overflow: hidden;
 
                             &:nth-child(n + 2) {

@@ -27,10 +27,7 @@
                     </div>
                 </slot>
             </div>
-            <div 
-                class="colos-icon" 
-                @click="onAddBtn('close')"
-            >
+            <div class="colos-icon" @click="onAddBtn('close')">
                 <close-outlined />
             </div>
         </MyMask>
@@ -38,15 +35,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import MyMask from "@/components/horwin/based-on-dom/MyMask.vue";
-import { LeftCircleOutlined, RightCircleOutlined, CloseOutlined } from "@ant-design/icons-vue";
+import { ref, onMounted } from 'vue';
+import MyMask from '@/components/horwin/based-on-dom/MyMask.vue';
+import { LeftCircleOutlined, RightCircleOutlined, CloseOutlined } from '@ant-design/icons-vue';
 
 const props = defineProps({
     // 查看的类型 是照片查看还是Video查看
     type: {
         type: String,
-        default: "image",
+        default: 'image',
     },
     // 预览的数据
     previewData: {
@@ -56,23 +53,23 @@ const props = defineProps({
     isClose: {
         type: Boolean,
         default: false,
-    }
+    },
 });
 
-const emits = defineEmits(['update:isClose'])
+const emits = defineEmits(['update:isClose']);
 
 /* Methods start */
-const onAddBtn = (type) => {
+const onAddBtn = type => {
     switch (type) {
-        case "close":
-            emits("update:isClose", false)
-        break;
+        case 'close':
+            emits('update:isClose', false);
+            break;
     }
 };
 /* Methods end */
 onMounted(() => {
-    console.log("previewData", props.previewData);
-})
+    console.log('previewData', props.previewData);
+});
 </script>
 
 <style lang="less" scoped>
@@ -134,7 +131,7 @@ onMounted(() => {
         position: absolute;
         top: 30px;
         right: 30px;
-        color: #FFF;
+        color: #fff;
         width: 30px;
         font-size: 30px;
         height: 30px;

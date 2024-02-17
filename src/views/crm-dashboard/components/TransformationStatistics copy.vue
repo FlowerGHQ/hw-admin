@@ -4,26 +4,23 @@
             {{ $t('db.transformation_analysis') }}
         </div>
 
-        <div class="table-container" >
-            <div id="chartId" ref='chartId'></div>
+        <div class="table-container">
+            <div id="chartId" ref="chartId"></div>
         </div>
-
     </div>
 </template>
 
 <script>
 import Core from '../../../core';
-import { Chart } from '@antv/g2'
-
+import { Chart } from '@antv/g2';
 
 export default {
     name: 'Card',
-    components: {
-    },
+    components: {},
     props: {
         searchForm: {
             type: Object,
-            default: ()=> {}
+            default: () => {},
         },
     },
     data() {
@@ -34,33 +31,29 @@ export default {
             tableData: [],
         };
     },
-    watch: {
-    },
-    computed: {
-    },
-    created() {
-    },
+    watch: {},
+    computed: {},
+    created() {},
     mounted() {
         this.boStatistics();
     },
-    beforeUnmount() {
-    },
+    beforeUnmount() {},
     methods: {
         boStatistics() {
             const dv = [
-                { action: '客户总人数', pv: 50000, percent: 1, type:'触达人数' },
-                { action: '公海客户数', pv: 35000, percent: 0.8, type:'有效访问人数' },
-                { action: '商机总数', pv: 25000, percent: 0.6, type:'兴趣人数' },
-                { action: '试驾单总数', pv: 15000, percent: 0.4, type:'下单人数' },
-                { action: '回款单总数', pv: 8000, percent: 0.2, type:'支付人数' },
-            ]
+                { action: '客户总人数', pv: 50000, percent: 1, type: '触达人数' },
+                { action: '公海客户数', pv: 35000, percent: 0.8, type: '有效访问人数' },
+                { action: '商机总数', pv: 25000, percent: 0.6, type: '兴趣人数' },
+                { action: '试驾单总数', pv: 15000, percent: 0.4, type: '下单人数' },
+                { action: '回款单总数', pv: 8000, percent: 0.2, type: '支付人数' },
+            ];
 
-            this.drawBoStatisticsChart(dv)
+            this.drawBoStatisticsChart(dv);
         },
         drawBoStatisticsChart(data) {
             if (this.boStatisticsChart.destroy) {
-                console.log('drawPurchaseChart destroy:')
-                this.boStatisticsChart.destroy()
+                console.log('drawPurchaseChart destroy:');
+                this.boStatisticsChart.destroy();
             }
             const chart = new Chart({
                 container: 'chartId',
@@ -71,10 +64,7 @@ export default {
             chart.data(data);
             chart.axis(false);
             chart.legend(false);
-            chart
-                .coordinate('rect')
-                .transpose()
-                .scale(1, -1);
+            chart.coordinate('rect').transpose().scale(1, -1);
             chart
                 .interval()
                 .adjust('symmetric')
@@ -96,15 +86,15 @@ export default {
                                 stroke: 'rgba(0, 0, 0, 0.15)',
                             },
                         },
-                    }
+                    },
                 )
                 .animate({
                     appear: {
-                        animation: 'fade-in'
+                        animation: 'fade-in',
                     },
                     update: {
-                        annotation: 'fade-in'
-                    }
+                        annotation: 'fade-in',
+                    },
                 });
 
             chart.interaction('element-active');
@@ -113,7 +103,7 @@ export default {
                 chart.annotation().clear(true);
                 const chartData = chart.getData();
                 // 中间标签文本
-                chartData.forEach((obj) => {
+                chartData.forEach(obj => {
                     chart.annotation().text({
                         top: true,
                         position: {
@@ -131,11 +121,9 @@ export default {
             });
 
             chart.render();
-            this.boStatisticsChart = chart
+            this.boStatisticsChart = chart;
         },
-
-
-    }
+    },
 };
 </script>
 
@@ -146,7 +134,9 @@ export default {
     .title {
         width: 100%;
         font-size: 18px;
-        font-family: PingFang SC-Medium, PingFang SC;
+        font-family:
+            PingFang SC-Medium,
+            PingFang SC;
         font-weight: 600;
         color: #333333;
         margin-bottom: 39px;

@@ -2,26 +2,21 @@
     <div class="item-bom">
         <div class="list-container item-container">
             <div class="title-container" ref="titleRefs">
-                <div class="title-area">{{ $t("item-bom.title") }}</div>
+                <div class="title-area">{{ $t('item-bom.title') }}</div>
             </div>
-            <div
-                class="item-tree"
-                :style="{ height: 'calc(100% - ' + titleHeight + ')' }">
+            <div class="item-tree" :style="{ height: 'calc(100% - ' + titleHeight + ')' }">
                 <!-- 左边 -->
                 <div
                     class="item-tree-left"
                     :class="{
                         'collapse-true': isCollapse,
                         'collapse-false': !isCollapse,
-                    }">
+                    }"
+                >
                     <div class="title-area">
-                        {{ $t("item-bom.bom_list") }}
-                        <div
-                            class="icon-collapse"
-                            @click="isCollapse = !isCollapse">
-                            <MySvgIcon
-                                icon-class="collapse"
-                                v-if="!isCollapse" />
+                        {{ $t('item-bom.bom_list') }}
+                        <div class="icon-collapse" @click="isCollapse = !isCollapse">
+                            <MySvgIcon icon-class="collapse" v-if="!isCollapse" />
                             <MySvgIcon icon-class="undold" v-else />
                         </div>
                     </div>
@@ -29,22 +24,21 @@
                         <FittingsTree
                             v-model:activeObj="activeObj"
                             :cancelIds="cancelId"
-                            :isCollapse="isCollapse" 
+                            :isCollapse="isCollapse"
                             ref="treeRef"
                         />
                     </div>
                 </div>
                 <!-- 右边 -->
                 <div class="item-tree-right">
-                    <div
-                        class="search-content"
-                        :style="{ 'min-width': minWidthCount + 'px' }">
+                    <div class="search-content" :style="{ 'min-width': minWidthCount + 'px' }">
                         <SearchAll
                             ref="searAllRef"
                             :isShowMore="false"
                             :options="searchOptions"
                             @search="handleSearch"
-                            @reset="handleReset">
+                            @reset="handleReset"
+                        >
                         </SearchAll>
                     </div>
                     <component
@@ -65,29 +59,21 @@
             :activeObj="activeObj"
             :code="level2CodeStr"
             @refresh="refresh"
-            @update:visibility="setValue"></ClassifyModal>
+            @update:visibility="setValue"
+        ></ClassifyModal>
     </div>
 </template>
 
 <script setup>
 // import { useRouter,onBeforeRouteUpdate } from 'vue-router';
-import {
-    ref,
-    shallowRef,
-    onMounted,
-    computed,
-    watch,
-    provide,
-    onBeforeUnmount,
-    getCurrentInstance,
-} from "vue";
-import SearchAll from "@/components/horwin/based-on-ant/SearchAll.vue";
-import fittings from "./components/item-bom/Fittings.vue";
-import FittingsTwo from "./components/item-bom/FittingsTwo.vue";
-import FittingsThree from "./components/item-bom/FittingsThree.vue";
-import FittingsTree from "./components/item-bom/FittingsTree.vue";
-import ClassifyModal from "./components/item-bom/ClassifyModal.vue"; // 分类弹窗组件
-import MySvgIcon from "@/components/MySvgIcon/index.vue";
+import { ref, shallowRef, onMounted, computed, watch, provide, onBeforeUnmount, getCurrentInstance } from 'vue';
+import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
+import fittings from './components/item-bom/Fittings.vue';
+import FittingsTwo from './components/item-bom/FittingsTwo.vue';
+import FittingsThree from './components/item-bom/FittingsThree.vue';
+import FittingsTree from './components/item-bom/FittingsTree.vue';
+import ClassifyModal from './components/item-bom/ClassifyModal.vue'; // 分类弹窗组件
+import MySvgIcon from '@/components/MySvgIcon/index.vue';
 // const router = useRouter()
 const minWidthCount = 890;
 const treeRef = ref(null);
@@ -110,23 +96,23 @@ const { proxy } = getCurrentInstance();
 // 注释-侧边栏
 const isCollapse = ref(false); //菜单Dom-是否收起
 const activeObj = ref({});
-const level2CodeStr = ref("");
+const level2CodeStr = ref('');
 const searchOptions = ref([
     {
         id: 1,
-        type: "input",
-        key: "item-bom.product_name",
+        type: 'input',
+        key: 'item-bom.product_name',
         value: undefined,
-        searchParmas: "name",
-        placeholder: "item-bom.please_enter",
+        searchParmas: 'name',
+        placeholder: 'item-bom.please_enter',
     },
     {
         id: 2,
-        type: "input",
-        key: "item-bom.commodity_code",
+        type: 'input',
+        key: 'item-bom.commodity_code',
         value: undefined,
-        searchParmas: "code_list",
-        placeholder: "item-bom.commodity_code_tips",
+        searchParmas: 'code_list',
+        placeholder: 'item-bom.commodity_code_tips',
     },
 ]); // 搜索options
 const searchParams = ref({}); // 搜索参数
@@ -136,12 +122,12 @@ const classifyModalShow = ref(false);
 
 watch(
     activeObj,
-    (newVal) => {
+    newVal => {
         searAllRef.value.handleSearchReset();
     },
     {
         deep: true,
-    }
+    },
 );
 const componentProps = ref();
 const componentName = computed(() => {
@@ -157,11 +143,9 @@ const componentName = computed(() => {
     }
 });
 
-const handleSearch = (data) => {
+const handleSearch = data => {
     searchParams.value = data;
-    searchParams.value.code_list = data.code_list
-        ? data.code_list.split(",")
-        : [];
+    searchParams.value.code_list = data.code_list ? data.code_list.split(',') : [];
 };
 const handleReset = () => {
     searchParams.value = {};
@@ -169,28 +153,24 @@ const handleReset = () => {
 const allComRef = ref(null); // component refs
 const searAllRef = ref(null); // searAll refs
 // 注释-侧边栏
-const screenWidth = ref(
-    window.innerWidth ||
-        document.documentElement.clientWidth ||
-        document.body.clientWidth
-);
+const screenWidth = ref(window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth);
 
-const TreeRefresh = (val) => {
-    console.log(val)
+const TreeRefresh = val => {
+    console.log(val);
     if (val) {
-        treeRef.value.getCurrentVersion(val.shop_id,val.version_id);
+        treeRef.value.getCurrentVersion(val.shop_id, val.version_id);
     }
 };
 
 onMounted(() => {
-    titleHeight.value = titleRefs.value.offsetHeight + "px";
+    titleHeight.value = titleRefs.value.offsetHeight + 'px';
     /* 计算适配宽度 */
     handleResize();
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 });
 
 onBeforeUnmount(() => {
-    window.removeEventListener("resize", handleResize);
+    window.removeEventListener('resize', handleResize);
 });
 
 /* fetch start */
@@ -200,23 +180,20 @@ onBeforeUnmount(() => {
 /* methods end*/
 
 // 分类弹窗打开
-const showClassModal = (data) => {
+const showClassModal = data => {
     level2CodeStr.value = data;
     classifyModalShow.value = true;
 };
 const handleResize = () => {
-    screenWidth.value =
-        window.innerWidth ||
-        document.documentElement.clientWidth ||
-        document.body.clientWidth;
+    screenWidth.value = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     if (window.innerWidth < 1550) {
         isCollapse.value = true;
     } else {
         isCollapse.value = false;
     }
 };
-provide("classifyShowModal", showClassModal); // 提供分类弹窗打开方法
-provide("bomId", activeObj.value.id); // 提供分类弹窗打开方法
+provide('classifyShowModal', showClassModal); // 提供分类弹窗打开方法
+provide('bomId', activeObj.value.id); // 提供分类弹窗打开方法
 const refresh = () => {
     if (activeObj.value.level === 2) {
         allComRef.value.refresh();
@@ -225,10 +202,10 @@ const refresh = () => {
     allComRef.value.getTableDataFetch();
 };
 
-const setValue = (val) => {
+const setValue = val => {
     classifyModalShow.value = val;
     if (!val) {
-        level2CodeStr.value = "";
+        level2CodeStr.value = '';
         // dataKeyPop.value = new Date();
     }
 };

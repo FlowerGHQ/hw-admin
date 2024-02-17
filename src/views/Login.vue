@@ -1,68 +1,86 @@
 <template>
-<div id="Login">
-    <div class="login-header">
-        <span class="text">{{ $t('n.system') }}</span>
-        <div class="header-right">
-            <a-button class="lang-switch" type="link"  @click="handleLangSwitch(lang =='zh' ? 'en' : 'zh')">
-                <i class="icon" :class="lang =='zh' ? 'i_zh-en' : 'i_en-zh'"/>
-            </a-button>
-        </div>
-    </div>
-    <div class="login-container">
-        <div class="form-title">{{ $t('n.account_login') }}</div>
-        <div class="form-content">
-            <div class="login-type" :class="TYPE_MAP[loginForm.user_type]">
-                <div class="type-item" v-for="item of loginTypeList" :key="item.value"
-                    :class="loginForm.user_type === item.value ? 'active' : ''"
-                    @click="loginForm.user_type = item.value">
-                    {{item[$i18n.locale]}}
-                </div>
+    <div id="Login">
+        <div class="login-header">
+            <span class="text">{{ $t('n.system') }}</span>
+            <div class="header-right">
+                <a-button class="lang-switch" type="link" @click="handleLangSwitch(lang == 'zh' ? 'en' : 'zh')">
+                    <i class="icon" :class="lang == 'zh' ? 'i_zh-en' : 'i_en-zh'" />
+                </a-button>
             </div>
-            <!-- 供应商 页面用手机号 -->
-            <template v-if="loginForm.user_type === TYPE.SUPPLIER">
-                <a-input
-                    class="form-item"
-                    :placeholder="$t('n.enter') + $t('n.phone')"
-                    v-model:value="supplierLoginForm.phone"
-                    @keydown.enter="handleFocusCode"
-                >
-                    <template #prefix>
-                        <i class="icon i_shouji placeholder"/>
-                    </template>
-                </a-input>
-                <div class="supplier-code">
-                    <a-input
-                        class="form-item code-form-item"
-                        :placeholder="$t('n.verification_code')"
-                        v-model:value="supplierLoginForm.code"
-                        ref="code-input"
-                        @keydown.enter="handleLogin('supplier')"
+        </div>
+        <div class="login-container">
+            <div class="form-title">{{ $t('n.account_login') }}</div>
+            <div class="form-content">
+                <div class="login-type" :class="TYPE_MAP[loginForm.user_type]">
+                    <div
+                        class="type-item"
+                        v-for="item of loginTypeList"
+                        :key="item.value"
+                        :class="loginForm.user_type === item.value ? 'active' : ''"
+                        @click="loginForm.user_type = item.value"
                     >
-                    </a-input>
-                    <div class="get-code-text" ref="get-code" @click="onGetCode">
-                        {{ $t('supply-chain.access_code') }}
+                        {{ item[$i18n.locale] }}
                     </div>
                 </div>
-                <a-button class="form-button" type="primary" @click="handleLogin('supplier')">{{ $t('n.login') }}</a-button>
-            </template>
-            <!-- 其他平台 -->
-            <template v-else>
-                <a-input class="form-item" :placeholder="$t('n.username')" v-model:value="loginForm.username" @keydown.enter="handleFocusPwd">
-                    <template #prefix>
-                        <i class="icon i_user placeholder"/>
-                    </template>
-                </a-input>
-                <a-input class="form-item" :placeholder="$t('n.enter_password')" v-model:value="loginForm.password" @keydown.enter="handleLogin" type="password" ref="password-input">
-                    <template #prefix>
-                        <i class="icon i_lock placeholder"/>
-                    </template>
-                </a-input>
-                <a-button class="form-button" type="primary" @click="handleLogin">{{ $t('n.login') }}</a-button>
-            </template>
+                <!-- 供应商 页面用手机号 -->
+                <template v-if="loginForm.user_type === TYPE.SUPPLIER">
+                    <a-input
+                        class="form-item"
+                        :placeholder="$t('n.enter') + $t('n.phone')"
+                        v-model:value="supplierLoginForm.phone"
+                        @keydown.enter="handleFocusCode"
+                    >
+                        <template #prefix>
+                            <i class="icon i_shouji placeholder" />
+                        </template>
+                    </a-input>
+                    <div class="supplier-code">
+                        <a-input
+                            class="form-item code-form-item"
+                            :placeholder="$t('n.verification_code')"
+                            v-model:value="supplierLoginForm.code"
+                            ref="code-input"
+                            @keydown.enter="handleLogin('supplier')"
+                        >
+                        </a-input>
+                        <div class="get-code-text" ref="get-code" @click="onGetCode">
+                            {{ $t('supply-chain.access_code') }}
+                        </div>
+                    </div>
+                    <a-button class="form-button" type="primary" @click="handleLogin('supplier')">{{
+                        $t('n.login')
+                    }}</a-button>
+                </template>
+                <!-- 其他平台 -->
+                <template v-else>
+                    <a-input
+                        class="form-item"
+                        :placeholder="$t('n.username')"
+                        v-model:value="loginForm.username"
+                        @keydown.enter="handleFocusPwd"
+                    >
+                        <template #prefix>
+                            <i class="icon i_user placeholder" />
+                        </template>
+                    </a-input>
+                    <a-input
+                        class="form-item"
+                        :placeholder="$t('n.enter_password')"
+                        v-model:value="loginForm.password"
+                        @keydown.enter="handleLogin"
+                        type="password"
+                        ref="password-input"
+                    >
+                        <template #prefix>
+                            <i class="icon i_lock placeholder" />
+                        </template>
+                    </a-input>
+                    <a-button class="form-button" type="primary" @click="handleLogin">{{ $t('n.login') }}</a-button>
+                </template>
+            </div>
         </div>
+        <div class="login-footer">Copyright © 2019-2022 常州浩万新能源科技有限公司 苏ICP备2022002975号-2</div>
     </div>
-    <div class="login-footer">Copyright © 2019-2022 常州浩万新能源科技有限公司 苏ICP备2022002975号-2</div>
-</div>
 </template>
 
 <script>
@@ -70,8 +88,8 @@ import Core from '../core';
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
 import enUS from 'ant-design-vue/lib/locale-provider/en_US';
 import jsapi from '../core/jsapi';
-const TYPE = Core.Const.LOGIN.TYPE
-const TYPE_MAP = Core.Const.LOGIN.TYPE_MAP
+const TYPE = Core.Const.LOGIN.TYPE;
+const TYPE_MAP = Core.Const.LOGIN.TYPE_MAP;
 export default {
     name: 'Login',
     components: {},
@@ -87,12 +105,12 @@ export default {
             loginForm: {
                 username: '',
                 password: '',
-                user_type: 10, 
+                user_type: 10,
             },
             // 供应商form
             supplierLoginForm: {
-                phone: "",
-                code: "",
+                phone: '',
+                code: '',
             },
             user: {},
             countdown: 60, // 倒计时
@@ -102,95 +120,108 @@ export default {
     watch: {},
     computed: {
         lang() {
-            return this.$store.state.lang
-        }
+            return this.$store.state.lang;
+        },
     },
     created() {
-        if (Core.Data.getLang() === "" || Core.Data.getLang() === null){
-            Core.Data.setLang("zh")
+        if (Core.Data.getLang() === '' || Core.Data.getLang() === null) {
+            Core.Data.setLang('zh');
         }
         // 初始化看选中哪个登录方
-        this.loginForm.user_type = Core.Data.getLoginType() || TYPE.ADMIN
+        this.loginForm.user_type = Core.Data.getLoginType() || TYPE.ADMIN;
     },
     mounted() {
-        this.fsLogin()
+        this.fsLogin();
     },
     unmounted() {
-        clearInterval(this.countdownTime)
-        this.countdownTime = null
+        clearInterval(this.countdownTime);
+        this.countdownTime = null;
     },
     methods: {
         /* Fetch start*/
         // 检查是否是超级管理员
         isAdminFetch(parmas) {
             // 分销商不调用
-            if (Core.Data.getLoginType() === Core.Const.USER.TYPE.DISTRIBUTOR) return
+            if (Core.Data.getLoginType() === Core.Const.USER.TYPE.DISTRIBUTOR) return;
             let obj = {
-                ...parmas
-            }
-            Core.Api.User.checkAdmin(obj).then(res => {
-                Core.Logger.log("参数", obj, "是否是超级管理员", res)
-                Core.Data.setManager(res.status)
-            }).catch(err => {
-                Core.Logger.warn("参数", obj, "是否是超级管理员", err)
-            })
+                ...parmas,
+            };
+            Core.Api.User.checkAdmin(obj)
+                .then(res => {
+                    Core.Logger.log('参数', obj, '是否是超级管理员', res);
+                    Core.Data.setManager(res.status);
+                })
+                .catch(err => {
+                    Core.Logger.warn('参数', obj, '是否是超级管理员', err);
+                });
         },
         // 登录接口
         loginFetch(params = {}, type) {
             let obj = {
-                ...params
-            }
+                ...params,
+            };
 
-            Core.Api.Common.login(obj).then(res => {
-                console.log('handleLogins apiName res', res)
+            Core.Api.Common.login(obj)
+                .then(res => {
+                    console.log('handleLogins apiName res', res);
 
-                Core.Data.setToken(res.token);
-                Core.Data.setUser(res.user.account);
+                    Core.Data.setToken(res.token);
+                    Core.Data.setUser(res.user.account);
 
-                Core.Data.setLoginType(res.user.type);  // 设置登录方的数字
-                let loginType = TYPE_MAP[res.user.type]
-                Core.Data.setUserType(loginType); // 设置登录方的文字
+                    Core.Data.setLoginType(res.user.type); // 设置登录方的数字
+                    let loginType = TYPE_MAP[res.user.type];
+                    Core.Data.setUserType(loginType); // 设置登录方的文字
 
-                if (type === 'supplier') {
-                    this.$router.push('/supply-home')
-                    return
-                }
+                    if (type === 'supplier') {
+                        this.$router.push('/supply-home');
+                        return;
+                    }
 
-                Core.Data.setOrgId(res.user.org_id); // 组织的id
-                Core.Data.setOrgType(res.user.org_type); // 组织的类型
-                Core.Data.setCurrency(res.user.currency); // 账号的单位
+                    Core.Data.setOrgId(res.user.org_id); // 组织的id
+                    Core.Data.setOrgType(res.user.org_type); // 组织的类型
+                    Core.Data.setCurrency(res.user.currency); // 账号的单位
 
-                this.getAuthority(res.user.id, res.user.type, loginType, res.user.role_id, res.user.flag_admin, res.user.flag_group_customer_admin);
-                this.isAdminFetch()
-            }).catch(err => {
-                console.log('handleLogins apiName err', err)
-            })
+                    this.getAuthority(
+                        res.user.id,
+                        res.user.type,
+                        loginType,
+                        res.user.role_id,
+                        res.user.flag_admin,
+                        res.user.flag_group_customer_admin,
+                    );
+                    this.isAdminFetch();
+                })
+                .catch(err => {
+                    console.log('handleLogins apiName err', err);
+                });
         },
         // 获取验证码
         getPhoneCodeFetch(params = {}) {
             let obj = {
-                ...params
-            }
+                ...params,
+            };
 
-            Core.Api.Common.phoneCode(obj).then(res => {
-              console.log("getPhoneCodeFetchs res", res);
-            }).catch(err => {
-                console.log("getPhoneCodeFetchs err", err);
-            })
+            Core.Api.Common.phoneCode(obj)
+                .then(res => {
+                    console.log('getPhoneCodeFetchs res', res);
+                })
+                .catch(err => {
+                    console.log('getPhoneCodeFetchs err', err);
+                });
         },
         /* Fetch end*/
         fsLogin() {
             if (window.h5sdk) {
-                jsapi.apiAuth();                
+                jsapi.apiAuth();
             }
         },
         handleFocusPwd() {
-            this.$refs['password-input'].focus()
+            this.$refs['password-input'].focus();
         },
 
         async handleLogin(type) {
-            let form = Core.Util.deepCopy(this.loginForm)
-            let _supplierLoginForm = Core.Util.deepCopy(this.supplierLoginForm)
+            let form = Core.Util.deepCopy(this.loginForm);
+            let _supplierLoginForm = Core.Util.deepCopy(this.supplierLoginForm);
 
             if (type === 'supplier') {
                 if (this.isCheck(this.supplierLoginForm, type)) return;
@@ -198,11 +229,11 @@ export default {
                     ..._supplierLoginForm,
                     type: Core.Const.COMMON.LOGIN_TYPE.CODE,
                     platform: Core.Const.COMMON.PLATFORM.SUPPLY,
-                }
-                this.loginFetch(obj, 'supplier')
+                };
+                this.loginFetch(obj, 'supplier');
             } else {
                 if (this.isCheck(form, type)) return;
-                this.loginFetch(form)
+                this.loginFetch(form);
             }
         },
 
@@ -210,54 +241,56 @@ export default {
         isCheck(form, type) {
             if (type === 'supplier') {
                 if (!form.phone) {
-                    return this.$message.warning(`${this.$t('n.enter')}${this.$t('n.phone')}`)
+                    return this.$message.warning(`${this.$t('n.enter')}${this.$t('n.phone')}`);
                 }
                 if (!form.code) {
-                    return this.$message.warning(`${this.$t('n.enter')}${this.$t('n.verification_code')}`)
+                    return this.$message.warning(`${this.$t('n.enter')}${this.$t('n.verification_code')}`);
                 }
             } else {
                 if (!form.username) {
-                    return this.$message.warning(this.$t('n.username'))
+                    return this.$message.warning(this.$t('n.username'));
                 }
                 if (!form.password) {
-                    return this.$message.warning(this.$t('n.enter_password'))
+                    return this.$message.warning(this.$t('n.enter_password'));
                 }
             }
 
-            return false
+            return false;
         },
 
         async getAuthority(userId, userType, loginType, roleId, flag_admin, flagGroupCustomerAdmin) {
-            Core.Data.setAuthority('')
-            let authorityMap = {}
-            authorityMap[loginType] = true
+            Core.Data.setAuthority('');
+            let authorityMap = {};
+            authorityMap[loginType] = true;
             if (flag_admin) {
-                authorityMap['MANAGER'] = true
+                authorityMap['MANAGER'] = true;
             }
-            if (flagGroupCustomerAdmin){
-                authorityMap['MANAGER_GROUP'] = true
+            if (flagGroupCustomerAdmin) {
+                authorityMap['MANAGER_GROUP'] = true;
             }
 
             Core.Api.Authority.authUserAll({
                 user_id: userId,
-                user_type: userType
-            }).then(res => {
-                let list = res.list                
-                for (const item of list) {
-                    authorityMap[item.key] = true
-                }
-            }).finally(() => {
-                Core.Data.setAuthority(authorityMap)
-                if (userType === Core.Const.USER.TYPE.ADMIN){
-                    setTimeout(() => {
-                        this.$router.replace({ path: '/distributor', query: {from: 'login'} })
-                    }, 1000)
-                } else {
-                    setTimeout(() => {
-                        this.$router.replace({ path: '/mall/index', query: {from: 'login'} })
-                    }, 1000)
-                }
+                user_type: userType,
             })
+                .then(res => {
+                    let list = res.list;
+                    for (const item of list) {
+                        authorityMap[item.key] = true;
+                    }
+                })
+                .finally(() => {
+                    Core.Data.setAuthority(authorityMap);
+                    if (userType === Core.Const.USER.TYPE.ADMIN) {
+                        setTimeout(() => {
+                            this.$router.replace({ path: '/distributor', query: { from: 'login' } });
+                        }, 1000);
+                    } else {
+                        setTimeout(() => {
+                            this.$router.replace({ path: '/mall/index', query: { from: 'login' } });
+                        }, 1000);
+                    }
+                });
         },
         handleLangSwitch(lang) {
             this.$store.commit('switchLang', lang);
@@ -267,46 +300,44 @@ export default {
         // 供应商的逻辑
         handleFocusCode() {
             // 快速定位到验证码
-            this.$refs['code-input'].focus()
+            this.$refs['code-input'].focus();
         },
         // 获取验证码
         onGetCode() {
             // 防止多次点击
-            if (this.countdownTime)  return
+            if (this.countdownTime) return;
 
             if (!this.supplierLoginForm.phone) {
-                return this.$message.warning(`${this.$t('n.enter')}${this.$t('n.phone')}`)
+                return this.$message.warning(`${this.$t('n.enter')}${this.$t('n.phone')}`);
             }
 
             this.getPhoneCodeFetch({
-                type: 1,  // 短信类型：1.登录注册
+                type: 1, // 短信类型：1.登录注册
                 phone: this.supplierLoginForm.phone,
-            })
+            });
 
-            console.log("获取验证码");
-            this.countdown--
-            this.$refs['get-code'].innerHTML = this.countdown
-            this.$refs['get-code'].style.color = '#bfbfbf'
-            this.$refs['get-code'].style.cursor = 'not-allowed'
+            console.log('获取验证码');
+            this.countdown--;
+            this.$refs['get-code'].innerHTML = this.countdown;
+            this.$refs['get-code'].style.color = '#bfbfbf';
+            this.$refs['get-code'].style.cursor = 'not-allowed';
 
             this.countdownTime = setInterval(() => {
-                this.countdown--
-                if(this.countdown === 0) {
-                    this.$refs['get-code'].innerHTML = this.$t('supply-chain.access_code')
-                    clearInterval(this.countdownTime)
-                    this.countdownTime = null
+                this.countdown--;
+                if (this.countdown === 0) {
+                    this.$refs['get-code'].innerHTML = this.$t('supply-chain.access_code');
+                    clearInterval(this.countdownTime);
+                    this.countdownTime = null;
 
-                    this.countdown = 60
-                    this.$refs['get-code'].style.color = '#006CFF'
-                    this.$refs['get-code'].style.cursor = 'pointer'
+                    this.countdown = 60;
+                    this.$refs['get-code'].style.color = '#006CFF';
+                    this.$refs['get-code'].style.cursor = 'pointer';
                 } else {
-                    this.$refs['get-code'].innerHTML = this.countdown
+                    this.$refs['get-code'].innerHTML = this.countdown;
                 }
-            }, 1000)
-
-
-        }
-    }
+            }, 1000);
+        },
+    },
 };
 </script>
 
@@ -383,7 +414,7 @@ export default {
                 border-radius: 2px;
                 position: absolute;
                 bottom: 2px;
-                transition: left .3s ease;
+                transition: left 0.3s ease;
                 right: 0;
             }
 
@@ -445,7 +476,7 @@ export default {
         justify-content: center;
         height: 44px;
         white-space: nowrap;
-        border: 1px solid #EAECF2;
+        border: 1px solid #eaecf2;
         border-radius: 4px;
         color: @BG_P;
         margin-left: 20px;

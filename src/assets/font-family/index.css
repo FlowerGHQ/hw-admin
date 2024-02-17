@@ -1,22 +1,24 @@
 @font-face {
-    font-family:"Alibaba_PuHuiTi";
+    font-family: 'Alibaba_PuHuiTi';
     src: url('AlibabaPuHuiTi-3.ttf') format('truetype');
-} 
+}
 @font-face {
-    font-family: "MiSans-Regular";
+    font-family: 'MiSans-Regular';
     src: url('MiSans-Regular.ttf') format('truetype');
 }
 @font-face {
-    font-family: "HarmonyOS_Sans_SC";
+    font-family: 'HarmonyOS_Sans_SC';
     src: url('HarmonyOS_Sans_SC.ttf') format('truetype');
 }
 @font-face {
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     src: url('Montserrat-Medium.ttf') format('truetype');
 }
 
-html, body, *{
-    font-family: "Alibaba_PuHuiTi", "HarmonyOS_Sans_SC", "MiSans-Regular";
+html,
+body,
+* {
+    font-family: 'Alibaba_PuHuiTi', 'HarmonyOS_Sans_SC', 'MiSans-Regular';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }

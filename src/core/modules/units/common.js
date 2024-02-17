@@ -30,7 +30,7 @@ export default {
       ]),
    */
     returnClassName(type, classNames) {
-        const item = classNames.find((el) => Number(el.status) === Number(type));
+        const item = classNames.find(el => Number(el.status) === Number(type));
         const key = item?.className;
         return key;
     },
@@ -38,7 +38,7 @@ export default {
      * @description 返回翻译的参数 { t: "common.xxx", }
      */
     returnTranslation(text, ConstData) {
-        let result = ConstData[text] ? ConstData[text]?.t : "-";
+        let result = ConstData[text] ? ConstData[text]?.t : '-';
         return result;
     },
     /**
@@ -46,8 +46,8 @@ export default {
      */
     getFirstSentence(html) {
         var regex = /<[^>]+>/g; // 匹配所有标签
-        var firstSentence = html.replace(regex, "").split(".")[0]; // 去除标签后按"."分隔并获取第一部分
-        return firstSentence
+        var firstSentence = html.replace(regex, '').split('.')[0]; // 去除标签后按"."分隔并获取第一部分
+        return firstSentence;
     },
     /**
      * @description 获取图片比例
@@ -62,9 +62,9 @@ export default {
             img.onload = function () {
                 resolve({
                     width: this.naturalWidth,
-                    height: this.naturalHeight
-                })
+                    height: this.naturalHeight,
+                });
             };
-        })
+        });
     },
 };

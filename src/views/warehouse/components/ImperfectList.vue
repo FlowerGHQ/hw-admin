@@ -2,12 +2,19 @@
     <div class="ImperfectList gray-panel no-margin">
         <div class="panel-content">
             <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                         :row-key="record => record.id" :pagination='false'>
-                    <template #bodyCell="{ column, record, text}">
+                <a-table
+                    :columns="tableColumns"
+                    :data-source="tableData"
+                    :scroll="{ x: true }"
+                    :row-key="record => record.id"
+                    :pagination="false"
+                >
+                    <template #bodyCell="{ column, record, text }">
                         <template v-if="column.key === 'detail' && $auth('repair-order.detail')">
-                            <a-tooltip placement="top" :title='text' >
-                                <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
+                            <a-tooltip placement="top" :title="text">
+                                <a-button type="link" @click="routerChange('detail', record)">{{
+                                    text || '-'
+                                }}</a-button>
                             </a-tooltip>
                         </template>
                         <template v-if="column.dataIndex === 'org_type'">
@@ -17,7 +24,7 @@
                             {{ $Util.repairServiceFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'name'">
-                            {{ $i18n.locale == 'zh' ? record.item.name : record.item.name_en}}
+                            {{ $i18n.locale == 'zh' ? record.item.name : record.item.name_en }}
                         </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
@@ -26,7 +33,13 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.dataIndex === 'operation'">
-                            <a-button type="link" @click="handleDelete(record.id)" v-if="$auth('warehouse.save')" class="danger"><i class="icon i_delete"/>删除</a-button>
+                            <a-button
+                                type="link"
+                                @click="handleDelete(record.id)"
+                                v-if="$auth('warehouse.save')"
+                                class="danger"
+                                ><i class="icon i_delete" />删除</a-button
+                            >
                         </template>
                     </template>
                 </a-table>
@@ -34,13 +47,13 @@
             <div class="paging-container">
                 <a-pagination
                     v-model:current="currPage"
-                    :page-size='pageSize'
+                    :page-size="pageSize"
                     :total="total"
                     show-quick-jumper
                     show-size-changer
                     show-less-items
                     :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
-                    :hide-on-single-page='false'
+                    :hide-on-single-page="false"
                     :pageSizeOptions="['10', '20', '30', '40']"
                     @change="pageChange"
                     @showSizeChange="pageSizeChange"
@@ -52,7 +65,7 @@
 
 <script>
 import Core from '../../../core';
-const TYPE = Core.Const.STOCK_RECORD.TYPE
+const TYPE = Core.Const.STOCK_RECORD.TYPE;
 export default {
     name: 'ImperfectList',
     components: {},
@@ -63,8 +76,8 @@ export default {
         detail: {
             type: Object,
             default: () => {
-                return {}
-            }
+                return {};
+            },
         },
         type: {
             type: Number,
@@ -86,20 +99,20 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: this.$t('n.fault'), dataIndex: 'uid'},
-                {title: this.$t('search.vehicle_no'), dataIndex: 'vehicle_no', key: 'item'},
-                {title: this.$t('r.sn'), dataIndex: 'source_uid', key: 'detail'},
-                {title: this.$t('r.warranty'), dataIndex: 'service_type'},
-                {title: this.$t('r.unit'), dataIndex: 'source_org_name'},
-                {title: this.$t('r.item'), dataIndex: 'name', key: 'name'},
-                {title: this.$t('i.code'), dataIndex: ['item','code'], key: 'item'},
-                {title: this.$t('r.fault_cause'), dataIndex: 'item_fault_name', key: 'item'},
+                { title: this.$t('n.fault'), dataIndex: 'uid' },
+                { title: this.$t('search.vehicle_no'), dataIndex: 'vehicle_no', key: 'item' },
+                { title: this.$t('r.sn'), dataIndex: 'source_uid', key: 'detail' },
+                { title: this.$t('r.warranty'), dataIndex: 'service_type' },
+                { title: this.$t('r.unit'), dataIndex: 'source_org_name' },
+                { title: this.$t('r.item'), dataIndex: 'name', key: 'name' },
+                { title: this.$t('i.code'), dataIndex: ['item', 'code'], key: 'item' },
+                { title: this.$t('r.fault_cause'), dataIndex: 'item_fault_name', key: 'item' },
                 // {title: '故障件实例', dataIndex: 'entity_uid', key: 'item'},
-                {title: this.$t('n.operator'), dataIndex: 'operator_name', key: 'item'},
-                {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
-                {title: this.$t('def.operate'), dataIndex: 'operation'},
-            ]
-            return columns
+                { title: this.$t('n.operator'), dataIndex: 'operator_name', key: 'item' },
+                { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time' },
+                { title: this.$t('def.operate'), dataIndex: 'operation' },
+            ];
+            return columns;
         },
     },
     mounted() {
@@ -107,41 +120,47 @@ export default {
     },
     methods: {
         routerChange(type, item = {}) {
-            console.log('item',item)
-            let routeUrl = ''
+            console.log('item', item);
+            let routeUrl = '';
             switch (type) {
                 case 'detail':
                     routeUrl = this.$router.resolve({
-                        path: "/repair/repair-detail",
-                        query: {id: item.source_id}
-                    })
-                    window.open(routeUrl.href, '_blank')
+                        path: '/repair/repair-detail',
+                        query: { id: item.source_id },
+                    });
+                    window.open(routeUrl.href, '_blank');
                     break;
             }
         },
-        pageChange(curr) {  // 页码改变
-            this.currPage = curr
-            this.getTableData()
+        pageChange(curr) {
+            // 页码改变
+            this.currPage = curr;
+            this.getTableData();
         },
-        pageSizeChange(current, size) {  // 页码尺寸改变
-            console.log('pageSizeChange size:', size)
-            this.pageSize = size
-            this.getTableData()
+        pageSizeChange(current, size) {
+            // 页码尺寸改变
+            console.log('pageSizeChange size:', size);
+            this.pageSize = size;
+            this.getTableData();
         },
-        getTableData() {  // 获取 表格 数据
+        getTableData() {
+            // 获取 表格 数据
             this.loading = true;
             Core.Api.FaultEntity.list({
                 page: this.currPage,
-                page_size: this.pageSize
-            }).then(res => {
-                console.log("getTableData res:", res)
-                this.total = res.count;
-                this.tableData = res.list;
-            }).catch(err => {
-                console.log('getTableData err:', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+                page_size: this.pageSize,
+            })
+                .then(res => {
+                    console.log('getTableData res:', res);
+                    this.total = res.count;
+                    this.tableData = res.list;
+                })
+                .catch(err => {
+                    console.log('getTableData err:', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         handleDelete(id) {
             let _this = this;
@@ -151,19 +170,20 @@ export default {
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.FaultEntity.delete({id}).then(() => {
-                        _this.$message.success(_this.$t('pop_up.delete_success'));
-                        _this.getTableData();
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
+                    Core.Api.FaultEntity.delete({ id })
+                        .then(() => {
+                            _this.$message.success(_this.$t('pop_up.delete_success'));
+                            _this.getTableData();
+                        })
+                        .catch(err => {
+                            console.log('handleDelete err', err);
+                        });
                 },
             });
         },
-    }
+    },
 };
 </script>
-
 
 <style lang="less" scoped>
 .StockList {
@@ -205,7 +225,7 @@ export default {
         .item-number {
             font-size: 12px;
             line-height: 16px;
-            color: #363D42;
+            color: #363d42;
         }
     }
 }

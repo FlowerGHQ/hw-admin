@@ -18,16 +18,23 @@
                     <div class="key">{{ $t('n.type') }}：</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.type" @click="form.category_id = undefined">
-                            <a-radio :value="item.key" v-for="item in TYPE_MAP">{{  lang === 'zh'?item.zh : item.en }}</a-radio>
+                            <a-radio :value="item.key" v-for="item in TYPE_MAP">{{
+                                lang === 'zh' ? item.zh : item.en
+                            }}</a-radio>
                         </a-radio-group>
                     </div>
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('inv.category') }}：</div>
                     <div class="value">
-                        <CategoryTreeSelect @change="handleCategorySelect"
-                                            :category='item_category' :category-id='form.category_id'
-                                            :placeholder="$t('n.choose') + $t('m.material_category')" type="material" :inventory-type="form.type"/>
+                        <CategoryTreeSelect
+                            @change="handleCategorySelect"
+                            :category="item_category"
+                            :category-id="form.category_id"
+                            :placeholder="$t('n.choose') + $t('m.material_category')"
+                            type="material"
+                            :inventory-type="form.type"
+                        />
                     </div>
                 </div>
 
@@ -76,15 +83,19 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('inv.tax_rate') }}：</div>
                     <div class="value">
-                        <a-input style="width: 70px;" v-model:value="form.tax" :placeholder="$t('def.input')" />%
+                        <a-input style="width: 70px" v-model:value="form.tax" :placeholder="$t('def.input')" />%
                     </div>
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('inv.cost') }}：</div>
                     <div class="value">
-                        <a-input-number v-model:value="form.cost" style="width: 82px;"
-                                        :min="0" :precision="2" :placeholder="$t('n.please_input')"/>
-
+                        <a-input-number
+                            v-model:value="form.cost"
+                            style="width: 82px"
+                            :min="0"
+                            :precision="2"
+                            :placeholder="$t('n.please_input')"
+                        />
                     </div>
                 </div>
                 <div class="form-item required">
@@ -105,7 +116,11 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('inv.start_date') }}：</div>
                     <div class="value">
-                        <a-date-picker v-model:value="form.start_date" valueFormat='YYYY-MM-DD' :placeholder="$t('def.input')"/>
+                        <a-date-picker
+                            v-model:value="form.start_date"
+                            valueFormat="YYYY-MM-DD"
+                            :placeholder="$t('def.input')"
+                        />
                     </div>
                 </div>
                 <div class="form-item required">
@@ -148,8 +163,8 @@
 
 <script>
 import Core from '../../core';
-import dayjs from "dayjs";
-import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue'
+import dayjs from 'dayjs';
+import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue';
 
 export default {
     name: 'WarehouseEdit',
@@ -175,8 +190,8 @@ export default {
                 name: '',
                 type: '',
                 category_id: undefined,
-                uid:undefined,
-                model:undefined,
+                uid: undefined,
+                model: undefined,
                 flag_production_use: undefined,
                 flag_outsourcing: undefined,
                 tax: undefined,
@@ -194,12 +209,12 @@ export default {
     watch: {},
     computed: {
         lang() {
-            return this.$store.state.lang
+            return this.$store.state.lang;
         },
     },
 
     mounted() {
-        this.form.id = Number(this.$route.query.id) || 0
+        this.form.id = Number(this.$route.query.id) || 0;
         if (this.form.id) {
             this.getInventoryDetail();
         }
@@ -208,7 +223,7 @@ export default {
         routerChange(type, item) {
             switch (type) {
                 case 'back':
-                    this.$router.go(-1)
+                    this.$router.go(-1);
                     break;
             }
         },
@@ -216,47 +231,56 @@ export default {
             this.loading = true;
             Core.Api.Inventory.detail({
                 id: this.form.id,
-            }).then(res => {
-                console.log('getWarehouseDetail res', res)
-                this.detail = res.inventory
-                this.detail.start_date = this.detail.start_date ? dayjs.unix(this.detail.start_date).format('YYYY-MM-DD') : undefined
-                for (const key in this.form) {
-                    this.form[key] = res.inventory[key]
-                }
-                this.form.start_date = this.detail.start_date ? dayjs.unix(this.detail.start_date).format('YYYY-MM-DD') : undefined
-                this.form.cost = Core.Util.countFilter(this.form.cost)
-                console.log('defAddr err', this.defAddr)
-            }).catch(err => {
-                console.log('getWarehouseDetail err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+            })
+                .then(res => {
+                    console.log('getWarehouseDetail res', res);
+                    this.detail = res.inventory;
+                    this.detail.start_date = this.detail.start_date
+                        ? dayjs.unix(this.detail.start_date).format('YYYY-MM-DD')
+                        : undefined;
+                    for (const key in this.form) {
+                        this.form[key] = res.inventory[key];
+                    }
+                    this.form.start_date = this.detail.start_date
+                        ? dayjs.unix(this.detail.start_date).format('YYYY-MM-DD')
+                        : undefined;
+                    this.form.cost = Core.Util.countFilter(this.form.cost);
+                    console.log('defAddr err', this.defAddr);
+                })
+                .catch(err => {
+                    console.log('getWarehouseDetail err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         handleSubmit() {
-            let form = Core.Util.deepCopy(this.form)
-            console.log('form', form)
+            let form = Core.Util.deepCopy(this.form);
+            console.log('form', form);
             if (!form.name) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('def.enter'));
             }
             if (!form.uid) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('def.enter'));
             }
-            form.cost = Core.Util.countFilter(this.form.cost,100,0,true)
-            form.start_date = form.start_date ? dayjs(form.start_date).unix() : 0 // 日期转时间戳
+            form.cost = Core.Util.countFilter(this.form.cost, 100, 0, true);
+            form.start_date = form.start_date ? dayjs(form.start_date).unix() : 0; // 日期转时间戳
             Core.Api.Inventory.save({
                 ...form,
-            }).then(() => {
-                this.$message.success(this.$t('pop_up.save_success'))
-                this.routerChange('back')
-            }).catch(err => {
-                console.log('handleSubmit err:', err)
             })
+                .then(() => {
+                    this.$message.success(this.$t('pop_up.save_success'));
+                    this.routerChange('back');
+                })
+                .catch(err => {
+                    console.log('handleSubmit err:', err);
+                });
         },
         // 物料分类选择
         handleCategorySelect(val, node) {
-            this.form.category_id = val
+            this.form.category_id = val;
         },
-    }
+    },
 };
 </script>
 

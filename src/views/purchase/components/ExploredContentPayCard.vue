@@ -14,9 +14,7 @@
                 <div class="price" v-if="currency === 'eur' || currency === 'EUR'">
                     €{{ $Util.countFilter(data[priceKey + 'eur']) }}
                 </div>
-                <div class="price" v-else>
-                    ${{ $Util.countFilter(data[priceKey + 'usd']) }}
-                </div>
+                <div class="price" v-else>${{ $Util.countFilter(data[priceKey + 'usd']) }}</div>
                 <!--            <div class="price">€{{$Util.countFilter(data[priceKey + 'eur'])}} | ${{$Util.countFilter(data[priceKey + 'usd'])}}</div>-->
             </div>
         </div>
@@ -29,9 +27,7 @@
                 <div class="shop-price" v-if="currency === 'eur' || currency === 'EUR'">
                     €{{ $Util.countFilter(data[priceKey + 'eur']) }}
                 </div>
-                <div class="shop-price" v-else>
-                    ${{ $Util.countFilter(data[priceKey + 'usd']) }}
-                </div>
+                <div class="shop-price" v-else>${{ $Util.countFilter(data[priceKey + 'usd']) }}</div>
                 <!--            <div class="shop-price">€{{$Util.countFilter(data[priceKey + 'eur'])}} | ${{$Util.countFilter(data[priceKey + 'usd'])}}</div>-->
             </div>
             <div class="shop-bottom">
@@ -40,8 +36,15 @@
                         <div class="icon minus" @click.stop="minus()">
                             <caret-down-outlined />
                         </div>
-                        <a-input-number id="inputNumber" v-model:value="value" :bordered="false" :controls="false" :min="0"
-                            :max="999" class="num" />
+                        <a-input-number
+                            id="inputNumber"
+                            v-model:value="value"
+                            :bordered="false"
+                            :controls="false"
+                            :min="0"
+                            :max="999"
+                            class="num"
+                        />
                         <div class="icon add" @click.stop="add()">
                             <caret-up-outlined />
                         </div>
@@ -50,7 +53,7 @@
                         <shopping-cart-outlined class="icon shop-card" />
                     </div>
                 </div>
-                <div class="stars" @click="hanldeAddToFavorite(data)" :class="{ 'active': data.in_favorite }">
+                <div class="stars" @click="hanldeAddToFavorite(data)" :class="{ active: data.in_favorite }">
                     <star-outlined />
                     <span class="star-text">{{ data.in_favorite ? $t('i.favorited') : $t('i.favorite_not') }}</span>
                 </div>
@@ -70,30 +73,30 @@ export default {
     },
     computed: {
         priceKey() {
-            let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
-            console.log('priceKey:', priceKey)
-            return priceKey
-        }
+            let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_';
+            console.log('priceKey:', priceKey);
+            return priceKey;
+        },
     },
     props: {
         data: Object,
-        num: Number
+        num: Number,
     },
     data() {
         return {
             value: 1,
             currency: '',
-            paramPrice: false
-        }
+            paramPrice: false,
+        };
     },
     mounted() {
         this.currency = Core.Data.getCurrency();
         if (Core.Data.getCurrency() === 'EUR') {
-            this.paramPrice = false
+            this.paramPrice = false;
         } else {
-            this.paramPrice = true
+            this.paramPrice = true;
         }
-        console.log(this.data, 'this data')
+        console.log(this.data, 'this data');
     },
     methods: {
         // 添加到购物车
@@ -102,43 +105,41 @@ export default {
             Core.Api.ShopCart.save({
                 item_id: list.id,
                 amount: this.value,
-                price: list.purchase_price
+                price: list.purchase_price,
             }).then(res => {
-                console.log('hanldeAddToShopCart res:', res)
-                this.$message.success(_this.$t('pop_up.add'))
-                this.$emit('change')
+                console.log('hanldeAddToShopCart res:', res);
+                this.$message.success(_this.$t('pop_up.add'));
+                this.$emit('change');
                 // this.componentDetail.in_shopping_cart = true;
-            })
+            });
         },
 
         // 收藏商品
         hanldeAddToFavorite(list) {
             let _this = this;
             if (list.in_favorite) {
-                return this.$message.warning(_this.$t('i.item_favorite'))
+                return this.$message.warning(_this.$t('i.item_favorite'));
             }
             if (!_this.paramPrice) {
                 Core.Api.Favorite.add({
                     item_id: list.id,
-                    price: list.fob_eur
+                    price: list.fob_eur,
                 }).then(res => {
-                    console.log('hanldeAddToFavorite res:', res)
-                    this.$message.success(_this.$t('i.favorite_success'))
-                    this.$emit('change')
-                })
-            }else {
+                    console.log('hanldeAddToFavorite res:', res);
+                    this.$message.success(_this.$t('i.favorite_success'));
+                    this.$emit('change');
+                });
+            } else {
                 Core.Api.Favorite.add({
                     item_id: list.id,
-                    price: list.fob_usd
+                    price: list.fob_usd,
                 }).then(res => {
-                    console.log('hanldeAddToFavorite res:', res)
-                    this.$message.success(_this.$t('i.favorite_success'))
-                    this.$emit('change')
-                })
+                    console.log('hanldeAddToFavorite res:', res);
+                    this.$message.success(_this.$t('i.favorite_success'));
+                    this.$emit('change');
+                });
             }
-
         },
-
 
         // 增加商品数量
         add() {
@@ -146,11 +147,11 @@ export default {
         },
         // 减少商品数量
         minus() {
-            if (this.value == 1) return
+            if (this.value == 1) return;
             this.value--;
         },
     },
-}
+};
 </script>
 <style scoped lang="less">
 .expolred-list {
@@ -165,7 +166,7 @@ export default {
     }
 
     &.active {
-        border-color: #006EF9;
+        border-color: #006ef9;
     }
 
     .card-left {
@@ -192,13 +193,13 @@ export default {
                 font-size: @fz_bs;
                 font-weight: 600;
                 // margin-top: 12px;
-                .ell()
+                .ell();
             }
 
             .info {
                 // margin-top: 12px;
                 font-weight: 500;
-                .ell()
+                .ell();
             }
 
             .price {
@@ -206,7 +207,7 @@ export default {
                 color: @TC_car_price;
                 font-size: @fz_sm;
                 font-weight: 500;
-                .ell()
+                .ell();
             }
         }
 
@@ -220,18 +221,18 @@ export default {
                 height: 30px;
                 line-height: 30px;
                 box-sizing: border-box;
-                border: 1px solid #006EF9;
+                border: 1px solid #006ef9;
                 text-align: center;
                 border-radius: 50%;
             }
 
-            .fcc()
+            .fcc();
         }
     }
 
     .shop-card {
         width: 300px;
-        background: rgba(128, 182, 252, .2);
+        background: rgba(128, 182, 252, 0.2);
         border-radius: 4px;
         padding: 12px;
         display: flex;
@@ -251,7 +252,7 @@ export default {
                 .spot {
                     width: 8px;
                     height: 8px;
-                    background: #FF9918;
+                    background: #ff9918;
                     border-radius: 50%;
                     margin-right: 7px;
                 }
@@ -281,11 +282,10 @@ export default {
                     padding: 1px;
 
                     .icon {
-                        background-color: #D9D9D9;
+                        background-color: #d9d9d9;
                         width: 26px;
                         .fcc();
                         cursor: pointer;
-
                     }
 
                     .num {
@@ -296,7 +296,7 @@ export default {
                 .cart {
                     width: 36px;
                     height: 36px;
-                    background-color: #006EF9;
+                    background-color: #006ef9;
                     margin-left: 10px;
                     cursor: pointer;
                     .fcc();
@@ -307,7 +307,7 @@ export default {
                         padding: 0;
                         width: 100%;
                         height: 100%;
-                        .fcc()
+                        .fcc();
                     }
                 }
             }
@@ -373,4 +373,5 @@ export default {
     text-align: center;
     font-size: @fz_sm;
     font-weight: 500;
-}</style>
+}
+</style>

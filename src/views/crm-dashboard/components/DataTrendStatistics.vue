@@ -8,90 +8,86 @@
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <div id="PurchaseIntentchartId" class="chart" ref='PurchaseIntentchartId'></div>
+            <div id="PurchaseIntentchartId" class="chart" ref="PurchaseIntentchartId"></div>
         </div>
     </div>
 </template>
 
 <script>
-import { Chart, registerTheme } from '@antv/g2'
+import { Chart, registerTheme } from '@antv/g2';
 
 export default {
     name: 'Cards',
-    components: {
-    },
+    components: {},
     props: {
         searchForm: {
             type: Object,
-            default: () => { }
+            default: () => {},
         },
         isPeople: {
             type: Boolean,
-            default: () => false
+            default: () => false,
         },
         list: {
             type: Array,
-            default: () => []
-        }
+            default: () => [],
+        },
     },
     data() {
         return {
             boStatisticsChart: {},
-			timer: null
+            timer: null,
         };
     },
     watch: {
         list: {
-            deep: true,            
-            handler(n) {				
-                this.testDriveIntentStatistics()                
-            }
+            deep: true,
+            handler(n) {
+                this.testDriveIntentStatistics();
+            },
         },
-
     },
     computed: {},
-    created() {
-
-    },
+    created() {},
     mounted() {
-        this.testDriveIntentStatistics()
+        this.testDriveIntentStatistics();
     },
-    beforeUnmount() {		
-        this.$refs.PurchaseIntentchartId.innerHTML = ''
-		clearTimeout(this.timer)
+    beforeUnmount() {
+        this.$refs.PurchaseIntentchartId.innerHTML = '';
+        clearTimeout(this.timer);
     },
     methods: {
         // 获取数据
-        testDriveIntentStatistics() {			
+        testDriveIntentStatistics() {
             this.timer = setTimeout(() => {
                 // 客户
                 if (this.isPeople) {
-                    this.drawPeopleBoStatisticsChart(this.list)
-                } else {  
-                // 车辆预定         
-                    this.drawCarBoStatisticsChart(this.list)
+                    this.drawPeopleBoStatisticsChart(this.list);
+                } else {
+                    // 车辆预定
+                    this.drawCarBoStatisticsChart(this.list);
                 }
-            }, 50)
+            }, 50);
         },
         drawCarBoStatisticsChart(data) {
             // console.log("数据", data);
             // value 总数
             // value1 是国外
             // value2 是国内(指app)
-            let filterData = []
+            let filterData = [];
 
             data.forEach(el => {
-                let abroadObj = { country: this.$t('db.abroad'), value: el.value1, time: el.date }  // 国外
-                let domesticObj = { country: this.$t('db.domestic') , value: el.value2, time: el.date } // 国内
-                const arr = [abroadObj,domesticObj]
-                filterData.push(...arr)
+                let abroadObj = { country: this.$t('db.abroad'), value: el.value1, time: el.date }; // 国外
+                let domesticObj = { country: this.$t('db.domestic'), value: el.value2, time: el.date }; // 国内
+                const arr = [abroadObj, domesticObj];
+                filterData.push(...arr);
             });
 
             // console.log("过滤后的数据", filterData);
 
             if (this.boStatisticsChart.destroy) {
                 // 销毁图表
-                this.boStatisticsChart.destroy()
+                this.boStatisticsChart.destroy();
             }
             const chart = new Chart({
                 container: 'PurchaseIntentchartId',
@@ -99,7 +95,7 @@ export default {
                 height: 217,
                 width: 600,
             });
-            chart.data(filterData)
+            chart.data(filterData);
             chart.scale({
                 time: {
                     tickCount: 10,
@@ -108,31 +104,30 @@ export default {
                 },
                 value: {
                     alias: this.$t('db.order_amount'),
-                    range: [0, 0.97],                    
-                    nice: true
+                    range: [0, 0.97],
+                    nice: true,
                 },
             });
 
             chart.legend({
-                position: 'top'
-            })
-            chart.axis('value', { // 隐藏网格线
-                grid: null
-            })  
-            
+                position: 'top',
+            });
+            chart.axis('value', {
+                // 隐藏网格线
+                grid: null,
+            });
+
             chart.area().shape('smooth').position('time*value').color('country');
             chart.line().shape('smooth').position('time*value').color('country');
 
             chart.interaction('element-highlight');
 
-              
-
             chart.render();
-            this.boStatisticsChart = chart
+            this.boStatisticsChart = chart;
         },
         drawPeopleBoStatisticsChart(people_data) {
-            if (this.boStatisticsChart.destroy) {                
-                this.boStatisticsChart.destroy()
+            if (this.boStatisticsChart.destroy) {
+                this.boStatisticsChart.destroy();
             }
             const chart = new Chart({
                 container: 'PurchaseIntentchartId',
@@ -140,7 +135,7 @@ export default {
                 height: 217,
                 width: 600,
             });
-            chart.data(people_data)
+            chart.data(people_data);
             chart.scale({
                 date: {
                     tickCount: 10,
@@ -151,24 +146,18 @@ export default {
                     alias: this.$t('db.amount'),
                     range: [0, 0.97],
                     type: 'linear',
-                }
+                },
             });
-            chart.axis('value', { // 隐藏y轴线
-                grid: null
-            })
-            chart.area()
-                .position('date*value')
-                .shape('smooth')
-                .color('l(270) 0:#FFFFFF 1:#346EF2')
-            chart.line()
-                .position('date*value')
-                .shape('smooth')
-                .color('#346EF2')
-                .size(2)
+            chart.axis('value', {
+                // 隐藏y轴线
+                grid: null,
+            });
+            chart.area().position('date*value').shape('smooth').color('l(270) 0:#FFFFFF 1:#346EF2');
+            chart.line().position('date*value').shape('smooth').color('#346EF2').size(2);
             chart.render();
-            this.boStatisticsChart = chart
-        },       
-    }
+            this.boStatisticsChart = chart;
+        },
+    },
 };
 </script>
 

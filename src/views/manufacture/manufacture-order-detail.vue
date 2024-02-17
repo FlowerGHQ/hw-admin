@@ -1,12 +1,18 @@
 <template>
-    <div id='ManufactureDetail' class='list-container'>
-        <div class='title-container'>
-            <div class='title-area'>生产订单详情</div>
+    <div id="ManufactureDetail" class="list-container">
+        <div class="title-container">
+            <div class="title-area">生产订单详情</div>
             <div class="btns-area">
-<!--                <a-button type="primary" ghost @click="handleSubmit" v-if="$auth('production-order.picking')"><i class="icon i_goods"/>一键领料</a-button>-->
-                <a-button type="primary" ghost @click="handleAdd(id)" v-if="$auth('production-order.picking')">生产整车码</a-button>
-                <a-button type="primary" ghost @click="routerChange('picking')" v-if="$auth('production-order.picking')"><i class="icon i_goods"/>领料</a-button>
-                <a-button type="danger" ghost @click="handleCancel(id)" v-if="$auth('production-order.delete')"><i class="icon i_close_c"/>取消</a-button>
+                <!--                <a-button type="primary" ghost @click="handleSubmit" v-if="$auth('production-order.picking')"><i class="icon i_goods"/>一键领料</a-button>-->
+                <a-button type="primary" ghost @click="handleAdd(id)" v-if="$auth('production-order.picking')"
+                    >生产整车码</a-button
+                >
+                <a-button type="primary" ghost @click="routerChange('picking')" v-if="$auth('production-order.picking')"
+                    ><i class="icon i_goods" />领料</a-button
+                >
+                <a-button type="danger" ghost @click="handleCancel(id)" v-if="$auth('production-order.delete')"
+                    ><i class="icon i_close_c" />取消</a-button
+                >
             </div>
         </div>
         <div class="gray-panel">
@@ -14,7 +20,7 @@
                 <div class="desc-title">
                     <div class="title-area">
                         <span class="title">{{ detail.name }}</span>
-                        <a-tag :color="$Util.productionStatusFilter(detail.status,'color')">
+                        <a-tag :color="$Util.productionStatusFilter(detail.status, 'color')">
                             {{ $Util.productionStatusFilter(detail.status) }}
                         </a-tag>
                     </div>
@@ -27,7 +33,7 @@
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">生产产品：</span>
                         <span class="value">
-                            <a-button type="link" @click='routerChange("item")'>{{item.name}}</a-button>
+                            <a-button type="link" @click="routerChange('item')">{{ item.name }}</a-button>
                         </span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
@@ -37,13 +43,15 @@
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">BOM表：</span>
                         <span class="value">
-                            <a-button type="link" @click='routerChange("bom")'>{{detail.bom_name}}</a-button>
+                            <a-button type="link" @click="routerChange('bom')">{{ detail.bom_name }}</a-button>
                         </span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">领料仓库：</span>
                         <span class="value">
-                            <a-button type="link" @click='routerChange("warehouse")'>{{detail.warehouse_name}}</a-button>
+                            <a-button type="link" @click="routerChange('warehouse')">{{
+                                detail.warehouse_name
+                            }}</a-button>
                         </span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
@@ -68,14 +76,20 @@
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
                 <a-tab-pane key="ProductionItem" tab="已生产产品">
-                    <ProductionItem :id='id' :uid="detail.uid" :detail='detail' @submit="getOrderDetail" v-if="activeKey === 'ProductionItem'"/>
+                    <ProductionItem
+                        :id="id"
+                        :uid="detail.uid"
+                        :detail="detail"
+                        @submit="getOrderDetail"
+                        v-if="activeKey === 'ProductionItem'"
+                    />
                 </a-tab-pane>
                 <!-- <a-tab-pane key="MaterialList" tab="材料总览">
                     <MaterialList />
                 </a-tab-pane> -->
             </a-tabs>
         </div>
-<!--        <template class="modal-container">
+        <!--        <template class="modal-container">
             <a-modal v-model:visible="materialShow" title="一键领料" :after-close='handleModalClose'>
                 <div class="modal-content">
                     <div class="form-item required">
@@ -96,18 +110,18 @@
             </a-modal>
         </template>-->
         <template class="modal-container">
-            <a-modal v-model:visible="addVehicleShow" title="生成整车编码" :after-close='handleVehicleClose'>
+            <a-modal v-model:visible="addVehicleShow" title="生成整车编码" :after-close="handleVehicleClose">
                 <div class="modal-content">
                     <div class="form-item required">
                         <div class="key">数量:</div>
                         <div class="value">
-                            <a-input-number v-model:value="form.amount" :min="0" :precision="0" placeholder="0"/>
+                            <a-input-number v-model:value="form.amount" :min="0" :precision="0" placeholder="0" />
                         </div>
                     </div>
                 </div>
                 <template #footer>
                     <a-button @click="handleVehicleClose">取消</a-button>
-                    <a-button @click="handleVehicleSubmit" type="primary" >确定</a-button>
+                    <a-button @click="handleVehicleSubmit" type="primary">确定</a-button>
                 </template>
             </a-modal>
         </template>
@@ -116,10 +130,10 @@
 
 <script>
 import Core from '../../core';
-import ProductionItem from './components/ProductionItem.vue'
-import MaterialList from './components/MaterialList.vue'
+import ProductionItem from './components/ProductionItem.vue';
+import MaterialList from './components/MaterialList.vue';
 
-const STOCK_RECORD = Core.Const.STOCK_RECORD
+const STOCK_RECORD = Core.Const.STOCK_RECORD;
 
 export default {
     name: 'ManufactureDetail',
@@ -135,11 +149,11 @@ export default {
             // 详情
             id: '',
             detail: {}, // 生产单详情
-            item: {},   // 商品详情
-            bom: {},    // BOM表详情
-            warehouse: {},  // 仓库详情
+            item: {}, // 商品详情
+            bom: {}, // BOM表详情
+            warehouse: {}, // 仓库详情
             addVehicleShow: false,
-            form:{
+            form: {
                 id: 0,
                 amount: 0,
             },
@@ -147,10 +161,10 @@ export default {
             activeKey: '',
             // 上传
             upload: {
-                action: Core.Const.NET.URL_POINT + "/admin/1/item/import",
+                action: Core.Const.NET.URL_POINT + '/admin/1/item/import',
                 fileList: [],
                 headers: {
-                    ContentType: false
+                    ContentType: false,
                 },
                 data: {
                     token: Core.Data.getToken(),
@@ -162,8 +176,8 @@ export default {
             editForm: {
                 production_order_id: '',
                 warehouse_id: undefined,
-            }
-        }
+            },
+        };
     },
     watch: {},
     computed: {},
@@ -179,35 +193,35 @@ export default {
                 case 'edit': // 编辑
                     routeUrl = this.$router.resolve({
                         path: '/manufacture/manufacture-order-edit',
-                        query: {id: this.id},
+                        query: { id: this.id },
                     });
                     window.open(routeUrl.href, '_self');
                     break;
                 case 'list': // 列表
                     routeUrl = this.$router.resolve({
                         path: '/manufacture/manufacture-order-list',
-                        query: {id: this.id},
+                        query: { id: this.id },
                     });
                     window.open(routeUrl.href, '_self');
                     break;
                 case 'item': // 商品详情
                     routeUrl = this.$router.resolve({
                         path: '/item/item-detail',
-                        query: {id: this.detail.item_id},
+                        query: { id: this.detail.item_id },
                     });
                     window.open(routeUrl.href, '_self');
                     break;
                 case 'bom': // BOM表详情
                     routeUrl = this.$router.resolve({
                         path: '/manufacture/bom-detail',
-                        query: {id: this.detail.bom_id},
+                        query: { id: this.detail.bom_id },
                     });
                     window.open(routeUrl.href, '_self');
                     break;
                 case 'warehouse': // 仓库详情
                     routeUrl = this.$router.resolve({
                         path: '/warehouse/warehouse-detail',
-                        query: {id: this.detail.warehouse_id},
+                        query: { id: this.detail.warehouse_id },
                     });
                     window.open(routeUrl.href, '_self');
                     break;
@@ -221,13 +235,13 @@ export default {
                             source_type: STOCK_RECORD.SOURCE_TYPE.PRODUCTION,
                             warehouse_id: this.detail.warehouse_id,
                         },
-                    }
+                    };
                     routeUrl = this.$router.resolve({
-                        path: "/warehouse/invoice-edit",
+                        path: '/warehouse/invoice-edit',
                         query: {
-                            source: JSON.stringify(source)
-                        }
-                    })
+                            source: JSON.stringify(source),
+                        },
+                    });
                     window.open(routeUrl.href, '_self');
                     break;
             }
@@ -236,17 +250,20 @@ export default {
             this.loading = true;
             Core.Api.ProductionOrder.detail({
                 id: this.id,
-            }).then((res) => {
-                console.log('getOrderDetail res', res);
-                let d = res.detail || {}
-                this.detail = d;
-                this.item = d.item || {};
-                this.activeKey = 'ProductionItem'
-            }).catch((err) => {
-                console.log('getOrderDetail err', err);
-            }).finally(() => {
-                this.loading = false;
-            });
+            })
+                .then(res => {
+                    console.log('getOrderDetail res', res);
+                    let d = res.detail || {};
+                    this.detail = d;
+                    this.item = d.item || {};
+                    this.activeKey = 'ProductionItem';
+                })
+                .catch(err => {
+                    console.log('getOrderDetail err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         handleCancel(id) {
             let _this = this;
@@ -256,19 +273,19 @@ export default {
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.ProductionOrder.cancel({id})
+                    Core.Api.ProductionOrder.cancel({ id })
                         .then(() => {
                             _this.$message.success(_this.$t('pop_up.delete_success'));
                             _this.routerChange('list');
                         })
-                        .catch((err) => {
+                        .catch(err => {
                             console.log('handleCancel err', err);
                         });
                 },
             });
         },
         handleAdd(id) {
-            this.form.id = id
+            this.form.id = id;
             this.addVehicleShow = true;
         },
         handleVehicleClose() {
@@ -278,22 +295,23 @@ export default {
             Core.Api.ProductionOrder.vehicleAdd({
                 id: this.form.id,
                 amount: this.form.amount,
-            }).then(() => {
-                this.$message.success('生成完成');
-                this.getOrderDetail();
-                this.handleVehicleClose();
-            }).catch((err) => {
-                console.log('handleSubmit err', err);
-            });
-
+            })
+                .then(() => {
+                    this.$message.success('生成完成');
+                    this.getOrderDetail();
+                    this.handleVehicleClose();
+                })
+                .catch(err => {
+                    console.log('handleSubmit err', err);
+                });
         },
         getWarehouseList() {
             Core.Api.Warehouse.listAll().then(res => {
-                this.warehouseList = res.list
-                console.log('getWarehouseList', this.warehouseList)
-            })
+                this.warehouseList = res.list;
+                console.log('getWarehouseList', this.warehouseList);
+            });
         },
-      /*  handleModalShow() { // 显示弹框
+        /*  handleModalShow() { // 显示弹框
             this.materialShow = true
         },
         handleModalClose() { // 关闭弹框
@@ -310,12 +328,14 @@ export default {
                 onOk() {
                     Core.Api.Invoice.generateMaterialRequisition({
                         source_id: _this.id,
-                    }).then(() => {
-                        this.$message.success('领料完成');
-                        this.getOrderDetail();
-                    }).catch((err) => {
-                        console.log('handleSubmit err', err);
-                    });
+                    })
+                        .then(() => {
+                            this.$message.success('领料完成');
+                            this.getOrderDetail();
+                        })
+                        .catch(err => {
+                            console.log('handleSubmit err', err);
+                        });
                 },
             });
         },
@@ -323,7 +343,7 @@ export default {
 };
 </script>
 
-<style lang='less'>
+<style lang="less">
 #ManufactureDetail {
     .file-upload-btn {
         margin-right: 10px;
@@ -334,7 +354,7 @@ export default {
                 margin-right: 20px;
             }
             .status-title {
-            font-size: 14px;
+                font-size: 14px;
             }
         }
     }

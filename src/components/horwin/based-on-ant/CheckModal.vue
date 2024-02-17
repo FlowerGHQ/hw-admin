@@ -1,8 +1,15 @@
 <template>
-    <a-modal centered :closable="false" v-model:visible="visible" class="continue-modal" :width="320" :footer="null"
-        :bodyStyle="bodyStyle">
+    <a-modal
+        centered
+        :closable="false"
+        v-model:visible="visible"
+        class="continue-modal"
+        :width="320"
+        :footer="null"
+        :bodyStyle="bodyStyle"
+    >
         <div class="modal-header">
-            {{ $t(/*确定退出吗*/'operation.sure_tip') }}
+            {{ $t(/*确定退出吗*/ 'operation.sure_tip') }}
         </div>
         <div class="modal-content">
             {{ bodyText }}
@@ -15,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted } from 'vue';
 const props = defineProps({
     // 弹框显隐
     visible: {
@@ -27,17 +34,17 @@ const props = defineProps({
     },
 });
 
-const emits = defineEmits(['exit', "continue"])
-const bodyStyle = ref({ paddingBottom: '18px' })
+const emits = defineEmits(['exit', 'continue']);
+const bodyStyle = ref({ paddingBottom: '18px' });
 /* Methods start */
 
 /* Methods end */
-onMounted(() => { })
+onMounted(() => {});
 </script>
 
 <style lang="less" scoped>
 .modal-header {
-    color: #1D2129;
+    color: #1d2129;
     font-size: 18px;
     font-weight: 600;
     width: 100%;
@@ -54,7 +61,7 @@ onMounted(() => { })
     width: 100%;
     position: relative;
     height: 1px;
-    border-top: 1px solid #F2F3F5;
+    border-top: 1px solid #f2f3f5;
     margin-bottom: 18px;
 }
 

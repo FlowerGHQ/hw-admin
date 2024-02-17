@@ -1,43 +1,58 @@
 <template>
     <div class="DisplayImage">
-        <div class="title">
-            {{ $t(/*商品封面*/'i.cover') }} ({{ coverImageList.length }})
-        </div>
+        <div class="title">{{ $t(/*商品封面*/ 'i.cover') }} ({{ coverImageList.length }})</div>
         <div class="img-list mb40">
-            <a-image v-for="(img, index) in coverImageList" :key="index" :width="138" :height="136" :src="$Util.imageFilter(img)" :fallback="$t('def.none')"/>
+            <a-image
+                v-for="(img, index) in coverImageList"
+                :key="index"
+                :width="138"
+                :height="136"
+                :src="$Util.imageFilter(img)"
+                :fallback="$t('def.none')"
+            />
         </div>
-        <div class="title">
-            {{ $t(/*详情图*/'i.picture') }} ({{ detailImageList.length }})
-        </div>
+        <div class="title">{{ $t(/*详情图*/ 'i.picture') }} ({{ detailImageList.length }})</div>
         <div class="img-list mb40">
-            <a-image v-for="(img, index) in detailImageList" :key="index" :width="138" :height="136" :src="$Util.imageFilter(img)" :fallback="$t('def.none')"/>
+            <a-image
+                v-for="(img, index) in detailImageList"
+                :key="index"
+                :width="138"
+                :height="136"
+                :src="$Util.imageFilter(img)"
+                :fallback="$t('def.none')"
+            />
         </div>
-        <div class="title">
-            {{ $t(/*规格图*/'i.spec_drawing') }} ({{ specImageList.length }})
-        </div>
+        <div class="title">{{ $t(/*规格图*/ 'i.spec_drawing') }} ({{ specImageList.length }})</div>
         <div class="img-list">
-            <a-image v-for="(img, index) in specImageList" :key="index" :width="138" :height="136" :src="$Util.imageFilter(img)" :fallback="$t('def.none')"/>
+            <a-image
+                v-for="(img, index) in specImageList"
+                :key="index"
+                :width="138"
+                :height="136"
+                :src="$Util.imageFilter(img)"
+                :fallback="$t('def.none')"
+            />
         </div>
     </div>
 </template>
-    
+
 <script>
 import Core from '../../../core';
 
 export default {
-    name: "DisplayImage",
+    name: 'DisplayImage',
     props: {
         coverImageList: {
             type: Array,
-            default: []
+            default: [],
         },
         detailImageList: {
             type: Array,
-            default: []
+            default: [],
         },
         specImageList: {
             type: Array,
-            default: []
+            default: [],
         },
     },
     data() {
@@ -46,23 +61,17 @@ export default {
             loading: false,
         };
     },
-    computed: {
-
-    },
-    mounted() {
-
-    },
-    methods: {
-
-    },
-}
+    computed: {},
+    mounted() {},
+    methods: {},
+};
 </script>
-    
+
 <style lang="less" scoped>
 .DisplayImage {
     .title {
         margin-bottom: 16px;
-        color:#1D2129;
+        color: #1d2129;
         font-size: 16px;
         font-style: normal;
         font-weight: 500;
@@ -91,4 +100,3 @@ export default {
     // }
 }
 </style>
-    
