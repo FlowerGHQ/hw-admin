@@ -89,6 +89,9 @@ const clearSearch = () => {
         console.warn('input不存在');
     }
 };
+
+// 提示信息值提示一边
+const messageNumer = ref(0);
 // 检测是否选择的值已经被绑定
 const checkBind = (value, bindArea, type) => {
     // 判断是新增还是删除
@@ -98,14 +101,17 @@ const checkBind = (value, bindArea, type) => {
         if (!bindArea.includes(value[i][1]) || $props.defaultList.includes(value[i][1])) {
             arr.push(value[i]);
         } else {
-            isAdd && message.warning($t('sales-area.bind_area_warning'));
-            return arr;
+            isAdd && messageNumer.value++;
+            (isAdd && messageNumer.value === 1 && message.warning($t('sales-area.bind_area_warning'))) ||
+                (!isAdd && messageNumer.value === 0 && message.warning($t('sales-area.bind_area_warning')));
+            arr = arr.concat(value.slice(i + 1));
         }
     }
     return arr;
 };
 // 触发获取
 const handleChange = (value, type) => {
+    messageNumer.value = 0;
     clearSearch();
     // 检测是否选择的值已经被绑定
     let getBindValue = checkBind(value, bindArea.value, type);
