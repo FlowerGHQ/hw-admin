@@ -42,11 +42,12 @@
 import axios from 'axios';
 import Core from '@/core';
 import MyButton from '@/components/common/MyButton.vue';
-import SvgIcon from "@/components/MySvgIcon/index.vue";
+import SvgIcon from '@/components/MySvgIcon/index.vue';
 
 export default {
     components: {
-        MyButton, SvgIcon
+        MyButton,
+        SvgIcon,
     },
     data() {
         return {
@@ -76,24 +77,26 @@ export default {
     },
     methods: {
         getDetailById() {
-            Core.Api.Operation.detail({ id: this.id }).then(res => {
-                res = res.detail
-                this.detail = res;
-                this.filterData(this.detail);
-            }).catch(err => {
-                console.log(err)
-            })
+            Core.Api.Operation.detail({ id: this.id })
+                .then(res => {
+                    res = res.detail;
+                    this.detail = res;
+                    this.filterData(this.detail);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         filterData(data) {
-            data.attachment = JSON.parse(data.attachment)
+            data.attachment = JSON.parse(data.attachment);
         },
         download(path) {
-            window.open(Core.Const.NET.FILE_URL_PREFIX + path, '_self')
-        }
+            window.open(Core.Const.NET.FILE_URL_PREFIX + path, '_self');
+        },
     },
 };
 </script>
- 
+
 <style scoped lang="less">
 #index {
     background: rgb(253, 253, 254);
@@ -134,13 +137,13 @@ export default {
                 padding: 8px 12px;
                 flex-direction: column;
                 align-items: center;
-                background: #FFF;
-                border: 1px solid #DADADA;
+                background: #fff;
+                border: 1px solid #dadada;
                 top: calc(48px + var(--header-h-pc));
                 z-index: 10;
 
                 .border-bottom-box {
-                    background: #E7E7E7;
+                    background: #e7e7e7;
                     width: 40px;
                     height: 0.5px;
                     margin: 16px 0px;
@@ -152,20 +155,17 @@ export default {
                     font-size: 16px;
                     font-weight: 400;
                     // letter-spacing: 0.8px;
-
                 }
             }
         }
 
         .begin-time {
-
             color: #666;
             margin-top: 24px;
             font-size: 20px;
             font-weight: 400;
             line-height: 150%;
             // letter-spacing: 2px;
-
         }
 
         .begin-title {
@@ -176,7 +176,6 @@ export default {
             font-weight: 700;
             line-height: 150%;
             // letter-spacing: 0px;
-
         }
 
         .content-formatter {
@@ -201,11 +200,9 @@ export default {
                 text-align: left !important;
                 font-size: 20px !important;
                 color: #333 !important;
-
             }
         }
     }
-
 
     #article {
         width: 100%;
@@ -220,7 +217,7 @@ export default {
     .download {
         margin-top: 60px;
         padding-top: 40px;
-        border-top: 1px solid #EEE;
+        border-top: 1px solid #eee;
 
         .title {
             color: #333;
@@ -232,7 +229,7 @@ export default {
         }
 
         .file-body {
-            background: #FAFAFA;
+            background: #fafafa;
 
             .file-item {
                 .flex(initial, center, row);
@@ -245,7 +242,7 @@ export default {
                     position: absolute;
                     bottom: 0;
                     left: 88px;
-                    background: #EEE;
+                    background: #eee;
                     width: calc(100% - 88px);
                     height: 1px;
                 }

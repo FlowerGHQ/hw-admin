@@ -1,11 +1,12 @@
 <template>
-    <a-tree-select class="CategoryTreeSelect"
-                   v-model:value="value"
-                   :placeholder="$t('def.select')"
-                   :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-                   :tree-data="treeData"
-                   multiple
-                   tree-default-expand-all
+    <a-tree-select
+        class="CategoryTreeSelect"
+        v-model:value="value"
+        :placeholder="$t('def.select')"
+        :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+        :tree-data="treeData"
+        multiple
+        tree-default-expand-all
     />
 </template>
 
@@ -17,7 +18,7 @@ export default {
     props: {
         parentId: {
             type: Number,
-            default: 0
+            default: 0,
         },
         categoryId: {
             type: Number,
@@ -25,50 +26,54 @@ export default {
         category: {
             type: Object,
         },
-       /* placeholder: {
+        /* placeholder: {
             type: String,
         },*/
         type: {
             type: String,
             default: 'item', //商品
-        }
+        },
     },
     emit: ['change'],
     data() {
         return {
             treeData: [],
             value: [],
-        }
+        };
     },
     watch: {
         parentId(n) {
-            this.getFirstItemCategory(n)
+            this.getFirstItemCategory(n);
         },
         categoryId(n) {
             if (!n) {
-                this.value = []
+                this.value = [];
             } else if (n && n !== this.value) {
-                this.value = this.categoryId
+                this.value = this.categoryId;
             }
-        }
+        },
     },
     computed: {},
     created() {},
     mounted() {
-        this.getFirstItemCategory(this.parentId)
-        console.log('mounted this.categoryId:', this.categoryId)
+        this.getFirstItemCategory(this.parentId);
+        console.log('mounted this.categoryId:', this.categoryId);
         if (this.categoryId) {
-            this.value = this.categoryId
+            this.value = this.categoryId;
         }
     },
     methods: {
         getFirstItemCategory() {
-            let key = ''
+            let key = '';
             switch (this.type) {
-                case 'item': key = 'ItemCategory'; break
-                case 'material': key = 'MaterialCategory'; break
+                case 'item':
+                    key = 'ItemCategory';
+                    break;
+                case 'material':
+                    key = 'MaterialCategory';
+                    break;
             }
-            Core.Api[key].tree({parent_id: this.parentId}).then(res => {
+            Core.Api[key].tree({ parent_id: this.parentId }).then(res => {
                 // let list = res.list.map(item => (
                 //     // id: item.id,
                 //     // parent_id: this.parentId,
@@ -79,9 +84,9 @@ export default {
                 //     // children: item.children,
                 //     this.getItemCategoryChildren(item)
                 // ))
-                this.treeData = res.list
-                console.log("treeData", this.treeData)
-            })
+                this.treeData = res.list;
+                console.log('treeData', this.treeData);
+            });
         },
         // async getItemCategory(parent_id, treeNode, resolve) {
         //     let key = ''
@@ -112,9 +117,9 @@ export default {
         // },
 
         handleSelect(value, node, extra) {
-            console.log('handleSelect value, node, extra:', value, node, extra)
-            this.$emit('change', value, node)
-        }
+            console.log('handleSelect value, node, extra:', value, node, extra);
+            this.$emit('change', value, node);
+        },
     },
-}
+};
 </script>

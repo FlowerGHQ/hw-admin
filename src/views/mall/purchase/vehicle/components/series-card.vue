@@ -1,8 +1,13 @@
 <template>
     <div id="vehicle-card" :class="selected ? 'active' : ''">
         <div class="text">
-            <p class="name">{{ langName[lang].seriesName && record[langName[lang].seriesName] ?
-                record[langName[lang].seriesName] : '-' }}</p>
+            <p class="name">
+                {{
+                    langName[lang].seriesName && record[langName[lang].seriesName]
+                        ? record[langName[lang].seriesName]
+                        : '-'
+                }}
+            </p>
             <div class="dis">
                 <p class="dis-text" v-html="record[langName[lang].descName]"></p>
             </div>
@@ -15,8 +20,8 @@
 import MyButton from '@/components/common/MyButton.vue';
 import Core from '@/core';
 import { ref, onMounted, computed, getCurrentInstance } from 'vue';
-import { useRoute, useRouter } from "vue-router";
-import { useStore } from "vuex";
+import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 const { proxy } = getCurrentInstance();
 
 const router = useRouter();
@@ -26,55 +31,55 @@ const store = useStore();
 const props = defineProps({
     selected: {
         type: Boolean,
-        default: false
+        default: false,
     },
     record: {
         type: [Object, String],
         default: () => {
-            return {}
-        }
+            return {};
+        },
     },
-})
-const langName = Core.Const.MALL.langName
+});
+const langName = Core.Const.MALL.langName;
 /* state start */
-const currency = ref('€')
-const paramPrice = ref(false)
+const currency = ref('€');
+const paramPrice = ref(false);
 /* state end */
 
 /* computed start */
 const lang = computed(() => {
-    return store.state.lang
-})
+    return store.state.lang;
+});
 
 const minPrice = computed(() => {
     if (!paramPrice.value) {
-        return Core.Util.Number.numFormat(proxy.$Util.countFilter(props.record.min_fob_eur))//最小离岸价格（欧元）
+        return Core.Util.Number.numFormat(proxy.$Util.countFilter(props.record.min_fob_eur)); //最小离岸价格（欧元）
     } else {
-        return Core.Util.Number.numFormat(proxy.$Util.countFilter(props.record.min_fob_usd))//最小离岸价格（美元）
+        return Core.Util.Number.numFormat(proxy.$Util.countFilter(props.record.min_fob_usd)); //最小离岸价格（美元）
     }
-})
+});
 const maxPrice = computed(() => {
     if (!paramPrice.value) {
-        return Core.Util.Number.numFormat(proxy.$Util.countFilter(props.record.max_fob_eur))//最大离岸价格（欧元）
+        return Core.Util.Number.numFormat(proxy.$Util.countFilter(props.record.max_fob_eur)); //最大离岸价格（欧元）
     } else {
-        return Core.Util.Number.numFormat(proxy.$Util.countFilter(props.record.max_fob_usd))//最大离岸价格（美元）
+        return Core.Util.Number.numFormat(proxy.$Util.countFilter(props.record.max_fob_usd)); //最大离岸价格（美元）
     }
-})
+});
 /* computed end */
 onMounted(() => {
     if (Core.Data.getCurrency() === 'EUR') {
-        currency.value = "€"
-        paramPrice.value = false
+        currency.value = '€';
+        paramPrice.value = false;
     } else {
-        currency.value = "$"
-        paramPrice.value = true
+        currency.value = '$';
+        paramPrice.value = true;
     }
-})
+});
 /* methods start */
 // 获取数据
 const getData = () => {
-    getCarList()
-}
+    getCarList();
+};
 // 路由跳转
 const routerChange = (routeUrl, item = {}, type = 1) => {
     if (!routeUrl) return;
@@ -82,13 +87,13 @@ const routerChange = (routeUrl, item = {}, type = 1) => {
         case 1:
             router.push({
                 path: routeUrl,
-                query: item
-            })
+                query: item,
+            });
             break;
         default:
             break;
     }
-}
+};
 /* methods end */
 /* fetch start */
 /* fetch end */
@@ -99,7 +104,7 @@ const routerChange = (routeUrl, item = {}, type = 1) => {
     .flex(space-between, center, column);
     width: 100%;
     height: 100%;
-    background: #FFF;
+    background: #fff;
     padding: 20px;
     // width: 207px;
     border: 2px solid transparent;
@@ -132,7 +137,6 @@ const routerChange = (routeUrl, item = {}, type = 1) => {
             flex: 1;
 
             .dis-text {
-
                 // &::before {
                 //     content: '';
                 //     display: inline-block;
@@ -164,22 +168,21 @@ const routerChange = (routeUrl, item = {}, type = 1) => {
         }
 
         .price {
-            color: #8F00FF;
+            color: #8f00ff;
             font-size: 16px;
             font-style: normal;
             font-weight: 700;
             line-height: normal;
             margin-top: 16px;
         }
-
     }
 }
 
 .active {
-    border: 2px solid #9167FF !important;
+    border: 2px solid #9167ff !important;
 
     .name {
-        color: #8F00FF !important;
+        color: #8f00ff !important;
     }
 }
 </style>

@@ -8,43 +8,60 @@
                 <div class="header-right">
                     <!-- 头像 -->
                     <span class="header-menu">
-                        <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom"
-                            @visibleChange="avatarDropDownChange">
+                        <a-dropdown
+                            :trigger="['click']"
+                            overlay-class-name="action-menu"
+                            placement="bottom"
+                            @visibleChange="avatarDropDownChange"
+                        >
                             <span class="menu-item-dropdown">
                                 <span class="header-menu-img">
                                     <a-avatar :src="$Util.imageFilter(user.avatar, 3)" :size="18" alt="user" />
                                 </span>
                                 <span class="header-menu-text tab-animate" :class="menuIndex === 0 ? 'active' : ''">{{
-                                    user.name }}</span>
-                                <svg-icon icon-class="header-expand-icon"
-                                    :class-name="avatarShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" />
+                                    user.name
+                                }}</span>
+                                <svg-icon
+                                    icon-class="header-expand-icon"
+                                    :class-name="avatarShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'"
+                                />
                             </span>
                             <template #overlay>
-                                <a-menu style="text-align: center;">
+                                <a-menu style="text-align: center">
                                     <a-menu-item @click="handleEditShow">
                                         <a class="menu_text" :class="lang">{{ $t('n.password') }}</a>
-                                        <a-modal v-model:visible="passShow" :title="$t('n.password')"
-                                            class="password-edit-modal" :after-close="handleEditClose">
+                                        <a-modal
+                                            v-model:visible="passShow"
+                                            :title="$t('n.password')"
+                                            class="password-edit-modal"
+                                            :after-close="handleEditClose"
+                                        >
                                             <div class="form-title">
                                                 <div class="form-item required">
                                                     <div class="key">{{ $t('n.old') }}:</div>
                                                     <div class="value">
-                                                        <a-input-password :placeholder="$t('def.input')"
-                                                            v-model:value="form.old_password" />
+                                                        <a-input-password
+                                                            :placeholder="$t('def.input')"
+                                                            v-model:value="form.old_password"
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div class="form-item required">
                                                     <div class="key">{{ $t('n.new') }}:</div>
                                                     <div class="value">
-                                                        <a-input-password v-model:value="form.password"
-                                                            :placeholder="$t('def.input')" />
+                                                        <a-input-password
+                                                            v-model:value="form.password"
+                                                            :placeholder="$t('def.input')"
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div class="form-item required">
                                                     <div class="key">{{ $t('n.double') }}:</div>
                                                     <div class="value">
-                                                        <a-input-password v-model:value="form.new_password"
-                                                            :placeholder="$t('n.double')" />
+                                                        <a-input-password
+                                                            v-model:value="form.new_password"
+                                                            :placeholder="$t('n.double')"
+                                                        />
                                                     </div>
                                                 </div>
                                             </div>
@@ -74,7 +91,8 @@
                             <a-avatar :src="getHeaderSrc('favorites', 'png')" :size="18" alt="user" />
                         </span>
                         <span class="header-menu-text tab-animate" :class="menuIndex === 1 ? 'active' : ''">{{
-                            $t('mall.Favorites') }}</span>
+                            $t('mall.Favorites')
+                        }}</span>
                     </span>
                     <!-- 订单 -->
                     <span class="header-menu" @click="changeMenu(2, '/purchase/purchase-order-self')">
@@ -82,28 +100,40 @@
                             <a-avatar :src="getHeaderSrc('orders', 'png')" :size="18" alt="user" />
                         </span>
                         <span class="header-menu-text tab-animate" :class="menuIndex === 2 ? 'active' : ''">{{
-                            $t('mall.Orders') }}</span>
+                            $t('mall.Orders')
+                        }}</span>
                     </span>
                     <!-- 更多 -->
                     <span class="header-menu">
-                        <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom"
-                            @visibleChange="moreDropDownChange">
+                        <a-dropdown
+                            :trigger="['click']"
+                            overlay-class-name="action-menu"
+                            placement="bottom"
+                            @visibleChange="moreDropDownChange"
+                        >
                             <div class="menu-item-dropdown" @click.prevent>
                                 <span class="header-menu-img">
                                     <a-avatar :src="getHeaderSrc('more', 'png')" :size="18" alt="user" />
                                 </span>
                                 <span class="header-menu-text tab-animate" :class="menuIndex === 3 ? 'active' : ''">{{
-                                    $t('mall.more_features') }}</span>
-                                <svg-icon icon-class="header-expand-icon"
-                                    :class-name="moreShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" />
+                                    $t('mall.more_features')
+                                }}</span>
+                                <svg-icon
+                                    icon-class="header-expand-icon"
+                                    :class-name="moreShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'"
+                                />
                             </div>
                             <template #overlay>
-                                <a-menu style="text-align: center;">
+                                <a-menu style="text-align: center">
                                     <template v-for="(item, index) in showList">
-                                        <a-menu-item v-if="$auth(...item.auth)" :key="item.key"
-                                            @click="routerChange(item.redirect)">
-                                            <a class="menu_text" :class="lang">{{ lang == 'zh' ? item.meta.title :
-                                                item.meta.title_en }}</a>
+                                        <a-menu-item
+                                            v-if="$auth(...item.auth)"
+                                            :key="item.key"
+                                            @click="routerChange(item.redirect)"
+                                        >
+                                            <a class="menu_text" :class="lang">{{
+                                                lang == 'zh' ? item.meta.title : item.meta.title_en
+                                            }}</a>
                                             <a-menu-divider class="menu_divider" v-if="index < showList.length - 1" />
                                         </a-menu-item>
                                     </template>
@@ -113,17 +143,26 @@
                     </span>
                     <!-- 语言切换 -->
                     <span class="header-menu">
-                        <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom"
-                            @visibleChange="langDropDownChange">
+                        <a-dropdown
+                            :trigger="['click']"
+                            overlay-class-name="action-menu"
+                            placement="bottom"
+                            @visibleChange="langDropDownChange"
+                        >
                             <div class="menu-item-dropdown" @click.prevent>
                                 <svg-icon icon-class="header-lang-icon" class-name="mt-user-icon" />
-                                <span class="mt-header-lang-text tab-animate" :class="menuIndex === 4 ? 'active' : ''">{{
-                                    currentAreaType }}</span>
-                                <svg-icon icon-class="header-expand-icon"
-                                    :class-name="langShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" />
+                                <span
+                                    class="mt-header-lang-text tab-animate"
+                                    :class="menuIndex === 4 ? 'active' : ''"
+                                    >{{ currentAreaType }}</span
+                                >
+                                <svg-icon
+                                    icon-class="header-expand-icon"
+                                    :class-name="langShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'"
+                                />
                             </div>
                             <template #overlay>
-                                <a-menu style="bottom: 0px; position: relative;">
+                                <a-menu style="bottom: 0px; position: relative">
                                     <a-menu-item key="0" @click="handleLangSwitch('en')">
                                         <a class="menu_text" :class="lang">EN</a>
                                     </a-menu-item>
@@ -142,8 +181,12 @@
             <div class="search-content content">
                 <img class="logo-img" :src="getHeaderSrc('logo', 'png')" @click="routerChange('/mall/index')" />
                 <div class="search-input">
-                    <input type="text" v-model="searchKey" :placeholder="$t('mall.search_placeholder')"
-                        @keyup.enter="search(searchKey)">
+                    <input
+                        type="text"
+                        v-model="searchKey"
+                        :placeholder="$t('mall.search_placeholder')"
+                        @keyup.enter="search(searchKey)"
+                    />
                     <div @click="search(searchKey)">
                         <my-button type="primary">
                             <svg-icon icon-class="header-search-icon" class-name="header-search-icon" />
@@ -165,15 +208,21 @@
                 <!-- 整车 -->
                 <span class="menu-item" @click="carMenu(0, '/mall/vehicle-list')">
                     <span class="menu-item-text tab-animate" :class="car_type_index === 0 ? 'active' : ''">{{
-                        $t('mall.vehicle_models') }}</span>
+                        $t('mall.vehicle_models')
+                    }}</span>
                 </span>
                 <!-- 配件 -->
                 <span class="menu-item" @click="carMenu(1, '/mall/accessories-list')">
-                    <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom"
-                        @visibleChange="sparepartsDropDownChange">
+                    <a-dropdown
+                        :trigger="['click']"
+                        overlay-class-name="action-menu"
+                        placement="bottom"
+                        @visibleChange="sparepartsDropDownChange"
+                    >
                         <div class="menu-item-dropdown" @click.prevent>
                             <span class="menu-item-text tab-animate" :class="car_type_index === 1 ? 'active' : ''">{{
-                                $t('mall.accessories') }}</span>
+                                $t('mall.accessories')
+                            }}</span>
                             <!-- <svg-icon icon-class="header-expand-icon" :class-name="accessoriesShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" /> -->
                         </div>
                         <!-- <template #overlay>
@@ -189,30 +238,32 @@
                 <!-- 周边产品 -->
                 <span class="menu-item" @click="carMenu(2, '/mall/peripheral-list')">
                     <span class="menu-item-text tab-animate" :class="car_type_index === 2 ? 'active' : ''">{{
-                        $t('mall.peripheral_products') }}</span>
+                        $t('mall.peripheral_products')
+                    }}</span>
                 </span>
                 <!-- 广宣品 -->
                 <span class="menu-item" @click="carMenu(3, '/mall/promotional-list')">
                     <span class="menu-item-text tab-animate" :class="car_type_index === 3 ? 'active' : ''">{{
-                        $t('mall.promotional_products') }}</span>
+                        $t('mall.promotional_products')
+                    }}</span>
                 </span>
             </div>
         </div>
     </div>
 </template>
-    
+
 <script>
 import Core from '@/core';
 import { SIDER } from '@/router/routes';
-import SvgIcon from "@/components/SvgIcon/index.vue";
+import SvgIcon from '@/components/SvgIcon/index.vue';
 import MyButton from '@/components/common/MyButton.vue';
 
-const headerModules = import.meta.globEager("@/assets/images/mall/header/*");
+const headerModules = import.meta.globEager('@/assets/images/mall/header/*');
 
 export default {
     components: {
         SvgIcon,
-        MyButton
+        MyButton,
     },
     data() {
         return {
@@ -237,83 +288,87 @@ export default {
             user_type_list: [],
             menuIndex: '',
             car_type_index: '',
-            isPreview: false
+            isPreview: false,
         };
     },
     computed: {
         showList() {
             let showList = SIDER.DISTRIBUTOR;
             showList = showList.map(item => {
-                item.auth = item.meta ? (item.meta.auth || []) : [];
-                item.not_sub_menu = item.meta ? (item.meta.not_sub_menu || false) : false;
+                item.auth = item.meta ? item.meta.auth || [] : [];
+                item.not_sub_menu = item.meta ? item.meta.not_sub_menu || false : false;
                 if (item.children) {
                     item.children = item.children.map(i => {
-                        i.auth = i.meta ? (i.meta.auth || []) : [];
-                        return i
-                    })
+                        i.auth = i.meta ? i.meta.auth || [] : [];
+                        return i;
+                    });
                     if (!item.children.find(i => item.redirect === `${item.path}/${i.path}`)) {
-                        item.redirect = `${item.path}/${item.children[0].path}`
+                        item.redirect = `${item.path}/${item.children[0].path}`;
                     }
                 }
-                return item
-            })
-            return showList
+                return item;
+            });
+            return showList;
         },
         shopCartNum() {
-            return this.$store.state.shopCartNum
+            return this.$store.state.shopCartNum;
         },
         mallSearchKey() {
-            return this.$store.state.mallSearchKey
+            return this.$store.state.mallSearchKey;
         },
         lang() {
-            return this.$store.state.lang
-        }
+            return this.$store.state.lang;
+        },
     },
     watch: {
         mallSearchKey(newV) {
-            this.searchKey = newV
+            this.searchKey = newV;
         },
         $route: {
             deep: true,
             immediate: true,
             handler(newV) {
-                switch (newV.path) {// 选中菜单
-                    case "/mall/favorites":
-                        this.menuIndex = 1
+                switch (
+                    newV.path // 选中菜单
+                ) {
+                    case '/mall/favorites':
+                        this.menuIndex = 1;
                         break;
 
                     default:
-                        this.menuIndex = ''
+                        this.menuIndex = '';
                         break;
                 }
-                if (/\/vehicle-list/.test(newV.path)) {// 选中菜单
-                    this.car_type_index = 0
+                if (/\/vehicle-list/.test(newV.path)) {
+                    // 选中菜单
+                    this.car_type_index = 0;
                 } else if (/\/accessories-list/.test(newV.path)) {
-                    this.car_type_index = 1
+                    this.car_type_index = 1;
                 } else if (/\/peripheral-list/.test(newV.path)) {
-                    this.car_type_index = 2
+                    this.car_type_index = 2;
                 } else if (/\/promotional-list/.test(newV.path)) {
-                    this.car_type_index = 3
+                    this.car_type_index = 3;
                 } else {
-                    this.car_type_index = ''
+                    this.car_type_index = '';
                 }
             },
         },
     },
     created() {
-        const lang = Core.Data.getLang()
-        if (lang === "" || lang === null) {
-            Core.Data.setLang("zh")
+        const lang = Core.Data.getLang();
+        if (lang === '' || lang === null) {
+            Core.Data.setLang('zh');
         }
-        this.handleLangSwitch(Core.Data.getLang())
+        this.handleLangSwitch(Core.Data.getLang());
         this.user_type_list = Core.Data.getUserTypeList();
     },
     mounted() {
-        if (this.$route.path === '/preview/deals-preview') {// 如果是预览页则禁用点击 且不继续往下执行
+        if (this.$route.path === '/preview/deals-preview') {
+            // 如果是预览页则禁用点击 且不继续往下执行
             this.isPreview = true;
             return;
-        };
-        this.getShopCartList()
+        }
+        this.getShopCartList();
     },
     methods: {
         getHeaderSrc(name, type = 'png') {
@@ -323,33 +378,33 @@ export default {
         // 获取购物车商品数量
         getShopCartList() {
             Core.Api.ShopCart.list().then(res => {
-                this.$store.commit('setShopCartNum', res.count)
-            })
+                this.$store.commit('setShopCartNum', res.count);
+            });
         },
         handleLangSwitch(lang) {
             this.$store.commit('switchLang', lang);
             this.$i18n.locale = this.$store.state.lang;
             if (this.$i18n.locale === 'zh') {
-                this.currentAreaType = '中文'
+                this.currentAreaType = '中文';
             } else {
                 this.currentAreaType = this.$i18n.locale.toUpperCase();
             }
-            this.langShow = false
+            this.langShow = false;
         },
         // 头像下拉菜单
         avatarDropDownChange(e) {
-            this.avatarShow = e
+            this.avatarShow = e;
         },
         // 头像下拉菜单
         moreDropDownChange(e) {
-            this.moreShow = e
+            this.moreShow = e;
         },
         // 语言下拉菜单是否展示
         langDropDownChange(e) {
-            this.langShow = e
+            this.langShow = e;
         },
         sparepartsDropDownChange(e) {
-            this.sparepartsShow = e
+            this.sparepartsShow = e;
         },
         // 修改密码
         handleEditShow() {
@@ -362,59 +417,61 @@ export default {
                 password: '',
                 new_password: '',
                 old_password: '',
-            }
+            };
         },
         // 退出登录
-        handleLogout() {          
+        handleLogout() {
             Core.Api.Common.logout().then(res => {
-                localStorage.clear()
+                localStorage.clear();
                 this.$router.replace('/login');
-            })
+            });
         },
         handleEditSubmit() {
-            let form = Core.Util.deepCopy(this.form)
+            let form = Core.Util.deepCopy(this.form);
             if (!form.old_password) {
-                return this.$message.warning(this.$t('u.old_password'))
+                return this.$message.warning(this.$t('u.old_password'));
             }
             if (!form.password) {
-                return this.$message.warning(this.$t('u.new_password'))
+                return this.$message.warning(this.$t('u.new_password'));
             }
             if (!form.new_password) {
-                return this.$message.warning(this.$t('u.again'))
+                return this.$message.warning(this.$t('u.again'));
             }
             if (this.form.new_password !== this.form.password) {
-                this.$message.warning(this.$t('u.not'))
-                return
+                this.$message.warning(this.$t('u.not'));
+                return;
             }
 
             this.loading = true;
-            Core.Api.Common.updatePwd(this.form).then(() => {
-                this.$message.success(this.$t('pop_up.save_success'))
-                this.handleEditClose();
-            }).catch(err => {
-                console.log('handleSubmit err:', err)
-            })
+            Core.Api.Common.updatePwd(this.form)
+                .then(() => {
+                    this.$message.success(this.$t('pop_up.save_success'));
+                    this.handleEditClose();
+                })
+                .catch(err => {
+                    console.log('handleSubmit err:', err);
+                });
         },
         search(key) {
             if (this.searchLoading) return;
-            this.searchLoading = true
+            this.searchLoading = true;
             if (!key) {
-                this.searchLoading = false
-                return this.$message.warning(this.$t('mall.search_placeholder'))
+                this.searchLoading = false;
+                return this.$message.warning(this.$t('mall.search_placeholder'));
             }
-            this.searchLoading = false
+            this.searchLoading = false;
             this.$store.commit('setMallKey', key);
-            this.routerChange('/mall/search', { key })
+            this.routerChange('/mall/search', { key });
         },
         changeMenu(index, path = '') {
             this.menuIndex = index;
             if (index === 1 || index === 2) {
-                this.routerChange(path)
+                this.routerChange(path);
             }
         },
         carMenu(index, routeUrl) {
             this.car_type_index = index;
-            this.routerChange(routeUrl)
+            this.routerChange(routeUrl);
         },
         // 路由跳转
         routerChange(routeUrl, item = {}, type = 1) {
@@ -422,23 +479,23 @@ export default {
                 case 1:
                     this.$router.push({
                         path: routeUrl,
-                        query: item
-                    })
+                        query: item,
+                    });
                     break;
                 default:
                     break;
             }
         },
-    }
+    },
 };
 </script>
-    
+
 <style lang="less">
 #mall-header {
     height: var(--header-h-pc-mall);
     overflow: hidden;
-    color: #FFF;
-    background: #FFF;
+    color: #fff;
+    background: #fff;
 
     .content {
         margin: 0 auto;
@@ -458,14 +515,14 @@ export default {
     .menu-content {
         .flex(initial, center, row);
         height: 60px;
-        border-top: 1px solid #F5F5F5;
+        border-top: 1px solid #f5f5f5;
     }
 
     #header-item {
         background: #000;
 
         .text {
-            >span {
+            > span {
                 color: rgba(255, 255, 255, 0.7);
                 font-size: 12px;
                 font-style: normal;
@@ -494,7 +551,7 @@ export default {
                 }
 
                 .header-menu-text {
-                    color: #FFF;
+                    color: #fff;
                     text-align: right;
                     font-size: 12px;
                     font-style: normal;
@@ -526,19 +583,19 @@ export default {
                 }
             }
 
-            >input {
+            > input {
                 flex: 1;
                 padding: 11px 24px;
                 height: 40px;
-                border: 1px solid #EEE;
-                background: #F5F5F5;
+                border: 1px solid #eee;
+                background: #f5f5f5;
                 color: #333;
                 font-size: 12px;
                 font-style: normal;
                 font-weight: 400;
                 line-height: 150%;
                 /* 18px */
-                caret-color: #C6F;
+                caret-color: #c6f;
 
                 &::-webkit-input-placeholder {
                     color: #999;
@@ -583,7 +640,7 @@ export default {
                 display: none;
             }
 
-            >span {
+            > span {
                 color: #333;
                 font-size: 12px;
                 font-style: normal;
@@ -606,16 +663,16 @@ export default {
             }
 
             &:hover {
-                border: 1px solid #C6F;
+                border: 1px solid #c6f;
                 background: transparent;
-                background: linear-gradient(100deg, #C6F 0%, #66F 100%);
-                border-image: linear-gradient(100deg, #C6F 0%, #66F 100%) 1;
+                background: linear-gradient(100deg, #c6f 0%, #66f 100%);
+                border-image: linear-gradient(100deg, #c6f 0%, #66f 100%) 1;
                 background-clip: text;
                 -webkit-background-clip: text;
 
                 // -webkit-text-fill-color: transparent;
-                >.bag-text {
-                    background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                > .bag-text {
+                    background: linear-gradient(100deg, #c6f 0%, #66f 100%);
                     background-clip: text;
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
@@ -683,7 +740,7 @@ export default {
     .menu-item-dropdown {
         .fcc();
 
-        >img {
+        > img {
             width: 28px;
             height: 28px;
             border-radius: 50%;
@@ -701,8 +758,10 @@ export default {
 
         .mt-triangle-icon {
             font-size: 18px;
-            transition: transform 0.3s ease, top 0.3s ease;
-            fill: #FFF;
+            transition:
+                transform 0.3s ease,
+                top 0.3s ease;
+            fill: #fff;
             margin-left: 2px;
 
             &.expand {
@@ -717,7 +776,7 @@ export default {
         }
 
         .mt-header-lang-text {
-            color: #FFF;
+            color: #fff;
             text-align: right;
             font-size: 12px;
             font-style: normal;
@@ -742,9 +801,11 @@ export default {
         }
     }
 
-    @media (min-width: 820px) {}
+    @media (min-width: 820px) {
+    }
 
-    @media (max-width: 820px) {}
+    @media (max-width: 820px) {
+    }
 }
 </style>
 <style lang="less">
@@ -780,7 +841,7 @@ export default {
         text-align: center;
 
         &:hover {
-            background-color: #EEE;
+            background-color: #eee;
         }
 
         padding: 8px 0px;

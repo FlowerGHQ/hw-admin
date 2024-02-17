@@ -7,7 +7,8 @@
         filterable
         class="cascader-area"
         :placeholder="$t('n.choose')"
-        @change="handleChange" />
+        @change="handleChange"
+    />
 </template>
 
 <script setup>
@@ -16,11 +17,11 @@
  * @param {Array} value 选中的值，返回的是一个数组 ps：["中国","日本"] 或者 [["亚洲","中国"],["亚洲","日本"]]
  * @param {Function} handleGetItem 获取选中的数据,返回的是一个数组,ps:[{name: "中国",code: "CN",parentCode: "亚洲",parentName: "中国",parentEnName: "中国"}]
  */
-import axios from "axios";
-import { ref, computed, getCurrentInstance, watch, onMounted, h } from "vue";
-import { useI18n } from "vue-i18n";
+import axios from 'axios';
+import { ref, computed, getCurrentInstance, watch, onMounted, h } from 'vue';
+import { useI18n } from 'vue-i18n';
 const $locale = useI18n().locale;
-const $emit = defineEmits(["update:value", "handleGetItem"]);
+const $emit = defineEmits(['update:value', 'handleGetItem']);
 const $props = defineProps({
     value: {
         type: Array,
@@ -33,15 +34,15 @@ console.log($locale.value);
 const countryOptions = ref([]);
 const props = { multiple: true };
 const targetCountryOptions = computed(() => {
-    return addParentCode(countryOptions.value, "", "", "");
+    return addParentCode(countryOptions.value, '', '', '');
 });
 // 给大洲的所有子元素添加父级code,并且添加一个全选
 const addParentCode = (arr, parentCode, parentName, parentEnName) => {
-    arr.forEach((item) => {
+    arr.forEach(item => {
         item.parentCode = parentCode;
         item.parentName = parentName;
         item.parentEnName = parentEnName;
-        item.label = $locale.value === "zh" ? item.name : item.name_en;
+        item.label = $locale.value === 'zh' ? item.name : item.name_en;
         item.value = item.name;
         if (item.children && item.children.length) {
             addParentCode(item.children, item.code, item.name, item.name_en);
@@ -50,14 +51,14 @@ const addParentCode = (arr, parentCode, parentName, parentEnName) => {
     return arr;
 };
 const getCountryOptions = () => {
-    axios.get("/ext/continent-country.json").then((response) => {
+    axios.get('/ext/continent-country.json').then(response => {
         countryOptions.value = response.data;
     });
 };
 // 数据扁平化
-const flatten = (arr) => {
+const flatten = arr => {
     let result = [];
-    arr.forEach((item) => {
+    arr.forEach(item => {
         if (item.children && item.children.length) {
             result = result.concat(flatten(item.children));
         } else {
@@ -67,25 +68,25 @@ const flatten = (arr) => {
     return result;
 };
 // 触发获取
-const handleChange = (value) => {
+const handleChange = value => {
     // 默认传递国家数据
     let arr = [];
-    value.forEach((item) => {
+    value.forEach(item => {
         arr.push(item[1]);
     });
     let allData = flatten(countryOptions.value);
     // 找到对应arr的name
     let itemData = [];
-    arr.forEach((item) => {
-        allData.forEach((item2) => {
+    arr.forEach(item => {
+        allData.forEach(item2 => {
             if (item === item2.name) {
                 itemData.push(item2);
             }
         });
     });
-    console.log("itemData", itemData);
-    $emit("handleGetItem", itemData);
-    $emit("update:value", arr);
+    console.log('itemData', itemData);
+    $emit('handleGetItem', itemData);
+    $emit('update:value', arr);
 };
 
 onMounted(() => {

@@ -1,44 +1,70 @@
 <template>
     <div class="list-container">
         <div class="title">
-            <span>{{$t('crm_dash.sale_presentation')}}</span>
+            <span>{{ $t('crm_dash.sale_presentation') }}</span>
         </div>
         <div class="table-container">
-            <a-row :gutter="[20,0]">
-                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+            <a-row :gutter="[20, 0]">
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.new_customer_count") }}</span>
-                        <span class="form-value" @click="routerChange">{{  this.form.new_customer_count || '-' }}</span>
+                        <span class="form-label"
+                            ><i class="icon i_s_customer" style="margin-right: 16px" />{{
+                                $t('crm_dash.new_customer_count')
+                            }}</span
+                        >
+                        <span class="form-value" @click="routerChange">{{ this.form.new_customer_count || '-' }}</span>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.new_contact_count") }}</span>
-                        <span class="form-value" @click="routerChange">{{  this.form.new_contact_count || '-' }}</span>
+                        <span class="form-label"
+                            ><i class="icon i_s_customer" style="margin-right: 16px" />{{
+                                $t('crm_dash.new_contact_count')
+                            }}</span
+                        >
+                        <span class="form-value" @click="routerChange">{{ this.form.new_contact_count || '-' }}</span>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.new_order_count") }}</span>
-                        <span class="form-value" @click="routerChange">{{  this.form.new_order_count || '-' }}</span>
+                        <span class="form-label"
+                            ><i class="icon i_s_customer" style="margin-right: 16px" />{{
+                                $t('crm_dash.new_order_count')
+                            }}</span
+                        >
+                        <span class="form-value" @click="routerChange">{{ this.form.new_order_count || '-' }}</span>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.new_bo_count") }}</span>
-                        <span class="form-value" @click="routerChange">{{  this.form.new_bo_count || '-' }}</span>
+                        <span class="form-label"
+                            ><i class="icon i_s_customer" style="margin-right: 16px" />{{
+                                $t('crm_dash.new_bo_count')
+                            }}</span
+                        >
+                        <span class="form-value" @click="routerChange">{{ this.form.new_bo_count || '-' }}</span>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.win_bo_count") }}</span>
-                        <span class="form-value" @click="routerChange">{{  this.form.win_bo_count || '-' }}</span>
+                        <span class="form-label"
+                            ><i class="icon i_s_customer" style="margin-right: 16px" />{{
+                                $t('crm_dash.win_bo_count')
+                            }}</span
+                        >
+                        <span class="form-value" @click="routerChange">{{ this.form.win_bo_count || '-' }}</span>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.new_test_driver_count") }}</span>
-                        <span class="form-value" @click="routerChange">{{  this.form.new_test_driver_count || '-' }}</span>
+                        <span class="form-label"
+                            ><i class="icon i_s_customer" style="margin-right: 16px" />{{
+                                $t('crm_dash.new_test_driver_count')
+                            }}</span
+                        >
+                        <span class="form-value" @click="routerChange">{{
+                            this.form.new_test_driver_count || '-'
+                        }}</span>
                     </div>
                 </a-col>
             </a-row>
@@ -48,16 +74,15 @@
 
 <script>
 import Core from '../../../core';
-import { Chart } from '@antv/g2'
+import { Chart } from '@antv/g2';
 
 export default {
     name: 'Card',
-    components: {
-    },
+    components: {},
     props: {
         searchForm: {
             type: Object,
-            default: ()=> {}
+            default: () => {},
         },
     },
     data() {
@@ -69,8 +94,7 @@ export default {
                 new_bo_count: '',
                 win_bo_count: '',
                 new_test_driver_count: '',
-            }
-
+            },
         };
     },
     watch: {
@@ -78,37 +102,30 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                this.salesStatistics()
-            }
+                this.salesStatistics();
+            },
         },
-
     },
-    computed: {
-    },
-    created() {
-    },
+    computed: {},
+    created() {},
     mounted() {
-        this.salesStatistics()
+        this.salesStatistics();
     },
     methods: {
-
         salesStatistics() {
             Core.Api.CRMDashboard.salesStatistics({
-                ...this.searchForm
+                ...this.searchForm,
             }).then(res => {
-                this.form.new_customer_count = res.new_customer_count
-                this.form.new_contact_count = res.new_contact_count
-                this.form.new_order_count = res.new_order_count
-                this.form.new_bo_count = res.new_bo_count
-                this.form.win_bo_count = res.win_bo_count
-                this.form.new_test_driver_count = res.new_test_driver_count
-
-            })
+                this.form.new_customer_count = res.new_customer_count;
+                this.form.new_contact_count = res.new_contact_count;
+                this.form.new_order_count = res.new_order_count;
+                this.form.new_bo_count = res.new_bo_count;
+                this.form.win_bo_count = res.win_bo_count;
+                this.form.new_test_driver_count = res.new_test_driver_count;
+            });
         },
-        routerChange(){
-            
-        },
-    }
+        routerChange() {},
+    },
 };
 </script>
 
@@ -138,8 +155,8 @@ export default {
         }
     }
     .tab-current {
-        border: 1px solid #006EF9;
-        color: #006EF9;
+        border: 1px solid #006ef9;
+        color: #006ef9;
     }
 }
 .contain {
@@ -154,7 +171,7 @@ export default {
         font-size: 14px;
     }
     .form-value {
-        color: #006EF9;
+        color: #006ef9;
         font-size: 20px;
     }
 }

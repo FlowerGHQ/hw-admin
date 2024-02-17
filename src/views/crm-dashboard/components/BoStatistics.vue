@@ -1,14 +1,13 @@
 <template>
     <div class="list-container">
         <div class="title">
-            <span>{{$t('crm_dash.business_analysis')}}</span>
+            <span>{{ $t('crm_dash.business_analysis') }}</span>
         </div>
 
-            <!-- echarts -->
-            <div class="table-container" >
-                <div id="chartId" class="chart" ref='chartId'></div>
-            </div>
-
+        <!-- echarts -->
+        <div class="table-container">
+            <div id="chartId" class="chart" ref="chartId"></div>
+        </div>
 
         <!-- </div> -->
     </div>
@@ -17,16 +16,15 @@
 <script>
 import Core from '../../../core';
 // import DataSet from '@antv/data-set';
-import { Chart } from '@antv/g2'
+import { Chart } from '@antv/g2';
 
 export default {
     name: 'Card',
-    components: {
-    },
+    components: {},
     props: {
         searchForm: {
             type: Object,
-            default: ()=> {}
+            default: () => {},
         },
     },
     data() {
@@ -35,7 +33,6 @@ export default {
             myChart: null,
             boStatisticsChart: {},
             tableData: [],
-
         };
     },
     watch: {
@@ -43,25 +40,21 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-               this.boStatistics()
-            }
+                this.boStatistics();
+            },
         },
-
     },
-    computed: {
-    },
-    created() {
-    },
+    computed: {},
+    created() {},
     mounted() {
         // const ths = this;
         // window.onresize =  () => {
         //     ths.resetChart();
         // }
-        this.getStatusDetail()
-
+        this.getStatusDetail();
     },
     beforeUnmount() {
-        this.$refs.chartId.innerHTML = ''
+        this.$refs.chartId.innerHTML = '';
     },
     methods: {
         // 点击tab
@@ -103,25 +96,29 @@ export default {
         //     })
         // },
 
-        getStatusDetail() {    // 获取 表格 数据
+        getStatusDetail() {
+            // 获取 表格 数据
             this.loading = true;
             Core.Api.CRMBoStatusGroup.detail({
                 id: 1,
-            }).then(res => {
-                this.detail = res.detail
-                console.log('tableData err:', this.detail)
-                console.log('tableData err:', this.detail.status_list)
-                this.tableData = JSON.parse(this.detail.status_list)
-                this.boStatistics()
-            }).catch(err => {
-                console.log('getTableData err:', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+            })
+                .then(res => {
+                    this.detail = res.detail;
+                    console.log('tableData err:', this.detail);
+                    console.log('tableData err:', this.detail.status_list);
+                    this.tableData = JSON.parse(this.detail.status_list);
+                    this.boStatistics();
+                })
+                .catch(err => {
+                    console.log('getTableData err:', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         boStatistics() {
             Core.Api.CRMDashboard.boStatistics({
-                ...this.searchForm
+                ...this.searchForm,
             }).then(res => {
                 // const { DataView } = DataSet;
                 // const dv = new DataView().source([
@@ -131,33 +128,32 @@ export default {
                 //     { action: '支付订单', pv: 15000 },
                 //     { action: '完成交易', pv: 8000 },
                 // ]);
-                const dv = []
-                console.log("res", res)
-                console.log("res.list", this.tableData)
-                this.tableData.forEach((item,index) => {
+                const dv = [];
+                console.log('res', res);
+                console.log('res.list', this.tableData);
+                this.tableData.forEach((item, index) => {
                     res.list.forEach(it => {
-                        console.log("status",item.status)
-                        console.log("status",it.status)
-                        if (index === it.status){
-                            dv.push({action: item.zh, pv: it.count, money: it.money, percent:it.rate/100})
+                        console.log('status', item.status);
+                        console.log('status', it.status);
+                        if (index === it.status) {
+                            dv.push({ action: item.zh, pv: it.count, money: it.money, percent: it.rate / 100 });
                         }
-                    })
-                })
-                for (let i = res.list.length - 1; i >=0; i--){
-                    let it = res.list[i]
-                    if (100 === it.status){
-                        dv.push({action: "赢单", pv: it.count, money: it.money, percent:it.rate/100})
+                    });
+                });
+                for (let i = res.list.length - 1; i >= 0; i--) {
+                    let it = res.list[i];
+                    if (100 === it.status) {
+                        dv.push({ action: '赢单', pv: it.count, money: it.money, percent: it.rate / 100 });
                     }
-                    if (-100 === it.status){
-                        dv.push({action: "输单", pv: it.count, money: it.money, percent:it.rate/100})
+                    if (-100 === it.status) {
+                        dv.push({ action: '输单', pv: it.count, money: it.money, percent: it.rate / 100 });
                     }
                 }
                 // res.list.forEach(it => {
                 //
                 // })
 
-
-                console.log("dv", dv)
+                console.log('dv', dv);
                 // const dv  = [
                 //     { action: '浏览网站', pv: 50000, percent: 1 },
                 //     { action: '放入购物车', pv: 35000 , percent: 0.75},
@@ -166,13 +162,13 @@ export default {
                 //     { action: '完成交易', pv: 8000, percent: 0.1 },
                 // ]
 
-                this.drawBoStatisticsChart(dv)
-            })
+                this.drawBoStatisticsChart(dv);
+            });
         },
         drawBoStatisticsChart(data) {
             if (this.boStatisticsChart.destroy) {
-                console.log('drawPurchaseChart destroy:')
-                this.boStatisticsChart.destroy()
+                console.log('drawPurchaseChart destroy:');
+                this.boStatisticsChart.destroy();
             }
             const chart = new Chart({
                 container: 'chartId',
@@ -194,16 +190,13 @@ export default {
                     '<span style="padding-left: 16px;line-height: 16px;">转换率：{percent}</span><br/>' +
                     '</li>',
             });
-            chart
-                .coordinate('rect')
-                .transpose()
-                .scale(1, -1);
+            chart.coordinate('rect').transpose().scale(1, -1);
             chart
                 .interval()
                 .adjust('symmetric')
                 .position('action*percent')
                 .shape('funnel')
-                .color('action', ['#5F86FC', '#6F92FC', '#8FAAFD', '#AFC2FD', '#41D0E9','#DDE1F0'])
+                .color('action', ['#5F86FC', '#6F92FC', '#8FAAFD', '#AFC2FD', '#41D0E9', '#DDE1F0'])
                 .label(
                     'action*pv',
                     (action, pv) => {
@@ -219,23 +212,23 @@ export default {
                                 stroke: 'rgba(0, 0, 0, 0.15)',
                             },
                         },
-                    }
+                    },
                 )
-                .tooltip('action*pv*percent*money', (action, pv, percent,money) => {
+                .tooltip('action*pv*percent*money', (action, pv, percent, money) => {
                     return {
                         name: action,
                         percent: +percent * 100 + '%',
                         pv,
-                        money
+                        money,
                     };
                 })
                 .animate({
                     appear: {
-                        animation: 'fade-in'
+                        animation: 'fade-in',
                     },
                     update: {
-                        annotation: 'fade-in'
-                    }
+                        annotation: 'fade-in',
+                    },
                 });
 
             chart.interaction('element-active');
@@ -244,7 +237,7 @@ export default {
                 chart.annotation().clear(true);
                 const chartData = chart.getData();
                 // 中间标签文本
-                chartData.forEach((obj) => {
+                chartData.forEach(obj => {
                     chart.annotation().text({
                         top: true,
                         position: {
@@ -262,11 +255,9 @@ export default {
             });
 
             chart.render();
-            this.boStatisticsChart = chart
+            this.boStatisticsChart = chart;
         },
-
-
-    }
+    },
 };
 </script>
 
@@ -296,8 +287,8 @@ export default {
         }
     }
     .tab-current {
-        border: 1px solid #006EF9;
-        color: #006EF9;
+        border: 1px solid #006ef9;
+        color: #006ef9;
     }
 }
 .contain {
@@ -312,7 +303,7 @@ export default {
         font-size: 14px;
     }
     .form-value {
-        color: #006EF9;
+        color: #006ef9;
         font-size: 20px;
     }
 }

@@ -1,58 +1,71 @@
 <template>
-<div class="InformationInfo gray-panel no-margin">
-    <div class="panel-content">
-        <div class="search">
-            <a-input-search v-model:value="search_name" :placeholder="$t('crm_c.team_members')" @search="handleSearch" class="search-btn"/>
-            <TrackMemberSelect @select="handleGroupShow">
-                {{$t('crm_c.addMember')}}
-            </TrackMemberSelect>
-        </div>
-        <div class="list">
-            <div class="list-item" v-for="(item, i) in tableData" :key="i">
-                <div class="item-left">
-                    <img class="avatar" src="@images/Group.png" alt="">
-                </div>
-                <div class="item-right">
-                    <div class="name">{{ item.user ? item.user.account ? item.user.account.name : '-' : '-'}}</div>
-                    <div class="type">{{ $Util.CRMGroupFilter(item.type, this.lang)}}</div>
-                </div>
-                <div class="item-button">
-                    <div class="button" @click="handleTrackMemberShow(item)"><i class="icon i_edit"/></div>
-                    <div class="button" @click="handleDelete(item.id)"><i class="icon i_delete"/></div>
-                </div>
+    <div class="InformationInfo gray-panel no-margin">
+        <div class="panel-content">
+            <div class="search">
+                <a-input-search
+                    v-model:value="search_name"
+                    :placeholder="$t('crm_c.team_members')"
+                    @search="handleSearch"
+                    class="search-btn"
+                />
+                <TrackMemberSelect @select="handleGroupShow">
+                    {{ $t('crm_c.addMember') }}
+                </TrackMemberSelect>
             </div>
-        </div>
-        <div class="paging-container">
-            <a-pagination
-                v-model:current="currPage"
-                :page-size="pageSize"
-                :total="total"
-                show-quick-jumper
-                show-less-items
-                :show-total="(total) => $t('n.all_total') + ` ${total} ` + $t('in.total')"
-                :hide-on-single-page="false"
-                :pageSizeOptions="['10', '20', '30', '40']"
-                @change="pageChange"
-                @showSizeChange="pageSizeChange"
-            />
-        </div>
-        <template class="modal-container">
-            <a-modal v-model:visible="trackMemberShow" :title="$t('crm_group.edit_type')" :after-close='handleTrackMemberClose'>
-                <div class="form-item required">
-                    <div class="key">{{ $t('crm_group.type') }}：</div>
-                    <div class="value">
-                        <a-select v-model:value="form.type" :placeholder="$t('def.select')">
-                            <a-select-option v-for="item of TYPE_MAP" :key="item.value" :value="item.value">{{ lang === 'zh' ? item.zh: item.en }}</a-select-option>
-                        </a-select>
+            <div class="list">
+                <div class="list-item" v-for="(item, i) in tableData" :key="i">
+                    <div class="item-left">
+                        <img class="avatar" src="@images/Group.png" alt="" />
+                    </div>
+                    <div class="item-right">
+                        <div class="name">
+                            {{ item.user ? (item.user.account ? item.user.account.name : '-') : '-' }}
+                        </div>
+                        <div class="type">{{ $Util.CRMGroupFilter(item.type, this.lang) }}</div>
+                    </div>
+                    <div class="item-button">
+                        <div class="button" @click="handleTrackMemberShow(item)"><i class="icon i_edit" /></div>
+                        <div class="button" @click="handleDelete(item.id)"><i class="icon i_delete" /></div>
                     </div>
                 </div>
-                <template #footer>
-                    <a-button @click="handleTrackMemberSubmit" type="primary">{{ $t('def.ok') }}</a-button>
-                    <a-button @click="handleTrackMemberClose">{{ $t('def.cancel') }}</a-button>
-                </template>
-            </a-modal>
-        </template>
-        <!-- <div>
+            </div>
+            <div class="paging-container">
+                <a-pagination
+                    v-model:current="currPage"
+                    :page-size="pageSize"
+                    :total="total"
+                    show-quick-jumper
+                    show-less-items
+                    :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
+                    :hide-on-single-page="false"
+                    :pageSizeOptions="['10', '20', '30', '40']"
+                    @change="pageChange"
+                    @showSizeChange="pageSizeChange"
+                />
+            </div>
+            <template class="modal-container">
+                <a-modal
+                    v-model:visible="trackMemberShow"
+                    :title="$t('crm_group.edit_type')"
+                    :after-close="handleTrackMemberClose"
+                >
+                    <div class="form-item required">
+                        <div class="key">{{ $t('crm_group.type') }}：</div>
+                        <div class="value">
+                            <a-select v-model:value="form.type" :placeholder="$t('def.select')">
+                                <a-select-option v-for="item of TYPE_MAP" :key="item.value" :value="item.value">{{
+                                    lang === 'zh' ? item.zh : item.en
+                                }}</a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
+                    <template #footer>
+                        <a-button @click="handleTrackMemberSubmit" type="primary">{{ $t('def.ok') }}</a-button>
+                        <a-button @click="handleTrackMemberClose">{{ $t('def.cancel') }}</a-button>
+                    </template>
+                </a-modal>
+            </template>
+            <!-- <div>
             <a-list
                 class="demo-loadmore-list"
                 :loading="initLoading"
@@ -87,11 +100,8 @@
                 </template>
             </a-list>
         </div> -->
-
-
-
+        </div>
     </div>
-</div>
 </template>
 
 <script>
@@ -100,18 +110,17 @@ import TrackMemberSelect from '@/components/crm/popup-btn/TrackMemberSelect.vue'
 
 export default {
     name: 'InformationInfo',
-    components: {TrackMemberSelect},
+    components: { TrackMemberSelect },
     props: {
-        detail:{
+        detail: {
             type: Object,
         },
         targetId: {
-            type: Number
+            type: Number,
         },
         targetType: {
-            type: Number
+            type: Number,
         },
-
     },
     data() {
         return {
@@ -123,7 +132,7 @@ export default {
             pageSize: 20,
             total: 0,
             // 表格数据
-            tableData: [{},{}],
+            tableData: [{}, {}],
             trackMemberShow: false,
             TYPE_MAP: Core.Const.CRM_TRACK_MEMBER.TYPE_EDIT_MAP,
             userId: '',
@@ -139,74 +148,78 @@ export default {
     },
     computed: {
         lang() {
-            return this.$store.state.lang
-        }
+            return this.$store.state.lang;
+        },
     },
     mounted() {
         this.getTableData();
     },
     methods: {
         // 点击添加
-        clickAdd() {
-
-        },
+        clickAdd() {},
         // 点击编辑
         clickEidt() {},
         // 点击搜索
         handleSearch() {
-            this.getTableData()
+            this.getTableData();
             // console.log('click search >>', key);
         },
         routerChange(type, item = {}) {
-            console.log(item)
-            let routeUrl = ''
+            console.log(item);
+            let routeUrl = '';
             switch (type) {
-                case 'edit':    // 编辑
+                case 'edit': // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/system/user-edit",
+                        path: '/system/user-edit',
                         query: {
                             id: item.id,
                             org_id: this.orgId,
                             org_type: this.orgType,
                             type: this.type,
-                        }
-                    })
-                    window.open(routeUrl.href, '_self')
+                        },
+                    });
+                    window.open(routeUrl.href, '_self');
                     break;
-                case 'detail':    // 详情
+                case 'detail': // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/system/user-detail",
-                        query: {id: item.id}
-                    })
-                    window.open(routeUrl.href, '_blank')
+                        path: '/system/user-detail',
+                        query: { id: item.id },
+                    });
+                    window.open(routeUrl.href, '_blank');
                     break;
             }
         },
-        pageChange(curr) {    // 页码改变
-            this.currPage = curr
-            this.getTableData()
+        pageChange(curr) {
+            // 页码改变
+            this.currPage = curr;
+            this.getTableData();
         },
-        pageSizeChange(current, size) {    // 页码尺寸改变
-            console.log('pageSizeChange size:', size)
-            this.pageSize = size
-            this.getTableData()
+        pageSizeChange(current, size) {
+            // 页码尺寸改变
+            console.log('pageSizeChange size:', size);
+            this.pageSize = size;
+            this.getTableData();
         },
-        getTableData() {    // 获取 表格 数据
+        getTableData() {
+            // 获取 表格 数据
             this.loading = true;
             Core.Api.CRMTrackMember.list({
                 name: this.search_name,
                 target_id: this.targetId,
                 target_type: this.targetType,
                 page: this.currPage,
-                page_size: this.pageSize
-            }).then(res => {
-                this.total = res.count;
-                this.tableData = res.list;
-            }).catch(err => {
-                console.log('getTableData err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+                page_size: this.pageSize,
+            })
+                .then(res => {
+                    this.total = res.count;
+                    this.tableData = res.list;
+                })
+                .catch(err => {
+                    console.log('getTableData err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         handleDelete(id) {
             let _this = this;
@@ -217,15 +230,17 @@ export default {
                 cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.CRMTrackMember.delete({
-                        id:id,
+                        id: id,
                         target_id: _this.targetId,
                         target_type: _this.targetType,
-                    }).then(() => {
-                        _this.$message.success(_this.$t('pop_up.delete_success'));
-                        _this.getTableData();
-                    }).catch(err => {
-                        console.log("handleDelete -> err", err);
                     })
+                        .then(() => {
+                            _this.$message.success(_this.$t('pop_up.delete_success'));
+                            _this.getTableData();
+                        })
+                        .catch(err => {
+                            console.log('handleDelete -> err', err);
+                        });
                 },
             });
         },
@@ -236,38 +251,42 @@ export default {
                 target_type: this.targetType,
                 user_id_list: ids,
                 type: type,
-            }).then(()=> {
-                this.handleSearch()
-            }).catch(err => {
-                console.log('getTableData err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+            })
+                .then(() => {
+                    this.handleSearch();
+                })
+                .catch(err => {
+                    console.log('getTableData err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         handleTrackMemberShow(item) {
             this.form.id = item.id;
             this.trackMemberShow = true;
-
         },
         handleTrackMemberSubmit() {
             Core.Api.CRMTrackMember.savePermissions({
-                ...this.form
-            }).then(()=> {
-                this.handleSearch()
-                this.handleTrackMemberClose()
-                this.$message.success(this.$t('pop_up.delete_success'));
-            }).catch(err => {
-                console.log('getTableData err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+                ...this.form,
+            })
+                .then(() => {
+                    this.handleSearch();
+                    this.handleTrackMemberClose();
+                    this.$message.success(this.$t('pop_up.delete_success'));
+                })
+                .catch(err => {
+                    console.log('getTableData err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         handleTrackMemberClose() {
-            this.form = Core.Util.deepCopy(this.$options.data().form)
+            this.form = Core.Util.deepCopy(this.$options.data().form);
             this.trackMemberShow = false;
         },
-
-    }
+    },
 };
 </script>
 
@@ -275,25 +294,24 @@ export default {
 .InformationInfo {
     padding: 0;
     box-shadow: none;
-    .panel-content{
+    .panel-content {
         padding: 0 20px !important;
     }
     .table-container {
         margin-top: -10px;
     }
-
 }
 .panel-content {
-    .search{
+    .search {
         display: flex;
         align-items: center;
         margin-bottom: 25px;
         padding: 0;
-        .search-btn{
+        .search-btn {
             margin-right: 10px;
-           :deep(.ant-input-search-button){
-                background-color: #006EF9;
-                border-color: #006CFF;
+            :deep(.ant-input-search-button) {
+                background-color: #006ef9;
+                border-color: #006cff;
                 color: #fff !important;
             }
         }
@@ -362,7 +380,7 @@ export default {
                 .button {
                     cursor: pointer;
                     margin-left: 8px;
-                    >.icon {
+                    > .icon {
                         font-size: 16px;
                     }
                 }
@@ -375,12 +393,11 @@ export default {
             }
         }
     }
-
 }
-.paging-container{
+.paging-container {
     padding: 0;
 }
-:deep(.ant-pagination-next){
+:deep(.ant-pagination-next) {
     margin-right: 0 !important;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <a-config-provider :locale="zhCN" :autoInsertSpaceInButton='false'>
+    <a-config-provider :locale="zhCN" :autoInsertSpaceInButton="false">
         <div id="mall-layout" :class="lang">
             <Header v-if="headAuth"></Header>
             <div class="mall-container">
@@ -17,13 +17,13 @@
         </div>
     </a-config-provider>
 </template>
-    
+
 <script>
 import Core from '@/core';
 import Header from './components/header.vue';
 import Footer from './components/footer.vue';
 import Breadcrumb from './components/Breadcrumb.vue';
-import SvgIcon from "@/components/SvgIcon/index.vue";
+import SvgIcon from '@/components/SvgIcon/index.vue';
 
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
 import enUS from 'ant-design-vue/lib/locale-provider/en_US';
@@ -33,7 +33,7 @@ export default {
         Header,
         Footer,
         Breadcrumb,
-        SvgIcon
+        SvgIcon,
     },
     data() {
         return {
@@ -52,110 +52,114 @@ export default {
     },
     computed: {
         lang() {
-            return this.$store.state.lang
-        }
+            return this.$store.state.lang;
+        },
     },
     watch: {
         $route: {
             deep: true,
             immediate: true,
             handler(n) {
-                this.breadcrumbList = n.matched.slice(1, n.matched.length)
+                this.breadcrumbList = n.matched.slice(1, n.matched.length);
                 let result = Core.Const.MALL_HEADER_AUTH.ROUTERS.find(el => {
-                    return el.value == n.path
-                })
-                this.headAuth = result
+                    return el.value == n.path;
+                });
+                this.headAuth = result;
                 let target = Core.Const.MALL_HEADER_AUTH.FOOTER.some(el => {
-                    return el.value == n.path
+                    return el.value == n.path;
                 });
-                this.footAuth = target
+                this.footAuth = target;
                 let totop = Core.Const.MALL_HEADER_AUTH.TOTOP.some(el => {
-                    return el.value == n.path
+                    return el.value == n.path;
                 });
-                this.totopAuth = totop
-            }
+                this.totopAuth = totop;
+            },
         },
         $lang: {
             deep: true,
             immediate: true,
             handler(n) {
                 switch (n) {
-                    case 'zh': this.locale = zhCN; break;
-                    case 'en': this.locale = enUS; break;
+                    case 'zh':
+                        this.locale = zhCN;
+                        break;
+                    case 'en':
+                        this.locale = enUS;
+                        break;
                 }
-            }
-        }
+            },
+        },
     },
-    created() { },
+    created() {},
     mounted() {
-        this.loginType = Core.Data.getLoginType()
-        if (Core.Data.getLang() === "" || Core.Data.getLang() === null) {
-            Core.Data.setLang("zh")
+        this.loginType = Core.Data.getLoginType();
+        if (Core.Data.getLang() === '' || Core.Data.getLang() === null) {
+            Core.Data.setLang('zh');
         }
-        this.$i18n.locale = Core.Data.getLang()
-        this.$store.state.lang = Core.Data.getLang()
+        this.$i18n.locale = Core.Data.getLang();
+        this.$store.state.lang = Core.Data.getLang();
 
         // 监听页面窗口
-        window.onresize = this.handleWindowResize
+        window.onresize = this.handleWindowResize;
         if (this.totopAuth) {
             setTimeout(() => {
-                this.scrollFn() // 首次执行初始化回到顶部按钮位置
+                this.scrollFn(); // 首次执行初始化回到顶部按钮位置
             }, 1000);
-            window.addEventListener('scroll', this.scrollFn)
+            window.addEventListener('scroll', this.scrollFn);
         }
     },
     beforeDestroy() {
-        window.removeEventListener('scroll', this.scrollFn)
+        window.removeEventListener('scroll', this.scrollFn);
     },
     methods: {
         // 监听窗口变化
-        handleWindowResize(e) { },
+        handleWindowResize(e) {},
         // 回到顶部
         back2Top() {
-            const dom = document.getElementById('mall-header')
+            const dom = document.getElementById('mall-header');
             dom.scrollIntoView({
-                behavior: 'smooth'
+                behavior: 'smooth',
             });
         },
         // 回到顶部按钮定位
         scrollFn() {
-            const footerEl = document.querySelector('#mall-footer')
+            const footerEl = document.querySelector('#mall-footer');
             //获取页面滚动距离
-            const scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
-            const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-            const scrollBottom = scrollHeight - scrollTop - innerHeight
-            if (scrollBottom > footerEl?.clientHeight) {// 离开footer
-                this.upTopPosition = 'fixed'
-            } else {// 进入footer
-                this.upTopPosition = 'absolute'
+            const scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+            const scrollBottom = scrollHeight - scrollTop - innerHeight;
+            if (scrollBottom > footerEl?.clientHeight) {
+                // 离开footer
+                this.upTopPosition = 'fixed';
+            } else {
+                // 进入footer
+                this.upTopPosition = 'absolute';
             }
             // 控制显隐
             if (scrollTop > 300) {
-                this.showTop = true
+                this.showTop = true;
             } else {
-                this.showTop = false
+                this.showTop = false;
             }
         },
-    }
+    },
 };
 </script>
-    
+
 <style lang="less" scoped>
 #mall-layout {
-    background: #F8F8F8;
+    background: #f8f8f8;
 
     .mall-container {
-        min-height: calc(100vh - var(--header-h-pc-mall)
-                /* 页头 */
-                - var(--footer-h-pc-mall)
-                /* 页尾 */
-            );
+        min-height: calc(100vh - var(--header-h-pc-mall) /* 页头 */ - var(--footer-h-pc-mall) /* 页尾 */);
         position: relative;
     }
 
-    @media (min-width: 820px) {}
+    @media (min-width: 820px) {
+    }
 
-    @media (max-width: 820px) {}
+    @media (max-width: 820px) {
+    }
 }
 
 .ant-input {
@@ -165,7 +169,6 @@ export default {
         box-shadow: none;
     }
 }
-
 
 input.ant-input {
     font-size: 14px;
@@ -182,8 +185,8 @@ input.ant-input {
     height: 80px;
     right: 80px;
     bottom: 40px;
-    border: 1px solid #EEE;
-    background: #FFF;
+    border: 1px solid #eee;
+    background: #fff;
     cursor: pointer;
     z-index: 999;
 
@@ -217,7 +220,7 @@ input.ant-input {
         }
 
         .back-top-text {
-            background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+            background: linear-gradient(100deg, #c6f 0%, #66f 100%);
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -233,7 +236,7 @@ input.ant-input {
 
     .ant-input,
     .ant-input-number-input {
-        caret-color: #C6F;
+        caret-color: #c6f;
     }
 }
 </style>

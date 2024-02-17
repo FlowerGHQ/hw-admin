@@ -4,10 +4,9 @@
 }
 
 .fade {
-
     &-enter-active,
     &-leave-active {
-        transition: opacity .5s;
+        transition: opacity 0.5s;
     }
 
     &-enter,
@@ -18,11 +17,11 @@
 
 .slide-fade {
     &-enter-active {
-        transition: transform .3s ease;
+        transition: transform 0.3s ease;
     }
 
     &-leave-active {
-        transition: transform .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+        transition: transform 0.5s cubic-bezier(1, 0.5, 0.8, 1);
     }
 
     &-enter,
@@ -34,11 +33,11 @@
 
 .slide-fade-toLeft {
     &-enter-active {
-        transition: all .5s ease;
+        transition: all 0.5s ease;
     }
 
     &-leave-active {
-        transition: all .5s ease;
+        transition: all 0.5s ease;
     }
 
     &-enter,
@@ -70,7 +69,7 @@
         margin-right: 6px;
     }
 
-    +.ant-btn {
+    + .ant-btn {
         margin-left: 8px;
     }
 
@@ -172,7 +171,7 @@
 .ant-pagination:not(.mini) {
     .ant-pagination-total-text {
         font-size: @fz_sm;
-        color: #505C6D;
+        color: #505c6d;
         margin-right: 4px;
     }
 
@@ -181,18 +180,18 @@
         height: 30px;
         margin-right: 4px;
         line-height: 28px;
-        border: 1px solid #E6EAEE;
+        border: 1px solid #e6eaee;
         border-radius: 2px;
 
         a {
-            color: #505C6D;
+            color: #505c6d;
             font-size: 12px;
         }
 
         &:hover,
         &.ant-pagination-item-active {
-            background: #006EF9;
-            border-color: #006EF9;
+            background: #006ef9;
+            border-color: #006ef9;
 
             a {
                 color: #fff;
@@ -205,12 +204,12 @@
         margin-right: 8px;
         min-width: 30px;
         height: 30px;
-        color: #C9D1DC;
+        color: #c9d1dc;
         line-height: 28px;
 
         .ant-pagination-item-link {
-            border: 1px solid #E6EAEE;
-            color: #505C6D;
+            border: 1px solid #e6eaee;
+            color: #505c6d;
 
             span.anticon {
                 position: relative;
@@ -219,11 +218,10 @@
         }
 
         &:not(.ant-pagination-disabled) .ant-pagination-item-link {
-
             &:hover,
             &.ant-pagination-item-active {
-                background: #006EF9;
-                border-color: #006EF9;
+                background: #006ef9;
+                border-color: #006ef9;
 
                 span {
                     color: #fff;
@@ -236,9 +234,9 @@
     .ant-pagination-jump-next {
         min-width: 30px;
         height: 30px;
-        color: #C9D1DC;
+        color: #c9d1dc;
         line-height: 28px;
-        border: 1px solid #E6EAEE;
+        border: 1px solid #e6eaee;
         margin-right: 8px;
     }
 
@@ -256,11 +254,11 @@
             margin-left: 8px;
             line-height: 30px;
             font-size: 12px;
-            color: #505C6D;
+            color: #505c6d;
 
             input {
                 height: 30px;
-                border: 1px solid #E6EAEE;
+                border: 1px solid #e6eaee;
                 font-size: 12px;
             }
         }
@@ -272,7 +270,6 @@
 }
 
 .ant-modal {
-
     .ant-modal-content {
         border-radius: 2px;
         overflow: hidden;
@@ -322,7 +319,7 @@
                 width: 240px;
                 align-items: center;
                 justify-content: space-between;
-    
+
                 .file-key {
                     display: flex;
                     align-items: center;
@@ -335,7 +332,7 @@
                 }
             }
             .audit-modal-title {
-                color: #1D2129;
+                color: #1d2129;
                 font-size: 16px;
                 font-weight: 600;
             }
@@ -350,11 +347,11 @@
                     align-items: center;
                     margin-right: 10px;
                     .head-key {
-                        color:#86909C;
+                        color: #86909c;
                         font-size: 14px;
                     }
                     .head-value {
-                        color:#1D2129;
+                        color: #1d2129;
                         font-size: 14px;
                     }
                 }
@@ -368,15 +365,15 @@
                     width: 100%;
                     display: flex;
                     justify-content: flex-end;
-                    color: #1D2129;
+                    color: #1d2129;
                     font-size: 14px;
                     font-weight: 400;
-        
+
                     .add-btn {
                         position: absolute;
                         left: 0;
                     }
-        
+
                     .total,
                     .total-amount {
                         margin-right: 24px;
@@ -392,13 +389,12 @@
                     padding-right: 2px;
                 }
                 .key {
-                    color:#1D2129;
+                    color: #1d2129;
                     font-size: 14px;
                     font-weight: 400;
                 }
-            
+
                 &.required {
-            
                     // 必填标志
                     .key::before {
                         opacity: 1;
@@ -422,16 +418,16 @@
 
     .modal-content {
         .ant-form {
-            >.ant-form-item {
+            > .ant-form-item {
                 display: flex;
                 margin-bottom: 16px;
 
-                >.ant-form-item-label {
+                > .ant-form-item-label {
                     width: 120px;
                 }
 
-                >.ant-form-item-control-wrapper {
-                    width: calc(~"100% - 120px");
+                > .ant-form-item-control-wrapper {
+                    width: calc(~'100% - 120px');
                 }
 
                 .ant-form-explain {
@@ -464,15 +460,14 @@
     .modal-title-wrap {
         display: flex;
 
-
         .modal-title-key {
-            color: #86909C;
+            color: #86909c;
             font-size: 14px;
             font-weight: 400;
         }
 
         .modal-title-value {
-            color: #1D2129;
+            color: #1d2129;
             font-size: 14px;
             font-weight: 400;
             margin-left: 10px;
@@ -490,7 +485,7 @@
             user-select: none;
         }
 
-        >.title {
+        > .title {
             font-weight: 500;
             font-size: 16px;
             line-height: 22px;
@@ -506,7 +501,7 @@
             .carousel-item {
                 position: relative;
 
-                >img {
+                > img {
                     width: 700px;
                     height: 440px;
                 }
@@ -575,7 +570,7 @@
 
             &:before,
             &:after {
-                content: "";
+                content: '';
                 display: block;
                 border-width: 5px;
                 position: absolute;
@@ -724,11 +719,11 @@
 }
 
 .ant-dropdown {
-    >ul.ant-dropdown-menu {
+    > ul.ant-dropdown-menu {
         li.ant-dropdown-menu-item {
             padding: 5px 0;
 
-            >button {
+            > button {
                 padding: 0 12px !important;
                 width: 100%;
             }
@@ -737,7 +732,6 @@
 }
 
 .ant-table {
-
     td,
     th {
         white-space: nowrap;
@@ -774,7 +768,7 @@
                         line-height: 22px;
                         color: rgba(0, 0, 0, 0.85);
                         padding: 8px 16px;
-                        background-color: #F7F8FA;
+                        background-color: #f7f8fa;
 
                         &::before {
                             display: none;
@@ -784,7 +778,7 @@
 
                 .ant-table-filter-trigger {
                     .anticon.anticon-filter {
-                        color: #8E9AAD;
+                        color: #8e9aad;
                     }
 
                     &.active {
@@ -798,9 +792,9 @@
             tbody.ant-table-tbody {
                 tr.ant-table-row {
                     td.ant-table-cell {
-                        border-bottom: 1px solid #E6EAEE;
+                        border-bottom: 1px solid #e6eaee;
                         padding: 8px 16px;
-                        color: #363D42;
+                        color: #363d42;
                         font-size: @fz_sm;
 
                         .ant-btn {
@@ -958,7 +952,6 @@
             }
         }
     }
-
 }
 
 // 输入框
@@ -995,14 +988,13 @@ div.ant-input-number {
         }
     }
 }
-div.ant-input-number-group-addon{
+div.ant-input-number-group-addon {
     border-color: @BC_N;
     border-radius: 4px;
     font-size: @fz_sm;
     line-height: 22px !important;
-
 }
-.ant-input-group-addon{
+.ant-input-group-addon {
     border-color: @BC_N;
     border-radius: 4px;
     font-size: @fz_sm;
@@ -1017,9 +1009,9 @@ div.ant-input-number-group-addon{
         width: 120px;
     }
 
-    >span {
+    > span {
         font-size: 10px;
-        color: #8090A6;
+        color: #8090a6;
         margin-left: 5px;
         margin-top: 7px;
     }
@@ -1034,7 +1026,7 @@ div.ant-input-number-group-addon{
         border-radius: 2px 0 0 2px;
     }
 
-    >.ant-input-number+.ant-select {
+    > .ant-input-number + .ant-select {
         width: 60px;
         position: relative;
 
@@ -1070,7 +1062,7 @@ div.ant-checkbox-group {
 label.ant-checkbox-wrapper {
     font-size: 12px;
     line-height: 16px;
-    color: #363D42;
+    color: #363d42;
     .fac();
 
     span.ant-checkbox {
@@ -1105,14 +1097,13 @@ label.ant-checkbox-wrapper {
         height: 32px;
         font-size: 12px;
         line-height: 16px;
-        color: #363D42;
+        color: #363d42;
         display: inline-flex;
         align-items: center !important;
 
         .ant-radio {
             top: 0 !important;
         }
-
     }
 }
 
@@ -1194,10 +1185,10 @@ div.ant-picker {
 }
 
 button.ant-switch {
-
     // height: 24px;
     // border-radius: 12px;
-    .ant-switch-inner {}
+    .ant-switch-inner {
+    }
 }
 
 .ant-tag {
@@ -1229,9 +1220,7 @@ button.ant-switch {
 
 /* =================== ant组件重写 =================== */
 
-
 .status {
-
     &.primary,
     .primary {
         color: @primary;
@@ -1279,16 +1268,17 @@ button.ant-switch {
         color: @grey;
     }
 
-    &.blue-2,.blue-2  {
+    &.blue-2,
+    .blue-2 {
         color: @blue_2;
     }
 
-    &.green-2,.green-2  {
+    &.green-2,
+    .green-2 {
         color: @green_2;
     }
 
     &-bg {
-
         &.primary,
         .primary {
             background-color: @primary_l;
@@ -1336,13 +1326,14 @@ button.ant-switch {
             background-color: @grey_l;
         }
 
-        &.blue-2,.blue-2 {
+        &.blue-2,
+        .blue-2 {
             background-color: @blue_2_l;
         }
-        &.green-2,.green-2 {
+        &.green-2,
+        .green-2 {
             background-color: @green_2_l;
         }
-    
     }
 }
 
@@ -1355,7 +1346,6 @@ i.icon {
 }
 
 .loading {
-
     &-fullscreen,
     &-incontent {
         top: 0;
@@ -1418,8 +1408,7 @@ p {
 /* 列表页搜索项 */
 .form-item
 
-/* 自定义表单项 */
-    {
+/* 自定义表单项 */ {
     .fac();
     margin-bottom: 16px;
 
@@ -1438,10 +1427,10 @@ p {
         width: calc(~'100% - 86px');
         min-width: 200px;
 
-        >.ant-input,
-        >.ant-select,
-        >.ant-picker,
-        >.ant-cascader-picker {
+        > .ant-input,
+        > .ant-select,
+        > .ant-picker,
+        > .ant-cascader-picker {
             width: 100%;
         }
     }
@@ -1505,7 +1494,6 @@ p {
     }
 
     &.required {
-
         // 必填标志
         .key::before {
             opacity: 1;
@@ -1555,7 +1543,7 @@ p {
 
     .ant-input-number {
         box-sizing: border-box;
-        width: calc(~"100% - 54px");
+        width: calc(~'100% - 54px');
         line-height: 30px;
         border-radius: 4px 0 0 4px;
     }
@@ -1575,10 +1563,9 @@ p {
     }
 
     &.word-one {
-
         // 后缀有1个字
         .ant-input-number {
-            width: calc(~"100% - 34px");
+            width: calc(~'100% - 34px');
         }
 
         .addon-after {
@@ -1587,10 +1574,9 @@ p {
     }
 
     &.word-three {
-
         // 后缀有3个字
         .ant-input-number {
-            width: calc(~"100% - 74px");
+            width: calc(~'100% - 74px');
         }
 
         .addon-after {
@@ -1601,13 +1587,12 @@ p {
 
 // 图片上传
 .image-uploader {
-
     .ant-upload.ant-upload-select-picture-card,
     .ant-upload-list-picture-card-container {
         background: @BG_upload;
         width: 78px;
         height: 78px;
-        border-color: #E5E8EB;
+        border-color: #e5e8eb;
 
         .ant-upload-list-item {
             padding: 0;
@@ -1642,7 +1627,6 @@ p {
     }
 
     &.small {
-
         .ant-upload.ant-upload-select-picture-card,
         .ant-upload-list-picture-card-container {
             width: 60px;
@@ -1657,8 +1641,8 @@ p {
         }
     }
 
-    +.tip {
-        color: #8090A6;
+    + .tip {
+        color: #8090a6;
         font-size: 10px;
     }
 }
@@ -1724,7 +1708,6 @@ p {
             &.time-range-select.left-close {
                 .ant-calendar-picker {
                     .ant-calendar-picker-input {
-
                         .ant-calendar-picker-icon,
                         .ant-calendar-picker-clear {
                             left: -20px;
@@ -1740,12 +1723,10 @@ p {
         justify-content: flex-end;
     }
 
-    +.table-container {
+    + .table-container {
         margin-top: 0;
     }
 }
-
-
 
 .search-container {
     // 搜索
@@ -1847,7 +1828,7 @@ p {
     .form-block {
         // 新增页 分块
         margin: 0 20px 20px;
-        background: #F8FAFC;
+        background: #f8fafc;
         border-radius: 6px;
         box-sizing: border-box;
         padding: 24px 0 8px 0;
@@ -1861,7 +1842,7 @@ p {
             font-weight: 500;
             font-size: 16px;
             line-height: 20px;
-            color: #363D42;
+            color: #363d42;
         }
 
         .form-content {
@@ -1874,7 +1855,7 @@ p {
 
             .key {
                 width: 86px;
-                color: #8090A6;
+                color: #8090a6;
             }
 
             .value {
@@ -1901,7 +1882,7 @@ p {
     }
 
     .form-btns {
-        border: 1px solid #EDF1F4;
+        border: 1px solid #edf1f4;
         padding: 20px 0 20px 268px;
 
         .ant-btn {
@@ -1910,12 +1891,11 @@ p {
             border-radius: 2px;
         }
     }
-
 }
 
 .gray-panel {
     // 灰底的面板
-    background: #F8FAFC;
+    background: #f8fafc;
     box-shadow: 0px 1px 2px rgba(23, 32, 48, 0.06);
     border-radius: 4px;
     margin: 0 20px 20px;
@@ -1926,9 +1906,8 @@ p {
     }
 
     .panel-btn {
-
         &.ant-btn,
-        >.ant-btn {
+        > .ant-btn {
             font-size: 12px;
             line-height: 20px;
             height: 30px;
@@ -1951,16 +1930,16 @@ p {
 
         .icon.i_expen {
             font-size: 14px;
-            color: #8090A6;
+            color: #8090a6;
         }
 
-        +.panel-content {
+        + .panel-content {
             margin-top: 14px;
         }
     }
 
     .panel-content {
-        background: #FFFFFF;
+        background: #ffffff;
         border-radius: 4px;
         padding: 20px;
 
@@ -1985,7 +1964,7 @@ p {
                 color: #465670;
 
                 span {
-                    color: #A5ACB8;
+                    color: #a5acb8;
                 }
             }
         }
@@ -2000,12 +1979,12 @@ p {
             font-size: 12px;
 
             .key {
-                color: #8090A6;
+                color: #8090a6;
             }
 
             .value {
                 margin-top: 10px;
-                color: #363D42;
+                color: #363d42;
 
                 .ant-btn {
                     font-size: 12px;
@@ -2047,7 +2026,7 @@ p {
                 font-size: 20px;
                 font-weight: 500;
                 line-height: 28px;
-                color: #4D4D4D;
+                color: #4d4d4d;
             }
         }
     }
@@ -2063,7 +2042,7 @@ p {
             .fac();
             margin-bottom: 8px;
 
-            >span,
+            > span,
             .ant-btn-link {
                 display: inline-block;
                 height: 22px;
@@ -2073,13 +2052,13 @@ p {
             }
 
             .key {
-                color: #8090A6;
+                color: #8090a6;
                 width: 100px;
             }
 
             .value {
-                color: #2D2E30;
-                width: calc(~"100% - 100px");
+                color: #2d2e30;
+                width: calc(~'100% - 100px');
                 .ell();
             }
 
@@ -2101,24 +2080,24 @@ p {
         .fac(space-evenly);
         margin-top: 20px;
         padding-top: 24px;
-        border-top: 1px solid #F3F5F7;
+        border-top: 1px solid #f3f5f7;
 
         .ant-divider-vertical {
             height: 40px;
-            background: #EAEDF0;
+            background: #eaedf0;
         }
 
         .ant-statistic {
             .ant-statistic-title {
                 font-size: 14px;
                 text-align: center;
-                color: #8090A6;
+                color: #8090a6;
             }
 
             .ant-statistic-content {
                 font-size: 24px;
                 text-align: center;
-                color: #363D42;
+                color: #363d42;
                 line-height: 24px;
 
                 .ant-statistic-content-prefix,
@@ -2132,7 +2111,6 @@ p {
 }
 
 .info-container {
-
     // 详情页 信息展示 竖向
     .info-block {
         display: flex;
@@ -2145,22 +2123,20 @@ p {
         width: 100%;
 
         .key {
-            color: #9A9EA5;
+            color: #9a9ea5;
             line-height: 17px;
         }
 
         .value {
             .ell();
             margin-top: 10px;
-            color: #202A3B;
+            color: #202a3b;
             padding-left: 15px;
             line-height: 17px;
             white-space: pre-wrap;
         }
     }
 }
-
-
 
 .tabs-container {
     // 详情页的tabs 与 列表页的 tabs
@@ -2213,7 +2189,7 @@ p {
                     color: @TC_D;
                     font-weight: normal;
 
-                    >span {
+                    > span {
                         margin-left: 4px;
                         display: inline-block;
                         height: 16px;
@@ -2270,10 +2246,8 @@ p {
 
                         &.green-2 {
                             color: @green;
-                            background-color:@green_2_l;
+                            background-color: @green_2_l;
                         }
-
-
                     }
                 }
 
@@ -2294,7 +2268,6 @@ p {
     background: @BG_N;
 
     .desc-zh-title {
-
         font-family: 'PingFang SC';
         font-style: normal;
         .fsb();
@@ -2305,10 +2278,9 @@ p {
         .title-area {
             .fac();
 
-
             .title {
                 height: 22px;
-                color: #363D42;
+                color: #363d42;
                 font-family: 'PingFang SC';
                 font-style: normal;
                 font-weight: 500;
@@ -2316,7 +2288,6 @@ p {
                 line-height: 22px;
             }
         }
-
     }
 
     .tabBox {
@@ -2324,11 +2295,11 @@ p {
         .fac();
 
         .ant-tag-processing {
-            color: #006EF9;
-            border: #006EF9 0.5px solid;
+            color: #006ef9;
+            border: #006ef9 0.5px solid;
             border-radius: 4px;
             height: 28px;
-            background-color: #E6F1FE;
+            background-color: #e6f1fe;
 
             font-family: 'PingFang SC';
             font-style: normal;
@@ -2339,12 +2310,11 @@ p {
         }
 
         .tab-uncheck .ant-tag-processing {
-            border: #EDF2F5 0.5px solid;
+            border: #edf2f5 0.5px solid;
             border-radius: 4px;
             height: 28px;
-            background: #EDF2F5;
-            color: #1E2023;
-
+            background: #edf2f5;
+            color: #1e2023;
 
             font-family: 'PingFang SC';
             font-style: normal;
@@ -2353,14 +2323,10 @@ p {
             line-height: 28px;
             vertical-align: top;
             margin-top: 0px;
-
         }
-
     }
 
     .desc-zh-detail {
-
-
         .fac();
         flex-wrap: wrap;
         margin-top: 18px;
@@ -2369,7 +2335,7 @@ p {
             .fac();
             margin-bottom: 28px;
 
-            >span,
+            > span,
             .ant-btn-link {
                 display: inline-block;
                 height: 20px;
@@ -2379,7 +2345,7 @@ p {
             }
 
             .key {
-                color: #8090A6;
+                color: #8090a6;
                 width: 100px;
             }
 
@@ -2390,7 +2356,6 @@ p {
             }
 
             &:hover .select-box {
-
                 .select-tab {
                     display: inline-block;
                 }
@@ -2398,7 +2363,6 @@ p {
                 .no-select-tab {
                     display: none;
                 }
-
             }
 
             .select-box {
@@ -2421,20 +2385,19 @@ p {
                     font-weight: 400;
                     font-size: 14px;
                     line-height: 20px;
-                    color: #CCD3DD;
+                    color: #ccd3dd;
                     padding-left: 12px;
                 }
             }
 
             .value {
-                color: #2D2E30;
-                width: calc(~"100% - 100px");
+                color: #2d2e30;
+                width: calc(~'100% - 100px');
                 .ell();
 
                 // 意向度
                 .intent {
-
-                    &:hover>.text {
+                    &:hover > .text {
                         display: block;
                     }
 
@@ -2444,7 +2407,7 @@ p {
                         font-weight: 400;
                         font-size: 14px;
                         line-height: 20px;
-                        color: #006EF9;
+                        color: #006ef9;
                     }
 
                     .none-content {
@@ -2453,14 +2416,13 @@ p {
                         font-weight: 400;
                         font-size: 14px;
                         line-height: 20px;
-                        color: #CCD3DD;
+                        color: #ccd3dd;
                         padding-left: 12px;
                     }
                 }
 
                 // 单选
                 .radio-all {
-
                     .radio-select {
                         display: none;
                     }
@@ -2471,24 +2433,22 @@ p {
                         font-weight: 400;
                         font-size: 14px;
                         line-height: 20px;
-                        color: #CCD3DD;
+                        color: #ccd3dd;
                         padding-left: 12px;
                     }
 
-                    &:hover>.radio-text {
+                    &:hover > .radio-text {
                         display: none;
                     }
 
-                    &:hover>.radio-select {
+                    &:hover > .radio-select {
                         display: block;
                     }
 
-                    &:hover>.none-content {
+                    &:hover > .none-content {
                         display: none;
                     }
                 }
-
-
             }
 
             &.full-col {
@@ -2498,21 +2458,17 @@ p {
             &.half-col {
                 width: 50% !important;
             }
-
-
         }
-
 
         // 意向度
         .intention-box {
-            &:hover>.intention-right-box>.edit-intention {
+            &:hover > .intention-right-box > .edit-intention {
                 display: block;
             }
 
             .intention-right-box {
                 align-items: center;
                 display: flex;
-
 
                 // 内容
                 .con-intentbox {
@@ -2529,12 +2485,9 @@ p {
                         font-weight: 400;
                         font-size: 14px;
                         line-height: 20px;
-                        color: #CCD3DD;
+                        color: #ccd3dd;
                     }
-
                 }
-
-
 
                 // 编辑内容
                 .edit-intention {
@@ -2543,15 +2496,11 @@ p {
                     font-weight: 400;
                     font-size: 14px;
                     line-height: 20px;
-                    color: #006EF9;
+                    color: #006ef9;
                     display: none;
                     cursor: pointer;
-
                 }
-
-
             }
-
         }
 
         // 带有hover 的input
@@ -2565,7 +2514,6 @@ p {
                 &:hover {
                     border: 1px solid #d7d7d7;
                     box-sizing: border-box;
-
                 }
             }
 
@@ -2575,12 +2523,12 @@ p {
             }
 
             // .ant-select{
-            //     &:hover .ant-select-selector {                    
+            //     &:hover .ant-select-selector {
             //         border: 1px solid #d7d7d7;
             //     }
             //     &:hover .ant-select-arrow {
-            //         display: block;                    
-            //     }            
+            //         display: block;
+            //     }
             // }
             // .ant-select-selector{
             //     border: inherit;
@@ -2588,8 +2536,6 @@ p {
             // .ant-select-arrow{
             //     display: none;
             // }
-
-
         }
 
         &.has-logo {
@@ -2601,24 +2547,24 @@ p {
         .fac(space-evenly);
         margin-top: 20px;
         padding-top: 24px;
-        border-top: 1px solid #F3F5F7;
+        border-top: 1px solid #f3f5f7;
 
         .ant-divider-vertical {
             height: 40px;
-            background: #EAEDF0;
+            background: #eaedf0;
         }
 
         .ant-statistic {
             .ant-statistic-title {
                 font-size: 14px;
                 text-align: center;
-                color: #8090A6;
+                color: #8090a6;
             }
 
             .ant-statistic-content {
                 font-size: 24px;
                 text-align: center;
-                color: #363D42;
+                color: #363d42;
                 line-height: 24px;
 
                 .ant-statistic-content-prefix,
@@ -2634,7 +2580,7 @@ p {
 .ant-collapse {
     .ant-collapse-item.gray-collapse-panel {
         // 灰底的 可折叠 面板
-        background: #F8FAFC;
+        background: #f8fafc;
         box-shadow: 0px 1px 2px rgba(23, 32, 48, 0.06);
         border-radius: 4px;
         margin: 0 20px 20px;
@@ -2648,7 +2594,7 @@ p {
 
             .icon.i_expan_l {
                 font-size: 14px;
-                color: #8090A6;
+                color: #8090a6;
                 transition: transform 0.3s ease;
             }
 
@@ -2664,7 +2610,7 @@ p {
         }
 
         .panel-content {
-            background: #FFFFFF;
+            background: #ffffff;
             border-radius: 4px;
             padding: 20px;
             .table-container {
@@ -2696,8 +2642,6 @@ p {
         }
     }
 }
-
-
 
 #Layout.en {
     .detail-item {
@@ -2776,9 +2720,8 @@ p {
     }
 }
 
-#Layout.zh {}
-
-
+#Layout.zh {
+}
 
 @media (min-width: 820px) {
     .MT {
@@ -2852,92 +2795,91 @@ p {
     -webkit-box-orient: vertical;
 }
 
-.search{
+.search {
     padding: 0 20px;
     box-sizing: border-box;
 }
 // form | search
-.row-detail{
+.row-detail {
     display: flex;
-    .row-item{ 
-        width: 100%;   
+    .row-item {
+        width: 100%;
 
         display: flex;
-        align-items: center;                 
-        font-size: 14px;        
+        align-items: center;
+        font-size: 14px;
         font-weight: 400;
         margin-top: 16px;
         // flex-grow: 0;
         // flex-shrink: 0;
         // 无宽度
-        .key{            
-            color:#1D2129;
+        .key {
+            color: #1d2129;
             white-space: nowrap;
             min-width: 100px;
             text-align: right;
         }
         // 有宽度右边对其
-        .key-w{
+        .key-w {
             width: 100px;
-            color:#1D2129;
-            text-align: right;             
+            color: #1d2129;
+            text-align: right;
             // white-space: nowrap;
         }
-        .key-form-86909C{
-            color: #86909C;
+        .key-form-86909C {
+            color: #86909c;
         }
         // 必选图标
-        .key::before{
-            content: "*";            
+        .key::before {
+            content: '*';
             color: @TC_required;
             margin-right: 4px;
             vertical-align: middle;
             display: none;
         }
-        .key-w::before{
-            content: "*";
+        .key-w::before {
+            content: '*';
             display: none;
             color: @TC_required;
             margin-right: 4px;
             vertical-align: middle;
         }
-        &.required{
-            .key::before{
+        &.required {
+            .key::before {
                 display: inline-block;
             }
-            .key-w::before{
+            .key-w::before {
                 display: inline-block;
             }
         }
 
-        .value{   
+        .value {
             width: 100%;
-            color:#1D2129;
+            color: #1d2129;
             padding-right: 20px;
-            >.ant-input,
-            >.ant-select,
-            >.ant-picker,
-            >.ant-cascader-picker {
+            > .ant-input,
+            > .ant-select,
+            > .ant-picker,
+            > .ant-cascader-picker {
                 font-size: 14px;
                 width: 100%;
-                >.ant-select-selector {
+                > .ant-select-selector {
                     font-size: 14px;
                 }
             }
         }
-    
     }
 
     // 收起操作
     .option-text {
         color: #006ef9 !important;
-        cursor: pointer;    
+        cursor: pointer;
     }
     // 箭头图标
-    .allow-icon{
+    .allow-icon {
         margin-right: 8px;
     }
-   
+
     // 选择框的宽度
     .select-w {
         width: 100%;
@@ -2954,42 +2896,37 @@ p {
         display: flex;
 
         .key-box {
-
             padding: 0px 10px;
             box-sizing: border-box;
             display: flex;
             align-items: center;
 
-            color:  #1D2129;
+            color: #1d2129;
             font-size: 14px;
             font-weight: 400;
-            border: 1px solid #E2E2EA;
-            border-radius: 4px 0px 0px 4px ;
+            border: 1px solid #e2e2ea;
+            border-radius: 4px 0px 0px 4px;
             border-right: none;
-            background-color: #FFFFFF;
-
+            background-color: #ffffff;
         }
-        
-        .value-box {
 
+        .value-box {
             flex: 1;
             overflow: hidden;
 
-            >.ant-input,
-            >.ant-select,
-            >.ant-select-selector,
-            >.ant-picker,
-            >.ant-cascader-picker,
-            >.ant-select-single,
-            >.ant-select-show-arrow {
+            > .ant-input,
+            > .ant-select,
+            > .ant-select-selector,
+            > .ant-picker,
+            > .ant-cascader-picker,
+            > .ant-select-single,
+            > .ant-select-show-arrow {
                 width: 100%;
                 border-radius: 0px 4px 4px 0px !important;
             }
-            .ant-select:not(.ant-select-customize-input) .ant-select-selector{
+            .ant-select:not(.ant-select-customize-input) .ant-select-selector {
                 border-radius: 0px 4px 4px 0px !important;
             }
-            
         }
     }
-
 }

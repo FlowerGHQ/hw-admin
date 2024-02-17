@@ -1,7 +1,14 @@
 <template>
-<a-range-picker v-model:value="createTime" valueFormat='X' @change="handleSearch" :show-time="defaultTime" :allow-clear='false' :placeholder="[$t('crm_def.start_time'),$t('crm_def.end_time')]">
-    <template #suffixIcon><i class="icon i_calendar"/></template>
-</a-range-picker>
+    <a-range-picker
+        v-model:value="createTime"
+        valueFormat="X"
+        @change="handleSearch"
+        :show-time="defaultTime"
+        :allow-clear="false"
+        :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]"
+    >
+        <template #suffixIcon><i class="icon i_calendar" /></template>
+    </a-range-picker>
 </template>
 
 <script>
@@ -13,44 +20,43 @@ export default {
     props: {
         value: {
             type: Array,
-            default: []
+            default: [],
         },
         keys: {
             type: Array,
-            default: ['begin_time', 'end_time']
+            default: ['begin_time', 'end_time'],
         },
         defaultTime: {
             type: Array,
-            default: () => Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B
-        }
+            default: () => Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
+        },
     },
     emits: ['search'],
     data() {
         return {
             // defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             createTime: this.value,
-        }
+        };
     },
     watch: {},
     computed: {},
     created() {},
-    mounted() {
-    },
+    mounted() {},
     methods: {
         handleSearch() {
-            let obj = {}
-            obj[this.keys[0]] = this.createTime[0]
-            obj[this.keys[1]] = this.createTime[1]
-            console.log('handleSearch obj:', obj,this.createTime)
+            let obj = {};
+            obj[this.keys[0]] = this.createTime[0];
+            obj[this.keys[1]] = this.createTime[1];
+            console.log('handleSearch obj:', obj, this.createTime);
             this.$emit('search', obj);
         },
         handleReset() {
-            this.createTime = []
-            let obj = {}
-            obj[this.keys[0]] = this.createTime[0]
-            obj[this.keys[1]] = this.createTime[1]
+            this.createTime = [];
+            let obj = {};
+            obj[this.keys[0]] = this.createTime[0];
+            obj[this.keys[1]] = this.createTime[1];
             this.$emit('search', obj);
-        }
+        },
     },
-}
+};
 </script>

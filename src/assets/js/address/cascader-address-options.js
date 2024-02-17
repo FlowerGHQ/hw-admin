@@ -1,10 +1,10 @@
-import continents from './continents.json';  // 大洲
-import countries from './countries.json';    // 国家
-import states from './states.json';          // 洲、省
-import cities from './cities.json';          // 城市
-import regions from './regions.json';        // 地区
+import continents from './continents.json'; // 大洲
+import countries from './countries.json'; // 国家
+import states from './states.json'; // 洲、省
+import cities from './cities.json'; // 城市
+import regions from './regions.json'; // 地区
 
-regions.forEach((region) => {
+regions.forEach(region => {
     const matchCity = cities.filter(city => city.id === region.city_id)[0];
     if (matchCity) {
         matchCity.children = matchCity.children || [];
@@ -16,9 +16,9 @@ regions.forEach((region) => {
             name_en: region.name_en,
         });
     }
-})
+});
 
-cities.forEach((city) => {
+cities.forEach(city => {
     const matchStates = states.filter(state => state.id === city.state_id)[0];
     if (matchStates) {
         matchStates.children = matchStates.children || [];
@@ -31,9 +31,9 @@ cities.forEach((city) => {
             children: city.children,
         });
     }
-})
+});
 
-states.forEach((state) => {
+states.forEach(state => {
     const matchCountry = countries.filter(country => country.id === state.country_id)[0];
     if (matchCountry) {
         matchCountry.children = matchCountry.children || [];
@@ -46,9 +46,9 @@ states.forEach((state) => {
             children: state.children,
         });
     }
-})
+});
 
-countries.forEach((country) => {
+countries.forEach(country => {
     const matchContinent = continents.filter(continent => continent.id === country.continent_id)[0];
     if (matchContinent) {
         matchContinent.children = matchContinent.children || [];
@@ -61,8 +61,8 @@ countries.forEach((country) => {
             children: country.children,
         });
     }
-})
-console.log('countries:', JSON.stringify(countries, null, 4))
+});
+console.log('countries:', JSON.stringify(countries, null, 4));
 
 let options = continents.map(continent => ({
     id: continent.id,

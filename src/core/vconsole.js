@@ -1,5 +1,5 @@
-import VConsole from "vconsole";
+import VConsole from 'vconsole';
 
-let vconsole = new VConsole()
+let vconsole = new VConsole();
 
-export default vconsole
+export default vconsole;

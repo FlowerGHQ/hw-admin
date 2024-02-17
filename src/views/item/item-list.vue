@@ -11,10 +11,10 @@
                         <div class="top-back"></div>
                     </div>
                     <div class="title-container">
-                        <div class="title-area">{{ $t("i.item_list") }}</div>
+                        <div class="title-area">{{ $t('i.item_list') }}</div>
                         <div class="btns-area">
                             <a-button class="download" type="primary" @click="handleExportConfirm"
-                                ><i class="icon i_download" />{{ $t("i.export") }}</a-button
+                                ><i class="icon i_download" />{{ $t('i.export') }}</a-button
                             >
                             <a-upload
                                 name="file"
@@ -25,16 +25,17 @@
                                 :headers="upload.headers"
                                 :data="upload.data"
                                 accept=".xlsx,.xls"
-                                @change="handleMatterChange">
+                                @change="handleMatterChange"
+                            >
                                 <a-button type="primary" ghost class="file-upload-btn">
-                                    <i class="icon i_add" />{{ $t("i.import") }}
+                                    <i class="icon i_add" />{{ $t('i.import') }}
                                 </a-button>
                             </a-upload>
                             <a-button type="primary" @click="handleSalesAreaByIdsShow()"
-                                ><i class="icon i_edit" /> {{ $t("ar.set_sales") }}
+                                ><i class="icon i_edit" /> {{ $t('ar.set_sales') }}
                             </a-button>
                             <a-button type="primary" @click="routerChange('add')"
-                                ><i class="icon i_add" />{{ $t("i.new") }}</a-button
+                                ><i class="icon i_add" />{{ $t('i.new') }}</a-button
                             >
                         </div>
                     </div>
@@ -43,12 +44,13 @@
                             :options="searchList"
                             @search="getSearchFrom"
                             @freshPageHeight="freshPageHeight"
-                            @reset="handleSearchReset">
+                            @reset="handleSearchReset"
+                        >
                             <template v-slot:time>
                                 <a-col :xs="24" :sm="24" :xl="16" :xxl="12" class="search-box">
                                     <div class="item-box">
                                         <div class="key-box">
-                                            {{ $t("d.create_time") }}
+                                            {{ $t('d.create_time') }}
                                         </div>
                                         <div class="value-box">
                                             <TimeSearch @search="handleOtherSearch" ref="TimeSearch" />
@@ -76,27 +78,28 @@
                         :loading="loading"
                         :scroll="{ x: true }"
                         :pagination="false"
-                        :row-key="(record) => record.id"
+                        :row-key="record => record.id"
                         @change="handleTableChange"
                         @expand="handleTableExpand"
                         :expandedRowKeys="expandedRowKeys"
                         :indentSize="0"
-                        :row-selection="rowSelection">
+                        :row-selection="rowSelection"
+                    >
                         <template #headerCell="{ column }">
                             <template v-if="column.dataIndex === 'code'">
                                 <div class="table-block">
-                                    {{ $t("i.code") }}/ {{ $t(/*SKU编码*/ "i.sku_code") }}
+                                    {{ $t('i.code') }}/ {{ $t(/*SKU编码*/ 'i.sku_code') }}
                                     <a-tooltip placement="top">
                                         <template #title>
                                             <p>
                                                 {{
-                                                    $t(/*商品编码: 多规格商品的父规格对应商品编码; */ "i.item_code_tip")
+                                                    $t(/*商品编码: 多规格商品的父规格对应商品编码; */ 'i.item_code_tip')
                                                 }}
                                             </p>
                                             <p>
                                                 {{
                                                     $t(
-                                                        /*SKU编码: 单规格、多规格商品的子规格对应SKU编码; */ "i.sku_code_tip"
+                                                        /*SKU编码: 单规格、多规格商品的子规格对应SKU编码; */ 'i.sku_code_tip',
                                                     )
                                                 }}
                                             </p>
@@ -115,17 +118,18 @@
                                         :width="55"
                                         :height="55"
                                         :src="$Util.imageFilter(record.logo, 2)"
-                                        :fallback="$t('def.none')" />
+                                        :fallback="$t('def.none')"
+                                    />
                                     <div class="info">
                                         <div>
                                             <a-tooltip>
                                                 <template #title>{{
-                                                    $i18n.locale === "zh" ? record.name : record.name_en || "-"
+                                                    $i18n.locale === 'zh' ? record.name : record.name_en || '-'
                                                 }}</template>
                                                 <a-button type="link" @click="routerChange('detail', record)">
                                                     <div class="ell" style="max-width: 150px">
                                                         {{
-                                                            $i18n.locale === "zh" ? record.name : record.name_en || "-"
+                                                            $i18n.locale === 'zh' ? record.name : record.name_en || '-'
                                                         }}
                                                     </div>
                                                 </a-button>
@@ -137,20 +141,21 @@
                                   : record.name_en || "-" */
                                                     !record.children && record.attr_list && record.attr_list.length
                                                         ? $Util.itemSpecFilter(record.attr_list)
-                                                        : `${$t(/*共有*/ "i.in_all")}${record.children_number}${$t(
-                                                              /*款规格商品*/ "i.spec_of_goods"
+                                                        : `${$t(/*共有*/ 'i.in_all')}${record.children_number}${$t(
+                                                              /*款规格商品*/ 'i.spec_of_goods',
                                                           )}`
                                                 }}</template>
                                                 <div
                                                     v-if="
                                                         !record.children && record.attr_list && record.attr_list.length
                                                     "
-                                                    class="sub-info">
+                                                    class="sub-info"
+                                                >
                                                     {{ $Util.itemSpecFilter(record.attr_list) }}
                                                 </div>
                                                 <div v-if="record.children_number" class="sub-info sub-info-farther">
-                                                    {{ $t(/*共有*/ "i.in_all") }} {{ record.children_number }}
-                                                    {{ $t(/*款规格商品*/ "i.spec_of_goods") }}
+                                                    {{ $t(/*共有*/ 'i.in_all') }} {{ record.children_number }}
+                                                    {{ $t(/*款规格商品*/ 'i.spec_of_goods') }}
                                                 </div>
                                             </a-tooltip>
                                         </div>
@@ -163,7 +168,8 @@
                                                 $t('i.synchronization_time') +
                                                 ' ' +
                                                 ($Util.timeFilter(record.sync_time) || '-')
-                                            ">
+                                            "
+                                        >
                                             <span>
                                                 {{ SOURCE_TYPE[record.source_type].value }}
                                             </span>
@@ -175,12 +181,12 @@
                                 {{ $Util.itemTypeFilter(text, $i18n.locale) }}
                             </template>
                             <template v-if="column.key === 'item'">
-                                {{ text || "-" }}
+                                {{ text || '-' }}
                             </template>
                             <template v-if="column.key === 'category_list'">
                                 <span v-for="(category, index) in text">
                                     <span v-if="index !== 0">,</span>
-                                    {{ $i18n.locale === "zh" ? category.category_name : category.category_name_en }}
+                                    {{ $i18n.locale === 'zh' ? category.category_name : category.category_name_en }}
                                 </span>
                             </template>
                             <template v-if="column.key === 'money'"> ￥{{ $Util.countFilter(text) }} </template>
@@ -196,7 +202,8 @@
                                 </template>
                                 <template v-else>
                                     <span v-if="text >= 0">{{ column.unit }}</span>
-                                    {{ paramPrice ? $Util.countFilter(record.fob_eur) : $Util.countFilter(record.fob_usd) }}
+                                    <!-- {{ paramPrice ? $Util.countFilter(record.fob_eur) : $Util.countFilter(record.fob_usd) }} -->
+                                    {{ $Util.countFilter(record.fob_eur) }}
                                 </template>
                             </template>
                             <template v-if="column.dataIndex === 'fob_usd'">
@@ -208,7 +215,8 @@
                                 </template>
                                 <template v-else>
                                     <span v-if="text >= 0">{{ column.unit }}</span>
-                                    {{ paramPrice ? $Util.countFilter(record.fob_eur) : $Util.countFilter(record.fob_usd) }}
+                                    <!-- {{ paramPrice ? $Util.countFilter(record.fob_eur) : $Util.countFilter(record.fob_usd) }} -->
+                                    {{ $Util.countFilter(record.fob_usd) }}
                                 </template>
                             </template>
                             <!-- sales_area_list -->
@@ -216,12 +224,12 @@
                                 <a-tooltip placement="topLeft">
                                     <span class="sales_area_list">
                                         <span class="sales_area_item" v-for="(sales, index) in record.sales_area_list">
-                                            {{$i18n.locale === "zh" ? sales.name : sales.name_en}}
+                                            {{ $i18n.locale === 'zh' ? sales.name : sales.name_en }}
                                         </span>
                                     </span>
                                     <template #title>
                                         <div v-for="(sales, index) in record.sales_area_list">
-                                            {{ $i18n.locale === "zh" ? sales.country : sales.country_en }}
+                                            {{ $i18n.locale === 'zh' ? sales.country : sales.country_en }}
                                         </div>
                                     </template>
                                 </a-tooltip>
@@ -230,8 +238,9 @@
                                 <div
                                     v-if="!record.children"
                                     class="status status-bg status-tag"
-                                    :class="text === 0 ? 'green' : 'red'">
-                                    {{ text === 0 ? $t("i.active") : $t("i.inactive") }}
+                                    :class="text === 0 ? 'green' : 'red'"
+                                >
+                                    {{ text === 0 ? $t('i.active') : $t('i.inactive') }}
                                 </div>
                                 <div v-else></div>
                             </template>
@@ -239,7 +248,7 @@
                             <template v-if="column.key === 'tip_item'">
                                 <a-tooltip placement="top" :title="text">
                                     <div class="ell" style="max-width: 160px">
-                                        {{ text || "-" }}
+                                        {{ text || '-' }}
                                     </div>
                                 </a-tooltip>
                             </template>
@@ -251,26 +260,29 @@
                                     <a-button
                                         type="link"
                                         v-if="$auth('item.save') /*编辑权限*/"
-                                        @click="routerChange('edit', record)">
-                                        <i class="icon i_edit" />{{ $t("def.edit") }}
+                                        @click="routerChange('edit', record)"
+                                    >
+                                        <i class="icon i_edit" />{{ $t('def.edit') }}
                                     </a-button>
                                     <a-button
                                         type="link"
                                         v-if="$auth('item.detail') /*详情权限*/"
-                                        @click="routerChange('detail', record)">
-                                        <i class="icon i_detail" /> {{ $t("def.detail") }}
+                                        @click="routerChange('detail', record)"
+                                    >
+                                        <i class="icon i_detail" /> {{ $t('def.detail') }}
                                     </a-button>
                                 </template>
                                 <a-button
                                     v-if="!record.children"
                                     type="link"
                                     @click="handleStatusChange(record)"
-                                    :class="record.status === 0 ? 'danger' : ''">
+                                    :class="record.status === 0 ? 'danger' : ''"
+                                >
                                     <template v-if="record.status === -1"
-                                        ><i class="icon i_putaway" />{{ $t("i.active_a") }}</template
+                                        ><i class="icon i_putaway" />{{ $t('i.active_a') }}</template
                                     >
                                     <template v-if="record.status === 0"
-                                        ><i class="icon i_downaway" /> {{ $t("i.inactive_a") }}</template
+                                        ><i class="icon i_downaway" /> {{ $t('i.inactive_a') }}</template
                                     >
                                 </a-button>
                             </template>
@@ -285,11 +297,12 @@
                         show-quick-jumper
                         show-size-changer
                         show-less-items
-                        :show-total="(total) => $t('n.all_total') + ` ${total} ` + $t('in.total')"
+                        :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                         :hide-on-single-page="false"
                         :pageSizeOptions="['20', '100', '500', '1000']"
                         @change="pageChange"
-                        @showSizeChange="pageSizeChange" />
+                        @showSizeChange="pageSizeChange"
+                    />
                 </div>
             </div>
         </div>
@@ -299,10 +312,11 @@
             :title="$t('ar.set_sale')"
             class="field-select-modal"
             :width="630"
-            :after-close="handleSalesAreaByIdsClose">
+            :after-close="handleSalesAreaByIdsClose"
+        >
             <div class="modal-content">
                 <div class="form-item required">
-                    <div class="key">{{ $t("d.sales_area") }}</div>
+                    <div class="key">{{ $t('d.sales_area') }}</div>
                     <div class="value">
                         <a-select v-model:value="salesAreaIds" mode="multiple" :placeholder="$t('def.select')">
                             <a-select-option v-for="(val, key) in salesList" :key="key" :value="val.id">{{
@@ -313,24 +327,24 @@
                 </div>
             </div>
             <template #footer>
-                <a-button type="primary" @click="handleSalesAreaByIdsConfirm">{{ $t("def.sure") }}</a-button>
-                <a-button @click="handleSalesAreaByIdsClose">{{ $t("def.cancel") }}</a-button>
+                <a-button type="primary" @click="handleSalesAreaByIdsConfirm">{{ $t('def.sure') }}</a-button>
+                <a-button @click="handleSalesAreaByIdsClose">{{ $t('def.cancel') }}</a-button>
             </template>
         </a-modal>
     </div>
 </template>
 
 <script>
-import Core from "../../core";
+import Core from '../../core';
 import { InfoCircleOutlined } from '@ant-design/icons-vue';
-import SearchAll from "@/components/horwin/based-on-ant/SearchAll.vue";
-import TimeSearch from "@/components/common/TimeSearch.vue";
-import CategoryTreeSelect from "@/components/popup-btn/CategoryTreeSelect.vue";
-import CategoryTree from "./components/TreeSelect.vue";
-import { split } from "lodash";
+import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
+import TimeSearch from '@/components/common/TimeSearch.vue';
+import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue';
+import CategoryTree from './components/TreeSelect.vue';
+import { split } from 'lodash';
 const ITEM = Core.Const.ITEM;
 export default {
-    name: "ItemList",
+    name: 'ItemList',
     components: {
         TimeSearch,
         CategoryTree,
@@ -350,13 +364,13 @@ export default {
             // 搜索
             filteredInfo: null,
             searchForm: {
-                name: "",
-                code: "",
+                name: '',
+                code: '',
                 category_id: undefined,
-                begin_time: "",
-                end_time: "",
+                begin_time: '',
+                end_time: '',
                 type: undefined,
-                status: "0",
+                status: '0',
                 source_type: undefined,
             },
             itemStatusMap: ITEM.STATUS_LIST,
@@ -370,39 +384,39 @@ export default {
             salesAreaIds: [],
             // 上传
             upload: {
-                action: Core.Const.NET.URL_POINT + "/admin/1/item/import",
+                action: Core.Const.NET.URL_POINT + '/admin/1/item/import',
                 fileList: [],
                 headers: {
                     ContentType: false,
                 },
                 data: {
                     token: Core.Data.getToken(),
-                    type: "xlsx",
+                    type: 'xlsx',
                 },
             },
             flag_spread: 0, // 0, 2是默认  传其他的是全部
             // isShowAdd: false,//查询时(名称和编码都有)
 
-            fixedHeight: "auto",
-            fixedWidth: "auto",
+            fixedHeight: 'auto',
+            fixedWidth: 'auto',
             observer: null,
 
             //
             searchList: [
-                { type: "input", value: "", searchParmas: "name", key: "n.name" }, // 名称
+                { type: 'input', value: '', searchParmas: 'name', key: 'n.name' }, // 名称
                 {
-                    type: "select",
+                    type: 'select',
                     value: undefined,
-                    searchParmas: "type",
-                    key: "n.type",
+                    searchParmas: 'type',
+                    key: 'n.type',
                     selectMap: ITEM.TYPE_MAP,
-                    placeholder: "n.choose",
+                    placeholder: 'n.choose',
                 }, // 类型
                 {
-                    type: "select",
+                    type: 'select',
                     value: undefined,
-                    searchParmas: "source_type",
-                    key: "i.source_type",
+                    searchParmas: 'source_type',
+                    key: 'i.source_type',
                     selectMap: (() => {
                         // 数据统一处理
                         const result = Core.Util.deepCopy(ITEM.SOURCE_TYPE);
@@ -411,27 +425,27 @@ export default {
                             result[i].en = result[i].value;
                             result[i].value = result[i].id;
                         }
-                        console.log("过滤的结果", result);
+                        console.log('过滤的结果', result);
                         return result;
                     })(),
-                    placeholder: "n.choose",
+                    placeholder: 'n.choose',
                 }, // 来源
-                { type: "input", value: "", searchParmas: "code", key: "i.code" }, // 商品编码
+                { type: 'input', value: '', searchParmas: 'code', key: 'i.code' }, // 商品编码
                 {
-                    type: "select",
+                    type: 'select',
                     value: undefined,
-                    searchParmas: "status",
-                    key: "i.status",
+                    searchParmas: 'status',
+                    key: 'i.status',
                     selectMap: ITEM.STATUS_LIST,
-                    placeholder: "n.choose",
+                    placeholder: 'n.choose',
                 }, // 商品状态
             ],
-            paramPrice: false
+            paramPrice: false,
         };
     },
     watch: {},
     beforeRouteLeave(to, from, next) {
-        window.removeEventListener("resize", this.handleResize);
+        window.removeEventListener('resize', this.handleResize);
         this.observer.disconnect(); //取消监听
         // 当离开当前路由时执行的操作
         next();
@@ -441,43 +455,43 @@ export default {
             let { filteredInfo } = this;
             filteredInfo = filteredInfo || {};
             let tableColumns = [
-                { title: this.$t("n.name"), dataIndex: "name", key: "detail", width: "660px" },
-                { title: this.$t("i.code"), dataIndex: "code", key: "item" },
+                { title: this.$t('n.name'), dataIndex: 'name', key: 'detail', width: '660px' },
+                { title: this.$t('i.code'), dataIndex: 'code', key: 'item' },
                 {
-                    title: this.$t("i.status"),
-                    dataIndex: "status",
-                    width: "80px",
+                    title: this.$t('i.status'),
+                    dataIndex: 'status',
+                    width: '80px',
                 },
-                { title: this.$t("i.sales_area"), dataIndex: "sales_area_list", key: "sales_area_list" },
-                { title: this.$t("n.type"), dataIndex: ["type"], key: "type" },
+                { title: this.$t('i.sales_area'), dataIndex: 'sales_area_list', key: 'sales_area_list' },
+                { title: this.$t('n.type'), dataIndex: ['type'], key: 'type' },
                 {
-                    title: this.$t("i.categories"),
-                    dataIndex: "category_list",
-                    key: "category_list",
+                    title: this.$t('i.categories'),
+                    dataIndex: 'category_list',
+                    key: 'category_list',
                 },
                 // { title: this.$t("i.number"), dataIndex: "model", key: "item" },
                 {
-                    title: "FOB(EUR)",
-                    dataIndex: "fob_eur",
-                    key: "fob_money",
-                    unit: "€",
+                    title: 'FOB(EUR)',
+                    dataIndex: 'fob_eur',
+                    key: 'fob_money',
+                    unit: '€',
                 },
                 {
-                    title: "FOB(USD)",
-                    dataIndex: "fob_usd",
-                    key: "fob_money",
-                    unit: "$",
+                    title: 'FOB(USD)',
+                    dataIndex: 'fob_usd',
+                    key: 'fob_money',
+                    unit: '$',
                 },
                 // { title: this.$t("i.hours"), dataIndex: "man_hour", key: "man_hour" },
                 {
-                    title: this.$t("d.create_time"),
-                    dataIndex: "create_time",
-                    key: "time",
+                    title: this.$t('d.create_time'),
+                    dataIndex: 'create_time',
+                    key: 'time',
                 }, // 工时
                 {
-                    title: this.$t("def.operate"),
-                    key: "operation",
-                    fixed: "right",
+                    title: this.$t('def.operate'),
+                    key: 'operation',
+                    fixed: 'right',
                     width: 180,
                 },
             ];
@@ -497,11 +511,11 @@ export default {
     async mounted() {
         let width = this.$refs.bigBox && this.$refs.bigBox.offsetWidth;
         let height = this.$refs.fixBox && this.$refs.fixBox.offsetHeight;
-        this.fixedWidth = width - 40 + "px";
-        this.fixedHeight = height + "px";
+        this.fixedWidth = width - 40 + 'px';
+        this.fixedHeight = height + 'px';
         await this.getTableData({ flag_spread: 1 });
         await this.getSalesAreaList();
-        window.addEventListener("resize", this.handleResize);
+        window.addEventListener('resize', this.handleResize);
 
         this.$nextTick(() => {
             this.handleResize();
@@ -509,15 +523,15 @@ export default {
 
         const dom = this.$refs.bigBox; // this.$refs.bigBox 返回是VueComponent对象
         this.observer = new ResizeObserver(this.handleResize); //  监听宽度变化
-        this.observer.observe(dom, { box: "border-box" });
+        this.observer.observe(dom, { box: 'border-box' });
         if (Core.Data.getCurrency() === 'EUR') {
-            this.paramPrice = false
+            this.paramPrice = false;
         } else {
-            this.paramPrice = true
+            this.paramPrice = true;
         }
     },
     beforeDestroy() {
-        window.removeEventListener("resize", this.handleResize);
+        window.removeEventListener('resize', this.handleResize);
         this.observer.disconnect(); //取消监听
     },
     methods: {
@@ -543,39 +557,39 @@ export default {
         handleResize() {
             const width = this.$refs.tabBox && this.$refs.tabBox.offsetWidth;
             const height = this.$refs.fixBox && this.$refs.fixBox.offsetHeight;
-            this.fixedWidth = width + "px";
-            this.fixedHeight = height + "px";
+            this.fixedWidth = width + 'px';
+            this.fixedHeight = height + 'px';
             // 在这里处理宽高变化的逻辑
         },
         routerChange(type, item = {}) {
-            let routeUrl = "";
+            let routeUrl = '';
             switch (type) {
-                case "detail": // 商品详情
+                case 'detail': // 商品详情
                     routeUrl = this.$router.resolve({
-                        path: "/item/item-detail",
+                        path: '/item/item-detail',
                         query: {
                             id: item.default_item_id || item.id,
                             set_id: item.set_id,
                         },
                     });
-                    window.open(routeUrl.href, "_blank");
+                    window.open(routeUrl.href, '_blank');
                     break;
-                case "edit": // 商品编辑
+                case 'edit': // 商品编辑
                     routeUrl = this.$router.resolve({
-                        path: "/item/item-edit",
+                        path: '/item/item-edit',
                         query: {
                             id: item.default_item_id || item.id,
                             set_id: item.set_id,
                             edit: true,
                         },
                     });
-                    window.open(routeUrl.href, "_self");
+                    window.open(routeUrl.href, '_self');
                     break;
-                case "add": // 商品新增
+                case 'add': // 商品新增
                     routeUrl = this.$router.resolve({
-                        path: "/item/item-edit",
+                        path: '/item/item-edit',
                     });
-                    window.open(routeUrl.href, "_self");
+                    window.open(routeUrl.href, '_self');
                     break;
             }
         },
@@ -590,7 +604,7 @@ export default {
         },
         // 查询
         handleSearch() {
-            if (this.searchForm.name !== "" || this.searchForm.code !== "") {
+            if (this.searchForm.name !== '' || this.searchForm.code !== '') {
                 this.flag_spread = 1;
             }
             // 如果名称和编码都有值的话  +号去掉
@@ -613,7 +627,7 @@ export default {
         handleTableChange(page, filters, sorter) {
             this.filteredInfo = filters;
             for (const key in filters) {
-                this.searchForm[key] = filters[key] ? filters[key][0] : "";
+                this.searchForm[key] = filters[key] ? filters[key][0] : '';
             }
             this.pageChange(1);
         },
@@ -636,7 +650,7 @@ export default {
                 page_size: this.pageSize,
                 ...params,
             })
-                .then((res) => {
+                .then(res => {
                     this.total = res.count;
                     this.tableData = res.list;
 
@@ -648,15 +662,15 @@ export default {
                     // this.tableData = res.list;
                     // }
                 })
-                .catch((err) => {
-                    console.log("getTableData err:", err);
+                .catch(err => {
+                    console.log('getTableData err:', err);
                 })
                 .finally(() => {
                     this.loading = false;
                 });
         },
         removeChildrenFromData(data) {
-            return data.map((item) => {
+            return data.map(item => {
                 const newItem = { ...item };
                 delete newItem.children;
                 return newItem;
@@ -665,18 +679,18 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: _this.$t("pop_up.sure_delete"),
-                okText: _this.$t("def.sure"),
-                okType: "danger",
-                cancelText: this.$t("def.cancel"),
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
+                okType: 'danger',
+                cancelText: this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Item.delete({ id })
                         .then(() => {
-                            _this.$message.success(_this.$t("pop_up.delete_success"));
+                            _this.$message.success(_this.$t('pop_up.delete_success'));
                             _this.getTableData();
                         })
-                        .catch((err) => {
-                            console.log("handleDelete err", err);
+                        .catch(err => {
+                            console.log('handleDelete err', err);
                         });
                 },
             });
@@ -684,20 +698,20 @@ export default {
 
         handleStatusChange(record) {
             let _this = this;
-            let name = record.status === -1 ? _this.$t("i.active_a") : _this.$t("i.inactive_a");
+            let name = record.status === -1 ? _this.$t('i.active_a') : _this.$t('i.inactive_a');
             this.$confirm({
-                title: _this.$t("pop_up.sure") + `${name}` + _this.$t("i.the_goods"),
-                okText: _this.$t("def.sure"),
-                okType: record.status === -1 ? "" : "danger",
-                cancelText: _this.$t("def.cancel"),
+                title: _this.$t('pop_up.sure') + `${name}` + _this.$t('i.the_goods'),
+                okText: _this.$t('def.sure'),
+                okType: record.status === -1 ? '' : 'danger',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Item.updateStatus({ id: record.id })
                         .then(() => {
-                            _this.$message.success(name + _this.$t("pop_up.success"));
+                            _this.$message.success(name + _this.$t('pop_up.success'));
                             _this.getTableData();
                         })
-                        .catch((err) => {
-                            console.log("handleStatusChange err", err);
+                        .catch(err => {
+                            console.log('handleStatusChange err', err);
                         });
                 },
             });
@@ -710,9 +724,9 @@ export default {
                     this.expandedRowKeys.push(record.id);
                 } else {
                     Core.Api.Item.listBySet({ set_id: record.set_id })
-                        .then((res) => {
-                            let list = res.list.filter((i) => i.flag_default !== 1);
-                            list.forEach((item) => {
+                        .then(res => {
+                            let list = res.list.filter(i => i.flag_default !== 1);
+                            list.forEach(item => {
                                 item.logo = item.imgs;
                             });
                             record.children = list;
@@ -729,35 +743,35 @@ export default {
 
         // 上传文件
         handleMatterChange({ file, fileList }) {
-            if (file.status == "done") {
+            if (file.status == 'done') {
                 if (file.response && file.response.code > 0) {
-                    return this.$message.error(this.$t(file.response.code + ""));
+                    return this.$message.error(this.$t(file.response.code + ''));
                 } else {
-                    return this.$message.success(this.$t("i.uploaded"));
+                    return this.$message.success(this.$t('i.uploaded'));
                 }
             }
             this.upload.fileList = fileList;
         },
         getSalesAreaList() {
-            Core.Api.SalesArea.list({ page: 0 }).then((res) => {
+            Core.Api.SalesArea.list({ page: 0 }).then(res => {
                 this.salesList = res.list;
             });
         },
         handleSalesAreaByIdsConfirm() {
             if (this.salesAreaIds.length <= 0) {
-                return this.$message.error(this.$t("n.choose") + this.$t("d.sales_area"));
+                return this.$message.error(this.$t('n.choose') + this.$t('d.sales_area'));
             }
             Core.Api.SalesAreaItem.batchSave({
                 item_id_list: this.selectedRowKeys,
                 sales_area_id_list: this.salesAreaIds,
-            }).then((res) => {
+            }).then(res => {
                 this.getTableData();
                 this.handleSalesAreaByIdsClose();
             });
         },
         handleSalesAreaByIdsShow() {
             if (this.selectedRowKeys.length <= 0) {
-                return this.$message.error(this.$t("n.choose") + this.$t("i.item"));
+                return this.$message.error(this.$t('n.choose') + this.$t('i.item'));
             }
             this.getSalesAreaList();
             this.salesAreaVisible = true;
@@ -772,9 +786,9 @@ export default {
             // 确认订单是否导出
             let _this = this;
             this.$confirm({
-                title: _this.$t("pop_up.sure") + _this.$t("n.export") + "?",
-                okText: _this.$t("def.sure"),
-                cancelText: _this.$t("def.cancel"),
+                title: _this.$t('pop_up.sure') + _this.$t('n.export') + '?',
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     _this.handleRepairExport();
                 },
@@ -786,13 +800,13 @@ export default {
             let form = Core.Util.deepCopy(this.searchForm);
 
             for (const key in form) {
-                form[key] = form[key] || "";
+                form[key] = form[key] || '';
             }
             let exportUrl = Core.Api.Export.exportItemPrice({
                 ...form,
-                language: this.$i18n.locale === "en" ? 1 : 0,
+                language: this.$i18n.locale === 'en' ? 1 : 0,
             });
-            window.open(exportUrl, "_self");
+            window.open(exportUrl, '_self');
             this.exportDisabled = false;
         },
 

@@ -1,7 +1,11 @@
 <template>
     <div id="FadeInImage">
-        <img class="default-img" :class="loaded ? 'hide' : ''" src="data:image/bmp;base64,Qk1OAAAAAAAAADYAAAAoAAAAAwAAAAIAAAABABgAAAAAAAAAAADEDgAAxA4AAAAAAAAAAAAA39/d39/d39/dAAAA39/d39/d39/dAAAA">
-        <img class="img" :src="src" @load="load">
+        <img
+            class="default-img"
+            :class="loaded ? 'hide' : ''"
+            src="data:image/bmp;base64,Qk1OAAAAAAAAADYAAAAoAAAAAwAAAAIAAAABABgAAAAAAAAAAADEDgAAxA4AAAAAAAAAAAAA39/d39/d39/dAAAA39/d39/d39/dAAAA"
+        />
+        <img class="img" :src="src" @load="load" />
     </div>
 </template>
 
@@ -13,13 +17,13 @@ export default {
         // 图片路径
         src: {
             type: String,
-            default: ''
+            default: '',
         },
     },
     data() {
         return {
-            loaded: false
-        }
+            loaded: false,
+        };
     },
     watch: {},
     computed: {},
@@ -27,10 +31,10 @@ export default {
     mounted() {},
     methods: {
         load() {
-            this.loaded = true
-        }
+            this.loaded = true;
+        },
     },
-}
+};
 </script>
 <style lang="less" scoped>
 #FadeInImage {
@@ -49,7 +53,7 @@ export default {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: 1s
+        transition: 1s;
     }
     .hide {
         opacity: 0;

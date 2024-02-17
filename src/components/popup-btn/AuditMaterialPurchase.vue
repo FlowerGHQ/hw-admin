@@ -1,10 +1,16 @@
 <template>
-    <a-button class="AuditMaterialPurchaseBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
+    <a-button
+        class="AuditMaterialPurchaseBtn"
+        @click.stop="handleModalShow"
+        :ghost="ghost"
+        :type="btnType"
+        :class="btnClass"
+    >
         <slot>{{ btnText }}</slot>
     </a-button>
-    <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose'>
+    <a-modal :title="btnText" v-model:visible="modalShow" :after-close="handleModalClose">
         <div class="modal-content" v-if="status === STATUS.WAIT_AUDIT">
-<!--            <div class="form-item required">
+            <!--            <div class="form-item required">
                 <div class="form-item required">
                     <div class="key">审核来源:</div>
                     <a-radio-group v-model:value="form.audit_type">
@@ -23,8 +29,12 @@
             <div class="form-item textarea required" v-if="form.status === STATUS.AUDIT_REFUSE">
                 <div class="key">{{ $t('n.reason') }}:</div>
                 <div class="value">
-                    <a-textarea v-model:value="form.audit_message" :placeholder="$t('r.fail_result')"
-                                :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                    <a-textarea
+                        v-model:value="form.audit_message"
+                        :placeholder="$t('r.fail_result')"
+                        :auto-size="{ minRows: 2, maxRows: 6 }"
+                        :maxlength="99"
+                    />
                 </div>
             </div>
         </div>
@@ -39,16 +49,25 @@
             <div class="form-item required">
                 <div class="key">{{ $t('in.finance_audit') }}:</div>
                 <div class="value">
-                    <a-date-picker v-model:value="form.finance_audit_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" :placeholder="$t('audit.choose_time')">
-                        <template #suffixIcon><i class="icon i_calendar"/></template>
+                    <a-date-picker
+                        v-model:value="form.finance_audit_time"
+                        valueFormat="YYYY-MM-DD HH:mm:ss"
+                        :show-time="defaultTime"
+                        :placeholder="$t('audit.choose_time')"
+                    >
+                        <template #suffixIcon><i class="icon i_calendar" /></template>
                     </a-date-picker>
                 </div>
             </div>
             <div class="form-item textarea required" v-if="form.status === STATUS.AUDIT_REFUSE">
                 <div class="key">{{ $t('n.reason') }}:</div>
                 <div class="value">
-                    <a-textarea v-model:value="form.audit_message" :placeholder="$t('r.fail_result')"
-                                :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                    <a-textarea
+                        v-model:value="form.audit_message"
+                        :placeholder="$t('r.fail_result')"
+                        :auto-size="{ minRows: 2, maxRows: 6 }"
+                        :maxlength="99"
+                    />
                 </div>
             </div>
         </div>
@@ -61,23 +80,22 @@
 
 <script>
 import Core from '@/core';
-import dayjs from "dayjs";
-const STOCK_RECORD = Core.Const.STOCK_RECORD
-const STATUS = STOCK_RECORD.STATUS
+import dayjs from 'dayjs';
+const STOCK_RECORD = Core.Const.STOCK_RECORD;
+const STATUS = STOCK_RECORD.STATUS;
 
-const TYPE = STOCK_RECORD.AUDIT_TYPE
+const TYPE = STOCK_RECORD.AUDIT_TYPE;
 export default {
-    components: {
-    },
+    components: {},
     emits: ['submit'],
     props: {
         btnText: {
             type: String,
-            default: '审核'
+            default: '审核',
         },
         btnType: {
             type: String,
-            default: 'primary'
+            default: 'primary',
         },
         btnClass: {
             type: String,
@@ -89,9 +107,9 @@ export default {
         invoiceId: {
             type: Number,
         },
-       status: {
-           type: Number,
-       },
+        status: {
+            type: Number,
+        },
         apiList: {},
     },
     data() {
@@ -108,7 +126,7 @@ export default {
                 // audit_type: '',
                 finance_audit_time: '',
             },
-        }
+        };
     },
     watch: {},
     computed: {},
@@ -116,48 +134,52 @@ export default {
     mounted() {},
     methods: {
         handleModalShow() {
-            console.log('handleModalShow:')
-            this.modalShow = true
+            console.log('handleModalShow:');
+            this.modalShow = true;
         },
         handleModalClose() {
-            this.modalShow = false
+            this.modalShow = false;
             this.form = {
                 status: '',
                 audit_message: '',
                 // audit_type: '',
                 finance_audit_time: '',
-            }
+            };
         },
         handleConfirm() {
-            let form = Core.Util.deepCopy(this.form)
+            let form = Core.Util.deepCopy(this.form);
             if (!form.status) {
-                return this.$message.warning(this.$t('audit.choose_status'))
+                return this.$message.warning(this.$t('audit.choose_status'));
             }
             if (!form.finance_audit_time && this.status === STATUS.AUDIT_PASS) {
-                return this.$message.warning(this.$t('audit.choose_finance_time'))
+                return this.$message.warning(this.$t('audit.choose_finance_time'));
             }
-            Core.Api[this.apiList[0]][this.apiList[1]]({
-                status: this.form.status,
-                audit_message: this.form.audit_message,
-                // audit_type: this.form.audit_type,
-                finance_audit_time: dayjs(this.form.finance_audit_time).unix(),
-                id: this.invoiceId
-            }).then(res => {
-                console.log('handleAuditSubmit res', res)
-                this.$message.success(this.$t('pop_up.audited'))
-                this.handleModalClose()
-                this.$emit('submit')
-            }).catch(err => {
-                console.log('handleAuditSubmit err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+            Core.Api[this.apiList[0]]
+                [this.apiList[1]]({
+                    status: this.form.status,
+                    audit_message: this.form.audit_message,
+                    // audit_type: this.form.audit_type,
+                    finance_audit_time: dayjs(this.form.finance_audit_time).unix(),
+                    id: this.invoiceId,
+                })
+                .then(res => {
+                    console.log('handleAuditSubmit res', res);
+                    this.$message.success(this.$t('pop_up.audited'));
+                    this.handleModalClose();
+                    this.$emit('submit');
+                })
+                .catch(err => {
+                    console.log('handleAuditSubmit err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
     },
-}
+};
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .AuditMaterialPurchaseBtn {
     &.ant-btn-link {
         line-height: 1;

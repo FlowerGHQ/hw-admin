@@ -8,7 +8,7 @@
                 </div>
             </div>
             <a-row>
-                <a-col class="group-container" :xs='9' :sm='6' :xl="4" :xxl='3'>
+                <a-col class="group-container" :xs="9" :sm="6" :xl="4" :xxl="3">
                     <div class="category-container">
                         <!-- <div class="category-title" >区域</div>-->
                         <div class="category-content">
@@ -23,13 +23,17 @@
                         </div>
                     </div>
                 </a-col>
-                <a-col :xs='15' :sm='18' :xl="20" :xxl='21'>
+                <a-col :xs="15" :sm="18" :xl="20" :xxl="21">
                     <div class="search-container">
                         <a-row class="search-area">
-                            <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
+                            <a-col :xs="24" :sm="24" :xl="8" :xxl="8" class="search-item">
                                 <div class="key">{{ $t('n.name') }}:</div>
                                 <div class="value">
-                                    <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                                    <a-input
+                                        :placeholder="$t('def.input')"
+                                        v-model:value="searchForm.name"
+                                        @keydown.enter="handleSearch"
+                                    />
                                 </div>
                             </a-col>
                             <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -41,9 +45,9 @@
                                     </a-select>
                                 </div>
                             </a-col>-->
-                            <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
+                            <a-col :xs="24" :sm="24" :xl="16" :xxl="12" class="search-item">
                                 <div class="key">{{ $t('d.create_time') }}:</div>
-                                <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
+                                <div class="value"><TimeSearch @search="handleOtherSearch" ref="TimeSearch" /></div>
                             </a-col>
                         </a-row>
                         <div class="btn-area">
@@ -52,13 +56,20 @@
                         </div>
                     </div>
                     <div class="operate-container">
-                        <a-button type="primary" ghost @click="handleEditShow()" class="panel-btn"><i class="icon i_add"/>{{ $t('u.save') }}</a-button>
+                        <a-button type="primary" ghost @click="handleEditShow()" class="panel-btn"
+                            ><i class="icon i_add" />{{ $t('u.save') }}</a-button
+                        >
                     </div>
                     <div class="table-container">
-                        <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                            :row-key="record => record.id" :pagination='false'
-                            v-model:expandedRowKeys='expandedRowKeys'>
-                            <template #bodyCell="{ column, text , record }">
+                        <a-table
+                            :columns="tableColumns"
+                            :data-source="tableData"
+                            :scroll="{ x: true }"
+                            :row-key="record => record.id"
+                            :pagination="false"
+                            v-model:expandedRowKeys="expandedRowKeys"
+                        >
+                            <template #bodyCell="{ column, text, record }">
                                 <template v-if="column.dataIndex === 'flag_admin'">
                                     {{ text ? $t('i.yes') : $t('i.no') }}
                                 </template>
@@ -70,23 +81,24 @@
                                 </template>
                                 <template v-if="column.key === 'flag_admin_group'">
                                     <template v-if="$auth('user.set-admin') && admin_user_id === loginUser.id">
-                                        <a-switch :checked="!!record.flag_admin_group" :checked-children="$t('i.yes')" :un-checked-children="$t('i.no')" @click="handleSetAdmin(record)"/>
+                                        <a-switch
+                                            :checked="!!record.flag_admin_group"
+                                            :checked-children="$t('i.yes')"
+                                            :un-checked-children="$t('i.no')"
+                                            @click="handleSetAdmin(record)"
+                                        />
                                     </template>
                                     <template v-else>
-                                        {{ text === 1? '是': '否' || '-' }}
+                                        {{ text === 1 ? '是' : '否' || '-' }}
                                     </template>
-
                                 </template>
 
                                 <template v-if="column.key === 'crm_group_member_list'">
-                                    <span v-for="it in text">
-                                        {{it.group_name}},
-                                    </span>
+                                    <span v-for="it in text"> {{ it.group_name }}, </span>
                                 </template>
 
-
                                 <template v-if="column.key === 'tip_item'">
-                                    <a-tooltip placement="top" :title='text'>
+                                    <a-tooltip placement="top" :title="text">
                                         <div class="ell" style="max-width: 160px">{{ text || '-' }}</div>
                                     </a-tooltip>
                                 </template>
@@ -94,7 +106,13 @@
                                     {{ $Util.timeFilter(text) }}
                                 </template>
                                 <template v-if="column.key === 'operation'">
-                                    <a-button type='link' @click="handleDelete(record.crm_group_member_id)" class="danger" v-if="$auth('crm-group.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                                    <a-button
+                                        type="link"
+                                        @click="handleDelete(record.crm_group_member_id)"
+                                        class="danger"
+                                        v-if="$auth('crm-group.delete')"
+                                        ><i class="icon i_delete" />{{ $t('def.delete') }}</a-button
+                                    >
                                 </template>
                             </template>
                         </a-table>
@@ -102,13 +120,13 @@
                     <div class="paging-container">
                         <a-pagination
                             v-model:current="currPage"
-                            :page-size='pageSize'
+                            :page-size="pageSize"
                             :total="total"
                             show-quick-jumper
                             show-size-changer
                             show-less-items
                             :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
-                            :hide-on-single-page='false'
+                            :hide-on-single-page="false"
                             :pageSizeOptions="['10', '20', '30', '40']"
                             @change="pageChange"
                             @showSizeChange="pageSizeChange"
@@ -118,22 +136,32 @@
             </a-row>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="modalVisible"  :title="$t('u.save')" width='860px'>
+            <a-modal v-model:visible="modalVisible" :title="$t('u.save')" width="860px">
                 <div class="modal-content">
                     <div class="search-container">
                         <a-row class="search-area">
-                            <a-col :xs='24' :sm='24' :md='12' class="search-item">
+                            <a-col :xs="24" :sm="24" :md="12" class="search-item">
                                 <div class="key">{{ $t('n.name') }}:</div>
                                 <div class="value">
                                     <div class="value">
-                                        <a-input :placeholder="$t('def.input')" v-model:value="userSearchForm.name" @keydown.enter='handleSearch'/>
+                                        <a-input
+                                            :placeholder="$t('def.input')"
+                                            v-model:value="userSearchForm.name"
+                                            @keydown.enter="handleSearch"
+                                        />
                                     </div>
                                 </div>
                             </a-col>
-                            <a-col :xs='24' :sm='24' :md='12' class="search-item">
-                                <div class="key"><span>{{ $t('n.phone') }}:</span></div>
+                            <a-col :xs="24" :sm="24" :md="12" class="search-item">
+                                <div class="key">
+                                    <span>{{ $t('n.phone') }}:</span>
+                                </div>
                                 <div class="value">
-                                    <a-input :placeholder="$t('def.input')" v-model:value="userSearchForm.phone" @keydown.enter='handleSearch'/>
+                                    <a-input
+                                        :placeholder="$t('def.input')"
+                                        v-model:value="userSearchForm.phone"
+                                        @keydown.enter="handleSearch"
+                                    />
                                 </div>
                             </a-col>
                         </a-row>
@@ -144,9 +172,11 @@
                     </div>
                     <div class="operate-container">
                         <div class="form-item required">
-                            <div class="key">{{ $t('crm_c.group') }}：</div> <!--区域 -->
+                            <div class="key">{{ $t('crm_c.group') }}：</div>
+                            <!--区域 -->
                             <div class="value">
-                                <a-tree-select class="CategoryTreeSelect"
+                                <a-tree-select
+                                    class="CategoryTreeSelect"
                                     v-model:value="editForm.group_id"
                                     :placeholder="$t('def.select')"
                                     :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
@@ -157,18 +187,24 @@
                         </div>
                     </div>
                     <div class="table-container">
-                        <UserTable :columns="userTableColumns" :checkMode="true" :dataSource="userTableData" :default-checked="editForm.user_list" @submit="handleSelectItem"/>
+                        <UserTable
+                            :columns="userTableColumns"
+                            :checkMode="true"
+                            :dataSource="userTableData"
+                            :default-checked="editForm.user_list"
+                            @submit="handleSelectItem"
+                        />
                     </div>
                     <div class="paging-container">
                         <a-pagination
                             v-model:current="userCurrPage"
-                            :page-size='userPageSize'
+                            :page-size="userPageSize"
                             :total="userTotal"
                             show-quick-jumper
                             show-size-changer
                             show-less-items
                             :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
-                            :hide-on-single-page='false'
+                            :hide-on-single-page="false"
                             :pageSizeOptions="['10', '20', '30', '40']"
                             @change="userPageChange"
                             @showSizeChange="userPageSizeChange"
@@ -186,11 +222,11 @@
 
 <script>
 import Core from '../../core';
-import UserTable from '@/components/table/UserTable.vue'
-import TimeSearch from '@/components/common/TimeSearch.vue'
+import UserTable from '@/components/table/UserTable.vue';
+import TimeSearch from '@/components/common/TimeSearch.vue';
 export default {
     name: 'CrmRegion',
-    components: {UserTable,TimeSearch},
+    components: { UserTable, TimeSearch },
     props: {},
     data() {
         return {
@@ -217,7 +253,7 @@ export default {
             // 搜索
             searchForm: {
                 name: '',
-                group_id: "",
+                group_id: '',
                 type: undefined,
                 org_id: Core.Data.getOrgId(),
                 org_type: Core.Data.getOrgType(),
@@ -230,7 +266,7 @@ export default {
             },
             editForm: {
                 group_id: '',
-                user_list:[],
+                user_list: [],
             },
             userData: [],
             expandedKeys: ['0-0-0', '0-0-1'],
@@ -248,44 +284,45 @@ export default {
     computed: {
         tableColumns() {
             let columns = [
-                {title: this.$t('n.name'), dataIndex: ['account', 'name'], key: 'user'},
-                {title: this.$t('u.account'), dataIndex: ['account', 'username'], key: 'item'},
-                {title: this.$t('n.phone'), dataIndex: ['account', 'phone'], key: 'item'},
-                {title: this.$t('n.email'), dataIndex: ['account', 'email'], key: 'item'},
-                {title: this.$t('crm_group.name'),  dataIndex: 'crm_group_member_list', key:'crm_group_member_list'},
-
-            ]
-            if (this.searchForm.group_id){
-                columns.push( {title: this.$t('crm_group.administrator'), dataIndex: 'flag_admin_group', key: 'flag_admin_group', align: 'center'})
-                columns.push( {title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100,})
+                { title: this.$t('n.name'), dataIndex: ['account', 'name'], key: 'user' },
+                { title: this.$t('u.account'), dataIndex: ['account', 'username'], key: 'item' },
+                { title: this.$t('n.phone'), dataIndex: ['account', 'phone'], key: 'item' },
+                { title: this.$t('n.email'), dataIndex: ['account', 'email'], key: 'item' },
+                { title: this.$t('crm_group.name'), dataIndex: 'crm_group_member_list', key: 'crm_group_member_list' },
+            ];
+            if (this.searchForm.group_id) {
+                columns.push({
+                    title: this.$t('crm_group.administrator'),
+                    dataIndex: 'flag_admin_group',
+                    key: 'flag_admin_group',
+                    align: 'center',
+                });
+                columns.push({ title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100 });
             }
 
-
-            return columns
+            return columns;
         },
         userTableColumns() {
             let columns = [
-                {title: this.$t('e.name'), dataIndex: ['account', 'name'], key: 'item'},
-                {title: this.$t('e.account'), dataIndex: ['account', 'username'], key: 'item'},
-                {title: this.$t('n.phone'), dataIndex: ['account', 'phone']},
+                { title: this.$t('e.name'), dataIndex: ['account', 'name'], key: 'item' },
+                { title: this.$t('e.account'), dataIndex: ['account', 'username'], key: 'item' },
+                { title: this.$t('n.phone'), dataIndex: ['account', 'phone'] },
                 // {title: this.$t('crm_group.name'),  dataIndex: 'crm_group_member_list', key:'crm_group_member_list'},
                 // {title: this.$t('crm_group.administrator'), dataIndex: 'flag_admin_group', key: 'flag_admin_group', align: 'center'},
-            ]
-            return columns
+            ];
+            return columns;
         },
     },
     mounted() {
-        this.handleGroupTree()
-        this.getTableData()
+        this.handleGroupTree();
+        this.getTableData();
     },
     methods: {
-
-
         handleGroupTree() {
             Core.Api.CRMGroupMember.structureByUser().then(res => {
-                this.groupOptions = res.list
-                console.log(res)
-            })
+                this.groupOptions = res.list;
+                console.log(res);
+            });
         },
         // onExpand(expandedKeys) {
         //     console.log('onExpand', expandedKeys);
@@ -300,74 +337,83 @@ export default {
         },
         onSelect(selectedKeys, info) {
             console.log('onSelect', info);
-            this.admin_user_id = info.node.admin_user_id
+            this.admin_user_id = info.node.admin_user_id;
             this.selectedKeys = selectedKeys;
             this.searchForm.group_id = selectedKeys[0];
-            this.handleSearch()
+            this.handleSearch();
         },
         routerChange(type, item = {}) {
-            console.log(item)
-            let routeUrl = ''
+            console.log(item);
+            let routeUrl = '';
             switch (type) {
-                case 'edit':    // 编辑
+                case 'edit': // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/system/user-edit",
+                        path: '/system/user-edit',
                         query: {
                             id: item.id,
                             org_id: Core.Data.getOrgId(),
-                            org_type: this.orgType
-                        }
-                    })
-                    window.open(routeUrl.href, '_self')
+                            org_type: this.orgType,
+                        },
+                    });
+                    window.open(routeUrl.href, '_self');
                     break;
-                case 'detail':    // 详情
+                case 'detail': // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/system/user-detail",
-                        query: {id: item.id}
-                    })
-                    window.open(routeUrl.href, '_self')
+                        path: '/system/user-detail',
+                        query: { id: item.id },
+                    });
+                    window.open(routeUrl.href, '_self');
                     break;
             }
         },
-        pageChange(curr) {    // 页码改变
-            this.currPage = curr
-            this.getTableData()
+        pageChange(curr) {
+            // 页码改变
+            this.currPage = curr;
+            this.getTableData();
         },
-        pageSizeChange(current, size) {    // 页码尺寸改变
-            console.log('pageSizeChange size:', size)
-            this.pageSize = size
-            this.getTableData()
+        pageSizeChange(current, size) {
+            // 页码尺寸改变
+            console.log('pageSizeChange size:', size);
+            this.pageSize = size;
+            this.getTableData();
         },
-        handleSearch() {    // 搜索
+        handleSearch() {
+            // 搜索
             this.pageChange(1);
         },
-        handleOtherSearch(params) { // 时间等组件化的搜索
+        handleOtherSearch(params) {
+            // 时间等组件化的搜索
             for (const key in params) {
-                this.searchForm[key] = params[key]
+                this.searchForm[key] = params[key];
             }
             this.pageChange(1);
         },
-        handleSearchReset() {    // 重置搜索
-            Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.$refs.TimeSearch.handleReset()
-            this.selectedKeys = []
+        handleSearchReset() {
+            // 重置搜索
+            Object.assign(this.searchForm, this.$options.data().searchForm);
+            this.$refs.TimeSearch.handleReset();
+            this.selectedKeys = [];
             this.pageChange(1);
         },
-        getTableData() {    // 获取 表格 数据
+        getTableData() {
+            // 获取 表格 数据
             this.loading = true;
             Core.Api.User.listGroup({
                 ...this.searchForm,
                 page: this.currPage,
-                page_size: this.pageSize
-            }).then(res => {
-                console.log("getTableData res", res)
-                this.total = res.count;
-                this.tableData = res.list;
-            }).catch(err => {
-                console.log('getTableData err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+                page_size: this.pageSize,
+            })
+                .then(res => {
+                    console.log('getTableData res', res);
+                    this.total = res.count;
+                    this.tableData = res.list;
+                })
+                .catch(err => {
+                    console.log('getTableData err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         // 删除团队
         handleDelete(id) {
@@ -378,12 +424,14 @@ export default {
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.CRMGroupMember.delete({id}).then(() => {
-                        _this.$message.success(_this.$t('pop_up.delete_success'));
-                        _this.getTableData();
-                    }).catch(err => {
-                        console.log("handleDelete -> err", err);
-                    })
+                    Core.Api.CRMGroupMember.delete({ id })
+                        .then(() => {
+                            _this.$message.success(_this.$t('pop_up.delete_success'));
+                            _this.getTableData();
+                        })
+                        .catch(err => {
+                            console.log('handleDelete -> err', err);
+                        });
                 },
             });
         },
@@ -393,79 +441,90 @@ export default {
             this.getUserTableData();
             this.modalVisible = true;
         },
-        getUserTableData() {    // 获取 表格 数据
+        getUserTableData() {
+            // 获取 表格 数据
             this.loading = true;
             Core.Api.User.list({
                 ...this.searchForm,
                 page: this.userCurrPage,
-                page_size: this.userPageSize
-            }).then(res => {
-                console.log("getTableData res", res)
-                this.userTotal = res.count;
-                this.userTableData = res.list;
-            }).catch(err => {
-                console.log('getTableData err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+                page_size: this.userPageSize,
+            })
+                .then(res => {
+                    console.log('getTableData res', res);
+                    this.userTotal = res.count;
+                    this.userTableData = res.list;
+                })
+                .catch(err => {
+                    console.log('getTableData err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
-        userPageChange(curr) {    // 页码改变
-            this.userCurrPage = curr
-            this.getUserTableData()
+        userPageChange(curr) {
+            // 页码改变
+            this.userCurrPage = curr;
+            this.getUserTableData();
         },
-        userPageSizeChange(current, size) {    // 页码尺寸改变
-            console.log('pageSizeChange size:', size)
-            this.userPageSize = size
-            this.getUserTableData()
+        userPageSizeChange(current, size) {
+            // 页码尺寸改变
+            console.log('pageSizeChange size:', size);
+            this.userPageSize = size;
+            this.getUserTableData();
         },
-        userHandleSearch() {    // 搜索
+        userHandleSearch() {
+            // 搜索
             this.userPageChange(1);
         },
-        userHandleSearchReset() {    // 重置搜索
-            Object.assign(this.userSearchForm, this.$options.data().userSearchForm)
-            this.selectedKeys = []
+        userHandleSearchReset() {
+            // 重置搜索
+            Object.assign(this.userSearchForm, this.$options.data().userSearchForm);
+            this.selectedKeys = [];
             this.userPageChange(1);
         },
 
         handleSelectItem(ids, items) {
-            console.log('handleSelectItem ids, items:', ids, items)
+            console.log('handleSelectItem ids, items:', ids, items);
             // this.selectItems = items
-            this.editForm.user_list = ids
+            this.editForm.user_list = ids;
         },
-        batchAddMember(){
+        batchAddMember() {
             if (!this.editForm.user_list) {
-                return this.$message.warning(this.$t('def.input')+this.$t('dept.name'))
+                return this.$message.warning(this.$t('def.input') + this.$t('dept.name'));
             }
             if (!this.editForm.group_id) {
-                return this.$message.warning(this.$t('def.input')+this.$t('dept.name'))
+                return this.$message.warning(this.$t('def.input') + this.$t('dept.name'));
             }
             Core.Api.CRMGroup.batchAddMember({
                 target_id_list: this.editForm.user_list,
                 group_id: this.editForm.group_id,
-            }).then(res => {
-            }).catch(err => {
-            }).finally(() => {
-                this.loading = false;
-                Object.assign(this.editForm, this.$options.data().editForm)
-                this.modalVisible = false;
-                this.getTableData()
-            });
+            })
+                .then(res => {})
+                .catch(err => {})
+                .finally(() => {
+                    this.loading = false;
+                    Object.assign(this.editForm, this.$options.data().editForm);
+                    this.modalVisible = false;
+                    this.getTableData();
+                });
         },
-        handleSetAdmin(record){
+        handleSetAdmin(record) {
             this.loading = true;
             Core.Api.CRMGroupMember.setAdmin({
                 id: record.id,
-                flag_admin: record.flag_admin_group ? 0 : 1
-            }).then(() => {
-                this.getTableData();
-            }).catch(err => {
-                console.log('handleManagerChange err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+                flag_admin: record.flag_admin_group ? 0 : 1,
+            })
+                .then(() => {
+                    this.getTableData();
+                })
+                .catch(err => {
+                    console.log('handleManagerChange err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
-
-    }
+    },
 };
 </script>
 

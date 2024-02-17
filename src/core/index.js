@@ -1,6 +1,6 @@
 import Api from './api/index';
-import Const from './const'
-import Util from './utils'
+import Const from './const';
+import Util from './utils';
 import Data from './data';
 import Logger from './Logger';
 
@@ -9,7 +9,7 @@ const Core = {
     Const,
     Util,
     Data,
-    Logger
+    Logger,
 };
 
 export default Core;

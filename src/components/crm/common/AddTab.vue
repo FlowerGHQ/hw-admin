@@ -1,30 +1,39 @@
 <template>
     <div>
         <div class="tab-box">
-
             <a-tag class="tag" color="processing" v-for="(item, index) in tabStrList" v-if="tabStrList.length">
                 {{ item }}
                 <close-circle-filled @click="popTabClick(item, false)" />
             </a-tag>
 
-            <img class="square" @click="addPop" src="../../../assets//images/intent/addtab.png" alt="">
+            <img class="square" @click="addPop" src="../../../assets//images/intent/addtab.png" alt="" />
 
             <div class="add-tab" v-if="addPopBoo">
                 <div class="input-tab">
-                    <a-input v-model:value="inputValue" placeholder="输入创建标签" :max-length="25"
-                        style="width: 120px;margin-bottom: 10px;" @pressEnter="pressEnter" />
+                    <a-input
+                        v-model:value="inputValue"
+                        placeholder="输入创建标签"
+                        :max-length="25"
+                        style="width: 120px; margin-bottom: 10px"
+                        @pressEnter="pressEnter"
+                    />
                     <div class="input-tabname" v-if="formatValue" @click="pressEnter">
                         创建标签&nbsp;&nbsp; <span class="span-tab-name">{{ formatValue }}</span>
                     </div>
 
-                    <div style="height: 10px;" v-if="formatValue">
-                    </div>
+                    <div style="height: 10px" v-if="formatValue"></div>
                 </div>
 
-                <div class="list-tab " :class="{ 'tab-uncheck': tabStrList.indexOf(item) == -1 }"
-                    v-for="(item, index) in tabList">
-                    <a-tag class="tag-list-all" color="processing"
-                        @click="popTabClick(item, tabStrList.indexOf(item) == -1)">
+                <div
+                    class="list-tab"
+                    :class="{ 'tab-uncheck': tabStrList.indexOf(item) == -1 }"
+                    v-for="(item, index) in tabList"
+                >
+                    <a-tag
+                        class="tag-list-all"
+                        color="processing"
+                        @click="popTabClick(item, tabStrList.indexOf(item) == -1)"
+                    >
                         {{ item }}
                     </a-tag>
                 </div>
@@ -48,18 +57,17 @@ export default {
         // 传入的字符串
         targetListStr: {
             type: String,
-            default: ''
+            default: '',
         },
         // 标签固定列表（不可增删）
         tabList: {
             type: Array,
-            default: []
+            default: [],
         },
         keyValue: {
             type: String,
-            required: true
-        }
-
+            required: true,
+        },
     },
     data() {
         return {
@@ -69,8 +77,7 @@ export default {
             // 是否显示弹窗
             addPopBoo: false,
             // 输入内容
-            inputValue: ''
-
+            inputValue: '',
         };
     },
     watch: {
@@ -79,18 +86,17 @@ export default {
             immediate: true,
             handler() {
                 this.getLabelList();
-            }
+            },
         },
     },
     computed: {
-
         // 提示内容
         formatValue() {
             return this.inputValue;
         },
         tabStrList() {
-            return this.targetListStr && this.targetListStr.split(',') || []
-        }
+            return (this.targetListStr && this.targetListStr.split(',')) || [];
+        },
     },
     mounted() {
         this.getLabelList();
@@ -99,20 +105,20 @@ export default {
         getLabelList() {
             Core.Api.CRMLabelBind.list({
                 target_id: this.targetId,
-                target_type: this.targetType
+                target_type: this.targetType,
             }).then(res => {
-                this.tableData = res.list
-            })
+                this.tableData = res.list;
+            });
         },
 
         handleAddLabelShow(ids, items) {
             Core.Api.CRMLabelBind.saveList({
                 target_id: this.targetId,
                 target_type: this.targetType,
-                label_ids: ids
+                label_ids: ids,
             }).then(res => {
                 this.getLabelList();
-            })
+            });
         },
 
         addPop() {
@@ -137,21 +143,19 @@ export default {
         //     return `${prefix}${result}${list[1] ? `.${list[1]}` : ''}`;
         // },
 
-
         pressEnter() {
-            this.$emit('addStr', { value: this.inputValue.trim().replace(/,/g, ""), key: this.keyValue });
-            this.inputValue = ''
+            this.$emit('addStr', { value: this.inputValue.trim().replace(/,/g, ''), key: this.keyValue });
+            this.inputValue = '';
         },
         // 点击弹窗标签 boo是true  则添加 否则删除
         popTabClick(item, boo) {
             if (boo) {
                 this.$emit('addStr', { value: item, key: this.keyValue });
             } else {
-
                 this.$emit('delStr', { value: item, key: this.keyValue });
             }
-        }
-    }
+        },
+    },
 };
 </script>
 
@@ -166,10 +170,9 @@ export default {
 
     // 添加标签盒子
     .square {
-
         height: 28px;
         width: 28px;
-        color: #006EF9;
+        color: #006ef9;
         font-size: 28px;
         vertical-align: bottom;
         margin-left: 6px;
@@ -185,8 +188,11 @@ export default {
         margin-top: -5px;
         min-width: 102px;
         max-height: 350px;
-        background: #FFFFFF;
-        box-shadow: 0px 3px 14px 2px rgba(0, 0, 0, 0.05), 0px 8px 10px 1px rgba(0, 0, 0, 0.06), 0px 5px 5px -3px rgba(0, 0, 0, 0.1);
+        background: #ffffff;
+        box-shadow:
+            0px 3px 14px 2px rgba(0, 0, 0, 0.05),
+            0px 8px 10px 1px rgba(0, 0, 0, 0.06),
+            0px 5px 5px -3px rgba(0, 0, 0, 0.1);
         border-radius: 4px;
         z-index: 30;
         display: inline-block;
@@ -202,7 +208,6 @@ export default {
         .numeric-input {
             position: absolute;
             top: 0;
-
         }
 
         // .numeric-input .ant-tooltip-inner {
@@ -222,7 +227,7 @@ export default {
             cursor: pointer;
             min-width: 112px;
             max-width: 120px;
-            background: #EDEEEE;
+            background: #edeeee;
             border-radius: 3px;
             padding: 8px 4px 5px;
 
@@ -237,7 +242,7 @@ export default {
                 font-weight: 600;
                 font-size: 10px;
                 line-height: 17px;
-                color: #363D42;
+                color: #363d42;
             }
         }
 
@@ -253,9 +258,7 @@ export default {
                 margin-bottom: 10px;
                 margin-top: 0px;
                 cursor: pointer;
-
             }
-
         }
     }
 }

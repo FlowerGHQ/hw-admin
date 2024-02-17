@@ -1,15 +1,15 @@
 <template>
     <div class="list-container">
         <div class="title">
-            <span>{{$t('crm_dash.results_list')}}</span>
+            <span>{{ $t('crm_dash.results_list') }}</span>
             <div>
                 <div class="select-item">
                     <a-select default-value="1" style="width: 80px" @change="handleChange">
                         <a-select-option value="1">
-                            {{$t('crm_def.month')}}
+                            {{ $t('crm_def.month') }}
                         </a-select-option>
                         <a-select-option value="2">
-                            {{$t('crm_def.year')}}
+                            {{ $t('crm_def.year') }}
                         </a-select-option>
                     </a-select>
                 </div>
@@ -18,9 +18,15 @@
         <!-- <div class="contain"> -->
         <!-- table -->
         <div class="table-container">
-            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :pagination='false'
-                :row-key="record => record.id" :indentSize='0'>
-                <template #headerCell="{title}">
+            <a-table
+                :columns="tableColumns"
+                :data-source="tableData"
+                :scroll="{ x: true }"
+                :pagination="false"
+                :row-key="record => record.id"
+                :indentSize="0"
+            >
+                <template #headerCell="{ title }">
                     {{ $t(title) }}
                 </template>
                 <template #bodyCell="{ column, text, index, record }">
@@ -46,16 +52,15 @@
 
 <script>
 import Core from '../../../core';
-import { Chart } from '@antv/g2'
+import { Chart } from '@antv/g2';
 
 export default {
     name: 'Card',
-    components: {
-    },
+    components: {},
     props: {
         searchForm: {
             type: Object,
-            default: () => { }
+            default: () => {},
         },
     },
     data() {
@@ -69,10 +74,9 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                this.performanceList()
-            }
+                this.performanceList();
+            },
         },
-
     },
     computed: {
         tableColumns() {
@@ -81,25 +85,24 @@ export default {
                 { title: 'crm_def.staff_name', dataIndex: 'user_name', key: 'name' },
                 { title: 'crm_def.win_number', dataIndex: 'count', key: 'winNum' },
                 { title: 'crm_def.total_contract_amount', dataIndex: 'money', key: 'myGap' },
-            ]
-            return tableColumns
+            ];
+            return tableColumns;
         },
     },
-    created() {
-    },
+    created() {},
     mounted() {
-        this.performanceList()
+        this.performanceList();
     },
     methods: {
         handleChange(value) {
-            this.search_type = value
+            this.search_type = value;
             this.performanceList();
         },
         // 点击tab
         clickTab(key) {
             this.currentTab = key;
-            this.search_type = key
-            this.performanceList()
+            this.search_type = key;
+            this.performanceList();
             console.log('切换tab >>', key);
         },
         performanceList() {
@@ -107,10 +110,10 @@ export default {
                 ...this.searchForm,
                 search_type: this.search_type,
             }).then(res => {
-                this.tableData = res.list
-            })
-        }
-    }
+                this.tableData = res.list;
+            });
+        },
+    },
 };
 </script>
 
@@ -143,10 +146,10 @@ export default {
     //     }
     // }
 
-//     .tab-current {
-//         border: 1px solid #006EF9;
-//         color: #006EF9;
-//     }
+    //     .tab-current {
+    //         border: 1px solid #006EF9;
+    //         color: #006EF9;
+    //     }
 }
 
 .contain {
@@ -164,7 +167,7 @@ export default {
     }
 
     .form-value {
-        color: #006EF9;
+        color: #006ef9;
         font-size: 20px;
     }
 }

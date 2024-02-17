@@ -1,35 +1,36 @@
 <template>
-    <span class="my-tag" :style="{ border: border ? '' : 'none', color: color, background: bgColor, borderColor: borderColor }">
+    <span
+        class="my-tag"
+        :style="{ border: border ? '' : 'none', color: color, background: bgColor, borderColor: borderColor }"
+    >
         <slot></slot>
     </span>
 </template>
 
 <script setup>
-
 const $prop = defineProps({
     border: {
         required: false,
         type: Boolean,
-        default: false
+        default: false,
     },
     color: {
         required: false,
         type: String,
-        default: '#4E5969'
+        default: '#4E5969',
     },
     bgColor: {
         required: false,
         type: String,
-        default: '#F2F3F5'
+        default: '#F2F3F5',
     },
     borderColor: {
         required: false,
         type: String,
-        default: '#F2F3F5'
+        default: '#F2F3F5',
     },
-})
-const $emit = defineEmits(['enter'])
-
+});
+const $emit = defineEmits(['enter']);
 </script>
 
 <style lang="less" scoped>

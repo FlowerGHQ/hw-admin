@@ -1,18 +1,13 @@
 <template>
     <div class="material-list">
         <div class="base-info content-area">
-            <div class="title">{{ $t("supply-chain.basic_info") }}</div>
+            <div class="title">{{ $t('supply-chain.basic_info') }}</div>
             <div class="base-info-form">
-                <a-form
-                    ref="formRef1"
-                    name="custom-validation"
-                    :model="formState"
-                    :rules="rules"
-                    labelAlign="right">
+                <a-form ref="formRef1" name="custom-validation" :model="formState" :rules="rules" labelAlign="right">
                     <div class="col-area">
                         <div class="title-area">
                             <div class="title">
-                                {{ $t("supply-chain.business_license_photos") }}
+                                {{ $t('supply-chain.business_license_photos') }}
                             </div>
                         </div>
                         <div class="content-area">
@@ -20,26 +15,20 @@
                                 <div class="col-all-area">
                                     <!-- 营业执照照片 -->
                                     <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.business_license_photos'
-                                            )
-                                        "
+                                        :label="$t('supply-chain.business_license_photos')"
                                         name="business_license_photo"
-                                        class="img-area">
+                                        class="img-area"
+                                    >
                                         <MyUpload
                                             class="c-upload"
                                             name="business_license_photo"
-                                            :tip="
-                                                $t('supply-chain.upload_photos')
-                                            "
-                                            v-model:value="
-                                                formState.business_license_photo
-                                            "
+                                            :tip="$t('supply-chain.upload_photos')"
+                                            v-model:value="formState.business_license_photo"
                                             showTip
                                             :limit="1"
                                             :limitSize="2"
-                                            tipPosition="right" />
+                                            tipPosition="right"
+                                        />
                                     </a-form-item>
                                 </div>
                             </div>
@@ -47,31 +36,19 @@
                                 <div class="col-all-area">
                                     <!-- 注册资本 -->
                                     <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.registered_capital'
-                                            )
-                                        "
-                                        name="registered_capital">
-                                        <div class="registered-capital—area">    
+                                        :label="$t('supply-chain.registered_capital')"
+                                        name="registered_capital"
+                                    >
+                                        <div class="registered-capital—area">
                                             <a-input-number
-                                                v-model:value="
-                                                    formState.registered_capital
-                                                "
-                                                :placeholder="
-                                                    $t(
-                                                        'supply-chain.please_enter'
-                                                    )
-                                                "
+                                                v-model:value="formState.registered_capital"
+                                                :placeholder="$t('supply-chain.please_enter')"
                                                 :maxlength="15"
-                                                name="registered_capital">
+                                                name="registered_capital"
+                                            >
                                                 <template #addonAfter>
                                                     <span>
-                                                        {{
-                                                            $t(
-                                                                "supply-chain.ten_thousand_yuan"
-                                                            )
-                                                        }}
+                                                        {{ $t('supply-chain.ten_thousand_yuan') }}
                                                     </span>
                                                 </template>
                                             </a-input-number>
@@ -83,32 +60,25 @@
                                 <div class="col-all-area">
                                     <!-- 营业期限 -->
                                     <a-form-item
-                                        :label="
-                                            $t('supply-chain.business_term')
-                                        "
-                                        name="business_duration_type">
+                                        :label="$t('supply-chain.business_term')"
+                                        name="business_duration_type"
+                                    >
                                         <div class="business-term">
-                                            <a-radio-group
-                                                v-model:value="
-                                                    formState.business_duration_type
-                                                ">
+                                            <a-radio-group v-model:value="formState.business_duration_type">
                                                 <a-radio
-                                                    v-for="(item, index) in Core
-                                                        .Const.SUPPLAY
-                                                        .BUSINESS_TERM"
+                                                    v-for="(item, index) in Core.Const.SUPPLAY.BUSINESS_TERM"
                                                     :value="item.value"
-                                                    :key="index">
+                                                    :key="index"
+                                                >
                                                     {{ $t(item.t) }}
                                                 </a-radio>
                                             </a-radio-group>
                                             <TimeSearch
-                                                v-if="
-                                                    formState.business_duration_type ==
-                                                    2
-                                                "
+                                                v-if="formState.business_duration_type == 2"
                                                 ref="TimeSearchRef"
                                                 @search="handleTimeSearch"
-                                                :defaultTime="false" />
+                                                :defaultTime="false"
+                                            />
                                         </div>
                                     </a-form-item>
                                 </div>
@@ -118,46 +88,32 @@
                     <div class="col-area">
                         <div class="title-area">
                             <div class="title">
-                                {{
-                                    $t("supply-chain.bank_billing_information")
-                                }}
+                                {{ $t('supply-chain.bank_billing_information') }}
                             </div>
                         </div>
                         <div class="content-area">
                             <div class="col-area">
                                 <div class="col-area-item">
                                     <!-- 开户名 -->
-                                    <a-form-item
-                                        :label="$t('supply-chain.account_name')"
-                                        name="account_name">
+                                    <a-form-item :label="$t('supply-chain.account_name')" name="account_name">
                                         <a-input
                                             :maxlength="50"
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
+                                            :placeholder="$t('supply-chain.please_enter')"
                                             name="account_name"
-                                            v-model:value="
-                                                formState.account_name
-                                            ">
+                                            v-model:value="formState.account_name"
+                                        >
                                         </a-input>
                                     </a-form-item>
                                 </div>
                                 <div class="col-area-item">
                                     <!-- 开户行 -->
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.bank_of_deposit')
-                                        "
-                                        name="account_with_bank">
+                                    <a-form-item :label="$t('supply-chain.bank_of_deposit')" name="account_with_bank">
                                         <a-input
                                             :maxlength="50"
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
+                                            :placeholder="$t('supply-chain.please_enter')"
                                             name="account_with_bank"
-                                            v-model:value="
-                                                formState.account_with_bank
-                                            ">
+                                            v-model:value="formState.account_with_bank"
+                                        >
                                         </a-input>
                                     </a-form-item>
                                 </div>
@@ -167,33 +123,26 @@
                                     <!-- 开户行号 -->
                                     <a-form-item
                                         :label="$t('supply-chain.bank_number')"
-                                        name="account_with_bank_number">
+                                        name="account_with_bank_number"
+                                    >
                                         <a-input
                                             name="account_with_bank_number"
                                             :maxlength="50"
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            v-model:value="
-                                                formState.account_with_bank_number
-                                            ">
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            v-model:value="formState.account_with_bank_number"
+                                        >
                                         </a-input>
                                     </a-form-item>
                                 </div>
                                 <div class="col-area-item">
                                     <!-- 银行账号 -->
-                                    <a-form-item
-                                        :label="$t('supply-chain.bank_account')"
-                                        name="bank_account">
+                                    <a-form-item :label="$t('supply-chain.bank_account')" name="bank_account">
                                         <a-input
                                             :maxlength="50"
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
+                                            :placeholder="$t('supply-chain.please_enter')"
                                             name="bank_account"
-                                            v-model:value="
-                                                formState.bank_account
-                                            ">
+                                            v-model:value="formState.bank_account"
+                                        >
                                         </a-input>
                                     </a-form-item>
                                 </div>
@@ -203,11 +152,7 @@
                     <div class="col-area">
                         <div class="title-area">
                             <div class="title">
-                                {{
-                                    $t(
-                                        "supply-chain.quality_system_certificate"
-                                    )
-                                }}
+                                {{ $t('supply-chain.quality_system_certificate') }}
                             </div>
                         </div>
                         <div class="content-area">
@@ -215,25 +160,19 @@
                                 <div class="col-all-area">
                                     <!-- 质量体系证书 -->
                                     <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.quality_system_certificate'
-                                            )
-                                        "
+                                        :label="$t('supply-chain.quality_system_certificate')"
                                         name="quality_system_certificate"
-                                        class="img-area">
+                                        class="img-area"
+                                    >
                                         <MyUpload
                                             name="quality_system_certificate"
-                                            :tip="
-                                                $t('supply-chain.please_upload')
-                                            "
-                                            v-model:value="
-                                                formState.quality_system_certificate
-                                            "
+                                            :tip="$t('supply-chain.please_upload')"
+                                            v-model:value="formState.quality_system_certificate"
                                             showTip
                                             :limit="9"
                                             :limitSize="2"
-                                            tipPosition="bottom" />
+                                            tipPosition="bottom"
+                                        />
                                     </a-form-item>
                                 </div>
                             </div>
@@ -242,7 +181,7 @@
                     <div class="col-area" v-if="supplyType == Core.Const.SUPPLAY.SUPPLAY_TYPE['2'].value">
                         <div class="title-area">
                             <div class="title">
-                                {{ $t("supply-chain.proxy_certificate") }}
+                                {{ $t('supply-chain.proxy_certificate') }}
                             </div>
                         </div>
                         <div class="content-area">
@@ -250,23 +189,19 @@
                                 <div class="col-all-area">
                                     <!-- 代理证书 -->
                                     <a-form-item
-                                        :label="
-                                            $t('supply-chain.proxy_certificate')
-                                        "
+                                        :label="$t('supply-chain.proxy_certificate')"
                                         name="proxy_certificate"
-                                        class="img-area">
+                                        class="img-area"
+                                    >
                                         <MyUpload
                                             name="proxy_certificate"
-                                            :tip="
-                                                $t('supply-chain.please_upload')
-                                            "
-                                            v-model:value="
-                                                formState.proxy_certificate
-                                            "
+                                            :tip="$t('supply-chain.please_upload')"
+                                            v-model:value="formState.proxy_certificate"
                                             showTip
                                             :limit="9"
                                             :limitSize="2"
-                                            tipPosition="bottom" />
+                                            tipPosition="bottom"
+                                        />
                                     </a-form-item>
                                 </div>
                             </div>
@@ -277,20 +212,14 @@
         </div>
         <div class="other-material content-area">
             <div class="title">
-                {{ $t("supply-chain.other_proving_materials") }}
+                {{ $t('supply-chain.other_proving_materials') }}
             </div>
             <!-- 其他证实性材料 -->
             <div class="other-material-form">
-                <a-form
-                    ref="formRef2"
-                    name="custom-validation"
-                    :model="formState"
-                    :rules="rules"
-                    labelAlign="right">
+                <a-form ref="formRef2" name="custom-validation" :model="formState" :rules="rules" labelAlign="right">
                     <div class="col-area">
                         <div class="title-area">
-                            <div class="title">
-                            </div>
+                            <div class="title"></div>
                         </div>
                         <div class="content-area">
                             <div class="col-area">
@@ -298,30 +227,27 @@
                                     <a-form-item
                                         :label="$t('supply-chain.bank_account_license')"
                                         name="account_opening_bank_license"
-                                        class="img-area">
+                                        class="img-area"
+                                    >
                                         <MyUpload
                                             name="account_opening_bank_license"
                                             :tip="$t('supply-chain.please_upload')"
-                                            v-model:value="
-                                                formState.account_opening_bank_license
-                                            "
+                                            v-model:value="formState.account_opening_bank_license"
                                             showTip
                                             :limit="9"
                                             :limitSize="2"
-                                            tipPosition="bottom" />
+                                            tipPosition="bottom"
+                                        />
                                     </a-form-item>
                                 </div>
                             </div>
                             <div class="col-area">
                                 <div class="col-all-area">
                                     <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.environmental_assessment_certificate'
-                                            )
-                                        "
+                                        :label="$t('supply-chain.environmental_assessment_certificate')"
                                         name="eia_certificate"
-                                        class="img-area">
+                                        class="img-area"
+                                    >
                                         <MyUpload
                                             name="eia_certificate"
                                             :tip="$t('supply-chain.please_upload')"
@@ -329,35 +255,32 @@
                                             showTip
                                             :limit="9"
                                             :limitSize="2"
-                                            tipPosition="bottom" />
+                                            tipPosition="bottom"
+                                        />
                                     </a-form-item>
                                 </div>
                             </div>
                             <div class="col-area">
                                 <div class="col-all-area">
                                     <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.environmental_protection_report'
-                                            )
-                                        "
+                                        :label="$t('supply-chain.environmental_protection_report')"
                                         name="environmental_report"
-                                        class="img-area">
+                                        class="img-area"
+                                    >
                                         <MyUpload
                                             name="environmental_report"
                                             :tip="$t('supply-chain.please_upload')"
-                                            v-model:value="
-                                                formState.environmental_report
-                                            "
+                                            v-model:value="formState.environmental_report"
                                             showTip
                                             :limit="9"
                                             :limitSize="2"
-                                            tipPosition="bottom" />
+                                            tipPosition="bottom"
+                                        />
                                     </a-form-item>
                                 </div>
-                            </div>  
+                            </div>
                         </div>
-                    </div>                    
+                    </div>
                 </a-form>
             </div>
         </div>
@@ -365,16 +288,16 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, onMounted, toRef, computed } from "vue";
-import MyUpload from "@/components/MyUpload/index.vue";
-import TimeSearch from "@/components/common/TimeSearch.vue";
-import { message } from "ant-design-vue";
-import Core from "@/core";
+import { ref, reactive, watch, onMounted, toRef, computed } from 'vue';
+import MyUpload from '@/components/MyUpload/index.vue';
+import TimeSearch from '@/components/common/TimeSearch.vue';
+import { message } from 'ant-design-vue';
+import Core from '@/core';
 const formRef1 = ref(null);
 const formRef2 = ref(null);
 const TimeSearchRef = ref(null);
-import { useI18n } from "vue-i18n";
-import { useStore } from "vuex";
+import { useI18n } from 'vue-i18n';
+import { useStore } from 'vuex';
 const $t = useI18n().t;
 const $i18n = useI18n();
 const $store = useStore();
@@ -383,70 +306,62 @@ let formState = reactive({
 });
 // 供应类型
 const supplyType = computed(() => {
-    return $store.getters["SUPPLY_CHAIN/supplyType"];
+    return $store.getters['SUPPLY_CHAIN/supplyType'];
 });
 let BusinessTermValid = async (_rule, value) => {
     if (formState.business_duration_type == 2) {
         if (!formState.begin_business_time || !formState.end_business_time) {
-            console.log($t("supply-chain.please_select_business_term"));
-            return Promise.reject(
-                $t("supply-chain.please_select_business_term")
-            );
+            console.log($t('supply-chain.please_select_business_term'));
+            return Promise.reject($t('supply-chain.please_select_business_term'));
         }
     }
     if (formState.business_duration_type == 1) {
-        formState.begin_business_time = "";
-        formState.end_business_time = "";
+        formState.begin_business_time = '';
+        formState.end_business_time = '';
     }
     return Promise.resolve();
 };
 let RegisteredCapitalVaild = async (_rule, value) => {
     if (!value) {
-        return Promise.reject(
-            $t("supply-chain.please_enter_registered_capital")
-        );
+        return Promise.reject($t('supply-chain.please_enter_registered_capital'));
     }
     // 必须为数字
     if (!/^[0-9]*$/.test(value)) {
-        return Promise.reject(
-            $t("supply-chain.registered_capital_must_be_number")
-        );
+        return Promise.reject($t('supply-chain.registered_capital_must_be_number'));
     }
     return Promise.resolve();
 };
 let account_nameVaild = async (_rule, value) => {
     if (!value) {
-        return Promise.reject($t("supply-chain.please_enter_account_name"));
+        return Promise.reject($t('supply-chain.please_enter_account_name'));
     }
     return Promise.resolve();
 };
 let account_with_bankVaild = async (_rule, value) => {
     if (!value) {
-        return Promise.reject($t("supply-chain.please_enter_bank_of_deposit"));
+        return Promise.reject($t('supply-chain.please_enter_bank_of_deposit'));
     }
     return Promise.resolve();
 };
 let account_with_bank_numberVaild = async (_rule, value) => {
     if (!value) {
-        return Promise.reject($t("supply-chain.please_enter_bank_number"));
+        return Promise.reject($t('supply-chain.please_enter_bank_number'));
     }
     return Promise.resolve();
 };
 let bank_accountVaild = async (_rule, value) => {
     if (!value) {
-        return Promise.reject($t("supply-chain.please_enter_bank_account"));
+        return Promise.reject($t('supply-chain.please_enter_bank_account'));
     }
     // 必须为数字
     if (!/^[0-9]*$/.test(value)) {
-        return Promise.reject($t("supply-chain.bank_number_must_be_number"));
+        return Promise.reject($t('supply-chain.bank_number_must_be_number'));
     }
     return Promise.resolve();
 };
 const business_license_photoVaild = async (_rule, value) => {
     if (!value) {
-        return Promise.reject(
-            $t("supply-chain.please_upload_business_license_photos")
-        );
+        return Promise.reject($t('supply-chain.please_upload_business_license_photos'));
     }
     return Promise.resolve();
 };
@@ -457,7 +372,7 @@ const rules = {
         {
             required: true,
             validator: RegisteredCapitalVaild,
-            trigger: ["change", "blur"],
+            trigger: ['change', 'blur'],
         },
     ],
     // 营业期限
@@ -465,54 +380,54 @@ const rules = {
         {
             required: true,
             validator: BusinessTermValid,
-            trigger: ["change", "blur"],
+            trigger: ['change', 'blur'],
         },
     ],
     account_name: [
         {
             required: true,
             validator: account_nameVaild,
-            trigger: ["change", "blur"],
+            trigger: ['change', 'blur'],
         },
     ],
     account_with_bank: [
         {
             required: true,
             validator: account_with_bankVaild,
-            trigger: ["change", "blur"],
+            trigger: ['change', 'blur'],
         },
     ],
     account_with_bank_number: [
         {
             required: true,
             validator: account_with_bank_numberVaild,
-            trigger: ["change", "blur"],
+            trigger: ['change', 'blur'],
         },
     ],
     bank_account: [
         {
             required: true,
             validator: bank_accountVaild,
-            trigger: ["change", "blur"],
+            trigger: ['change', 'blur'],
         },
     ],
-    business_license_photo:[
+    business_license_photo: [
         {
             required: true,
             validator: business_license_photoVaild,
-            trigger: ["change", "blur"],
+            trigger: ['change', 'blur'],
         },
-    ]
+    ],
 };
 
-const handleTimeSearch = (params) => {
+const handleTimeSearch = params => {
     formState.begin_business_time = params.begin_time;
     formState.end_business_time = params.end_time;
 };
 // 草稿回显
 const draftDataReview = () => {
     let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain;
-    console.log("草稿回显数据：", draftData);
+    console.log('草稿回显数据：', draftData);
     // 判断是否为空对象
     if (Object.keys(draftData).length === 0) {
         formState = {
@@ -525,21 +440,17 @@ const draftDataReview = () => {
     } else {
         // 解析出来的数据
         let data = draftData;
-        Object.keys(data?.form?.confirmatory_material ?? {}).forEach((key) => {
+        Object.keys(data?.form?.confirmatory_material ?? {}).forEach(key => {
             formState[key] = data.form.confirmatory_material[key];
         });
-        formState.business_duration_type =
-            data?.form?.confirmatory_material?.business_duration_type || 1;
+        formState.business_duration_type = data?.form?.confirmatory_material?.business_duration_type || 1;
 
-        console.log("回显数据：", formState);
+        console.log('回显数据：', formState);
     }
     setTimeout(() => {
         if (TimeSearchRef.value) {
             // 给timeSearch赋值
-            TimeSearchRef.value.createTime = [
-                formState.begin_business_time,
-                formState.end_business_time,
-            ];
+            TimeSearchRef.value.createTime = [formState.begin_business_time, formState.end_business_time];
         }
     });
 };
@@ -600,8 +511,8 @@ const step2Vaild = async () => {
     }
 
     // 保存数据
-    await $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
-    await $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", data);
+    await $store.dispatch('SUPPLY_CHAIN/setSupplyChain', data);
+    await $store.dispatch('SUPPLY_CHAIN/setSupplyDraftChain', data);
 };
 // 点击上一步的操作
 const handlePrev = () => {
@@ -617,15 +528,15 @@ const handlePrev = () => {
     } else {
         // console.log("判断类型", typeof data.form);
         if (typeof data.form === 'string') {
-            data.form = JSON.parse(data.form)
-            data.form.confirmatory_material = formState;        
+            data.form = JSON.parse(data.form);
+            data.form.confirmatory_material = formState;
         } else {
             // 不为空对象
             data.form.confirmatory_material = formState;
         }
     }
-    $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
-    $store.commit("SUPPLY_CHAIN/setSupplyDraftChain", data);
+    $store.dispatch('SUPPLY_CHAIN/setSupplyChain', data);
+    $store.commit('SUPPLY_CHAIN/setSupplyDraftChain', data);
 };
 // 保存草稿
 const saveDraft = () => {
@@ -635,9 +546,9 @@ const saveDraft = () => {
         },
     };
     data.form.confirmatory_material = formState;
-    $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", data);
+    $store.dispatch('SUPPLY_CHAIN/setSupplyDraftChain', data);
     // 提示
-    message.success($t("supply-chain.save_successfully"));
+    message.success($t('supply-chain.save_successfully'));
 };
 // 回显数据
 const reviewData = () => {
@@ -647,12 +558,12 @@ const reviewData = () => {
 
 watch(
     () => $i18n.locale.value,
-    (val) => {
+    val => {
         // 重新校验
         if (formRef1.value) {
             formRef1.value.clearValidate();
         }
-    }
+    },
 );
 
 defineExpose({
@@ -691,23 +602,23 @@ onMounted(() => {
     }
     .base-info {
         width: 100%;
-        .title{
-            color: #1D2129;
+        .title {
+            color: #1d2129;
             font-size: 18px;
             font-weight: 500;
         }
         .base-info-form {
             padding: 0 3%;
             margin: 0 auto;
-            .ant-form{
-                .col-area{
-                    .title-area{
+            .ant-form {
+                .col-area {
+                    .title-area {
                         min-width: 96px;
                     }
-                    .content-area{
+                    .content-area {
                         padding: 0;
                         margin-left: 10.5%;
-                        .col-area{
+                        .col-area {
                             margin-left: 0 !important;
                         }
                     }
@@ -718,28 +629,28 @@ onMounted(() => {
     .other-material {
         width: 100%;
         margin-top: 21px;
-        .title{
-            color: #1D2129;
+        .title {
+            color: #1d2129;
             font-size: 18px;
             font-weight: 500;
         }
         .other-material-form {
             padding: 0 3%;
             margin: 0 auto;
-            .ant-form{
-                .col-area{
-                    .title-area{
+            .ant-form {
+                .col-area {
+                    .title-area {
                         min-width: 96px;
                     }
-                    .content-area{
+                    .content-area {
                         padding: 0;
                         margin-left: 10.5%;
-                        .col-area{
+                        .col-area {
                             margin-left: 0 !important;
                         }
                     }
                 }
-            }            
+            }
         }
     }
 }
@@ -755,7 +666,7 @@ onMounted(() => {
     margin-bottom: 16px;
 }
 :deep(.ant-form-item-label > label) {
-    color: #8090a6;    
+    color: #8090a6;
 }
 :deep(.ant-form-item-label > label::after) {
     display: none;
@@ -819,17 +730,17 @@ onMounted(() => {
             flex-wrap: wrap;
         }
     }
-    
-    .title-area{
+
+    .title-area {
         width: 96px;
         display: flex;
         align-items: center;
         justify-content: flex-end;
         margin-right: 16px;
-        .title{
-        color: #1D2129;
-        font-size: 14px;
-        font-weight: 500;
+        .title {
+            color: #1d2129;
+            font-size: 14px;
+            font-weight: 500;
         }
     }
 }
@@ -846,7 +757,7 @@ onMounted(() => {
     }
 }
 
-.c-upload {    
+.c-upload {
     :deep(.tip) {
         width: 300px;
     }

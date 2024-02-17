@@ -7,214 +7,241 @@
                     <div class="tip-wrap">
                         <img class="tip-icon" :src="tipIcon" alt="" />
                         <div class="tip-text">
-                            {{ $t(/*操作说明*/ "item-bom.operation_instructions") }}
+                            {{ $t(/*操作说明*/ 'item-bom.operation_instructions') }}
                         </div>
                     </div>
                 </a-tooltip>
 
                 <div v-if="isExplosionImg" class="operation">
-					<a-button 
-                        class="delete-btn m-r-10" 
-                        @click="onOperation('delete')"
-                    >
+                    <a-button class="delete-btn m-r-10" @click="onOperation('delete')">
                         {{ /*删除*/ $t('item-bom.delete_explosive') }}
                     </a-button>
 
                     <a-upload
                         class="m-r-10"
-                        name="file"                              
-                        accept='image/*'
+                        name="file"
+                        accept="image/*"
                         :file-list="uploadOptions.coverList"
                         :action="uploadOptions.action"
                         :headers="uploadOptions.headers"
-                        :data='uploadOptions.data'
+                        :data="uploadOptions.data"
                         :maxCount="1"
                         :showUploadList="false"
-                        @change="(event) => onUploadExplosion(event, explosionImgItem.id)"
+                        @change="event => onUploadExplosion(event, explosionImgItem.id)"
                     >
                         <a-button class="replace-btn">
                             {{ /* 替换爆炸图 */ $t('item-bom.alternate_explosive') }}
                         </a-button>
-                    </a-upload>					
-					<a-button class="save-btn" type="primary" @click="onOperation('save')">
+                    </a-upload>
+                    <a-button class="save-btn" type="primary" @click="onOperation('save')">
                         {{ $t('item-bom.save') }}
                     </a-button>
-				</div>
+                </div>
             </div>
             <div class="explosion-diagram-bottom">
-				<div v-if="isExplosionImg" class="explosion-diagram-content">
-					<div class="content-left /*点位*/">
-						<div class="left-list">
-							<div class="left-list-header">{{ $t('item-bom.point_list') }}</div>
-							<div v-if="sidebarDataGroup.length === 0" class="left-list-emtpy-text">
-								{{ $t('item-bom.current_point_tips') }}
-							</div>
-                            <div v-else class="sidebar-points">                     
-                                <div 
-                                    v-for="(item, itemIndex) in sidebarDataGroup" 
-                                    :key="itemIndex"
-                                    class="sidebar"
-                                    >
-                                    <template 
-                                        v-for="(ground, i) in item" 
-                                        :key="i" 
-                                    >
+                <div v-if="isExplosionImg" class="explosion-diagram-content">
+                    <div class="content-left /*点位*/">
+                        <div class="left-list">
+                            <div class="left-list-header">{{ $t('item-bom.point_list') }}</div>
+                            <div v-if="sidebarDataGroup.length === 0" class="left-list-emtpy-text">
+                                {{ $t('item-bom.current_point_tips') }}
+                            </div>
+                            <div v-else class="sidebar-points">
+                                <div v-for="(item, itemIndex) in sidebarDataGroup" :key="itemIndex" class="sidebar">
+                                    <template v-for="(ground, i) in item" :key="i">
                                         <!-- 父节点 -->
                                         <div
                                             class="sidebar-item"
-                                            :class="{ 'sidebar-item-change' : siderBarItemLabel === ground.label }"
-                                            @click="(event) => onSidebarItem(event, 'parent-node', ground)"
+                                            :class="{ 'sidebar-item-change': siderBarItemLabel === ground.label }"
+                                            @click="event => onSidebarItem(event, 'parent-node', ground)"
                                         >
                                             <div class="silder-index-left">
                                                 <div
                                                     class="silder-index-text"
-                                                    :class="{ 'silder-index-text-change' : siderBarItemLabel === ground.label }"
+                                                    :class="{
+                                                        'silder-index-text-change': siderBarItemLabel === ground.label,
+                                                    }"
                                                 >
                                                     {{ $t('item-bom.point') }}
                                                     {{ ground.index }}
                                                 </div>
                                             </div>
-                                        
-                                            <div 
-                                                class="silder-operate"
-                                            >
+
+                                            <div class="silder-operate">
                                                 <div class="silder-copy" @click.stop="onSilderCopy(ground, i, 'node')">
                                                     <a-tooltip>
-                                                        <template #title> {{ $t('item-bom.copy_point_location') }}</template>                                                        
-                                                        <img class="img-icon" src="../../../../assets/images/bom/copy.png" alt="">
+                                                        <template #title>
+                                                            {{ $t('item-bom.copy_point_location') }}</template
+                                                        >
+                                                        <img
+                                                            class="img-icon"
+                                                            src="../../../../assets/images/bom/copy.png"
+                                                            alt=""
+                                                        />
                                                     </a-tooltip>
                                                 </div>
-                                                <div class="silder-delete" @click.stop="onNodeDelete(ground, i, 'node')">
+                                                <div
+                                                    class="silder-delete"
+                                                    @click.stop="onNodeDelete(ground, i, 'node')"
+                                                >
                                                     <a-tooltip>
                                                         <template #title> {{ $t('item-bom.deelete_points') }}</template>
-                                                        <img class="img-icon" src="../../../../assets/images/bom/delete.png" alt="">
+                                                        <img
+                                                            class="img-icon"
+                                                            src="../../../../assets/images/bom/delete.png"
+                                                            alt=""
+                                                        />
                                                     </a-tooltip>
                                                 </div>
-                                                <div class="silder-node" @click.stop="onSilderCopy(ground, i, 'child_node')">
+                                                <div
+                                                    class="silder-node"
+                                                    @click.stop="onSilderCopy(ground, i, 'child_node')"
+                                                >
                                                     <a-tooltip>
-                                                        <template #title> {{ $t('item-bom.copy_Branch') }}</template>                                                        
-                                                        <img class="img-icon" src="../../../../assets/images/bom/childe-node.png" alt="">
+                                                        <template #title> {{ $t('item-bom.copy_Branch') }}</template>
+                                                        <img
+                                                            class="img-icon"
+                                                            src="../../../../assets/images/bom/childe-node.png"
+                                                            alt=""
+                                                        />
                                                     </a-tooltip>
                                                 </div>
                                             </div>
                                         </div>
                                         <!-- 子节点 -->
                                         <div class="child-node">
-                                            <div 
-                                                class="vertical-line" 
-                                                :style="{ 
-                                                    height: ground.child_node?.length <= 1 ? 21 * (ground.child_node?.length) + 'px' : 46 * (ground.child_node?.length - 1) + 21 + 'px' /*计算高度 数据height是42*/ }"
-                                            >
-                                            </div>
-                                            <template v-for="(item, childIndex) in ground.child_node" :key="childIndex">                                                
+                                            <div
+                                                class="vertical-line"
+                                                :style="{
+                                                    height:
+                                                        ground.child_node?.length <= 1
+                                                            ? 21 * ground.child_node?.length + 'px'
+                                                            : 46 * (ground.child_node?.length - 1) +
+                                                              21 +
+                                                              'px' /*计算高度 数据height是42*/,
+                                                }"
+                                            ></div>
+                                            <template v-for="(item, childIndex) in ground.child_node" :key="childIndex">
                                                 <div class="child-node-item">
                                                     <div class="line-item">
                                                         <div class="line"></div>
                                                         <div class="circle"></div>
                                                     </div>
-                                                    <div class="child-node-text cursor" @click="(event) => onSidebarItem(event, 'child-node', ground)">
+                                                    <div
+                                                        class="child-node-text cursor"
+                                                        @click="event => onSidebarItem(event, 'child-node', ground)"
+                                                    >
                                                         <!-- 这里的class上面点击事件要用到 -->
                                                         <span class="child-node-content">
                                                             {{ $t('item-bom.branch_point') }}{{ childIndex + 1 }}
                                                         </span>
-                                                        <div class="child-delete" @click.stop="onSilderDelete(ground, i, 'child_node', childIndex)">
-                                                            <MySvgIcon icon-class="delete" class="f-s-16"/>
+                                                        <div
+                                                            class="child-delete"
+                                                            @click.stop="
+                                                                onSilderDelete(ground, i, 'child_node', childIndex)
+                                                            "
+                                                        >
+                                                            <MySvgIcon icon-class="delete" class="f-s-16" />
                                                         </div>
                                                     </div>
-                                                </div>                                           
+                                                </div>
                                             </template>
                                         </div>
                                     </template>
                                 </div>
                             </div>
-						</div>
-					</div>
-					<div class="content-right /*爆炸图*/">
-						<div class="point-contain" @mouseup="mouseUpHandler" @mousemove="mousemoveHandler">
+                        </div>
+                    </div>
+                    <div class="content-right /*爆炸图*/">
+                        <div class="point-contain" @mouseup="mouseUpHandler" @mousemove="mousemoveHandler">
                             <!-- init中有创建了一个img在这 -->
-							<canvas class="explore-canvas" id="exploreCanvas" ref="exploreCanvas"></canvas>
+                            <canvas class="explore-canvas" id="exploreCanvas" ref="exploreCanvas"></canvas>
 
-							<template v-for="(item, itemIndex) in pointerList">
+                            <template v-for="(item, itemIndex) in pointerList">
                                 <template v-for="(itemStart, itemStartIndex) in item.start_point" :key="itemStartIndex">
-                                    <div      									     
-                                        class="pointer-start" 
-                                        :style="{'left': `${itemStart?.x}px`, 'top': `${itemStart?.y }px`}"
+                                    <div
+                                        class="pointer-start"
+                                        :style="{ left: `${itemStart?.x}px`, top: `${itemStart?.y}px` }"
                                         @mousedown="pointMousedown(itemIndex, 'start_point', itemStartIndex)"
                                         @mousemove.stop=""
-                                    >
-                                    </div>
+                                    ></div>
                                     <!-- 子节点 -->
-                                    <template v-if="itemStart.child_node?.length">                                    
+                                    <template v-if="itemStart.child_node?.length">
                                         <div
-                                            v-for="(child_node, childNodeIndex) in itemStart.child_node" :key="childNodeIndex"                                
-                                            class="pointer-start" 
-                                            :style="{'left': `${child_node?.x}px`, 'top': `${child_node?.y }px`}"
-                                            @mousedown="pointMousedown(itemIndex, 'child_node', itemStartIndex, childNodeIndex)"
+                                            v-for="(child_node, childNodeIndex) in itemStart.child_node"
+                                            :key="childNodeIndex"
+                                            class="pointer-start"
+                                            :style="{ left: `${child_node?.x}px`, top: `${child_node?.y}px` }"
+                                            @mousedown="
+                                                pointMousedown(itemIndex, 'child_node', itemStartIndex, childNodeIndex)
+                                            "
                                             @mousemove.stop=""
-                                            >
-                                        </div>                                    
+                                        ></div>
                                     </template>
-                                </template>         
-							</template>
-							<template v-for="(item, itemIndex) in pointerList" :key="itemIndex">            
-								<div  
-                                    v-for="(itemEnd, itemEndIndex) in item.end_point" :key="itemEndIndex"  									
-									class="pointer-end"
+                                </template>
+                            </template>
+                            <template v-for="(item, itemIndex) in pointerList" :key="itemIndex">
+                                <div
+                                    v-for="(itemEnd, itemEndIndex) in item.end_point"
+                                    :key="itemEndIndex"
+                                    class="pointer-end"
                                     :class="{
-                                        'opacity-1': siderChildNodeLabel === itemEnd.label
-                                        || siderBarItemLabel === itemEnd.label
+                                        'opacity-1':
+                                            siderChildNodeLabel === itemEnd.label ||
+                                            siderBarItemLabel === itemEnd.label,
                                     }"
-									:style="{'left': `${itemEnd?.x}px`, 'top': `${itemEnd?.y }px`}"
-									@mousedown="pointMousedown(itemIndex, 'end_point', itemEndIndex)"
-									@mousemove.stop=""
+                                    :style="{ left: `${itemEnd?.x}px`, top: `${itemEnd?.y}px` }"
+                                    @mousedown="pointMousedown(itemIndex, 'end_point', itemEndIndex)"
+                                    @mousemove.stop=""
                                     @mouseenter.stop="onPointerEnd(item, 'enter', itemEnd)"
                                     @mouseleave.stop="onPointerEnd(item, 'leave', itemEnd)"
-                                    >
-									{{item.index || 0}}
-                                    <div 
+                                >
+                                    {{ item.index || 0 }}
+                                    <div
                                         class="component"
                                         :class="{
-                                            'component-change': siderChildNodeLabel === itemEnd.label
-                                            || siderBarItemLabel === itemEnd.label
+                                            'component-change':
+                                                siderChildNodeLabel === itemEnd.label ||
+                                                siderBarItemLabel === itemEnd.label,
                                         }"
                                         @mousedown.stop=""
                                     >
                                         <div class="component-contain">
-                                            <div class="contain-name">                                                
+                                            <div class="contain-name">
                                                 <span class="icon-name">{{ $t('item-bom.product_name') }}:</span>
                                                 {{ item.sync_name || '-' }}
-                                            </div>                                           
+                                            </div>
                                         </div>
                                     </div>
-								</div>
-							</template>
-						</div>
-					</div>
-				</div>
-				<!-- 空状态 -->
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                <!-- 空状态 -->
                 <div v-else class="empty-upload-container">
                     <img :src="uploadPic" alt="" />
                     <div class="empty-upload-flex-wrap">
                         <div class="empty-upload-tip">
-                            {{ $t("item-bom.upload_text") }}
+                            {{ $t('item-bom.upload_text') }}
                         </div>
-                        <div  v-if="tableData.length === 0" class="disable-add-btn">
-                            {{ $t(/*上传爆炸图*/ "item-bom.upload_explosion") }}
+                        <div v-if="tableData.length === 0" class="disable-add-btn">
+                            {{ $t(/*上传爆炸图*/ 'item-bom.upload_explosion') }}
                         </div>
-                        <a-upload 
+                        <a-upload
                             v-else
-                            name="file"                              
-                            accept='image/*'
+                            name="file"
+                            accept="image/*"
                             :file-list="uploadOptions.coverList"
                             :action="uploadOptions.action"
                             :headers="uploadOptions.headers"
-                            :data='uploadOptions.data'
+                            :data="uploadOptions.data"
                             :maxCount="1"
                             :showUploadList="false"
-                            @change="(event) => onUploadExplosion(event, 0)"
+                            @change="event => onUploadExplosion(event, 0)"
                         >
                             <a-button class="empty-upload-btn" type="primary">
-                                {{ $t(/*上传爆炸图*/ "item-bom.upload_explosion") }}
+                                {{ $t(/*上传爆炸图*/ 'item-bom.upload_explosion') }}
                             </a-button>
                         </a-upload>
                     </div>
@@ -225,16 +252,16 @@
         <div class="fittings-table-container">
             <div class="fittings-all">
                 <div class="fittings-title">
-                    {{ $t("item-bom.accessories_list") }}
+                    {{ $t('item-bom.accessories_list') }}
                 </div>
                 <div v-if="tableData.length > 0" class="fittings-title-options">
                     <a-button @click="onAddFittings" type="primary">
-                        {{ $t("item-bom.add_fittings") }}
+                        {{ $t('item-bom.add_fittings') }}
                     </a-button>
                 </div>
             </div>
             <a-table
-                :row-key="(record) => record.id"
+                :row-key="record => record.id"
                 :data-source="tableData"
                 :columns="tableColumns"
                 :scroll="{ x: true }"
@@ -272,13 +299,11 @@
                             <template #title>
                                 <template v-if="record.sales_area_list?.length !== 0">
                                     <span v-for="(item, index) in record.sales_area_list">
-                                        {{  $i18n.locale === 'en' ? item.country_en : item.country }}
-                                        {{ (index + 1) !== record.sales_area_list?.length ? ',' : ''}}
+                                        {{ $i18n.locale === 'en' ? item.country_en : item.country }}
+                                        {{ index + 1 !== record.sales_area_list?.length ? ',' : '' }}
                                     </span>
                                 </template>
-                                <template v-else>
-                                    -
-                                </template>
+                                <template v-else> - </template>
                             </template>
                             <div
                                 class="one-spils cursor"
@@ -288,13 +313,11 @@
                             >
                                 <template v-if="record.sales_area_list?.length !== 0">
                                     <span v-for="(item, index) in record.sales_area_list">
-                                        {{  $i18n.locale === 'en' ? item.country_en : item.country }}
-                                        {{ (index + 1) !== record.sales_area_list?.length ? ',' : ''}}
+                                        {{ $i18n.locale === 'en' ? item.country_en : item.country }}
+                                        {{ index + 1 !== record.sales_area_list?.length ? ',' : '' }}
                                     </span>
                                 </template>
-                                <template v-else>
-                                    -
-                                </template>
+                                <template v-else> - </template>
                             </div>
                         </a-tooltip>
                     </span>
@@ -310,15 +333,15 @@
                         </a-tooltip>
                     </span>
                 </template>
-                <template v-if="!isSearch"  #emptyText>
+                <template v-if="!isSearch" #emptyText>
                     <div class="empty-add-item-container">
                         <img :src="emptyImage" alt="" />
-                        <div  class="empty-add-item-text-wrap">
+                        <div class="empty-add-item-text-wrap">
                             <div class="empty-add-item-tip">
-                                {{ $t("item-bom.explosion_diagram") }}
+                                {{ $t('item-bom.explosion_diagram') }}
                             </div>
                             <a-button @click="onAddFittings" type="primary">
-                                {{ $t("item-bom.add_fittings") }}
+                                {{ $t('item-bom.add_fittings') }}
                             </a-button>
                         </div>
                     </div>
@@ -330,9 +353,9 @@
 </template>
 
 <script setup>
-import { onMounted, ref, getCurrentInstance, computed, nextTick, watch, onUnmounted, inject } from "vue";
-import Core from "@/core";
-import MySvgIcon from "@/components/MySvgIcon/index.vue";
+import { onMounted, ref, getCurrentInstance, computed, nextTick, watch, onUnmounted, inject } from 'vue';
+import Core from '@/core';
+import MySvgIcon from '@/components/MySvgIcon/index.vue';
 import {
     pointerList,
     sidebarData,
@@ -345,85 +368,85 @@ import {
     onSilderDelete,
     initLine,
     sidebarDataGroup,
-}   from './bom-explosion'
+} from './bom-explosion';
 const classifyShowModal = inject('classifyShowModal');
 
 const emptyImage =
-    "http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/12516f00dce1e02da63e405e578c65ea6c82e4c4f5e8c750dc64afa1c1ca7450.png";
+    'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/12516f00dce1e02da63e405e578c65ea6c82e4c4f5e8c750dc64afa1c1ca7450.png';
 const tipIcon =
-    "http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/fdbe378097b4f3f08dbf97bd49d7dae700b138d2827db87d6bc5001d46fa3364.png";
+    'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/fdbe378097b4f3f08dbf97bd49d7dae700b138d2827db87d6bc5001d46fa3364.png';
 const uploadPic =
-    "http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/b3f294686cc11e3cacbe2c7ea720b740574c051623cd75a00efec3e6aece72d6.png";
+    'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/b3f294686cc11e3cacbe2c7ea720b740574c051623cd75a00efec3e6aece72d6.png';
 
 const { proxy } = getCurrentInstance();
 
 const props = defineProps({
     activeObj: {
         type: Object,
-        default: () => {}
+        default: () => {},
     },
     searchParams: {
         type: Object,
-        default: () => {}
-    }
-})
+        default: () => {},
+    },
+});
 const loading = ref(false);
 
 const tableColumns = computed(() => {
-    const result = [      
+    const result = [
         {
             // 商品名称
-            title: proxy.$t("item-bom.product_name"),
-            dataIndex: "sync_name",
-            key: "sync_name",
+            title: proxy.$t('item-bom.product_name'),
+            dataIndex: 'sync_name',
+            key: 'sync_name',
         },
         {
             // 商品编码
-            title: proxy.$t("item-bom.commodity_code"),
-            dataIndex: "sync_id",
-            key: "sync_id",
+            title: proxy.$t('item-bom.commodity_code'),
+            dataIndex: 'sync_id',
+            key: 'sync_id',
         },
         {
             // 版本号
-            title: proxy.$t("item-bom.version_number"),
+            title: proxy.$t('item-bom.version_number'),
             dataIndex: ['bom', 'version'],
-            key: "version",
+            key: 'version',
         },
         {
             // 用量
-            title: proxy.$t("item-bom.dosage"),
-            dataIndex: "amount",
-            key: "amount",
+            title: proxy.$t('item-bom.dosage'),
+            dataIndex: 'amount',
+            key: 'amount',
         },
         {
             // 销售区域
-            title: proxy.$t("item-bom.sales_area"),
-            dataIndex: "sales_area_list",
-            key: "sales_area_list",
+            title: proxy.$t('item-bom.sales_area'),
+            dataIndex: 'sales_area_list',
+            key: 'sales_area_list',
         },
         {
             // 创建时间
-            title: proxy.$t("item-bom.create_time"),
-            dataIndex: "effective_time",
-            key: "effective_time",
+            title: proxy.$t('item-bom.create_time'),
+            dataIndex: 'effective_time',
+            key: 'effective_time',
         },
         {
             // 备注
-            title: proxy.$t("item-bom.remark"),
-            dataIndex: "comment",
-            key: "comment",
+            title: proxy.$t('item-bom.remark'),
+            dataIndex: 'comment',
+            key: 'comment',
         },
     ];
 
     if (isExplosionImg.value) {
         // 有爆炸图才添加序号(前端自定义自己删除)
-        result.unshift(  {
+        result.unshift({
             // 序号
             width: 250,
-            title: proxy.$t("item-bom.ordinal"),
-            dataIndex: "index",
-            key: "index",
-        })
+            title: proxy.$t('item-bom.ordinal'),
+            dataIndex: 'index',
+            key: 'index',
+        });
     }
     return result;
 });
@@ -434,17 +457,14 @@ const tableData = ref([
     //     "bom_category_id": 0, //分类id
     //     "production_code": "", //生产编码
     //     "target_id": 279, //商品id
-    //     "target_type": 1, //商品类型    
+    //     "target_type": 1, //商品类型
     //     "amount": 1, //用量
     //     "comment": "萨基发生纠纷萨科JFK吉萨反抗军萨福克就是部分你就撒开积分", //备注
     //     "version_num": 0, //版本信息
     //     "effective_time": 1670169600, //版本生效时间
-    //     "weight": 0, 
-        
-    //     "create_time": 1702454601, 
-        
-    //     "update_time": 1702454601, 
-        
+    //     "weight": 0,
+    //     "create_time": 1702454601,
+    //     "update_time": 1702454601,
     //     "sync_id": "47100-TLA3-E000", //同步编号
     //     "sync_name": "后牌照支架", //同步名称
     //     "sync_type": 1, //同步类型
@@ -458,10 +478,10 @@ const tableData = ref([
     //     //         "country_en": "Korea", //销售区域英文名称
     //     //         "country_code": "KOR", //销售区域code
     //     //         "name": "韩国", //销售区域名称
-    //     //         "name_en": "",                 
-    //     //         "weight": 0,                 
-    //     //         "create_time": 1651045507,                 
-    //     //         "update_time": 1657594395             
+    //     //         "name_en": "",
+    //     //         "weight": 0,
+    //     //         "create_time": 1651045507,
+    //     //         "update_time": 1657594395
     //     //     },
     //     //     {
     //     //         "id": 7, //销售区域id
@@ -471,86 +491,85 @@ const tableData = ref([
     //     //         "country_en": "Belgium", //销售区域英文名称
     //     //         "country_code": "BEL", //销售区域code
     //     //         "name": "比利时", //销售区域名称
-    //     //         "name_en": "",                 
-    //     //         "weight": 0,                 
-    //     //         "create_time": 1653358167,                 
-    //     //         "update_time": 1657594335             
+    //     //         "name_en": "",
+    //     //         "weight": 0,
+    //     //         "create_time": 1653358167,
+    //     //         "update_time": 1657594335
     //     //     }
     //     // ]
     // }
 ]);
-const isExplosionImg = ref(false) // 是否有爆炸图
-const explosionImgItem = ref({ img: "", }) // 爆炸图照片 https://horwin.oss-cn-hangzhou.aliyuncs.com/img/33f7c35baa7bbc83466ff2dd7d2006d063b28740b783e81cb5bc227f63541194.png
-const pointEndTargetId = ref(null) // 移入的点位id是多少用于判断table的样式样式
+const isExplosionImg = ref(false); // 是否有爆炸图
+const explosionImgItem = ref({ img: '' }); // 爆炸图照片 https://horwin.oss-cn-hangzhou.aliyuncs.com/img/33f7c35baa7bbc83466ff2dd7d2006d063b28740b783e81cb5bc227f63541194.png
+const pointEndTargetId = ref(null); // 移入的点位id是多少用于判断table的样式样式
 
 const uploadOptions = ref({
     action: Core.Const.NET.FILE_UPLOAD_END_POINT,
     coverList: [],
     headers: {
-        ContentType: false
+        ContentType: false,
     },
     data: {
         token: Core.Data.getToken(),
         type: 'img',
     },
-}) // 上传参数
+}); // 上传参数
 
 const addTagItem = ref({
     target_id: props.activeObj.category_id, // bom_category.id (分类id)
     target_type: 3, // bom分类(固定死这里)
-    item_component_set_list: []
-})  // 最后保存按钮
-
+    item_component_set_list: [],
+}); // 最后保存按钮
 
 // 分页
 const channelPagination = ref({
     current: 1,
-    pageSizeOptions: ["20", "40", "60", "80", "100"],
+    pageSizeOptions: ['20', '40', '60', '80', '100'],
     pageSize: 20,
     showQuickJumper: true, // 是否可以快速跳转至某页
     showSizeChanger: true, // 是否可以改变 pageSize
     total: 0,
-    showTotal: (total) => `${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
+    showTotal: total => `${proxy.$t('n.all_total')} ${total} ${proxy.$t('in.total')}`,
 });
-const isSearch = ref(false)
-const childNodeItemHeight = ref(0)  // 子节点的高度
+const isSearch = ref(false);
+const childNodeItemHeight = ref(0); // 子节点的高度
 
 watch(
     () => props.activeObj,
-	(newVal) => {
-        console.log("监听 activeObj", newVal);
-        getExplosionImgFetch({ target_id: newVal.category_id })
-	},
-	{
-		deep: true,
-	}
-)
+    newVal => {
+        console.log('监听 activeObj', newVal);
+        getExplosionImgFetch({ target_id: newVal.category_id });
+    },
+    {
+        deep: true,
+    },
+);
 watch(
     () => props.searchParams,
-	(newVal) => {
-        console.log("监听 searchParams", newVal, Object.keys(newVal).length);
+    newVal => {
+        console.log('监听 searchParams', newVal, Object.keys(newVal).length);
         if (Object.keys(newVal).length === 0) {
             // 重置操作
             isSearch.value = false;
         } else {
             isSearch.value = true;
         }
-        channelPagination.value.current = 1
-        channelPagination.value.pageSize = 20
-        getTableDataFetch()
-	},
-	{
-		deep: true,
-	}
-)
-onMounted(() => {    
-    getExplosionImgFetch({ target_id: props.activeObj.category_id }, true)
+        channelPagination.value.current = 1;
+        channelPagination.value.pageSize = 20;
+        getTableDataFetch();
+    },
+    {
+        deep: true,
+    },
+);
+onMounted(() => {
+    getExplosionImgFetch({ target_id: props.activeObj.category_id }, true);
 });
 
 onUnmounted(() => {
-    console.log("销毁");
-    isSearch.value = false
-})
+    console.log('销毁');
+    isSearch.value = false;
+});
 /* Fetch start*/
 // 获取表格list(依靠爆炸图数据在执行这里)
 const getTableDataFetch = (parmas = {}) => {
@@ -567,183 +586,184 @@ const getTableDataFetch = (parmas = {}) => {
     };
 
     Core.Api.ITEM_BOM.partsList(obj)
-        .then((res) => {
+        .then(res => {
             loading.value = false;
             channelPagination.value.total = res.count;
             tableData.value = res.list;
-            
+
             addTagItem.value.item_component_set_list[0]?.item_component_list.forEach($1 => {
                 // 给配件表格添加index
                 tableData.value.forEach($2 => {
                     if (Number($1.target_id) === Number($2.id)) {
-                        $2.index = $1.index
-                        $1['sync_name'] = $2.sync_name
+                        $2.index = $1.index;
+                        $1['sync_name'] = $2.sync_name;
                     }
-                })
+                });
             });
         })
-        .catch((err) => {
-            console.log("getTableDataFetchError", err);
+        .catch(err => {
+            console.log('getTableDataFetchError', err);
             loading.value = false;
         });
 };
 // 新增编辑爆炸图Fetch
-const saveImgeFetch = (parmas = {}) => {    
+const saveImgeFetch = (parmas = {}) => {
     let obj = {
-        img: undefined,        
+        img: undefined,
         target_id: props.activeObj.category_id, // (分类id)
         target_type: 3, // bom分类(固定死这里)
         // id: 0,  // 不传id新增 传id是爆炸图id
-        ...parmas
-    }
+        ...parmas,
+    };
     Core.Api.ITEM_BOM.saveOrEdit(obj)
-        .then((res) => {
-            getExplosionImgFetch({ target_id: obj.target_id })
+        .then(res => {
+            getExplosionImgFetch({ target_id: obj.target_id });
         })
-        .catch((err) => {
-            console.log("saveImgeFetchError", err);
+        .catch(err => {
+            console.log('saveImgeFetchError', err);
         });
-}
+};
 // 删除|编辑|添加点位Fetch
 const editPointFetch = (parmas = {}, type) => {
-    let obj = {            
+    let obj = {
         target_id: props.activeObj.category_id, // bom_category.id (分类id)
         target_type: 3, // bom分类(固定死这里)
         item_component_set_list: [],
-        ...parmas
-    }
+        ...parmas,
+    };
     Core.Api.ITEM_BOM.editPoint(obj)
-        .then((res) => {
-            console.log("deleteExplosionImgFetchSuccess", res);
+        .then(res => {
+            console.log('deleteExplosionImgFetchSuccess', res);
 
             if (type === 'delete') {
-                proxy.$message.success("删除成功")
-                sidebarData.value = []
-                pointerList.value = []
+                proxy.$message.success('删除成功');
+                sidebarData.value = [];
+                pointerList.value = [];
             } else if (type === 'add') {
-                proxy.$message.success("保存成功")
+                proxy.$message.success('保存成功');
             }
 
-            getExplosionImgFetch({ target_id: obj.target_id })
+            getExplosionImgFetch({ target_id: obj.target_id });
         })
-        .catch((err) => {
-            console.log("deleteExplosionImgFetchError", err);
+        .catch(err => {
+            console.log('deleteExplosionImgFetchError', err);
         });
-}
+};
 // 获取爆炸图list Fetch
 const getExplosionImgFetch = (parmas = {}, initBool = false /*是否已经初始化*/) => {
     let obj = {
         target_id: props.activeObj.category_id, // bom_category.id(分类id)
         target_type: 3, //  bom分类(固定死这里)
-        ...parmas
-    }
+        ...parmas,
+    };
     Core.Api.ITEM_BOM.getExplosionImg(obj)
-        .then((res) => {
-            const first_data = res.list.list[0]
+        .then(res => {
+            const first_data = res.list.list[0];
             // 过滤数据
             first_data?.item_component_list.forEach(el => {
-                el.start_point = !el.start_point ? "" : JSON.parse(el.start_point)
-                el.end_point = !el.end_point ? "" : JSON.parse(el.end_point)
-            })
+                el.start_point = !el.start_point ? '' : JSON.parse(el.start_point);
+                el.end_point = !el.end_point ? '' : JSON.parse(el.end_point);
+            });
 
             if (first_data?.img) {
-                console.log("获取爆炸图信息", res);
-                addTagItem.value.item_component_set_list = [first_data] // 回显
-                isExplosionImg.value = true
-                explosionImgItem.value = first_data
-                                
+                console.log('获取爆炸图信息', res);
+                addTagItem.value.item_component_set_list = [first_data]; // 回显
+                isExplosionImg.value = true;
+                explosionImgItem.value = first_data;
+
                 nextTick(() => {
-                    init(first_data?.item_component_list, first_data.img)
-                })
+                    init(first_data?.item_component_list, first_data.img);
+                });
             } else {
-                isExplosionImg.value = false
-                explosionImgItem.value = undefined
+                isExplosionImg.value = false;
+                explosionImgItem.value = undefined;
             }
 
             getTableDataFetch();
         })
-        .catch((err) => {
-            console.log("getExplosionImgFetchError", err);
+        .catch(err => {
+            console.log('getExplosionImgFetchError', err);
         });
-}
+};
 
 /* Fetch end*/
 
 /* methods start*/
 // 上传爆炸图
 const onUploadExplosion = ({ file, fileList }, type) => {
-    console.log("上传爆炸图", file, fileList, type);
+    console.log('上传爆炸图', file, fileList, type);
     // console.log("上传爆炸图", file, fileList);
     if (file.status == 'done') {
         if (file.response && file.response.code > 0) {
-            return proxy.$message.error(file.response.message)
+            return proxy.$message.error(file.response.message);
         }
         saveImgeFetch({
             img: Core.Const.NET.FILE_URL_PREFIX + file.response.data.filename,
-            id: type,            
-        })
+            id: type,
+        });
     }
     uploadOptions.value.coverList = fileList;
 };
 // 添加配件
 const onAddFittings = () => {
-    console.log("添加配件"); 
+    console.log('添加配件');
     classifyShowModal();
 };
 // 按钮操作
 const onOperation = (type, record) => {
-    switch(type) {
-        case 'delete':            
+    switch (type) {
+        case 'delete':
             proxy.$confirm({
-                title: "确定要删除爆炸图?",
+                title: '确定要删除爆炸图?',
                 okText: proxy.$t('def.sure'),
                 cancelText: proxy.$t('def.cancel'),
                 okType: 'danger',
                 onOk() {
-                    editPointFetch({ target_id: props.activeObj.category_id }, 'delete')
+                    editPointFetch({ target_id: props.activeObj.category_id }, 'delete');
                 },
-                onCancel () {
-                }
+                onCancel() {},
             });
-        break;
+            break;
         case 'save':
-            console.log("addTagItem", addTagItem.value);
-            console.log("pointerList", pointerList.value);
-            const datas = addTagItem.value.item_component_set_list[0]
-
+            console.log('addTagItem', addTagItem.value);
+            console.log('pointerList', pointerList.value);
+            const datas = addTagItem.value.item_component_set_list[0];
 
             const copyPointerList = Core.Util.deepCopy(pointerList.value).filter(el => {
                 // 过滤有点位数据
-                return el.start_point?.length && el.end_point?.length
-            })            
+                return el.start_point?.length && el.end_point?.length;
+            });
 
             copyPointerList.forEach(item => {
                 // 删除字段
                 Reflect.deleteProperty(item, 'sync_name');
-                
-                item.end_point = JSON.stringify(item.end_point)
-                item.start_point = JSON.stringify(item.start_point)
-            })            
 
-            datas.item_component_list = copyPointerList
+                item.end_point = JSON.stringify(item.end_point);
+                item.start_point = JSON.stringify(item.start_point);
+            });
 
-            console.log("save", addTagItem.value);
-            editPointFetch({
-                ...addTagItem.value,
-                target_id: props.activeObj.category_id, // bom_category.id (分类id)
-            }, 'add')
+            datas.item_component_list = copyPointerList;
 
-        break;
+            console.log('save', addTagItem.value);
+            editPointFetch(
+                {
+                    ...addTagItem.value,
+                    target_id: props.activeObj.category_id, // bom_category.id (分类id)
+                },
+                'add',
+            );
+
+            break;
         case 'blur':
-            console.log("失去焦点", record);
-            console.log("addPointItem", addTagItem.value);
-            console.log("pointerList", pointerList.value);
-            
-            const pointData = addTagItem.value.item_component_set_list[0]?.item_component_list  // 这个是点位Array
+            console.log('失去焦点', record);
+            console.log('addPointItem', addTagItem.value);
+            console.log('pointerList', pointerList.value);
+
+            const pointData = addTagItem.value.item_component_set_list[0]?.item_component_list; // 这个是点位Array
 
             // 找到添加是否是对应的数据不是push是删除了在push
-            const findIndex = pointData.findIndex(el => el.target_id == record.id)
-                                    
+            const findIndex = pointData.findIndex(el => el.target_id == record.id);
+
             let addPointItem = {
                 sync_name: record.sync_name,
                 index: record.index,
@@ -751,29 +771,29 @@ const onOperation = (type, record) => {
                 target_id: record.id, // 配件id
                 start_point: [{ x: 0, y: 100 }],
                 end_point: [{ x: 0, y: 0 }],
-            }
+            };
 
             // 判断之前有替换 | 添加
             if (findIndex !== -1) {
-                pointData.splice(findIndex, 1, { 
-                    ...addPointItem, 
-                    start_point: pointData[findIndex].start_point, 
-                    end_point: pointData[findIndex].end_point
-                })
+                pointData.splice(findIndex, 1, {
+                    ...addPointItem,
+                    start_point: pointData[findIndex].start_point,
+                    end_point: pointData[findIndex].end_point,
+                });
             } else {
-                pointData.push(addPointItem)
+                pointData.push(addPointItem);
             }
 
-            console.log("pointData", pointData);
-            pointerList.value = pointData
-            initLine(pointerList.value)
-        break;
+            console.log('pointData', pointData);
+            pointerList.value = pointData;
+            initLine(pointerList.value);
+            break;
     }
-}
+};
 
 defineExpose({
-    getTableDataFetch
-})
+    getTableDataFetch,
+});
 
 // 分页事件
 const handleTableChange = (pagination, filters, sorter) => {
@@ -784,85 +804,83 @@ const handleTableChange = (pagination, filters, sorter) => {
 // table的样式
 const onRowClassName = (recode, index) => {
     // console.log("输出", recode.id);
-    return recode.id === pointEndTargetId.value ? 'row-style' : ''
-}
+    return recode.id === pointEndTargetId.value ? 'row-style' : '';
+};
 // 结束点移入事件
-const onPointerEnd = (item, type, itemEnd) => { 
-    
+const onPointerEnd = (item, type, itemEnd) => {
     // 清除子节点的背景和颜色
-    const childNode = document.querySelectorAll('.child-node-text')            
+    const childNode = document.querySelectorAll('.child-node-text');
     for (var i = 0; i < childNode.length; i++) {
-        childNode[i].style.background = '#F8F8F8'
-        childNode[i].style.color = '#1D2129'
+        childNode[i].style.background = '#F8F8F8';
+        childNode[i].style.color = '#1D2129';
     }
 
-    switch(type) {
+    switch (type) {
         case 'enter':
-                console.log("itme", item, "type", type, "itemEnd", itemEnd);
-                pointEndTargetId.value = item.target_id
-                siderBarItemLabel.value = itemEnd.label
+            console.log('itme', item, 'type', type, 'itemEnd', itemEnd);
+            pointEndTargetId.value = item.target_id;
+            siderBarItemLabel.value = itemEnd.label;
             break;
-            case 'leave':
-                // 清除父节点和子节点的
-                siderBarItemLabel.value = null
-                siderChildNodeLabel.value = null
-                // end
-                pointEndTargetId.value = null
-        break;
+        case 'leave':
+            // 清除父节点和子节点的
+            siderBarItemLabel.value = null;
+            siderChildNodeLabel.value = null;
+            // end
+            pointEndTargetId.value = null;
+            break;
     }
-}
+};
 // 点击父节点事件
 
-const siderBarItemLabel = ref(null) // 父节点表示
-const siderChildNodeLabel = ref(null)  // 子节点表示
+const siderBarItemLabel = ref(null); // 父节点表示
+const siderChildNodeLabel = ref(null); // 子节点表示
 const onSidebarItem = (event, type, ground) => {
-    console.log("ground", ground);
-    pointEndTargetId.value = ground.target_id // 用于显示表格样式显示
+    console.log('ground', ground);
+    pointEndTargetId.value = ground.target_id; // 用于显示表格样式显示
 
     // 清除子节点的背景和颜色
-    const childNode = document.querySelectorAll('.child-node-text')            
+    const childNode = document.querySelectorAll('.child-node-text');
     for (var i = 0; i < childNode.length; i++) {
-        childNode[i].style.background = '#F8F8F8'
-        childNode[i].style.color = '#1D2129'
+        childNode[i].style.background = '#F8F8F8';
+        childNode[i].style.color = '#1D2129';
     }
 
-    switch(type) {
+    switch (type) {
         case 'parent-node':
-            siderChildNodeLabel.value = null
-            siderBarItemLabel.value = ground.label
-        break;
+            siderChildNodeLabel.value = null;
+            siderBarItemLabel.value = ground.label;
+            break;
         case 'child-node':
-            siderBarItemLabel.value = null
-            siderChildNodeLabel.value = ground.label
+            siderBarItemLabel.value = null;
+            siderChildNodeLabel.value = ground.label;
 
-            const target = event.target
+            const target = event.target;
             if (target.className === 'child-node-content') {
                 // 判断是否点击到子节点
                 const parentElement = target.parentNode;
-                parentElement.style.background = 'rgba(0, 97, 255, 0.10)'
-                parentElement.style.color = '#0061FF'
-                return
+                parentElement.style.background = 'rgba(0, 97, 255, 0.10)';
+                parentElement.style.color = '#0061FF';
+                return;
             }
-            target.style.background = 'rgba(0, 97, 255, 0.10)'
-            target.style.color = '#0061FF'
-            
-        break;
+            target.style.background = 'rgba(0, 97, 255, 0.10)';
+            target.style.color = '#0061FF';
+
+            break;
     }
-}
+};
 
 // 父节点点击事件
 const onNodeDelete = (ground, i, type) => {
-    onSilderDelete(ground, i, type)
-    
+    onSilderDelete(ground, i, type);
+
     // 监听删除之后表格(index)跟着变换
     addTagItem.value.item_component_set_list[0]?.item_component_list.forEach($1 => {
         if ($1.start_point.length === 0 && $1.end_point.length === 0) {
-            const item = tableData.value.find($2 => Number($2.id) === Number($1.target_id))
-            item.index = null           
+            const item = tableData.value.find($2 => Number($2.id) === Number($1.target_id));
+            item.index = null;
         }
-    })
-}
-
+    });
+};
 
 /* methods end*/
 </script>
@@ -876,7 +894,7 @@ const onNodeDelete = (ground, i, type) => {
 
         .explosion-diagram-tip {
             display: flex;
-			justify-content: space-between;
+            justify-content: space-between;
             .tip-wrap {
                 display: flex;
                 align-items: center;
@@ -886,61 +904,61 @@ const onNodeDelete = (ground, i, type) => {
                 }
                 .tip-text {
                     margin-left: 5px;
-                    color: #666;                    
+                    color: #666;
                     font-size: 16px;
                     font-weight: 400;
                 }
             }
 
-            .operation {				
-				font-weight: 400;					
-				font-size: 14px;
-				.delete-btn {
-					color: #666;
-				}
-				.replace-btn {
-					color: #666;
-				}
-				.save-btn {
-					color: #FFF;
-				}
+            .operation {
+                font-weight: 400;
+                font-size: 14px;
+                .delete-btn {
+                    color: #666;
+                }
+                .replace-btn {
+                    color: #666;
+                }
+                .save-btn {
+                    color: #fff;
+                }
             }
         }
         .explosion-diagram-bottom {
-			.explosion-diagram-content {
-				margin-top: 31px;
-				display: flex;
-				.content-left {
+            .explosion-diagram-content {
+                margin-top: 31px;
+                display: flex;
+                .content-left {
                     white-space: nowrap;
-					.left-list {
+                    .left-list {
                         width: 206px;
-						border: 1px solid #EEE;
-						border-radius: 4px;
-						.left-list-header {
-							padding: 6px;
-							box-sizing: border-box;						
-							color: #000;
-							font-size: 14px;
-							font-weight: 400;
-							background-color: #F2F3F5;
-						}
-						.left-list-emtpy-text {
-							padding: 10px 27px;
-							box-sizing: border-box;
-							text-align: center;
-							color: #BFBFBF;
-							text-align: center;							
-							font-size: 14px;
-							font-weight: 400;
+                        border: 1px solid #eee;
+                        border-radius: 4px;
+                        .left-list-header {
+                            padding: 6px;
+                            box-sizing: border-box;
+                            color: #000;
+                            font-size: 14px;
+                            font-weight: 400;
+                            background-color: #f2f3f5;
+                        }
+                        .left-list-emtpy-text {
+                            padding: 10px 27px;
+                            box-sizing: border-box;
+                            text-align: center;
+                            color: #bfbfbf;
+                            text-align: center;
+                            font-size: 14px;
+                            font-weight: 400;
                             white-space: pre-wrap;
-						}
+                        }
                         .sidebar-points {
                             padding: 0 10px;
                             box-sizing: border-box;
                             .sidebar {
                                 width: 100%;
                                 margin: 10px 0;
-                                                                             
+
                                 .sidebar-item {
                                     margin-top: 10px;
                                     padding: 10px;
@@ -949,9 +967,9 @@ const onNodeDelete = (ground, i, type) => {
                                     align-items: center;
                                     justify-content: space-between;
                                     border-radius: 4px;
-                                    background-color: #F8F8F8; 
-                                    cursor: pointer;                                   
-    
+                                    background-color: #f8f8f8;
+                                    cursor: pointer;
+
                                     .silder-index-left {
                                         display: flex;
                                         align-items: center;
@@ -960,26 +978,24 @@ const onNodeDelete = (ground, i, type) => {
                                             height: 20px;
                                             line-height: 20px;
                                             text-align: center;
-                                            background-color: #F2F3F5;
+                                            background-color: #f2f3f5;
                                             border-radius: 50%;
-        
-                                            color: #666;                                    
+
+                                            color: #666;
                                             font-size: 12px;
                                             font-weight: 500;
-                                            
-        
                                         }
                                         .silder-index-text {
-                                            color: #1D2129;
+                                            color: #1d2129;
                                             font-size: 14px;
                                             font-weight: 400;
 
                                             &.silder-index-text-change {
-                                                color: #0061FF;
+                                                color: #0061ff;
                                             }
                                         }
                                     }
-                                    .silder-operate {                                        
+                                    .silder-operate {
                                         display: flex;
                                         .silder-copy {
                                             margin-right: 10px;
@@ -995,23 +1011,22 @@ const onNodeDelete = (ground, i, type) => {
                                             width: 16px;
                                             height: 16px;
                                         }
-
                                     }
-                                    
+
                                     &.sidebar-item-change {
-                                        background: rgba(0, 97, 255, 0.10);
+                                        background: rgba(0, 97, 255, 0.1);
                                     }
 
                                     &:hover {
-                                        background: rgba(0, 97, 255, 0.10);
+                                        background: rgba(0, 97, 255, 0.1);
                                         .silder-index-text {
-                                            color: #0061FF;
+                                            color: #0061ff;
                                         }
                                     }
                                 }
 
                                 .child-node {
-                                    position: relative;                                    
+                                    position: relative;
                                     .child-node-item {
                                         display: flex;
                                         margin: 4px 0;
@@ -1022,13 +1037,13 @@ const onNodeDelete = (ground, i, type) => {
                                             .line {
                                                 width: 8px;
                                                 height: 1.5px;
-                                                background-color: #DADADA;
+                                                background-color: #dadada;
                                             }
-                                            .circle {                                                
+                                            .circle {
                                                 width: 5px;
                                                 height: 5px;
                                                 border-radius: 50%;
-                                                background-color: #DADADA;
+                                                background-color: #dadada;
                                             }
                                         }
                                         .child-node-text {
@@ -1036,13 +1051,13 @@ const onNodeDelete = (ground, i, type) => {
                                             height: 42px;
                                             line-height: 42px;
                                             padding: 0px 10px;
-                                            box-sizing: border-box;                                            
+                                            box-sizing: border-box;
                                             margin-left: 4px;
                                             border-radius: 4px;
-                                            background-color: #F8F8F8;
+                                            background-color: #f8f8f8;
                                             display: flex;
                                             justify-content: space-between;
-                                            color: #1D2129;
+                                            color: #1d2129;
 
                                             .child-delete {
                                                 width: 16px;
@@ -1050,71 +1065,71 @@ const onNodeDelete = (ground, i, type) => {
                                                 visibility: hidden;
                                             }
                                             &:hover {
-                                                background-color: rgba(0, 97, 255, 0.10) !important;
-                                                color: #0061FF !important;
+                                                background-color: rgba(0, 97, 255, 0.1) !important;
+                                                color: #0061ff !important;
                                                 .child-delete {
                                                     visibility: visible;
                                                 }
                                             }
-                                        }                               
+                                        }
                                     }
                                     .vertical-line {
                                         display: inline-block;
                                         position: absolute;
-                                        left: 0;                                        
-                                        border-left: 1.5px solid #DADADA;
-                                    }                            
+                                        left: 0;
+                                        border-left: 1.5px solid #dadada;
+                                    }
                                 }
                             }
                         }
-					}
-				}
-				.content-right {
+                    }
+                }
+                .content-right {
                     flex: 1;
-					.point-contain {
-        
-						display: inline-block;
+                    .point-contain {
+                        display: inline-block;
                         position: relative;
                         left: 50%;
                         transform: translateX(-50%);
 
-						.explore-canvas {
-							position: absolute;
+                        .explore-canvas {
+                            position: absolute;
                             top: 0;
                             right: 0;
                             bottom: 0;
                             left: 0;
-						}
-						.pointer-start, .pointer-end  {
-							position: absolute;
-							z-index: 10;
-							border-radius: 50px;
-							user-select: none;
-							opacity: 0.7;
-							transition: opacity 0.15s ease;
-							transform: translate(-50%, -50%);
-							cursor: pointer;
-							&:hover {
-								z-index: 20;
-								opacity: 1;
-							}
-						}
-						.pointer-start {
-							width: 8px;
-							height: 8px;
-							background-color: @BG_LP;
+                        }
+                        .pointer-start,
+                        .pointer-end {
+                            position: absolute;
+                            z-index: 10;
+                            border-radius: 50px;
+                            user-select: none;
+                            opacity: 0.7;
+                            transition: opacity 0.15s ease;
+                            transform: translate(-50%, -50%);
+                            cursor: pointer;
                             &:hover {
-								width: 14px;
-							    height: 14px;
-							}
-						}
-						.pointer-end {
-							width: 20px;
-							height: 20px;
-							line-height: 20px;
-							text-align: center;
-							background-color: @BG_LP;
-							color: #fff;
+                                z-index: 20;
+                                opacity: 1;
+                            }
+                        }
+                        .pointer-start {
+                            width: 8px;
+                            height: 8px;
+                            background-color: @BG_LP;
+                            &:hover {
+                                width: 14px;
+                                height: 14px;
+                            }
+                        }
+                        .pointer-end {
+                            width: 20px;
+                            height: 20px;
+                            line-height: 20px;
+                            text-align: center;
+                            background-color: @BG_LP;
+                            color: #fff;
 
                             .component {
                                 display: none;
@@ -1125,7 +1140,7 @@ const onNodeDelete = (ground, i, type) => {
                                     position: absolute;
                                     display: flex;
                                     flex-wrap: wrap;
-                                    padding: 5px 0;                                    
+                                    padding: 5px 0;
                                     top: 4px;
                                     left: -26px;
                                     border-radius: 2px;
@@ -1133,8 +1148,9 @@ const onNodeDelete = (ground, i, type) => {
                                     border: 1px solid @BG_LP;
                                     font-size: 0;
 
-                                    &:before, &:after {
-                                        content: "";
+                                    &:before,
+                                    &:after {
+                                        content: '';
                                         display: block;
                                         border-width: 5px;
                                         position: absolute;
@@ -1144,7 +1160,7 @@ const onNodeDelete = (ground, i, type) => {
                                         border-color: transparent transparent @BG_LP transparent;
                                         font-size: 0;
                                         line-height: 0;
-                                    }                                    
+                                    }
                                     .contain-name {
                                         position: relative;
                                         padding: 0 16px;
@@ -1156,9 +1172,9 @@ const onNodeDelete = (ground, i, type) => {
                                         text-align: left;
                                         overflow: hidden; //超出的文本隐藏
                                         text-overflow: ellipsis; //溢出用省略号显示
-                                        white-space: nowrap;                           
+                                        white-space: nowrap;
                                         .icon-name {
-                                            color: #FFF;                                            
+                                            color: #fff;
                                             font-size: 14px;
                                             font-weight: 500;
                                         }
@@ -1174,11 +1190,11 @@ const onNodeDelete = (ground, i, type) => {
                                 .component {
                                     display: block;
                                 }
-							}
-						}
-					}
-				}
-			}
+                            }
+                        }
+                    }
+                }
+            }
             .empty-upload-container {
                 width: 100%;
                 display: flex;
@@ -1224,7 +1240,7 @@ const onNodeDelete = (ground, i, type) => {
             }
         }
     }
-    .fittings-table-container {        
+    .fittings-table-container {
         margin-top: 20px;
 
         .fittings-all {
@@ -1233,16 +1249,15 @@ const onNodeDelete = (ground, i, type) => {
             align-content: center;
             margin-bottom: 10px;
             .fittings-title {
-                color: #1d2129;            
+                color: #1d2129;
                 font-size: 16px;
                 font-weight: 600;
             }
             .fittings-options {
-
             }
         }
         .table-title {
-            color: #1d2129;            
+            color: #1d2129;
             font-size: 14px;
             font-weight: 500;
         }
@@ -1267,12 +1282,12 @@ const onNodeDelete = (ground, i, type) => {
                     font-weight: 400;
                     line-height: normal;
                     margin-bottom: 10px;
-                }                
+                }
             }
         }
 
         .table-title {
-            color: #1d2129;            
+            color: #1d2129;
             font-size: 14px;
             font-weight: 500;
         }
@@ -1313,7 +1328,7 @@ const onNodeDelete = (ground, i, type) => {
 }
 
 :deep(.row-style) {
-    background: rgba(0, 97, 255, 0.10);
+    background: rgba(0, 97, 255, 0.1);
 }
 .opacity-1 {
     opacity: 1 !important;

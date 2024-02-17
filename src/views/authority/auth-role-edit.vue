@@ -10,16 +10,20 @@
             </div>
             <div class="form-content">
                 <div class="form-item required">
-                    <div class="key">{{  $t('n.name') }}:</div>
+                    <div class="key">{{ $t('n.name') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" :placeholder=" $t('def.input')"/>
+                        <a-input v-model:value="form.name" :placeholder="$t('def.input')" />
                     </div>
                 </div>
                 <div class="form-item textarea">
                     <div class="key">{{ $t('role.description') }}:</div>
                     <div class="value">
-                        <a-textarea v-model:value="form.remark" :placeholder=" $t('def.input')"
-                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                        <a-textarea
+                            v-model:value="form.remark"
+                            :placeholder="$t('def.input')"
+                            :auto-size="{ minRows: 2, maxRows: 6 }"
+                            :maxlength="99"
+                        />
                         <span class="content-length">{{ form.remark.length }}/99</span>
                     </div>
                 </div>
@@ -33,26 +37,24 @@
             <div class="form-content long-key">
                 <template v-for="item of authItems" :key="item.key">
                     <div class="form-item afs" v-if="item.list.length">
-                        <div class="key">{{ $t('authority.title.'+ item.key) }}:</div>
+                        <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
                         <div class="value">
                             <!-- 全选 -->
-                            <a-checkbox class="select-all"
+                            <a-checkbox
+                                class="select-all"
                                 v-model:checked="itemCheckAll[item.key]"
                                 :indeterminate="indeterminate[item.key]"
-                                @change="onCheckAllChange(itemCheckAll[item.key],item, key)"
+                                @change="onCheckAllChange(itemCheckAll[item.key], item, key)"
                             >
                                 {{ $t('u.select_all') }}
                             </a-checkbox>
                             <!-- 单选 -->
-                            <a-checkbox-group 
-                                v-model:value="item.select"  
+                            <a-checkbox-group
+                                v-model:value="item.select"
                                 @change="onChange(item.select, item.key, item.list)"
                             >
-                                <a-checkbox 
-                                    v-for="it in item.list" 
-                                    :value="it.value"
-                                >
-                                    {{ $t('authority.'+ it.label) }}
+                                <a-checkbox v-for="it in item.list" :value="it.value">
+                                    {{ $t('authority.' + it.label) }}
                                 </a-checkbox>
                             </a-checkbox-group>
                         </div>
@@ -71,7 +73,7 @@
 <script>
 import Core from '../../core';
 
-const AUTH_LIST_TEMP = Core.Const.AUTH_LIST_TEMP
+const AUTH_LIST_TEMP = Core.Const.AUTH_LIST_TEMP;
 
 export default {
     name: 'AuthRoleEdit',
@@ -100,12 +102,12 @@ export default {
     watch: {},
     computed: {},
     created() {
-        this.form.id = Number(this.$route.query.id) || 0
+        this.form.id = Number(this.$route.query.id) || 0;
         if (this.form.id) {
             this.getAuthRoleDetail();
         }
-        this.getAuthOptions()
-        console.log("解决", this.authItems);
+        this.getAuthOptions();
+        console.log('解决', this.authItems);
     },
     methods: {
         routerChange(type, item) {
@@ -116,105 +118,114 @@ export default {
             }
         },
         // 获取角色详情
-        getAuthRoleDetail() { 
+        getAuthRoleDetail() {
             this.loading = true;
             Core.Api.Authority.roleDetail({
                 id: this.form.id,
-            }).then(res => {
-                console.log('获取角色详情', res)
+            })
+                .then(res => {
+                    console.log('获取角色详情', res);
 
-                this.detail = res.role
-                for (const key in this.form) {
-                    this.form[key] = res.role[key]
-                }
-            }).catch(err => {
-                console.log('getAuthRoleDetail err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-        // 获取 某个身份下 可选的权限项
-        getAuthOptions() { 
-            let apiName = this.$auth('ADMIN') ? 'allOptions' : 'authOptions'
-            Core.Api.Authority[apiName]({
-                org_type: Core.Data.getOrgType(),
-            }).then(res => {
-                console.log('获取 某个身份下 可选的权限项', res)
-                let list = res.list
-                list.map(auth => {
-                    let key = auth.key.split('.')[0];
-                    let item = this.authItems.find(i => key === i.key);
-                    if (item) {
-                        item.list.push({ value: auth.id, label: auth.key });
-                        this.itemCheckAll[key] = false;
-                        this.indeterminate[key] = false;
+                    this.detail = res.role;
+                    for (const key in this.form) {
+                        this.form[key] = res.role[key];
                     }
                 })
-                if (this.form.id) {
-                    console.log("this.authItems", this.authItems);
-                    this.getRoleSelectedAuth();
-                }
-            }).catch(err => {
-                console.log('getAuthOptions err:', err)
+                .catch(err => {
+                    console.log('getAuthRoleDetail err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
+        // 获取 某个身份下 可选的权限项
+        getAuthOptions() {
+            let apiName = this.$auth('ADMIN') ? 'allOptions' : 'authOptions';
+            Core.Api.Authority[apiName]({
+                org_type: Core.Data.getOrgType(),
             })
+                .then(res => {
+                    console.log('获取 某个身份下 可选的权限项', res);
+                    let list = res.list;
+                    list.map(auth => {
+                        let key = auth.key.split('.')[0];
+                        let item = this.authItems.find(i => key === i.key);
+                        if (item) {
+                            item.list.push({ value: auth.id, label: auth.key });
+                            this.itemCheckAll[key] = false;
+                            this.indeterminate[key] = false;
+                        }
+                    });
+                    if (this.form.id) {
+                        console.log('this.authItems', this.authItems);
+                        this.getRoleSelectedAuth();
+                    }
+                })
+                .catch(err => {
+                    console.log('getAuthOptions err:', err);
+                });
         },
         // 某个角色 已选的权限
         getRoleSelectedAuth() {
             Core.Api.Authority.authSelected({
                 role_id: this.form.id,
-            }).then(res => {
-                console.log('某个角色 已选的权限', res)
-                res.list.forEach(auth => {
-                    let key = auth.key.split('.')[0];
-                    let item = this.authItems.find(i => key === i.key);
-                    if (item) {
-                        item.select.push(auth.id);
-                    }
-                })
-                this.authItems.forEach(it => {
-                    this.onChange(it.select, it.key, it.list)
-                })
-            }).catch(err => {
-                console.log('getRoleSelectedAuth err:', err)
             })
+                .then(res => {
+                    console.log('某个角色 已选的权限', res);
+                    res.list.forEach(auth => {
+                        let key = auth.key.split('.')[0];
+                        let item = this.authItems.find(i => key === i.key);
+                        if (item) {
+                            item.select.push(auth.id);
+                        }
+                    });
+                    this.authItems.forEach(it => {
+                        this.onChange(it.select, it.key, it.list);
+                    });
+                })
+                .catch(err => {
+                    console.log('getRoleSelectedAuth err:', err);
+                });
         },
 
         handleSubmit() {
-            let form = Core.Util.deepCopy(this.form)
-            console.log('handleSubmit form:', form)
+            let form = Core.Util.deepCopy(this.form);
+            console.log('handleSubmit form:', form);
             if (!form.name) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('def.enter'));
             }
-            let list = []
+            let list = [];
             for (const item of this.authItems) {
-                list.push(...item.select)
+                list.push(...item.select);
             }
             Core.Api.Authority.roleEdit({
                 ...form,
                 authority_ids: list.join(','),
-            }).then(() => {
-                this.$message.success(this.$t('pop_up.save_success'))
-                this.routerChange('back')
-            }).catch(err => {
-                console.log('handleSubmit err:', err)
             })
+                .then(() => {
+                    this.$message.success(this.$t('pop_up.save_success'));
+                    this.routerChange('back');
+                })
+                .catch(err => {
+                    console.log('handleSubmit err:', err);
+                });
         },
         onChange(checkedList, key, plainOptions) {
             this.indeterminate[key] = !!checkedList.length && checkedList.length < plainOptions.length;
             this.itemCheckAll[key] = checkedList.length === plainOptions.length;
         },
-        onCheckAllChange(e,item, key) {
-            console.log("e",e)
-            let select = []
-            let selectDisabled = []
+        onCheckAllChange(e, item, key) {
+            console.log('e', e);
+            let select = [];
+            let selectDisabled = [];
             item.list.forEach(it => {
-                if (it.disabled){
-                    selectDisabled.push(it.value)
+                if (it.disabled) {
+                    selectDisabled.push(it.value);
                 }
-                select.push(it.value)
-            })
-            console.log("list",select)
-            item.select = e ? select: selectDisabled;
+                select.push(it.value);
+            });
+            console.log('list', select);
+            item.select = e ? select : selectDisabled;
             this.indeterminate[key] = false;
             this.itemCheckAll[key] = e;
             // Object.assign(this, {
@@ -223,7 +234,7 @@ export default {
             //     checkAll: e.checked,
             // });
         },
-    }
+    },
 };
 </script>
 
@@ -237,10 +248,10 @@ export default {
         margin-left: 0px;
     }
     div.ant-checkbox-group {
-        display:inline;
+        display: inline;
     }
     div.ant-checkbox-group .ant-checkbox-wrapper {
-        display:inline-flex;
+        display: inline-flex;
     }
 
     .ant-checkbox + span {
@@ -254,7 +265,8 @@ export default {
         margin-bottom: 10px;
         font-weight: 500;
     }
-    &.en, &.zh {
+    &.en,
+    &.zh {
         .form-content.long-key {
             padding: 0 5%;
             .form-item {

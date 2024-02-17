@@ -5,60 +5,68 @@
             <div class="content">
                 <div class="content-right">
                     <div class="user-card">
-                        <UserDetail ref="userDetailRef" :id="userId" @updateLabel="updateTask"/>
+                        <UserDetail ref="userDetailRef" :id="userId" @updateLabel="updateTask" />
                     </div>
                     <div class="about">
                         <div class="user-about">
                             <a-tabs v-model:activeKey="activeKey">
                                 <a-tab-pane key="1" tab="总览">
                                     <div class="tab-body">
-                                        <GeneralView ref="tabPane1"/>
+                                        <GeneralView ref="tabPane1" />
                                     </div>
                                 </a-tab-pane>
                                 <a-tab-pane key="2" :tab="`跟进记录(${totals['2']})`" forceRender>
-                                    <div class="tab-body" style="overflow: hidden;">
-                                        <FollowRecord ref="tabPane2" @getCount='getCount'/>
+                                    <div class="tab-body" style="overflow: hidden">
+                                        <FollowRecord ref="tabPane2" @getCount="getCount" />
                                     </div>
                                 </a-tab-pane>
                                 <a-tab-pane key="3" :tab="`归属记录(${totals['3']})`" forceRender>
                                     <div class="tab-body">
-                                        <attributionRecord ref="tabPane3" @getCount='getCount'/>
+                                        <attributionRecord ref="tabPane3" @getCount="getCount" />
                                     </div>
                                 </a-tab-pane>
                                 <a-tab-pane key="4" :tab="`订单(${totals['4']})`" forceRender>
                                     <div class="tab-body">
-                                        <Order ref="tabPane4" @getCount='getCount'/>
+                                        <Order ref="tabPane4" @getCount="getCount" />
                                     </div>
                                 </a-tab-pane>
                                 <a-tab-pane key="5" :tab="`试驾(${totals['5']})`" forceRender>
                                     <div class="tab-body">
-                                        <TestDrive ref="tabPane5" @getCount='getCount'/>
+                                        <TestDrive ref="tabPane5" @getCount="getCount" />
                                     </div>
                                 </a-tab-pane>
                                 <a-tab-pane key="6" :tab="`日志(${totals['6']})`" forceRender>
-                                    <div class="tab-body" @scroll="(e) => handleScroll(e, 'log')">
-                                        <LogSteps ref="tabPane6" :list="logList"/>
+                                    <div class="tab-body" @scroll="e => handleScroll(e, 'log')">
+                                        <LogSteps ref="tabPane6" :list="logList" />
                                     </div>
                                 </a-tab-pane>
                             </a-tabs>
                         </div>
                     </div>
                 </div>
-                <FixedSelect :isTop="isTop" :current="taskCurrent" :amount="taskAmount" :isProvince="isProvince" @next="nextTask" @toTop="toTop" @order="order"/>
+                <FixedSelect
+                    :isTop="isTop"
+                    :current="taskCurrent"
+                    :amount="taskAmount"
+                    :isProvince="isProvince"
+                    @next="nextTask"
+                    @toTop="toTop"
+                    @order="order"
+                />
             </div>
         </div>
         <a-drawer
-          v-model:visible="openOrder"
-          class="custom-class"
-          title="快捷下单"
-          width="440px"
-          :body-style="bodyStyle"
-          :footer="false"
-          :closable="false"
-          destroyOnClose
-          placement="right"
+            v-model:visible="openOrder"
+            class="custom-class"
+            title="快捷下单"
+            width="440px"
+            :body-style="bodyStyle"
+            :footer="false"
+            :closable="false"
+            destroyOnClose
+            placement="right"
         >
-          <QuickOrder ref="QuickOrderRef"/>
+            <QuickOrder ref="QuickOrderRef" />
         </a-drawer>
     </div>
 </template>
@@ -69,30 +77,30 @@ import Static from './static';
 import Order from './components/order.vue';
 import TestDrive from './components/test-drive.vue';
 import GeneralView from './components/general-view.vue';
-import attributionRecord from "./components/attribution-record.vue";
-import FollowRecord from "./components/FollowRecord.vue";
-import LogSteps from "./components/log-step.vue";
-import IntentionStairs from "./components/intention-stairs.vue";
-import UserDetail from "./components/UserDetail.vue";
-import Search from "./components/search.vue";
+import attributionRecord from './components/attribution-record.vue';
+import FollowRecord from './components/FollowRecord.vue';
+import LogSteps from './components/log-step.vue';
+import IntentionStairs from './components/intention-stairs.vue';
+import UserDetail from './components/UserDetail.vue';
+import Search from './components/search.vue';
 // import UserAbout from "./components/user-about.vue";
-import FixedSelect from "./components/fixed-select.vue";
-import QuickOrder from "./components/quick-order.vue";
-import myTag from "./components/my-tag.vue";
+import FixedSelect from './components/fixed-select.vue';
+import QuickOrder from './components/quick-order.vue';
+import myTag from './components/my-tag.vue';
 import { computed, nextTick, onMounted, reactive, ref, provide, getCurrentInstance } from 'vue';
-import { useRoute, useRouter } from "vue-router";
-import dayjs from "dayjs";
+import { useRoute, useRouter } from 'vue-router';
+import dayjs from 'dayjs';
 
-const router = useRouter()
-const route = useRoute()
-const userId = ref(route.query?.id)
+const router = useRouter();
+const route = useRoute();
+const userId = ref(route.query?.id);
 const { proxy } = getCurrentInstance();
-onMounted(() => {    
-    getAllChildData()
-})
+onMounted(() => {
+    getAllChildData();
+});
 
 // a-drawer bodyStyle样式
-const bodyStyle = ref({ padding: 0 })
+const bodyStyle = ref({ padding: 0 });
 
 // 左边切换栏
 const menuLeftIndex = ref(0);
@@ -102,69 +110,72 @@ const menuLeft = [
 ];
 const menuLeftRender = computed(() => {
     return menuLeft.map(item => {
-        let obj_num = numList.find(num_item=>{
-			return num_item.status_mapping == item;
-		})
-		let obj = {
-			id: item,
-			title: Core.Const.TASK_TYPE[item].title,
-			value: obj_num?.deal_amount,
-			all_value: obj_num?.total
-		}
-		return obj
-    })
-})
+        let obj_num = numList.find(num_item => {
+            return num_item.status_mapping == item;
+        });
+        let obj = {
+            id: item,
+            title: Core.Const.TASK_TYPE[item].title,
+            value: obj_num?.deal_amount,
+            all_value: obj_num?.total,
+        };
+        return obj;
+    });
+});
 //置顶
-const QuickOrderRef = ref(null)
-const openOrder = ref(false)
-const isProvince = ref(false)
+const QuickOrderRef = ref(null);
+const openOrder = ref(false);
+const isProvince = ref(false);
 const order = () => {
-    openOrder.value = true
+    openOrder.value = true;
     nextTick(() => {
-        QuickOrderRef.value.getUserDetail()
-    })
-}
+        QuickOrderRef.value.getUserDetail();
+    });
+};
 
 // 日志
 const logPagination = reactive({
-  	page_size: 20,
-  	page: 1,
-  	total: 0,
-  	total_page: 0
-})
-const logList = ref([])
+    page_size: 20,
+    page: 1,
+    total: 0,
+    total_page: 0,
+});
+const logList = ref([]);
 /* Fetch start*/
 // 获取日志list
-const getLogListFetch = (params = {} , isSearch = false) => {
-    if (!userId.value) return
-    scrollLoading.value = true
+const getLogListFetch = (params = {}, isSearch = false) => {
+    if (!userId.value) return;
+    scrollLoading.value = true;
     const obj = {
-		page: logPagination.page,
-		page_size: logPagination.page_size,
-		target_id: userId.value, // 用户id
-	    target_type: Core.Const.LABEl.CATEGORY.CLIENT,  // 目标类型 (1客户、2商机、3合同订单、4回款单)
-        ...params
-	}
-	Core.Logger.success("参数", obj)
-    Core.Api.CustomService.logList(obj).then(res=>{
-		logPagination.total = res.count
-        logPagination.total_page = Math.ceil(logPagination.total / logPagination.page_size)
+        page: logPagination.page,
+        page_size: logPagination.page_size,
+        target_id: userId.value, // 用户id
+        target_type: Core.Const.LABEl.CATEGORY.CLIENT, // 目标类型 (1客户、2商机、3合同订单、4回款单)
+        ...params,
+    };
+    Core.Logger.success('参数', obj);
+    Core.Api.CustomService.logList(obj)
+        .then(res => {
+            logPagination.total = res.count;
+            logPagination.total_page = Math.ceil(logPagination.total / logPagination.page_size);
 
-        Core.Logger.success("参数", obj, "获取日志list", res)
-		// 是否是搜索的
-		if (isSearch) {
-            logList.value = []
-            logPagination.page = 1
-        }
+            Core.Logger.success('参数', obj, '获取日志list', res);
+            // 是否是搜索的
+            if (isSearch) {
+                logList.value = [];
+                logPagination.page = 1;
+            }
 
-        logList.value = logList.value.concat(res.list)
-        getCount('6', res.count)
-	}).catch(err=>{
-        Core.Logger.error("参数", obj, "获取日志list", err)
-	}).finally(() => {
-        scrollLoading.value = false
-    })
-}
+            logList.value = logList.value.concat(res.list);
+            getCount('6', res.count);
+        })
+        .catch(err => {
+            Core.Logger.error('参数', obj, '获取日志list', err);
+        })
+        .finally(() => {
+            scrollLoading.value = false;
+        });
+};
 
 //tab栏
 const tabPane1 = ref(null);
@@ -174,89 +185,90 @@ const tabPane4 = ref(null);
 const tabPane5 = ref(null);
 const tabPane6 = ref(null);
 const userDetailRef = ref(null);
-const activeKey = ref('1')
+const activeKey = ref('1');
 const totals = reactive({
-    '1': 0,
-    '2': 0,
-    '3': 0,
-    '4': 0,
-    '5': 0,
-    '6': 0,
-})
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+    6: 0,
+});
 
 const getCount = (key, count) => {
-    totals[key] = count
-}
+    totals[key] = count;
+};
 const getAllChildData = () => {
-    if (!userId.value) return
-    const arr = ['1', '2', '3', '4', '5', '6', 'userDetailRef']
-    arr.forEach(item => getChildData(item))
+    if (!userId.value) return;
+    const arr = ['1', '2', '3', '4', '5', '6', 'userDetailRef'];
+    arr.forEach(item => getChildData(item));
 
     // 获取当前人员省市情况
-    Core.Api.CustomService.detail({ id: userId.value }).then(res=>{
-        if (res.province || res.city) {
-            isProvince.value = true
-        } else {
-            isProvince.value = false
-        }
-	}).catch(err=>{
-        Core.Logger.error("参数", "数据", err)
-	})
-}
-const getChildData = (key) => {
+    Core.Api.CustomService.detail({ id: userId.value })
+        .then(res => {
+            if (res.province || res.city) {
+                isProvince.value = true;
+            } else {
+                isProvince.value = false;
+            }
+        })
+        .catch(err => {
+            Core.Logger.error('参数', '数据', err);
+        });
+};
+const getChildData = key => {
     nextTick(() => {
         switch (key) {
             case '1':
-                tabPane1.value.getData()
+                tabPane1.value.getData();
                 break;
             case '2':
-                tabPane2.value.getData()
+                tabPane2.value.getData();
                 break;
             case '3':
-                tabPane3.value.getData()
+                tabPane3.value.getData();
                 break;
             case '4':
-                tabPane4.value.getData()
+                tabPane4.value.getData();
                 break;
             case '5':
-                tabPane5.value.getData()
+                tabPane5.value.getData();
                 break;
             case '6':
-                getLogListFetch({ page: 1 }, true)
+                getLogListFetch({ page: 1 }, true);
                 break;
             case 'userDetailRef':
-                userDetailRef.value.getData()
+                userDetailRef.value.getData();
                 break;
-            
+
             default:
                 break;
         }
-    })
-}
-
+    });
+};
 
 // 公共方法
 //动态获取本地图片
-const getAssetURL = (image) => {
-  // 参数一: 相对路径
-  return new URL(`../crm-staging/${image}`, import.meta.url).href
-}
+const getAssetURL = image => {
+    // 参数一: 相对路径
+    return new URL(`../crm-staging/${image}`, import.meta.url).href;
+};
 // 监听滚轮事件
-const scrollLoading = ref(false)
+const scrollLoading = ref(false);
 const handleScroll = (e, type) => {
     const element = e.target;
     if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight - Static.hitBottomHeight) {
-        Core.Logger.log("滑到底部")
-        if ((logPagination.page < logPagination.total_page) && !scrollLoading.value) {
-            logPagination.page++
-            getLogListFetch({ page: logPagination.page })
+        Core.Logger.log('滑到底部');
+        if (logPagination.page < logPagination.total_page && !scrollLoading.value) {
+            logPagination.page++;
+            getLogListFetch({ page: logPagination.page });
         }
     }
-}
+};
 
 const getTaskList = () => {
-    getAllChildData()
-}
+    getAllChildData();
+};
 
 provide('userId', userId); // 提供id
 provide('getTaskList', getTaskList); // 提供更新任务数据方法
@@ -274,12 +286,12 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
         flex-direction: column;
         align-items: center;
         border-radius: 6px;
-        background: #FFF;
+        background: #fff;
         &-item {
             text-align: center;
             width: 100%;
             border-radius: 5px;
-            background: #F2F3F5;
+            background: #f2f3f5;
             padding: 11px 8px;
             margin-bottom: 12px;
             display: flex;
@@ -290,20 +302,21 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
                 margin-bottom: 0;
             }
             &-name {
-                color: #4E5969;
+                color: #4e5969;
             }
             &-num {
-                color: #86909C;
+                color: #86909c;
             }
             &:hover {
-                background: #F2F8FF;
+                background: #f2f8ff;
             }
             &.selected {
-                .menu-left-item-name, .menu-left-item-num {
+                .menu-left-item-name,
+                .menu-left-item-num {
                     color: #fff;
                 }
                 font-weight: 600;
-                background: #0061FF;
+                background: #0061ff;
             }
         }
     }
@@ -339,7 +352,7 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
                             cursor: pointer;
                         }
                         .title {
-                            color: #1D2129;
+                            color: #1d2129;
                             font-size: 16px;
                             font-weight: 600;
                         }
@@ -349,13 +362,13 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
                         padding: 2px;
                         align-items: flex-start;
                         border-radius: 5px;
-                        background: #F2F3F5;
+                        background: #f2f3f5;
                         padding: 2px;
                         &-item {
                             height: 24px;
                             padding: 0px 18px;
                             border-radius: 4px;
-                            color: #1D2129;
+                            color: #1d2129;
                             font-size: 14px;
                             font-weight: 400;
                             margin-right: 4px;
@@ -369,7 +382,7 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
                             }
                         }
                         .selected {
-                            background: #0061FF;
+                            background: #0061ff;
                             color: #fff;
                             font-weight: 600;
                         }
@@ -380,7 +393,7 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
                     padding: 0 6px 20px 20px;
                     margin-right: 6px;
                     /* 自定义滚动条样式 */
-                    
+
                     &-item {
                         display: flex;
                         border-radius: 6px;
@@ -389,13 +402,13 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
                         margin-bottom: 4px;
                         cursor: pointer;
                         &:hover {
-                            background-color: #F7F8FA;
+                            background-color: #f7f8fa;
                         }
                         &.is-top {
-                            background: rgba(230, 239, 255, 0.50);
+                            background: rgba(230, 239, 255, 0.5);
                         }
                         &.selected {
-                            background: #F7F8FA;
+                            background: #f7f8fa;
                         }
                         &:last-child {
                             margin-bottom: 0;
@@ -428,22 +441,22 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
                                     display: flex;
                                     align-items: center;
                                     .name {
-                                        color: #1D2129;
+                                        color: #1d2129;
                                         font-size: 16px;
                                         font-weight: 600;
                                         margin-right: 8px;
                                     }
                                     .age {
-                                        color: #4E5969;
+                                        color: #4e5969;
                                         font-size: 14px;
                                     }
                                 }
                                 .phone {
-                                    color: var(--Color-text-1, #1D2129);
+                                    color: var(--Color-text-1, #1d2129);
                                     font-size: 14px;
                                 }
                                 .time {
-                                    color: #86909C;
+                                    color: #86909c;
                                     font-size: 12px;
                                 }
                             }
@@ -467,7 +480,7 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
                 flex-direction: column;
                 .user-card {
                     border-radius: 6px 0px 6px 6px;
-                    background: #FFF;
+                    background: #fff;
                     overflow: hidden;
                     margin-bottom: 16px;
                 }
@@ -475,7 +488,7 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
                     flex: 1;
                     padding: 8px 20px 20px 20px;
                     border-radius: 6px;
-                    background: #FFF;
+                    background: #fff;
                     overflow: hidden;
                     .user-about {
                         height: 100%;
@@ -501,18 +514,18 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
         align-items: center;
     }
     ::-webkit-scrollbar {
-      width: 8px; /* 滚动条宽度 */
+        width: 8px; /* 滚动条宽度 */
     }
-    
+
     /* 滚动条背景 */
     ::-webkit-scrollbar-track {
-      background-color: #FFF;
+        background-color: #fff;
     }
-    
+
     /* 滚动条滑块 */
     ::-webkit-scrollbar-thumb {
-      background-color: #E5E6EB;
-      border-radius: 20px; /* 滑块圆角 */
+        background-color: #e5e6eb;
+        border-radius: 20px; /* 滑块圆角 */
     }
 }
 </style>

@@ -3,45 +3,40 @@
         <!-- 标题 -->
         <div class="title">
             <div>{{ title }}</div>
-            <div class="detail-title" @click="goToDetail('detail')">
-                详情
-            </div>
+            <div class="detail-title" @click="goToDetail('detail')">详情</div>
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <div v-if="!isEmpty" id="ColorDistChartId" class="chart" ref='ColorDistChartId'></div>
+            <div v-if="!isEmpty" id="ColorDistChartId" class="chart" ref="ColorDistChartId"></div>
             <div class="legend-container">
                 <div class="legend-wrap" v-for="item in legendList">
                     <div class="legend-block">
                         <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
                         <div class="legend-key">{{ item.item }}</div>
                     </div>
-                    <div class="legend-value">{{ ((item.percent) * 100).toFixed(0) + '%' }}</div>
+                    <div class="legend-value">{{ (item.percent * 100).toFixed(0) + '%' }}</div>
                 </div>
             </div>
             <div v-if="isEmpty" class="empty-wrap">
-                <img src="../../../assets/images/dashboard/emptyData.png" alt="">
-                <div class="empty-desc">
-                    暂无数据
-                </div>
+                <img src="../../../assets/images/dashboard/emptyData.png" alt="" />
+                <div class="empty-desc">暂无数据</div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import { Chart } from '@antv/g2'
-import Core from "../../../core";
+import { Chart } from '@antv/g2';
+import Core from '../../../core';
 import data from '../../../core/data';
 
 export default {
     name: 'Cards',
-    components: {
-    },
+    components: {},
     props: {
         searchForm: {
             type: Object,
-            default: () => { }
+            default: () => {},
         },
     },
     data() {
@@ -63,19 +58,18 @@ export default {
                 if (this.searchForm.activity_id) {
                     this.getResultChartData();
                 }
-            }
+            },
         },
-
     },
     computed: {},
-    created() { },
+    created() {},
     mounted() {
         if (this.searchForm.activity_id) {
             this.getResultChartData();
         }
     },
     beforeUnmount() {
-        this.$refs.ColorDistChartId.innerHTML = ''
+        this.$refs.ColorDistChartId.innerHTML = '';
     },
     methods: {
         // 点击tab
@@ -85,9 +79,9 @@ export default {
         },
 
         async drawBoStatisticsChart(data) {
-            console.log('颜色', data)
+            console.log('颜色', data);
             if (this.boStatisticsChart.destroy) {
-                this.boStatisticsChart.destroy()
+                this.boStatisticsChart.destroy();
             }
             await this.$nextTick();
             const chart = new Chart({
@@ -112,7 +106,7 @@ export default {
             // 声明需要进行自定义图例字段： 'item'
             chart.legend(false);
             // 监听 element 上状态的变化来动态更新 Annotation 信息
-            chart.on('element:statechange', (ev) => {
+            chart.on('element:statechange', ev => {
                 const { state, stateStatus, element } = ev.gEvent.originalEvent;
 
                 // 本示例只需要监听 active 的状态变化
@@ -153,7 +147,7 @@ export default {
                                 fill: '#333333',
                                 textAlign: 'center',
                             },
-                        })
+                        });
                     innerView.render(true);
                     lastItem = data.item;
                 }
@@ -190,7 +184,7 @@ export default {
             chart.removeInteraction('legend-filter');
             chart.interaction('element-active');
             chart.render();
-            this.boStatisticsChart = chart
+            this.boStatisticsChart = chart;
         },
         async getResultChartData() {
             try {
@@ -200,47 +194,47 @@ export default {
                         date: 1692242388,
                         source_list: [
                             {
-                                code: "red", // 投票结果
-                                vote_count: 102 //投票数量
-                            }
+                                code: 'red', // 投票结果
+                                vote_count: 102, //投票数量
+                            },
                         ],
                     },
                     {
                         date: 1692242388,
                         source_list: [
                             {
-                                code: "yellow", // 投票结果
-                                vote_count: 203 //投票数量
-                            }
+                                code: 'yellow', // 投票结果
+                                vote_count: 203, //投票数量
+                            },
                         ],
                     },
                     {
                         date: 1692242388,
                         source_list: [
                             {
-                                code: "blue", // 投票结果
-                                vote_count: 304 //投票数量
-                            }
+                                code: 'blue', // 投票结果
+                                vote_count: 304, //投票数量
+                            },
                         ],
                     },
                     {
                         date: 1692242388,
                         source_list: [
                             {
-                                code: "black", // 投票结果
-                                vote_count: 405 //投票数量
-                            }
+                                code: 'black', // 投票结果
+                                vote_count: 405, //投票数量
+                            },
                         ],
                     },
-                ]
+                ];
                 // 创建一个空对象用于存储转换后的数据
                 const transformedData = {};
 
                 // 遍历后端返回的数据
-                res.forEach((entry) => {
+                res.forEach(entry => {
                     const { source_list } = entry;
 
-                    source_list.forEach((source) => {
+                    source_list.forEach(source => {
                         const { code, vote_count } = source;
 
                         // 如果颜色已存在于 transformedData 中，则累加投票数量
@@ -258,58 +252,53 @@ export default {
                 });
 
                 // 计算总投票数量的和
-                const totalCount = Object.values(transformedData).reduce(
-                    (sum, { count }) => sum + count,
-                    0
-                );
+                const totalCount = Object.values(transformedData).reduce((sum, { count }) => sum + count, 0);
 
                 // 计算每个颜色的百分比并更新 transformedData
-                Object.values(transformedData).forEach((entry) => {
+                Object.values(transformedData).forEach(entry => {
                     entry.percent = Number((entry.count / totalCount).toFixed(2));
                 });
 
                 // 转换后的数据存储在 transformedData 中
                 const finalData = Object.values(transformedData);
                 console.log('finalData', finalData);
-                this.legendList = Core.Util.deepCopy(finalData).sort((a, b) => b.count - a.count)
-                const color = ['#056DFF', '#FFBC48', '#FB6381', '#15BFEF', '#26D0A1', '#A880FF', '#FF9834', '#5282FF'] // 配置项的颜色
+                this.legendList = Core.Util.deepCopy(finalData).sort((a, b) => b.count - a.count);
+                const color = ['#056DFF', '#FFBC48', '#FB6381', '#15BFEF', '#26D0A1', '#A880FF', '#FF9834', '#5282FF']; // 配置项的颜色
                 this.legendList.forEach((item, index) => {
-                    item.color = color[index]
-                })
+                    item.color = color[index];
+                });
                 if (!finalData.length) {
-                    this.isEmpty = true
+                    this.isEmpty = true;
                 } else {
-                    this.isEmpty = false
-                    let data = []
+                    this.isEmpty = false;
+                    let data = [];
                     data = finalData.sort((a, b) => b.count - a.count);
                     this.drawBoStatisticsChart(data);
                 }
             } catch (error) {
                 console.log('Error in getResultChartData', error);
-                this.$message.warning('数据无法加载，请稍后重试！')
+                this.$message.warning('数据无法加载，请稍后重试！');
             }
         },
         goToDetail(type) {
-            let routeUrl = ''
+            let routeUrl = '';
             switch (type) {
-                case 'detail':    // 编辑
+                case 'detail': // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/crm-dashboard/vote-detail",
+                        path: '/crm-dashboard/vote-detail',
                         query: {
                             title: this.title,
                             api_name: 'resultStatistics',
                             begin_time: this.searchForm.begin_time,
                             end_time: this.searchForm.end_time,
-                            column_type: Core.Const.VOTE.TYPE.COLOR
-                        }
-                    })
-                    window.open(routeUrl.href, '_blank')
+                            column_type: Core.Const.VOTE.TYPE.COLOR,
+                        },
+                    });
+                    window.open(routeUrl.href, '_blank');
                     break;
             }
-        }
-
-
-    }
+        },
+    },
 };
 </script>
 
@@ -333,7 +322,7 @@ export default {
 
     .detail-title {
         cursor: pointer;
-        color: #0061FF;
+        color: #0061ff;
         font-size: 14px;
         font-style: normal;
         font-weight: 400;
@@ -342,7 +331,7 @@ export default {
 
 .chart {
     width: 200px;
-    height: auto
+    height: auto;
 }
 
 .table-container {
@@ -356,14 +345,14 @@ export default {
         justify-content: center;
         align-items: center;
 
-        >img {
+        > img {
             width: 280px;
         }
 
         .empty-desc {
             margin-top: 10px;
             font-size: 14px;
-            color: #86909C;
+            color: #86909c;
         }
     }
 
@@ -390,14 +379,14 @@ export default {
                 }
 
                 .legend-key {
-                    color: #4E5969;
+                    color: #4e5969;
                     font-size: 14px;
                     font-weight: 400;
                 }
             }
 
             .legend-value {
-                color: #1D2129;
+                color: #1d2129;
                 font-size: 14px;
                 font-weight: 600;
             }

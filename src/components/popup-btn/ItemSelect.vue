@@ -1,43 +1,74 @@
 <template>
-    <a-button class="ItemSelectBtn" v-if="isShowBtn"  @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass" :disabled="disabled!== ''">
+    <a-button
+        class="ItemSelectBtn"
+        v-if="isShowBtn"
+        @click.stop="handleModalShow"
+        :ghost="ghost"
+        :type="btnType"
+        :class="btnClass"
+        :disabled="disabled !== ''"
+    >
         <slot>{{ btnText }}</slot>
     </a-button>
-    <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'
-        class="ItemSelectModal">
+    <a-modal
+        :title="btnText"
+        v-model:visible="modalShow"
+        :after-close="handleModalClose"
+        width="860px"
+        class="ItemSelectModal"
+    >
         <div class="modal-content">
             <div class="search-container">
                 <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :md='12' class="search-item" v-if="!purchaseId">
-                        <div class="key"><span>{{ $t('n.name') }}:</span></div>
+                    <a-col :xs="24" :sm="24" :md="12" class="search-item" v-if="!purchaseId">
+                        <div class="key">
+                            <span>{{ $t('n.name') }}:</span>
+                        </div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                            <a-input
+                                :placeholder="$t('def.input')"
+                                v-model:value="searchForm.name"
+                                @keydown.enter="handleSearch"
+                            />
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :md='12' class="search-item" v-if="!purchaseId">
-                        <div class="key"><span>{{ $t('i.categories') }}:</span></div>
+                    <a-col :xs="24" :sm="24" :md="12" class="search-item" v-if="!purchaseId">
+                        <div class="key">
+                            <span>{{ $t('i.categories') }}:</span>
+                        </div>
                         <div class="value">
-                            <CategoryTreeSelect ref="treeSelect" @change="handleCategorySelect" :category_id='searchForm.category_id' />
+                            <CategoryTreeSelect
+                                ref="treeSelect"
+                                @change="handleCategorySelect"
+                                :category_id="searchForm.category_id"
+                            />
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :md='12' class="search-item">
-                        <div class="key"><span>{{ $t('i.code') }}:</span></div>
+                    <a-col :xs="24" :sm="24" :md="12" class="search-item">
+                        <div class="key">
+                            <span>{{ $t('i.code') }}:</span>
+                        </div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
+                            <a-input
+                                :placeholder="$t('def.input')"
+                                v-model:value="searchForm.code"
+                                @keydown.enter="handleSearch"
+                            />
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :md='12' class="search-item">
-                        <div class="key"><span>{{ $t('i.data_source') }}:</span></div>
+                    <a-col :xs="24" :sm="24" :md="12" class="search-item">
+                        <div class="key">
+                            <span>{{ $t('i.data_source') }}:</span>
+                        </div>
                         <div class="value">
                             <a-select
                                 @change="handleSearch"
                                 v-model:value="source_type"
-                                :placeholder="$t('def.select')">
-                                <a-select-option
-                                    v-for="(item, index) in SOURCE_MAP"
-                                    :key="index"
-                                    :value="item.value"
-                                    >{{ item[$i18n.locale] }}</a-select-option
-                                >
+                                :placeholder="$t('def.select')"
+                            >
+                                <a-select-option v-for="(item, index) in SOURCE_MAP" :key="index" :value="item.value">{{
+                                    item[$i18n.locale]
+                                }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -48,32 +79,33 @@
                 </div>
             </div>
             <div class="table-container">
-                <ItemTable 
-                    v-if="modalShow" 
-                    :columns="tableColumns" 
-                    :data-source="tableData" 
-                    :loading='loading'  
-                    :showStock='!!warehouseId'
-                    :check-mode='true' 
-                    :disabled-checked='disabledChecked'
-                    :radio-mode='radioMode'
-                    @submit="handleSelectItem" 
+                <ItemTable
+                    v-if="modalShow"
+                    :columns="tableColumns"
+                    :data-source="tableData"
+                    :loading="loading"
+                    :showStock="!!warehouseId"
+                    :check-mode="true"
+                    :disabled-checked="disabledChecked"
+                    :radio-mode="radioMode"
+                    @submit="handleSelectItem"
                 />
             </div>
         </div>
         <template #footer>
             <div class="modal-footer">
                 <div class="paging-area">
-                    <a-pagination v-if="!purchaseId"
+                    <a-pagination
+                        v-if="!purchaseId"
                         show-less-items
-                        :hide-on-single-page='false'
+                        :hide-on-single-page="false"
                         :total="total"
                         :current="currPage"
-                        :default-page-size='pageSize'
+                        :default-page-size="pageSize"
                         @change="pageChange"
                     />
                     <div class="tip">
-                        {{ $t('in.selected') + ` ${this.selectItemIds.length} ` + $t('in.total')}}
+                        {{ $t('in.selected') + ` ${this.selectItemIds.length} ` + $t('in.total') }}
                     </div>
                 </div>
                 <div class="btn-area">
@@ -88,8 +120,8 @@
 <script>
 import Core from '@/core';
 
-import ItemTable from '@/components/table/ItemTable.vue'
-import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue'
+import ItemTable from '@/components/table/ItemTable.vue';
+import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue';
 const ITEM = Core.Const.ITEM;
 export default {
     components: {
@@ -98,17 +130,17 @@ export default {
     },
     emits: ['select', 'option'],
     props: {
-        isShowBtn:{
-            type:Boolean,
-            default:true
+        isShowBtn: {
+            type: Boolean,
+            default: true,
         },
         btnText: {
             type: String,
-            default: '添加商品'
+            default: '添加商品',
         },
         btnType: {
             type: String,
-            default: 'primary'
+            default: 'primary',
         },
         btnClass: {
             type: String,
@@ -118,33 +150,34 @@ export default {
             default: false,
         },
 
-        radioMode: { // 是否只能选一个商品
+        radioMode: {
+            // 是否只能选一个商品
             type: Boolean,
             default: false,
         },
         disabledChecked: {
             type: Array,
             default: () => {
-                return []
-            }
+                return [];
+            },
         },
 
         faultName: {
             type: String,
-            default: 'false'
+            default: 'false',
         },
         warehouseId: {
             type: Number,
-            default: 0
+            default: 0,
         },
         purchaseId: {
             type: Number,
-            default: 0
+            default: 0,
         },
-        disabled:{
-            type:String,
-            default:''
-        }
+        disabled: {
+            type: String,
+            default: '',
+        },
     },
     data() {
         return {
@@ -164,103 +197,107 @@ export default {
 
             selectItems: [],
             selectItemIds: [],
-        }
+        };
     },
     watch: {},
     computed: {
         tableColumns() {
             let tableColumns = [
-                {title: this.$t('n.name'), dataIndex: 'name', key: 'detail'},
-                {title: this.$t('i.categories'), dataIndex: 'category_list', key: 'category_list' },
-                {title: this.$t('i.number'), dataIndex: 'model', key: 'item'},
-                {title: this.$t('i.code'), dataIndex: 'code', key: 'item'},
-                {title: this.$t('i.spec'), dataIndex: 'attr_list', key: 'spec'},
-            ]
+                { title: this.$t('n.name'), dataIndex: 'name', key: 'detail' },
+                { title: this.$t('i.categories'), dataIndex: 'category_list', key: 'category_list' },
+                { title: this.$t('i.number'), dataIndex: 'model', key: 'item' },
+                { title: this.$t('i.code'), dataIndex: 'code', key: 'item' },
+                { title: this.$t('i.spec'), dataIndex: 'attr_list', key: 'spec' },
+            ];
             if (this.warehouseId !== 0) {
-                tableColumns.splice(3, 0, {title: this.$t('wa.quantity'), dataIndex: 'stock', key: 'count'})
+                tableColumns.splice(3, 0, { title: this.$t('wa.quantity'), dataIndex: 'stock', key: 'count' });
             }
             if (this.purchaseId !== 0) {
-                tableColumns.splice(3, 0, {title: this.$t('in.order_quantity'), dataIndex: 'count', key: 'count'})
+                tableColumns.splice(3, 0, { title: this.$t('in.order_quantity'), dataIndex: 'count', key: 'count' });
             }
-            return tableColumns
+            return tableColumns;
         },
     },
-    created() {
-    },
+    created() {},
     mounted() {
-        this.getTableData()
+        this.getTableData();
     },
     methods: {
         handleModalShow() {
-            this.pageChange(1)
-            this.modalShow = true
+            this.pageChange(1);
+            this.modalShow = true;
         },
         handleModalClose() {
-            this.modalShow = false
-            this.selectItemIds = []
-            this.selectItems = []
+            this.modalShow = false;
+            this.selectItemIds = [];
+            this.selectItems = [];
             this.searchForm = {
                 code: '',
                 name: '',
                 category_id: '',
-            }
+            };
             this.handleSearchReset();
         },
         handleConfirm() {
-            console.log('handleConfirm this.selectItems:', this.selectItems)
-            this.$emit('select', this.selectItemIds, this.selectItems, this.faultName)
-            this.modalShow = false
+            console.log('handleConfirm this.selectItems:', this.selectItems);
+            this.$emit('select', this.selectItemIds, this.selectItems, this.faultName);
+            this.modalShow = false;
         },
         getTableData() {
             this.loading = true;
             //更换数组形式传参,字符串逗号分隔输入--编码
             let arr = this.searchForm.code.split(',');
-                arr = arr.map(item=>item.trim());
-                arr = arr.filter(item => item !== "");  
-                if (this.purchaseId) {
-                    Core.Api.Purchase.itemList({
-                        order_id: this.purchaseId,
-                        // item_code: this.searchForm.code,
-                        code_list: arr, //更换数组形式传参,字符串逗号分隔输入
-                    }).then(res => {
+            arr = arr.map(item => item.trim());
+            arr = arr.filter(item => item !== '');
+            if (this.purchaseId) {
+                Core.Api.Purchase.itemList({
+                    order_id: this.purchaseId,
+                    // item_code: this.searchForm.code,
+                    code_list: arr, //更换数组形式传参,字符串逗号分隔输入
+                })
+                    .then(res => {
                         this.tableData = res.list.map(item => {
                             return {
                                 ...item.item,
-                                count: item.amount
-                            }
-                        })
-                        this.$emit('option', this.tableData)
+                                count: item.amount,
+                            };
+                        });
+                        this.$emit('option', this.tableData);
                         this.loading = false;
-                    }).catch(err => {
-                        console.log('Purchase.itemList err', err)
+                    })
+                    .catch(err => {
+                        console.log('Purchase.itemList err', err);
                         this.loading = false;
-                    }).finally(() => {
+                    })
+                    .finally(() => {
                         this.loading = false;
                     });
-                } else {
-                    Core.Api.Item.list({
-                        // ...this.searchForm,
-                        name: this.searchForm.name,
-                        category_id: this.searchForm.category_id,
-                        warehouse_id: this.warehouseId,
-                        page: this.currPage,
-                        page_size: this.pageSize,
-                        flag_spread: 1,
-                        source_type: this.source_type === 0 ? '' : this.source_type,
-                        code_list: arr, //更换数组形式传参,字符串逗号分隔输入
-
-                    }).then(res => {
-                        console.log('Item.list res:', res)
-                        this.tableData = this.removeChildrenFromData(res.list)
+            } else {
+                Core.Api.Item.list({
+                    // ...this.searchForm,
+                    name: this.searchForm.name,
+                    category_id: this.searchForm.category_id,
+                    warehouse_id: this.warehouseId,
+                    page: this.currPage,
+                    page_size: this.pageSize,
+                    flag_spread: 1,
+                    source_type: this.source_type === 0 ? '' : this.source_type,
+                    code_list: arr, //更换数组形式传参,字符串逗号分隔输入
+                })
+                    .then(res => {
+                        console.log('Item.list res:', res);
+                        this.tableData = this.removeChildrenFromData(res.list);
                         this.total = res.count;
                         this.loading = false;
-                    }).catch(err => {
-                        console.log('Item.list err', err)
+                    })
+                    .catch(err => {
+                        console.log('Item.list err', err);
                         this.loading = false;
-                    }).finally(() => {
+                    })
+                    .finally(() => {
                         this.loading = false;
                     });
-                }
+            }
         },
         /* 删除加号 */
         removeChildrenFromData(data) {
@@ -270,35 +307,36 @@ export default {
                 return newItem;
             });
         },
-        pageChange(curr) {  // 页码改变
-            this.currPage = curr
-            this.getTableData()
+        pageChange(curr) {
+            // 页码改变
+            this.currPage = curr;
+            this.getTableData();
         },
         handleSearch() {
-            this.pageChange(1)
+            this.pageChange(1);
         },
         handleSearchReset() {
-            this.searchForm.code = ''
-            this.searchForm.name = ''
-            this.searchForm.category_id = undefined
-            this.source_type = undefined
+            this.searchForm.code = '';
+            this.searchForm.name = '';
+            this.searchForm.category_id = undefined;
+            this.source_type = undefined;
             this.$refs.treeSelect?.resetVal();
-            this.pageChange(1)
+            this.pageChange(1);
         },
         handleCategorySelect(val) {
-            this.searchForm.category_id = val
+            this.searchForm.category_id = val;
             this.pageChange(1);
         },
         handleSelectItem(ids, items) {
-            console.log('handleSelectItem ids, items:', ids, items)
-            this.selectItems = items
-            this.selectItemIds = ids
+            console.log('handleSelectItem ids, items:', ids, items);
+            this.selectItems = items;
+            this.selectItemIds = ids;
         },
     },
-}
+};
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .ItemSelectBtn {
     &.ant-btn-link {
         line-height: 1;
