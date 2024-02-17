@@ -196,7 +196,8 @@
                                 </template>
                                 <template v-else>
                                     <span v-if="text >= 0">{{ column.unit }}</span>
-                                    {{ paramPrice ? $Util.countFilter(record.fob_eur) : $Util.countFilter(record.fob_usd) }}
+                                    <!-- {{ paramPrice ? $Util.countFilter(record.fob_eur) : $Util.countFilter(record.fob_usd) }} -->
+                                    {{ $Util.countFilter(record.fob_eur) }}
                                 </template>
                             </template>
                             <template v-if="column.dataIndex === 'fob_usd'">
@@ -208,7 +209,8 @@
                                 </template>
                                 <template v-else>
                                     <span v-if="text >= 0">{{ column.unit }}</span>
-                                    {{ paramPrice ? $Util.countFilter(record.fob_eur) : $Util.countFilter(record.fob_usd) }}
+                                    <!-- {{ paramPrice ? $Util.countFilter(record.fob_eur) : $Util.countFilter(record.fob_usd) }} -->
+                                    {{ $Util.countFilter(record.fob_usd) }}
                                 </template>
                             </template>
                             <!-- sales_area_list -->
