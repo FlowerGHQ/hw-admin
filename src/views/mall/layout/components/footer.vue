@@ -12,7 +12,13 @@
                 <!-- <span class="menu-item" v-for="(item, index) in menuList" :key="index">
                     {{ $t(`mall.${item.lang}`) }}
                 </span> -->
-                <span class="menu-item tab-animate" :class="menuIndex === index ? 'active' : ''" v-for="(item, index) in menuListOne" :key="index" @click="menuChange(index, item.path)">
+                <span
+                    class="menu-item tab-animate"
+                    :class="menuIndex === index ? 'active' : ''"
+                    v-for="(item, index) in menuListOne"
+                    :key="index"
+                    @click="menuChange(index, item.path)"
+                >
                     {{ $t(`mall.${item.lang}`) }}
                 </span>
             </div>
@@ -23,7 +29,7 @@
         </div>
     </div>
 </template>
-    
+
 <script>
 import Core from '@/core';
 
@@ -45,12 +51,12 @@ export default {
             immediate: true,
             handler(newV) {
                 switch (newV.path) {
-                    case "/mall/all-articles":
-                        this.menuIndex = 1
+                    case '/mall/all-articles':
+                        this.menuIndex = 1;
                         break;
-                
+
                     default:
-                        this.menuIndex = ''
+                        this.menuIndex = '';
                         break;
                 }
             },
@@ -58,15 +64,16 @@ export default {
     },
     created() {},
     mounted() {
-        if (this.$route.path === '/preview/deals-preview') {// 如果是预览页则禁用点击 且不继续往下执行
+        if (this.$route.path === '/preview/deals-preview') {
+            // 如果是预览页则禁用点击 且不继续往下执行
             this.isPreview = true;
             return;
-        };
+        }
     },
     methods: {
         menuChange(index, path) {
-            this.menuIndex = index
-            this.routerChange(path)
+            this.menuIndex = index;
+            this.routerChange(path);
         },
         // 路由跳转
         routerChange(routeUrl, item = {}, type = 1) {
@@ -74,23 +81,23 @@ export default {
                 case 1:
                     this.$router.push({
                         path: routeUrl,
-                        query: item
-                    })
+                        query: item,
+                    });
                     break;
                 default:
                     break;
             }
         },
-    }
+    },
 };
 </script>
-    
+
 <style lang="less">
-#mall-footer{
+#mall-footer {
     height: var(--footer-h-pc-mall);
     overflow: hidden;
     background-color: #000;
-    color: #FFF;
+    color: #fff;
     .content {
         border-top: 1px solid rgba(255, 255, 255, 0.1);
         .fcc(space-between);
@@ -128,14 +135,16 @@ export default {
         .menu-one {
             .menu-item {
                 font-size: 14px;
-                color: #FFF;
+                color: #fff;
                 &:hover {
-                    color: #FFF;
+                    color: #fff;
                 }
             }
         }
     }
-    @media (min-width: 820px) {}
-    @media (max-width: 820px) {}
+    @media (min-width: 820px) {
+    }
+    @media (max-width: 820px) {
+    }
 }
 </style>

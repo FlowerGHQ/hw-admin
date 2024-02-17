@@ -2,14 +2,17 @@
     <div class="static-preview-list">
         <template v-for="(item, index) in attachment_list" :key="index">
             <template v-if="/(image\/|png|jpg|jpeg)/.test(item.type)">
-                <img 
-                    :class="{ 'm-l-16': index > 0 }" 
-                    class="attachment-img" 
-                    :src="item.path" alt="" 
-                    @click="onViewImage({
-                        ...item,
-                        file
-                    })" 
+                <img
+                    :class="{ 'm-l-16': index > 0 }"
+                    class="attachment-img"
+                    :src="item.path"
+                    alt=""
+                    @click="
+                        onViewImage({
+                            ...item,
+                            file,
+                        })
+                    "
                 />
             </template>
             <template v-else-if="/video\/+/.test(item.type)">
@@ -25,7 +28,7 @@
                     "
                 >
                     <MySvgIcon class="video-icon" icon-class="video-icon" />
-                    <div class="time">{{ item.duration || "-" }}{{ item.duration ? "s" : "" }}</div>
+                    <div class="time">{{ item.duration || '-' }}{{ item.duration ? 's' : '' }}</div>
                     <div class="bottom-mask">{{ item.name }}</div>
                 </div>
             </template>
@@ -66,7 +69,7 @@
 </template>
 
 <script setup>
-import MySvgIcon from "@/components/MySvgIcon/index.vue";
+import MySvgIcon from '@/components/MySvgIcon/index.vue';
 
 const props = defineProps({
     // 循环list
@@ -76,16 +79,16 @@ const props = defineProps({
     },
     // 特殊的传进来的
     file: {
-        type: String,        
+        type: String,
     },
 });
 
-const emits = defineEmits(['view'])
+const emits = defineEmits(['view']);
 
-const onViewImage = (item) => {
-    console.log("onViewImage", item);
-    emits('view', item)
-}
+const onViewImage = item => {
+    console.log('onViewImage', item);
+    emits('view', item);
+};
 </script>
 
 <style lang="less" scoped>

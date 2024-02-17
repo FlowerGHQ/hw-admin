@@ -1,7 +1,6 @@
-
 export default {
     zh: {
-        system: "HORWIN业务操作系统",
+        system: 'HORWIN业务操作系统',
         account_login: '登录',
         conditions: '条款和条件',
         legal: '隐私',
@@ -39,7 +38,7 @@ export default {
         phone_login: '手机号码/验证码登录',
     },
     en: {
-        system: "HORWIN Business Operating System",
+        system: 'HORWIN Business Operating System',
         account_login: 'Log In',
         conditions: 'terms & conditions',
         legal: 'legal',
@@ -75,6 +74,5 @@ export default {
         more_login: 'More Login Methods',
         user_name_login: 'User Name / Password Log In',
         phone_login: 'Phone Number / Verification Code Log In',
-    }
-}
-
+    },
+};

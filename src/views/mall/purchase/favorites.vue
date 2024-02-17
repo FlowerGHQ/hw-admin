@@ -26,80 +26,82 @@ import Core from '@/core';
 import { ref, reactive, onMounted, computed, onBeforeUnmount } from 'vue';
 
 /* state start */
-const spinning = ref(false)
+const spinning = ref(false);
 const pagination = reactive({
     page_size: 20,
     page: 1,
     total: 0,
     total_page: 0,
-})
-const list = ref([])
-const favoriteListFetch = Core.Api.Favorite.list
+});
+const list = ref([]);
+const favoriteListFetch = Core.Api.Favorite.list;
 /* state end */
 
 onMounted(() => {
-    getData()
-    window.addEventListener('scroll', handleScroll)
-})
+    getData();
+    window.addEventListener('scroll', handleScroll);
+});
 onBeforeUnmount(() => {
-    window.removeEventListener('scroll', handleScroll)
-})
+    window.removeEventListener('scroll', handleScroll);
+});
 
 /* computed start */
 const listRender = computed(() => {
     return list.value.map(item => {
-        delete item['item'].id
+        delete item['item'].id;
         return {
             ...item,
             ...item['item'],
-        }
-    })
-})
+        };
+    });
+});
 /* computed end */
 
 /* methods start */
 // 获取数据
 const getData = () => {
-    getCarList()
-}
+    getCarList();
+};
 const handleScroll = () => {
     // 因为存在子组件路由所以判断只在父路由时执行
-    const footerHeight = document.querySelector('#mall-footer').clientHeight
-    const html = document.documentElement
-    Core.Util.handleScrollFn(html, getCarList, pagination, spinning.value, footerHeight)
-}
+    const footerHeight = document.querySelector('#mall-footer').clientHeight;
+    const html = document.documentElement;
+    Core.Util.handleScrollFn(html, getCarList, pagination, spinning.value, footerHeight);
+};
 const resetFn = () => {
-    list.value = []
+    list.value = [];
     Object.assign(pagination, {
         page_size: 20,
         page: 1,
         total: 0,
         total_page: 0,
-    })
-}
+    });
+};
 /* methods end */
 
 /* fetch start */
 const getCarList = (q, reset = false) => {
     if (reset) resetFn();
-    spinning.value = true
+    spinning.value = true;
     const params = {
-        "page": pagination.page,
-        "page_size": pagination.page_size,
-    }
-    Object.assign(params, q)
-    favoriteListFetch({ ...params }).then(res => {
-        list.value = list.value.concat(res?.list)
-        pagination.total = res.count
-        pagination.total_page = Math.ceil(pagination.total / pagination.page_size)
-    }).finally(() => {
-        spinning.value = false
-    })
-}
+        page: pagination.page,
+        page_size: pagination.page_size,
+    };
+    Object.assign(params, q);
+    favoriteListFetch({ ...params })
+        .then(res => {
+            list.value = list.value.concat(res?.list);
+            pagination.total = res.count;
+            pagination.total_page = Math.ceil(pagination.total / pagination.page_size);
+        })
+        .finally(() => {
+            spinning.value = false;
+        });
+};
 /* fetch end */
 </script>
 
-<style lang='scss' scoped src='../css/layout.css'></style>
+<style lang="scss" scoped src="../css/layout.css"></style>
 <style lang="less" scoped>
 #favorites {
     .content {

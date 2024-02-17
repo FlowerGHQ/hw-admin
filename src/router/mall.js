@@ -1,11 +1,12 @@
-import Const from "../core/const"
-import Util from "../core/utils"
-import Data from "../core/data"
+import Const from '../core/const';
+import Util from '../core/utils';
+import Data from '../core/data';
 import MallLayout from '../views/mall/layout/index.vue';
 
-const LOGIN_TYPE = Const.LOGIN.TYPE
+const LOGIN_TYPE = Const.LOGIN.TYPE;
 
-const mallRouters = { // 看板
+const mallRouters = {
+    // 看板
     path: '/mall',
     component: MallLayout,
     name: 'Mall',
@@ -14,7 +15,7 @@ const mallRouters = { // 看板
         title_en: 'Store',
         icon: 'i_s_dashboard',
         roles: [LOGIN_TYPE.DISTRIBUTOR],
-        hidden: true
+        hidden: true,
     },
     children: [
         {
@@ -23,7 +24,7 @@ const mallRouters = { // 看板
             meta: {
                 title: '首页',
                 title_en: 'Index',
-            }
+            },
         },
         {
             path: 'search',
@@ -31,7 +32,7 @@ const mallRouters = { // 看板
             meta: {
                 title: '搜索',
                 title_en: 'Search',
-            }
+            },
         },
         {
             path: 'favorites',
@@ -39,7 +40,7 @@ const mallRouters = { // 看板
             meta: {
                 title: '收藏夹',
                 title_en: 'Favorites',
-            }
+            },
         },
         {
             path: 'all-articles',
@@ -47,7 +48,7 @@ const mallRouters = { // 看板
             meta: {
                 title: '文章列表',
                 title_en: 'All Articles',
-            }
+            },
         },
         {
             path: 'all-deals',
@@ -55,7 +56,7 @@ const mallRouters = { // 看板
             meta: {
                 title: '公告列表',
                 title_en: 'All Deals',
-            }
+            },
         },
         {
             path: 'deals-detail',
@@ -63,7 +64,7 @@ const mallRouters = { // 看板
             meta: {
                 title: '公告详情',
                 title_en: 'Report Detail',
-            }
+            },
         },
         {
             path: 'detail',
@@ -71,7 +72,7 @@ const mallRouters = { // 看板
             meta: {
                 title: '文章详情',
                 title_en: 'Articles Detail',
-            }
+            },
         },
         {
             path: 'shopping-bag',
@@ -79,7 +80,7 @@ const mallRouters = { // 看板
             meta: {
                 title: '购物车',
                 title_en: 'Shopping Bag',
-            }
+            },
         },
         {
             path: 'vehicle-list',
@@ -96,10 +97,10 @@ const mallRouters = { // 看板
                     meta: {
                         title: '整车详情',
                         title_en: 'Vehicle Detail',
-                        hideParentTemplate: true
-                    }
+                        hideParentTemplate: true,
+                    },
                 },
-            ]
+            ],
         },
         {
             path: 'accessories-list',
@@ -116,10 +117,10 @@ const mallRouters = { // 看板
                     meta: {
                         title: '配件详情',
                         title_en: 'Accessories Detail',
-                        hideParentTemplate: true
-                    }
+                        hideParentTemplate: true,
+                    },
                 },
-            ]
+            ],
         },
         {
             path: 'peripheral-list',
@@ -136,10 +137,10 @@ const mallRouters = { // 看板
                     meta: {
                         title: '周边件详情',
                         title_en: 'Peripheral Products Detail',
-                        hideParentTemplate: true
-                    }
+                        hideParentTemplate: true,
+                    },
                 },
-            ]
+            ],
         },
         {
             path: 'promotional-list',
@@ -156,13 +157,13 @@ const mallRouters = { // 看板
                     meta: {
                         title: '广宣品详情',
                         title_en: 'Promotional Products Detail',
-                        hideParentTemplate: true
-                    }
+                        hideParentTemplate: true,
+                    },
                 },
-            ]
+            ],
         },
-    ]
-}
+    ],
+};
 const dealsPreview = {
     path: '/preview',
     component: MallLayout,
@@ -172,7 +173,7 @@ const dealsPreview = {
         title_en: 'Store',
         icon: 'i_s_dashboard',
         roles: [LOGIN_TYPE.ADMIN],
-        hidden: true
+        hidden: true,
     },
     children: [
         {
@@ -181,11 +182,8 @@ const dealsPreview = {
             meta: {
                 title: '公告详情',
                 title_en: 'Report Detail',
-            }
+            },
         },
-    ]
-}
-export {
-    mallRouters,
-    dealsPreview
-}
+    ],
+};
+export { mallRouters, dealsPreview };

@@ -3,11 +3,11 @@
         <div class="list-container">
             <!-- 头部 -->
             <div class="title-container">
-                <div class="title-area">{{ $t("customer-care.inquiry_list") }}</div>
+                <div class="title-area">{{ $t('customer-care.inquiry_list') }}</div>
                 <div class="btns-area">
                     <a-button type="primary" @click="routerChange('add')"
                         ><i class="icon i_add" />
-                        {{ $t("customer-care.create_inquiry_form") }}
+                        {{ $t('customer-care.create_inquiry_form') }}
                     </a-button>
                 </div>
             </div>
@@ -27,12 +27,18 @@
                 </a-tabs>
             </div>
             <div class="search">
-                <SearchAll ref="search_all" :options="isDistributerAdmin ? searchAdminList : searchDistributerList" @search="onSearch" @reset="onReset"> </SearchAll>
+                <SearchAll
+                    ref="search_all"
+                    :options="isDistributerAdmin ? searchAdminList : searchDistributerList"
+                    @search="onSearch"
+                    @reset="onReset"
+                >
+                </SearchAll>
             </div>
             <!-- table -->
             <div class="table-container">
-                <a-button v-if="isDistributerAdmin" class="m-b-10" type="primary" @click="handleExportIn/*导出功能*/">
-                    <i class="icon i_download" />{{ $t("common.export") }}
+                <a-button v-if="isDistributerAdmin" class="m-b-10" type="primary" @click="handleExportIn; /*导出功能*/">
+                    <i class="icon i_download" />{{ $t('common.export') }}
                 </a-button>
                 <a-table
                     :columns="tableColumns"
@@ -40,7 +46,7 @@
                     :scroll="{ x: true }"
                     :loading="loading"
                     :locale="$i18n.locale === 'en' ? localeEn : localeZh"
-                    :row-key="(record) => record.id"
+                    :row-key="record => record.id"
                     :pagination="false"
                 >
                     <template #headerCell="{ title }">
@@ -50,8 +56,10 @@
                         <!-- 公共 -->
                         <template v-if="column.key === 'uid'">
                             <div class="new">
-                                <span class="new-msg" v-if="newMsgIdFn(record, 'admin')">{{ $t("customer-care.new_msg") /*新消息*/ }}</span>
-                                <div>{{ text || "-" }}</div>
+                                <span class="new-msg" v-if="newMsgIdFn(record, 'admin')">{{
+                                    $t('customer-care.new_msg') /*新消息*/
+                                }}</span>
+                                <div>{{ text || '-' }}</div>
                             </div>
                         </template>
                         <!-- 时间类型 -->
@@ -91,7 +99,11 @@
                         <!-- 故障类型 -->
                         <template v-if="column.key === 'fault_type'">
                             <template
-                                v-if="$Util.Common.returnTypeBool(record.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY /*电池*/])"
+                                v-if="
+                                    $Util.Common.returnTypeBool(record.type, [
+                                        Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY /*电池*/,
+                                    ])
+                                "
                             >
                                 {{ $t($Util.Common.returnTranslation(text, Core.Const.CUSTOMER_CARE.FAULT_TYPE)) }}
                             </template>
@@ -102,9 +114,14 @@
                                             <span>
                                                 {{
                                                     item.vehicle_uid +
-                                                    "(" +
-                                                    $t($Util.Common.returnTranslation(item?.fault_type, Core.Const.CUSTOMER_CARE.FAULT_TYPE)) +
-                                                    ")"
+                                                    '(' +
+                                                    $t(
+                                                        $Util.Common.returnTranslation(
+                                                            item?.fault_type,
+                                                            Core.Const.CUSTOMER_CARE.FAULT_TYPE,
+                                                        ),
+                                                    ) +
+                                                    ')'
                                                 }}
                                             </span>
                                             <span v-if="record.vehicle_list.length > 1">,</span>
@@ -120,9 +137,14 @@
                                             <span>
                                                 {{
                                                     item.vehicle_uid +
-                                                    "(" +
-                                                    $t($Util.Common.returnTranslation(item?.fault_type, Core.Const.CUSTOMER_CARE.FAULT_TYPE)) +
-                                                    ")"
+                                                    '(' +
+                                                    $t(
+                                                        $Util.Common.returnTranslation(
+                                                            item?.fault_type,
+                                                            Core.Const.CUSTOMER_CARE.FAULT_TYPE,
+                                                        ),
+                                                    ) +
+                                                    ')'
                                                 }}
                                             </span>
                                             <span v-if="record.vehicle_list.length > 1">,</span>
@@ -137,7 +159,9 @@
                             <a-tooltip placement="topLeft">
                                 <template #title>
                                     <span v-for="(item, index) in record.part_list">
-                                        <span>{{ $i18n.locale === "en" ? item?.item?.name_en || "-" : item?.item?.name || "-" }}</span>
+                                        <span>{{
+                                            $i18n.locale === 'en' ? item?.item?.name_en || '-' : item?.item?.name || '-'
+                                        }}</span>
                                         <span v-if="record.part_list.length > 1">,</span>
                                     </span>
                                 </template>
@@ -148,7 +172,9 @@
                                     }"
                                 >
                                     <span v-for="(item, index) in record.part_list">
-                                        <span>{{ $i18n.locale === "en" ? item?.item?.name_en || "-" : item?.item?.name || "-" }}</span>
+                                        <span>{{
+                                            $i18n.locale === 'en' ? item?.item?.name_en || '-' : item?.item?.name || '-'
+                                        }}</span>
                                         <span v-if="record.part_list.length > 1">,</span>
                                     </span>
                                     <template v-if="record.part_list.length === 0">-</template>
@@ -161,7 +187,7 @@
                                 <template #title>
                                     <span v-for="(item, index) in record.vehicle_list">
                                         <span>
-                                            {{ item.vehicle_uid + "(" + item.mileage + "km" + ")" }}
+                                            {{ item.vehicle_uid + '(' + item.mileage + 'km' + ')' }}
                                         </span>
                                         <span v-if="record.vehicle_list.length > 1">,</span>
                                     </span>
@@ -174,7 +200,7 @@
                                 >
                                     <span v-for="(item, index) in record.vehicle_list">
                                         <span>
-                                            {{ item.vehicle_uid + "(" + item.mileage + "km" + ")"  }}
+                                            {{ item.vehicle_uid + '(' + item.mileage + 'km' + ')' }}
                                         </span>
                                         <span v-if="record.vehicle_list.length > 1">,</span>
                                     </span>
@@ -192,7 +218,7 @@
                                         <span>{{ item.vehicle_uid }}</span>
                                         <span v-if="record.vehicle_list.length > 1">,</span>
                                     </span>
-                                </template>                                
+                                </template>
                                 <div
                                     class="one-spils cursor"
                                     :style="{
@@ -203,14 +229,14 @@
                                         <span>{{ item.vehicle_uid || '-' }}</span>
                                         <span v-if="record.vehicle_list.length > 1">,</span>
                                     </span>
-                                    
+
                                     <template v-if="record.vehicle_list.length === 0">-</template>
                                 </div>
                             </a-tooltip>
                         </template>
                         <!-- 车型 -->
                         <template v-if="column.key === 'category'">
-                            {{ $i18n.locale === "en" ? record.category?.name_en : record.category?.name }}
+                            {{ $i18n.locale === 'en' ? record.category?.name_en : record.category?.name }}
                         </template>
                         <!-- 反馈类型 -->
                         <template v-if="column.key === 'type'">
@@ -220,16 +246,30 @@
                         <template v-if="column.key === 'operations'">
                             <a-button type="link" @click="routerChange('detail', record)">
                                 <MySvgIcon icon-class="common-view" />
-                                <span class="m-l-4">{{ $t("common.detail") }}</span>
+                                <span class="m-l-4">{{ $t('common.detail') }}</span>
                             </a-button>
-                            <template v-if="!$Util.Common.returnTypeBool(record.status, [Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED])">
-                                <a-button v-if="editCommentAuth($auth('enquiry-ticket.edit'))" type="link" @click="routerChange('edit', record)">
+                            <template
+                                v-if="
+                                    !$Util.Common.returnTypeBool(record.status, [
+                                        Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED,
+                                    ])
+                                "
+                            >
+                                <a-button
+                                    v-if="editCommentAuth($auth('enquiry-ticket.edit'))"
+                                    type="link"
+                                    @click="routerChange('edit', record)"
+                                >
                                     <MySvgIcon icon-class="common-edit" />
-                                    <span class="m-l-4">{{ $t("common.edit") }}</span>
+                                    <span class="m-l-4">{{ $t('common.edit') }}</span>
                                 </a-button>
-                                <a-button v-if="editCommentAuth($auth('enquiry-ticket.comment'))" type="link" @click="routerChange('msg', record)">
+                                <a-button
+                                    v-if="editCommentAuth($auth('enquiry-ticket.comment'))"
+                                    type="link"
+                                    @click="routerChange('msg', record)"
+                                >
                                     <MySvgIcon icon-class="common-leave" />
-                                    <span class="m-l-4">{{ $t("customer-care.leave_message") }}</span>
+                                    <span class="m-l-4">{{ $t('customer-care.leave_message') }}</span>
                                 </a-button>
                             </template>
                         </template>
@@ -244,7 +284,7 @@
                     show-quick-jumper
                     show-size-changer
                     show-less-items
-                    :show-total="(total) => $t('n.all_total') + ` ${pagination.total} ` + $t('in.total')"
+                    :show-total="total => $t('n.all_total') + ` ${pagination.total} ` + $t('in.total')"
                     :hide-on-single-page="false"
                     :pageSizeOptions="['10', '20', '30', '40']"
                     @change="onPageChange"
@@ -256,21 +296,21 @@
 </template>
 
 <script setup>
-import { ref, computed, getCurrentInstance, watch, onMounted } from "vue";
-import Core from "@/core";
-import MySvgIcon from "@/components/MySvgIcon/index.vue";
-import { useTable } from "@/hooks/useTable";
-import SearchAll from "@/components/horwin/based-on-ant/SearchAll.vue";
+import { ref, computed, getCurrentInstance, watch, onMounted } from 'vue';
+import Core from '@/core';
+import MySvgIcon from '@/components/MySvgIcon/index.vue';
+import { useTable } from '@/hooks/useTable';
+import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';
 import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
 
 const STATUS = Core.Const.FEEDBACK.STATUS;
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE;
 const USER_TYPE = Core.Const.USER.TYPE;
-import TimeSearch from "@/components/common/TimeSearch.vue";
-import { useRouter, useRoute } from "vue-router";
-import { message } from "ant-design-vue";
-import { result } from "lodash";
+import TimeSearch from '@/components/common/TimeSearch.vue';
+import { useRouter, useRoute } from 'vue-router';
+import { message } from 'ant-design-vue';
+import { result } from 'lodash';
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
@@ -294,28 +334,28 @@ const statusData = ref({
 const searchDistributerList = ref([
     {
         // 问询单号
-        type: "input",
-        value: "",
-        searchParmas: "uid",
-        key: "customer-care.inquiry_number",
+        type: 'input',
+        value: '',
+        searchParmas: 'uid',
+        key: 'customer-care.inquiry_number',
     },
     {
         // 车架号
-        type: "input",
-        value: "",
-        searchParmas: "vehicle_uid",
-        key: "common.vehicle_no",
+        type: 'input',
+        value: '',
+        searchParmas: 'vehicle_uid',
+        key: 'common.vehicle_no',
     },
     {
         // 状态
-        type: "select",
+        type: 'select',
         value: undefined,
-        searchParmas: "status",
-        key: "common.status",
+        searchParmas: 'status',
+        key: 'common.status',
         selectMap: (() => {
             let result = [];
             for (const key in Core.Const.CUSTOMER_CARE.ORDER_STATUS) {
-                if (key === "-1") {
+                if (key === '-1') {
                     result.unshift(Core.Const.CUSTOMER_CARE.ORDER_STATUS[key]);
                 } else {
                     result.push(Core.Const.CUSTOMER_CARE.ORDER_STATUS[key]);
@@ -329,42 +369,42 @@ const searchDistributerList = ref([
 const searchAdminList = ref([
     {
         // 国家
-        type: "input",
+        type: 'input',
         value: undefined,
-        searchParmas: "country",
-        key: "common.country",
+        searchParmas: 'country',
+        key: 'common.country',
     },
     {
         // 车架号
-        type: "input",
+        type: 'input',
         value: undefined,
-        searchParmas: "vehicle_uid",
-        key: "common.vehicle_no",
+        searchParmas: 'vehicle_uid',
+        key: 'common.vehicle_no',
     },
     {
         // 零件
-        type: "input",
+        type: 'input',
         value: undefined,
-        searchParmas: "part_name",
-        key: "customer-care.part",
+        searchParmas: 'part_name',
+        key: 'customer-care.part',
     },
     {
         // 车型
-        type: "input",
+        type: 'input',
         value: undefined,
-        searchParmas: "category_name",
-        key: "common.vehicle_model",
+        searchParmas: 'category_name',
+        key: 'common.vehicle_model',
     },
     {
         // 问询标签
-        type: "select",
+        type: 'select',
         value: undefined,
-        searchParmas: "purpose",
-        key: "customer-care.inquiry_label",
+        searchParmas: 'purpose',
+        key: 'customer-care.inquiry_label',
         selectMap: (() => {
             let result = [];
             for (const key in Core.Const.CUSTOMER_CARE.SORTING_TYPE) {
-                if (key === "-1") {
+                if (key === '-1') {
                     result.unshift(Core.Const.CUSTOMER_CARE.SORTING_TYPE[key]);
                 } else {
                     result.push(Core.Const.CUSTOMER_CARE.SORTING_TYPE[key]);
@@ -393,14 +433,14 @@ const searchAdminList = ref([
     // },
     {
         // 故障分类
-        type: "select",
+        type: 'select',
         value: undefined,
-        searchParmas: "fault_type",
-        key: "customer-care.fault_classification",
+        searchParmas: 'fault_type',
+        key: 'customer-care.fault_classification',
         selectMap: (() => {
             let result = [];
             for (const key in Core.Const.CUSTOMER_CARE.FAULT_TYPE) {
-                if (key === "-1") {
+                if (key === '-1') {
                     result.unshift(Core.Const.CUSTOMER_CARE.FAULT_TYPE[key]);
                 } else {
                     result.push(Core.Const.CUSTOMER_CARE.FAULT_TYPE[key]);
@@ -411,10 +451,10 @@ const searchAdminList = ref([
     },
     {
         // 类型
-        type: "select",
+        type: 'select',
         value: undefined,
-        searchParmas: "type",
-        key: "common.type",
+        searchParmas: 'type',
+        key: 'common.type',
         selectMap: (() => {
             let result = [];
             for (const key in Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE) {
@@ -425,33 +465,38 @@ const searchAdminList = ref([
     },
     {
         // 归属客服
-        type: "input",
+        type: 'input',
         value: undefined,
-        searchParmas: "process_user_name",
-        key: "customer-care.belonging_customer_service",
+        searchParmas: 'process_user_name',
+        key: 'customer-care.belonging_customer_service',
     },
 ]);
 
 // tabs 的数据
 const statusList = computed(() => {
     let result = [
-        { t: "common.all", count: statusData.value.all_total, color: "primary", key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.ALL },
         {
-            t: "customer-care.waiting_for_processing",
+            t: 'common.all',
+            count: statusData.value.all_total,
+            color: 'primary',
+            key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.ALL,
+        },
+        {
+            t: 'customer-care.waiting_for_processing',
             count: statusData.value.waiting_total,
-            color: "yellow",
+            color: 'yellow',
             key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.EQUALTREATMENT,
         },
         {
-            t: "customer-care.processing",
+            t: 'customer-care.processing',
             count: statusData.value.process_total,
-            color: "yellow",
+            color: 'yellow',
             key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.INPROCESS,
         },
         {
-            t: "customer-care.problem_solving",
+            t: 'customer-care.problem_solving',
             count: statusData.value.resolved_total,
-            color: "yellow",
+            color: 'yellow',
             key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED,
         },
     ];
@@ -463,28 +508,43 @@ const tableColumns = computed(() => {
     let columns = [];
     if (!isDistributerAdmin.value) {
         columns = [
-            { title: proxy.$t("customer-care.inquiry_number"), dataIndex: "uid", key: "uid" }, // 问询单号
-            { title: proxy.$t("common.vehicle_no"), dataIndex: "vehicle_list", key: "vehicle_list", width: 150 }, // 车架号
-            { title: proxy.$t("customer-care.feedback_type"), dataIndex: "type", key: "type" }, // 反馈类型
-            { title: proxy.$t("common.vehicle_model"), dataIndex: "category", key: "category" }, // 车型
-            { title: proxy.$t("common.status"), dataIndex: "status", key: "status", width: 70 }, // 状态
-            { title: proxy.$t("common.create_time"), dataIndex: "create_time", key: "time" }, // 创建时间
-            { title: proxy.$t("common.operations"), dataIndex: "operations", key: "operations", fixed: "right", width: 200 }, // 操作
+            { title: proxy.$t('customer-care.inquiry_number'), dataIndex: 'uid', key: 'uid' }, // 问询单号
+            { title: proxy.$t('common.vehicle_no'), dataIndex: 'vehicle_list', key: 'vehicle_list', width: 150 }, // 车架号
+            { title: proxy.$t('customer-care.feedback_type'), dataIndex: 'type', key: 'type' }, // 反馈类型
+            { title: proxy.$t('common.vehicle_model'), dataIndex: 'category', key: 'category' }, // 车型
+            { title: proxy.$t('common.status'), dataIndex: 'status', key: 'status', width: 70 }, // 状态
+            { title: proxy.$t('common.create_time'), dataIndex: 'create_time', key: 'time' }, // 创建时间
+            {
+                title: proxy.$t('common.operations'),
+                dataIndex: 'operations',
+                key: 'operations',
+                fixed: 'right',
+                width: 200,
+            }, // 操作
         ];
     } else if (isDistributerAdmin.value) {
         columns = [
-            { title: proxy.$t("customer-care.Construction_site_number"), dataIndex: "uid", key: "uid" }, // 工单编号
-            { title: proxy.$t("customer-care.classify"), dataIndex: "purpose", key: "purpose" }, // 归类
-            { title: proxy.$t("common.type"), dataIndex: "type", key: "type" }, // 类型
-            { title: proxy.$t("customer-care.submitter"), dataIndex: "submit_user_name", key: "submit_user_name" }, // 提交人
-            { title: proxy.$t("customer-care.part"), dataIndex: "part_list", key: "part_list", width: 150 }, // 零件
-            { title: proxy.$t("customer-care.processing_progress"), dataIndex: "status", key: "status", width: 70 }, // 处理进度
-            { title: proxy.$t("customer-care.model_number_mileage"), dataIndex: "mileage", key: "mileage", width: 150 }, // 车架号、公里数
-            { title: proxy.$t("customer-care.fault_classification"), dataIndex: "fault_type", key: "fault_type", width: 150 }, // 故障分类
-            { title: proxy.$t("customer-care.belonging_customer_service"), dataIndex: "process_user_name", key: "process_user_name" }, // 归属客服
-            { title: proxy.$t("common.create_time"), dataIndex: "create_time", key: "time" }, // 创建时间
-            { title: proxy.$t("customer-care.last_modification_time"), dataIndex: "update_time", key: "time" }, // 最近一次修改时间
-            { title: proxy.$t("common.operations"), dataIndex: "operations", key: "operations", fixed: "right" }, // 操作
+            { title: proxy.$t('customer-care.Construction_site_number'), dataIndex: 'uid', key: 'uid' }, // 工单编号
+            { title: proxy.$t('customer-care.classify'), dataIndex: 'purpose', key: 'purpose' }, // 归类
+            { title: proxy.$t('common.type'), dataIndex: 'type', key: 'type' }, // 类型
+            { title: proxy.$t('customer-care.submitter'), dataIndex: 'submit_user_name', key: 'submit_user_name' }, // 提交人
+            { title: proxy.$t('customer-care.part'), dataIndex: 'part_list', key: 'part_list', width: 150 }, // 零件
+            { title: proxy.$t('customer-care.processing_progress'), dataIndex: 'status', key: 'status', width: 70 }, // 处理进度
+            { title: proxy.$t('customer-care.model_number_mileage'), dataIndex: 'mileage', key: 'mileage', width: 150 }, // 车架号、公里数
+            {
+                title: proxy.$t('customer-care.fault_classification'),
+                dataIndex: 'fault_type',
+                key: 'fault_type',
+                width: 150,
+            }, // 故障分类
+            {
+                title: proxy.$t('customer-care.belonging_customer_service'),
+                dataIndex: 'process_user_name',
+                key: 'process_user_name',
+            }, // 归属客服
+            { title: proxy.$t('common.create_time'), dataIndex: 'create_time', key: 'time' }, // 创建时间
+            { title: proxy.$t('customer-care.last_modification_time'), dataIndex: 'update_time', key: 'time' }, // 最近一次修改时间
+            { title: proxy.$t('common.operations'), dataIndex: 'operations', key: 'operations', fixed: 'right' }, // 操作
         ];
     }
     return columns;
@@ -500,12 +560,12 @@ const getStatusFetch = (params = {}) => {
 
     Core.Api.inquiry_sheet
         .statusList(obj)
-        .then((res) => {
-            console.log("获取状态数据 res", res);
+        .then(res => {
+            console.log('获取状态数据 res', res);
             statusData.value = res;
         })
-        .catch((err) => {
-            console.log("获取状态数据 err", err);
+        .catch(err => {
+            console.log('获取状态数据 err', err);
         });
 };
 // 导出接口
@@ -514,7 +574,7 @@ const exportFetch = (params = {}) => {
         ...params,
     };
 
-    Core.Api.Export.enquiryTickeTexport(obj)        
+    Core.Api.Export.enquiryTickeTexport(obj);
 };
 
 // 获取询问单列表
@@ -558,89 +618,89 @@ const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPa
 
 /* methods start*/
 const routerChange = (type, record) => {
-    let routeUrl = "";
+    let routeUrl = '';
     if (!isDistributerAdmin.value) {
         // 分销商
         switch (type) {
-            case "add": // 添加
+            case 'add': // 添加
                 routeUrl = router.resolve({
-                    path: "/customer-care/edit",
+                    path: '/customer-care/edit',
                 });
-                window.open(routeUrl.href, "_blank");
+                window.open(routeUrl.href, '_blank');
                 break;
-            case "edit": // 编辑
+            case 'edit': // 编辑
                 routeUrl = router.resolve({
-                    path: "/customer-care/edit",
+                    path: '/customer-care/edit',
                     query: { id: record.id },
                 });
-                window.open(routeUrl.href, "_blank");
+                window.open(routeUrl.href, '_blank');
                 break;
-            case "detail": // 详情
+            case 'detail': // 详情
                 routeUrl = router.resolve({
-                    path: "/customer-care/detail",
+                    path: '/customer-care/detail',
                     query: { id: record.id },
                 });
-                window.open(routeUrl.href, "_blank");
+                window.open(routeUrl.href, '_blank');
 
-                storageFn(Core.Data.getDistributorNewMsg(), "setDistributorNewMsg", record);
+                storageFn(Core.Data.getDistributorNewMsg(), 'setDistributorNewMsg', record);
 
                 break;
-            case "msg": // 留言
+            case 'msg': // 留言
                 routeUrl = router.resolve({
-                    path: "/customer-care/detail",
+                    path: '/customer-care/detail',
                     query: {
                         id: record.id,
                         leave: true,
                     },
                 });
-                window.open(routeUrl.href, "_blank");
+                window.open(routeUrl.href, '_blank');
 
-                storageFn(Core.Data.getDistributorNewMsg(), "setDistributorNewMsg", record);
+                storageFn(Core.Data.getDistributorNewMsg(), 'setDistributorNewMsg', record);
 
                 break;
         }
     } else {
         // 平台方
         switch (type) {
-            case "add": // 添加
+            case 'add': // 添加
                 routeUrl = router.resolve({
-                    path: "/inquiry-management/edit",
+                    path: '/inquiry-management/edit',
                 });
-                window.open(routeUrl.href, "_blank");
+                window.open(routeUrl.href, '_blank');
                 break;
-            case "edit": // 编辑
+            case 'edit': // 编辑
                 routeUrl = router.resolve({
-                    path: "/inquiry-management/edit",
+                    path: '/inquiry-management/edit',
                     query: { id: record.id },
                 });
-                window.open(routeUrl.href, "_blank");
+                window.open(routeUrl.href, '_blank');
                 break;
-            case "detail": // 详情
+            case 'detail': // 详情
                 routeUrl = router.resolve({
-                    path: "/inquiry-management/detail",
+                    path: '/inquiry-management/detail',
                     query: { id: record.id },
                 });
-                window.open(routeUrl.href, "_blank");
+                window.open(routeUrl.href, '_blank');
 
-                storageFn(Core.Data.getAdminNewMsg(), "setAdminNewMsg", record);
+                storageFn(Core.Data.getAdminNewMsg(), 'setAdminNewMsg', record);
                 break;
-            case "msg": // 留言
+            case 'msg': // 留言
                 routeUrl = router.resolve({
-                    path: "/inquiry-management/detail",
+                    path: '/inquiry-management/detail',
                     query: {
                         id: record.id,
                         leave: true,
                     },
                 });
-                window.open(routeUrl.href, "_blank");
+                window.open(routeUrl.href, '_blank');
 
-                storageFn(Core.Data.getAdminNewMsg(), "setAdminNewMsg", record);
+                storageFn(Core.Data.getAdminNewMsg(), 'setAdminNewMsg', record);
                 break;
         }
     }
 };
-const onSearch = (data) => {
-    console.log("data", data);    
+const onSearch = data => {
+    console.log('data', data);
     searchParam.value = { ...searchForm.value, ...data };
     search();
 };
@@ -652,7 +712,7 @@ const storageFn = (loaclData, setLoaclDataName, record) => {
     let newMsg = loaclData || [];
 
     // 判断本地是否存在id(存在替换)
-    const findIndex = newMsg?.findIndex((el) => el.id === record.id);
+    const findIndex = newMsg?.findIndex(el => el.id === record.id);
     if (findIndex !== -1) {
         newMsg?.splice(findIndex, 1, {
             id: record.id,
@@ -668,7 +728,7 @@ const storageFn = (loaclData, setLoaclDataName, record) => {
     Core.Data[setLoaclDataName](newMsg);
 };
 // 判断是否显示新消息标签
-const newMsgIdFn = (record) => {
+const newMsgIdFn = record => {
     let loaclData = [];
 
     if (isDistributerAdmin.value) {
@@ -679,44 +739,43 @@ const newMsgIdFn = (record) => {
         loaclData = Core.Data.getDistributorNewMsg();
     }
 
-    const find = loaclData?.find((el) => Number(el.id) === Number(record.id));
+    const find = loaclData?.find(el => Number(el.id) === Number(record.id));
     // console.log("find data", find);
 
     // 判断找到的本地数据的数量是否少于渲染的数据(是 返回true 否则返回 false)
     return find?.new_msg_id ? Number(find?.new_msg_id) < Number(record?.new_msg_id) : record?.new_msg_id > 0;
 };
 // 导出功能
-const search_all = ref(null)
+const search_all = ref(null);
 const handleExportIn = () => {
-    search_all.value.handleSearch()
-    let exportUrl = Core.Api.Export.enquiryTickeTexport({ ...Core.Util.searchFilter(searchParam.value) })    
-    console.log("exportUrl", exportUrl);
-    window.open(exportUrl, '_blank')
-}
+    search_all.value.handleSearch();
+    let exportUrl = Core.Api.Export.enquiryTickeTexport({ ...Core.Util.searchFilter(searchParam.value) });
+    console.log('exportUrl', exportUrl);
+    window.open(exportUrl, '_blank');
+};
 
 // 分销商 不需要编辑和留言功能
-const editCommentAuth = (type) => {
-
-    let result = false    
+const editCommentAuth = type => {
+    let result = false;
 
     if (isDistributerAdmin.value) {
-        result = type
+        result = type;
     } else {
-        result = true
+        result = true;
     }
-    return result
-}
+    return result;
+};
 
 /* methods end*/
 
 watch(
     () => router.currentRoute.value,
     (newValue, oldValue) => {
-        console.log("newValue", newValue);
-        if (newValue.matched[0].path === "/customer-care") {
+        console.log('newValue', newValue);
+        if (newValue.matched[0].path === '/customer-care') {
             // 分销商的客户关怀
             isDistributerAdmin.value = false;
-        } else if (newValue.matched[0].path === "/inquiry-management") {
+        } else if (newValue.matched[0].path === '/inquiry-management') {
             // 平台方
             isDistributerAdmin.value = true;
             getStatusFetch();
@@ -725,7 +784,7 @@ watch(
     {
         deep: true,
         immediate: true,
-    }
+    },
 );
 
 onMounted(() => {

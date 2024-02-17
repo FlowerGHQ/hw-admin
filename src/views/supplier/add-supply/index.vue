@@ -26,23 +26,23 @@
                 <div class="supply-chain-footer" v-if="setp !== 2">
                     <!-- 承诺书 -->
                     <div class="promise-book" v-if="setp == 1" @click="handleOpen">
-                        <span>{{ $t("supply-chain.please_read_before_submitting_an_application") }}</span>
-                        <a class="promise-text">{{ $t("supply-chain.commitment_to_integrity") }}</a>
+                        <span>{{ $t('supply-chain.please_read_before_submitting_an_application') }}</span>
+                        <a class="promise-text">{{ $t('supply-chain.commitment_to_integrity') }}</a>
                         <a class="promise-text">{{
-                            $t("supply-chain.confidentiality_and_non_competition_agreement")
+                            $t('supply-chain.confidentiality_and_non_competition_agreement')
                         }}</a>
                     </div>
                     <div class="btn-area">
                         <!-- 保存草稿 -->
-                        <a-button @click="handleSave">{{ $t("supply-chain.save_draft") }}</a-button>
+                        <a-button @click="handleSave">{{ $t('supply-chain.save_draft') }}</a-button>
                         <a-button type="primary" @click="handleNext" v-if="setp == 0">{{
-                            $t("supply-chain.next_step")
+                            $t('supply-chain.next_step')
                         }}</a-button>
                         <!-- 上一步 -->
-                        <a-button @click="handlePrev" v-if="setp == 1">{{ $t("supply-chain.previous_step") }}</a-button>
+                        <a-button @click="handlePrev" v-if="setp == 1">{{ $t('supply-chain.previous_step') }}</a-button>
                         <!-- 提交 -->
                         <a-button type="primary" @click="handleSubmit" v-if="setp == 1">{{
-                            $t("supply-chain.submit_application")
+                            $t('supply-chain.submit_application')
                         }}</a-button>
                     </div>
                 </div>
@@ -80,7 +80,7 @@
                     }"
                     @click="handleSubmitOk"
                 >
-                    {{ $t("supply-chain.read_and_send_application") }}
+                    {{ $t('supply-chain.read_and_send_application') }}
                     <div class="time-area" v-if="countTime != 0">
                         (
                         <span class="timing">{{ countTime }}s</span>
@@ -93,24 +93,24 @@
 </template>
 
 <script setup>
-import Core from "@/core";
-import { computed, ref, onMounted, watch, onBeforeUnmount } from "vue";
-import SvgIcon from "@/components/MySvgIcon/index.vue";
+import Core from '@/core';
+import { computed, ref, onMounted, watch, onBeforeUnmount } from 'vue';
+import SvgIcon from '@/components/MySvgIcon/index.vue';
 // import MyStep from "./components/steps.vue";
-import { useStore } from "vuex";
-import { useI18n } from "vue-i18n";
-import { useRouter, useRoute } from "vue-router";
-import { message } from "ant-design-vue";
+import { useStore } from 'vuex';
+import { useI18n } from 'vue-i18n';
+import { useRouter, useRoute } from 'vue-router';
+import { message } from 'ant-design-vue';
 // 基础信息
-import BasicInfo from "./basic-info.vue";
+import BasicInfo from './basic-info.vue';
 // 材料清单
-import MaterialList from "./material-list.vue";
+import MaterialList from './material-list.vue';
 // 成功页
-import Successful from "./successful.vue";
+import Successful from './successful.vue';
 // 廉洁承诺书
-import HonestPage from "./components/honest-page.vue";
+import HonestPage from './components/honest-page.vue';
 // 保密和不竞争
-import SecrecyNotCompete from "./components/secrecy-not-compete.vue";
+import SecrecyNotCompete from './components/secrecy-not-compete.vue';
 
 const $i18n = useI18n();
 const $store = useStore();
@@ -124,7 +124,7 @@ const MaterialListRef = ref(null);
 const BasicInfoRef = ref(null);
 //步数样式
 const setpCount = computed(() => {
-    return $store.getters["SUPPLY_CHAIN/SETP"];
+    return $store.getters['SUPPLY_CHAIN/SETP'];
 });
 // 第几步
 const setp = computed(() => setpCount.value);
@@ -133,32 +133,32 @@ const setpObject = computed(() => {
     let result = {
         0: {
             setp: 0,
-            t: "supply-chain.basic_info",
-            bg: Core.Util.Image.getImageFile("supply-chain", "setp-base-bg"),
-            icon: "setp-icon-white",
-            text_color: "#FFF",
+            t: 'supply-chain.basic_info',
+            bg: Core.Util.Image.getImageFile('supply-chain', 'setp-base-bg'),
+            icon: 'setp-icon-white',
+            text_color: '#FFF',
         },
         1: {
             setp: 1,
-            t: "supply-chain.material_list",
-            bg: Core.Util.Image.getImageFile("supply-chain", "setp-material-default-bg"),
-            icon: "setp-icon-black",
-            text_color: "#666",
+            t: 'supply-chain.material_list',
+            bg: Core.Util.Image.getImageFile('supply-chain', 'setp-material-default-bg'),
+            icon: 'setp-icon-black',
+            text_color: '#666',
         },
     };
 
     switch (setpCount.value) {
         case 0:
-            result[0].bg = Core.Util.Image.getImageFile("supply-chain", "setp-base-bg");
-            result[0].icon = "setp-icon-white";
-            result[0].text_color = "#FFF";
-            result[1].bg = Core.Util.Image.getImageFile("supply-chain", "setp-material-default-bg");
+            result[0].bg = Core.Util.Image.getImageFile('supply-chain', 'setp-base-bg');
+            result[0].icon = 'setp-icon-white';
+            result[0].text_color = '#FFF';
+            result[1].bg = Core.Util.Image.getImageFile('supply-chain', 'setp-material-default-bg');
             break;
         case 1:
-            result[0].bg = Core.Util.Image.getImageFile("supply-chain", "setp-base-bg");
-            result[1].bg = Core.Util.Image.getImageFile("supply-chain", "setp-material-bg");
-            result[1].icon = "setp-icon-white";
-            result[1].text_color = "#FFF";
+            result[0].bg = Core.Util.Image.getImageFile('supply-chain', 'setp-base-bg');
+            result[1].bg = Core.Util.Image.getImageFile('supply-chain', 'setp-material-bg');
+            result[1].icon = 'setp-icon-white';
+            result[1].text_color = '#FFF';
             break;
     }
 
@@ -171,9 +171,9 @@ let countTime = ref(30);
 // 定时器
 let timer = ref(null);
 const form = ref({
-    old_password: "",
-    password: "",
-    new_password: "",
+    old_password: '',
+    password: '',
+    new_password: '',
 });
 const passShow = ref(false);
 // 倒计时
@@ -193,7 +193,7 @@ const countDown = () => {
 /* methods start*/
 // 上一步
 const handlePrev = () => {
-    $store.dispatch("SUPPLY_CHAIN/prevStep");
+    $store.dispatch('SUPPLY_CHAIN/prevStep');
     MaterialListRef.value && MaterialListRef.value.handlePrev();
 };
 // 下一步
@@ -201,13 +201,13 @@ const handleNext = () => {
     BasicInfoRef.value &&
         BasicInfoRef.value
             .step1Vaild()
-            .then((res) => {
-                console.log("res-----------------:", res);
+            .then(res => {
+                console.log('res-----------------:', res);
                 // 下一步
-                $store.dispatch("SUPPLY_CHAIN/nextStep");
+                $store.dispatch('SUPPLY_CHAIN/nextStep');
             })
-            .catch((err) => {
-                console.log("err-------------------:", err);
+            .catch(err => {
+                console.log('err-------------------:', err);
             });
 };
 // 保存草稿
@@ -220,7 +220,7 @@ const handleSave = () => {
 const handleSubmit = () => {
     // 判断是否已经阅读了
     // 没有阅读
-    if (!$store.getters["SUPPLY_CHAIN/ISREAD"]) {
+    if (!$store.getters['SUPPLY_CHAIN/ISREAD']) {
         // 打开弹框
         visible.value = true;
     } else {
@@ -232,13 +232,13 @@ const handleSubmit = () => {
 // 提交申请
 const handleSubmitOk = () => {
     // 将阅读状态改为true
-    $store.dispatch("SUPPLY_CHAIN/setRead", true);
+    $store.dispatch('SUPPLY_CHAIN/setRead', true);
     // 关闭弹框
     visible.value = false;
     MaterialListRef.value.step2Vaild().then(() => {
         let supplyChain_data = $store.state.SUPPLY_CHAIN.supplyChain; //拿到上传数据
         let supplyDraftChain_data = $store.state.SUPPLY_CHAIN.supplyDraftChain; //拿到草稿数据
-        $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", Object.assign(supplyDraftChain_data, supplyChain_data));
+        $store.dispatch('SUPPLY_CHAIN/setSupplyDraftChain', Object.assign(supplyDraftChain_data, supplyChain_data));
         // 跳转到注册按钮
         handleSubmitData();
     });
@@ -247,28 +247,28 @@ const handleSubmitOk = () => {
 const handleSubmitData = () => {
     // 获取本地上传表单数据
     const data = $store.state.SUPPLY_CHAIN.supplyChain;
-    data?.form ? (data.form = JSON.stringify(data.form)) : "{}";
+    data?.form ? (data.form = JSON.stringify(data.form)) : '{}';
     // 获取类型
-    if ($store.state.SUPPLY_CHAIN.supplyType != Core.Const.SUPPLAY.SUPPLAY_TYPE["2"].value) {
+    if ($store.state.SUPPLY_CHAIN.supplyType != Core.Const.SUPPLAY.SUPPLAY_TYPE['2'].value) {
         if (data?.confirmatory_material?.proxy_certificate) {
             delete data.confirmatory_material.proxy_certificate;
         }
     }
-        
+
     Core.Api.SUPPLY.adminAdd(data)
-        .then((res) => {
+        .then(res => {
             visible.value = false;
             // 获取详情数据
             // getDetail().then(() => {
             //     $store.dispatch("SUPPLY_CHAIN/nextStep");
             // });
-            $router.push('/supply-manage/list')
+            $router.push('/supply-manage/list');
         })
-        .catch((err) => {
+        .catch(err => {
             // console.log("提交数据失败", err.data);
-            if (Number(err.data.code) === 41001) {                
+            if (Number(err.data.code) === 41001) {
                 // 出现这个问题回归到 第一步骤
-                $store.dispatch("SUPPLY_CHAIN/setStep", 0);
+                $store.dispatch('SUPPLY_CHAIN/setStep', 0);
             }
             // $message.error(err.message);
         });
@@ -277,7 +277,7 @@ const handleSubmitData = () => {
 const getDetail = () => {
     return new Promise((resolve, reject) => {
         Core.Api.SUPPLY.adminDetail({})
-            .then((res) => {
+            .then(res => {
                 let DETAILS = {};
                 DETAILS = res?.detail ?? null;
                 if (DETAILS) {
@@ -285,10 +285,10 @@ const getDetail = () => {
                         // 需要显示的是详情数据所以需要合并，用detail数据覆盖草稿数据
                         if (DETAILS?.form) {
                             let type = typeof DETAILS.form;
-                            if (type === "string") {
+                            if (type === 'string') {
                                 DETAILS.form = JSON.parse(DETAILS.form);
                             }
-                            if (type === "object") {
+                            if (type === 'object') {
                                 DETAILS.form = DETAILS.form;
                             }
                         } else {
@@ -298,27 +298,27 @@ const getDetail = () => {
                             DETAILS = Object.assign(DETAILS, $store.state.SUPPLY_CHAIN.supplyDraftChain);
                         }
                         let data = DETAILS;
-                        console.log("data:", data);
+                        console.log('data:', data);
                         // 存储到草稿数据
-                        $store.commit("SUPPLY_CHAIN/setSupplyDraftChain", data);
+                        $store.commit('SUPPLY_CHAIN/setSupplyDraftChain', data);
                         // 如果已经提交了
                         Object.keys(DETAILS.form).length > 0
-                            ? $store.commit("SUPPLY_CHAIN/setSubmitEd", true)
-                            : $store.commit("SUPPLY_CHAIN/setSubmitEd", false);
+                            ? $store.commit('SUPPLY_CHAIN/setSubmitEd', true)
+                            : $store.commit('SUPPLY_CHAIN/setSubmitEd', false);
                     } else {
                         // 如果没有提交
-                        $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
-                        $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", {});
+                        $store.dispatch('SUPPLY_CHAIN/setSubmitEd', false);
+                        $store.dispatch('SUPPLY_CHAIN/setSupplyDraftChain', {});
                     }
                 } else {
                     // 如果没有提交
-                    $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
-                    $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", {});
+                    $store.dispatch('SUPPLY_CHAIN/setSubmitEd', false);
+                    $store.dispatch('SUPPLY_CHAIN/setSupplyDraftChain', {});
                 }
                 resolve();
             })
-            .catch((err) => {
-                $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", {});
+            .catch(err => {
+                $store.dispatch('SUPPLY_CHAIN/setSupplyDraftChain', {});
                 reject();
             });
     });
@@ -327,7 +327,7 @@ const getDetail = () => {
 // 打开
 const handleOpen = () => {
     // 如果已经阅读 了
-    if ($store.getters["SUPPLY_CHAIN/ISREAD"]) {
+    if ($store.getters['SUPPLY_CHAIN/ISREAD']) {
         // 让倒计时直接为0
         countTime.value = 0;
     } else {
@@ -339,7 +339,7 @@ const handleOpen = () => {
 // 监听 弹框打开，开始倒计时
 watch(
     () => visible.value,
-    (val) => {
+    val => {
         // 如果打开了并且倒计时不为0，则开始倒计时
         if (val && countTime.value != 0) {
             countTime.value = 30;
@@ -348,18 +348,18 @@ watch(
     },
     {
         immediate: true,
-    }
+    },
 );
 // 监听是否在第一页
 watch(
     () => setp.value,
-    (val) => {
+    val => {
         if (val == 0) {
             // getDetail().then(() => {
             //     BasicInfoRef.value && BasicInfoRef.value.reviewData();
             // });
         }
-    }
+    },
 );
 
 const timer1 = ref(null);
@@ -385,7 +385,7 @@ onBeforeUnmount(() => {
 
 <style lang="less" scoped>
 .home {
-    position: relative;    
+    position: relative;
     display: flex;
     flex-direction: column;
     :deep(.ant-layout) {
@@ -506,7 +506,7 @@ onBeforeUnmount(() => {
                 bottom: 0;
                 right: 16px;
                 // border-top: 1px solid #EAECF1;
-                background: #FFF;
+                background: #fff;
                 text-align: center;
                 box-sizing: border-box;
                 .btn-area {

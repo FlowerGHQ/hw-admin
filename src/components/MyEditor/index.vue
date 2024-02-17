@@ -7,25 +7,26 @@
             :readOnly="readOnly"
             :options="myOptions"
             contentType="html"
-            @update:content="setValue()" />
+            @update:content="setValue()"
+        />
         <span class="SizeTiShi" v-if="showNumber">{{ TiLength }} / {{ maxLength }}</span>
     </div>
 </template>
 
 <script setup>
-import { QuillEditor } from "@vueup/vue-quill";
-import "@vueup/vue-quill/dist/vue-quill.snow.css";
-import * as Quill from 'quill'
+import { QuillEditor } from '@vueup/vue-quill';
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import * as Quill from 'quill';
 // 拖拽上传
-import { ImageDrop } from 'quill-image-drop-module'
+import { ImageDrop } from 'quill-image-drop-module';
 // 调整上传图片大小
 // import ImageResize from 'quill-image-resize-module'
 import 'quill-image-resize-module/image-resize.min.js';
 
 // 注册事件
-Quill.register('modules/imageDrop', ImageDrop)
+Quill.register('modules/imageDrop', ImageDrop);
 // Quill.register('modules/imageResize', ImageResize)
-import { ref, watch, reactive, toRaw, nextTick, getCurrentInstance } from "vue";
+import { ref, watch, reactive, toRaw, nextTick, getCurrentInstance } from 'vue';
 
 const { proxy } = getCurrentInstance();
 //withDefaults 是一个辅助函数，用于将默认值与传递的值合并
@@ -40,17 +41,15 @@ const props = defineProps({
     },
     placeholder: {
         type: String,
-        default: "请输入内容...",
+        default: '请输入内容...',
     },
     modules: {
         type: Object,
         default: () => {
             return {
-                toolbar: [
-                    [{ list: "bullet" }],
-                ],
-            }
-        }
+                toolbar: [[{ list: 'bullet' }]],
+            };
+        },
     },
     // 是否显示计数
     showNumber: {
@@ -62,52 +61,51 @@ const props = defineProps({
         default: 2000,
     },
 });
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(['update:modelValue']);
 
 const { placeholder, modules } = props;
-const content = ref("");
+const content = ref('');
 const quillRef = ref(null);
 const myOptions = reactive({
     modules,
     placeholder,
 });
-const TiLength = ref(0)
+const TiLength = ref(0);
 
 const setValue = () => {
     const text = toRaw(quillRef.value).getHTML() !== '<p><br></p>' ? toRaw(quillRef.value).getHTML() : '';
-    emit("update:modelValue", text);
-    if(props.showNumber) {
-        TiLength.value = quillRef.value.getText().length - 1
-        if(TiLength.value > props.maxLength){
-            proxy.$message.warning(proxy.$t('operation.with') + props.maxLength + proxy.$t('operation.char'))
+    emit('update:modelValue', text);
+    if (props.showNumber) {
+        TiLength.value = quillRef.value.getText().length - 1;
+        if (TiLength.value > props.maxLength) {
+            proxy.$message.warning(proxy.$t('operation.with') + props.maxLength + proxy.$t('operation.char'));
             nextTick(() => {
-                quillRef.value.setText(quillRef.value.getText().slice(0, props.maxLength))
-            })
+                quillRef.value.setText(quillRef.value.getText().slice(0, props.maxLength));
+            });
         }
     }
 };
 watch(
     () => props.modelValue,
-    (val) => {
+    val => {
         console.log(val);
-        if ((val != null || val != "" || val != "<p><br></p>") &&val) {
+        if ((val != null || val != '' || val != '<p><br></p>') && val) {
             content.value = val;
-            if(props.showNumber && quillRef.value) {
-                nextTick(() =>{
-                    TiLength.value = quillRef.value.getText().length - 1;// 设置字数
-                })
+            if (props.showNumber && quillRef.value) {
+                nextTick(() => {
+                    TiLength.value = quillRef.value.getText().length - 1; // 设置字数
+                });
             }
-        }
-        else {
-            content.value = "";
+        } else {
+            content.value = '';
             // 清空
-            quillRef.value && toRaw(quillRef.value).setContents("");
+            quillRef.value && toRaw(quillRef.value).setContents('');
         }
     },
     {
         deep: true,
         immediate: true,
-    }
+    },
 );
 </script>
 
@@ -115,7 +113,7 @@ watch(
 .editor-container {
     position: relative;
     .SizeTiShi {
-        color: #4E5969;
+        color: #4e5969;
         font-size: 12px;
         font-style: normal;
         font-weight: 400;

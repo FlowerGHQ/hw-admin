@@ -1,13 +1,20 @@
 <template>
     <div>
         <div>
-            <div v-for="(item, index) in itemList" :key="index" @contextmenu.prevent="showContextMenu(item, index, $event)">
+            <div
+                v-for="(item, index) in itemList"
+                :key="index"
+                @contextmenu.prevent="showContextMenu(item, index, $event)"
+            >
                 {{ item.name }}
             </div>
         </div>
         <!-- 右键弹框 -->
-        <div v-if="contextMenuVisible" class="custom-context-menu"
-            :style="{ top: contextMenuY + 'px', left: contextMenuX + 'px' }">
+        <div
+            v-if="contextMenuVisible"
+            class="custom-context-menu"
+            :style="{ top: contextMenuY + 'px', left: contextMenuX + 'px' }"
+        >
             <div>
                 <div @click="renameItem">重命名</div>
                 <div @click="deleteItem">删除</div>
@@ -15,16 +22,12 @@
         </div>
     </div>
 </template>
-  
+
 <script>
 export default {
     data() {
         return {
-            itemList: [
-                { name: 'Item 1' },
-                { name: 'Item 2' },
-                { name: 'Item 3' },
-            ],
+            itemList: [{ name: 'Item 1' }, { name: 'Item 2' }, { name: 'Item 3' }],
             contextMenuVisible: false,
             contextMenuX: 0,
             contextMenuY: 0,
@@ -51,7 +54,7 @@ export default {
     },
 };
 </script>
-  
+
 <style>
 .custom-context-menu {
     position: absolute;

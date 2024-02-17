@@ -4,7 +4,7 @@
             <div class="table-container">
                 <div class="search-container">
                     <a-row class="search-area">
-                        <a-col :xs='24' :sm='24' :xl="16" :xxl='8' class="search-item">
+                        <a-col :xs="24" :sm="24" :xl="16" :xxl="8" class="search-item">
                             <div class="key">code：</div>
                             <div class="value">
                                 <a-select
@@ -17,7 +17,7 @@
                                     :not-found-content="null"
                                     @search="handleItemSearch"
                                 >
-                                    <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
+                                    <a-select-option v-for="item in itemOptions" :key="item.id" :value="item.id">
                                         {{ item.code }} - {{ item.name }}
                                     </a-select-option>
                                 </a-select>
@@ -26,27 +26,32 @@
                     </a-row>
 
                     <div class="btn-area">
-                        <a-button @click="handleSearch" type="primary">{{$t('def.search')}}</a-button>
-                        <a-button @click="handleSearchReset" >{{$t('def.reset')}}</a-button>
+                        <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
+                        <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                     </div>
                 </div>
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                         :row-key="(record) => record.id" :pagination="false">
+                <a-table
+                    :columns="tableColumns"
+                    :data-source="tableData"
+                    :scroll="{ x: true }"
+                    :row-key="record => record.id"
+                    :pagination="false"
+                >
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="column.key === 'detail' && $auth('invoice.detail')">
-                            <a-tooltip placement="top" :title='text'>
-                                <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}</a-button>
+                            <a-tooltip placement="top" :title="text">
+                                <a-button type="link" @click="routerChange('detail', record)">{{
+                                    text || '-'
+                                }}</a-button>
                             </a-tooltip>
                         </template>
-                        <template v-if="column.key === 'count'">
-                            {{ text || 0 }} {{ $t('i.pcs2') }}
-                        </template>
+                        <template v-if="column.key === 'count'"> {{ text || 0 }} {{ $t('i.pcs2') }} </template>
                         <template v-if="column.type && column.type === 'item'">
                             <template v-if="record.target_type === 1 && column.key === 'name'">
-                                <a-tooltip placement="top" :title='record.item[column.key]'>
+                                <a-tooltip placement="top" :title="record.item[column.key]">
                                     <div class="ell" style="max-width: 120px">
                                         <a-button type="link" @click="routerChange('item', record)">
-                                          {{ lang === 'zh'? record.item.name || '-': record.item.name_en || '-' }}
+                                            {{ lang === 'zh' ? record.item.name || '-' : record.item.name_en || '-' }}
                                         </a-button>
                                     </div>
                                 </a-tooltip>
@@ -55,10 +60,14 @@
                                 {{ record.item.code || '-' }}
                             </template>
                             <template v-if="record.target_type === 2 && column.key === 'name'">
-                                <a-tooltip placement="top" :title='record.material[column.key]'>
+                                <a-tooltip placement="top" :title="record.material[column.key]">
                                     <div class="ell" style="max-width: 120px">
                                         <a-button type="link" @click="routerChange('material', record)">
-                                          {{ lang === 'zh'? record.material.name || '-': record.material.name_en || '-' }}
+                                            {{
+                                                lang === 'zh'
+                                                    ? record.material.name || '-'
+                                                    : record.material.name_en || '-'
+                                            }}
                                         </a-button>
                                     </div>
                                 </a-tooltip>
@@ -91,7 +100,7 @@
                     show-quick-jumper
                     show-size-changer
                     show-less-items
-                    :show-total="(total) => $t('n.all_total') + ` ${total} ` + $t('in.total')"
+                    :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
                     :hide-on-single-page="false"
                     :pageSizeOptions="['10', '20', '30', '40']"
                     @change="pageChange"
@@ -103,10 +112,10 @@
 </template>
 
 <script>
-import Core from "../../../core";
+import Core from '../../../core';
 
 export default {
-    name: "StockRecord",
+    name: 'StockRecord',
     components: {},
     props: {
         warehouseId: {
@@ -141,48 +150,48 @@ export default {
             let tableColumns = [
                 /*          { title: "变更对象", dataIndex: ['material','name'], key: "detail" },
                           { title: "变更对象编码", dataIndex: ['material','code'], key: "text" },*/
-                {title: this.$t('wa.object'), type: "item", key: "name"},
-                {title: this.$t('i.code'), type: "item", key: "code"},
-                {title: this.$t('n.operation'), dataIndex: "type", key: "type"},
-                {title: this.$t('i.quantity'), dataIndex: "amount", key: "count"},
-                {title: this.$t('wa.amount'), dataIndex: "balance", key: "count"},
-                {title: this.$t('n.source'), dataIndex: "source_type", key: "source_type"},
-                {title: this.$t('n.source_number'), dataIndex: "sn", key: "detail" },
-                {title: this.$t('d.create_time'), dataIndex: "create_time", key: "time"},
+                { title: this.$t('wa.object'), type: 'item', key: 'name' },
+                { title: this.$t('i.code'), type: 'item', key: 'code' },
+                { title: this.$t('n.operation'), dataIndex: 'type', key: 'type' },
+                { title: this.$t('i.quantity'), dataIndex: 'amount', key: 'count' },
+                { title: this.$t('wa.amount'), dataIndex: 'balance', key: 'count' },
+                { title: this.$t('n.source'), dataIndex: 'source_type', key: 'source_type' },
+                { title: this.$t('n.source_number'), dataIndex: 'sn', key: 'detail' },
+                { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time' },
             ];
             return tableColumns;
         },
-      lang() {
-        return this.$store.state.lang
-      }
+        lang() {
+            return this.$store.state.lang;
+        },
     },
     mounted() {
         this.getTableData();
     },
     methods: {
         routerChange(type, item = {}) {
-            let routeUrl = ''
+            let routeUrl = '';
             switch (type) {
                 case 'detail':
                     routeUrl = this.$router.resolve({
-                        path: "/warehouse/invoice-detail",
-                        query: {id: item.source_id}
-                    })
-                    window.open(routeUrl.href, '_blank')
+                        path: '/warehouse/invoice-detail',
+                        query: { id: item.source_id },
+                    });
+                    window.open(routeUrl.href, '_blank');
                     break;
                 case 'material':
                     routeUrl = this.$router.resolve({
-                        path: "/production/material-detail",
-                        query: {id: item.target_id}
-                    })
-                    window.open(routeUrl.href, '_blank')
+                        path: '/production/material-detail',
+                        query: { id: item.target_id },
+                    });
+                    window.open(routeUrl.href, '_blank');
                     break;
                 case 'item':
                     routeUrl = this.$router.resolve({
-                        path: "/item/item-detail",
-                        query: {id: item.target_id}
-                    })
-                    window.open(routeUrl.href, '_blank')
+                        path: '/item/item-detail',
+                        query: { id: item.target_id },
+                    });
+                    window.open(routeUrl.href, '_blank');
                     break;
             }
         },
@@ -204,27 +213,30 @@ export default {
                 target_id: this.searchForm.item_id,
                 page: this.currPage,
                 page_size: this.pageSize,
-            }).then(res => {
-                console.log("getTableData res", res);
-                this.total = res.count;
-                this.tableData = res.list;
-            }).catch(err => {
-                console.log("getTableData err", err);
-            }).finally(() => {
-                this.loading = false;
-            });
+            })
+                .then(res => {
+                    console.log('getTableData res', res);
+                    this.total = res.count;
+                    this.tableData = res.list;
+                })
+                .catch(err => {
+                    console.log('getTableData err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         handleItemSearch(code) {
-            Core.Api.Item.list({code: code,flag_spread: 1}).then(res => {
-                this.itemOptions = res.list
-            })
+            Core.Api.Item.list({ code: code, flag_spread: 1 }).then(res => {
+                this.itemOptions = res.list;
+            });
         },
         handleSearch() {
-            this.pageChange(1)
+            this.pageChange(1);
         },
         handleSearchReset() {
-            Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.pageChange(1)
+            Object.assign(this.searchForm, this.$options.data().searchForm);
+            this.pageChange(1);
         },
     },
 };

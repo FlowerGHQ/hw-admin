@@ -2,11 +2,11 @@ import axios from 'axios';
 import { message } from 'ant-design-vue';
 import i18n from '../i18n';
 import Data from '../data';
-import Const from '../const'
+import Const from '../const';
 import messages from '../../lang';
 
 // const shownErrorMessages = [];
-const showMessage = (msg) => {
+const showMessage = msg => {
     message.error(msg);
     message.config({
         maxCount: 3,
@@ -16,9 +16,9 @@ const showMessage = (msg) => {
 const errorHandle = (status, message = i18n.global.t('error_code.unknown')) => {
     if (message.includes('登录状态已过期，请重新登录')) {
         if (Number(Data.getLoginType()) === Const.USER.TYPE.SUPPLIER) {
-            window.location.href = window.location.href.split('#')[0] + `#/login?user_type=${ Data.getLoginType() }`
+            window.location.href = window.location.href.split('#')[0] + `#/login?user_type=${Data.getLoginType()}`;
         } else {
-            window.location.href = window.location.href.split('#')[0] + `#/login`            
+            window.location.href = window.location.href.split('#')[0] + `#/login`;
         }
 
         Data.clearSpecificItem();
@@ -33,40 +33,38 @@ const errorHandle = (status, message = i18n.global.t('error_code.unknown')) => {
     if (status >= 1000) {
         try {
             if (message instanceof Object) {
-                message = JSON.parse(message)
+                message = JSON.parse(message);
             }
         } catch (err) {
-            message = {}
+            message = {};
         }
-        return showMessage(i18n.global.t(message))
+        return showMessage(i18n.global.t(message));
     }
-    if (!message.includes('登录状态已过期，请重新登录')) {        
+    if (!message.includes('登录状态已过期，请重新登录')) {
         showMessage(message);
     }
 };
 
 var instance = axios.create({ timeout: 1000 * 15 });
 // instance.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
-instance.defaults.headers.post['Content-Type'] =
-    'application/x-www-form-urlencoded;charset=UTF-8';
+instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 
 instance.interceptors.request.use(
-    (config) => {
+    config => {
         return config;
     },
-    (error) => Promise.error(error)
+    error => Promise.error(error),
 );
 
 instance.interceptors.response.use(
-    (res) => {
+    res => {
         if (res.status === 200) {
             if (res.data.code === 0) {
                 return res.data.data;
                 // return Promise.resolve(res.data.data);
             } else if (res.data instanceof Blob) {
                 return res;
-            }
-            else {
+            } else {
                 errorHandle(res.data.code, res.data.message);
                 return Promise.reject(res);
             }
@@ -74,8 +72,8 @@ instance.interceptors.response.use(
             Promise.reject(res);
         }
     },
-    (error) => {
-        console.log('error:', error)
+    error => {
+        console.log('error:', error);
         const { response } = error;
         if (response) {
             errorHandle(response.status, response.data.message);
@@ -86,7 +84,7 @@ instance.interceptors.response.use(
                 return Promise.reject(error);
             }
         }
-    }
+    },
 );
 
 export default instance;

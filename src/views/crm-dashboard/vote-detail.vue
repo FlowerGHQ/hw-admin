@@ -4,13 +4,24 @@
             <div class="title-container">
                 <div class="title-area">{{ title }}详情</div>
                 <div class="btns-area">
-                    <a-range-picker style="width: 400px;" v-model:value="time" @change="handleChange()" :allowClear="false"
-                        :placeholder="['开始时间', '结束时间']" ref="TimeSearch" />
+                    <a-range-picker
+                        style="width: 400px"
+                        v-model:value="time"
+                        @change="handleChange()"
+                        :allowClear="false"
+                        :placeholder="['开始时间', '结束时间']"
+                        ref="TimeSearch"
+                    />
                 </div>
             </div>
             <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                    :row-key="record => record.id" :pagination='false'>
+                <a-table
+                    :columns="tableColumns"
+                    :data-source="tableData"
+                    :scroll="{ x: true }"
+                    :row-key="record => record.id"
+                    :pagination="false"
+                >
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
@@ -27,16 +38,14 @@
         </div>
     </div>
 </template>
-  
-<script>
-import { Result } from "ant-design-vue";
-import Core from "../../core";
-import dayjs from "dayjs";
-export default {
-    name: "Demo",
-    components: {
 
-    },
+<script>
+import { Result } from 'ant-design-vue';
+import Core from '../../core';
+import dayjs from 'dayjs';
+export default {
+    name: 'Demo',
+    components: {},
     props: {},
     data() {
         return {
@@ -44,11 +53,11 @@ export default {
             api_name: '',
             time: [null, null],
             searchForm: {
-                begin_time: "",
-                end_time: "",
+                begin_time: '',
+                end_time: '',
             },
             column_type: 1,
-            tableData: []
+            tableData: [],
         };
     },
     watch: {},
@@ -107,13 +116,13 @@ export default {
             return columnMap[this.column_type] || [];
         },
     },
-    created() { },
+    created() {},
     mounted() {
-        this.title = this.$route.query.title || ''
-        this.api_name = this.$route.query.api_name || ''
-        this.column_type = parseInt(this.$route.query.column_type) || 1
-        this.searchForm.begin_time = this.$route.query.begin_time || 0
-        this.searchForm.end_time = this.$route.query.end_time || 0
+        this.title = this.$route.query.title || '';
+        this.api_name = this.$route.query.api_name || '';
+        this.column_type = parseInt(this.$route.query.column_type) || 1;
+        this.searchForm.begin_time = this.$route.query.begin_time || 0;
+        this.searchForm.end_time = this.$route.query.end_time || 0;
         this.getTableData();
         this.getQueryTime();
     },
@@ -123,8 +132,8 @@ export default {
             let begin_time = dayjs(this.time[0]);
             let end_time = dayjs(this.time[1]);
             let searchForm = this.$Util.deepCopy(this.searchForm);
-            searchForm.begin_time = begin_time.startOf("day").unix();
-            searchForm.end_time = end_time.endOf("day").unix();
+            searchForm.begin_time = begin_time.startOf('day').unix();
+            searchForm.end_time = end_time.endOf('day').unix();
             this.searchForm = searchForm;
             this.getTableData();
         },
@@ -140,7 +149,7 @@ export default {
                 let res = await Core.Api.VoteData[this.api_name]({ ...this.searchForm, activity_id: 1 });
                 console.log('getTableData res', res);
                 if (this.column_type === Core.Const.VOTE.TYPE.DAILYVOTE) {
-                    const targetData = res
+                    const targetData = res;
                     this.tableData = targetData.map(item => {
                         return {
                             date: item.date,
@@ -148,11 +157,11 @@ export default {
                             vote_count: item.vote_count,
                             turnout_rate: item.uv ? ((item.vote_count / item.uv) * 100).toFixed(1) + '%' : '0.00%',
                             paid_user: item.pay_num,
-                            unpaid_user: item.uv - item.pay_num
+                            unpaid_user: item.uv - item.pay_num,
                         };
-                    })
+                    });
                 } else if (this.column_type === Core.Const.VOTE.TYPE.SOURCE) {
-                    const targetData = res
+                    const targetData = res;
                     this.tableData = targetData.map(item => {
                         const targetItem = {
                             date: item.date,
@@ -190,7 +199,7 @@ export default {
                         return targetItem;
                     });
                 } else if (this.column_type === Core.Const.VOTE.TYPE.PAID) {
-                    const targetData = res
+                    const targetData = res;
                     this.tableData = targetData.map(item => {
                         return {
                             date: item.date,
@@ -198,36 +207,36 @@ export default {
                             vote_count: item.vote_count,
                             turnout_rate: item.uv ? ((item.vote_count / item.uv) * 100).toFixed(1) + '%' : '0.00%',
                             paid_user: item.pay_num,
-                            unpaid_user: item.uv - item.pay_num
+                            unpaid_user: item.uv - item.pay_num,
                         };
-                    })
+                    });
                 } else if (this.column_type === Core.Const.VOTE.TYPE.COLOR) {
-                    const targetData = res
+                    const targetData = res;
                     this.tableData = targetData.flatMap(item => {
                         const targetItems = item.source_list.map(source => {
                             return {
                                 date: item.date,
                                 total: source.vote_count,
-                                color: source.code
+                                color: source.code,
                             };
                         });
 
                         return targetItems;
                     });
                 } else if (this.column_type === Core.Const.VOTE.TYPE.AREA) {
-                    const targetData = res
+                    const targetData = res;
                     this.tableData = targetData.flatMap(item => {
                         const targetItems = item.source_list.map(source => {
                             return {
                                 date: item.date,
                                 total: source.vote_count,
-                                city: source.code
+                                city: source.code,
                             };
                         });
                         return targetItems;
                     });
                 } else if (this.column_type === Core.Const.VOTE.TYPE.SHARE) {
-                    const targetData = res
+                    const targetData = res;
                     this.tableData = targetData.map(item => {
                         const targetItem = {
                             date: item.date,
@@ -263,18 +272,18 @@ export default {
                 }
             } catch (error) {
                 console.log('Error in getTableData', error);
-                this.$message.warning('数据无法加载，请稍后重试！')
+                this.$message.warning('数据无法加载，请稍后重试！');
             }
-        }
+        },
     },
 };
 </script>
-  
+
 <style lang="less" scoped>
-#VoteDetail {}
+#VoteDetail {
+}
 
 :deep(.ant-col-24) {
     padding-right: 12px;
 }
 </style>
-  

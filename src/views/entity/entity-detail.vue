@@ -1,21 +1,27 @@
 <template>
-    <div id='EntityDetail' class='list-container'>
-        <div class='title-container'>
-            <div class='title-area'>{{ $t('v.detail') }}</div>
+    <div id="EntityDetail" class="list-container">
+        <div class="title-container">
+            <div class="title-area">{{ $t('v.detail') }}</div>
             <div class="btns-area">
-                <a-button type="danger" ghost @click="handleDelete(id)"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                <a-button type="danger" ghost @click="handleDelete(id)"
+                    ><i class="icon i_delete" />{{ $t('def.delete') }}</a-button
+                >
             </div>
         </div>
         <div class="gray-panel">
             <div class="panel-content desc-container">
                 <div class="desc-title">
                     <div class="title-area">
-                        <span class="title" v-if="detail.type === Core.Const.ITEM.TYPE.PRODUCT">{{ detail.item ? detail.item.name : '-' }}</span>
-                        <span class="title" v-if="detail.type === Core.Const.ITEM.TYPE.COMPONENT">{{ detail.material ? detail.material.name : '-' }}</span>
+                        <span class="title" v-if="detail.type === Core.Const.ITEM.TYPE.PRODUCT">{{
+                            detail.item ? detail.item.name : '-'
+                        }}</span>
+                        <span class="title" v-if="detail.type === Core.Const.ITEM.TYPE.COMPONENT">{{
+                            detail.material ? detail.material.name : '-'
+                        }}</span>
                     </div>
                 </div>
                 <a-row class="desc-detail">
-<!--                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                    <!--                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">整车名称：</span>
                         <span class="value">{{ detail.item ? detail.item.name : '-' }}</span>
                     </a-col>-->
@@ -43,7 +49,7 @@
                         <span class="key">{{ $t('v.date_a') }}：</span>
                         <span class="value">{{ $Util.timeFilter(detail.arrival_time) }}</span>
                     </a-col>
-<!--                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                    <!--                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">创建时间：</span>
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>-->
@@ -52,7 +58,7 @@
         </div>
         <div class="tabs-container">
             <a-tabs>
-                 <a-tab-pane key="RepairOrderList" :tab="$t('r.repair_list')">
+                <a-tab-pane key="RepairOrderList" :tab="$t('r.repair_list')">
                     <RepairOrderList :itemId="id"></RepairOrderList>
                 </a-tab-pane>
             </a-tabs>
@@ -62,7 +68,7 @@
 
 <script>
 import Core from '../../core';
-import RepairOrderList from './components/RepairOrderList.vue'
+import RepairOrderList from './components/RepairOrderList.vue';
 
 export default {
     name: 'EntityDetail',
@@ -79,7 +85,7 @@ export default {
             item_id: '',
             detail: {},
             activeKey: '',
-        }
+        };
     },
     watch: {},
     computed: {},
@@ -94,7 +100,7 @@ export default {
                 case 'list': // 列表
                     routeUrl = this.$router.resolve({
                         path: '/entity/entity-list',
-                        query: {id: this.id},
+                        query: { id: this.id },
                     });
                     window.open(routeUrl.href, '_self');
                     break;
@@ -104,14 +110,17 @@ export default {
             this.loading = true;
             Core.Api.Entity.detail({
                 id: this.id,
-            }).then((res) => {
-                console.log('getEntityDetail res', res);
-                this.detail = res.detail
-            }).catch((err) => {
-                console.log('getEntityDetail err', err);
-            }).finally(() => {
-                this.loading = false;
-            });
+            })
+                .then(res => {
+                    console.log('getEntityDetail res', res);
+                    this.detail = res.detail;
+                })
+                .catch(err => {
+                    console.log('getEntityDetail err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         handleDelete(id) {
             let _this = this;
@@ -121,11 +130,12 @@ export default {
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.Entity.delete({id})
+                    Core.Api.Entity.delete({ id })
                         .then(() => {
                             _this.$message.success(_this.$t('pop_up.delete_success'));
                             _this.routerChange('list');
-                        }).catch((err) => {
+                        })
+                        .catch(err => {
                             console.log('handleDelete err', err);
                         });
                 },
@@ -135,7 +145,7 @@ export default {
 };
 </script>
 
-<style lang='less'>
+<style lang="less">
 #EntityDetail {
     .desc-title {
         .title-area {

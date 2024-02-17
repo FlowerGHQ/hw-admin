@@ -4,16 +4,22 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('crm_b.mail_title') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('add-mail')" v-if="$auth('crm-bo.save')"><i class="icon i_add"/>{{ $t('crm_b.add') }}</a-button>
+                    <a-button type="primary" @click="routerChange('add-mail')" v-if="$auth('crm-bo.save')"
+                        ><i class="icon i_add" />{{ $t('crm_b.add') }}</a-button
+                    >
                 </div>
             </div>
             <div class="search-container">
                 <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
                         <a-input-group compact>
                             <!-- <div class="key">{{ $t('crm_b.title') }}：</div> -->
                             <a-button>{{ $t('crm_b.title') }}</a-button>
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.title" @keydown.enter='handleSearch'/>
+                            <a-input
+                                :placeholder="$t('def.input')"
+                                v-model:value="searchForm.title"
+                                @keydown.enter="handleSearch"
+                            />
                         </a-input-group>
                     </a-col>
                 </a-row>
@@ -23,16 +29,23 @@
                 </div>
             </div>
             <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' @change="getTableData">
-                    <template #headerCell="{title}">
+                <a-table
+                    :columns="tableColumns"
+                    :data-source="tableData"
+                    :scroll="{ x: true }"
+                    :row-key="record => record.id"
+                    :pagination="false"
+                    @change="getTableData"
+                >
+                    <template #headerCell="{ title }">
                         {{ $t(title) }}
                     </template>
-                    <template #bodyCell="{ column, text , record, index }">
+                    <template #bodyCell="{ column, text, record, index }">
                         <template v-if="column.key === 'xh'">
                             {{ index + (currPage - 1) * pageSize + 1 }}
                         </template>
                         <template v-if="column.key === 'title'">
-                            <p class="ell" style="width: 200px;" :title="text">{{ text || '-' }}</p>
+                            <p class="ell" style="width: 200px" :title="text">{{ text || '-' }}</p>
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -41,7 +54,7 @@
                             {{ text ? $Util.timeFilter(text) : '不定时发送' }}
                         </template>
                         <template v-if="column.key === 'email_content'">
-                            <p class="ell" style="width: 400px;" :title="text">{{ text || '-' }}</p>
+                            <p class="ell" style="width: 400px" :title="text">{{ text || '-' }}</p>
                         </template>
                         <template v-if="column.key === 'send_count'">
                             <template v-if="text">
@@ -52,23 +65,51 @@
                             </template>
                         </template>
                         <template v-if="column.key === 'send_success_count'">
-                            {{ text ? `${text}（${record.send_count ? parseFloat((text / record.send_count * 100).toFixed(2)) : 100}%）` : '-' }}
+                            {{
+                                text
+                                    ? `${text}（${record.send_count ? parseFloat(((text / record.send_count) * 100).toFixed(2)) : 100}%）`
+                                    : '-'
+                            }}
                         </template>
                         <template v-if="column.key === 'click_count'">
-                            {{ text ? `${text}（${record.send_count ? parseFloat((text / record.send_count * 100).toFixed(2)) : 100}%）` : '-' }}
+                            {{
+                                text
+                                    ? `${text}（${record.send_count ? parseFloat(((text / record.send_count) * 100).toFixed(2)) : 100}%）`
+                                    : '-'
+                            }}
                         </template>
 
                         <template v-if="column.key === 'operation'">
                             <template v-if="record.send_status === 0 && record.schedule_time">
-                                <a-button type="link" @click="deleteMail(record.id)"><img class="operation-icon" src="@images/crm-mail-management/delete.svg">{{ $t('n.delete') }}</a-button>
-                                <a-button type="link" @click="routerChange('add-mail', { id: record.id })"><img class="operation-icon" src="@images/crm-mail-management/write.svg">{{ $t('n.edit') }}</a-button>
+                                <a-button type="link" @click="deleteMail(record.id)"
+                                    ><img class="operation-icon" src="@images/crm-mail-management/delete.svg" />{{
+                                        $t('n.delete')
+                                    }}</a-button
+                                >
+                                <a-button type="link" @click="routerChange('add-mail', { id: record.id })"
+                                    ><img class="operation-icon" src="@images/crm-mail-management/write.svg" />{{
+                                        $t('n.edit')
+                                    }}</a-button
+                                >
                             </template>
                             <template v-else-if="record.send_status === 0 && !record.schedule_time">
-                                <a-button type="link" @click="openSendMail(record)"><img class="operation-icon" src="@images/crm-mail-management/send.svg">{{ $t('crm_b.send') }}</a-button>
-                                <a-button type="link" @click="routerChange('add-mail', { id: record.id })"><img class="operation-icon" src="@images/crm-mail-management/write.svg">{{ $t('n.edit') }}</a-button>
+                                <a-button type="link" @click="openSendMail(record)"
+                                    ><img class="operation-icon" src="@images/crm-mail-management/send.svg" />{{
+                                        $t('crm_b.send')
+                                    }}</a-button
+                                >
+                                <a-button type="link" @click="routerChange('add-mail', { id: record.id })"
+                                    ><img class="operation-icon" src="@images/crm-mail-management/write.svg" />{{
+                                        $t('n.edit')
+                                    }}</a-button
+                                >
                             </template>
                             <template v-else-if="record.send_status === 1">
-                                <a-button type="link" @click="viewMail(record)"><img class="operation-icon" src="@images/crm-mail-management/view.svg">{{ $t('crm_b.view') }}</a-button>
+                                <a-button type="link" @click="viewMail(record)"
+                                    ><img class="operation-icon" src="@images/crm-mail-management/view.svg" />{{
+                                        $t('crm_b.view')
+                                    }}</a-button
+                                >
                             </template>
                         </template>
                     </template>
@@ -77,27 +118,40 @@
             <div class="paging-container">
                 <a-pagination
                     v-model:current="currPage"
-                    :page-size='pageSize'
+                    :page-size="pageSize"
                     :total="total"
                     show-quick-jumper
                     show-size-changer
                     show-less-items
                     :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
-                    :hide-on-single-page='false'
+                    :hide-on-single-page="false"
                     :pageSizeOptions="['10', '20', '30', '40']"
                     @change="pageChange"
                     @showSizeChange="pageSizeChange"
                 />
             </div>
         </div>
-        <a-modal class="custom-ant-modal" v-model:visible="mailShow" width="648px" destroyOnClose :footer="null" :after-close='handleMailClose'>
+        <a-modal
+            class="custom-ant-modal"
+            v-model:visible="mailShow"
+            width="648px"
+            destroyOnClose
+            :footer="null"
+            :after-close="handleMailClose"
+        >
             <template #title>
                 <span class="model-title">{{ $t('crm_b.preview') }}</span>
             </template>
             <mailTemplete :mailData="mailData"></mailTemplete>
         </a-modal>
-        
-        <a-modal class="custom-ant-modal" v-model:visible="sendMailShow" width="648px" destroyOnClose :after-close='handleSendMailClose'>
+
+        <a-modal
+            class="custom-ant-modal"
+            v-model:visible="sendMailShow"
+            width="648px"
+            destroyOnClose
+            :after-close="handleSendMailClose"
+        >
             <template #title>
                 <span class="model-title">{{ $t('crm_b.send_mail') }}</span>
             </template>
@@ -115,15 +169,15 @@
 
 <script>
 import Core from '../../core';
-import { h } from 'vue'
+import { h } from 'vue';
 import mailTemplete from './components/mail-templete.vue';
 
-const modules = import.meta.globEager("../../assets/images/crm-mail-management/*")
+const modules = import.meta.globEager('../../assets/images/crm-mail-management/*');
 
 export default {
     name: 'mailSendStatistics',
     components: {
-        mailTemplete
+        mailTemplete,
     },
     props: {},
     data() {
@@ -145,37 +199,37 @@ export default {
             sendMailShow: false,
             mailData: {},
             sendMailData: {},
-            sendId: ''
+            sendId: '',
         };
     },
     watch: {
-        searchForm:{
-            deep:true,
-            handler(oldValue,newValue) {
-                if(oldValue === newValue){
-                    this.currPage = 1
-                    this.pageSize = 20
+        searchForm: {
+            deep: true,
+            handler(oldValue, newValue) {
+                if (oldValue === newValue) {
+                    this.currPage = 1;
+                    this.pageSize = 20;
                 }
             },
-        }
+        },
     },
     computed: {
         tableColumns() {
             let columns = [
-                {title: 'n.index', dataIndex: 'xh', key:'xh'},
-                {title: 'crm_b.title', dataIndex: 'title', key:'title'},
-                {title: 'd.create_time', dataIndex: 'create_time', key: 'time'},
-                {title: 'crm_b.schedule_time', dataIndex: 'schedule_time', key: 'schedule_time'},
-                {title: 'crm_b.mail_content', dataIndex: 'email_content', key: 'email_content'},
-                {title: 'crm_b.push', dataIndex: 'send_count', key: 'send_count'},
-                {title: 'crm_b.push_success', dataIndex: 'send_success_count', key: 'send_success_count'},
-                {title: 'crm_b.click_mail', dataIndex: 'click_count', key: 'click_count'},
-                {title: 'def.operate', key: 'operation', fixed: 'right'},
-            ]
-            return columns
+                { title: 'n.index', dataIndex: 'xh', key: 'xh' },
+                { title: 'crm_b.title', dataIndex: 'title', key: 'title' },
+                { title: 'd.create_time', dataIndex: 'create_time', key: 'time' },
+                { title: 'crm_b.schedule_time', dataIndex: 'schedule_time', key: 'schedule_time' },
+                { title: 'crm_b.mail_content', dataIndex: 'email_content', key: 'email_content' },
+                { title: 'crm_b.push', dataIndex: 'send_count', key: 'send_count' },
+                { title: 'crm_b.push_success', dataIndex: 'send_success_count', key: 'send_success_count' },
+                { title: 'crm_b.click_mail', dataIndex: 'click_count', key: 'click_count' },
+                { title: 'def.operate', key: 'operation', fixed: 'right' },
+            ];
+            return columns;
         },
         lang() {
-            return this.$store.state.lang
+            return this.$store.state.lang;
         },
     },
     mounted() {
@@ -194,16 +248,19 @@ export default {
             Core.Api.MAIL_MANAGEMENT.list({
                 ...this.searchForm,
                 page: this.currPage,
-                page_size: this.pageSize
-            }).then(res => {
-                console.log("getTableData res:", res)
-                this.total = res.count;
-                this.tableData = res.list;
-            }).catch(err => {
-                console.log('getTableData err:', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+                page_size: this.pageSize,
+            })
+                .then(res => {
+                    console.log('getTableData res:', res);
+                    this.total = res.count;
+                    this.tableData = res.list;
+                })
+                .catch(err => {
+                    console.log('getTableData err:', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         // 删除邮件
         deleteMail(id) {
@@ -214,12 +271,14 @@ export default {
                 okType: 'danger',
                 cancelText: _this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.MAIL_MANAGEMENT.delete({ id }).then(res => {
-                        _this.$message.success(_this.$t('crm_b.delete_success'))
-                        _this.getTableData();
-                    }).catch(err => {
-                        _this.$message.error(_this.$t('crm_b.delete_error'))
-                    })
+                    Core.Api.MAIL_MANAGEMENT.delete({ id })
+                        .then(res => {
+                            _this.$message.success(_this.$t('crm_b.delete_success'));
+                            _this.getTableData();
+                        })
+                        .catch(err => {
+                            _this.$message.error(_this.$t('crm_b.delete_error'));
+                        });
                 },
             });
         },
@@ -227,45 +286,48 @@ export default {
         sendMail(id) {
             if (this.loadingSend) return;
             let _this = this;
-            this.loadingSend = true
-            Core.Api.MAIL_MANAGEMENT.scheduleEmail({ email_task_id: id }).then(res => {
-                this.$message.success({
-                    content: () => _this.$t('crm_b.send_success'),
-                    class: 'mail-success-class',
-                    icon: () =>
-                    h("img", {
-                        src: _this.getSrcImg('send-mail', 'svg')
-                    }),
-                    top: 90,
+            this.loadingSend = true;
+            Core.Api.MAIL_MANAGEMENT.scheduleEmail({ email_task_id: id })
+                .then(res => {
+                    this.$message.success({
+                        content: () => _this.$t('crm_b.send_success'),
+                        class: 'mail-success-class',
+                        icon: () =>
+                            h('img', {
+                                src: _this.getSrcImg('send-mail', 'svg'),
+                            }),
+                        top: 90,
+                    });
+                    this.getTableData();
+                    this.sendMailShow = false;
+                })
+                .catch(err => {
+                    this.$message.error(this.$t('crm_b.send_error'));
+                })
+                .finally(() => {
+                    this.loadingSend = false;
                 });
-                this.getTableData();
-                this.sendMailShow = false;
-            }).catch(err => {
-                this.$message.error(this.$t('crm_b.send_error'))
-            }).finally(() => {
-                this.loadingSend = false;
-            });
         },
         /* 接口 end */
         routerChange(type, item = {}) {
-            let routeUrl = ''
+            let routeUrl = '';
             switch (type) {
                 case 'add-mail':
                     routeUrl = this.$router.resolve({
-                        path: "/mail-management/add-mail",
-                        query: item
-                    })
-                    window.open(routeUrl.href, '_blank')
+                        path: '/mail-management/add-mail',
+                        query: item,
+                    });
+                    window.open(routeUrl.href, '_blank');
                     break;
                 case 'situation':
                     this.$router.push({
-                        path: "/mail-management/mail-send-situation",
-                        query: item
-                    })
+                        path: '/mail-management/mail-send-situation',
+                        query: item,
+                    });
                     break;
             }
         },
-        pageChange(page) {          
+        pageChange(page) {
             // 页码改变
             this.currPage = page;
             this.getTableData();
@@ -279,8 +341,9 @@ export default {
             // 搜索
             this.pageChange(this.currPage);
         },
-        handleSearchReset() {    // 重置搜索
-            Object.assign(this.searchForm, this.$options.data().searchForm)
+        handleSearchReset() {
+            // 重置搜索
+            Object.assign(this.searchForm, this.$options.data().searchForm);
             this.pageChange(1);
         },
         handleMailClose() {
@@ -291,34 +354,34 @@ export default {
         },
         // 预览邮件
         viewMail(record) {
-            const data = Core.Util.deepCopy(record)
-            this.mailData = Object.assign(data, JSON.parse(data.template_param))
+            const data = Core.Util.deepCopy(record);
+            this.mailData = Object.assign(data, JSON.parse(data.template_param));
             this.mailShow = true;
         },
         // 预览邮件
         openSendMail(record) {
-            this.sendId = record.id
-            const data = Core.Util.deepCopy(record)
-            this.sendMailData = Object.assign(data, JSON.parse(data.template_param))
+            this.sendId = record.id;
+            const data = Core.Util.deepCopy(record);
+            this.sendMailData = Object.assign(data, JSON.parse(data.template_param));
             this.sendMailShow = true;
         },
-    }
+    },
 };
 </script>
 
 <style lang="less" scoped>
 // #CustomerList {}
-.search-text{
+.search-text {
     margin-left: 30px;
-    color: #006EF9;
+    color: #006ef9;
     cursor: pointer;
 }
-.nameStyle{
-  color: #9000f0;
+.nameStyle {
+    color: #9000f0;
 }
 .search-item {
     .ant-btn {
-        border-color: #EAECF2;
+        border-color: #eaecf2;
         pointer-events: none;
     }
     .ant-input {
@@ -334,23 +397,38 @@ export default {
 .btns {
     text-align: center;
 }
-:deep(.ant-table .ant-table-container .ant-table-content table tbody.ant-table-tbody tr.ant-table-row td.ant-table-cell) {
+:deep(
+        .ant-table
+            .ant-table-container
+            .ant-table-content
+            table
+            tbody.ant-table-tbody
+            tr.ant-table-row
+            td.ant-table-cell
+    ) {
     padding: 10px 16px;
     font-size: 14px;
-    color: #1D2129;
+    color: #1d2129;
 }
 :deep(.ant-table .ant-table-container .ant-table-content table thead.ant-table-thead tr th.ant-table-cell) {
     padding: 10px 16px;
     font-size: 14px;
     font-weight: 500;
-    color: #1D2129;
+    color: #1d2129;
 }
-.ant-table .ant-table-container .ant-table-content table tbody.ant-table-tbody tr.ant-table-row td.ant-table-cell .ant-btn {
+.ant-table
+    .ant-table-container
+    .ant-table-content
+    table
+    tbody.ant-table-tbody
+    tr.ant-table-row
+    td.ant-table-cell
+    .ant-btn {
     font-size: 14px;
 }
 
 .model-title {
-    color: #1D2129;
+    color: #1d2129;
     font-size: 18px;
     font-weight: 600;
 }
@@ -361,7 +439,7 @@ export default {
     .ant-message-notice-content {
         top: 90px;
         color: rgba(38, 171, 84, 1);
-        background-color: rgba(38, 171, 84, .1);
+        background-color: rgba(38, 171, 84, 0.1);
         box-shadow: 0px 6px 15px 0px rgba(0, 0, 0, 0.25);
         img {
             margin-right: 9px;

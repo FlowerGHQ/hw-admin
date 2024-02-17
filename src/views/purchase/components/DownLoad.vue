@@ -2,7 +2,7 @@
     <div id="DownLoad" class="list-container">
         <div class="download">
             <div class="list" v-for="i in tableData">
-                <img src="../../../assets/images/default_download.png" class="img">
+                <img src="../../../assets/images/default_download.png" class="img" />
                 <a @click="handleDownload(i)">{{ i.name }}</a>
             </div>
         </div>
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import Core from "../../../core";
+import Core from '../../../core';
 export default {
     name: 'DownLoad',
     components: {},
@@ -22,8 +22,8 @@ export default {
         //     type: Number
         // },
         tableData: {
-            type: Array
-        }
+            type: Array,
+        },
     },
     data() {
         return {
@@ -31,8 +31,7 @@ export default {
         };
     },
     watch: {},
-    computed: {
-    },
+    computed: {},
     mounted() {
         // this.getTableData()
     },
@@ -54,11 +53,11 @@ export default {
         // },
         // 下载附件
         handleDownload(record) {
-            console.log('handleDownload record:', record)
-            let url = Core.Const.NET.FILE_URL_PREFIX + record.path
-            window.open(url, '_self')
+            console.log('handleDownload record:', record);
+            let url = Core.Const.NET.FILE_URL_PREFIX + record.path;
+            window.open(url, '_self');
         },
-    }
+    },
 };
 </script>
 

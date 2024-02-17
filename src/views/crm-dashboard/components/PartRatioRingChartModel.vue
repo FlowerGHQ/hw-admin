@@ -3,43 +3,38 @@
         <!-- 标题 -->
         <div class="title">
             <div>已支付用户参与比例</div>
-            <div class="detail-title" @click="goToDetail('detail')">
-                详情
-            </div>
+            <div class="detail-title" @click="goToDetail('detail')">详情</div>
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <div v-if="!isEmpty" id="PartRatioRingChartId" class="chart" ref='PartRatioRingChartId'></div>
+            <div v-if="!isEmpty" id="PartRatioRingChartId" class="chart" ref="PartRatioRingChartId"></div>
             <div v-if="!isEmpty" class="legend-container">
                 <div class="legend-wrap" v-for="item in legendList">
                     <div class="legend-block">
                         <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
                         <div class="legend-key">{{ item.item }}</div>
                     </div>
-                    <div class="legend-value">{{ (item.percent) * 100 + '%' }}</div>
+                    <div class="legend-value">{{ item.percent * 100 + '%' }}</div>
                 </div>
             </div>
             <div v-if="isEmpty" class="empty-wrap">
-                <img src="../../../assets/images/dashboard/emptyData.png" alt="">
-                <div class="empty-desc">
-                    暂无数据
-                </div>
+                <img src="../../../assets/images/dashboard/emptyData.png" alt="" />
+                <div class="empty-desc">暂无数据</div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import { Chart } from '@antv/g2'
-import Core from "../../../core";
+import { Chart } from '@antv/g2';
+import Core from '../../../core';
 export default {
     name: 'Cards',
-    components: {
-    },
+    components: {},
     props: {
         searchForm: {
             type: Object,
-            default: () => { }
+            default: () => {},
         },
     },
     data() {
@@ -61,24 +56,24 @@ export default {
                 if (this.searchForm.activity_id) {
                     this.getPartRatioRingChartData();
                 }
-            }
+            },
         },
     },
     computed: {},
-    created() { },
+    created() {},
     mounted() {
         if (this.searchForm.activity_id) {
             this.getPartRatioRingChartData();
         }
     },
     beforeUnmount() {
-        this.$refs.PartRatioRingChartId.innerHTML = ''
+        this.$refs.PartRatioRingChartId.innerHTML = '';
     },
     methods: {
         async drawBoStatisticsChart(data) {
-            console.log('环图', data)
+            console.log('环图', data);
             if (this.boStatisticsChart.destroy) {
-                this.boStatisticsChart.destroy()
+                this.boStatisticsChart.destroy();
             }
             await this.$nextTick();
             const chart = new Chart({
@@ -103,7 +98,7 @@ export default {
             // 声明需要进行自定义图例字段： 'item'
             chart.legend(false);
             // 监听 element 上状态的变化来动态更新 Annotation 信息
-            chart.on('element:statechange', (ev) => {
+            chart.on('element:statechange', ev => {
                 const { state, stateStatus, element } = ev.gEvent.originalEvent;
 
                 // 本示例只需要监听 active 的状态变化
@@ -144,7 +139,7 @@ export default {
                                 fill: '#333333',
                                 textAlign: 'center',
                             },
-                        })
+                        });
                     innerView.render(true);
                     lastItem = data.item;
                 }
@@ -181,7 +176,7 @@ export default {
             chart.removeInteraction('legend-filter');
             chart.interaction('element-active');
             chart.render();
-            this.boStatisticsChart = chart
+            this.boStatisticsChart = chart;
         },
         async getPartRatioRingChartData() {
             try {
@@ -191,48 +186,48 @@ export default {
                 // 计算未支付人数总和
                 const totalUnpaidCount = res.reduce((sum, item) => sum + (item.uv - item.pay_num), 0);
                 // 已支付人数百分比
-                const totalPaidPercent = (totalPaidCount / (totalPaidCount + totalUnpaidCount)).toFixed(2)
+                const totalPaidPercent = (totalPaidCount / (totalPaidCount + totalUnpaidCount)).toFixed(2);
                 // 未支付人数百分比
-                const totalUnpaidPercent = (totalUnpaidCount / (totalPaidCount + totalUnpaidCount)).toFixed(2)
+                const totalUnpaidPercent = (totalUnpaidCount / (totalPaidCount + totalUnpaidCount)).toFixed(2);
                 const formattedData = [
                     { item: '已支付', count: totalPaidCount, percent: Number(totalPaidPercent) },
-                    { item: '未支付', count: totalUnpaidCount, percent: Number(totalUnpaidPercent) }
+                    { item: '未支付', count: totalUnpaidCount, percent: Number(totalUnpaidPercent) },
                 ];
-                this.legendList = Core.Util.deepCopy(formattedData)
-                const color = ['#056DFF', '#FFBC48'] // 配置项的颜色
+                this.legendList = Core.Util.deepCopy(formattedData);
+                const color = ['#056DFF', '#FFBC48']; // 配置项的颜色
                 this.legendList.forEach((item, index) => {
-                    item.color = color[index]
-                })
+                    item.color = color[index];
+                });
                 if (!formattedData[0].count) {
-                    this.isEmpty = true
+                    this.isEmpty = true;
                 } else {
-                    this.isEmpty = false
-                    this.drawBoStatisticsChart(formattedData)
+                    this.isEmpty = false;
+                    this.drawBoStatisticsChart(formattedData);
                 }
             } catch (error) {
                 console.log('Error in getPartRatioRingChartData', error);
-                this.$message.warning('数据无法加载，请稍后重试！')
+                this.$message.warning('数据无法加载，请稍后重试！');
             }
         },
         goToDetail(type) {
-            let routeUrl = ''
+            let routeUrl = '';
             switch (type) {
-                case 'detail':    // 编辑
+                case 'detail': // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/crm-dashboard/vote-detail",
+                        path: '/crm-dashboard/vote-detail',
                         query: {
                             title: this.title,
                             api_name: 'numberStatistics',
                             begin_time: this.searchForm.begin_time,
                             end_time: this.searchForm.end_time,
-                            column_type: Core.Const.VOTE.TYPE.PAID
-                        }
-                    })
-                    window.open(routeUrl.href, '_blank')
+                            column_type: Core.Const.VOTE.TYPE.PAID,
+                        },
+                    });
+                    window.open(routeUrl.href, '_blank');
                     break;
             }
-        }
-    }
+        },
+    },
 };
 </script>
 
@@ -256,7 +251,7 @@ export default {
 
     .detail-title {
         cursor: pointer;
-        color: #0061FF;
+        color: #0061ff;
         font-size: 14px;
         font-style: normal;
         font-weight: 400;
@@ -265,7 +260,7 @@ export default {
 
 .chart {
     width: 200px;
-    height: auto
+    height: auto;
 }
 
 .table-container {
@@ -279,14 +274,14 @@ export default {
         justify-content: center;
         align-items: center;
 
-        >img {
+        > img {
             width: 280px;
         }
 
         .empty-desc {
             margin-top: 10px;
             font-size: 14px;
-            color: #86909C;
+            color: #86909c;
         }
     }
 
@@ -313,14 +308,14 @@ export default {
                 }
 
                 .legend-key {
-                    color: #4E5969;
+                    color: #4e5969;
                     font-size: 14px;
                     font-weight: 400;
                 }
             }
 
             .legend-value {
-                color: #1D2129;
+                color: #1d2129;
                 font-size: 14px;
                 font-weight: 600;
             }

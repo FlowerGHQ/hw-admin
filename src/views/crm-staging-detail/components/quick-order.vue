@@ -2,12 +2,18 @@
     <div class="quick-order">
         <template v-if="!isConfirm">
             <div class="body">
-                <img :src="cycList[modelId].src" class="cyc-img">
+                <img :src="cycList[modelId].src" class="cyc-img" />
                 <div class="title">车型</div>
                 <div class="cyc-body">
-                    <div class="cyc-item" :class="cycIndex === index ? 'selected' : ''" v-for="(cyc, key, index) in cycList" :key="index" @click="change(cyc.modelId, index)">
+                    <div
+                        class="cyc-item"
+                        :class="cycIndex === index ? 'selected' : ''"
+                        v-for="(cyc, key, index) in cycList"
+                        :key="index"
+                        @click="change(cyc.modelId, index)"
+                    >
                         <div class="cyc-item-img">
-                            <img :src="cyc.src">
+                            <img :src="cyc.src" />
                         </div>
                         <p class="cyc-item-name">{{ cyc.name }}</p>
                     </div>
@@ -15,19 +21,25 @@
                 <div class="title">版本</div>
                 <div class="version">
                     <div class="version-title">
-                        <p>{{ cycList[modelId].name }}<span v-if="cycList[modelId].version">·{{ cycList[modelId].version }}</span></p>
-                        <p v-if="cycList[modelId].total_price">￥{{ Core.Util.countFilter(cycList[modelId].total_price) }}<span class="old-price">￥{{ Core.Util.countFilter(cycList[modelId].old_price) }}</span></p>
+                        <p>
+                            {{ cycList[modelId].name
+                            }}<span v-if="cycList[modelId].version">·{{ cycList[modelId].version }}</span>
+                        </p>
+                        <p v-if="cycList[modelId].total_price">
+                            ￥{{ Core.Util.countFilter(cycList[modelId].total_price)
+                            }}<span class="old-price">￥{{ Core.Util.countFilter(cycList[modelId].old_price) }}</span>
+                        </p>
                     </div>
                     <div class="version-dis">
-                        <img src="../images/MILEAGE.png" alt="">
+                        <img src="../images/MILEAGE.png" alt="" />
                         <span>{{ cycList[modelId].accelerate }}</span>
                     </div>
                     <div class="version-dis">
-                        <img src="../images/BATTERY.png" alt="">
+                        <img src="../images/BATTERY.png" alt="" />
                         <span>{{ cycList[modelId].mileage }}</span>
                     </div>
                     <div class="version-dis">
-                        <img src="../images/ACCELERATE.png" alt="">
+                        <img src="../images/ACCELERATE.png" alt="" />
                         <span>{{ cycList[modelId].fastCharging }}</span>
                     </div>
                 </div>
@@ -39,7 +51,11 @@
             </div>
             <div class="footer">
                 <div class="price" v-if="cycList[modelId].total_price">
-                    <p class="amount">总价：<span class="amount-price">￥{{ Core.Util.countFilter(cycList[modelId].total_price) }}</span></p>
+                    <p class="amount">
+                        总价：<span class="amount-price"
+                            >￥{{ Core.Util.countFilter(cycList[modelId].total_price) }}</span
+                        >
+                    </p>
                     <p class="config">车型配置、图片信息仅供参考</p>
                 </div>
                 <a-button type="primary" @click="confirmConfig">确定配置</a-button>
@@ -47,12 +63,17 @@
         </template>
         <template v-else>
             <div class="body">
-                <img :src="cycList[modelId].src" class="cyc-img">
+                <img :src="cycList[modelId].src" class="cyc-img" />
                 <div class="title">版本</div>
                 <div class="confirm-version">
                     <div class="confirm-version-title">
-                        <p>{{ cycList[modelId].name }}<span v-if="cycList[modelId].version">·{{ cycList[modelId].version }}</span></p>
-                        <p v-if="cycList[modelId].total_price">￥{{ Core.Util.countFilter(cycList[modelId].total_price) }}</p>
+                        <p>
+                            {{ cycList[modelId].name
+                            }}<span v-if="cycList[modelId].version">·{{ cycList[modelId].version }}</span>
+                        </p>
+                        <p v-if="cycList[modelId].total_price">
+                            ￥{{ Core.Util.countFilter(cycList[modelId].total_price) }}
+                        </p>
                     </div>
                 </div>
                 <div class="title">颜色</div>
@@ -67,7 +88,11 @@
             </div>
             <div class="footer">
                 <div class="price" v-if="cycList[modelId].total_price">
-                    <p class="amount">总价：<span class="amount-price">￥{{ Core.Util.countFilter(cycList[modelId].total_price) }}</span></p>
+                    <p class="amount">
+                        总价：<span class="amount-price"
+                            >￥{{ Core.Util.countFilter(cycList[modelId].total_price) }}</span
+                        >
+                    </p>
                 </div>
                 <div>
                     <a-button @click="pushApp">推送给用户</a-button>
@@ -81,94 +106,101 @@
 <script setup>
 import { inject, getCurrentInstance, reactive, ref, toRefs } from 'vue';
 import Core from '@/core';
-import QrcodeVue from 'qrcode.vue'
-import Static from '../static'
+import QrcodeVue from 'qrcode.vue';
+import Static from '../static';
 
 const userId = inject('userId');
-const getChildData = inject('getChildData'); // 更新子组件数据方法 传对应 key 
+const getChildData = inject('getChildData'); // 更新子组件数据方法 传对应 key
 const $prop = defineProps({
     customer_id: {
         required: true,
         type: [String, Number],
-    }
-})
+    },
+});
 const { proxy } = getCurrentInstance();
-const $emit = defineEmits([])
-const qrCodeUrl = ref(null)
-const cycIndex = ref(0)
-const modelId = ref(1)
-const orderId = ref(null)
-const isConfirm = ref(false)
-const isUpdate = ref(false)
+const $emit = defineEmits([]);
+const qrCodeUrl = ref(null);
+const cycIndex = ref(0);
+const modelId = ref(1);
+const orderId = ref(null);
+const isConfirm = ref(false);
+const isUpdate = ref(false);
 const colorList = {
-	'号外橙': '#DC6E38',
-	'号外紫': '#1010A8',
-}
-const userMes = ref([])
-const cycList = Static.MODEL
+    号外橙: '#DC6E38',
+    号外紫: '#1010A8',
+};
+const userMes = ref([]);
+const cycList = Static.MODEL;
 const change = (id, index) => {
-    modelId.value = id
-    cycIndex.value = index
-}
+    modelId.value = id;
+    cycIndex.value = index;
+};
 const getUserDetail = () => {
-    Core.Api.CustomService.detail({ id: userId.value }).then(res=>{
-		Core.Logger.success('getTaskNum',res);
-        userMes.value = res
-	}).catch(err=>{
-        Core.Logger.error("参数", "数据", err)
-	})
-}
+    Core.Api.CustomService.detail({ id: userId.value })
+        .then(res => {
+            Core.Logger.success('getTaskNum', res);
+            userMes.value = res;
+        })
+        .catch(err => {
+            Core.Logger.error('参数', '数据', err);
+        });
+};
 const confirmConfig = () => {
-    if (!userId.value) return
+    if (!userId.value) return;
     if (isUpdate.value) {
-        updateOrder()
-        return
+        updateOrder();
+        return;
     }
     const params = {
-        "address": userMes.value.address,// 地址
-		"city": userMes.value.city,// 所属城市
-		"customer_id": userId.value,// 用户ID
-		"group_id": userMes.value.group_id,// 所属区域id
-		"pay_money": cycList[modelId.value].pay_money,// 本次支付金额
-		"remark": JSON.stringify({ ...cycList[modelId.value] }), // 车辆信息
-		"total_price": cycList[modelId.value].total_price,// 产品总金额
-		"type": "1",// 本次支付订单类型
-		"user_id": Core.Data.getUser('user').id,// 员工用户ID
-	}
-    Core.Logger.success('params', params)
-    Core.Api.CustomService.createOrder({ ...params }).then(res=>{
-		Core.Logger.success('getTaskNum',res);
-        orderId.value = res.order.id
-        isConfirm.value = true
-        getChildData('4')
-	}).catch(err=>{
-        Core.Logger.error("参数", "数据", err)
-	})
-}
+        address: userMes.value.address, // 地址
+        city: userMes.value.city, // 所属城市
+        customer_id: userId.value, // 用户ID
+        group_id: userMes.value.group_id, // 所属区域id
+        pay_money: cycList[modelId.value].pay_money, // 本次支付金额
+        remark: JSON.stringify({ ...cycList[modelId.value] }), // 车辆信息
+        total_price: cycList[modelId.value].total_price, // 产品总金额
+        type: '1', // 本次支付订单类型
+        user_id: Core.Data.getUser('user').id, // 员工用户ID
+    };
+    Core.Logger.success('params', params);
+    Core.Api.CustomService.createOrder({ ...params })
+        .then(res => {
+            Core.Logger.success('getTaskNum', res);
+            orderId.value = res.order.id;
+            isConfirm.value = true;
+            getChildData('4');
+        })
+        .catch(err => {
+            Core.Logger.error('参数', '数据', err);
+        });
+};
 const updateOrder = () => {
-    Core.Api.CustomService.orderUpdate({ id: orderId.value, remark: JSON.stringify({ ...cycList[modelId.value] }) }).then(res=>{
-		Core.Logger.success('getTaskNum',res);
-        isConfirm.value = true
-        getChildData('4')
-	}).catch(err=>{
-        Core.Logger.error("参数", "数据", err)
-	})
-}
+    Core.Api.CustomService.orderUpdate({ id: orderId.value, remark: JSON.stringify({ ...cycList[modelId.value] }) })
+        .then(res => {
+            Core.Logger.success('getTaskNum', res);
+            isConfirm.value = true;
+            getChildData('4');
+        })
+        .catch(err => {
+            Core.Logger.error('参数', '数据', err);
+        });
+};
 const changeConfig = () => {
-    isUpdate.value = true
-    isConfirm.value = false
-}
+    isUpdate.value = true;
+    isConfirm.value = false;
+};
 const pushApp = () => {
-    Core.Api.CustomService.pushApp({ id: orderId.value }).then(res=>{
-		Core.Logger.success('getTaskNum',res);
-        proxy.$message.success('推送成功');
-	}).catch(err=>{
-        Core.Logger.error("参数", "数据", err)
-	})
-}
+    Core.Api.CustomService.pushApp({ id: orderId.value })
+        .then(res => {
+            Core.Logger.success('getTaskNum', res);
+            proxy.$message.success('推送成功');
+        })
+        .catch(err => {
+            Core.Logger.error('参数', '数据', err);
+        });
+};
 
-defineExpose({ getUserDetail })
-
+defineExpose({ getUserDetail });
 </script>
 
 <style lang="less" scoped>
@@ -185,7 +217,7 @@ defineExpose({ getUserDetail })
         line-height: 1.5715;
         word-wrap: break-word;
         .title {
-            color: #1D2129;
+            color: #1d2129;
             font-size: 16px;
             font-weight: 600;
             margin-bottom: 10px;
@@ -207,7 +239,7 @@ defineExpose({ getUserDetail })
                     padding: 9px 6px;
                     border-radius: 4px;
                     margin-bottom: 4px;
-                    border: 1px solid #E5E6EB;
+                    border: 1px solid #e5e6eb;
                     > img {
                         width: 180px;
                         height: 102px;
@@ -215,7 +247,7 @@ defineExpose({ getUserDetail })
                 }
                 .cyc-item-name {
                     text-align: center;
-                    color: #1D2129;
+                    color: #1d2129;
                     font-size: 16px;
                     font-weight: 600;
                 }
@@ -224,7 +256,7 @@ defineExpose({ getUserDetail })
                 }
                 &.selected {
                     .cyc-item-img {
-                        border-color: #0061FF;
+                        border-color: #0061ff;
                     }
                 }
             }
@@ -234,11 +266,11 @@ defineExpose({ getUserDetail })
             display: flex;
             flex-direction: column;
             border-radius: 8px;
-            border: 1px solid #F2F3F5;
+            border: 1px solid #f2f3f5;
             .version-title {
                 display: flex;
                 justify-content: space-between;
-                color: #1D2129;
+                color: #1d2129;
                 font-size: 16px;
                 font-weight: 600;
                 position: relative;
@@ -249,7 +281,7 @@ defineExpose({ getUserDetail })
                     right: 0;
                     transform: translateY(100%);
                     overflow: hidden;
-                    color: #86909C;
+                    color: #86909c;
                     text-overflow: ellipsis;
                     font-size: 12px;
                     text-decoration: line-through;
@@ -268,7 +300,7 @@ defineExpose({ getUserDetail })
                     margin-right: 4px;
                 }
                 > span {
-                    color: #86909C;
+                    color: #86909c;
                     font-size: 14px;
                 }
             }
@@ -280,13 +312,13 @@ defineExpose({ getUserDetail })
             .confirm-version-title {
                 display: flex;
                 justify-content: space-between;
-                color: #1D2129;
+                color: #1d2129;
                 font-size: 14px;
             }
         }
         .color-name {
             display: inline-block;
-            color: #4E5969;
+            color: #4e5969;
             font-size: 14px;
             margin-bottom: 6px;
         }
@@ -304,7 +336,7 @@ defineExpose({ getUserDetail })
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            border-top: 1px dashed #E5E6EB;
+            border-top: 1px dashed #e5e6eb;
             padding: 60px;
             margin-top: 28px;
             .qrcode-image {
@@ -315,7 +347,7 @@ defineExpose({ getUserDetail })
                 margin-top: 8px;
                 text-align: center;
                 font-size: 14px;
-                color: #1D2129;
+                color: #1d2129;
             }
         }
     }
@@ -328,15 +360,15 @@ defineExpose({ getUserDetail })
         .price {
             flex: 1;
             .amount {
-                color: #1D2129;
+                color: #1d2129;
                 font-size: 16px;
                 font-weight: 600;
                 .amount-price {
-                    color: #0061FF;
+                    color: #0061ff;
                 }
             }
             .config {
-                color: #86909C;
+                color: #86909c;
                 font-size: 12px;
             }
         }

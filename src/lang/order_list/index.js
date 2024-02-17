@@ -7,11 +7,11 @@
  */
 export default {
     zh: {
-		// 预定数量
-		book_number: '预定数量',
+        // 预定数量
+        book_number: '预定数量',
     },
     en: {
-		// 预定数量
-		book_number: 'Book Number',
-    }
-}
+        // 预定数量
+        book_number: 'Book Number',
+    },
+};

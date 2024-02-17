@@ -6,37 +6,33 @@
             :okText="$t('item-bom.confirm')"
             :cancelText="$t('item-bom.cancel')"
             @ok="handleOk"
-			width="570px"
+            width="570px"
             centered
             :closable="false"
             class="export-modal"
             @cancel="handCancle"
-            :getContainer="() => wrap">
+            :getContainer="() => wrap"
+        >
             <div class="main">
-                <span class="title"
-                    >{{ $t("item-bom.change_version_number")
-                    }}{{ `：${versionName}` }}</span
-                >
+                <span class="title">{{ $t('item-bom.change_version_number') }}{{ `：${versionName}` }}</span>
                 <div class="success-tips">
                     <div class="success-icon">
-                        <img
-                            src="../../../../assets/images/bom/ok.png"
-                            alt="" />
+                        <img src="../../../../assets/images/bom/ok.png" alt="" />
                     </div>
                     <div class="success-text">
-                        {{ $t("item-bom.parsing_completion") }}
+                        {{ $t('item-bom.parsing_completion') }}
                     </div>
                     <div class="success-or-fail">
-                        {{ $t("item-bom.parsing_success") }}
+                        {{ $t('item-bom.parsing_success') }}
                         <span class="success-txt">{{ successCount }}</span>
-                        {{ $t("item-bom.strip") }} {{ $t("item-bom.data") }}，
-                        {{ $t("item-bom.failure") }}
+                        {{ $t('item-bom.strip') }} {{ $t('item-bom.data') }}，
+                        {{ $t('item-bom.failure') }}
                         <span class="fail-txt">{{ failCount }}</span>
-                        {{ $t("item-bom.strip") }}
+                        {{ $t('item-bom.strip') }}
                     </div>
                 </div>
                 <div class="tips">
-                    {{ $t("item-bom.import_failure_data") }}
+                    {{ $t('item-bom.import_failure_data') }}
                 </div>
                 <div class="table">
                     <a-table
@@ -45,21 +41,18 @@
                         bordered
                         size="small"
                         :pagination="false"
-                        :scroll="{ x: true, y: 282 }">
+                        :scroll="{ x: true, y: 282 }"
+                    >
                         <template #bodyCell="{ record, column, text }">
-							<!-- category_name -->
-							<div v-if="column.key === 'category'">
-								<a-tooltip :title="text">
-									<div class="ell overflow-ell">{{ text }}</div>
-								</a-tooltip>
-							</div>
+                            <!-- category_name -->
+                            <div v-if="column.key === 'category'">
+                                <a-tooltip :title="text">
+                                    <div class="ell overflow-ell">{{ text }}</div>
+                                </a-tooltip>
+                            </div>
                             <div v-if="column.key === 'parsing_failure_number'">
-                                <span class="zero" v-if="record.fail_count == 0"
-                                    >0</span
-                                >
-                                <span class="fail-number" v-else>{{
-                                    text
-                                }}</span>
+                                <span class="zero" v-if="record.fail_count == 0">0</span>
+                                <span class="fail-number" v-else>{{ text }}</span>
                             </div>
                         </template>
                     </a-table>
@@ -70,9 +63,9 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
-import { useI18n } from "vue-i18n";
-import Core from "@/core";
+import { ref, computed, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import Core from '@/core';
 
 const $t = useI18n().t;
 const wrap = ref(null);
@@ -83,7 +76,7 @@ const successCount = ref(0);
 // 失败总条数
 const failCount = ref(0);
 
-const emits = defineEmits(["update:visibility", "refresh"]);
+const emits = defineEmits(['update:visibility', 'refresh']);
 const props = defineProps({
     objData: {
         type: Object,
@@ -95,11 +88,11 @@ const props = defineProps({
     },
     versionName: {
         type: String,
-        default: "",
+        default: '',
     },
     bom_version_id: {
         type: String,
-        default: "",
+        default: '',
     },
 });
 
@@ -110,7 +103,7 @@ watch(
         let fail_count = 0;
         correctList.value = newVal?.correctList;
         tableData.value = newVal?.statistics;
-        tableData.value.forEach((item) => {
+        tableData.value.forEach(item => {
             success_count += Number(item.success_count);
             fail_count += Number(item.fail_count);
         });
@@ -119,27 +112,27 @@ watch(
     },
     {
         deep: true,
-    }
+    },
 );
 const tableColumns = computed(() => {
     const result = [
         {
-            title: $t("item-bom.category"),
-            dataIndex: "category_name",
-            key: "category",
-            align: "center",
+            title: $t('item-bom.category'),
+            dataIndex: 'category_name',
+            key: 'category',
+            align: 'center',
         },
         {
-            title: $t("item-bom.parsing_success_number"),
-            dataIndex: "success_count",
-            key: "parsing_success_number",
-            align: "center",
+            title: $t('item-bom.parsing_success_number'),
+            dataIndex: 'success_count',
+            key: 'parsing_success_number',
+            align: 'center',
         },
         {
-            title: $t("item-bom.parsing_failure_number"),
-            dataIndex: "fail_count",
-            key: "parsing_failure_number",
-            align: "center",
+            title: $t('item-bom.parsing_failure_number'),
+            dataIndex: 'fail_count',
+            key: 'parsing_failure_number',
+            align: 'center',
         },
     ];
     return result;
@@ -149,7 +142,7 @@ const tableColumns = computed(() => {
 const tableData = ref([]);
 
 const handCancle = () => {
-    emits("update:visibility", false);
+    emits('update:visibility', false);
 };
 
 const handleOk = () => {
@@ -157,15 +150,15 @@ const handleOk = () => {
         bom_version_id: props.bom_version_id,
         item_list: correctList.value,
     })
-        .then((res) => {
-            console.log("importBindBomItem", res);
-            emits("refresh");
+        .then(res => {
+            console.log('importBindBomItem', res);
+            emits('refresh');
         })
-        .catch((err) => {
-            console.log("err", err);
+        .catch(err => {
+            console.log('err', err);
         })
         .finally(() => {
-            emits("update:visibility", false);
+            emits('update:visibility', false);
         });
 };
 </script>
@@ -252,17 +245,17 @@ const handleOk = () => {
                     .ant-table-cell {
                         color: #1d2129 !important;
                         height: 32px !important;
-						padding: 0;
-						.overflow-ell{
-							padding:0 8px;
-						}
+                        padding: 0;
+                        .overflow-ell {
+                            padding: 0 8px;
+                        }
                     }
-					.ant-table-body{
-						width: 100% !important;
-						table{
-							width: 100% !important;
-						}
-					}
+                    .ant-table-body {
+                        width: 100% !important;
+                        table {
+                            width: 100% !important;
+                        }
+                    }
                     .zero {
                         color: #bfbfbf;
                     }

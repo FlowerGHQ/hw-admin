@@ -17,8 +17,12 @@
                     </span>
                 </div>
                 <div class="list">
-                    <div class="item" v-for="item in list" :key="item.id"
-                        @click="routerChange(`${route.path}/detail`, { id: item.id })">
+                    <div
+                        class="item"
+                        v-for="item in list"
+                        :key="item.id"
+                        @click="routerChange(`${route.path}/detail`, { id: item.id })"
+                    >
                         <VehicleCard :record="item" />
                     </div>
                 </div>
@@ -39,8 +43,8 @@ import DownLoading from '../../components/DownLoading.vue';
 
 import Core from '@/core';
 import { ref, reactive, onMounted, computed, watch, getCurrentInstance, nextTick, onBeforeUnmount } from 'vue';
-import { useRoute, useRouter, onBeforeRouteLeave } from "vue-router";
-import { useStore } from "vuex";
+import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
+import { useStore } from 'vuex';
 const { proxy } = getCurrentInstance();
 const route = useRoute();
 const router = useRouter();
@@ -48,50 +52,50 @@ const store = useStore();
 
 /* state start */
 const vehicle_type = ref(Number(route.meta?.item_type) || 1);
-const spinning = ref(false)
+const spinning = ref(false);
 const pagination = reactive({
     page_size: 20,
     page: 1,
     total: 0,
     total_page: 0,
-})
-const list = ref([])
-const itemListFetch = Core.Api.Item.list
+});
+const list = ref([]);
+const itemListFetch = Core.Api.Item.list;
 /* state end */
 
-onBeforeRouteLeave((to) => {
-    vehicle_type.value = Number(to.meta?.item_type) || 1
+onBeforeRouteLeave(to => {
+    vehicle_type.value = Number(to.meta?.item_type) || 1;
     getCarList({}, true);
 });
 /* computed start */
 const lang = computed(() => {
-    return store.state.lang
-})
+    return store.state.lang;
+});
 /* computed end */
 
 /* watch start */
 /* watch end */
 
 onMounted(() => {
-    getData()
-    window.addEventListener('scroll', handleScroll)
-})
+    getData();
+    window.addEventListener('scroll', handleScroll);
+});
 onBeforeUnmount(() => {
-    window.removeEventListener('scroll', handleScroll)
-})
+    window.removeEventListener('scroll', handleScroll);
+});
 
 /* methods start */
 // 获取数据
 const getData = () => {
-    getCarList()
-}
+    getCarList();
+};
 const handleScroll = () => {
     // 因为存在子组件路由所以判断只在父路由时执行
     if (route.path !== '/mall/vehicle-list') return;
-    const footerHeight = document.querySelector('#mall-footer').clientHeight
-    const html = document.documentElement
-    Core.Util.handleScrollFn(html, getCarList, pagination, spinning.value, footerHeight)
-}
+    const footerHeight = document.querySelector('#mall-footer').clientHeight;
+    const html = document.documentElement;
+    Core.Util.handleScrollFn(html, getCarList, pagination, spinning.value, footerHeight);
+};
 // 路由跳转
 const routerChange = (routeUrl, item = {}, type = 1) => {
     if (!routeUrl) return;
@@ -99,48 +103,50 @@ const routerChange = (routeUrl, item = {}, type = 1) => {
         case 1:
             router.push({
                 path: routeUrl,
-                query: item
-            })
+                query: item,
+            });
             break;
         default:
             break;
     }
-}
+};
 const resetFn = () => {
-    list.value = []
+    list.value = [];
     Object.assign(pagination, {
         page_size: 20,
         page: 1,
         total: 0,
         total_page: 0,
-    })
-}
+    });
+};
 /* methods end */
 
 /* fetch start */
 const getCarList = (q, reset = false) => {
     if (reset) resetFn();
-    spinning.value = true
+    spinning.value = true;
     const params = {
-        "type": vehicle_type.value, //1.整车；2.零部件/物料；3.周边；4.广宣品
-        "page": pagination.page,
-        "page_size": pagination.page_size,
-    }
-    Object.assign(params, q)
-    const vehicle_type_old = Core.Util.deepCopy(vehicle_type.value)
-    itemListFetch({ ...params }).then(res => {
-        if (vehicle_type_old !== vehicle_type.value) return; // 已切换类型不再赋值数据
-        list.value = list.value.concat(res?.list)
-        pagination.total = res.count
-        pagination.total_page = Math.ceil(pagination.total / pagination.page_size)
-    }).finally(() => {
-        spinning.value = false
-    })
-}
+        type: vehicle_type.value, //1.整车；2.零部件/物料；3.周边；4.广宣品
+        page: pagination.page,
+        page_size: pagination.page_size,
+    };
+    Object.assign(params, q);
+    const vehicle_type_old = Core.Util.deepCopy(vehicle_type.value);
+    itemListFetch({ ...params })
+        .then(res => {
+            if (vehicle_type_old !== vehicle_type.value) return; // 已切换类型不再赋值数据
+            list.value = list.value.concat(res?.list);
+            pagination.total = res.count;
+            pagination.total_page = Math.ceil(pagination.total / pagination.page_size);
+        })
+        .finally(() => {
+            spinning.value = false;
+        });
+};
 /* fetch end */
 </script>
 
-<style lang='scss' scoped src='../../css/layout.css'></style>
+<style lang="scss" scoped src="../../css/layout.css"></style>
 <style lang="less" scoped>
 #vehicle-list {
     .content {
@@ -167,7 +173,6 @@ const getCarList = (q, reset = false) => {
         }
     }
 }
-
 
 @media (max-width: 1200px) {
     #vehicle-list .content .list {

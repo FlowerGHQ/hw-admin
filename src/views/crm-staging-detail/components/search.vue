@@ -3,41 +3,41 @@
         <div class="search-item">
             <a-input placeholder="搜索用户名称/手机号" v-model:value="searchForm.key" @keydown.enter="handleSearch">
                 <template #prefix>
-                    <SearchOutlined style="font-size: 20px; color: #C9CDD4;"/>
+                    <SearchOutlined style="font-size: 20px; color: #c9cdd4" />
                 </template>
             </a-input>
         </div>
         <div class="search-item">
             <a-select
-              ref="select"
-              :options="optionsIntention"
-              v-model:value="searchForm.intention"
-              :field-names="{ label: 'zh', value: 'key' }"
-              style="width: 90px;"
-              placeholder="意向度"
-              @change="handleChange"
+                ref="select"
+                :options="optionsIntention"
+                v-model:value="searchForm.intention"
+                :field-names="{ label: 'zh', value: 'key' }"
+                style="width: 90px"
+                placeholder="意向度"
+                @change="handleChange"
             ></a-select>
         </div>
         <div class="search-item">
             <a-select
-              ref="select"
-              :options="optionsSource"
-              v-model:value="searchForm.source_type_mapping"
-              :field-names="{ label: 'title', value: 'value' }"
-              style="width: 110px;"
-              placeholder="来源"
-              @change="handleChange"
+                ref="select"
+                :options="optionsSource"
+                v-model:value="searchForm.source_type_mapping"
+                :field-names="{ label: 'title', value: 'value' }"
+                style="width: 110px"
+                placeholder="来源"
+                @change="handleChange"
             ></a-select>
         </div>
         <div class="search-item">
             <a-select
-              ref="select"
-              :options="optionsStatus"
-              v-model:value="searchForm.order_status"
-              :field-names="{ label: 'text', value: 'key' }"
-              style="width: 104px;"
-              placeholder="订单状态"
-              @change="handleChange"
+                ref="select"
+                :options="optionsStatus"
+                v-model:value="searchForm.order_status"
+                :field-names="{ label: 'text', value: 'key' }"
+                style="width: 104px"
+                placeholder="订单状态"
+                @change="handleChange"
             ></a-select>
         </div>
         <!-- <div class="search-item">
@@ -77,15 +77,15 @@
         </div> -->
         <div class="search-item">
             <a-range-picker
-              v-model:value="searchForm.time"
-              @change="handleChange()"
-              :allowClear="false"
-              :placeholder="['开始日期', '结束日期']"
-              style="width: 230px;"
-              ref="TimeSearch"
+                v-model:value="searchForm.time"
+                @change="handleChange()"
+                :allowClear="false"
+                :placeholder="['开始日期', '结束日期']"
+                style="width: 230px"
+                ref="TimeSearch"
             >
                 <template #suffixIcon>
-                    <CalendarOutlined style="font-size: 20px; color: #86909C;"/>
+                    <CalendarOutlined style="font-size: 20px; color: #86909c" />
                 </template>
             </a-range-picker>
         </div>
@@ -97,17 +97,17 @@
 import Core from '@/core';
 import { SearchOutlined, CalendarOutlined } from '@ant-design/icons-vue';
 import { reactive, ref, toRefs, onMounted } from 'vue';
-import Static from '../static'
+import Static from '../static';
 
 // const $prop = defineProps(['xxx'])
-const $emit = defineEmits(['enter'])
+const $emit = defineEmits(['enter']);
 
-// onMounted(() => {    
+// onMounted(() => {
 //     getGroupList()
 // })
 
 // 搜索栏
-const clear = ref(false)
+const clear = ref(false);
 const optionsIntention = ref(Object.values(Core.Const.CRM_ORDER.INTENTION_STATUS));
 const optionsSource = ref(Static.SOURCE_TYPE);
 const optionsStatus = ref(Object.values(Static.ORDER_STATUS_MAP));
@@ -123,7 +123,7 @@ const searchForm = reactive({
     // city: undefined,
     // store_id: undefined,
     time: undefined,
-})
+});
 // const getGroupList = () => {
 //     Core.Api.CustomService.groupList().then(res=>{
 // 		Core.Logger.success('getTaskNum',res);
@@ -132,9 +132,9 @@ const searchForm = reactive({
 //         Core.Logger.error("参数", "数据", err)
 // 	})
 // }
-const handleChange = (type) => {
-    openClear()
-    $emit('enter', searchForm)
+const handleChange = type => {
+    openClear();
+    $emit('enter', searchForm);
     // switch (type) {
     //     case 'group':
     //         getCityList();
@@ -142,11 +142,11 @@ const handleChange = (type) => {
     //     case 'city':
     //         getStoreList();
     //         break;
-    
+
     //     default:
     //         break;
     // }
-}
+};
 // // 获取城市列表
 // const getCityList = (value) => {
 //     Core.Api.CustomService.getCityList({
@@ -172,22 +172,22 @@ const handleChange = (type) => {
 // 	})
 // }
 const handleSearch = () => {
-    openClear()
-    $emit('enter', searchForm)
-}
+    openClear();
+    $emit('enter', searchForm);
+};
 const clearFn = () => {
-    if (!clear.value) return
-    for(let key in searchForm) {
-        searchForm[key] = undefined
+    if (!clear.value) return;
+    for (let key in searchForm) {
+        searchForm[key] = undefined;
     }
-    clear.value = false
-    $emit('clearId')
-    $emit('enter', searchForm)
-}
+    clear.value = false;
+    $emit('clearId');
+    $emit('enter', searchForm);
+};
 const openClear = () => {
-    clear.value = true
-}
-defineExpose({openClear})
+    clear.value = true;
+};
+defineExpose({ openClear });
 </script>
 
 <style lang="less" scoped>
@@ -209,17 +209,19 @@ defineExpose({openClear})
                 font-size: 14px;
             }
         }
-        :deep(.ant-picker-input > input), :deep(.ant-select-selector), :deep(.ant-input-affix-wrapper > input.ant-input) {
+        :deep(.ant-picker-input > input),
+        :deep(.ant-select-selector),
+        :deep(.ant-input-affix-wrapper > input.ant-input) {
             font-size: 14px;
         }
     }
     .clear {
         position: absolute;
         right: 0;
-        color: #86909C;
+        color: #86909c;
         cursor: pointer;
         &:hover {
-            color: #0061FF;
+            color: #0061ff;
         }
     }
 }

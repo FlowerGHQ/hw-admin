@@ -4,11 +4,15 @@
             <div class="container">
                 <!-- 地方政策列表 -->
                 <div class="deals-list">
-                    <div class="deals-item hover" v-for="(item, index) in reportList" :key="index"
-                        @click="selectDeals(item.id)">
+                    <div
+                        class="deals-item hover"
+                        v-for="(item, index) in reportList"
+                        :key="index"
+                        @click="selectDeals(item.id)"
+                    >
                         <div class="img-body">
                             <div class="img">
-                                <img class="deals-img" :src="$Util.imageFilter(JSON.parse(item.img)[0].path, 5)">
+                                <img class="deals-img" :src="$Util.imageFilter(JSON.parse(item.img)[0].path, 5)" />
                             </div>
                         </div>
                         <div class="text">
@@ -35,7 +39,8 @@ import fadeInImage from '../components/FadeInImage.vue';
 
 export default {
     components: {
-        DownLoading, fadeInImage
+        DownLoading,
+        fadeInImage,
     },
     data() {
         return {
@@ -47,7 +52,7 @@ export default {
                 page_size: 15,
                 page: 1,
                 total: 0,
-                total_page: 0
+                total_page: 0,
             },
             loadingCarousel: false,
             loadingArticle: false,
@@ -55,70 +60,73 @@ export default {
     },
     watch: {},
     created() {
-        window.addEventListener('resize', this.handleWindowResize)
+        window.addEventListener('resize', this.handleWindowResize);
     },
     mounted() {
-        this.getDeals()
-        window.addEventListener('scroll', this.handleScroll)
+        this.getDeals();
+        window.addEventListener('scroll', this.handleScroll);
     },
     computed: {
         lang() {
-            return this.$store.state.lang
-        }
+            return this.$store.state.lang;
+        },
     },
     beforeDestroy() {
-        window.removeEventListener('scroll', this.handleScroll)
+        window.removeEventListener('scroll', this.handleScroll);
         window.removeEventListener('resize', this.handleWindowResize);
     },
     methods: {
         // 获取地方政策
         getDeals() {
-            if (this.loadingArticle) return
-            this.loadingArticle = true
+            if (this.loadingArticle) return;
+            this.loadingArticle = true;
             let params = {
-                "page": this.pagination.page,// 页号
-                "page_size": this.pagination.page_size,// 页大小
-                "title": "",
-                "area": "",
-                type: 1
-            }
-            Core.Api.Operation.list({ ...params }).then(res => {
-                this.reportList = this.reportList.concat(res.list)
-                this.reportList = this.reportList.map(item => {
-                    item.firstSentence = Core.Util.Common.getFirstSentence(item.content)
-                    return item
+                page: this.pagination.page, // 页号
+                page_size: this.pagination.page_size, // 页大小
+                title: '',
+                area: '',
+                type: 1,
+            };
+            Core.Api.Operation.list({ ...params })
+                .then(res => {
+                    this.reportList = this.reportList.concat(res.list);
+                    this.reportList = this.reportList.map(item => {
+                        item.firstSentence = Core.Util.Common.getFirstSentence(item.content);
+                        return item;
+                    });
+                    this.pagination.total = res.count;
+                    this.pagination.total_page = Math.ceil(this.pagination.total / this.pagination.page_size);
                 })
-                this.pagination.total = res.count
-                this.pagination.total_page = Math.ceil(this.pagination.total / this.pagination.page_size)
-            }).catch(err => {
-                console.log(err)
-            }).finally(() => {
-                this.loadingArticle = false
-            })
+                .catch(err => {
+                    console.log(err);
+                })
+                .finally(() => {
+                    this.loadingArticle = false;
+                });
         },
-        onChange() { },
+        onChange() {},
         selectDeals(id) {
-            this.routerChange('mall/deals-detail', { id })
+            this.routerChange('mall/deals-detail', { id });
         },
         /*== 路由跳转 start ==*/
         routerChange(key, q = {}) {
             this.$router.push({
                 path: `/${key}`,
-                query: q
+                query: q,
             });
         },
         /*== 路由跳转 end ==*/
         handleScroll() {
-            this.footerHeight = document.querySelector('#mall-footer').clientHeight
-            const html = document.documentElement
-            Core.Util.handleScrollFn(html, this.getData, this.pagination, this.loadingArticle, this.footerHeight)
+            this.footerHeight = document.querySelector('#mall-footer').clientHeight;
+            const html = document.documentElement;
+            Core.Util.handleScrollFn(html, this.getData, this.pagination, this.loadingArticle, this.footerHeight);
         },
         getData(params = {}) {
-            this.getDeals()
+            this.getDeals();
         },
         // 窗口大小
         handleWindowResize() {
-            this.footerHeight = document.querySelector('#mall-footer').clientHeight
+            this.footerHeight = document.querySelector('#mall-footer').clientHeight;
         },
     },
 };
@@ -159,7 +167,7 @@ export default {
                 cursor: pointer;
 
                 .article-carousel-fixed {
-                    background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 26.29%, rgba(0, 0, 0, 0.80) 88.1%);
+                    background-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 26.29%, rgba(0, 0, 0, 0.8) 88.1%);
                     position: absolute;
                     top: 0;
                     left: 0;
@@ -173,7 +181,7 @@ export default {
                         padding: 0 120px 64px 120px;
 
                         .text-title {
-                            color: #FFF;
+                            color: #fff;
                             font-size: 32px;
                             text-align: left;
                             margin-bottom: 16px;
@@ -181,7 +189,7 @@ export default {
                         }
 
                         .text-sub-title {
-                            color: #BFBFBF;
+                            color: #bfbfbf;
                             text-align: left;
                             font-size: 16px;
                             width: 570px;
@@ -211,7 +219,7 @@ export default {
 
             .deals-item {
                 .flex(initial, initial, row);
-                background: #FFF;
+                background: #fff;
                 cursor: pointer;
 
                 &:nth-child(n + 2) {
@@ -286,7 +294,7 @@ export default {
         box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.08);
 
         .name {
-            background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+            background: linear-gradient(100deg, #c6f 0%, #66f 100%);
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -302,7 +310,7 @@ export default {
 /* For carousel */
 .ant-carousel /deep/.slick-slider {
     &:hover {
-        box-shadow: 0px 8px 24px 0px #DADADA;
+        box-shadow: 0px 8px 24px 0px #dadada;
 
         .article-carousel-content-img {
             transform: scale(1.2);
@@ -340,7 +348,6 @@ export default {
 // PC端
 @media (min-width: 750px) and (max-width: 1280px) {
     #index {
-
         #article {
             padding: 0 40px;
 
@@ -365,7 +372,6 @@ export default {
 
 @media (min-width: 1280px) {
     #index {
-
         #article {
             padding: 0;
 

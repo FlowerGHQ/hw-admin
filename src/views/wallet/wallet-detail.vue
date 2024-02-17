@@ -3,8 +3,8 @@
         <div class="title-container">
             <div class="title-area">{{ $t('w.detail') }}</div>
             <div class="btns-area">
-<!--                <a-button type="primary" ghost @click="routerChange('edit', record)"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>-->
-<!--                <a-button type="primary" ghost @click="handleDelete(wallet_id)"><i class="icon i_delete"/>删除</a-button>-->
+                <!--                <a-button type="primary" ghost @click="routerChange('edit', record)"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>-->
+                <!--                <a-button type="primary" ghost @click="handleDelete(wallet_id)"><i class="icon i_delete"/>删除</a-button>-->
             </div>
         </div>
         <div class="gray-panel">
@@ -17,7 +17,7 @@
                 <a-row class="desc-detail">
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">{{ $t('w.balance') }}：</span>
-                        <span class="value">{{ walletMap[detail.type] + (detail.balance / 100) }}</span>
+                        <span class="value">{{ walletMap[detail.type] + detail.balance / 100 }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">{{ $t('n.time') }}：</span>
@@ -27,9 +27,9 @@
             </div>
         </div>
         <div class="tabs-container">
-            <a-tabs v-model:activeKey='activeKey'>
+            <a-tabs v-model:activeKey="activeKey">
                 <a-tab-pane key="BalanceList" :tab="$t('w.record')">
-                    <BalanceList :walletId='wallet_id' :detail='detail' @submit="getWalletDetail"/>
+                    <BalanceList :walletId="wallet_id" :detail="detail" @submit="getWalletDetail" />
                 </a-tab-pane>
             </a-tabs>
         </div>
@@ -37,13 +37,13 @@
 </template>
 
 <script>
-import Core from "../../core";
+import Core from '../../core';
 import BalanceList from './components/BalanceList.vue';
 
 export default {
-    name: "WalletDetail",
+    name: 'WalletDetail',
     components: {
-        BalanceList
+        BalanceList,
     },
     props: {},
     data() {
@@ -58,7 +58,7 @@ export default {
                 1: '¥',
                 2: '€',
                 3: '$',
-                4: '£'
+                4: '£',
             },
         };
     },
@@ -75,14 +75,14 @@ export default {
                 case 'edit': // 编辑
                     routeUrl = this.$router.resolve({
                         path: '/wallet/wallet-edit',
-                        query: {id: this.wallet_id},
+                        query: { id: this.wallet_id },
                     });
                     window.open(routeUrl.href, '_self');
                     break;
                 case 'list': // 列表
                     routeUrl = this.$router.resolve({
                         path: '/wallet/wallet-list',
-                        query: {id: this.wallet_id},
+                        query: { id: this.wallet_id },
                     });
                     window.open(routeUrl.href, '_self');
                     break;
@@ -92,14 +92,17 @@ export default {
             this.loading = true;
             Core.Api.Wallet.detail({
                 id: this.wallet_id,
-            }).then((res) => {
-                console.log('getWalletDetail res', res);
-                this.detail = res.detail;
-            }).catch((err) => {
-                console.log('getWalletDetail err', err);
-            }).finally(() => {
-                this.loading = false;
-            });
+            })
+                .then(res => {
+                    console.log('getWalletDetail res', res);
+                    this.detail = res.detail;
+                })
+                .catch(err => {
+                    console.log('getWalletDetail err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         handleDelete(id) {
             let _this = this;
@@ -109,13 +112,14 @@ export default {
                 okType: 'danger',
                 cancelText: _this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.Wallet.delete({id})
+                    Core.Api.Wallet.delete({ id })
                         .then(() => {
                             _this.$message.success(this.$t('pop_up.delete_success'));
                             _this.routerChange('list');
-                        }).catch((err) => {
-                        console.log('handleDelete err', err);
-                    });
+                        })
+                        .catch(err => {
+                            console.log('handleDelete err', err);
+                        });
                 },
             });
         },

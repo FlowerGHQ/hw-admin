@@ -1,24 +1,24 @@
-import Const from "../core/const"
-import Util from "../core/utils"
-import Data from "../core/data"
+import Const from '../core/const';
+import Util from '../core/utils';
+import Data from '../core/data';
 import Layout from '../views/layout/index.vue';
 
-const LOGIN_TYPE = Const.LOGIN.TYPE
-const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE
+const LOGIN_TYPE = Const.LOGIN.TYPE;
+const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE;
 
 // 客户关怀
 const inquiryManagement = {
-    path: "/inquiry-management",
+    path: '/inquiry-management',
     component: Layout,
-    name: "InquiryManagement",
-    redirect: "/inquiry-management/list",    
+    name: 'InquiryManagement',
+    redirect: '/inquiry-management/list',
     type: [ROUTER_TYPE.AFTER],
     meta: {
         title: '问询单管理',
         title_en: 'Inquiry Management',
         icon: 'i_menu_fankuguanli',
         roles: [LOGIN_TYPE.ADMIN],
-        auth: ["enquiry-ticket.list", "enquiry-ticket-category.list", "enquiry-ticket-customer.list"],
+        auth: ['enquiry-ticket.list', 'enquiry-ticket-category.list', 'enquiry-ticket-customer.list'],
     },
     children: [
         {
@@ -28,8 +28,8 @@ const inquiryManagement = {
             meta: {
                 title: '问询单列表',
                 title_en: 'Customer Service Inquiry',
-                auth: ["enquiry-ticket.list"],
-            }
+                auth: ['enquiry-ticket.list'],
+            },
         },
         {
             path: 'edit',
@@ -39,7 +39,7 @@ const inquiryManagement = {
                 hidden: true,
                 title: '问询单编辑',
                 title_en: 'Customer Service Inquiry Edit',
-            }
+            },
         },
         {
             path: 'detail',
@@ -49,7 +49,7 @@ const inquiryManagement = {
                 hidden: true,
                 title: '问询单详情',
                 title_en: 'Customer Service Inquiry Detail',
-            }
+            },
         },
         // 车型分类管理
         {
@@ -59,8 +59,8 @@ const inquiryManagement = {
             meta: {
                 title: '车型分类管理',
                 title_en: 'Car Model Management',
-                auth: ["enquiry-ticket-category.list"],
-            }
+                auth: ['enquiry-ticket-category.list'],
+            },
         },
         // 账号管理及分配
         {
@@ -70,13 +70,13 @@ const inquiryManagement = {
             meta: {
                 title: '问询单分配',
                 title_en: 'Inquiry Sheet Distribution',
-                auth: ["enquiry-ticket-customer.list"],
-            }
+                auth: ['enquiry-ticket-customer.list'],
+            },
         },
-    ]
-}
+    ],
+};
 // 运营管理
-const operationManagement = { 
+const operationManagement = {
     path: '/operation',
     component: Layout,
     redirect: '/operation/report-list',
@@ -96,7 +96,7 @@ const operationManagement = {
             meta: {
                 title: '通知公告',
                 title_en: 'Notice And Announcement',
-            }
+            },
         },
         {
             path: 'report-edit',
@@ -107,7 +107,7 @@ const operationManagement = {
                 title: '通知公告编辑',
                 title_en: 'Notice Editor',
                 parent: '/operation/report-list',
-            }
+            },
         },
         {
             path: 'ad-list',
@@ -116,7 +116,7 @@ const operationManagement = {
             meta: {
                 title: '广告位管理',
                 title_en: 'Advertising Space Management',
-            }
+            },
         },
         {
             path: 'ad-edit',
@@ -127,11 +127,8 @@ const operationManagement = {
                 title: '广告位编辑',
                 title_en: 'AD Space Editor',
                 parent: '/operation/ad-list',
-            }
+            },
         },
-    ]
-}
-export  {
-    inquiryManagement,
-    operationManagement
-}
+    ],
+};
+export { inquiryManagement, operationManagement };

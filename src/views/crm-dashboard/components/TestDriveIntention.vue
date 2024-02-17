@@ -1,31 +1,29 @@
 <template>
     <div class="list-container">
         <div class="title">
-            <span>{{$t('crm_dash.test_drive_intention')}}</span>
+            <span>{{ $t('crm_dash.test_drive_intention') }}</span>
         </div>
 
         <!-- echarts -->
         <div class="table-container">
-            <div id="TestDriveIntentionChartId" class="chart" ref='TestDriveIntentionChartId'></div>
+            <div id="TestDriveIntentionChartId" class="chart" ref="TestDriveIntentionChartId"></div>
         </div>
-
 
         <!-- </div> -->
     </div>
 </template>
 
 <script>
-import { Chart } from '@antv/g2'
-import Core from "../../../core";
+import { Chart } from '@antv/g2';
+import Core from '../../../core';
 
 export default {
     name: 'Cards',
-    components: {
-    },
+    components: {},
     props: {
         searchForm: {
             type: Object,
-            default: ()=> {}
+            default: () => {},
         },
     },
     data() {
@@ -33,7 +31,6 @@ export default {
             currentTab: '',
             myChart: null,
             boStatisticsChart: {},
-
         };
     },
     watch: {
@@ -41,30 +38,26 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                this.purchaseIntentStatistics()
-            }
+                this.purchaseIntentStatistics();
+            },
         },
-
     },
     computed: {
         lang() {
-            return this.$store.state.lang
+            return this.$store.state.lang;
         },
     },
-    created() {
-    },
+    created() {},
     mounted() {
         // const ths = this;
         // window.onresize =  () => {
         //     ths.resetChart();
         // }
         // this.drawBoStatisticsChart(this.tableData)
-        this.purchaseIntentStatistics()
-
-
+        this.purchaseIntentStatistics();
     },
     beforeUnmount() {
-        this.$refs.TestDriveIntentionChartId.innerHTML = ''
+        this.$refs.TestDriveIntentionChartId.innerHTML = '';
     },
     methods: {
         // 点击tab
@@ -75,8 +68,8 @@ export default {
 
         drawBoStatisticsChart(data) {
             if (this.boStatisticsChart.destroy) {
-                console.log('drawPurchaseChart destroy:')
-                this.boStatisticsChart.destroy()
+                console.log('drawPurchaseChart destroy:');
+                this.boStatisticsChart.destroy();
             }
             const chart = new Chart({
                 container: 'TestDriveIntentionChartId',
@@ -102,56 +95,52 @@ export default {
                     '<span style="padding-left: 16px; line-height: 20px;">数量：{value}<br/></span>' +
                     '</li>',
             });
-            chart
-                .interval()
-                .adjust('stack')
-                .position('value')
-                .color('type')
-                .shape('slice-shape');
+            chart.interval().adjust('stack').position('value').color('type').shape('slice-shape');
 
             chart.interaction('element-active');
-            chart
-                .annotation()
-                .text({
-                    position: ['50%', '56%'],
-                    // content: 'Test Drive intention',
-                    content:this.$t('crm_dash.test_drive_intention_echarts'),
-                    style: {
-                        fontSize: 14,
-                        fill: '#000000',
-                        textAlign: 'center',
-                        fontWeight:900
-                    },
-                    offsetY: -20,
-                })
+            chart.annotation().text({
+                position: ['50%', '56%'],
+                // content: 'Test Drive intention',
+                content: this.$t('crm_dash.test_drive_intention_echarts'),
+                style: {
+                    fontSize: 14,
+                    fill: '#000000',
+                    textAlign: 'center',
+                    fontWeight: 900,
+                },
+                offsetY: -20,
+            });
 
             chart.render();
-            this.boStatisticsChart = chart
+            this.boStatisticsChart = chart;
         },
         purchaseIntentStatistics() {
             this.loading = true;
             Core.Api.CRMDashboard.testDriveIntentStatistics({
-                ...this.searchForm
-            }).then(res => {
-                console.log('getTableData err', res)
-                // this.testDriveIntentList = res.list;
-                const dv = []
-                res.list.forEach(res => {
-                    if(res.type !== 0){
-                        dv.push({ type: this.$Util.CRMCustomerTestDriveIntentChartFilter(res.type, this.lang), value: res.value })
-                    }
+                ...this.searchForm,
+            })
+                .then(res => {
+                    console.log('getTableData err', res);
+                    // this.testDriveIntentList = res.list;
+                    const dv = [];
+                    res.list.forEach(res => {
+                        if (res.type !== 0) {
+                            dv.push({
+                                type: this.$Util.CRMCustomerTestDriveIntentChartFilter(res.type, this.lang),
+                                value: res.value,
+                            });
+                        }
+                    });
+                    this.drawBoStatisticsChart(dv);
                 })
-                this.drawBoStatisticsChart(dv)
-
-            }).catch(err => {
-                console.log('getTableData err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        }
-
-
-    }
+                .catch(err => {
+                    console.log('getTableData err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
+    },
 };
 </script>
 
@@ -185,8 +174,8 @@ export default {
     }
 
     .tab-current {
-        border: 1px solid #006EF9;
-        color: #006EF9;
+        border: 1px solid #006ef9;
+        color: #006ef9;
     }
 }
 
@@ -205,7 +194,7 @@ export default {
     }
 
     .form-value {
-        color: #006EF9;
+        color: #006ef9;
         font-size: 20px;
     }
 }

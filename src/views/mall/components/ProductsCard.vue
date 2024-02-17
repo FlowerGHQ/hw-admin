@@ -14,8 +14,11 @@
                 </div>
                 <template v-if="showOperation">
                     <p class="favorites" @click="addFavorites(record)">
-                        <svg-icon icon-class="collected-icon" class-name="favorites-icon"
-                            v-if="record.in_favorite || canRemoveFavorites" />
+                        <svg-icon
+                            icon-class="collected-icon"
+                            class-name="favorites-icon"
+                            v-if="record.in_favorite || canRemoveFavorites"
+                        />
                         <svg-icon icon-class="favorites-icon" class-name="favorites-icon" v-else />
                         <span class="favorites-text">{{ $t('mall.favorites') }}</span>
                     </p>
@@ -24,18 +27,14 @@
             <div class="mes-right">
                 <div class="text">
                     <template v-if="record.type === Core.Const.ITEM.TYPE.PRODUCT">
-                        <p class="price-text">
-                            40QH : {{ currency }}{{ stepPrice['40qh'] }}
-                        </p>
+                        <p class="price-text">40QH : {{ currency }}{{ stepPrice['40qh'] }}</p>
                         <p class="price-text-t">
-                            Samples : {{ currency }}{{ stepPrice['normal'] }} / 20GP : {{ currency }}{{
-                                stepPrice['20gp'] }}
+                            Samples : {{ currency }}{{ stepPrice['normal'] }} / 20GP : {{ currency
+                            }}{{ stepPrice['20gp'] }}
                         </p>
                     </template>
                     <template v-else>
-                        <p class="price-text">
-                            {{ currency }}{{ price }}
-                        </p>
+                        <p class="price-text">{{ currency }}{{ price }}</p>
                     </template>
                 </div>
                 <template v-if="showOperation">
@@ -55,17 +54,17 @@
 </template>
 
 <script setup>
-import SvgIcon from "@/components/SvgIcon/index.vue";
+import SvgIcon from '@/components/SvgIcon/index.vue';
 import Core from '@/core';
 import { ref, onMounted, computed, getCurrentInstance } from 'vue';
-import { useStore } from "vuex";
+import { useStore } from 'vuex';
 const { proxy } = getCurrentInstance();
 
 const store = useStore();
 const props = defineProps({
     selected: {
         type: Boolean,
-        default: false
+        default: false,
     },
     record: {
         type: [Object, String],
@@ -73,98 +72,98 @@ const props = defineProps({
     // 是否可以取消收藏
     canRemoveFavorites: {
         type: Boolean,
-        default: false
+        default: false,
     },
     //类型
     type: {
         type: String,
-        default: 'default'
+        default: 'default',
     },
     // 是否可以取消收藏
     showOperation: {
         type: Boolean,
-        default: true
+        default: true,
     },
-})
+});
 
-const editCount = ref(1)
-const currency = ref('€')
-const paramPrice = ref(false)
+const editCount = ref(1);
+const currency = ref('€');
+const paramPrice = ref(false);
 /* computed start */
 const lang = computed(() => {
-    return store.state.lang
-})
+    return store.state.lang;
+});
 const stepPrice = computed(() => {
     return {
         '40qh': proxy.$Util.countFilter(props.record[proxy.$Util.Number.getStepPriceIndex('40qh')]),
         '20gp': proxy.$Util.countFilter(props.record[proxy.$Util.Number.getStepPriceIndex('20gp')]),
-        'normal': proxy.$Util.countFilter(props.record[proxy.$Util.Number.getStepPriceIndex()])
-    }
-})
+        normal: proxy.$Util.countFilter(props.record[proxy.$Util.Number.getStepPriceIndex()]),
+    };
+});
 const price = computed(() => {
-    return proxy.$Util.countFilter(props.record[proxy.$Util.Number.getPriceIndex()])
-})
+    return proxy.$Util.countFilter(props.record[proxy.$Util.Number.getPriceIndex()]);
+});
 /* computed end */
-const emits = defineEmits(['handlechange'])
+const emits = defineEmits(['handlechange']);
 onMounted(() => {
     if (Core.Data.getCurrency() === 'EUR') {
-        currency.value = "€"
-        paramPrice.value = false
+        currency.value = '€';
+        paramPrice.value = false;
     } else {
-        currency.value = "$"
-        paramPrice.value = true
+        currency.value = '$';
+        paramPrice.value = true;
     }
-})
+});
 /* fetch start */
 // 添加购物车
-const addCar = (item) => {
+const addCar = item => {
     const params = {
         item_id: item.id,
         amount: editCount.value,
         price: currency.value === '€' ? item.fob_eur : item.fob_usd,
-    }
+    };
     Core.Api.ShopCart.save({ ...params }).then(res => {
-        proxy.$message.success(proxy.$t("i.add_success"));
-        getShopCartList()
-    })
-}
+        proxy.$message.success(proxy.$t('i.add_success'));
+        getShopCartList();
+    });
+};
 // 获取购物车商品数量
 const getShopCartList = () => {
     Core.Api.ShopCart.list().then(res => {
-        proxy.$store.commit('setShopCartNum', res.count)
-    })
-}
+        proxy.$store.commit('setShopCartNum', res.count);
+    });
+};
 // 添加收藏
-const addFavorites = async (item) => {
+const addFavorites = async item => {
     if (item.in_favorite) {
         if (props.canRemoveFavorites) {
-            return removeFavorites(item)
+            return removeFavorites(item);
         } else {
-            return proxy.$message.warning(proxy.$t("i.item_favorite"));
+            return proxy.$message.warning(proxy.$t('i.item_favorite'));
         }
     }
     try {
         if (paramPrice.value) {
-            await Core.Api.Favorite.add({ item_id: item.id, price: item?.fob_eur })
+            await Core.Api.Favorite.add({ item_id: item.id, price: item?.fob_eur });
         } else {
-            await Core.Api.Favorite.add({ item_id: item.id, price: item?.fob_usd })
+            await Core.Api.Favorite.add({ item_id: item.id, price: item?.fob_usd });
         }
-        proxy.$message.success(proxy.$t('pop_up.operate'))
+        proxy.$message.success(proxy.$t('pop_up.operate'));
     } catch (err) {
-        console.log('handleMoveToFavorite err:', err)
+        console.log('handleMoveToFavorite err:', err);
     } finally {
         // 重新获取列表数据
-        emits('handlechange')
+        emits('handlechange');
     }
-}
+};
 // 删除收藏
-const removeFavorites = (item) => {
+const removeFavorites = item => {
     Core.Api.Favorite.remove({ id: item.id }).then(() => {
-        proxy.$message.success(proxy.$t('pop_up.move'))
+        proxy.$message.success(proxy.$t('pop_up.move'));
         // 重新获取列表数据
-        emits('handlechange')
-    })
-}
+        emits('handlechange');
+    });
+};
 /* fetch end */
 </script>
 
@@ -172,11 +171,11 @@ const removeFavorites = (item) => {
 #products-card {
     .flex(initial, initial, row);
     padding: 20px;
-    background: #FFF;
+    background: #fff;
     border: 2px solid transparent;
 
     .img {
-        border: 1px solid #D9D9D9;
+        border: 1px solid #d9d9d9;
 
         :deep(.ant-image) {
             height: 100%;
@@ -239,7 +238,7 @@ const removeFavorites = (item) => {
         .mes-right {
             .flex(space-between, initial);
 
-            .text>p {
+            .text > p {
                 color: #000;
                 font-size: 14px;
                 font-style: normal;
@@ -252,7 +251,7 @@ const removeFavorites = (item) => {
                 }
 
                 &:first-child {
-                    color: #8F00FF;
+                    color: #8f00ff;
                     text-align: right;
                     font-size: 16px;
                     font-style: normal;
@@ -261,7 +260,7 @@ const removeFavorites = (item) => {
                 }
 
                 &:nth-child(2) {
-                    color: #8E8E8E;
+                    color: #8e8e8e;
                     text-align: right;
                     font-size: 12px;
                     font-style: normal;
@@ -290,7 +289,7 @@ const removeFavorites = (item) => {
                                 display: inline-flex;
                                 align-items: center;
                                 text-align: center;
-                                background: #F5F5F5;
+                                background: #f5f5f5;
                                 height: 32px;
                             }
                         }
@@ -307,7 +306,7 @@ const removeFavorites = (item) => {
                                 visibility: visible;
                                 height: 32px;
                                 width: 32px;
-                                background: #F5F5F5;
+                                background: #f5f5f5;
                                 border: none;
                                 position: absolute;
                                 border: 0;
@@ -331,7 +330,7 @@ const removeFavorites = (item) => {
                                         content: '';
                                         width: 12px;
                                         height: 1px;
-                                        background: #1C1B1F;
+                                        background: #1c1b1f;
                                         border-radius: 20px 20px 20px 20px;
                                         opacity: 1;
                                     }
@@ -345,7 +344,7 @@ const removeFavorites = (item) => {
                                         position: absolute;
                                         display: inline-block;
                                         content: '';
-                                        background: #1C1B1F;
+                                        background: #1c1b1f;
                                         border-radius: 20px;
                                     }
 
@@ -369,10 +368,10 @@ const removeFavorites = (item) => {
                     margin-left: 16px;
                     width: 32px;
                     height: 32px;
-                    border: 1px solid #C6F;
+                    border: 1px solid #c6f;
                     background: transparent;
-                    background: linear-gradient(100deg, #C6F 0%, #66F 100%);
-                    border-image: linear-gradient(100deg, #C6F 0%, #66F 100%) 1;
+                    background: linear-gradient(100deg, #c6f 0%, #66f 100%);
+                    border-image: linear-gradient(100deg, #c6f 0%, #66f 100%) 1;
                     background-clip: text;
                     -webkit-background-clip: text;
                     cursor: pointer;
@@ -389,7 +388,7 @@ const removeFavorites = (item) => {
 
                     &:hover {
                         border: none;
-                        background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                        background: linear-gradient(100deg, #c6f 0%, #66f 100%);
 
                         .car-icon {
                             display: none;
@@ -427,7 +426,7 @@ const removeFavorites = (item) => {
         }
 
         .mes-right {
-            .text>p {
+            .text > p {
                 margin-bottom: 8px;
             }
 
@@ -442,7 +441,7 @@ const removeFavorites = (item) => {
     .img {
         width: 90px;
         height: 90px;
-        border-color: #EEE;
+        border-color: #eee;
     }
 
     .mes {
@@ -461,7 +460,7 @@ const removeFavorites = (item) => {
         }
 
         .mes-right {
-            .text>p {
+            .text > p {
                 margin-bottom: 4px;
             }
 
@@ -470,20 +469,15 @@ const removeFavorites = (item) => {
 
                 .count-edit {
                     /deep/.ant-input-number {
-
                         .ant-input-number-handler-wrap {
-
                             .ant-input-number-handler {
-
                                 &.ant-input-number-handler-down {
-
                                     &::before {
                                         width: 10px;
                                     }
                                 }
 
                                 &.ant-input-number-handler-up {
-
                                     &::before {
                                         width: 10px;
                                     }
@@ -502,6 +496,6 @@ const removeFavorites = (item) => {
 }
 
 .active {
-    border: 2px solid #9167FF !important;
+    border: 2px solid #9167ff !important;
 }
 </style>

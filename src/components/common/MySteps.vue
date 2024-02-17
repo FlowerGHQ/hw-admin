@@ -1,21 +1,24 @@
 <template>
-<!-- 步骤条 -->
-<div class="steps-container">
-    <div class="steps-content">
-        <div v-for="(item, i) of stepsList" :key="i"
-            :style="`z-index: ${stepsList.length - i};`"
-            :class="{item: true, done: current>i, doing: current===i, wait: current<i}">
-            <span class="symbol">
-                <template v-if="current>i"><i class="icon i_click"/></template>
-                <template v-else>{{i+1}}</template>
-            </span>
-            <div class="text">
-                <p class="title"> {{item[$i18n.locale]}}</p>
-                <span class="time" v-if="item.time">{{ $Util.timeFilter(item.time) }}</span>
+    <!-- 步骤条 -->
+    <div class="steps-container">
+        <div class="steps-content">
+            <div
+                v-for="(item, i) of stepsList"
+                :key="i"
+                :style="`z-index: ${stepsList.length - i};`"
+                :class="{ item: true, done: current > i, doing: current === i, wait: current < i }"
+            >
+                <span class="symbol">
+                    <template v-if="current > i"><i class="icon i_click" /></template>
+                    <template v-else>{{ i + 1 }}</template>
+                </span>
+                <div class="text">
+                    <p class="title">{{ item[$i18n.locale] }}</p>
+                    <span class="time" v-if="item.time">{{ $Util.timeFilter(item.time) }}</span>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </template>
 
 <script>
@@ -23,18 +26,17 @@ export default {
     props: {
         stepsList: {
             type: Array,
-            default: []
+            default: [],
         },
         current: {
             type: Number,
-            default: 0
+            default: 0,
         },
     },
     data() {
-        return {
-        }
+        return {};
     },
-}
+};
 </script>
 
 <style lang="less">
@@ -65,7 +67,7 @@ export default {
                 border-radius: 50%;
                 font-size: 14px;
                 margin-right: 16px;
-                color: #FFFFFF;
+                color: #ffffff;
                 .icon.i_click {
                     font-size: 8px;
                     line-height: 20px;
@@ -74,11 +76,11 @@ export default {
             .text {
                 font-size: 12px;
                 line-height: 17px;
-                color: #363D42;
+                color: #363d42;
                 .time {
                     font-size: 10px;
                     font-weight: 400;
-                    color: #8090A6;
+                    color: #8090a6;
                     transform: scale(20%);
                     letter-spacing: -1px;
                 }
@@ -95,52 +97,54 @@ export default {
                 border-top: 1px solid transparent;
                 border-right: 1px solid transparent;
             }
-            &:last-child::after { display: none; }
+            &:last-child::after {
+                display: none;
+            }
 
             &.done {
-                border-color: #006EF9;
-                background: #FFFFFF;
+                border-color: #006ef9;
+                background: #ffffff;
                 .symbol {
-                    background: #E6F1FE;
-                    color: #006EF9;
+                    background: #e6f1fe;
+                    color: #006ef9;
                 }
                 .text {
-                    color: #363D42;
+                    color: #363d42;
                 }
                 &::after {
-                    border-color: #006EF9;
-                    background: #FFFFFF;
+                    border-color: #006ef9;
+                    background: #ffffff;
                 }
             }
             &.doing {
-                border-color: #006EF9;
-                background: #006EF9;
+                border-color: #006ef9;
+                background: #006ef9;
                 .symbol {
                     background: rgba(255, 255, 255, 0.2);
                 }
                 .text {
-                    color: #FFFFFF;
+                    color: #ffffff;
                     .time {
-                        color: #FFFFFF;
+                        color: #ffffff;
                     }
                 }
                 &::after {
-                    border-color: #006EF9;
-                    background: #006EF9;
+                    border-color: #006ef9;
+                    background: #006ef9;
                 }
             }
             &.wait {
-                border-color: #EAEDF4;
-                background: #F7F9FD;
+                border-color: #eaedf4;
+                background: #f7f9fd;
                 .symbol {
-                    background: #E1E4EB;
+                    background: #e1e4eb;
                 }
                 .text {
-                    color: #6F7785;
+                    color: #6f7785;
                 }
                 &::after {
-                    border-color: #EAEDF4;
-                    background: #F7F9FD;
+                    border-color: #eaedf4;
+                    background: #f7f9fd;
                 }
             }
         }

@@ -12,33 +12,33 @@ NProgress.configure({
     speed: 500, // 递增进度条的速度
     showSpinner: false, // 是否显示加载ico
     trickleSpeed: 200, // 自动递增间隔
-    minimum: 0.3 // 初始化时的最小百分比
+    minimum: 0.3, // 初始化时的最小百分比
 });
 
 const router = createRouter({
     history: createWebHashHistory(),
-    routes
+    routes,
 });
 
 // 设置路由白名单(其实网上很多做法用meta的requiresAuth就是跟白名单一样的)
 function inWhiteList(toPath) {
-    const whiteList = ['/login','/loginMall','/login-redirect'];
-    const bool = whiteList.some(el => el == toPath) // 有一个正确就正确
-    return bool
+    const whiteList = ['/login', '/loginMall', '/login-redirect'];
+    const bool = whiteList.some(el => el == toPath); // 有一个正确就正确
+    return bool;
 }
-router.beforeEach((to, from, next) => {	
-    window.scrollTo(0, 0);// 跳转页面后 滚动条默认置顶
+router.beforeEach((to, from, next) => {
+    window.scrollTo(0, 0); // 跳转页面后 滚动条默认置顶
     const token = Core.Data.getToken();
-    const loginType = Core.Data.getLoginType()
+    const loginType = Core.Data.getLoginType();
     NProgress.start();
     if (to.meta.title) {
-	    const lang = Core.Data.getLang();
-        document.title = "EOS" + ' | ' + (lang ==="zh" ? to.meta.title : to.meta.title_en)
+        const lang = Core.Data.getLang();
+        document.title = 'EOS' + ' | ' + (lang === 'zh' ? to.meta.title : to.meta.title_en);
     }
-    if (inWhiteList(to.path)){
-        next()
+    if (inWhiteList(to.path)) {
+        next();
         NProgress.done();
-        return
+        return;
     }
     if (!token) {
         // 没登录
@@ -47,11 +47,10 @@ router.beforeEach((to, from, next) => {
         next('/login');
     } else {
         // 已登录
-        const roles = to.meta.roles;   
+        const roles = to.meta.roles;
         if (roles) {
             // 如果进入的路由meta中有roles规则
             if (roles.includes(loginType)) {
-              
                 next();
             } else {
                 // 表前userType禁止访问
@@ -71,6 +70,3 @@ router.afterEach((to, from) => {
 });
 
 export default router;
-
-
-

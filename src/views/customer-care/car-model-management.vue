@@ -4,12 +4,13 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('i.categories') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleModalShow({})"><i class="icon i_add" />{{ $t('i.add_category')
-                    }}</a-button>
+                    <a-button type="primary" @click="handleModalShow({})"
+                        ><i class="icon i_add" />{{ $t('i.add_category') }}</a-button
+                    >
                 </div>
             </div>
             <div class="tabs-container colorful">
-                <a-tabs v-model:activeKey="searchForm.parent_id" @change='handleTabSearch'>
+                <a-tabs v-model:activeKey="searchForm.parent_id" @change="handleTabSearch">
                     <a-tab-pane :key="item.id" v-for="item of statusList">
                         <template #tab>
                             <div class="tabs-title">{{ $i18n.locale === 'zh' ? item.name : item.name_en }}</div>
@@ -18,35 +19,49 @@
                 </a-tabs>
             </div>
             <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :loading="loading"
-                    :row-key="record => record.id" :pagination='false' v-model:expandedRowKeys='expandedRowKeys'
-                    @expand='handleExpandedChange'>
+                <a-table
+                    :columns="tableColumns"
+                    :data-source="tableData"
+                    :scroll="{ x: true }"
+                    :loading="loading"
+                    :row-key="record => record.id"
+                    :pagination="false"
+                    v-model:expandedRowKeys="expandedRowKeys"
+                    @expand="handleExpandedChange"
+                >
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'tip_item'">
-                            <a-tooltip placement="top" :title='text'>
+                            <a-tooltip placement="top" :title="text">
                                 <div class="ell" style="max-width: 160px">{{ text || '-' }}</div>
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="handleModalShow(record)"><i class="icon i_edit" />{{
-                                $t('i.edit_name') }}
+                            <a-button type="link" @click="handleModalShow(record)"
+                                ><i class="icon i_edit" />{{ $t('i.edit_name') }}
                             </a-button>
-                            <a-button type='link' v-if="record.level != 1" @click="handleModalShow({ parent_id: record.id }, null, record)"><i
-                                    class="icon i_add" /> {{ $t('i.subcategory') }}
+                            <a-button
+                                type="link"
+                                v-if="record.level != 1"
+                                @click="handleModalShow({ parent_id: record.id }, null, record)"
+                                ><i class="icon i_add" /> {{ $t('i.subcategory') }}
                             </a-button>
-                            <a-button type='link' class="danger" @click="handleDelete(record)"><i class="icon i_delete" />
-                                {{ $t('def.delete') }}</a-button>
+                            <a-button type="link" class="danger" @click="handleDelete(record)"
+                                ><i class="icon i_delete" /> {{ $t('def.delete') }}</a-button
+                            >
                         </template>
                     </template>
                 </a-table>
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="modalVisible" :title="editForm.id ? $t('i.edit_a') : $t('i.add_category')"
-                @ok="handleModalSubmit">
+            <a-modal
+                v-model:visible="modalVisible"
+                :title="editForm.id ? $t('i.edit_a') : $t('i.add_category')"
+                @ok="handleModalSubmit"
+            >
                 <div class="modal-content">
                     <div class="form-item required">
                         <div class="key">{{ $t('m.category_name') }}</div>
@@ -62,8 +77,13 @@
                     </div>
                 </div>
             </a-modal>
-            <a-modal v-model:visible="salesAreaVisible" :title="$t('ar.set_sale')" class="field-select-modal" :width="630"
-                :after-close='handleSalesAreaByIdsClose'>
+            <a-modal
+                v-model:visible="salesAreaVisible"
+                :title="$t('ar.set_sale')"
+                class="field-select-modal"
+                :width="630"
+                :after-close="handleSalesAreaByIdsClose"
+            >
                 <div class="modal-content">
                     <div class="form-item required">
                         <div class="key">{{ $t('d.sales_area') }}</div>
@@ -71,13 +91,13 @@
                             <a-select
                                 v-model:value="salesAreaIds"
                                 :show-search="true"
-                                :placeholder="$t('def.select')"                                                                
-                                :filter-option="false"                                
-                                mode="multiple" 
-                                @search="onSearch"                                
-                            >                          
+                                :placeholder="$t('def.select')"
+                                :filter-option="false"
+                                mode="multiple"
+                                @search="onSearch"
+                            >
                                 <a-select-option v-for="(val, key) in salesList" :key="key" :value="val.id">
-                                    {{ val.name}}
+                                    {{ val.name }}
                                 </a-select-option>
                             </a-select>
                         </div>
@@ -120,15 +140,15 @@ export default {
             salesAreaIds: [],
             statusList: [
                 {
-                    id:1,
+                    id: 1,
                     name: '车辆',
                     name_en: 'Car',
-                }
+                },
             ],
             searchForm: {
                 parent_id: 1,
-                type:20
-            },            
+                type: 20,
+            },
         };
     },
     watch: {},
@@ -137,9 +157,9 @@ export default {
             let columns = [
                 { title: this.$t('m.category_name'), dataIndex: 'name' },
                 { title: this.$t('n.name_en'), dataIndex: 'name_en' },
-                { title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100, },
-            ]
-            return columns
+                { title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100 },
+            ];
+            return columns;
         },
     },
     mounted() {
@@ -147,55 +167,60 @@ export default {
     },
     methods: {
         // 处理数据
-        handleData(data,level = 0) {
+        handleData(data, level = 0) {
             // 设置数据的层级
             data.forEach(item => {
-                item.level = level
+                item.level = level;
                 if (item.children.length > 0) {
-                    this.handleData(item.children,level + 1)
-                }else{
-                    item.children = null
+                    this.handleData(item.children, level + 1);
+                } else {
+                    item.children = null;
                 }
-            })
-            return data
-
+            });
+            return data;
         },
-        getDataByParent(parent_id = 0) {  // 通过父节点获取子级数据
+        getDataByParent(parent_id = 0) {
+            // 通过父节点获取子级数据
             this.loading = true;
             Core.Api.ItemCategory.tree({
                 page: 0,
                 parent_id: parent_id,
                 depth: 2,
-                type : this.searchForm.type,
-            }).then(res => {
-                this.tableData = this.handleData(res.list);
-                console.log('getDataByParent res', res.list)
-            }).catch(err => {
-                console.log('getDataByParent err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+                type: this.searchForm.type,
+            })
+                .then(res => {
+                    this.tableData = this.handleData(res.list);
+                    console.log('getDataByParent res', res.list);
+                })
+                .catch(err => {
+                    console.log('getDataByParent err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         // 通过本节点获取本级数据  不知用处是什么
         getDataById(id = 0) {
             Core.Api.ItemCategory.tree({
                 page: 0,
                 id: id,
-                type : this.searchForm.type,
-            }).then(res => {
-                console.log('通过本节点获取本级数据', res.list)
-            }).catch(err => {
-                console.log('通过本节点获取本级数据 err', err)
+                type: this.searchForm.type,
             })
+                .then(res => {
+                    console.log('通过本节点获取本级数据', res.list);
+                })
+                .catch(err => {
+                    console.log('通过本节点获取本级数据 err', err);
+                });
         },
         // 节点展开与关闭
-        handleExpandedChange(expanded, record) {            
-            console.log('handleExpandedChange expanded:', expanded, 'record', record)
+        handleExpandedChange(expanded, record) {
+            console.log('handleExpandedChange expanded:', expanded, 'record', record);
             if (expanded) {
-                this.expandedRowKeys.push(record.id)
+                this.expandedRowKeys.push(record.id);
             } else {
-                let index = this.expandedRowKeys.indexOf(record.id)
-                this.expandedRowKeys.splice(index, 1)                
+                let index = this.expandedRowKeys.indexOf(record.id);
+                this.expandedRowKeys.splice(index, 1);
             }
         },
         // 编辑与新增子类
@@ -205,39 +230,41 @@ export default {
                 name: name,
                 name_en: name_en,
                 parent_id: parent_id ? parent_id : this.searchForm.parent_id,
-                type : this.searchForm.type,
+                type: this.searchForm.type,
             };
-            this.parentNode= parent;
+            this.parentNode = parent;
             this.editNode = node;
             this.modalVisible = true;
         },
         handleModalSubmit() {
-            let form = Core.Util.deepCopy(this.editForm)
+            let form = Core.Util.deepCopy(this.editForm);
             if (!form.name) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('def.enter'));
             }
             if (!form.name_en) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('def.enter'));
             }
-            form.key = form.index_key
-            this.loading = true
-            let apiName = form.id ? 'update' : 'save';            
-            Core.Api.ItemCategory[apiName](form).then(res => {                
-                this.getDataByParent(this.searchForm.parent_id)
-                this.$message.success(this.$t('pop_up.save_success'))
-                this.modalVisible = false
-            }).catch(err => {
-                console.log('handleModalSubmit err:', err)
-            }).finally(() => {
-                this.loading = false
-            })
-
+            form.key = form.index_key;
+            this.loading = true;
+            let apiName = form.id ? 'update' : 'save';
+            Core.Api.ItemCategory[apiName](form)
+                .then(res => {
+                    this.getDataByParent(this.searchForm.parent_id);
+                    this.$message.success(this.$t('pop_up.save_success'));
+                    this.modalVisible = false;
+                })
+                .catch(err => {
+                    console.log('handleModalSubmit err:', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
 
         // 删除分类
         handleDelete(record) {
             this.loading = false;
-            let _this = this
+            let _this = this;
             this.$confirm({
                 title: _this.$t('pop_up.sure') + _this.$t('pop_up.delete') + ` [${record.name}] ？`,
                 okText: _this.$t('def.sure'),
@@ -246,23 +273,26 @@ export default {
                 onOk() {
                     Core.Api.ItemCategory.delete({
                         id: record.id,
-                    }).then(res => {
-                        console.log("handleDelete res", res)
-                        _this.$message.success(_this.$t('pop_up.delete_success'))
-                        if (record.parent_id !== 0) {
-                            let index = _this.expandedRowKeys.indexOf(record.parent_id)
-                            _this.expandedRowKeys.splice(index, 1)
-                        }                        
-                        _this.getDataByParent(_this.searchForm.parent_id)
-                    }).catch(err => {
-                        console.log('handleDelete err', err)
-                    }).finally(() => {
-                        _this.loading = false;
-                    });
+                    })
+                        .then(res => {
+                            console.log('handleDelete res', res);
+                            _this.$message.success(_this.$t('pop_up.delete_success'));
+                            if (record.parent_id !== 0) {
+                                let index = _this.expandedRowKeys.indexOf(record.parent_id);
+                                _this.expandedRowKeys.splice(index, 1);
+                            }
+                            _this.getDataByParent(_this.searchForm.parent_id);
+                        })
+                        .catch(err => {
+                            console.log('handleDelete err', err);
+                        })
+                        .finally(() => {
+                            _this.loading = false;
+                        });
                 },
             });
         },
-    }
+    },
 };
 </script>
 

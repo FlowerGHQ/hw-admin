@@ -2,29 +2,29 @@
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">
-                {{ $t(/*通知及公告*/'operation.notices_title') }}
+                {{ $t(/*通知及公告*/ 'operation.notices_title') }}
             </div>
             <div class="btns-area">
                 <a-button type="primary" @click="routerChange('add')">
-                    {{ $t(/*新增公告*/'operation.new_notice') }}
+                    {{ $t(/*新增公告*/ 'operation.new_notice') }}
                 </a-button>
             </div>
         </div>
         <!-- search -->
         <div class="search">
-            <SearchAll 
-                :options="searchList" 
-                :isShowMore="false" 
-                @search="onSearch" 
-                @reset="onReset"
-                ref="searchAllRef"
-            >
+            <SearchAll :options="searchList" :isShowMore="false" @search="onSearch" @reset="onReset" ref="searchAllRef">
             </SearchAll>
         </div>
         <!-- table -->
         <div class="table-container">
-            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :loading="loading"
-                :row-key="(record) => record.id" :pagination="false">
+            <a-table
+                :columns="tableColumns"
+                :data-source="tableData"
+                :scroll="{ x: true }"
+                :loading="loading"
+                :row-key="record => record.id"
+                :pagination="false"
+            >
                 <template #headerCell="{ column }">
                     <!-- 排序 -->
                     <template v-if="column.key === 'input'">
@@ -44,9 +44,12 @@
                     <template v-if="column.key === 'item'">
                         <a-tooltip placement="topLeft">
                             <template #title>{{ text || '-' }}</template>
-                            <div class="one-spils cursor" :style="{
-                                width: text?.length > 15 ? 7 * 12 + 'px' : '',
-                            }">
+                            <div
+                                class="one-spils cursor"
+                                :style="{
+                                    width: text?.length > 15 ? 7 * 12 + 'px' : '',
+                                }"
+                            >
                                 {{ text || '-' }}
                             </div>
                         </a-tooltip>
@@ -55,9 +58,12 @@
                     <template v-if="column.key === 'content'">
                         <a-tooltip placement="topLeft">
                             <template #title>{{ record.firstSentence }}</template>
-                            <div class="one-spils cursor" :style="{
-                                width: record.firstSentence?.length > 20 ? 18 + 'rem' : '',
-                            }">
+                            <div
+                                class="one-spils cursor"
+                                :style="{
+                                    width: record.firstSentence?.length > 20 ? 18 + 'rem' : '',
+                                }"
+                            >
                                 {{ record.firstSentence }}
                             </div>
                         </a-tooltip>
@@ -68,13 +74,18 @@
                     </template>
                     <!-- 区域 -->
                     <template v-if="column.key === 'area'">
-                        <span v-if="record.area_type === Core.Const.OPERATION.AREA_TYPE_MAP.ALL">{{ $t('common.all') }}</span>
+                        <span v-if="record.area_type === Core.Const.OPERATION.AREA_TYPE_MAP.ALL">{{
+                            $t('common.all')
+                        }}</span>
                         <span v-else>
                             <a-tooltip placement="topLeft">
                                 <template #title>{{ text }}</template>
-                                <div class="one-spils cursor" :style="{
-                                    width: text.length > 20 ? 18 + 'rem' : '',
-                                }">
+                                <div
+                                    class="one-spils cursor"
+                                    :style="{
+                                        width: text.length > 20 ? 18 + 'rem' : '',
+                                    }"
+                                >
                                     {{ text }}
                                 </div>
                             </a-tooltip>
@@ -82,24 +93,31 @@
                     </template>
                     <!-- 排序 -->
                     <template v-if="column.key === 'input'">
-                        <a-input-number 
-                            style="width: 110px;"
-                            :placeholder="$t('common.please_enter')" 
+                        <a-input-number
+                            style="width: 110px"
+                            :placeholder="$t('common.please_enter')"
                             v-model:value="record.sort"
                             @blur="onBlur(record)"
-                            :min="1" 
+                            :min="1"
                             :precision="0"
                         />
                     </template>
                     <!-- 操作 -->
                     <template v-if="column.key === 'effective_state'">
                         <div class="effective-state">
-                            <a-switch v-model:checked="record.status" size="small" :checked-value="1" :un-checked-value="2"
-                                @change="(event) => onSwitch(event, record)" />
-                            <div 
-                                :class="record.status === 1 ? 'switch-state blue' : 'switch-state grey'"
-                            >
-                                {{ record.status === 1 ? $t(/*已生效*/'operation.took_effect') : $t(/*未生效*/'operation.invalid') }}
+                            <a-switch
+                                v-model:checked="record.status"
+                                size="small"
+                                :checked-value="1"
+                                :un-checked-value="2"
+                                @change="event => onSwitch(event, record)"
+                            />
+                            <div :class="record.status === 1 ? 'switch-state blue' : 'switch-state grey'">
+                                {{
+                                    record.status === 1
+                                        ? $t(/*已生效*/ 'operation.took_effect')
+                                        : $t(/*未生效*/ 'operation.invalid')
+                                }}
                             </div>
                         </div>
                     </template>
@@ -118,130 +136,130 @@
             </a-table>
         </div>
         <div class="paging-container">
-            <a-pagination 
-                v-model:current="pagination.current" 
-                :page-size="pagination.size" 
+            <a-pagination
+                v-model:current="pagination.current"
+                :page-size="pagination.size"
                 :total="pagination.total"
-                show-quick-jumper 
-                show-size-changer 
+                show-quick-jumper
+                show-size-changer
                 show-less-items
-                :show-total="(total) => $t('n.all_total') + ` ${pagination.total} ` + $t('in.total')"
-                :hide-on-single-page="false" 
-                :pageSizeOptions="['10', '20', '30', '40']" 
+                :show-total="total => $t('n.all_total') + ` ${pagination.total} ` + $t('in.total')"
+                :hide-on-single-page="false"
+                :pageSizeOptions="['10', '20', '30', '40']"
                 @change="onPageChange"
-                @showSizeChange="onSizeChange" 
+                @showSizeChange="onSizeChange"
             />
         </div>
     </div>
 </template>
 
 <script setup>
-import { onMounted, ref, computed, getCurrentInstance } from "vue";
-import Core from "@/core";
-import SearchAll from "@/components/horwin/based-on-ant/SearchAll.vue";
-import { useTable } from '@/hooks/useTable'
-import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
-import MySvgIcon from "@/components/MySvgIcon/index.vue";
-const router = useRouter()
+import { onMounted, ref, computed, getCurrentInstance } from 'vue';
+import Core from '@/core';
+import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
+import { useTable } from '@/hooks/useTable';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
+import MySvgIcon from '@/components/MySvgIcon/index.vue';
+const router = useRouter();
 const $t = useI18n().t;
-const searchAllRef = ref(null)
+const searchAllRef = ref(null);
 const { proxy } = getCurrentInstance();
 const tableColumns = computed(() => {
     let columns = [
-        { title: $t(/*序号*/"n.index"), dataIndex: "id", key: "number" },
-        { title: $t(/*标题*/"operation.title"), dataIndex: "title", key: "item" },
-        { title: $t(/*内容*/"n.content"), dataIndex: "content", key: "content" },
-        { title: $t(/*创建时间*/"n.time"), dataIndex: "create_time", key: "create_time" },
-        { title: $t(/*生效时间*/"operation.effective_time"), dataIndex: "effect_time", key: "create_time" },
-        { title: $t(/*区域*/"operation.area"), dataIndex: "area", key: "area" },
-        { title: $t(/*排序*/"n.sort"), dataIndex: "sort", key: "input" },
-        { title: $t(/*生效状态*/"operation.effective_state"), key: "effective_state", fixed: "right" },
-        { title: $t(/*操作*/"common.operations"), key: "operations", fixed: "right" },
+        { title: $t(/*序号*/ 'n.index'), dataIndex: 'id', key: 'number' },
+        { title: $t(/*标题*/ 'operation.title'), dataIndex: 'title', key: 'item' },
+        { title: $t(/*内容*/ 'n.content'), dataIndex: 'content', key: 'content' },
+        { title: $t(/*创建时间*/ 'n.time'), dataIndex: 'create_time', key: 'create_time' },
+        { title: $t(/*生效时间*/ 'operation.effective_time'), dataIndex: 'effect_time', key: 'create_time' },
+        { title: $t(/*区域*/ 'operation.area'), dataIndex: 'area', key: 'area' },
+        { title: $t(/*排序*/ 'n.sort'), dataIndex: 'sort', key: 'input' },
+        { title: $t(/*生效状态*/ 'operation.effective_state'), key: 'effective_state', fixed: 'right' },
+        { title: $t(/*操作*/ 'common.operations'), key: 'operations', fixed: 'right' },
     ];
     return columns;
 });
 
 const searchList = ref([
     {
-        type: "input",
-        value: "",
-        searchParmas: "title",
-        key: 'operation.title'
+        type: 'input',
+        value: '',
+        searchParmas: 'title',
+        key: 'operation.title',
     },
     {
-        type: "input",
-        value: "",
-        searchParmas: "area",
+        type: 'input',
+        value: '',
+        searchParmas: 'area',
         key: 'operation.area',
     },
     {
-        type: "select",
+        type: 'select',
         value: undefined,
-        searchParmas: "status",
+        searchParmas: 'status',
         key: 'operation.status',
         selectMap: Core.Const.OPERATION.OPERATION_TYPE,
     },
-])
+]);
 
 onMounted(() => {});
 /* Fetch start*/
 const request = Core.Api.Operation.list;
-const dataCallBack = (res) => {// 处理数据
+const dataCallBack = res => {
+    // 处理数据
     return res.list.map(item => {
-        item.old_sort = Core.Util.deepCopy(item.sort)
-        item.firstSentence = Core.Util.Common.getFirstSentence(item.content)
-        return item
-    })
-}
-const {
-    loading,
-    tableData,
-    pagination,
-    search,
-    onSizeChange,
-    refreshTable,
-    onPageChange,
-    searchParam,
-} = useTable({ request, initParam: { type: Core.Const.OPERATION.OPERATION_TYPE_MAP.REPORT }, dataCallBack: dataCallBack });
-const deleteFetch = (id) => {
+        item.old_sort = Core.Util.deepCopy(item.sort);
+        item.firstSentence = Core.Util.Common.getFirstSentence(item.content);
+        return item;
+    });
+};
+const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
+    request,
+    initParam: { type: Core.Const.OPERATION.OPERATION_TYPE_MAP.REPORT },
+    dataCallBack: dataCallBack,
+});
+const deleteFetch = id => {
     Core.Api.Operation.delete({
         id: id,
-    }).then((res) => {
-        console.log('deleteFetch res', res);
-        searchAllRef.value.handleSearch();
-        proxy.$message.success($t("pop_up.delete_success"))
-    }).catch(err => {
-        console.log('deleteFetch err', err);
-    })       
-}
+    })
+        .then(res => {
+            console.log('deleteFetch res', res);
+            searchAllRef.value.handleSearch();
+            proxy.$message.success($t('pop_up.delete_success'));
+        })
+        .catch(err => {
+            console.log('deleteFetch err', err);
+        });
+};
 
 const updateStatusFetch = (record, type) => {
     Core.Api.Operation.updateStatus({
         id: record.id,
         status: record.status,
         sort: record.sort,
-        type: 1
-    }).then((res) => {
-        console.log('updateStatusFetch res', res);
-        searchAllRef.value.handleSearch();
-        if(record.status === 1 && type === 'switch') {
-            proxy.$message.success($t("operation.ad_success_tip"))
-        }
-    }).catch(err => {
-        console.log('updateStatusFetch err', err);
+        type: 1,
     })
-}
+        .then(res => {
+            console.log('updateStatusFetch res', res);
+            searchAllRef.value.handleSearch();
+            if (record.status === 1 && type === 'switch') {
+                proxy.$message.success($t('operation.ad_success_tip'));
+            }
+        })
+        .catch(err => {
+            console.log('updateStatusFetch err', err);
+        });
+};
 /* Fetch end*/
 
 /* methods start*/
-const onSearch = (data) => {
-    searchParam.value = data
-    search()
-}
+const onSearch = data => {
+    searchParam.value = data;
+    search();
+};
 const onReset = () => {
-    refreshTable()
-}
+    refreshTable();
+};
 const routerChange = (type, record) => {
     switch (type) {
         case 'edit':
@@ -249,37 +267,37 @@ const routerChange = (type, record) => {
                 path: '/operation/report-edit',
                 query: {
                     id: record.id,
-                }
-            })
+                },
+            });
             break;
         case 'add':
             router.push({
-                path: "/operation/report-edit",                
+                path: '/operation/report-edit',
             });
             break;
     }
-}
-const handleDelete = (record) => {
+};
+const handleDelete = record => {
     Core.Util.confirm({
         title: $t('pop_up.sure_delete'),
         okText: $t('def.sure'),
         okType: 'danger',
         cancelText: $t('def.cancel'),
-		onOk: () => {
-			deleteFetch(record.id)
-		},
-	})   
-}
+        onOk: () => {
+            deleteFetch(record.id);
+        },
+    });
+};
 const onSwitch = (e, record) => {
     updateStatusFetch(record, 'switch');
-}
-const onBlur = (record) => {
-    if(!record.sort) {
+};
+const onBlur = record => {
+    if (!record.sort) {
         // 如果输入为空则赋值之前的排序
-        record.sort = record.old_sort
+        record.sort = record.old_sort;
     }
     updateStatusFetch(record, 'input');
-}
+};
 /* methods end*/
 </script>
 
@@ -287,7 +305,7 @@ const onBlur = (record) => {
 .list-container {
     .title-container {
         .title-area {
-            color: #1D2129;
+            color: #1d2129;
             font-size: 18px;
             font-weight: 600;
         }
@@ -302,21 +320,20 @@ const onBlur = (record) => {
         align-items: center;
 
         .switch-state {
-            color: #8E8E8E;
+            color: #8e8e8e;
             font-size: 12px;
             font-style: normal;
             font-weight: 400;
             margin-left: 4px;
 
             &.blue {
-                color: #0061FF;
+                color: #0061ff;
             }
 
             &.grey {
-                color: #8E8E8E;
+                color: #8e8e8e;
             }
         }
     }
 }
 </style>
-

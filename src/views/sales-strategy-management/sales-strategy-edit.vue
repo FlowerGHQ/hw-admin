@@ -8,11 +8,11 @@
                             <MySvgIcon icon-class="sales-back" />
                         </div>
                         {{
-                            type === "add"
-                                ? $t("sales-strategy-management.new_sales_strategy")
-                                : type === "edit"
-                                ? $t("sales-strategy-management.edit_sales_strategy")
-                                : $t("sales-strategy-management.strategy_details")
+                            type === 'add'
+                                ? $t('sales-strategy-management.new_sales_strategy')
+                                : type === 'edit'
+                                  ? $t('sales-strategy-management.edit_sales_strategy')
+                                  : $t('sales-strategy-management.strategy_details')
                         }}
                     </div>
                 </div>
@@ -22,7 +22,8 @@
                         name="custom-validation"
                         :model="formState"
                         :labelCol="{ style: { width: '86px' } }"
-                        :rules="rules">
+                        :rules="rules"
+                    >
                         <!-- 策略名称 -->
                         <a-row :gutter="18">
                             <a-col :xs="24" :sm="24" :md="24" :lg="22" :xl="18" :xxl="12" :xxxl="12">
@@ -33,7 +34,8 @@
                                         allowClear
                                         showCount
                                         :placeholder="$t('def.input')"
-                                        :maxlength="100" />
+                                        :maxlength="100"
+                                    />
                                 </a-form-item>
                             </a-col>
                         </a-row>
@@ -46,10 +48,11 @@
                                         btnText="选择商品"
                                         :isShowBtn="false"
                                         ref="itemSelectRef"
-                                        :disabled-checked="selectData.map((i) => i.item_id)"
+                                        :disabled-checked="selectData.map(i => i.item_id)"
                                         btn-type="primary"
                                         :btn-text="$t('i.add')"
-                                        btn-class="fault-btn" />
+                                        btn-class="fault-btn"
+                                    />
                                     <a-select
                                         :disabled="type === 'details' ? true : false"
                                         v-model:value="showSelectData"
@@ -58,7 +61,8 @@
                                         :open="false"
                                         :placeholder="$t('def.select')"
                                         @deselect="handleDeleteItem"
-                                        @focus.stop="handleOpenModal">
+                                        @focus.stop="handleOpenModal"
+                                    >
                                         <template #removeIcon>
                                             <MySvgIcon icon-class="sales-circle-delete" />
                                         </template>
@@ -75,7 +79,8 @@
                                         :disabled="type === 'details' ? true : false"
                                         :placeholder="$t('def.select')"
                                         :options="strategyTypeOptions"
-                                        @change="handleClearVaild" />
+                                        @change="handleClearVaild"
+                                    />
                                 </a-form-item>
                             </a-col>
                         </a-row>
@@ -91,7 +96,8 @@
                                                 v-model:value="formState.rule.quantity_min"
                                                 :disabled="type === 'details' ? true : false"
                                                 :placeholder="$t('def.p_set')"
-                                                :min="1">
+                                                :min="1"
+                                            >
                                                 <template #addonAfter>
                                                     <span class="unit"> 辆 </span>
                                                 </template>
@@ -103,7 +109,8 @@
                                                 v-model:value="formState.rule.quantity_every"
                                                 :disabled="type === 'details' ? true : false"
                                                 :placeholder="$t('def.p_set')"
-                                                :min="1">
+                                                :min="1"
+                                            >
                                                 <template #addonAfter>
                                                     <span class="unit"> 辆 </span>
                                                 </template>
@@ -116,7 +123,8 @@
                                                 :disabled="type === 'details' ? true : false"
                                                 :placeholder="$t('def.p_set')"
                                                 style="max-width: 300px; flex: 1"
-                                                :min="1" />
+                                                :min="1"
+                                            />
                                         </div>
                                     </div>
                                     <div class="gift-rules-first" v-else-if="formState.type == 2">
@@ -127,7 +135,8 @@
                                                 v-model:value="formState.rule.quantity_min"
                                                 :disabled="type === 'details' ? true : false"
                                                 :placeholder="$t('def.p_set')"
-                                                :min="1">
+                                                :min="1"
+                                            >
                                                 <template #addonAfter>
                                                     <span class="unit"> 辆 </span>
                                                 </template>
@@ -139,7 +148,8 @@
                                                 v-model:value="formState.rule.quantity_bonus"
                                                 :disabled="type === 'details' ? true : false"
                                                 :placeholder="$t('def.p_set')"
-                                                :min="1">
+                                                :min="1"
+                                            >
                                             </a-input-number>
                                         </div>
                                     </div>
@@ -160,8 +170,9 @@
                         :data-source="tableData"
                         :scroll="{ x: true }"
                         :loading="loading"
-                        :row-key="(record) => record.id"
-                        :pagination="false">
+                        :row-key="record => record.id"
+                        :pagination="false"
+                    >
                         <template #bodyCell="{ column, text, record, index }">
                             <!-- 适用地区 -->
                             <template v-if="column.dataIndex === 'applicable_area'">
@@ -169,7 +180,7 @@
                             </template>
                             <!-- 赠品 -->
                             <template v-if="column.dataIndex === 'item_list'">
-                                {{ record.item.map((i) => i.name).join("、") }}
+                                {{ record.item.map(i => i.name).join('、') }}
                             </template>
                             <!-- 赠送规则 -->
                             <template v-if="column.dataIndex === 'rule'">
@@ -177,8 +188,8 @@
                                     record.type == 1
                                         ? `【每满送】 起送门槛【${record.rule.quantity_min}】 每满${record.rule.quantity_every}送${record.rule.quantity_bonus}`
                                         : record.type == 2
-                                        ? `【整单送】 起送门槛【${record.rule.quantity_min}】 达到起送门槛后,赠送${record.rule.quantity_bonus}`
-                                        : "-"
+                                          ? `【整单送】 起送门槛【${record.rule.quantity_min}】 达到起送门槛后,赠送${record.rule.quantity_bonus}`
+                                          : '-'
                                 }}
                             </template>
                             <!-- 操作 -->
@@ -186,12 +197,12 @@
                                 <div class="operation">
                                     <!-- 修改 -->
                                     <a-button type="link" @click="handleEdit(record, index)">
-                                        <MySvgIcon icon-class="sales-edit" />{{ $t("n.amend") }}</a-button
+                                        <MySvgIcon icon-class="sales-edit" />{{ $t('n.amend') }}</a-button
                                     >
                                     <!-- 删除 -->
                                     <a-button type="link" @click="handleDelete(record, index)">
                                         <MySvgIcon icon-class="sales-delete" />
-                                        {{ $t("def.delete") }}</a-button
+                                        {{ $t('def.delete') }}</a-button
                                     >
                                 </div>
                             </template>
@@ -209,15 +220,15 @@
             <div class="sales-footer">
                 <!-- 取消 -->
                 <a-button type="default" @click="handleCancel" v-if="type !== 'details'">
-                    {{ $t("def.cancel") }}
+                    {{ $t('def.cancel') }}
                 </a-button>
                 <!-- 确定 -->
                 <a-button type="primary" @click="handleSubmit" v-if="type !== 'details'">
-                    {{ $t("def.ok") }}
+                    {{ $t('def.ok') }}
                 </a-button>
                 <!-- 编辑资料 -->
                 <a-button @click="handleEditData" v-if="type === 'details'">
-                    {{ $t("sales-strategy-management.edit_data") }}
+                    {{ $t('sales-strategy-management.edit_data') }}
                 </a-button>
             </div>
         </div>
@@ -227,7 +238,8 @@
         :reviewData="reviewData"
         @hanldAdd="handleAddStrategyDetail"
         @hanldItemList="hanldItemList"
-        @handleEdit="handleModalEdit">
+        @handleEdit="handleModalEdit"
+    >
     </ClassifyModal>
     <!-- 取消的modal -->
     <a-modal
@@ -240,7 +252,8 @@
         cancel-text="继续填写"
         centered
         :getContainer="() => salesRef"
-        @ok="handleCancelOk">
+        @ok="handleCancelOk"
+    >
         <div class="title">确定退出吗？</div>
         <div class="content">
             <div class="tips">
@@ -264,18 +277,18 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, onBeforeUnmount } from "vue";
-import ItemSelect from "./components/ItemSelect.vue";
-import MySvgIcon from "@/components/MySvgIcon/index.vue";
-import ClassifyModal from "./components/ClassifyModal.vue";
-import { Form, message, Modal } from "ant-design-vue";
-import _ from "lodash";
+import { ref, reactive, computed, onMounted, onBeforeUnmount } from 'vue';
+import ItemSelect from './components/ItemSelect.vue';
+import MySvgIcon from '@/components/MySvgIcon/index.vue';
+import ClassifyModal from './components/ClassifyModal.vue';
+import { Form, message, Modal } from 'ant-design-vue';
+import _ from 'lodash';
 // 使用useTable
-import { useTable } from "@/hooks/useTable";
-import { useI18n } from "vue-i18n";
-import { useRouter, useRoute } from "vue-router";
-import Core from "../../core";
-import { Item } from "ant-design-vue/lib/menu";
+import { useTable } from '@/hooks/useTable';
+import { useI18n } from 'vue-i18n';
+import { useRouter, useRoute } from 'vue-router';
+import Core from '../../core';
+import { Item } from 'ant-design-vue/lib/menu';
 const $router = useRouter();
 const $route = useRoute();
 const $t = useI18n().t;
@@ -296,25 +309,25 @@ const formState = reactive({
 const reviewData = ref([]);
 const strategyTypeOptions = ref([
     {
-        label: "每满送",
-        value: "1",
+        label: '每满送',
+        value: '1',
     },
     {
-        label: "整单送",
-        value: "2",
+        label: '整单送',
+        value: '2',
     },
 ]);
 const formRef = ref(null);
 const giftRulesVaild = (rule, value) => {
     if (formState.type == 1) {
         if (!formState.rule.quantity_min || !formState.rule.quantity_every || !formState.rule.quantity_bonus) {
-            return Promise.reject("请填写完整的赠送规则");
+            return Promise.reject('请填写完整的赠送规则');
         } else {
             return Promise.resolve();
         }
     } else if (formState.type == 2) {
         if (!formState.rule.quantity_min || !formState.rule.quantity_bonus) {
-            return Promise.reject("请填写完整的赠送规则");
+            return Promise.reject('请填写完整的赠送规则');
         } else {
             return Promise.resolve();
         }
@@ -326,8 +339,8 @@ const rules = computed(() => {
         name: [
             {
                 required: true,
-                message: "请输入策略名称",
-                trigger: ["blur", "change"],
+                message: '请输入策略名称',
+                trigger: ['blur', 'change'],
             },
         ],
         shops: [
@@ -337,26 +350,26 @@ const rules = computed(() => {
                 validator: (rule, value) => {
                     if (selectData.value.length == 0) {
                         // callback(new Error("请选择适用商品"));
-                        return Promise.reject("请选择适用商品");
+                        return Promise.reject('请选择适用商品');
                     } else {
                         return Promise.resolve();
                     }
                 },
-                trigger: ["blur", "change"],
+                trigger: ['blur', 'change'],
             },
         ],
         type: [
             {
                 required: true,
-                message: "请选择策略类型",
-                trigger: ["blur", "change"],
+                message: '请选择策略类型',
+                trigger: ['blur', 'change'],
             },
         ],
         giftRules: [
             {
                 required: true,
                 validator: giftRulesVaild,
-                trigger: ["blur", "change"],
+                trigger: ['blur', 'change'],
             },
         ],
     };
@@ -370,37 +383,37 @@ const itemSelectRef = ref(null);
 const tableColumns = computed(() => {
     let columns = [
         {
-            title: $t("sales-strategy-management.serial_number"),
-            dataIndex: "serial_number",
+            title: $t('sales-strategy-management.serial_number'),
+            dataIndex: 'serial_number',
             width: 80,
-            fixed: "left",
-            align: "center",
+            fixed: 'left',
+            align: 'center',
         },
         {
-            title: $t("sales-strategy-management.applicable_area"),
-            dataIndex: "country",
-            key: "country",
+            title: $t('sales-strategy-management.applicable_area'),
+            dataIndex: 'country',
+            key: 'country',
         },
         {
-            title: $t("sales-strategy-management.gift"),
-            dataIndex: "item_list",
-            key: "item_list",
+            title: $t('sales-strategy-management.gift'),
+            dataIndex: 'item_list',
+            key: 'item_list',
         },
         {
-            title: $t("sales-strategy-management.gift_rule"),
-            dataIndex: "rule",
-            key: "rule",
+            title: $t('sales-strategy-management.gift_rule'),
+            dataIndex: 'rule',
+            key: 'rule',
         },
         {
-            title: $t("sales-strategy-management.operation"),
-            dataIndex: "operation",
-            key: "operation",
-            fixed: "right",
+            title: $t('sales-strategy-management.operation'),
+            dataIndex: 'operation',
+            key: 'operation',
+            fixed: 'right',
             width: 200,
         },
     ];
-    if (type.value == "details") {
-        columns = columns.filter((item) => item.dataIndex != "operation");
+    if (type.value == 'details') {
+        columns = columns.filter(item => item.dataIndex != 'operation');
     }
     return columns;
 });
@@ -408,7 +421,7 @@ const tableColumns = computed(() => {
 const showSelectData = computed(() => {
     let arr = [];
     if (selectData.value.length > 0) {
-        selectData.value.forEach((item) => {
+        selectData.value.forEach(item => {
             let showObj = {
                 label: `${item.name}(${item.code})`,
                 value: item.item_id,
@@ -427,7 +440,7 @@ const strategyId = ref(null);
 // methods
 const handleBack = () => {
     $router.push({
-        path: "/sales-strategy-management/sales-strategy-list",
+        path: '/sales-strategy-management/sales-strategy-list',
     });
 };
 // 添加适用商品
@@ -447,16 +460,16 @@ const handleOpenModal = () => {
     itemSelectRef.value.handleModalShow();
 };
 // 删除适用商品
-const handleDeleteItem = (value) => {
+const handleDeleteItem = value => {
     console.log(value);
-    selectData.value = selectData.value.filter((item) => item.item_id != value);
+    selectData.value = selectData.value.filter(item => item.item_id != value);
 };
 // 校验添加
 const handleVaild = () => {
     formRef.value && formRef.value.clearValidate();
     // 校验表单
     formRef.value &&
-        formRef.value.validate().then((res) => {
+        formRef.value.validate().then(res => {
             classifyModalShow.value = true;
         });
 };
@@ -470,16 +483,16 @@ const handleClearVaild = () => {
     formRef.value && formRef.value.validate();
 };
 // 获取适用商品的选项
-const hanldItemList = (data) => {
+const hanldItemList = data => {
     formState.item_list = data;
 };
 // 编辑资料
 const handleEditData = () => {
     $router.push({
-        path: "/sales-strategy-management/sales-strategy-edit",
+        path: '/sales-strategy-management/sales-strategy-edit',
         query: {
             id: $route.query.id,
-            type: "edit",
+            type: 'edit',
         },
     });
 };
@@ -487,9 +500,9 @@ const handleEditData = () => {
 // 添加方案的相关代码
 
 // 添加方案明细
-const handleAddStrategyDetail = (data) => {
+const handleAddStrategyDetail = data => {
     let copyData = _.cloneDeep(data);
-    copyData.forEach((item) => {
+    copyData.forEach(item => {
         item.add = true;
     });
     formState.strategy_detail = [...formState.strategy_detail, ...copyData];
@@ -511,23 +524,23 @@ const handleAddStrategyDetail = (data) => {
     tableData.value = viewData(arr);
 };
 // 添加方案明细：只有在type为add的时候才会触发
-const addData = (data) => {
-    Core.Api.SALES_STRATEGY.add(data).then(async (res) => {
-        message.success("添加成功");
+const addData = data => {
+    Core.Api.SALES_STRATEGY.add(data).then(async res => {
+        message.success('添加成功');
         strategyId.value = res?.detail?.id;
         await getDetail();
         await $router.push({
-            path: "/sales-strategy-management/sales-strategy-list",
+            path: '/sales-strategy-management/sales-strategy-list',
         });
     });
 };
 // 修改方案明细：只有在type为edit的时候才会触发
-const editData = (data) => {
-    Core.Api.SALES_STRATEGY.update(data).then(async (res) => {
-        message.success("修改成功");
+const editData = data => {
+    Core.Api.SALES_STRATEGY.update(data).then(async res => {
+        message.success('修改成功');
         await getDetail();
         await $router.push({
-            path: "/sales-strategy-management/sales-strategy-list",
+            path: '/sales-strategy-management/sales-strategy-list',
         });
     });
 };
@@ -536,21 +549,21 @@ const handleSubmit = () => {
     formRef.value && formRef.value.clearValidate();
     // 校验表单
     formRef.value &&
-        formRef.value.validate().then((res) => {
+        formRef.value.validate().then(res => {
             if (formState.strategy_detail.length === 0) {
-                message.warning("请添加方案明细");
+                message.warning('请添加方案明细');
                 return;
             }
             // 拷贝一份数据,formState的数据
             let form = _.cloneDeep(formState);
             form.rule = JSON.stringify(form.rule);
-            form.item_list = showSelectData.value.map((item) => {
+            form.item_list = showSelectData.value.map(item => {
                 return item.value;
             });
             // 整合到上传的数据中
-            if (type.value === "add") {
+            if (type.value === 'add') {
                 addData(form);
-            } else if (type.value === "edit") {
+            } else if (type.value === 'edit') {
                 form.id = $route.query.id;
                 editData(form);
             }
@@ -567,31 +580,31 @@ const handleEdit = (record, index) => {
     };
 };
 // 修改返回值
-const handleModalEdit = (data) => {
-    console.log(data, "data------------------------");
-    console.log(formState.strategy_detail, "strategy_detail-----------------");
-    console.log(tableData.value, "tableData-------------------");
-    console.log(formState.rule, "rule-----------------");
+const handleModalEdit = data => {
+    console.log(data, 'data------------------------');
+    console.log(formState.strategy_detail, 'strategy_detail-----------------');
+    console.log(tableData.value, 'tableData-------------------');
+    console.log(formState.rule, 'rule-----------------');
     let country = data[0].country;
     let no;
-    let countryArr = formState.strategy_detail.filter((item) => item.country == country) || [];
+    let countryArr = formState.strategy_detail.filter(item => item.country == country) || [];
     // 说明点击了修改,但是修改了国家
     if (countryArr.length === 0) {
         no = formState.strategy_detail[reviewData.value.index].no;
         // 删除点击的国家的数据
         formState.strategy_detail = formState.strategy_detail.filter(
-            (item) => item.country != formState.strategy_detail[reviewData.value.index].country
+            item => item.country != formState.strategy_detail[reviewData.value.index].country,
         );
     } else {
         no = countryArr[0].no;
     }
-    formState.strategy_detail.forEach((item) => {
+    formState.strategy_detail.forEach(item => {
         item.rule = formState.rule;
         item.type = formState.type;
     });
 
     // 重新构建数据
-    let newData = data.map((item) => {
+    let newData = data.map(item => {
         return {
             bonus_item_id: item.bonus_item_id,
             no,
@@ -602,43 +615,43 @@ const handleModalEdit = (data) => {
         };
     });
 
-    console.log(newData, "newData-------------------");
-    formState.strategy_detail = formState.strategy_detail.filter((item) => item.country !== country);
+    console.log(newData, 'newData-------------------');
+    formState.strategy_detail = formState.strategy_detail.filter(item => item.country !== country);
     formState.strategy_detail = [...formState.strategy_detail, ...newData];
-    console.log(formState.strategy_detail, "strategy_detail-----------------");
+    console.log(formState.strategy_detail, 'strategy_detail-----------------');
     console.log(viewData(formState.strategy_detail));
     tableData.value = viewData(formState.strategy_detail);
     // 拷贝一份数据,formState的数据
     let form = _.cloneDeep(formState);
     form.rule = JSON.stringify(form.rule);
-    form.item_list = showSelectData.value.map((item) => {
+    form.item_list = showSelectData.value.map(item => {
         return item.value;
     });
-    message.success("修改成功");
+    message.success('修改成功');
 };
 
 // 重构数据
-const viewData = (arr) => {
+const viewData = arr => {
     // 处理成表格数据
     // 相同no 并且 相同country的数据的 item数据合并
     let newArr = [];
-    arr.forEach((item) => {
+    arr.forEach(item => {
         let obj = {};
         // 是否有相同的no和country
-        let isSame = newArr.some((i) => {
+        let isSame = newArr.some(i => {
             return i.no == item.no && i.country == item.country;
         });
         // 如果有相同的no和country，就把item合并
         if (isSame) {
-            newArr.forEach((i) => {
+            newArr.forEach(i => {
                 if (i.no == item.no && i.country == item.country) {
                     i.item = [...i.item, item.item];
-                    i.id = [i.id, item.id].join(",");
+                    i.id = [i.id, item.id].join(',');
                 }
             });
         } else {
             obj.type = item.type;
-            obj.id = item?.id ? item.id.toString() : "";
+            obj.id = item?.id ? item.id.toString() : '';
             obj.no = item.no;
             obj.country = item.country;
             obj.item = [item.item];
@@ -647,7 +660,7 @@ const viewData = (arr) => {
             newArr.push(obj);
         }
     });
-    console.log("newArr", newArr);
+    console.log('newArr', newArr);
     newArr.forEach((item, index) => {
         item.serial_number = index + 1;
     });
@@ -658,16 +671,16 @@ const viewData = (arr) => {
 const getDetail = () => {
     Core.Api.SALES_STRATEGY.detail({
         id:
-            type.value === "edit"
+            type.value === 'edit'
                 ? $route.query.id
-                : type.value === "add"
-                ? strategyId.value
-                : type.value === "details"
-                ? $route.query.id
-                : "",
-    }).then((res) => {
+                : type.value === 'add'
+                  ? strategyId.value
+                  : type.value === 'details'
+                    ? $route.query.id
+                    : '',
+    }).then(res => {
         if (!res.detail) return;
-        console.log("详情数据 ===================", res.detail);
+        console.log('详情数据 ===================', res.detail);
         formState.name = res.detail.name;
         // 转化为字符串
         formState.type = res.detail.type.toString();
@@ -676,10 +689,10 @@ const getDetail = () => {
         formState.item_list = res.detail.item_list;
         // 适用商品
         selectData.value = res.detail.item_list;
-        selectData.value.forEach((item) => {
-            item.name = item?.item?.name || "";
-            item.code = item?.item?.code || "";
-            item.item_id = item?.item?.id || "";
+        selectData.value.forEach(item => {
+            item.name = item?.item?.name || '';
+            item.code = item?.item?.code || '';
+            item.item_id = item?.item?.id || '';
         });
 
         let arr = [];
@@ -712,7 +725,7 @@ const handleCancel = () => {
 };
 const handleCancelOk = () => {
     $router.push({
-        path: "/sales-strategy-management/sales-strategy-list",
+        path: '/sales-strategy-management/sales-strategy-list',
     });
 };
 // 删除方案
@@ -720,18 +733,18 @@ const handleDelete = (item, index) => {
     // 删除index位置的数据
     tableData.value.splice(index, 1);
     // 删除formState.strategy_detail中的数据
-    formState.strategy_detail = formState.strategy_detail.filter((i) => {
+    formState.strategy_detail = formState.strategy_detail.filter(i => {
         // 过滤不是统一no 和 country的数据,i.item.id 不包含在item.item.join(",")的数据
-        return (i.no != item.no || i.country != item.country) && !item.item.join(",").includes(i.item.id.toString());
+        return (i.no != item.no || i.country != item.country) && !item.item.join(',').includes(i.item.id.toString());
     });
 };
 
 onMounted(() => {
     // 将本地缓存制空
     Core.Data.setSalesData(JSON.stringify([]));
-    if (type.value == "edit" || type.value == "details") {
+    if (type.value == 'edit' || type.value == 'details') {
         getDetail(); //获取详情并存储表格数据
-    } else if (type.value == "add") {
+    } else if (type.value == 'add') {
         tableData.value = []; //表格数据为空
     }
 });
@@ -927,7 +940,7 @@ onMounted(() => {
                             font-size: 14px;
                             font-family: SimSun, sans-serif;
                             line-height: 1;
-                            content: "*";
+                            content: '*';
                         }
                     }
                     .threshold,

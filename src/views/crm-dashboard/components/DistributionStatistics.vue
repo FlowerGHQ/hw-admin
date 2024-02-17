@@ -6,23 +6,22 @@
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <div id="DistributionChartId" class="chart" ref='DistributionChartId'></div>
+            <div id="DistributionChartId" class="chart" ref="DistributionChartId"></div>
         </div>
     </div>
 </template>
 
 <script>
-import { Chart } from '@antv/g2'
-import Core from "../../../core";
+import { Chart } from '@antv/g2';
+import Core from '../../../core';
 
 export default {
     name: 'Cards',
-    components: {
-    },
+    components: {},
     props: {
         searchForm: {
             type: Object,
-            default: () => { }
+            default: () => {},
         },
     },
     data() {
@@ -36,28 +35,27 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                this.customerStatistics()
-            }
+                this.customerStatistics();
+            },
         },
     },
     computed: {
         lang() {
-            return this.$store.state.lang
+            return this.$store.state.lang;
         },
     },
-    created() {
-    },
+    created() {},
     mounted() {
-        this.customerStatistics()
+        this.customerStatistics();
     },
     beforeUnmount() {
-        this.$refs.DistributionChartId.innerHTML = ''
+        this.$refs.DistributionChartId.innerHTML = '';
     },
     methods: {
         drawBoStatisticsChart(data) {
             if (this.boStatisticsChart.destroy) {
-                console.log('drawPurchaseChart destroy:')
-                this.boStatisticsChart.destroy()
+                console.log('drawPurchaseChart destroy:');
+                this.boStatisticsChart.destroy();
             }
             const chart = new Chart({
                 container: 'DistributionChartId',
@@ -79,10 +77,10 @@ export default {
                     line: {
                         style: {
                             lineDash: [4, 4],
-                            stroke: '#333'
-                        }
-                    }
-                }
+                            stroke: '#333',
+                        },
+                    },
+                },
             });
             chart.axis('item', {
                 line: null,
@@ -108,39 +106,37 @@ export default {
                 },
             });
 
-            chart
-                .line()
-                .position('item*value')
-                .color('#5C6FD3')
-                .size(3);
-            chart
-                .area()
-                .position('item*value')
-                .color('#AFB9F5')
-                .style({
-                    fillOpacity: 0.8,
-                });
+            chart.line().position('item*value').color('#5C6FD3').size(3);
+            chart.area().position('item*value').color('#AFB9F5').style({
+                fillOpacity: 0.8,
+            });
             chart.render();
-            this.boStatisticsChart = chart
+            this.boStatisticsChart = chart;
         },
         customerStatistics() {
             const dv = [];
             Core.Api.CRMDashboard.customerStatistics({
-                ...this.searchForm
+                ...this.searchForm,
             }).then(res => {
-                res.list.forEach(it =>{
-                    if (this.maxCount < it.count){
+                res.list.forEach(it => {
+                    if (this.maxCount < it.count) {
                         this.maxCount = it.count;
                     }
 
                     switch (it.source_type) {
-                        case 1:dv.push({ item: '预定小程序', value: it.count });break;
-                        case 2:dv.push({ item: '系统录入', value: it.count });break;
-                        case 3:dv.push({ item: 'Shopify', value: it.count });break;
+                        case 1:
+                            dv.push({ item: '预定小程序', value: it.count });
+                            break;
+                        case 2:
+                            dv.push({ item: '系统录入', value: it.count });
+                            break;
+                        case 3:
+                            dv.push({ item: 'Shopify', value: it.count });
+                            break;
                     }
-                })
-                this.drawBoStatisticsChart(dv)
-            })
+                });
+                this.drawBoStatisticsChart(dv);
+            });
             // const dv = [
             //     { item: '系统录入', value: 70 },
             //     { item: '国内官网', value: 60 },
@@ -148,9 +144,8 @@ export default {
             //     { item: '小程序', value: 40 },
             //     { item: 'APP', value: 60 },
             // ]
-
-        }
-    }
+        },
+    },
 };
 </script>
 
@@ -171,6 +166,6 @@ export default {
 
 .chart {
     width: 100%;
-    height: auto
+    height: auto;
 }
 </style>

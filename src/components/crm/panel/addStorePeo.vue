@@ -1,9 +1,18 @@
 <template>
-    <a-modal v-model:visible="isShow" :title="isMan ? $t('crm_st.add_man') : $t('crm_st.add_peo')" @Ok="handleOk"
-        :okText="$t('def.save')" @cancel="handleCancel">
+    <a-modal
+        v-model:visible="isShow"
+        :title="isMan ? $t('crm_st.add_man') : $t('crm_st.add_peo')"
+        @Ok="handleOk"
+        :okText="$t('def.save')"
+        @cancel="handleCancel"
+    >
         <div class="box-model" @scroll="handleScroll">
-            <a-input v-model:value="userName" :placeholder="$t('retail.search_personnel_name')" @blur="inputEvent"
-                @pressEnter="inputEvent">
+            <a-input
+                v-model:value="userName"
+                :placeholder="$t('retail.search_personnel_name')"
+                @blur="inputEvent"
+                @pressEnter="inputEvent"
+            >
                 <template #prefix>
                     <search-outlined :style="{ fontSize: '16px' }" />
                 </template>
@@ -17,7 +26,7 @@
             <div class="tag-box" v-if="!isMan">
                 <template v-for="(item, index) in selectList" :key="index">
                     <a-tag color="processing">
-                        <img class="tag-box-img" :src="item.avatar" alt="">
+                        <img class="tag-box-img" :src="item.avatar" alt="" />
                         <span>{{ item.name }}</span>
                         <span class="cha" @click="onClose(item, index)">×</span>
                     </a-tag>
@@ -28,21 +37,21 @@
             <div class="per-box">
                 <div class="person" v-for="(item, index) in fsListComput" :key="index">
                     <div class="left">
-                        <img class="img" :src="item.avatar">
+                        <img class="img" :src="item.avatar" />
                     </div>
                     <div class="middle">
                         <div>{{ item.name }}</div>
                         <div class="department-style">
                             <span v-for="($1, index) in item.department_list" :key="$1.id" class="department-item">
                                 <span class="text">{{ $1.name }}</span>
-                                <span v-if="(item.department_list.length - 1) != index" class="v-line">|</span>
+                                <span v-if="item.department_list.length - 1 != index" class="v-line">|</span>
                             </span>
                         </div>
                     </div>
 
                     <div class="right">
                         <span v-if="item.isTick" class="tick-img">
-                            <img class="img" src="~@/assets/images/retail/tick.png" alt="">
+                            <img class="img" src="~@/assets/images/retail/tick.png" alt="" />
                         </span>
                         <span v-else class="add cursor" @click="onAdd(item)">{{ $t('retail.increase') }}</span>
                     </div>
@@ -53,7 +62,6 @@
 </template>
 
 <script>
-
 import Core from '../../../core';
 import { SearchOutlined } from '@ant-design/icons-vue';
 
@@ -65,11 +73,12 @@ export default {
     props: {
         isShow: {
             type: Boolean,
-            default: false
+            default: false,
         },
-        isMan: { // 是否是店长
+        isMan: {
+            // 是否是店长
             type: Boolean,
-            default: false
+            default: false,
         },
     },
     data() {
@@ -78,51 +87,49 @@ export default {
                 page_size: 10,
                 page: 1,
                 total: 0,
-                total_page: 0
+                total_page: 0,
             },
             userName: '',
             // 人员列表
             fsList: [],
             // 选中的人员
-            selectList: []
-        }
+            selectList: [],
+        };
     },
     watch: {},
     computed: {
         lang() {
-            return this.$store.state.lang
+            return this.$store.state.lang;
         },
         fsListComput() {
-            let result = []
+            let result = [];
             result = this.fsList.map($1 => {
                 const bool = this.selectList.find($2 => {
-                    return $2.id == $1.id
-                })
+                    return $2.id == $1.id;
+                });
                 if (bool) {
-                    $1.isTick = true
+                    $1.isTick = true;
                 } else {
-                    $1.isTick = false
+                    $1.isTick = false;
                 }
                 return {
-                    ...$1
-                }
-            })
+                    ...$1,
+                };
+            });
             // console.log("fsListComput", result);
-            return result.filter(el => !el.select)
-        }
+            return result.filter(el => !el.select);
+        },
     },
     mounted() {
-
-        this.userListFetch()
+        this.userListFetch();
     },
     methods: {
-
         handleOk() {
             console.log('this.selectList', this.selectList);
             const selectFilter = this.selectList.map(el => {
-                return el.id
-            })
-            console.log("selectFilter 过滤出来的", selectFilter, this.selectList);
+                return el.id;
+            });
+            console.log('selectFilter 过滤出来的', selectFilter, this.selectList);
             if (this.isMan) {
                 // console.log('保存店长',this.selectList);
                 let arr = [];
@@ -131,11 +138,11 @@ export default {
                         ...$1,
                         user_name: $1.name,
                         status: $1.store_user_status,
-                        user_phone:$1.phone,
-                        type:$1.store_user_type,
-                    }
-                })
-                this.$emit('save', arr)
+                        user_phone: $1.phone,
+                        type: $1.store_user_type,
+                    };
+                });
+                this.$emit('save', arr);
                 // this.userListFetch() // 更新列表
             } else {
                 /*  Core.Api.RETAIL.addStoreUser({
@@ -148,64 +155,65 @@ export default {
                  }).catch(err => {
                      console.log("保存人员失败", err);
                  }) */
-                this.$emit('save', selectFilter)
+                this.$emit('save', selectFilter);
             }
-            this.handleCancel()
+            this.handleCancel();
             // this.saveFetch({ outer_user_id_list: selectFilter })
         },
         handleCancel() {
-            this.$emit('Cancel', false)
+            this.$emit('Cancel', false);
         },
 
         // 人员list
         userListFetch(params = {}, isSearch = false) {
-            // Core.Api.CRMCustomer.list 测试接口    
+            // Core.Api.CRMCustomer.list 测试接口
             Core.Api.RETAIL.personList({
                 key: this.userName,
                 page_size: this.pagination.page_size,
                 page: this.pagination.page,
-                ...params
-            }).then(res => {
-                this.pagination.total = res.count
-                this.pagination.total_page = Math.ceil(this.pagination.total / this.pagination.page_size)
-
-                // 是否是搜索的
-                if (isSearch) {
-                    this.fsList = []
-                }
-
-                this.fsList = this.fsList.concat(res.list)
-                console.log("获取人员list", res, this.fsList);
-            }).catch(err => {
-                console.log("获取人员list err", err);
+                ...params,
             })
+                .then(res => {
+                    this.pagination.total = res.count;
+                    this.pagination.total_page = Math.ceil(this.pagination.total / this.pagination.page_size);
+
+                    // 是否是搜索的
+                    if (isSearch) {
+                        this.fsList = [];
+                    }
+
+                    this.fsList = this.fsList.concat(res.list);
+                    console.log('获取人员list', res, this.fsList);
+                })
+                .catch(err => {
+                    console.log('获取人员list err', err);
+                });
         },
         // 监听滚轮事件
         handleScroll(e) {
             const element = e.target;
             if (element.scrollTop + element.clientHeight >= element.scrollHeight - 1) {
                 console.log('滑到底部');
-                this.pagination.page++
-                this.userListFetch({ page: this.pagination.page })
+                this.pagination.page++;
+                this.userListFetch({ page: this.pagination.page });
             }
         },
         onClose(item, index) {
-            this.selectList.splice(index, 1)
+            this.selectList.splice(index, 1);
         },
         onAdd(item) {
             if (this.isMan) {
-                this.selectList.length < 1 ? this.selectList.push(item) : this.selectList = [item];
+                this.selectList.length < 1 ? this.selectList.push(item) : (this.selectList = [item]);
             } else {
-                this.selectList.push(item)
+                this.selectList.push(item);
             }
         },
         // 输入框失去焦点/回车/点击
         inputEvent() {
-            this.userListFetch({ page: 1 }, true)
+            this.userListFetch({ page: 1 }, true);
         },
-    }
-}
-
+    },
+};
 </script>
 
 <style lang="less" scoped>
@@ -213,11 +221,11 @@ export default {
     margin-top: 20px;
 
     .ant-tag-processing {
-        color: var(--color-text-1, #1D2129);
+        color: var(--color-text-1, #1d2129);
         border-radius: 24px;
         border: none;
         height: 28px;
-        background-color: var(--color-fill-2, #F2F3F5);
+        background-color: var(--color-fill-2, #f2f3f5);
         padding-left: 2px;
         font-family: 'PingFang SC';
         font-style: normal;
@@ -230,20 +238,18 @@ export default {
         margin-bottom: 12px;
 
         .cha:hover {
-            background-color: #FFFFFF;
-            color: #006EF9;
+            background-color: #ffffff;
+            color: #006ef9;
             border-radius: 50%;
         }
-
     }
 
     .tab-uncheck .ant-tag-processing {
-        border: #EDF2F5 0.5px solid;
+        border: #edf2f5 0.5px solid;
         border-radius: 4px;
         height: 28px;
-        background: #EDF2F5;
-        color: #1E2023;
-
+        background: #edf2f5;
+        color: #1e2023;
 
         font-family: 'PingFang SC';
         font-style: normal;
@@ -252,11 +258,10 @@ export default {
         line-height: 28px;
         vertical-align: top;
         margin-top: 0px;
-
     }
 
     .cha {
-        background-color: var(--color-fill-2, #F2F3F5);
+        background-color: var(--color-fill-2, #f2f3f5);
         height: 16px;
         width: 16px;
         font-size: 16px;
@@ -273,7 +278,7 @@ export default {
     .tag-name {
         display: inline-block;
         background-color: red;
-        color: #FFFFFF;
+        color: #ffffff;
         border-radius: 50%;
         height: 24px;
         width: 24px;
@@ -325,12 +330,12 @@ export default {
                     font-weight: 400;
 
                     .text {
-                        color: var(--color-text-3, #86909C);
+                        color: var(--color-text-3, #86909c);
                     }
 
                     .v-line {
                         margin: 0 5px;
-                        color: #F0F0F0;
+                        color: #f0f0f0;
                     }
                 }
             }
@@ -345,10 +350,10 @@ export default {
                 line-height: 30px;
                 text-align: center;
                 display: inline-block;
-                background-color: var(--color-fill-2, #F2F3F5);
+                background-color: var(--color-fill-2, #f2f3f5);
                 font-size: 14px;
                 border-radius: 2px;
-                color: var(--brand-6, #0061FF);
+                color: var(--brand-6, #0061ff);
             }
 
             .img {

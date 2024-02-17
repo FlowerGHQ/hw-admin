@@ -5,185 +5,225 @@
             <div>
                 <div
                     class="tab-item"
-                    :class="{'tab-current': currentTab === item.key}"
+                    :class="{ 'tab-current': currentTab === item.key }"
                     v-for="(item, index) in titleTabs"
                     :key="index"
-                    @click="clickTab(item.key)">
+                    @click="clickTab(item.key)"
+                >
                     {{ item.label }}
                 </div>
             </div>
         </div>
         <!-- <div class="contain"> -->
-            <!-- table -->
-            <div class="table-container" v-if="type === 1">
-                <a-table
-                    :columns="tableColumns"
-                    :data-source="tableData"
-                    :scroll="{ x: true }"
-                    :pagination='false'
-                    :row-key="record => record.id"
-                    :indentSize='0'
-                >
-                    <template #bodyCell="{ column, text , index, record }">
-                        <template v-if="column.key === 'index'">
-                            <span>{{index + 1}}</span>
-                        </template>
-                        <template v-if="column.key === 'name'">
-                            <span>{{ text }}</span>
-                        </template>
-                        <template v-if="column.key === 'winNum'">
-                            <span>{{ text }}</span>
-                        </template>
-                        <template v-if="column.key === 'myGap'">
-                            <span>{{ text }}</span>
-                        </template>
+        <!-- table -->
+        <div class="table-container" v-if="type === 1">
+            <a-table
+                :columns="tableColumns"
+                :data-source="tableData"
+                :scroll="{ x: true }"
+                :pagination="false"
+                :row-key="record => record.id"
+                :indentSize="0"
+            >
+                <template #bodyCell="{ column, text, index, record }">
+                    <template v-if="column.key === 'index'">
+                        <span>{{ index + 1 }}</span>
                     </template>
-                </a-table>
-            </div>
-
-            <!-- form -->
-            <div class="table-container" v-if="type === 2">
-                <a-row :gutter="[20,0]">
-<!--                    <a-col v-for="(item, index) in formList" :key="index" :xs='24' :sm='12' :xl="12" :xxl='12'>-->
-<!--                        <div class="form-item">-->
-<!--                            <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ item.label }}</span>-->
-<!--                            <span class="form-value">{{  this.form.new_customer_count || '-' }}</span>-->
-<!--                        </div>-->
-<!--                    </a-col>-->
-                    <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
-                        <div class="form-item">
-                            <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.new_customer_count") }}</span>
-                            <span class="form-value">{{  this.form.new_customer_count || '-' }}</span>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
-                        <div class="form-item">
-                            <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.new_contact_count") }}</span>
-                            <span class="form-value">{{  this.form.new_contact_count || '-' }}</span>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
-                        <div class="form-item">
-                            <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.new_order_count") }}</span>
-                            <span class="form-value">{{  this.form.new_order_count || '-' }}</span>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
-                        <div class="form-item">
-                            <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.new_bo_count") }}</span>
-                            <span class="form-value">{{  this.form.new_bo_count || '-' }}</span>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
-                        <div class="form-item">
-                            <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.win_bo_count") }}</span>
-                            <span class="form-value">{{  this.form.win_bo_count || '-' }}</span>
-                        </div>
-                    </a-col>
-                    <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
-                        <div class="form-item">
-                            <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.new_test_driver_count") }}</span>
-                            <span class="form-value">{{  this.form.new_test_driver_count || '-' }}</span>
-                        </div>
-                    </a-col>
-                </a-row>
+                    <template v-if="column.key === 'name'">
+                        <span>{{ text }}</span>
+                    </template>
+                    <template v-if="column.key === 'winNum'">
+                        <span>{{ text }}</span>
+                    </template>
+                    <template v-if="column.key === 'myGap'">
+                        <span>{{ text }}</span>
+                    </template>
+                </template>
+            </a-table>
         </div>
-        <div class="table-container" v-if="type === 5">
-            <a-row :gutter="[20,0]">
+
+        <!-- form -->
+        <div class="table-container" v-if="type === 2">
+            <a-row :gutter="[20, 0]">
                 <!--                    <a-col v-for="(item, index) in formList" :key="index" :xs='24' :sm='12' :xl="12" :xxl='12'>-->
                 <!--                        <div class="form-item">-->
                 <!--                            <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ item.label }}</span>-->
                 <!--                            <span class="form-value">{{  this.form.new_customer_count || '-' }}</span>-->
                 <!--                        </div>-->
                 <!--                    </a-col>-->
-                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.new_customer_count") }}</span>
-                        <span class="form-value">{{  this.form.track_count || '-' }}</span>
+                        <span class="form-label"
+                            ><i class="icon i_add" style="margin-right: 16px" />{{
+                                $t('crm_dash.new_customer_count')
+                            }}</span
+                        >
+                        <span class="form-value">{{ this.form.new_customer_count || '-' }}</span>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.new_contact_count") }}</span>
-                        <span class="form-value">{{  this.form.call_count || '-' }}</span>
+                        <span class="form-label"
+                            ><i class="icon i_add" style="margin-right: 16px" />{{
+                                $t('crm_dash.new_contact_count')
+                            }}</span
+                        >
+                        <span class="form-value">{{ this.form.new_contact_count || '-' }}</span>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.new_order_count") }}</span>
-                        <span class="form-value">{{  this.form.visit_count || '-' }}</span>
+                        <span class="form-label"
+                            ><i class="icon i_add" style="margin-right: 16px" />{{
+                                $t('crm_dash.new_order_count')
+                            }}</span
+                        >
+                        <span class="form-value">{{ this.form.new_order_count || '-' }}</span>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.new_bo_count") }}</span>
-                        <span class="form-value">{{  this.form.pool_count || '-' }}</span>
+                        <span class="form-label"
+                            ><i class="icon i_add" style="margin-right: 16px" />{{ $t('crm_dash.new_bo_count') }}</span
+                        >
+                        <span class="form-value">{{ this.form.new_bo_count || '-' }}</span>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.win_bo_count") }}</span>
-                        <span class="form-value">{{  this.form.customer_count || '-' }}</span>
+                        <span class="form-label"
+                            ><i class="icon i_add" style="margin-right: 16px" />{{ $t('crm_dash.win_bo_count') }}</span
+                        >
+                        <span class="form-value">{{ this.form.win_bo_count || '-' }}</span>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ $t("crm_dash.new_test_driver_count") }}</span>
-                        <span class="form-value">{{  this.form.bo_count || '-' }}</span>
+                        <span class="form-label"
+                            ><i class="icon i_add" style="margin-right: 16px" />{{
+                                $t('crm_dash.new_test_driver_count')
+                            }}</span
+                        >
+                        <span class="form-value">{{ this.form.new_test_driver_count || '-' }}</span>
+                    </div>
+                </a-col>
+            </a-row>
+        </div>
+        <div class="table-container" v-if="type === 5">
+            <a-row :gutter="[20, 0]">
+                <!--                    <a-col v-for="(item, index) in formList" :key="index" :xs='24' :sm='12' :xl="12" :xxl='12'>-->
+                <!--                        <div class="form-item">-->
+                <!--                            <span class="form-label"><i class="icon i_add" style="margin-right:16px"/>{{ item.label }}</span>-->
+                <!--                            <span class="form-value">{{  this.form.new_customer_count || '-' }}</span>-->
+                <!--                        </div>-->
+                <!--                    </a-col>-->
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
+                    <div class="form-item">
+                        <span class="form-label"
+                            ><i class="icon i_add" style="margin-right: 16px" />{{
+                                $t('crm_dash.new_customer_count')
+                            }}</span
+                        >
+                        <span class="form-value">{{ this.form.track_count || '-' }}</span>
+                    </div>
+                </a-col>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
+                    <div class="form-item">
+                        <span class="form-label"
+                            ><i class="icon i_add" style="margin-right: 16px" />{{
+                                $t('crm_dash.new_contact_count')
+                            }}</span
+                        >
+                        <span class="form-value">{{ this.form.call_count || '-' }}</span>
+                    </div>
+                </a-col>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
+                    <div class="form-item">
+                        <span class="form-label"
+                            ><i class="icon i_add" style="margin-right: 16px" />{{
+                                $t('crm_dash.new_order_count')
+                            }}</span
+                        >
+                        <span class="form-value">{{ this.form.visit_count || '-' }}</span>
+                    </div>
+                </a-col>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
+                    <div class="form-item">
+                        <span class="form-label"
+                            ><i class="icon i_add" style="margin-right: 16px" />{{ $t('crm_dash.new_bo_count') }}</span
+                        >
+                        <span class="form-value">{{ this.form.pool_count || '-' }}</span>
+                    </div>
+                </a-col>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
+                    <div class="form-item">
+                        <span class="form-label"
+                            ><i class="icon i_add" style="margin-right: 16px" />{{ $t('crm_dash.win_bo_count') }}</span
+                        >
+                        <span class="form-value">{{ this.form.customer_count || '-' }}</span>
+                    </div>
+                </a-col>
+                <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
+                    <div class="form-item">
+                        <span class="form-label"
+                            ><i class="icon i_add" style="margin-right: 16px" />{{
+                                $t('crm_dash.new_test_driver_count')
+                            }}</span
+                        >
+                        <span class="form-value">{{ this.form.bo_count || '-' }}</span>
                     </div>
                 </a-col>
             </a-row>
         </div>
 
-            <!-- echarts -->
-            <div class="table-container" v-if="type === 3">
-                <div :id="chartId" class="chart" :ref='chartId'></div>
-            </div>
+        <!-- echarts -->
+        <div class="table-container" v-if="type === 3">
+            <div :id="chartId" class="chart" :ref="chartId"></div>
+        </div>
 
-            <!-- dataInfo -->
-            <div class="table-container" v-if="type === 4">
-                <div class="data-body">
-                    <i class="icon i_add" style="margin-right:16px;font-size:32px;color:blue"/>
-                    <div class="data-contain">
-                        <div class="info-item" v-for="(item, index) in infoTabs" :key="index">
-                            <span class="label">{{ item.label }}</span>
-                            <span class="value">{{ info[item.key] || '1个' }}</span>
-                        </div>
+        <!-- dataInfo -->
+        <div class="table-container" v-if="type === 4">
+            <div class="data-body">
+                <i class="icon i_add" style="margin-right: 16px; font-size: 32px; color: blue" />
+                <div class="data-contain">
+                    <div class="info-item" v-for="(item, index) in infoTabs" :key="index">
+                        <span class="label">{{ item.label }}</span>
+                        <span class="value">{{ info[item.key] || '1个' }}</span>
                     </div>
                 </div>
             </div>
+        </div>
         <!-- </div> -->
     </div>
 </template>
 
 <script>
 import Core from '../../core';
-import { Chart } from '@antv/g2'
+import { Chart } from '@antv/g2';
 
 export default {
     name: 'Card',
-    components: {
-    },
+    components: {},
     props: {
         info: {
             type: Object,
-            default: ()=> {}
+            default: () => {},
         },
         tableData: {
             type: Object,
-            default: ()=> [{ name: '1', winNum: '2', myGap: '3' }]
+            default: () => [{ name: '1', winNum: '2', myGap: '3' }],
         },
         type: {
             type: Number,
-            default: 1
-        }
+            default: 1,
+        },
     },
     data() {
         return {
             titleTabs: [
                 { label: '按钮名称', key: 'key1' },
                 { label: '按钮名称', key: 'key2' },
-                { label: '按钮名称', key: 'key3' }
+                { label: '按钮名称', key: 'key3' },
             ],
             currentTab: '',
             formList: [
@@ -199,11 +239,9 @@ export default {
             infoTabs: [
                 { label: '标签名称', key: 'key1' },
                 { label: '标签名称', key: 'key2' },
-                { label: '标签名称', key: 'key3' }
+                { label: '标签名称', key: 'key3' },
             ],
-            searchForm: {
-
-            },
+            searchForm: {},
             form: {
                 new_customer_count: '',
                 new_contact_count: '',
@@ -218,8 +256,7 @@ export default {
                 pool_count: '',
                 customer_count: '',
                 bo_count: '',
-            }
-
+            },
         };
     },
     watch: {},
@@ -230,19 +267,18 @@ export default {
                 { title: '人员名字', dataIndex: 'name', key: 'name' },
                 { title: '赢单数量', dataIndex: 'winNum', key: 'winNum' },
                 { title: '我的差距', dataIndex: 'myGap', key: 'myGap' },
-            ]
-            return tableColumns
+            ];
+            return tableColumns;
         },
     },
-    created() {
-    },
+    created() {},
     mounted() {
         const ths = this;
-        window.onresize =  () => {
+        window.onresize = () => {
             ths.resetChart();
-        }
-        this.salesStatistics()
-        this.trackStatistics()
+        };
+        this.salesStatistics();
+        this.trackStatistics();
     },
     methods: {
         // 点击tab
@@ -252,7 +288,7 @@ export default {
         },
         // 窗口缩放重制chart
         resetChart() {
-            if(this.timer !== null) {
+            if (this.timer !== null) {
                 clearTimeout(this.timer);
             }
             this.timer = setTimeout(() => {
@@ -268,57 +304,54 @@ export default {
                 el.innerHTML = '';
                 this.myChart = null;
             }
-            this.$nextTick(()=>{
+            this.$nextTick(() => {
                 let width = el.offsetWidth;
                 let rate = 300 / 200; //  宽/高
-                console.log('init chart width >>', width, width / rate)
+                console.log('init chart width >>', width, width / rate);
                 let chart = new Chart({
                     container: this.chartId,
                     autoFit: true,
                     height: width / rate,
                     width,
-                })
-                chart.data(data)
+                });
+                chart.data(data);
                 this.myChart = chart;
-                console.log(this.myChart)
-            })
+                console.log(this.myChart);
+            });
         },
 
         salesStatistics() {
             Core.Api.CRMDashboard.salesStatistics({
-                ...this.searchForm
+                ...this.searchForm,
             }).then(res => {
-                this.form.new_customer_count = res.new_customer_count
-                this.form.new_contact_count = res.new_contact_count
-                this.form.new_order_count = res.new_order_count
-                this.form.new_bo_count = res.new_bo_count
-                this.form.win_bo_count = res.win_bo_count
-                this.form.new_test_driver_count = res.new_test_driver_count
-
-            })
+                this.form.new_customer_count = res.new_customer_count;
+                this.form.new_contact_count = res.new_contact_count;
+                this.form.new_order_count = res.new_order_count;
+                this.form.new_bo_count = res.new_bo_count;
+                this.form.win_bo_count = res.win_bo_count;
+                this.form.new_test_driver_count = res.new_test_driver_count;
+            });
         },
         trackStatistics() {
             Core.Api.CRMDashboard.trackStatistics({
-                ...this.searchForm
+                ...this.searchForm,
             }).then(res => {
-                this.form.track_count = res.track_count
-                this.form.call_count = res.call_count
-                this.form.visit_count = res.visit_count
-                this.form.pool_count = res.pool_count
-                this.form.customer_count = res.customer_count
-                this.form.bo_count = res.bo_count
-
-            })
+                this.form.track_count = res.track_count;
+                this.form.call_count = res.call_count;
+                this.form.visit_count = res.visit_count;
+                this.form.pool_count = res.pool_count;
+                this.form.customer_count = res.customer_count;
+                this.form.bo_count = res.bo_count;
+            });
         },
         boStatistics() {
             Core.Api.CRMDashboard.boStatistics({
-                ...this.searchForm
+                ...this.searchForm,
             }).then(res => {
-                res.list
-            })
+                res.list;
+            });
         },
-
-    }
+    },
 };
 </script>
 
@@ -348,8 +381,8 @@ export default {
         }
     }
     .tab-current {
-        border: 1px solid #006EF9;
-        color: #006EF9;
+        border: 1px solid #006ef9;
+        color: #006ef9;
     }
 }
 .contain {
@@ -364,7 +397,7 @@ export default {
         font-size: 14px;
     }
     .form-value {
-        color: #006EF9;
+        color: #006ef9;
         font-size: 20px;
     }
 }

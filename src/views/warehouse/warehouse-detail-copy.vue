@@ -21,7 +21,8 @@
                     <a-row class="desc-detail">
                         <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                             <span class="key">{{ $t('n.type') }}：</span>
-                            <span class="value">{{ $Util.warehouseTypeFilter(warehoseDetail.type, $i18n.locale) || '-'
+                            <span class="value">{{
+                                $Util.warehouseTypeFilter(warehoseDetail.type, $i18n.locale) || '-'
                             }}</span>
                         </a-col>
                         <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
@@ -64,14 +65,13 @@
             </div>
         </div>
         <!-- bottom -->
-        <div class="list-container" style="margin-top: 10px;">
-            <div class="title-container" style="border-bottom: 1px solid #eff2f4; border-radius: 0px;">
-                <div class="title-area" style="font-size: 14px;">
-                    <eosTabs v-model:activeKey="activeKey2" :tabsList="tabsList2">
-                    </eosTabs>
+        <div class="list-container" style="margin-top: 10px">
+            <div class="title-container" style="border-bottom: 1px solid #eff2f4; border-radius: 0px">
+                <div class="title-area" style="font-size: 14px">
+                    <eosTabs v-model:activeKey="activeKey2" :tabsList="tabsList2"> </eosTabs>
                 </div>
                 <div class="btns-area">
-                    <div style="display: inline-flex;">
+                    <div style="display: inline-flex">
                         <a-select>
                             <a-select-option value="jack">Jack</a-select-option>
                             <a-select-option value="lucy">Lucy</a-select-option>
@@ -79,7 +79,7 @@
                             <a-select-option value="Yiminghe">yiminghe</a-select-option>
                         </a-select>
                         <a-input placeholder="请输入" />
-                        <a-input-search style="margin-left: 15px;" placeholder="请输入库位号" />
+                        <a-input-search style="margin-left: 15px" placeholder="请输入库位号" />
                     </div>
                 </div>
             </div>
@@ -93,29 +93,19 @@
                 </template>
                 <!-- 出入库记录 -->
                 <template v-else-if="activeKey2 == 'StockRecord'">
-                    <StockRecord                         
-                        :warehouseId="route.query.id" 
-                        :detail="warehoseDetail"                         
-                    />
+                    <StockRecord :warehouseId="route.query.id" :detail="warehoseDetail" />
                 </template>
 
                 <template v-else-if="activeKey2 == 'operation_record'">4</template>
 
                 <!-- 库位对应物料 -->
                 <template v-else-if="activeKey2 == 'location_stock'">
-                    <WarehouseLocationStock                         
-                        :warehouseId="route.query.id" 
-                        :detail="warehoseDetail"
-                    />
+                    <WarehouseLocationStock :warehouseId="route.query.id" :detail="warehoseDetail" />
                 </template>
 
                 <!-- 库存物料 -->
                 <template v-else="activeKey2 == 'MaterialStockList'">
-                    <StockList                         
-                        type='material' 
-                        :warehouseId="route.query.id" 
-                        :detail="warehoseDetail"                         
-                    />
+                    <StockList type="material" :warehouseId="route.query.id" :detail="warehoseDetail" />
                 </template>
             </div>
         </div>
@@ -124,65 +114,65 @@
 
 <script setup>
 import { ref, reactive, getCurrentInstance, onMounted, computed } from 'vue';
-import { useRoute } from 'vue-router'
+import { useRoute } from 'vue-router';
 
-import Core from "@/core";
-import eosTabs from '@/components/common/eos-tabs.vue'
-import { inventoryManage, StockRecord, SluggishMaterialTrend, SluggishMaterialRank } from './components/index'
-import WarehouseLocationStock from "./components/WarehouseLocationStock.vue";
-import StockList from "./components/StockList.vue";
+import Core from '@/core';
+import eosTabs from '@/components/common/eos-tabs.vue';
+import { inventoryManage, StockRecord, SluggishMaterialTrend, SluggishMaterialRank } from './components/index';
+import WarehouseLocationStock from './components/WarehouseLocationStock.vue';
+import StockList from './components/StockList.vue';
 
-const route = useRoute()
-const { proxy } = getCurrentInstance()
+const route = useRoute();
+const { proxy } = getCurrentInstance();
 
-
-const activeKey1 = ref(1) // top
+const activeKey1 = ref(1); // top
 const tabsList1 = computed(() => [
     { key: 1, value: `${proxy.$t('wa.inventory_alarm')}` }, // 库存告警
     { key: 2, value: `${proxy.$t('wa.inert_material')}` }, // 呆滞物料
-])
-const activeKey2 = ref('WarehouseLocation') // bottom
+]);
+const activeKey2 = ref('WarehouseLocation'); // bottom
 const tabsList2 = computed(() => {
-    
     let arr = [
-        { weight:1, key: 'ItemStockList', value: `${proxy.$t('wa.stock')}` }, // 库存产品
-        { weight:2, key: 'WarehouseLocation', value: `${proxy.$t('wa.location')}` }, // 库存管理        
-        { weight:4, key: 'operation_record', value: `${proxy.$t('wa.operation_record')}` }, // 操作记录
-        { weight:10, key: 'location_stock', value: `${proxy.$t('wa.location_stock')}` }, // 库位对应物料
-    ]
+        { weight: 1, key: 'ItemStockList', value: `${proxy.$t('wa.stock')}` }, // 库存产品
+        { weight: 2, key: 'WarehouseLocation', value: `${proxy.$t('wa.location')}` }, // 库存管理
+        { weight: 4, key: 'operation_record', value: `${proxy.$t('wa.operation_record')}` }, // 操作记录
+        { weight: 10, key: 'location_stock', value: `${proxy.$t('wa.location_stock')}` }, // 库位对应物料
+    ];
 
     // 出入库记录(残次仓不显示)
-    if(warehoseDetail.value.type !== WAREHOUSE_TYPE.DEFECTIVE){
-        arr.push({ weight:3, key: 'StockRecord', value: `${proxy.$t('wa.records')}` }) // 出入库记录
+    if (warehoseDetail.value.type !== WAREHOUSE_TYPE.DEFECTIVE) {
+        arr.push({ weight: 3, key: 'StockRecord', value: `${proxy.$t('wa.records')}` }); // 出入库记录
     }
     // 库存物料(物料仓)
-    if(warehoseDetail.value.type == WAREHOUSE_TYPE.MATERIAL || true){
-        arr.push({ weight:3, key: 'MaterialStockList', value: `${proxy.$t('wa.stock_material')}` })
+    if (warehoseDetail.value.type == WAREHOUSE_TYPE.MATERIAL || true) {
+        arr.push({ weight: 3, key: 'MaterialStockList', value: `${proxy.$t('wa.stock_material')}` });
     }
 
-    return arr.sort((a,b) => a.weight - b.weight)
-})
+    return arr.sort((a, b) => a.weight - b.weight);
+});
 
-const WAREHOUSE_TYPE = Core.Const.WAREHOUSE.TYPE //仓库类型  1成品仓 2残次仓 3物料仓 4广宣品仓
+const WAREHOUSE_TYPE = Core.Const.WAREHOUSE.TYPE; //仓库类型  1成品仓 2残次仓 3物料仓 4广宣品仓
 
-const warehoseDetail = ref({}) // 改仓库详情
+const warehoseDetail = ref({}); // 改仓库详情
 
 onMounted(() => {
-    getWarehouseDetail()
-})
+    getWarehouseDetail();
+});
 
 /*fetch*/
 const getWarehouseDetail = (params = {}) => {
     Core.Api.Warehouse.detail({
         id: Number(route.query.id),
-        ...params
-    }).then(res => {
-        // console.log("详情", res.detail);
-        warehoseDetail.value = res.detail;     
-    }).catch(err => {
-        console.log("getWarehouseDetail err", err);
+        ...params,
     })
-}
+        .then(res => {
+            // console.log("详情", res.detail);
+            warehoseDetail.value = res.detail;
+        })
+        .catch(err => {
+            console.log('getWarehouseDetail err', err);
+        });
+};
 </script>
 
 <style lang="less" scoped>

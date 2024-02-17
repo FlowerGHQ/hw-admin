@@ -1,23 +1,23 @@
-import Const from "../core/const"
-import Util from "../core/utils"
-import Data from "../core/data"
+import Const from '../core/const';
+import Util from '../core/utils';
+import Data from '../core/data';
 import Layout from '../views/layout/index.vue';
 
-const LOGIN_TYPE = Const.LOGIN.TYPE
-const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE
+const LOGIN_TYPE = Const.LOGIN.TYPE;
+const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE;
 
 // 客户关怀
 const customerCare = {
-    path: "/customer-care",
+    path: '/customer-care',
     component: Layout,
-    name: "CustomerCare",
-    redirect: "/customer-care/list",    
+    name: 'CustomerCare',
+    redirect: '/customer-care/list',
     meta: {
         title: '客户关怀',
         title_en: 'Customer Care',
         icon: 'i_menu_fankuguanli',
         roles: [LOGIN_TYPE.DISTRIBUTOR],
-        auth: ["enquiry-ticket.list"],
+        auth: ['enquiry-ticket.list'],
     },
     children: [
         {
@@ -27,8 +27,8 @@ const customerCare = {
             meta: {
                 title: '客服问询单',
                 title_en: 'Customer Service Inquiry',
-                auth: ["enquiry-ticket.list"],
-            }
+                auth: ['enquiry-ticket.list'],
+            },
         },
         {
             path: 'edit',
@@ -38,7 +38,7 @@ const customerCare = {
                 hidden: true,
                 title: '客服问询单编辑',
                 title_en: 'Customer Service Inquiry Edit',
-            }
+            },
         },
         {
             path: 'detail',
@@ -48,10 +48,8 @@ const customerCare = {
                 hidden: true,
                 title: '客服问询单详情',
                 title_en: 'Customer Service Inquiry Detail',
-            }
+            },
         },
-    ]
-}
-export  {
-    customerCare
-}
+    ],
+};
+export { customerCare };

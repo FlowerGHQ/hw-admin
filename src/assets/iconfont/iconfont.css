@@ -1,467 +1,467 @@
 @font-face {
-  font-family: "icon"; /* Project id 3000141 */
-  src: url('iconfont.woff2?t=1705287153048') format('woff2'),
-       url('iconfont.woff?t=1705287153048') format('woff'),
-       url('iconfont.ttf?t=1705287153048') format('truetype');
+    font-family: 'icon'; /* Project id 3000141 */
+    src:
+        url('iconfont.woff2?t=1705287153048') format('woff2'),
+        url('iconfont.woff?t=1705287153048') format('woff'),
+        url('iconfont.ttf?t=1705287153048') format('truetype');
 }
 
 .icon {
-  font-family: "icon" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-family: 'icon' !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .i_a-iconmenu_xiaoshoucelue:before {
-  content: "\e85b";
+    content: '\e85b';
 }
 
 .i_shouji:before {
-  content: "\e621";
+    content: '\e621';
 }
 
 .i_menu_xitongguanli:before {
-  content: "\e85a";
+    content: '\e85a';
 }
 
 .i_menu_zhinengbiaoqian:before {
-  content: "\e858";
+    content: '\e858';
 }
 
 .i_menu_kehu:before {
-  content: "\e859";
+    content: '\e859';
 }
 
 .i_menu_shiliguanli:before {
-  content: "\e857";
+    content: '\e857';
 }
 
 .i_menu_shangji:before {
-  content: "\e855";
+    content: '\e855';
 }
 
 .i_menu_renyuanguanli:before {
-  content: "\e856";
+    content: '\e856';
 }
 
 .i_menu_yonghuzhognxin:before {
-  content: "\e851";
+    content: '\e851';
 }
 
 .i_menu_haowudingdan:before {
-  content: "\e852";
+    content: '\e852';
 }
 
 .i_menu_fenpeiguize:before {
-  content: "\e853";
+    content: '\e853';
 }
 
 .i_menu_youxiangdingyue:before {
-  content: "\e854";
+    content: '\e854';
 }
 
 .i_menu_shangpingguanli:before {
-  content: "\e84d";
+    content: '\e84d';
 }
 
 .i_menu_gongdanguanli:before {
-  content: "\e84e";
+    content: '\e84e';
 }
 
 .i_menu_fankuguanli:before {
-  content: "\e84f";
+    content: '\e84f';
 }
 
 .i_menu_shouhouguanli:before {
-  content: "\e850";
+    content: '\e850';
 }
 
 .i_menu_shegnchanguanli:before {
-  content: "\e84b";
+    content: '\e84b';
 }
 
 .i_menu_gongyingguajli:before {
-  content: "\e84c";
+    content: '\e84c';
 }
 
 .i_menu_cunhuoguanli:before {
-  content: "\e847";
+    content: '\e847';
 }
 
 .i_menu_kucunguanli:before {
-  content: "\e848";
+    content: '\e848';
 }
 
 .i_menu_COC:before {
-  content: "\e849";
+    content: '\e849';
 }
 
 .i_menu_shezhi:before {
-  content: "\e84a";
+    content: '\e84a';
 }
 
 .i_youxiang:before {
-  content: "\e601";
+    content: '\e601';
 }
 
 .i_a-02:before {
-  content: "\e60d";
+    content: '\e60d';
 }
 
 .i_order1:before {
-  content: "\e60c";
+    content: '\e60c';
 }
 
 .i_tansuo:before {
-  content: "\e604";
+    content: '\e604';
 }
 
 .i_renyuan-:before {
-  content: "\e612";
+    content: '\e612';
 }
 
 .i_dingdan:before {
-  content: "\e603";
+    content: '\e603';
 }
 
 .i_stores:before {
-  content: "\e6d4";
+    content: '\e6d4';
 }
 
 .i_001motuoche:before {
-  content: "\e829";
+    content: '\e829';
 }
 
 .i_xiala:before {
-  content: "\e61f";
+    content: '\e61f';
 }
 
 .i_point1:before {
-  content: "\e6d1";
+    content: '\e6d1';
 }
 
 .i_icon-follow:before {
-  content: "\e611";
+    content: '\e611';
 }
 
 .i_xialajiantouxiao:before {
-  content: "\e87e";
+    content: '\e87e';
 }
 
 .i_shouqijiantouxiao:before {
-  content: "\e892";
+    content: '\e892';
 }
 
 .i_crm_data:before {
-  content: "\e605";
+    content: '\e605';
 }
 
 .i_crm_order:before {
-  content: "\e606";
+    content: '\e606';
 }
 
 .i_crm_test_drive:before {
-  content: "\e607";
+    content: '\e607';
 }
 
 .i_crm_bo:before {
-  content: "\e608";
+    content: '\e608';
 }
 
 .i_crm_setting:before {
-  content: "\e609";
+    content: '\e609';
 }
 
 .i_crm_label:before {
-  content: "\e60a";
+    content: '\e60a';
 }
 
 .i_crm_order_income:before {
-  content: "\e60b";
+    content: '\e60b';
 }
 
 .i_test:before {
-  content: "\e616";
+    content: '\e616';
 }
 
 .i_print:before {
-  content: "\e613";
+    content: '\e613';
 }
 
 .i_home:before {
-  content: "\e61b";
+    content: '\e61b';
 }
 
 .i_setting:before {
-  content: "\e623";
+    content: '\e623';
 }
 
 .i_skew-bg:before {
-  content: "\e6e0";
+    content: '\e6e0';
 }
 
 .i_relevance:before {
-  content: "\e682";
+    content: '\e682';
 }
 
 .i_s_role:before {
-  content: "\e6d2";
+    content: '\e6d2';
 }
 
 .i_s_aftersales:before {
-  content: "\e6d3";
+    content: '\e6d3';
 }
 
 .i_copy:before {
-  content: "\e66a";
+    content: '\e66a';
 }
 
 .i_putaway:before {
-  content: "\e636";
+    content: '\e636';
 }
 
 .i_downaway:before {
-  content: "\e6d0";
+    content: '\e6d0';
 }
 
 .i_audit:before {
-  content: "\e620";
+    content: '\e620';
 }
 
 .i_m_error:before {
-  content: "\e6cc";
+    content: '\e6cc';
 }
 
 .i_m_info:before {
-  content: "\e6cd";
+    content: '\e6cd';
 }
 
 .i_m_warning:before {
-  content: "\e6ce";
+    content: '\e6ce';
 }
 
 .i_m_success:before {
-  content: "\e6cf";
+    content: '\e6cf';
 }
 
 .i_download:before {
-  content: "\e61e";
+    content: '\e61e';
 }
 
 .i_en-zh:before {
-  content: "\e69c";
+    content: '\e69c';
 }
 
 .i_zh-en:before {
-  content: "\e6a0";
+    content: '\e6a0';
 }
 
 .i_notify:before {
-  content: "\e679";
+    content: '\e679';
 }
 
 .i_minus:before {
-  content: "\e64e";
+    content: '\e64e';
 }
 
 .i_edit_l:before {
-  content: "\e6c6";
+    content: '\e6c6';
 }
 
 .i_settle:before {
-  content: "\e6c7";
+    content: '\e6c7';
 }
 
 .i_deliver:before {
-  content: "\e6c8";
+    content: '\e6c8';
 }
 
 .i_transfer:before {
-  content: "\e6c9";
+    content: '\e6c9';
 }
 
 .i_submit:before {
-  content: "\e6ca";
+    content: '\e6ca';
 }
 
 .i_received:before {
-  content: "\e6cb";
+    content: '\e6cb';
 }
 
 .i_goods:before {
-  content: "\e6c5";
+    content: '\e6c5';
 }
 
 .i_close_c:before {
-  content: "\e6c0";
+    content: '\e6c0';
 }
 
 .i_comment:before {
-  content: "\e6c1";
+    content: '\e6c1';
 }
 
 .i_confirm:before {
-  content: "\e6c2";
+    content: '\e6c2';
 }
 
 .i_completed:before {
-  content: "\e6c3";
+    content: '\e6c3';
 }
 
 .i_detail_l:before {
-  content: "\e6c4";
+    content: '\e6c4';
 }
 
 .i_s_warehouse:before {
-  content: "\e6b8";
+    content: '\e6b8';
 }
 
 .i_s_item:before {
-  content: "\e6b9";
+    content: '\e6b9';
 }
 
 .i_s_customer:before {
-  content: "\e6ba";
+    content: '\e6ba';
 }
 
 .i_s_dashboard:before {
-  content: "\e6bb";
+    content: '\e6bb';
 }
 
 .i_s_repair:before {
-  content: "\e6bc";
+    content: '\e6bc';
 }
 
 .i_s_agent:before {
-  content: "\e6bd";
+    content: '\e6bd';
 }
 
 .i_s_store:before {
-  content: "\e6be";
+    content: '\e6be';
 }
 
 .i_s_user:before {
-  content: "\e6bf";
+    content: '\e6bf';
 }
 
 .i_order:before {
-  content: "\e6b7";
+    content: '\e6b7';
 }
 
 .i_forbidden:before {
-  content: "\e64c";
+    content: '\e64c';
 }
 
 .i_enable:before {
-  content: "\e64d";
+    content: '\e64d';
 }
 
 .i_detail:before {
-  content: "\e61c";
+    content: '\e61c';
 }
 
 .i_check_b:before {
-  content: "\e63d";
+    content: '\e63d';
 }
 
 .i_expan_l:before {
-  content: "\e6b3";
+    content: '\e6b3';
 }
 
 .i_delete:before {
-  content: "\e6b4";
+    content: '\e6b4';
 }
 
 .i_s_temp:before {
-  content: "\e6b5";
+    content: '\e6b5';
 }
 
 .i_warning:before {
-  content: "\e6b6";
+    content: '\e6b6';
 }
 
 .i_cart:before {
-  content: "\e6a8";
+    content: '\e6a8';
 }
 
 .i_agora:before {
-  content: "\e6a9";
+    content: '\e6a9';
 }
 
 .i_calendar:before {
-  content: "\e6aa";
+    content: '\e6aa';
 }
 
 .i_collect:before {
-  content: "\e6ab";
+    content: '\e6ab';
 }
 
 .i_expan:before {
-  content: "\e6ac";
+    content: '\e6ac';
 }
 
 .i_list:before {
-  content: "\e6ad";
+    content: '\e6ad';
 }
 
 .i_pack_up:before {
-  content: "\e6ae";
+    content: '\e6ae';
 }
 
 .i_edit:before {
-  content: "\e6b0";
+    content: '\e6b0';
 }
 
 .i_eyes:before {
-  content: "\e650";
+    content: '\e650';
 }
 
 .i_more:before {
-  content: "\e694";
+    content: '\e694';
 }
 
 .i_back:before {
-  content: "\e697";
+    content: '\e697';
 }
 
 .i_add:before {
-  content: "\e698";
+    content: '\e698';
 }
 
 .i_upload:before {
-  content: "\e699";
+    content: '\e699';
 }
 
 .i_hint:before {
-  content: "\e69a";
+    content: '\e69a';
 }
 
 .i_search:before {
-  content: "\e69b";
+    content: '\e69b';
 }
 
 .i_close_b:before {
-  content: "\e69d";
+    content: '\e69d';
 }
 
 .i_close:before {
-  content: "\e69e";
+    content: '\e69e';
 }
 
 .i_point:before {
-  content: "\e69f";
+    content: '\e69f';
 }
 
 .i_click:before {
-  content: "\e6a4";
+    content: '\e6a4';
 }
 
 .i_lock:before {
-  content: "\e6b1";
+    content: '\e6b1';
 }
 
 .i_user:before {
-  content: "\e6b2";
+    content: '\e6b2';
 }
-

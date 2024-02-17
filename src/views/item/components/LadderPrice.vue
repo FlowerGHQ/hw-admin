@@ -10,20 +10,21 @@
         :width="860"
         ellipsis
         :title="ladderPriceTitle"
-        :wrapClassName="{'ladder-modal':!batchSetVisible,'no-footer':batchSetVisible}"
+        :wrapClassName="{ 'ladder-modal': !batchSetVisible, 'no-footer': batchSetVisible }"
         @ok="handleComfirmLadderPrice"
-        @cancel="handleCancelLadderPrice">
+        @cancel="handleCancelLadderPrice"
+    >
         <!-- footer -->
         <template #footer>
             <div class="confim-footer">
                 <div class="tips">
-                    <MySvgIcon icon-class="hint" /> <span class="text-hint">{{ $t("item-edit.batch_price_all") }}</span>
+                    <MySvgIcon icon-class="hint" /> <span class="text-hint">{{ $t('item-edit.batch_price_all') }}</span>
                 </div>
                 <div class="btn-area">
                     <!-- 取消按钮 -->
-                    <a-button @click="handleCancelLadderPrice">{{ $t("def.cancel") }}</a-button>
+                    <a-button @click="handleCancelLadderPrice">{{ $t('def.cancel') }}</a-button>
                     <!-- 确定按钮 -->
-                    <a-button type="primary" @click="handleComfirmLadderPrice">{{ $t("def.sure") }}</a-button>
+                    <a-button type="primary" @click="handleComfirmLadderPrice">{{ $t('def.sure') }}</a-button>
                 </div>
             </div>
         </template>
@@ -41,7 +42,8 @@
                 }"
                 class="ladder-table"
                 :pagination="false"
-                :rowKey="(record, index) => index">
+                :rowKey="(record, index) => index"
+            >
                 <template #headerCell="{ column, record, index, text }">
                     <div class="title">
                         {{ column.title }}
@@ -59,49 +61,55 @@
                         v-model:value="record[column.dataIndex]"
                         :min="0.1"
                         :precision="2"
-                        :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                        :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
-                        @change="inputValidateConfig" />
+                        :formatter="value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                        :parser="value => value.replace(/€\s?|(,*)/g, '')"
+                        @change="inputValidateConfig"
+                    />
                     <a-input-number
                         v-if="column.dataIndex === 'fob_20gp_eur'"
                         v-model:value="record[column.dataIndex]"
                         :min="0.1"
                         :precision="2"
-                        :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                        :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
-                        @change="inputValidateConfig" />
+                        :formatter="value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                        :parser="value => value.replace(/€\s?|(,*)/g, '')"
+                        @change="inputValidateConfig"
+                    />
                     <a-input-number
                         v-if="column.dataIndex === 'fob_40qh_eur'"
                         v-model:value="record[column.dataIndex]"
                         :min="0.1"
                         :precision="2"
-                        :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                        :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
-                        @change="inputValidateConfig" />
+                        :formatter="value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                        :parser="value => value.replace(/€\s?|(,*)/g, '')"
+                        @change="inputValidateConfig"
+                    />
                     <a-input-number
                         v-if="column.dataIndex === 'fob_usd'"
                         v-model:value="record[column.dataIndex]"
                         :min="0.1"
                         :precision="2"
-                        :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                        :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
-                        @change="inputValidateConfig" />
+                        :formatter="value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                        :parser="value => value.replace(/\$\s?|(,*)/g, '')"
+                        @change="inputValidateConfig"
+                    />
                     <a-input-number
                         v-if="column.dataIndex === 'fob_20gp_usd'"
                         v-model:value="record[column.dataIndex]"
                         :min="0.1"
                         :precision="2"
-                        :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                        :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
-                        @change="inputValidateConfig" />
+                        :formatter="value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                        :parser="value => value.replace(/\$\s?|(,*)/g, '')"
+                        @change="inputValidateConfig"
+                    />
                     <a-input-number
                         v-if="column.dataIndex === 'fob_40qh_usd'"
                         v-model:value="record[column.dataIndex]"
                         :min="0.1"
                         :precision="2"
-                        :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                        :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
-                        @change="inputValidateConfig" />
+                        :formatter="value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                        :parser="value => value.replace(/\$\s?|(,*)/g, '')"
+                        @change="inputValidateConfig"
+                    />
                 </template>
             </a-table>
             <div
@@ -111,15 +119,16 @@
                     'is-null': isFirst,
                     'slide-in-down': batchSetVisible,
                     'slide-in-up': !batchSetVisible,
-                }">
+                }"
+            >
                 <div class="title-area">
                     <div class="title">
-                        {{ $t("item-edit.batch_price") }}
+                        {{ $t('item-edit.batch_price') }}
                     </div>
                     <div class="btn-area">
                         <!-- 取消确定 -->
-                        <a-button @click="hanleAllVisible">{{ $t("def.cancel") }}</a-button>
-                        <a-button type="primary" ghost @click="hanleAllSure">{{ $t("def.sure") }}</a-button>
+                        <a-button @click="hanleAllVisible">{{ $t('def.cancel') }}</a-button>
+                        <a-button type="primary" ghost @click="hanleAllSure">{{ $t('def.sure') }}</a-button>
                     </div>
                 </div>
                 <div class="table-content">
@@ -128,7 +137,8 @@
                         bordered
                         :dataSource="dataSource"
                         :pagination="false"
-                        :rowKey="(record, index) => index">
+                        :rowKey="(record, index) => index"
+                    >
                         <template #headerCell="{ column, record, index, text }">
                             <div class="title">
                                 {{ column.title }}
@@ -146,49 +156,55 @@
                                 v-model:value="record[column.dataIndex]"
                                 :min="0.1"
                                 :precision="2"
-                                :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
-                                @change="inputValidateConfig" />
+                                :formatter="value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="value => value.replace(/€\s?|(,*)/g, '')"
+                                @change="inputValidateConfig"
+                            />
                             <a-input-number
                                 v-if="column.dataIndex === 'fob_20gp_eur'"
                                 v-model:value="record[column.dataIndex]"
                                 :min="0.1"
                                 :precision="2"
-                                :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
-                                @change="inputValidateConfig" />
+                                :formatter="value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="value => value.replace(/€\s?|(,*)/g, '')"
+                                @change="inputValidateConfig"
+                            />
                             <a-input-number
                                 v-if="column.dataIndex === 'fob_40qh_eur'"
                                 v-model:value="record[column.dataIndex]"
                                 :min="0.1"
                                 :precision="2"
-                                :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
-                                @change="inputValidateConfig" />
+                                :formatter="value => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="value => value.replace(/€\s?|(,*)/g, '')"
+                                @change="inputValidateConfig"
+                            />
                             <a-input-number
                                 v-if="column.dataIndex === 'fob_usd'"
                                 v-model:value="record[column.dataIndex]"
                                 :min="0.1"
                                 :precision="2"
-                                :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
-                                @change="inputValidateConfig" />
+                                :formatter="value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="value => value.replace(/\$\s?|(,*)/g, '')"
+                                @change="inputValidateConfig"
+                            />
                             <a-input-number
                                 v-if="column.dataIndex === 'fob_20gp_usd'"
                                 v-model:value="record[column.dataIndex]"
                                 :min="0.1"
                                 :precision="2"
-                                :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
-                                @change="inputValidateConfig" />
+                                :formatter="value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="value => value.replace(/\$\s?|(,*)/g, '')"
+                                @change="inputValidateConfig"
+                            />
                             <a-input-number
                                 v-if="column.dataIndex === 'fob_40qh_usd'"
                                 v-model:value="record[column.dataIndex]"
                                 :min="0.1"
                                 :precision="2"
-                                :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-                                :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
-                                @change="inputValidateConfig" />
+                                :formatter="value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="value => value.replace(/\$\s?|(,*)/g, '')"
+                                @change="inputValidateConfig"
+                            />
                         </template>
                     </a-table>
                 </div>
@@ -198,11 +214,11 @@
 </template>
 
 <script setup>
-import MySvgIcon from "@/components/MySvgIcon/index.vue";
-import { ref, reactive, computed, watch, onMounted, onUnmounted } from "vue";
-import { useI18n } from "vue-i18n";
+import MySvgIcon from '@/components/MySvgIcon/index.vue';
+import { ref, reactive, computed, watch, onMounted, onUnmounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 const $t = useI18n().t;
-const emit = defineEmits(["update:ladderPriceVisible", "handleLastLadderData", "initActiveIndex"]);
+const emit = defineEmits(['update:ladderPriceVisible', 'handleLastLadderData', 'initActiveIndex']);
 const props = defineProps({
     // 阶梯价格
     ladderData: {
@@ -216,7 +232,7 @@ const props = defineProps({
     },
     ladderPriceTitle: {
         type: String,
-        default: "",
+        default: '',
     },
     // 高亮的行
     activeRow: {
@@ -245,59 +261,59 @@ const batchLadderColumns = computed(() => {
     return [
         {
             // 商品
-            title: $t("item-edit.commodity"),
-            dataIndex: "commodity",
-            key: "commodity",
+            title: $t('item-edit.commodity'),
+            dataIndex: 'commodity',
+            key: 'commodity',
         },
         {
-            title: "EUR",
+            title: 'EUR',
             children: [
                 {
                     // 26<=订货量（40QH）
-                    title: $t("item-edit.quantity_26_no"),
-                    title_unit: $t("item-edit.quantity_40HQ"),
-                    dataIndex: "fob_40qh_eur",
-                    key: "fob_40qh_eur",
+                    title: $t('item-edit.quantity_26_no'),
+                    title_unit: $t('item-edit.quantity_40HQ'),
+                    dataIndex: 'fob_40qh_eur',
+                    key: 'fob_40qh_eur',
                     width: 110,
                 },
                 {
-                    title: $t("item-edit.quantity_11_25_no"),
-                    title_unit: $t("item-edit.quantity_20GP"),
-                    dataIndex: "fob_20gp_eur",
-                    key: "fob_20gp_eur",
+                    title: $t('item-edit.quantity_11_25_no'),
+                    title_unit: $t('item-edit.quantity_20GP'),
+                    dataIndex: 'fob_20gp_eur',
+                    key: 'fob_20gp_eur',
                     width: 110,
                 },
                 {
-                    title: $t("item-edit.quantity_1_10_no"),
-                    title_unit: $t("item-edit.sample"),
-                    dataIndex: "fob_eur",
-                    key: "fob_eur",
+                    title: $t('item-edit.quantity_1_10_no'),
+                    title_unit: $t('item-edit.sample'),
+                    dataIndex: 'fob_eur',
+                    key: 'fob_eur',
                     width: 110,
                 },
             ],
         },
         {
-            title: "USD",
+            title: 'USD',
             children: [
                 {
-                    title: $t("item-edit.quantity_26_no"),
-                    title_unit: $t("item-edit.quantity_40HQ"),
-                    dataIndex: "fob_40qh_usd",
-                    key: "fob_40qh_usd",
+                    title: $t('item-edit.quantity_26_no'),
+                    title_unit: $t('item-edit.quantity_40HQ'),
+                    dataIndex: 'fob_40qh_usd',
+                    key: 'fob_40qh_usd',
                     width: 110,
                 },
                 {
-                    title: $t("item-edit.quantity_11_25_no"),
-                    title_unit: $t("item-edit.quantity_20GP"),
-                    dataIndex: "fob_20gp_usd",
-                    key: "fob_20gp_usd",
+                    title: $t('item-edit.quantity_11_25_no'),
+                    title_unit: $t('item-edit.quantity_20GP'),
+                    dataIndex: 'fob_20gp_usd',
+                    key: 'fob_20gp_usd',
                     width: 110,
                 },
                 {
-                    title: $t("item-edit.quantity_1_10_no"),
-                    title_unit: $t("item-edit.sample"),
-                    dataIndex: "fob_usd",
-                    key: "fob_usd",
+                    title: $t('item-edit.quantity_1_10_no'),
+                    title_unit: $t('item-edit.sample'),
+                    dataIndex: 'fob_usd',
+                    key: 'fob_usd',
                     width: 110,
                 },
             ],
@@ -309,69 +325,69 @@ const ladderColumns = computed(() => {
     return [
         {
             // 商品
-            title: $t("item-edit.commodity"),
-            dataIndex: "name",
-            key: "name",
-            align: "center",
+            title: $t('item-edit.commodity'),
+            dataIndex: 'name',
+            key: 'name',
+            align: 'center',
             width: 110,
         },
         // EUR
         {
-            title: "EUR",
+            title: 'EUR',
             // 下面有子项
             children: [
                 {
                     // 26<=订货量（40QH）
-                    title: $t("item-edit.quantity_26_no"),
-                    title_unit: $t("item-edit.quantity_40HQ"),
-                    dataIndex: "fob_40qh_eur",
-                    key: "fob_40qh_eur",
-                    align: "center",
+                    title: $t('item-edit.quantity_26_no'),
+                    title_unit: $t('item-edit.quantity_40HQ'),
+                    dataIndex: 'fob_40qh_eur',
+                    key: 'fob_40qh_eur',
+                    align: 'center',
                     width: 110,
                 },
                 {
-                    title: $t("item-edit.quantity_11_25_no"),
-                    title_unit: $t("item-edit.quantity_20GP"),
-                    dataIndex: "fob_20gp_eur",
-                    key: "fob_20gp_eur",
-                    align: "center",
+                    title: $t('item-edit.quantity_11_25_no'),
+                    title_unit: $t('item-edit.quantity_20GP'),
+                    dataIndex: 'fob_20gp_eur',
+                    key: 'fob_20gp_eur',
+                    align: 'center',
                     width: 110,
                 },
                 {
-                    title: $t("item-edit.quantity_1_10_no"),
-                    title_unit: $t("item-edit.sample"),
-                    dataIndex: "fob_eur",
-                    key: "fob_eur",
-                    align: "center",
+                    title: $t('item-edit.quantity_1_10_no'),
+                    title_unit: $t('item-edit.sample'),
+                    dataIndex: 'fob_eur',
+                    key: 'fob_eur',
+                    align: 'center',
                     width: 110,
                 },
             ],
         },
         {
-            title: "USD",
+            title: 'USD',
             children: [
                 {
-                    title: $t("item-edit.quantity_26_no"),
-                    title_unit: $t("item-edit.quantity_40HQ"),
-                    dataIndex: "fob_40qh_usd",
-                    key: "fob_40qh_usd",
-                    align: "center",
+                    title: $t('item-edit.quantity_26_no'),
+                    title_unit: $t('item-edit.quantity_40HQ'),
+                    dataIndex: 'fob_40qh_usd',
+                    key: 'fob_40qh_usd',
+                    align: 'center',
                     width: 110,
                 },
                 {
-                    title: $t("item-edit.quantity_11_25_no"),
-                    title_unit: $t("item-edit.quantity_20GP"),
-                    dataIndex: "fob_20gp_usd",
-                    key: "fob_20gp_usd",
-                    align: "center",
+                    title: $t('item-edit.quantity_11_25_no'),
+                    title_unit: $t('item-edit.quantity_20GP'),
+                    dataIndex: 'fob_20gp_usd',
+                    key: 'fob_20gp_usd',
+                    align: 'center',
                     width: 110,
                 },
                 {
-                    title: $t("item-edit.quantity_1_10_no"),
-                    title_unit: $t("item-edit.sample"),
-                    dataIndex: "fob_usd",
-                    key: "fob_usd",
-                    align: "center",
+                    title: $t('item-edit.quantity_1_10_no'),
+                    title_unit: $t('item-edit.sample'),
+                    dataIndex: 'fob_usd',
+                    key: 'fob_usd',
+                    align: 'center',
                     width: 110,
                 },
             ],
@@ -411,7 +427,7 @@ const onSelectChange = (selectedRowKeys, selectedRows) => {
 };
 // 全选
 const onSelectAll = (selected, selectedRows, changeRows) => {
-    keyAndItem.selectedRowKeys = selectedRows.map((item) => item.key);
+    keyAndItem.selectedRowKeys = selectedRows.map(item => item.key);
     keyAndItem.selectedRowItems = selectedRows;
     if (selected) {
         batchSetVisible.value = true;
@@ -428,8 +444,8 @@ const getContainer = () => {
 const handleComfirmLadderPrice = () => {
     console.log(props.ladderData);
     // 传递给父组件，让父组件去处理
-    emit("handleSaveLadderData", props.ladderData);
-    emit("update:ladderPriceVisible", false);
+    emit('handleSaveLadderData', props.ladderData);
+    emit('update:ladderPriceVisible', false);
 };
 // 取消按钮
 const handleCancelLadderPrice = () => {
@@ -448,10 +464,10 @@ const handleCancelLadderPrice = () => {
     keyAndItem.selectedRowKeys = [];
     keyAndItem.selectedRowItems = [];
     batchSetVisible.value = false;
-    emit("initActiveIndex", null);
-    emit("update:ladderPriceVisible", false);
+    emit('initActiveIndex', null);
+    emit('update:ladderPriceVisible', false);
 };
-const inputValidateConfig = (value) => {
+const inputValidateConfig = value => {
     console.log(value);
 };
 // 取消按钮（动画）
@@ -486,7 +502,7 @@ const hanleAllVisible = () => {
 // 确定按钮（动画）
 const hanleAllSure = () => {
     console.log(dataSource.value);
-    keyAndItem.selectedRowItems.forEach((item) => {
+    keyAndItem.selectedRowItems.forEach(item => {
         item.fob_40qh_eur = dataSource?.value[0]?.fob_40qh_eur || item.fob_40qh_eur;
         item.fob_20gp_eur = dataSource?.value[0]?.fob_20gp_eur || item.fob_20gp_eur;
         item.fob_eur = dataSource?.value[0]?.fob_eur || item.fob_eur;
@@ -513,13 +529,13 @@ const hanleAllSure = () => {
     // 重置是否为首次进入
     isFirst.value = true;
     // 传递给父组件，让父组件去处理
-    emit("handleLastLadderData", props.ladderData);
+    emit('handleLastLadderData', props.ladderData);
 };
 
 // 监听
 watch(
     () => props.activeIndex,
-    (newVal) => {
+    newVal => {
         if (newVal !== null) {
             if (
                 props.ladderData[newVal].fob_eur ||
@@ -537,7 +553,7 @@ watch(
     {
         deep: true,
         immediate: true,
-    }
+    },
 );
 // 监听是否为首次显示动画
 watch(
@@ -550,7 +566,7 @@ watch(
     },
     {
         deep: true,
-    }
+    },
 );
 </script>
 
@@ -560,8 +576,7 @@ watch(
     height: 100%;
 }
 :deep(.ladder-modal),
-:deep(.no-footer)
-{
+:deep(.no-footer) {
     .ant-modal {
         .ant-modal-content {
             border-radius: 4px;
@@ -625,7 +640,7 @@ watch(
                                 display: flex;
                                 align-items: center;
                                 &::before {
-                                    content: "";
+                                    content: '';
                                     display: inline-block;
                                     width: 3px;
                                     height: 12px;
@@ -695,12 +710,12 @@ watch(
         }
     }
 }
-:deep(.no-footer){
+:deep(.no-footer) {
     .ant-modal-footer {
         display: none !important;
         transition: all 0.3s ease-in-out;
     }
-    .ant-modal-body{
+    .ant-modal-body {
         height: calc(598px + 68px) !important;
     }
 }

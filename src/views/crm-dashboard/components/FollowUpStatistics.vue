@@ -3,22 +3,22 @@
         <div class="title">{{ $t('db.follow_up_statistics') }}</div>
         <div class="container">
             <div class="item">
-                <img class="img" src="../../../assets/images/dashboard/high-seas-customers.png" alt="">
+                <img class="img" src="../../../assets/images/dashboard/high-seas-customers.png" alt="" />
                 <div class="text">{{ $t('db.highsea_customer_follow') }}</div>
                 <div class="num">{{ form.pool_count }}</div>
             </div>
             <div class="item">
-                <img class="img" src="../../../assets/images/dashboard/customer.png" alt="">
+                <img class="img" src="../../../assets/images/dashboard/customer.png" alt="" />
                 <div class="text">{{ $t('db.individual_customer_follow') }}</div>
                 <div class="num">{{ form.customer_count }}</div>
             </div>
             <div class="item mt-28">
-                <img class="img" src="../../../assets/images/dashboard/drive-order.png" alt="">
+                <img class="img" src="../../../assets/images/dashboard/drive-order.png" alt="" />
                 <div class="text">{{ $t('db.drive_order_follow') }}</div>
                 <div class="num">652</div>
             </div>
             <div class="item mt-28">
-                <img class="img" src="../../../assets/images/dashboard/business.png" alt="">
+                <img class="img" src="../../../assets/images/dashboard/business.png" alt="" />
                 <div class="text">{{ $t('db.business_opportunities_follow') }}</div>
                 <div class="num">{{ form.bo_count }}</div>
             </div>
@@ -31,12 +31,11 @@ import Core from '../../../core';
 
 export default {
     name: 'Card',
-    components: {
-    },
+    components: {},
     props: {
         searchForm: {
             type: Object,
-            default: ()=> {}
+            default: () => {},
         },
     },
     data() {
@@ -45,32 +44,27 @@ export default {
                 pool_count: '',
                 customer_count: '',
                 bo_count: '',
-            }
+            },
         };
     },
-    watch: {
-    },
-    computed: {
-    },
-    created() {
-    },
+    watch: {},
+    computed: {},
+    created() {},
     mounted() {
-        this.salesStatistics()
+        this.salesStatistics();
     },
-    beforeUnmount() {
-    },
+    beforeUnmount() {},
     methods: {
         salesStatistics() {
             Core.Api.CRMDashboard.trackStatistics({
-                ...this.searchForm
+                ...this.searchForm,
             }).then(res => {
-                this.form.pool_count = res.pool_count
-                this.form.customer_count = res.customer_count
-                this.form.bo_count = res.bo_count
-
-            })
+                this.form.pool_count = res.pool_count;
+                this.form.customer_count = res.customer_count;
+                this.form.bo_count = res.bo_count;
+            });
         },
-    }
+    },
 };
 </script>
 

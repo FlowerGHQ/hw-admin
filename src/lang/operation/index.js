@@ -105,10 +105,11 @@ export default {
         with: 'Within',
         char: 'Characters',
         banner_pic: 'Banner',
-        img_desc_tip: 'You are advised to use a paragraph to explain the content of the banner image for later modification. Such as: Mid-Autumn Festival holiday announcement map',
+        img_desc_tip:
+            'You are advised to use a paragraph to explain the content of the banner image for later modification. Such as: Mid-Autumn Festival holiday announcement map',
         pic_size_tip: 'Image size: 1920x720',
         ad_success_tip: 'The AD space is in effect',
         all_areas: 'All Areas',
         partial_areas: 'Partial Areas',
-    }
-}
+    },
+};

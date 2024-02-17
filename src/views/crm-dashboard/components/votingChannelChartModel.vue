@@ -2,35 +2,30 @@
     <div class="list-container">
         <div class="title">
             <div>{{ title }}</div>
-            <div class="detail-title" @click="goToDetail('detail')">
-                详情
-            </div>
+            <div class="detail-title" @click="goToDetail('detail')">详情</div>
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <div v-if="!isEmpty" id="votingChannelChartId" class="chart" ref='votingChannelChartId'></div>
+            <div v-if="!isEmpty" id="votingChannelChartId" class="chart" ref="votingChannelChartId"></div>
             <div v-if="isEmpty" class="empty-wrap">
-                <img src="../../../assets/images/dashboard/emptyData.png" alt="">
-                <div id="empty" class="empty-desc">
-                    暂无数据
-                </div>
+                <img src="../../../assets/images/dashboard/emptyData.png" alt="" />
+                <div id="empty" class="empty-desc">暂无数据</div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import { Chart } from '@antv/g2'
-import Core from "../../../core";
+import { Chart } from '@antv/g2';
+import Core from '../../../core';
 
 export default {
     name: 'Cards',
-    components: {
-    },
+    components: {},
     props: {
         searchForm: {
             type: Object,
-            default: () => { }
+            default: () => {},
         },
     },
     data() {
@@ -39,7 +34,7 @@ export default {
             chartHeight: 254,
             title: '分享投票率',
             SOURCE_TYPE_MAP: Core.Const.VOTE.SOURCE_TYPE_MAP,
-            isEmpty: false
+            isEmpty: false,
         };
     },
     watch: {
@@ -50,30 +45,27 @@ export default {
                 if (this.searchForm.activity_id) {
                     this.getDailyVoteChartData();
                 }
-            }
+            },
         },
-
     },
     computed: {
         lang() {
-            return this.$store.state.lang
+            return this.$store.state.lang;
         },
     },
-    created() {
-
-    },
+    created() {},
     mounted() {
         if (this.searchForm.activity_id) {
             this.getDailyVoteChartData();
         }
     },
     beforeUnmount() {
-        this.$refs.votingChannelChartId.innerHTML = ''
+        this.$refs.votingChannelChartId.innerHTML = '';
     },
     methods: {
         async drawBoStatisticsChart(data) {
             if (this.boStatisticsChart.destroy) {
-                this.boStatisticsChart.destroy()
+                this.boStatisticsChart.destroy();
             }
             /* mock */
             // const data = [
@@ -108,7 +100,8 @@ export default {
                     symbol: 'circle', // 设置图例形状为圆形
                 },
             });
-            chart.interval()
+            chart
+                .interval()
                 .position('type*value')
                 .color('name', ['#056DFF', '#FFBC48'])
                 .adjust([
@@ -116,10 +109,10 @@ export default {
                         type: 'dodge',
                         marginRatio: 0,
                     },
-                ])
+                ]);
             chart.interaction('active-region');
             chart.render();
-            this.boStatisticsChart = chart
+            this.boStatisticsChart = chart;
         },
         async getDailyVoteChartData() {
             try {
@@ -131,9 +124,9 @@ export default {
                             {
                                 count: 20,
                                 vote_count: 10,
-                                type: 1
-                            }
-                        ]
+                                type: 1,
+                            },
+                        ],
                     },
                     {
                         date: 1692242388,
@@ -141,9 +134,9 @@ export default {
                             {
                                 count: 30,
                                 vote_count: 20,
-                                type: 2
-                            }
-                        ]
+                                type: 2,
+                            },
+                        ],
                     },
                     {
                         date: 1692242388,
@@ -151,9 +144,9 @@ export default {
                             {
                                 count: 40,
                                 vote_count: 60,
-                                type: 3
-                            }
-                        ]
+                                type: 3,
+                            },
+                        ],
                     },
                     {
                         date: 1692242388,
@@ -161,65 +154,67 @@ export default {
                             {
                                 count: 10,
                                 vote_count: 10,
-                                type: 1
-                            }
-                        ]
-                    }
+                                type: 1,
+                            },
+                        ],
+                    },
                 ];
                 const transformedData = [];
-                res.forEach((item) => {
-                    item.source_list.forEach((source) => {
+                res.forEach(item => {
+                    item.source_list.forEach(source => {
                         const sourceType = source.type;
                         const count = source.count;
                         const voteCount = source.vote_count;
 
-                        const sourceTypeText = this.SOURCE_TYPE_MAP[sourceType] ? this.SOURCE_TYPE_MAP[sourceType].text : '未知';
+                        const sourceTypeText = this.SOURCE_TYPE_MAP[sourceType]
+                            ? this.SOURCE_TYPE_MAP[sourceType].text
+                            : '未知';
 
                         const countData = {
                             name: '访客人数',
                             type: sourceTypeText,
-                            value: count
+                            value: count,
                         };
 
                         const voteCountData = {
                             name: '投票人数',
                             type: sourceTypeText,
-                            value: voteCount
+                            value: voteCount,
                         };
 
                         transformedData.push(countData, voteCountData);
                     });
                 });
                 if (!transformedData.length) {
-                    this.isEmpty = true
+                    this.isEmpty = true;
                 } else {
-                    this.isEmpty = false
+                    this.isEmpty = false;
                     this.drawBoStatisticsChart(transformedData);
                 }
             } catch (error) {
                 console.log('Error in getDailyVoteChartData', error);
-                this.$message.warning('数据无法加载，请稍后重试！')
+                this.$message.warning('数据无法加载，请稍后重试！');
             }
         },
         goToDetail(type) {
-            let routeUrl = ''
+            let routeUrl = '';
             switch (type) {
-                case 'detail':    // 编辑
+                case 'detail': // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/crm-dashboard/vote-detail",
+                        path: '/crm-dashboard/vote-detail',
                         query: {
                             title: this.title,
                             api_name: 'sourceStatistics',
                             begin_time: this.searchForm.begin_time,
                             end_time: this.searchForm.end_time,
-                            column_type: Core.Const.VOTE.TYPE.SHARE
-                        }
-                    })
-                    window.open(routeUrl.href, '_blank')
+                            column_type: Core.Const.VOTE.TYPE.SHARE,
+                        },
+                    });
+                    window.open(routeUrl.href, '_blank');
                     break;
             }
-        }
-    }
+        },
+    },
 };
 </script>
 
@@ -240,7 +235,7 @@ export default {
 
         .detail-title {
             cursor: pointer;
-            color: #0061FF;
+            color: #0061ff;
             font-size: 14px;
             font-style: normal;
             font-weight: 400;
@@ -255,14 +250,14 @@ export default {
         justify-content: center;
         align-items: center;
 
-        >img {
+        > img {
             width: 280px;
         }
 
         .empty-desc {
             margin-top: 10px;
             font-size: 14px;
-            color: #86909C;
+            color: #86909c;
         }
     }
 }

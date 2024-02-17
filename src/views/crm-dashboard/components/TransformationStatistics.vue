@@ -34,7 +34,7 @@
                     <div class="text">{{ $t('db.number_of_received') }}</div>
                     <div class="num">{{ customer_customer_count }}</div>
                 </div>
-<!--                <div class="flex-direction">
+                <!--                <div class="flex-direction">
                     &lt;!&ndash; 未分配客户数 &ndash;&gt;
                     <div class="text">{{ $t('db.number_of_unallocated') }}</div>
                     <div class="num">{{ customer_count }}</div>
@@ -53,7 +53,7 @@
                     <div class="text">{{ $t('db.total_of_test_drive') }}</div>
                     <div class="num">{{ test_drive_count }}</div>
                 </div>
-<!--                <div class="flex-direction">
+                <!--                <div class="flex-direction">
                     &lt;!&ndash; 预约成功人数 &ndash;&gt;
                     <div class="text">{{ $t('db.number_of_successful_appointments') }}</div>
                     <div class="num">{{ customer_count }}</div>
@@ -88,28 +88,26 @@
 <script>
 import Core from '../../../core';
 
-
 export default {
     name: 'Card',
-    components: {
-    },
+    components: {},
     data() {
         return {
-            customer_count: "",
-            customer_pool_count: "",
-            customer_customer_count: "",
-            bo_count: "",
-            test_drive_count: "",
-            order_income_count: "",
-            order_income_sum: "",
-            order_income_completed_sum: "",
-            order_income_incomplete_sum: "",
+            customer_count: '',
+            customer_pool_count: '',
+            customer_customer_count: '',
+            bo_count: '',
+            test_drive_count: '',
+            order_income_count: '',
+            order_income_sum: '',
+            order_income_completed_sum: '',
+            order_income_incomplete_sum: '',
         };
     },
     props: {
         searchForm: {
             type: Object,
-            default: () => { }
+            default: () => {},
         },
     },
     watch: {
@@ -117,40 +115,40 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                this.transformationStatistics()
-            }
+                this.transformationStatistics();
+            },
         },
     },
-    computed: {
-    },
-    created() {
-    },
+    computed: {},
+    created() {},
     mounted() {
-        this.transformationStatistics()
+        this.transformationStatistics();
     },
-    beforeUnmount() {
-    },
+    beforeUnmount() {},
     methods: {
         transformationStatistics() {
             this.loading = true;
             Core.Api.CRMDashboard.transformationStatistics({
-                ...this.searchForm
-            }).then(res => {
-                this.customer_count= res.customer_count
-                this.customer_pool_count= res.customer_pool_count
-                this.customer_customer_count= res.customer_customer_count
-                this.bo_count= res.bo_count
-                this.test_drive_count= res.test_drive_count
-                this.order_income_count= res.order_income_count
-                this.order_income_sum= res.order_income_sum
-                this.order_income_completed_sum= res.order_income_completed_sum
-                this.order_income_incomplete_sum= res.order_income_incomplete_sum
-            }).catch(err => {
-                console.log('getTableData err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        }
+                ...this.searchForm,
+            })
+                .then(res => {
+                    this.customer_count = res.customer_count;
+                    this.customer_pool_count = res.customer_pool_count;
+                    this.customer_customer_count = res.customer_customer_count;
+                    this.bo_count = res.bo_count;
+                    this.test_drive_count = res.test_drive_count;
+                    this.order_income_count = res.order_income_count;
+                    this.order_income_sum = res.order_income_sum;
+                    this.order_income_completed_sum = res.order_income_completed_sum;
+                    this.order_income_incomplete_sum = res.order_income_incomplete_sum;
+                })
+                .catch(err => {
+                    console.log('getTableData err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
     },
 };
 </script>
@@ -184,7 +182,7 @@ export default {
             .fcc();
             font-size: 0.6vw;
             font-weight: 500;
-            color: #FFFFFF;
+            color: #ffffff;
             transition: all 0.5s;
             cursor: pointer;
         }
@@ -199,7 +197,7 @@ export default {
         .layer_1 {
             width: 15.8vw;
             height: 58px;
-            background: url("../../../assets/images/dashboard/layer1.png");
+            background: url('../../../assets/images/dashboard/layer1.png');
             background-repeat: no-repeat;
             background-size: 100% 100%;
         }
@@ -207,7 +205,7 @@ export default {
         .layer_2 {
             width: 13.1vw;
             height: 58px;
-            background: url("../../../assets/images/dashboard/layer2.png");
+            background: url('../../../assets/images/dashboard/layer2.png');
             background-repeat: no-repeat;
             background-size: 100% 100%;
             margin-left: 1px;
@@ -216,7 +214,7 @@ export default {
         .layer_3 {
             width: 10.43vw;
             height: 59px;
-            background: url("../../../assets/images/dashboard/layer3.png");
+            background: url('../../../assets/images/dashboard/layer3.png');
             background-repeat: no-repeat;
             background-size: 100% 100%;
         }
@@ -224,7 +222,7 @@ export default {
         .layer_4 {
             width: 7.7vw;
             height: 59px;
-            background: url("../../../assets/images/dashboard/layer4.png");
+            background: url('../../../assets/images/dashboard/layer4.png');
             background-repeat: no-repeat;
             background-size: 100% 100%;
             margin-left: 1px;
@@ -233,7 +231,7 @@ export default {
         .layer_5 {
             width: 4.9vw;
             height: 59px;
-            background: url("../../../assets/images/dashboard/layer5.png");
+            background: url('../../../assets/images/dashboard/layer5.png');
             background-repeat: no-repeat;
             background-size: 100% 100%;
             margin-left: 2px;
@@ -266,41 +264,41 @@ export default {
             .text {
                 font-size: 12px;
                 font-weight: 500;
-                color: #DD6623;
+                color: #dd6623;
                 margin-left: 3vw;
             }
 
             .num {
                 font-size: 12px;
                 font-weight: 500;
-                color: #DD6623;
+                color: #dd6623;
                 margin-left: 3vw;
             }
         }
 
         .lay_1 {
             height: 59px;
-            background: linear-gradient(270deg, #FEF9E0 0%, #FEF9E0 100%);
+            background: linear-gradient(270deg, #fef9e0 0%, #fef9e0 100%);
         }
 
         .lay_2 {
             height: 59px;
-            background: linear-gradient(270deg, #FDF4DF 0%, #FDF4DF 100%);
+            background: linear-gradient(270deg, #fdf4df 0%, #fdf4df 100%);
         }
 
         .lay_3 {
             height: 59px;
-            background: linear-gradient(270deg, #FCEFD9 0%, #FCEFD9 100%);
+            background: linear-gradient(270deg, #fcefd9 0%, #fcefd9 100%);
         }
 
         .lay_4 {
             height: 59px;
-            background: linear-gradient(263deg, #FBE9D5 0%, #FBE9D5 100%);
+            background: linear-gradient(263deg, #fbe9d5 0%, #fbe9d5 100%);
         }
 
         .lay_5 {
             height: 57px;
-            background: linear-gradient(270deg, #FBE5D5 0%, #FBE5D5 100%);
+            background: linear-gradient(270deg, #fbe5d5 0%, #fbe5d5 100%);
         }
     }
 }

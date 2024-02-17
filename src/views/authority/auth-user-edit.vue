@@ -8,7 +8,7 @@
                 <div class="title-colorful">{{ $t('n.information') }}</div>
             </div>
             <div class="form-content">
-<!--                <div class="form-item required">
+                <!--                <div class="form-item required">
                     <div class="key">名称</div>
                     <div class="value">
                         <a-input v-model:value="form.name" placeholder="请输入权限名称"/>
@@ -18,19 +18,23 @@
                     <div class="key">{{ $t('n.type') }}</div>
                     <div class="value">
                         <a-select v-model:value="form.resource_type" :placeholder="$t('n.select_permission')">
-                            <a-select-option v-for="(val,key) in resourceMap" :key="key" :value="key">{{ val[$i18n.locale] }}</a-select-option>
+                            <a-select-option v-for="(val, key) in resourceMap" :key="key" :value="key">{{
+                                val[$i18n.locale]
+                            }}</a-select-option>
                         </a-select>
                     </div>
                 </div>
-                <div class="form-item required" >
+                <div class="form-item required">
                     <div class="key">{{ $t('n.object') }}</div>
                     <div class="value">
                         <a-select v-model:value="form.resource_id" :placeholder="$t('n.select_permission')">
-                            <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+                            <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">{{
+                                item.name
+                            }}</a-select-option>
                         </a-select>
                     </div>
                 </div>
-<!--                <div class="form-item required">
+                <!--                <div class="form-item required">
                     <div class="key">用户</div>
                     <div class="value">
                         <a-select v-model:value="form.user_ids" mode="tags"  placeholder="请选择权限对象">
@@ -50,8 +54,8 @@
 <script>
 import Core from '../../core';
 
-const AUTH_LIST_TEMP = Core.Const.AUTH_LIST_TEMP
-const RESOURCE_TYPE = Core.Const.NOTICE.RESOURCE_TYPE
+const AUTH_LIST_TEMP = Core.Const.AUTH_LIST_TEMP;
+const RESOURCE_TYPE = Core.Const.NOTICE.RESOURCE_TYPE;
 export default {
     name: 'AuthRoleEdit',
     components: {},
@@ -75,18 +79,18 @@ export default {
                 resource_type: undefined,
                 resource_id: undefined,
                 user_ids: undefined,
-            }
+            },
         };
     },
     watch: {},
     computed: {},
     created() {
-        this.form.id = Number(this.$route.query.id) || 0
+        this.form.id = Number(this.$route.query.id) || 0;
         if (this.form.id) {
             this.getAuthUserDetail();
         }
-        this.getWarehouseList()
-        this.getUserList()
+        this.getWarehouseList();
+        this.getUserList();
     },
     methods: {
         routerChange(type, item) {
@@ -98,63 +102,69 @@ export default {
         },
         getWarehouseList() {
             Core.Api.Warehouse.listAll().then(res => {
-                this.warehouseList = res.list
-            })
+                this.warehouseList = res.list;
+            });
         },
         getUserList() {
             Core.Api.User.listAll().then(res => {
-                this.userList = res.list
-            })
+                this.userList = res.list;
+            });
         },
-        getAuthUserDetail() { // 获取角色详情
+        getAuthUserDetail() {
+            // 获取角色详情
             this.loading = true;
             Core.Api.AuthorityUser.detail({
                 id: this.form.id,
-            }).then(res => {
-                console.log('getAuthUserDetail res', res)
-                this.detail = res
-                console.log('res',res)
-                for (const key in this.detail) {
-                    this.form[key] = this.detail[key]
-                    console.log('key',key)
-                }
-            }).catch(err => {
-                console.log('getAuthUserDetail err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+            })
+                .then(res => {
+                    console.log('getAuthUserDetail res', res);
+                    this.detail = res;
+                    console.log('res', res);
+                    for (const key in this.detail) {
+                        this.form[key] = this.detail[key];
+                        console.log('key', key);
+                    }
+                })
+                .catch(err => {
+                    console.log('getAuthUserDetail err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
 
         handleSubmit() {
-            let form = Core.Util.deepCopy(this.form)
-            console.log('handleSubmit form:', form)
-         /*   if (!form.name) {
+            let form = Core.Util.deepCopy(this.form);
+            console.log('handleSubmit form:', form);
+            /*   if (!form.name) {
                 return this.$message.warning('请输入权限名称')
             }*/
             if (!form.resource_type) {
-                return this.$message.warning(this.$t('e.select_permission'))
+                return this.$message.warning(this.$t('e.select_permission'));
             }
             if (!form.resource_id) {
-                return this.$message.warning(this.$t('e.select_warehouse'))
+                return this.$message.warning(this.$t('e.select_warehouse'));
             }
             if (!form.user_ids) {
-                return this.$message.warning(this.$t('e.select_employees'))
+                return this.$message.warning(this.$t('e.select_employees'));
             }
-            let list = []
+            let list = [];
             for (const item of this.authItems) {
-                list.push(...item.select)
+                list.push(...item.select);
             }
-            form.user_ids = form.user_ids
+            form.user_ids = form.user_ids;
             Core.Api.AuthorityUser.save({
                 ...form,
-            }).then(() => {
-                this.$message.success(this.$t('pop_up.save_success'))
-                this.routerChange('back')
-            }).catch(err => {
-                console.log('handleSubmit err:', err)
             })
-        }
-    }
+                .then(() => {
+                    this.$message.success(this.$t('pop_up.save_success'));
+                    this.routerChange('back');
+                })
+                .catch(err => {
+                    console.log('handleSubmit err:', err);
+                });
+        },
+    },
 };
 </script>
 

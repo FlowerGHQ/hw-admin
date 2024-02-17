@@ -1,22 +1,22 @@
 <template>
     <div id="down-loading" v-if="show">
-        <img src="@images/mall/purchase/loading.png" class="loading-img"><span class="loading-text">{{ text }}</span>
+        <img src="@images/mall/purchase/loading.png" class="loading-img" /><span class="loading-text">{{ text }}</span>
     </div>
 </template>
 
 <script setup>
-import { ref ,onMounted} from 'vue';
+import { ref, onMounted } from 'vue';
 
-const props = defineProps({  
+const props = defineProps({
     show: {
         type: Boolean,
-        default: false
+        default: false,
     },
     text: {
         type: String,
-        default: 'Loading'
-    }
-})
+        default: 'Loading',
+    },
+});
 </script>
 <style lang="less" scoped>
 #down-loading {

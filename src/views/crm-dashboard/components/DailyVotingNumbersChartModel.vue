@@ -2,42 +2,37 @@
     <div class="list-container">
         <div class="title">
             <div>{{ title }}</div>
-            <div class="detail-title" @click="goToDetail('detail')">
-                详情
-            </div>
+            <div class="detail-title" @click="goToDetail('detail')">详情</div>
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <div v-if="!isEmpty" id="DailyVotingNumbersChartId" class="chart" ref='DailyVotingNumbersChartId'></div>
+            <div v-if="!isEmpty" id="DailyVotingNumbersChartId" class="chart" ref="DailyVotingNumbersChartId"></div>
             <div v-else class="empty-wrap">
-                <img src="../../../assets/images/dashboard/emptyData.png" alt="">
-                <div class="empty-desc">
-                    暂无数据
-                </div>
+                <img src="../../../assets/images/dashboard/emptyData.png" alt="" />
+                <div class="empty-desc">暂无数据</div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import { Chart } from '@antv/g2'
-import Core from "../../../core";
+import { Chart } from '@antv/g2';
+import Core from '../../../core';
 import dayjs from 'dayjs';
 export default {
     name: 'Cards',
-    components: {
-    },
+    components: {},
     props: {
         searchForm: {
             type: Object,
-            default: () => { }
+            default: () => {},
         },
     },
     data() {
         return {
             boStatisticsChart: {},
             title: '每日访问参与投票人数',
-            isEmpty: false
+            isEmpty: false,
         };
     },
     watch: {
@@ -48,23 +43,23 @@ export default {
                 if (this.searchForm.activity_id) {
                     this.getDailyVotingChartData();
                 }
-            }
+            },
         },
     },
     computed: {},
-    created() { },
+    created() {},
     mounted() {
         if (this.searchForm.activity_id) {
             this.getDailyVotingChartData();
         }
     },
     beforeUnmount() {
-        this.$refs.DailyVotingNumbersChartId.innerHTML = ''
+        this.$refs.DailyVotingNumbersChartId.innerHTML = '';
     },
     methods: {
         async drawBoStatisticsChart(data) {
             if (this.boStatisticsChart.destroy) {
-                this.boStatisticsChart.destroy()
+                this.boStatisticsChart.destroy();
             }
             await this.$nextTick();
             const chart = new Chart({
@@ -87,7 +82,8 @@ export default {
                     symbol: 'circle', // 设置图例形状为圆形
                 },
             });
-            chart.interval()
+            chart
+                .interval()
                 .position('month*value')
                 .color('name', ['#056DFF', '#FFBC48'])
                 .adjust([
@@ -95,11 +91,11 @@ export default {
                         type: 'dodge',
                         marginRatio: 0,
                     },
-                ])
+                ]);
             // .size(20);
             chart.interaction('active-region');
             chart.render();
-            this.boStatisticsChart = chart
+            this.boStatisticsChart = chart;
         },
         async getDailyVotingChartData() {
             try {
@@ -108,74 +104,74 @@ export default {
                     {
                         date: 1692201600,
                         vote_count: 10,
-                        uv: 10
+                        uv: 10,
                     },
                     {
                         date: 1692288000,
                         vote_count: 20,
-                        uv: 20
+                        uv: 20,
                     },
                     {
                         date: 1692242388,
                         vote_count: 60,
-                        uv: 30
+                        uv: 30,
                     },
                     {
                         date: 1692242388,
                         vote_count: 10,
-                        uv: 40
-                    }
+                        uv: 40,
+                    },
                 ];
                 const transformedData = [];
-                res.forEach((item) => {
+                res.forEach(item => {
                     const date = item.date;
                     const count = item.uv;
                     const voteCount = item.vote_count;
                     const countData = {
                         name: '访客人数',
                         month: dayjs(date * 1000).format('MM.DD'),
-                        value: count
+                        value: count,
                     };
                     const voteCountData = {
                         name: '投票人数',
                         month: dayjs(date * 1000).format('MM.DD'),
-                        value: voteCount
+                        value: voteCount,
                     };
                     transformedData.push(countData, voteCountData);
                 });
                 this.isEmpty = transformedData.every(item => {
-                    return item.value === 0
-                })
+                    return item.value === 0;
+                });
                 if (!transformedData.length) {
-                    this.isEmpty = true
+                    this.isEmpty = true;
                 } else {
-                    this.isEmpty = false
+                    this.isEmpty = false;
                     this.drawBoStatisticsChart(transformedData);
                 }
             } catch (error) {
                 console.log('Error in getPartRatioRingChartData', error);
-                this.$message.warning('数据无法加载，请稍后重试！')
+                this.$message.warning('数据无法加载，请稍后重试！');
             }
         },
         goToDetail(type) {
-            let routeUrl = ''
+            let routeUrl = '';
             switch (type) {
-                case 'detail':    // 编辑
+                case 'detail': // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/crm-dashboard/vote-detail",
+                        path: '/crm-dashboard/vote-detail',
                         query: {
                             title: this.title,
                             api_name: 'numberStatistics',
                             begin_time: this.searchForm.begin_time,
                             end_time: this.searchForm.end_time,
-                            column_type: Core.Const.VOTE.TYPE.DAILYVOTE
-                        }
-                    })
-                    window.open(routeUrl.href, '_blank')
+                            column_type: Core.Const.VOTE.TYPE.DAILYVOTE,
+                        },
+                    });
+                    window.open(routeUrl.href, '_blank');
                     break;
             }
-        }
-    }
+        },
+    },
 };
 </script>
 
@@ -196,7 +192,7 @@ export default {
 
         .detail-title {
             cursor: pointer;
-            color: #0061FF;
+            color: #0061ff;
             font-size: 14px;
             font-style: normal;
             font-weight: 400;
@@ -211,14 +207,14 @@ export default {
         justify-content: center;
         align-items: center;
 
-        >img {
+        > img {
             width: 280px;
         }
 
         .empty-desc {
             margin-top: 10px;
             font-size: 14px;
-            color: #86909C;
+            color: #86909c;
         }
     }
 }

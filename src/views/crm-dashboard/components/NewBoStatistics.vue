@@ -6,24 +6,23 @@
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <div id="NewBoStatisticsChartId" class="chart" ref='NewBoStatisticsChartId'></div>
+            <div id="NewBoStatisticsChartId" class="chart" ref="NewBoStatisticsChartId"></div>
         </div>
     </div>
 </template>
 
 <script>
-import { Chart } from '@antv/g2'
-import Core from "../../../core";
+import { Chart } from '@antv/g2';
+import Core from '../../../core';
 import data from '../../../core/data';
 
 export default {
     name: 'Cards',
-    components: {
-    },
+    components: {},
     props: {
         searchForm: {
             type: Object,
-            default: () => { }
+            default: () => {},
         },
     },
     data() {
@@ -32,7 +31,6 @@ export default {
             myChart: null,
             boStatisticsChart: {},
             groupStatusTableData: [],
-
         };
     },
     watch: {
@@ -40,15 +38,14 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                console.log("purchaseIntentStatistics")
-                this.purchaseIntentStatistics()
-            }
+                console.log('purchaseIntentStatistics');
+                this.purchaseIntentStatistics();
+            },
         },
-
     },
     computed: {
         lang() {
-            return this.$store.state.lang
+            return this.$store.state.lang;
         },
     },
     created() {
@@ -61,10 +58,10 @@ export default {
         // }
         // this.drawBoStatisticsChart(this.tableData)
 
-        this.purchaseIntentStatistics()
+        this.purchaseIntentStatistics();
     },
     beforeUnmount() {
-        this.$refs.NewBoStatisticsChartId.innerHTML = ''
+        this.$refs.NewBoStatisticsChartId.innerHTML = '';
     },
     methods: {
         // 点击tab
@@ -75,8 +72,8 @@ export default {
 
         drawBoStatisticsChart(data) {
             if (this.boStatisticsChart.destroy) {
-                console.log('drawPurchaseChart destroy:')
-                this.boStatisticsChart.destroy()
+                console.log('drawPurchaseChart destroy:');
+                this.boStatisticsChart.destroy();
             }
             const chart = new Chart({
                 container: 'NewBoStatisticsChartId',
@@ -99,30 +96,30 @@ export default {
             });
             // 声明需要进行自定义图例字段： 'item'
             chart.legend('item', {
-                position: 'bottom',                                  // 配置图例显示位置
-                custom: true,                                       // 关键字段，告诉 G2，要使用自定义的图例
+                position: 'bottom', // 配置图例显示位置
+                custom: true, // 关键字段，告诉 G2，要使用自定义的图例
                 items: data.map((obj, index) => {
                     return {
-                        name: obj.item,                                 // 对应 itemName
-                        value: obj.percent,                             // 对应 itemValue
+                        name: obj.item, // 对应 itemName
+                        value: obj.percent, // 对应 itemValue
                         marker: {
-                            symbol: 'circle',                             // marker 的形状
+                            symbol: 'circle', // marker 的形状
                             style: {
-                                r: 5,                                       // marker 图形半径
-                                fill: chart.getTheme().colors10[index],     // marker 颜色，使用默认颜色，同图形对应
+                                r: 5, // marker 图形半径
+                                fill: chart.getTheme().colors10[index], // marker 颜色，使用默认颜色，同图形对应
                             },
-                        },                                              // marker 配置
+                        }, // marker 配置
                     };
                 }),
                 itemValue: {
                     style: {
                         fill: '#999',
-                    },                                               // 配置 itemValue 样式
-                    formatter: val => `${val * 100}%`                // 格式化 itemValue 内容
+                    }, // 配置 itemValue 样式
+                    formatter: val => `${val * 100}%`, // 格式化 itemValue 内容
                 },
             });
             // 监听 element 上状态的变化来动态更新 Annotation 信息
-            chart.on('element:statechange', (ev) => {
+            chart.on('element:statechange', ev => {
                 const { state, stateStatus, element } = ev.gEvent.originalEvent;
 
                 // 本示例只需要监听 active 的状态变化
@@ -162,7 +159,7 @@ export default {
                                 fill: '#333333',
                                 textAlign: 'center',
                             },
-                        })
+                        });
                     innerView.render(true);
                     lastItem = data.item;
                 }
@@ -199,62 +196,69 @@ export default {
             chart.removeInteraction('legend-filter');
             chart.interaction('element-active');
             chart.render();
-            this.boStatisticsChart = chart
+            this.boStatisticsChart = chart;
         },
-        getGroupStatusDetail() {    // 获取 表格 数据
+        getGroupStatusDetail() {
+            // 获取 表格 数据
             this.loading = true;
             Core.Api.CRMBoStatusGroup.detail({
                 id: 1,
-            }).then(res => {
-                this.groupStatusTableData = JSON.parse(res.detail.status_list)
-            }).catch(err => {
-                console.log('getTableData err:', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+            })
+                .then(res => {
+                    this.groupStatusTableData = JSON.parse(res.detail.status_list);
+                })
+                .catch(err => {
+                    console.log('getTableData err:', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         purchaseIntentStatistics() {
             this.loading = true;
             Core.Api.CRMDashboard.boStatistics({
-                ...this.searchForm
-            }).then(res => {
-                console.log('getTableData err', res)
-                // this.testDriveIntentList = res.list;
-                const dv = [];
-                res.list.forEach(it => {
-                    this.groupStatusTableData.forEach((item,index) => {
-
-                        if (index == it.status){
-                            dv.push({ item: item.zh, item_en: item.en, count: it.count, percent: this.$Util.countFilter(it.count/res.total, 1,2)});
-                        }
-                    })
-
+                ...this.searchForm,
+            })
+                .then(res => {
+                    console.log('getTableData err', res);
+                    // this.testDriveIntentList = res.list;
+                    const dv = [];
+                    res.list.forEach(it => {
+                        this.groupStatusTableData.forEach((item, index) => {
+                            if (index == it.status) {
+                                dv.push({
+                                    item: item.zh,
+                                    item_en: item.en,
+                                    count: it.count,
+                                    percent: this.$Util.countFilter(it.count / res.total, 1, 2),
+                                });
+                            }
+                        });
+                    });
+                    // const dv = [
+                    //     { item: '咨询', count: 20, percent: 0.2 },
+                    //     { item: '支付定金', count: 20, percent: 0.2 },
+                    //     { item: '等待交付', count: 21, percent: 0.21 },
+                    //     { item: '预约试驾', count: 17, percent: 0.17 },
+                    //     { item: '订单支付', count: 13, percent: 0.13 },
+                    //     { item: '已交付', count: 9, percent: 0.09 },
+                    // ]
+                    // const dv = []
+                    // res.list.forEach(res => {
+                    //     if(res.type !== 0){
+                    //         dv.push({ type: this.$Util.CRMCustomerTestDriveIntentChartFilter(res.type, this.lang), value: res.value })
+                    //     }
+                    // })
+                    this.drawBoStatisticsChart(dv);
                 })
-                // const dv = [
-                //     { item: '咨询', count: 20, percent: 0.2 },
-                //     { item: '支付定金', count: 20, percent: 0.2 },
-                //     { item: '等待交付', count: 21, percent: 0.21 },
-                //     { item: '预约试驾', count: 17, percent: 0.17 },
-                //     { item: '订单支付', count: 13, percent: 0.13 },
-                //     { item: '已交付', count: 9, percent: 0.09 },
-                // ]
-                // const dv = []
-                // res.list.forEach(res => {
-                //     if(res.type !== 0){
-                //         dv.push({ type: this.$Util.CRMCustomerTestDriveIntentChartFilter(res.type, this.lang), value: res.value })
-                //     }
-                // })
-                this.drawBoStatisticsChart(dv)
-
-            }).catch(err => {
-                console.log('getTableData err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        }
-
-
-    }
+                .catch(err => {
+                    console.log('getTableData err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
+    },
 };
 </script>
 
@@ -275,6 +279,6 @@ export default {
 
 .chart {
     width: 100%;
-    height: auto
+    height: auto;
 }
 </style>

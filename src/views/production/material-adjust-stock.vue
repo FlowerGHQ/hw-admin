@@ -1,9 +1,10 @@
 <template>
     <div id="MaterialOutStock" class="edit-container">
         <div class="title-container">
-            <div class="title-area">{{$t('i.material_out_stock')}}</div>
+            <div class="title-area">{{ $t('i.material_out_stock') }}</div>
         </div>
-        <div class="form-block"> <!-- 基本信息 -->
+        <div class="form-block">
+            <!-- 基本信息 -->
             <div class="form-title">
                 <div class="title"></div>
             </div>
@@ -22,11 +23,10 @@
                             @search="handleOutWarehouseSearch"
                             @change="handleWarehouseByUidChange"
                         >
-                            <a-select-option v-for=" item in outWarehouseOptions" :key="item.id" :value="item.id">
+                            <a-select-option v-for="item in outWarehouseOptions" :key="item.id" :value="item.id">
                                 {{ item.name }}
                             </a-select-option>
                         </a-select>
-
                     </div>
                 </div>
                 <div class="form-item required">
@@ -42,96 +42,95 @@
                             :not-found-content="null"
                             @search="handleWarehouseSearch"
                         >
-                            <a-select-option v-for=" item in warehouseOptions" :key="item.id" :value="item.id">
+                            <a-select-option v-for="item in warehouseOptions" :key="item.id" :value="item.id">
                                 {{ item.name }}
                             </a-select-option>
                         </a-select>
-
                     </div>
                 </div>
                 <div class="form-item required">
                     <div class="key">uid</div>
                     <div class="value">
-                        <a-input v-model:value="uid" @change="handleWarehouseByUidChange"/>
+                        <a-input v-model:value="uid" @change="handleWarehouseByUidChange" />
                     </div>
                 </div>
 
                 <div class="form-item">
                     <div class="key">物料名称</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" disabled/>
+                        <a-input v-model:value="form.name" disabled />
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">物料编码</div>
                     <div class="value">
-                        <a-input v-model:value="form.code" disabled/>
+                        <a-input v-model:value="form.code" disabled />
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">库位</div>
                     <div class="value">
-                        <a-input v-model:value="form.warehouse_location_uid" disabled/>
+                        <a-input v-model:value="form.warehouse_location_uid" disabled />
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">物料规格</div>
                     <div class="value">
-                        <a-input v-model:value="form.spec" disabled/>
+                        <a-input v-model:value="form.spec" disabled />
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">物料包装</div>
                     <div class="value">
-                        <a-input v-model:value="form.encapsulation" disabled/>
+                        <a-input v-model:value="form.encapsulation" disabled />
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">单位</div>
                     <div class="value">
-                        <a-input v-model:value="form.unit" disabled/>
+                        <a-input v-model:value="form.unit" disabled />
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">包装尺寸</div>
                     <div class="value">
-                        <a-input v-model:value="form.encapsulation_size" disabled/>
+                        <a-input v-model:value="form.encapsulation_size" disabled />
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">毛重</div>
                     <div class="value">
-                        <a-input v-model:value="form.gross_weight" disabled/>
+                        <a-input v-model:value="form.gross_weight" disabled />
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">备注</div>
                     <div class="value">
-                        <a-input v-model:value="form.remark" disabled/>
+                        <a-input v-model:value="form.remark" disabled />
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">该批次剩余库存</div>
                     <div class="value">
-                        <a-input v-model:value="form.record_balance" disabled/>
+                        <a-input v-model:value="form.record_balance" disabled />
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">当前库存</div>
                     <div class="value">
-                        <a-input v-model:value="form.stock" disabled/>
+                        <a-input v-model:value="form.stock" disabled />
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">库存变动时间</div>
                     <div class="value">
-                        <a-input v-model:value="form.stock_update_time" disabled/>
+                        <a-input v-model:value="form.stock_update_time" disabled />
                     </div>
                 </div>
                 <div class="form-item">
                     <div class="key">出库数量</div>
                     <div class="value">
-                        <a-input type="number" v-model:value="form.amount" placeholder="请输入数量"/>
+                        <a-input type="number" v-model:value="form.amount" placeholder="请输入数量" />
                     </div>
                 </div>
             </div>
@@ -145,10 +144,10 @@
 
 <script>
 import Core from '../../core';
-import CategoryTreeSelect from '../../components/popup-btn/CategoryTreeSelect.vue'
+import CategoryTreeSelect from '../../components/popup-btn/CategoryTreeSelect.vue';
 
-const TARGET_TYPE_MAP = Core.Const.ITEM.TARGET_TYPE_MAP
-const STOCK_RECORD = Core.Const.STOCK_RECORD
+const TARGET_TYPE_MAP = Core.Const.ITEM.TARGET_TYPE_MAP;
+const STOCK_RECORD = Core.Const.STOCK_RECORD;
 
 export default {
     name: 'MaterialOutStock',
@@ -162,7 +161,7 @@ export default {
             loading: false,
             warehouse_id: '',
             out_warehouse_id: '',
-            uid: "",
+            uid: '',
             form: {
                 id: '',
                 name: '',
@@ -186,28 +185,25 @@ export default {
             options: [],
             warehouseOptions: [],
             outWarehouseOptions: [],
-
         };
     },
     watch: {},
     computed: {},
-    created() {
-    },
-    mounted() {
-    },
+    created() {},
+    mounted() {},
     methods: {
         routerChange(type, item) {
-            let routeUrl
+            let routeUrl;
             switch (type) {
                 case 'back':
-                    this.$router.go(-1)
+                    this.$router.go(-1);
                     break;
-                case 'detail':  // 详情
+                case 'detail': // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/item/item-detail",
-                        query: {id: item.id}
-                    })
-                    window.open(routeUrl.href, '_self')
+                        path: '/item/item-detail',
+                        query: { id: item.id },
+                    });
+                    window.open(routeUrl.href, '_self');
                     break;
             }
         },
@@ -216,67 +212,69 @@ export default {
             this.loading = true;
             Core.Api.Material.detail({
                 id: this.form.id,
-            }).then(res => {
-                console.log('Material.detail res', res)
-                this.form = res
-                this.form.code = res.code
-                this.handleWarehouseByMaterialChange()
-                console.log('Material.detail res.code', res.code)
-                this.form.gross_weight = Core.Util.countFilter(res.gross_weight)
-
-            }).finally(() => {
-                this.loading = false
             })
+                .then(res => {
+                    console.log('Material.detail res', res);
+                    this.form = res;
+                    this.form.code = res.code;
+                    this.handleWarehouseByMaterialChange();
+                    console.log('Material.detail res.code', res.code);
+                    this.form.gross_weight = Core.Util.countFilter(res.gross_weight);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         handleSearch(code) {
-            Core.Api.Material.list({code: code}).then(res => {
-                this.options = res.list
-            })
+            Core.Api.Material.list({ code: code }).then(res => {
+                this.options = res.list;
+            });
         },
         handleChange() {
-            this.id = this.form.id
+            this.id = this.form.id;
             this.getMaterialDetail();
-
-
         },
         handleWarehouseSearch(name) {
-            Core.Api.Warehouse.list({name: name}).then(res => {
-                this.warehouseOptions = res.list
-            })
+            Core.Api.Warehouse.list({ name: name }).then(res => {
+                this.warehouseOptions = res.list;
+            });
         },
         handleOutWarehouseSearch(name) {
-            Core.Api.Warehouse.list({name: name}).then(res => {
-                this.outWarehouseOptions = res.list
-            })
+            Core.Api.Warehouse.list({ name: name }).then(res => {
+                this.outWarehouseOptions = res.list;
+            });
         },
         handleWarehouseByUidChange() {
             if (!this.uid) {
-                return
+                return;
             }
             if (!this.out_warehouse_id) {
-                console.log(2)
-                return
+                console.log(2);
+                return;
             }
             Core.Api.StockRecord.detailWarehouse({
                 uid: this.uid,
-                warehouse_id: this.out_warehouse_id
+                warehouse_id: this.out_warehouse_id,
             }).then(res => {
-                this.form = {}
-                if (res.material !== undefined){
-                    this.form = res.material
-                    this.form.warehouse_location_uid = res.warehouse_location_uid
-                    this.form.stock_update_time = this.$Util.timeFormat(res.material.stock.update_time != undefined ? res.material.stock.update_time: res.material.stock.create_time)
-                    this.form.stock = res.material.stock.stock
-                    this.form.record_balance = res.record_balance
+                this.form = {};
+                if (res.material !== undefined) {
+                    this.form = res.material;
+                    this.form.warehouse_location_uid = res.warehouse_location_uid;
+                    this.form.stock_update_time = this.$Util.timeFormat(
+                        res.material.stock.update_time != undefined
+                            ? res.material.stock.update_time
+                            : res.material.stock.create_time,
+                    );
+                    this.form.stock = res.material.stock.stock;
+                    this.form.record_balance = res.record_balance;
                 }
 
-                console.log(this.form.stock.stock)
-
-            })
+                console.log(this.form.stock.stock);
+            });
         },
         handleSubmit() {
             if (!this.form.amount) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('def.enter'));
             }
             let _this = this;
             this.$confirm({
@@ -291,21 +289,20 @@ export default {
                         target_id: _this.form.id,
                         target_type: TARGET_TYPE_MAP.MATERIAL,
                         type: STOCK_RECORD.TYPE.OUT,
-                        count: _this.form.amount
-
-                    }).then(() => {
-                        _this.$message.success(_this.$t('pop_up.operate'))
-                        _this.handleWarehouseByUidChange();
-
-                    }).catch(err => {
-                        console.log("handleComplete err", err);
+                        count: _this.form.amount,
                     })
+                        .then(() => {
+                            _this.$message.success(_this.$t('pop_up.operate'));
+                            _this.handleWarehouseByUidChange();
+                        })
+                        .catch(err => {
+                            console.log('handleComplete err', err);
+                        });
                 },
             });
         },
-    }
+    },
 };
 </script>
 
-<style lang="less">
-</style>
+<style lang="less"></style>

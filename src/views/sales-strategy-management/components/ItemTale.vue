@@ -6,10 +6,11 @@
         :columns="columns"
         :data-source="dataList"
         :scroll="{ x: true }"
-        :row-key="(record) => record.id"
+        :row-key="record => record.id"
         :loading="loading"
         :pagination="false"
-        :row-selection="checkMode ? rowSelection : null">
+        :row-selection="checkMode ? rowSelection : null"
+    >
         <template #bodyCell="{ record, column, text }">
             <template v-if="column.key === 'detail'">
                 <div class="table-img">
@@ -17,12 +18,13 @@
                         :width="30"
                         :height="30"
                         :src="$Util.imageFilter(record.logo)"
-                        :fallback="$t('def.none')" />
+                        :fallback="$t('def.none')"
+                    />
                     <a-tooltip placement="top" :title="$i18n.locale === 'zh' ? record.name : record.name_en || '-'">
                         <div class="info">
                             <a-button type="link" @click="routerChange('detail', record)">
                                 <div class="ell" style="max-width: 100px">
-                                    {{ $i18n.locale === "zh" ? record.name : record.name_en || "-" }}
+                                    {{ $i18n.locale === 'zh' ? record.name : record.name_en || '-' }}
                                 </div>
                             </a-button>
                         </div>
@@ -35,22 +37,22 @@
                 <!--                {{column.unit}} {{$Util.countFilter(text)}}-->
             </template>
             <template v-if="column.key === 'item'">
-                {{ text || "-" }}
+                {{ text || '-' }}
             </template>
             <template v-if="column.key === 'category_list'">
                 <span v-for="(category, index) in text" class="category_list_item">
                     <a-tooltip>
                         <template #title>
                             <span v-if="index !== 0">,</span>
-                            {{ $i18n.locale === "zh" ? category.category_name : category.category_name_en }}
+                            {{ $i18n.locale === 'zh' ? category.category_name : category.category_name_en }}
                         </template>
-						<span v-if="index !== 0">,</span>
-                            {{ $i18n.locale === "zh" ? category.category_name : category.category_name_en }}
+                        <span v-if="index !== 0">,</span>
+                        {{ $i18n.locale === 'zh' ? category.category_name : category.category_name_en }}
                     </a-tooltip>
                 </span>
             </template>
             <template v-if="column.key === 'count'">
-                {{ text ? text + $t("m.pcs") : "-" }}
+                {{ text ? text + $t('m.pcs') : '-' }}
             </template>
             <template v-if="column.key === 'spec'">
                 {{ $Util.itemSpecFilter(text, $i18n.locale) }}
@@ -62,7 +64,7 @@
             </template>
             <template v-if="column.key === 'material_spec'">
                 <a-tooltip placement="top" :title="text">
-                    <div class="ell" style="max-width: 80px">{{ text || "-" }}</div>
+                    <div class="ell" style="max-width: 80px">{{ text || '-' }}</div>
                 </a-tooltip>
             </template>
             <template v-if="column.key === 'time'">
@@ -76,7 +78,7 @@
 </template>
 
 <script>
-import Core from "@/core";
+import Core from '@/core';
 export default {
     components: {},
     props: {
@@ -125,7 +127,7 @@ export default {
             default: false,
         },
     },
-    emit: ["submit"],
+    emit: ['submit'],
     data() {
         return {
             selectedRowKeys: [],
@@ -140,17 +142,17 @@ export default {
             this.dataList = Core.Util.deepCopy(this.dataSource);
         },
         defaultChecked: function (n) {
-            console.log("defaultChecked:", n);
+            console.log('defaultChecked:', n);
             this.selectedRowKeys = Core.Util.deepCopy(this.defaultChecked);
-            console.log(this.dataSource)
-            this.selectedRowItems = this.dataSource.filter((item) => this.selectedRowKeys.includes(item.id));
-            console.log("defaultChecked this.selectedRowKeys:", this.selectedRowKeys);
-            console.log("defaultChecked this.selectedRowItems:", this.selectedRowItems);
-            this.$emit("submit", this.selectedRowKeys, this.selectedRowItems);
+            console.log(this.dataSource);
+            this.selectedRowItems = this.dataSource.filter(item => this.selectedRowKeys.includes(item.id));
+            console.log('defaultChecked this.selectedRowKeys:', this.selectedRowKeys);
+            console.log('defaultChecked this.selectedRowItems:', this.selectedRowItems);
+            this.$emit('submit', this.selectedRowKeys, this.selectedRowItems);
         },
     },
     created() {
-        console.log("created this.defaultChecked:", this.defaultChecked);
+        console.log('created this.defaultChecked:', this.defaultChecked);
         if (this.defaultChecked.length) {
             this.selectedRowKeys = Core.Util.deepCopy(this.defaultChecked);
         }
@@ -158,7 +160,7 @@ export default {
     computed: {
         rowSelection() {
             return {
-                type: this.radioMode ? "radio" : "checkbox",
+                type: this.radioMode ? 'radio' : 'checkbox',
                 selectedRowKeys: this.selectedRowKeys,
                 preserveSelectedRowKeys: true,
                 onChange: (selectedRowKeys, selectedRows) => {
@@ -166,20 +168,20 @@ export default {
                     this.selectedRowKeys = selectedRowKeys;
                     this.selectedRowItemsAll.push(...selectedRows);
                     let selectedRowItems = [];
-                    selectedRowKeys.forEach((id) => {
-                        let element = this.selectedRowItemsAll.find((i) => i.id == id);
+                    selectedRowKeys.forEach(id => {
+                        let element = this.selectedRowItemsAll.find(i => i.id == id);
                         selectedRowItems.push(element);
                     });
                     this.selectedRowItems = selectedRowItems;
                     console.log(
-                        "rowSelection this.selectedRowKeys:",
+                        'rowSelection this.selectedRowKeys:',
                         this.selectedRowKeys,
-                        "selectedRowItems:",
-                        selectedRowItems
+                        'selectedRowItems:',
+                        selectedRowItems,
                     );
-                    this.$emit("submit", this.selectedRowKeys, this.selectedRowItems);
+                    this.$emit('submit', this.selectedRowKeys, this.selectedRowItems);
                 },
-                getCheckboxProps: (record) => {
+                getCheckboxProps: record => {
                     return {
                         disabled: (this.showStock && record.stock === 0) || this.disabledChecked.includes(record.id),
                     };
@@ -189,18 +191,18 @@ export default {
     },
     methods: {
         routerChange(type, item = {}) {
-            console.log("routerChange item:", item);
+            console.log('routerChange item:', item);
             // return
-            let routeUrl = "";
+            let routeUrl = '';
             switch (type) {
-                case "detail": // 商品编辑
+                case 'detail': // 商品编辑
                     routeUrl = this.$router.resolve({
-                        path: this.$auth("ADMIN") ? "/item/item-detail" : "/purchase/item-display",
+                        path: this.$auth('ADMIN') ? '/item/item-detail' : '/purchase/item-display',
                         query: { id: item.id },
                     });
                     break;
             }
-            window.open(routeUrl.href, "_blank");
+            window.open(routeUrl.href, '_blank');
         },
     },
 };
