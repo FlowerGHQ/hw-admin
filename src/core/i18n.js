@@ -1995,6 +1995,7 @@ const messages = {
                 'enquiry-ticket': '问询单、客户关怀',
                 'enquiry-ticket-category': '车型分类管理',
                 'enquiry-ticket-customer': '问询单分配',
+                operate: '运营管理',
             },
             distributor: {
                 list: '查看分销商列表',
@@ -2330,6 +2331,7 @@ const messages = {
             },
             coc: {
                 template: 'COC模板',
+                certificate: 'COC证书',
             },
             'aftermarket-bom': {
                 list: '售后BOM列表',
@@ -2350,6 +2352,10 @@ const messages = {
             },
             'enquiry-ticket-customer': {
                 list: '分配列表',
+            },
+            operate: {
+                announcement: '公告',
+                advertisement: '广告',
             },
         },
         error_code: {
@@ -4793,6 +4799,7 @@ const messages = {
                 'enquiry-ticket': 'List Of Inquiry Forms, Customer Care',
                 'enquiry-ticket-category': 'Classified Management Of Vehicle Models',
                 'enquiry-ticket-customer': 'Inquiry Sheet Distribution',
+                operate: 'Operation Management',
             },
             distributor: {
                 list: 'View Distributor List',
@@ -5126,6 +5133,7 @@ const messages = {
             },
             coc: {
                 template: 'Coc Template',
+                certificate: 'Coc Certificate',
             },
             'aftermarket-bom': {
                 list: 'Aftermarket Bom List',
@@ -5146,6 +5154,10 @@ const messages = {
             },
             'enquiry-ticket-customer': {
                 list: 'Allocation List',
+            },
+            operate: {
+                announcement: 'Announcement',
+                advertisement: 'Advertisement',
             },
         },
         error_code: {

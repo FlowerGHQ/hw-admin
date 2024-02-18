@@ -47,8 +47,8 @@ switch (window.location.hostname) {
         URL_POINT = 'https://eos-api-release.horwincloud.com'; // 预发环境
         break;
     default:
-        URL_POINT = 'https://eos-dev-api.horwincloud.com'; //测试服
-        // URL_POINT = 'https://eos-api.horwincloud.com'; // 新正式服
+        // URL_POINT = 'https://eos-dev-api.horwincloud.com'; //测试服
+        URL_POINT = 'https://eos-api.horwincloud.com'; // 新正式服
         // URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.10.12.194:8889' // zwq
@@ -1160,6 +1160,8 @@ let Const = {
         { list: [], select: [], key: 'enquiry-ticket', name: '问询单列表、客户关怀' },
         { list: [], select: [], key: 'enquiry-ticket-category', name: '车型分类管理' },
         { list: [], select: [], key: 'enquiry-ticket-customer', name: '问询单分配' },
+        // 新加入2024/2/18
+        { list: [], select: [], key: 'operate', name: '运营管理' },
     ],
 
     ATTACHMENT: {

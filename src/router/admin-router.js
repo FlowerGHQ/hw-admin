@@ -87,6 +87,7 @@ const operationManagement = {
         title_en: 'Operation Management',
         icon: 'i_order',
         roles: [LOGIN_TYPE.ADMIN],
+        auth: ['operate.announcement', 'operate.advertisement'],
     },
     children: [
         {
@@ -96,6 +97,7 @@ const operationManagement = {
             meta: {
                 title: '通知公告',
                 title_en: 'Notice And Announcement',
+                auth: ['operate.announcement'],
             },
         },
         {
@@ -116,6 +118,7 @@ const operationManagement = {
             meta: {
                 title: '广告位管理',
                 title_en: 'Advertising Space Management',
+                auth: ['operate.advertisement'],
             },
         },
         {
