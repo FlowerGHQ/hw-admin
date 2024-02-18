@@ -47,8 +47,8 @@ switch (window.location.hostname) {
         URL_POINT = 'https://eos-api-release.horwincloud.com'; // 预发环境
         break;
     default:
-        // URL_POINT = 'https://eos-dev-api.horwincloud.com'; //测试服
-        URL_POINT = 'https://eos-api.horwincloud.com'; // 新正式服
+        URL_POINT = 'https://eos-dev-api.horwincloud.com'; //测试服
+        // URL_POINT = 'https://eos-api.horwincloud.com'; // 新正式服
         // URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.10.12.194:8889' // zwq
@@ -1107,7 +1107,7 @@ let Const = {
         { list: [], select: [], key: 'data', name: '时效看板' },
         { list: [], select: [], key: 'distributor', name: '分销商管理' },
         { list: [], select: [], key: 'agent', name: '零售商管理' },
-        { list: [], select: [], key: 'store', name: '门店管理' },
+        { list: [], select: [], key: 'store', name: '分销管理-门店列表' },
         { list: [], select: [], key: 'purchase-order', name: '采购订单' },
         { list: [], select: [], key: 'sales-area', name: '销售区域' },
         { list: [], select: [], key: 'item', name: '商品管理' },
@@ -1162,6 +1162,11 @@ let Const = {
         { list: [], select: [], key: 'enquiry-ticket-customer', name: '问询单分配' },
         // 新加入2024/2/18
         { list: [], select: [], key: 'operate', name: '运营管理' },
+        { list: [], select: [], key: 'staging', name: '工作台' },
+        { list: [], select: [], key: 'user-center', name: '用户中心' },
+        { list: [], select: [], key: 'allocation-rules', name: '分配规则' },
+        { list: [], select: [], key: 'good-goods-order', name: '好物订单' },
+        { list: [], select: [], key: 'email', name: '邮件管理' },
     ],
 
     ATTACHMENT: {

@@ -1940,7 +1940,7 @@ const messages = {
             title: {
                 distributor: '分销商管理',
                 agent: '零售商管理',
-                store: '门店管理',
+                store: '分销管理-门店列表',
                 'purchase-order': '采购订单',
                 'sales-area': '销售区域',
                 item: '商品管理',
@@ -1996,6 +1996,11 @@ const messages = {
                 'enquiry-ticket-category': '车型分类管理',
                 'enquiry-ticket-customer': '问询单分配',
                 operate: '运营管理',
+                staging: '工作台',
+                'user-center': '用户中心',
+                'allocation-rules': '分配规则',
+                'good-goods-order': '好物订单',
+                email: '邮件管理',
             },
             distributor: {
                 list: '查看分销商列表',
@@ -2356,6 +2361,23 @@ const messages = {
             operate: {
                 announcement: '公告',
                 advertisement: '广告',
+            },
+            staging: {
+                staging: '工作台',
+            },
+            'user-center': {
+                clue: '线索',
+                'user-list': '用户列表',
+            },
+            'allocation-rules': {
+                'allocation-rules': '分配规则',
+            },
+            'good-goods-order': {
+                'order-list': '订单列表',
+            },
+            email: {
+                'email-list': '邮件列表',
+                'email-statistics': '邮件列表',
             },
         },
         error_code: {
@@ -4749,7 +4771,7 @@ const messages = {
             title: {
                 distributor: 'Distributor Management',
                 agent: 'Dealer Management',
-                store: 'Shop Management',
+                store: 'Distribution Management - Store List',
                 'purchase-order': 'Purchase Order',
                 'sales-area': 'Sales Region',
                 item: 'Product Management',
@@ -4800,6 +4822,11 @@ const messages = {
                 'enquiry-ticket-category': 'Classified Management Of Vehicle Models',
                 'enquiry-ticket-customer': 'Inquiry Sheet Distribution',
                 operate: 'Operation Management',
+                staging: 'Staging',
+                'user-center': 'User Center',
+                'allocation-rules': 'Allocation Rules',
+                'good-goods-order': 'Good Goods Order',
+                email: 'Email',
             },
             distributor: {
                 list: 'View Distributor List',
@@ -5158,6 +5185,23 @@ const messages = {
             operate: {
                 announcement: 'Announcement',
                 advertisement: 'Advertisement',
+            },
+            staging: {
+                staging: 'Staging',
+            },
+            'user-center': {
+                clue: 'clue',
+                'user-list': 'User List',
+            },
+            'allocation-rules': {
+                'allocation-rules': 'Allocation Rules',
+            },
+            'good-goods-order': {
+                'order-list': 'Order List',
+            },
+            email: {
+                'email-list': 'Email List',
+                'email-statistics': 'Email Statistics',
             },
         },
         error_code: {
