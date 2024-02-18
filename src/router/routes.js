@@ -1647,6 +1647,7 @@ const routes = [
             title: 'COC证书管理',
             title_en: 'COC Certificate Management',
             icon: 'i_menu_COC',
+            auth: ['coc.template', 'coc.certificate'],
         },
         children: [
             {
@@ -1669,6 +1670,7 @@ const routes = [
                     title: 'COC证书',
                     title_en: 'COC Certificate',
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                    auth: ['coc.certificate'],
                 },
             },
             {
