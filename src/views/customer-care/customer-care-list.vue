@@ -256,7 +256,7 @@
                                 "
                             >
                                 <a-button
-                                    v-if="editCommentAuth($auth('enquiry-ticket.edit'))"
+                                    v-if="$auth('enquiry-ticket.edit')"
                                     type="link"
                                     @click="routerChange('edit', record)"
                                 >
@@ -264,7 +264,7 @@
                                     <span class="m-l-4">{{ $t('common.edit') }}</span>
                                 </a-button>
                                 <a-button
-                                    v-if="editCommentAuth($auth('enquiry-ticket.comment'))"
+                                    v-if="$auth('enquiry-ticket.comment')"
                                     type="link"
                                     @click="routerChange('msg', record)"
                                 >
@@ -752,18 +752,6 @@ const handleExportIn = () => {
     let exportUrl = Core.Api.Export.enquiryTickeTexport({ ...Core.Util.searchFilter(searchParam.value) });
     console.log('exportUrl', exportUrl);
     window.open(exportUrl, '_blank');
-};
-
-// 分销商 不需要编辑和留言功能
-const editCommentAuth = type => {
-    let result = false;
-
-    if (isDistributerAdmin.value) {
-        result = type;
-    } else {
-        result = true;
-    }
-    return result;
 };
 
 /* methods end*/
