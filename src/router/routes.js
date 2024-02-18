@@ -11,8 +11,7 @@ import { mallRouters, dealsPreview } from './mall';
 // 分销商路由
 import { customerCare } from './distributor-router';
 // 平台方路由
-import { inquiryManagement } from './admin-router';
-import { operationManagement } from './admin-router';
+import { inquiryManagement, adminEmpty, operationManagement } from './admin-router';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE;
@@ -2827,7 +2826,7 @@ const routes = [
             },
         ],
     },
-
+    adminEmpty,
     // 测试用例
     {
         path: '/test',

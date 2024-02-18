@@ -134,4 +134,30 @@ const operationManagement = {
         },
     ],
 };
-export { inquiryManagement, operationManagement };
+
+// 切换 销售/售后/生产/CRM 路口显示 空页面显示
+const adminEmpty = {
+    path: '/admin',
+    component: Layout,
+    name: 'Empty',
+    redirect: '/admin/404',
+    type: [ROUTER_TYPE.AFTER],
+    meta: {
+        title: '空',
+        title_en: 'Inquiry Management',
+        hidden: true,
+    },
+    children: [
+        {
+            path: '404',
+            name: '404',
+            component: () => import('@/views/z-error/admin404.vue'),
+            meta: {
+                title: '空',
+                title_en: 'Inquiry Management',
+                hidden: true,
+            },
+        },
+    ],
+};
+export { inquiryManagement, operationManagement, adminEmpty };

@@ -92,18 +92,14 @@
                     >
                         <template v-for="item of showList">
                             <!-- 这个是只有当个导航栏 -->
-                            <a-menu-item
-                                v-if="$auth(...item.auth) && item.not_sub_menu"
-                                :key="item.path"
-                                @click="handleLink(item.path)"
-                            >
+                            <a-menu-item v-if="item.not_sub_menu" :key="item.path" @click="handleLink(item.path)">
                                 <i class="icon" :class="item.meta.icon" />
                                 <span :class="{ 'collapsed-title': collapsed }">{{
                                     lang == 'zh' ? item.meta.title : item.meta.title_en
                                 }}</span>
                             </a-menu-item>
                             <!-- 有二级导航栏的 -->
-                            <a-sub-menu v-else-if="$auth(...item.auth)" :key="item.path">
+                            <a-sub-menu v-else :key="item.path">
                                 <template #title>
                                     <i class="icon" :class="item.meta.icon" />
                                     <span v-show="!collapsed">
@@ -277,7 +273,8 @@ export default {
                     showList = result;
                 }
             }
-            return showList;
+
+            return showList.filter(el => this.$auth(...el.auth));
         },
         lang() {
             return this.$store.state.lang;
@@ -457,37 +454,55 @@ export default {
                 return;
             }
             Core.Data.setTabPosition(this.tabPosition);
-            console.log('tabPosition', this.tabPosition);
 
+            // console.log('获取路由列表第一个的跳转', this.showList[0]?.path);
             switch (this.tabPosition) {
                 case this.ROUTER_TYPE.SALES:
-                    if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
-                        this.$router.replace({ path: '/distributor', query: { from: 'login' } });
-                    } else {
-                        this.$router.replace({ path: '/dashboard/index', query: { from: 'login' } });
+                    if (this.returnAdminFilter(this.ROUTER_TYPE.SALES)) {
+                        return this.$router.replace({ path: '/admin/404' });
                     }
+
+                    this.$router.replace({ path: this.showList[0]?.path });
                     break;
                 case this.ROUTER_TYPE.AFTER:
-                    if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
-                        this.$router.replace({ path: '/distributor' });
-                    } else {
-                        this.$router.replace({ path: '/dashboard/index' });
+                    if (this.returnAdminFilter(this.ROUTER_TYPE.AFTER)) {
+                        return this.$router.replace({ path: '/admin/404' });
                     }
+
+                    this.$router.replace({ path: this.showList[0]?.path });
                     break;
                 case this.ROUTER_TYPE.PRODUCTION:
-                    if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
-                        this.$router.replace({ path: '/entity' });
-                    } else {
-                        this.$router.replace({ path: '/dashboard/index' });
+                    if (this.returnAdminFilter(this.ROUTER_TYPE.PRODUCTION)) {
+                        return this.$router.replace({ path: '/admin/404' });
                     }
+
+                    this.$router.replace({ path: this.showList[0]?.path });
                     break;
                 case this.ROUTER_TYPE.CRM:
-                    this.$router.replace('/crm-dashboard');
-                    break;
+                    if (this.returnAdminFilter(this.ROUTER_TYPE.CRM)) {
+                        return this.$router.replace({ path: '/admin/404' });
+                    }
 
+                    this.$router.replace({ path: this.showList[0]?.path });
+                    break;
                 default:
                     break;
             }
+        },
+        // 判断顶部的 销售/售后/生产/CRM 路口显示
+        returnAdminFilter(tabPosition, data = SIDER.ADMIN) {
+            let result = [];
+            result = data.filter(el => el.type?.includes(tabPosition));
+            result = result.filter(el => {
+                // console.log('判断顶部的 销售/售后/生产/CRM 路口显示', el, el.meta?.auth);
+                if (el.meta?.auth) {
+                    return this.$auth(...el.meta?.auth);
+                } else {
+                    return true;
+                }
+            });
+
+            return result.length === 0;
         },
 
         // 监听窗口变化

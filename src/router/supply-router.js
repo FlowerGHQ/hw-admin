@@ -11,7 +11,7 @@ const supplyManage = {
     path: '/supply-manage',
     component: Layout,
     name: 'SupplyManage',
-    redirect: '/supply/list',
+    redirect: '/supply-manage/list',
     type: [ROUTER_TYPE.SALES],
     meta: {
         title: '供应商管理',
@@ -54,16 +54,6 @@ const supplyManage = {
 };
 
 const supplyRouters = [
-    // {
-    //     path: "/supply-home",
-    //     name: "SupplyHome",
-    //     component: () => import('@/views/supplier/home/index.vue'),
-    //     meta: {
-    //         title: '首页',
-    //         title_en: 'Supplier Home',
-    //         hidden: true,
-    //     },
-    // },
     {
         path: '/supply-home',
         name: 'SupplyHome',
