@@ -1758,6 +1758,7 @@ const routes = [
             title_en: 'Staging',
             icon: 'i_crm_bo',
             roles: [LOGIN_TYPE.ADMIN],
+            auth: ['staging.staging'],
         },
         children: [
             {
@@ -1767,6 +1768,7 @@ const routes = [
                 meta: {
                     title: '工作台',
                     title_en: 'Staging',
+                    auth: ['staging.staging'],
                 },
             },
             {
@@ -1793,6 +1795,7 @@ const routes = [
             title_en: 'User Center',
             icon: 'i_menu_yonghuzhognxin',
             roles: [LOGIN_TYPE.ADMIN],
+            auth: ['user-center.clue', 'user-center.user-list'],
         },
         children: [
             {
@@ -1803,6 +1806,7 @@ const routes = [
                     title: '线索',
                     title_en: 'Clue List',
                     icon: 'i_home',
+                    auth: ['user-center.clue'],
                 },
             },
             {
@@ -1813,6 +1817,7 @@ const routes = [
                     title: '用户列表',
                     title_en: 'User List',
                     icon: 'i_home',
+                    auth: ['user-center.user-list'],
                 },
             },
             {
@@ -1839,6 +1844,7 @@ const routes = [
             title_en: 'Stores Management',
             icon: 'i_stores',
             roles: [LOGIN_TYPE.ADMIN],
+            auth: ['crm-store.list', 'crm-store.group-list'],
         },
         children: [
             {
@@ -1849,6 +1855,7 @@ const routes = [
                     title: '门店列表',
                     title_en: 'Stores List',
                     icon: 'i_home',
+                    auth: ['crm-store.list'],
                 },
             },
             {
@@ -1859,6 +1866,7 @@ const routes = [
                     title: '区域管理',
                     title_en: 'Regional Mangage',
                     icon: 'i_home',
+                    auth: ['crm-store.group-list'],
                 },
             },
             {
@@ -1918,8 +1926,8 @@ const routes = [
             title: '人员管理',
             title_en: 'Personnel Management',
             icon: 'i_menu_renyuanguanli',
-            // auth: ['crm-user.list'], // 人员列表有这个就可以出现了
             roles: [LOGIN_TYPE.ADMIN],
+            auth: ['crm-user.list'],
         },
         children: [
             {
@@ -1931,6 +1939,7 @@ const routes = [
                     title_en: 'Personnel List',
                     icon: 'i_s_user',
                     roles: [LOGIN_TYPE.ADMIN],
+                    auth: ['crm-user.list'],
                 },
             },
             {
@@ -2013,6 +2022,7 @@ const routes = [
             title_en: 'Allocation rules',
             icon: 'i_menu_fenpeiguize',
             roles: [LOGIN_TYPE.ADMIN],
+            auth: ['allocation-rules.allocation-rules'],
         },
         children: [
             {
@@ -2022,6 +2032,7 @@ const routes = [
                 meta: {
                     title: '分配规则',
                     title_en: 'Allocation rules',
+                    auth: ['allocation-rules.allocation-rules'],
                 },
             },
         ],
@@ -2038,6 +2049,7 @@ const routes = [
             title_en: 'Good Items Order',
             icon: 'i_menu_haowudingdan',
             roles: [LOGIN_TYPE.ADMIN],
+            auth: ['good-goods-order.order-list'],
         },
         children: [
             {
@@ -2047,8 +2059,7 @@ const routes = [
                 meta: {
                     title: '订单列表',
                     title_en: 'Order List',
-                    // type: 'region',
-                    // auth: ['MANAGER_GROUP','MANAGER']
+                    auth: ['good-goods-order.order-list'],
                 },
             },
             {
@@ -2060,8 +2071,6 @@ const routes = [
                     title: '订单详情',
                     title_en: 'Order Edit',
                     parent: '/good-items-order/order-list',
-                    // type: 'private',
-                    // auth: ["crm-customer.list"],
                 },
             },
         ],
@@ -2170,6 +2179,7 @@ const routes = [
             title_en: 'Mail Management',
             icon: 'i_s_customer',
             roles: [LOGIN_TYPE.ADMIN],
+            auth: ['email.email-list', 'email.email-statistics'],
         },
         children: [
             {
@@ -2179,6 +2189,7 @@ const routes = [
                 meta: {
                     title: '邮箱订阅状态列表',
                     title_en: 'List of email subscription status',
+                    // auth: ['email.email-list'],
                 },
             },
             {
@@ -2188,6 +2199,7 @@ const routes = [
                 meta: {
                     title: '邮件发送及统计',
                     title_en: 'Mail sending and statistics',
+                    auth: ['email.email-statistics'],
                 },
             },
             {
@@ -2560,7 +2572,7 @@ const routes = [
             title: '系统设置',
             title_en: 'System Setting',
             icon: 'i_crm_setting',
-            // auth: ["crm-customer.list"],
+            auth: ['crm-bo-status.list', 'crm-dict.list', 'crm-group.list', 'crm-group.list'],
         },
         children: [
             {
