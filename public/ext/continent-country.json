@@ -238,6 +238,11 @@
                 "code": "VNM",
                 "name": "越南",
                 "name_en": "Vietnam"
+            },
+            {
+                "code": "AE",
+                "name": "阿联酋",
+                "name_en": "United Arab Emirates"
             }
         ]
     },
@@ -453,7 +458,7 @@
             },
             {
                 "code": "SCG",
-                "name": "塞尔维亚,黑山",
+                "name": "塞尔维亚-黑山",
                 "name_en": "Serbia,Montenegro"
             },
             {

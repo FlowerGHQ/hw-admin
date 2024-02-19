@@ -73,7 +73,7 @@
                         <!-- 策略类型 -->
                         <a-row :gutter="18">
                             <a-col :xs="24" :sm="24" :md="24" :lg="22" :xl="18" :xxl="12" :xxxl="12">
-                                <a-form-item label="销售类型" name="type">
+                                <!-- <a-form-item label="销售类型" name="type">
                                     <a-select
                                         v-model:value="formState.type"
                                         :disabled="type === 'details' ? true : false"
@@ -81,6 +81,21 @@
                                         :options="strategyTypeOptions"
                                         @change="handleClearVaild"
                                     />
+                                </a-form-item> -->
+                                <!-- 单选框 -->
+                                <a-form-item label="销售类型" name="type">
+                                    <a-radio-group
+                                        v-model:value="formState.type"
+                                        :disabled="type === 'details' ? true : false"
+                                        @change="handleClearVaild"
+                                    >
+                                        <a-radio
+                                            v-for="(item, index) in strategyTypeOptions"
+                                            :key="index"
+                                            :value="item.value"
+                                            >{{ item.label }}</a-radio
+                                        >
+                                    </a-radio-group>
                                 </a-form-item>
                             </a-col>
                         </a-row>
@@ -117,14 +132,18 @@
                                             </a-input-number>
                                         </div>
                                         <div class="number">
-                                            <span> 送 </span>
+                                            <span> 赠送 </span>
                                             <a-input-number
                                                 v-model:value="formState.rule.quantity_bonus"
                                                 :disabled="type === 'details' ? true : false"
                                                 :placeholder="$t('def.p_set')"
                                                 style="max-width: 300px; flex: 1"
                                                 :min="1"
-                                            />
+                                            >
+                                                <template #addonAfter>
+                                                    <span class="unit"> 份 </span>
+                                                </template>
+                                            </a-input-number>
                                         </div>
                                     </div>
                                     <div class="gift-rules-first" v-else-if="formState.type == 2">
@@ -150,6 +169,9 @@
                                                 :placeholder="$t('def.p_set')"
                                                 :min="1"
                                             >
+                                                <template #addonAfter>
+                                                    <span class="unit"> 份 </span>
+                                                </template>
                                             </a-input-number>
                                         </div>
                                     </div>
@@ -184,28 +206,28 @@
                             </template>
                             <!-- 赠送规则 -->
                             <template v-if="column.dataIndex === 'rule'">
-                                <div class="table-block" v-if="record.type == 1">
-                                    <div class="table-tag">
-                                        每满送
-                                    </div> 
-                                    <div class="table-text">
-                                        {{
-                                            `起送门槛${record.rule.quantity_min} 每满${record.rule.quantity_every}送${record.rule.quantity_bonus}`
-                                        }}
-                                    </div> 
+                                <!-- {{
+                                    record.type == 1
+                                        ? `【每满送】 起送门槛【${record.rule.quantity_min}】 每满${record.rule.quantity_every}送${record.rule.quantity_bonus}`
+                                        : record.type == 2
+                                          ? `【整单送】 起送门槛【${record.rule.quantity_min}】 达到起送门槛后,赠送${record.rule.quantity_bonus}`
+                                          : '-'
+                                }} -->
+                                <div class="type_one" v-if="record.type == 1">
+                                    <span class="area">每满送</span>
+                                    起送门槛
+                                    <span class="area">{{ record.rule.quantity_min }}</span
+                                    >, 每满
+                                    <span class="area">{{ record.rule.quantity_every }}</span>
+                                    赠送
+                                    <span class="area">{{ record.rule.quantity_bonus }} </span>
                                 </div>
-                                <div class="table-block" v-else-if="record.type == 2">
-                                    <div class="table-tag">
-                                        整单送
-                                    </div>
-                                    <div class="table-text">
-                                        {{ 
-                                            `起送门槛${record.rule.quantity_min} 达到起送门槛后，赠送${record.rule.quantity_bonus}`
-                                        }}
-                                    </div>
-                                </div>
-                                <div v-else>
-                                    -
+                                <div class="type_two" v-else>
+                                    <span class="area">整单送</span>
+                                    起送门槛
+                                    <span class="area">{{ record.rule.quantity_min }}</span>
+                                    达到起送门槛后,赠送
+                                    <span class="area">{{ record.rule.quantity_bonus }}</span>
                                 </div>
                             </template>
                             <!-- 操作 -->
@@ -925,6 +947,22 @@ onMounted(() => {
             }
         }
     }
+    .type_one,
+    .type_two {
+        display: flex;
+        align-items: center;
+        .area {
+            display: flex;
+            height: 24px;
+            padding: 2px 4px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            background: #f2f3f5;
+            margin: 0 8px;
+            float: left;
+        }
+    }
 }
 :deep(.gift-rules) {
     .ant-form-item-control {
@@ -970,9 +1008,19 @@ onMounted(() => {
                             white-space: nowrap;
                             margin-right: 8px;
                         }
+                        .ant-input-number,
+                        .ant-input-number-group-wrapper {
+                            flex: 1;
+                        }
                     }
-                    .number {
-                        margin-right: 0;
+                    .threshold {
+                        min-width: 30%;
+                    }
+                    // div 除了label-gift
+                    > div:not(.label-gift) {
+                        &:last-child {
+                            margin-right: 0;
+                        }
                     }
                 }
             }
@@ -1021,11 +1069,11 @@ onMounted(() => {
 }
 .table-tag {
     border-radius: 4px;
-    background: #F2F3F5;
+    background: #f2f3f5;
     padding: 0 4px;
     box-sizing: border-box;
     font-size: 12px;
-    color: #1D2129;
+    color: #1d2129;
     margin-right: 4px;
 }
 </style>

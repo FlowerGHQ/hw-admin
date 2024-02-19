@@ -23,7 +23,11 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('n.area') }}:</div>
                     <div class="value">
-                        <MyCountryCascader v-model:value="areaList" @handleGetItem="handleGetItem" />
+                        <MyCountryCascader
+                            v-model:value="areaList"
+                            :defaultList="defaultAreaList"
+                            @handleGetItem="handleGetItem"
+                        />
                     </div>
                 </div>
             </div>
@@ -56,6 +60,7 @@ export default {
             },
             // 地区
             areaList: [],
+            defaultAreaList: [],
             area: {
                 continent: '',
                 continent_en: '',
@@ -100,6 +105,7 @@ export default {
                         this.area[key] = d[key];
                     }
                     this.areaList = d.country.split(',');
+                    this.defaultAreaList = d.country.split(',');
                 })
                 .catch(err => {
                     console.log('getSalesAreaDetail err', err);

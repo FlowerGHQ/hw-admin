@@ -44,28 +44,29 @@
                         </template>
                         <!-- 赠送规则 -->
                         <template v-if="column.dataIndex === 'rule'">
-                            <div class="table-block" v-if="record.type == 1">
-                                <div class="table-tag">
-                                    每满送
-                                </div> 
-                                <div class="table-text">
-                                    {{
-                                        `起送门槛${record.rule.quantity_min} 每满${record.rule.quantity_every}送${record.rule.quantity_bonus}`
-                                    }}
-                                </div> 
+                            <!-- {{
+                                record.type == 1
+                                
+                                    ? `【每满送】 起送门槛【${record.rule.quantity_min}】 每满${record.rule.quantity_every}送${record.rule.quantity_bonus}`
+                                    : record.type == 2
+                                      ? `【整单送】 起送门槛【${record.rule.quantity_min}】 达到起送门槛后,赠送${record.rule.quantity_bonus}`
+                                      : '-'
+                            }} -->
+                            <div class="type_one" v-if="record.type == 1">
+                                <span class="area">每满送</span>
+                                起送门槛
+                                <span class="area">{{ record.rule.quantity_min }}</span
+                                >, 每满
+                                <span class="area">{{ record.rule.quantity_every }}</span>
+                                赠送
+                                <span class="area">{{ record.rule.quantity_bonus }} </span>
                             </div>
-                            <div class="table-block" v-else-if="record.type == 2">
-                                <div class="table-tag">
-                                    整单送
-                                </div>
-                                <div class="table-text">
-                                    {{ 
-                                        `起送门槛${record.rule.quantity_min} 达到起送门槛后，赠送${record.rule.quantity_bonus}`
-                                    }}
-                                </div>
-                            </div>
-                            <div v-else>
-                                -
+                            <div class="type_two" v-else>
+                                <span class="area">整单送</span>
+                                起送门槛
+                                <span class="area">{{ record.rule.quantity_min }}</span>
+                                达到起送门槛后,赠送
+                                <span class="area">{{ record.rule.quantity_bonus }}</span>
                             </div>
                         </template>
                         <!-- 地区赠品 -->
@@ -413,7 +414,6 @@ onMounted(() => {
 }
 :deep(.ant-table-cell) {
     color: #1d2129;
-
     .strategy_name-cell {
         width: 100px;
         // 超出隐藏
@@ -455,6 +455,22 @@ onMounted(() => {
             }
         }
     }
+    .type_one,
+    .type_two {
+        display: flex;
+        align-items: center;
+        .area {
+            display: flex;
+            height: 24px;
+            padding: 2px 4px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            background: #f2f3f5;
+            margin: 0 8px;
+            float: left;
+        }
+    }
     .operation {
         display: flex;
         align-items: center;
@@ -490,11 +506,11 @@ onMounted(() => {
 }
 .table-tag {
     border-radius: 4px;
-    background: #F2F3F5;
+    background: #f2f3f5;
     padding: 0 4px;
     box-sizing: border-box;
     font-size: 12px;
-    color: #1D2129;
+    color: #1d2129;
     margin-right: 4px;
 }
 </style>
