@@ -1070,7 +1070,7 @@
             </a-button>
             <!--  type="primary" ghost -->
             <a-button @click="routerChange('back')">{{ $t('def.cancel') }}</a-button>
-            <a-button type="primary" @click="handleSubmit">{{ $t('def.sure_create') }}</a-button>
+            <a-button type="primary" @click="handleSubmit">{{ $t('def.sure') }}</a-button>
             <!-- 底部障眼法-盒子 -->
             <div class="bottom-box"></div>
         </div>

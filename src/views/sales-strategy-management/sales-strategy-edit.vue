@@ -184,13 +184,29 @@
                             </template>
                             <!-- 赠送规则 -->
                             <template v-if="column.dataIndex === 'rule'">
-                                {{
-                                    record.type == 1
-                                        ? `【每满送】 起送门槛【${record.rule.quantity_min}】 每满${record.rule.quantity_every}送${record.rule.quantity_bonus}`
-                                        : record.type == 2
-                                          ? `【整单送】 起送门槛【${record.rule.quantity_min}】 达到起送门槛后,赠送${record.rule.quantity_bonus}`
-                                          : '-'
-                                }}
+                                <div class="table-block" v-if="record.type == 1">
+                                    <div class="table-tag">
+                                        每满送
+                                    </div> 
+                                    <div class="table-text">
+                                        {{
+                                            `起送门槛${record.rule.quantity_min} 每满${record.rule.quantity_every}送${record.rule.quantity_bonus}`
+                                        }}
+                                    </div> 
+                                </div>
+                                <div class="table-block" v-else-if="record.type == 2">
+                                    <div class="table-tag">
+                                        整单送
+                                    </div>
+                                    <div class="table-text">
+                                        {{ 
+                                            `起送门槛${record.rule.quantity_min} 达到起送门槛后，赠送${record.rule.quantity_bonus}`
+                                        }}
+                                    </div>
+                                </div>
+                                <div v-else>
+                                    -
+                                </div>
                             </template>
                             <!-- 操作 -->
                             <template v-if="column.dataIndex === 'operation'">
@@ -998,5 +1014,18 @@ onMounted(() => {
 }
 :deep(.ant-form-item) {
     margin-bottom: 16px !important;
+}
+.table-block {
+    display: flex;
+    align-items: center;
+}
+.table-tag {
+    border-radius: 4px;
+    background: #F2F3F5;
+    padding: 0 4px;
+    box-sizing: border-box;
+    font-size: 12px;
+    color: #1D2129;
+    margin-right: 4px;
 }
 </style>
