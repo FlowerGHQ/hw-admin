@@ -864,7 +864,7 @@
                                         >
                                     </template>
                                     <template v-if="column.dataIndex === 'operation'">
-                                        <a-button type="link" @click="handleDelete(record)">
+                                        <a-button type="link" danger @click="handleDelete(record)">
                                             <i class="icon i_delete" />
                                             {{ $t('def.delete') }}
                                         </a-button>
@@ -3476,7 +3476,7 @@ export default {
     }
 }
 .i_delete {
-    color: #0061ff;
+    color: #f5222d;
 }
 .popover {
     min-width: 344px;
