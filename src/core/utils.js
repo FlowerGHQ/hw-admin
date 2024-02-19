@@ -355,11 +355,12 @@ const Util = {
         let ITEM = MAP[val + ''] || {};
         return ITEM[to] || '';
     },
-    imageFilter(item, default_type = 1) {
+    imageFilter(item, default_type = 1, default_img_url = '') {
         if (!item || typeof item !== 'string') {
             console.warn('imageFilter 没有找到图像');
             let map = Const.DEFULT_IMG;
-            return map[default_type] || '';
+            // return map[default_type] || '';
+            return default_img_url || map[default_type] || '';
         }
         // 如果是多张-逗号拼接形式
         if (item.includes(',')) {

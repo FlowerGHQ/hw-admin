@@ -3238,6 +3238,7 @@ export default {
                 display: flex;
                 align-items: center;
                 border: 1px solid #eaecf1;
+                justify-content: space-between;
                 &:hover {
                     border: 1px solid rgba(0, 97, 255, 0.5);
                     border-radius: 4px;

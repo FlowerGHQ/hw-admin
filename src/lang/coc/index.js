@@ -31,6 +31,8 @@ export default {
         coc_lable_validity_date: '有效日期',
         coc_lable_create_date: '创建日期',
         coc_lable_template: '证书模板',
+        // 模板示例图
+        coc_lable_template_img: '模板示例图',
         coc_placeholder_name: '请输入COC名称',
         coc_placeholder_version: '请输入版本号',
         coc_placeholder_apply_vehicle: '请选择适用车型',

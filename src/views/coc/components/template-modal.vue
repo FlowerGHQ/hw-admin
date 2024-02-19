@@ -142,12 +142,23 @@
                         </div>
                     </a-upload>
                 </a-form-item>
+                <a-form-item
+                    :label="$t('coc.coc_lable_template_img')"
+                    :label-col="labelCol"
+                    class="upload-item"
+                    v-if="type === 'add'"
+                >
+                    <div class="coc_lable_template_img">
+                        <a-image :preview="true" :src="defaultTemplate" />
+                    </div>
+                </a-form-item>
             </a-form>
         </a-modal>
     </div>
 </template>
 <script setup>
 import Core from '@/core';
+import defaultTemplate from '@/assets/images/coc/template-img.png';
 import { useI18n } from 'vue-i18n';
 import { defineEmits, reactive, ref, onMounted, watch, getCurrentInstance, computed } from 'vue';
 // import TemplateUpload from "./template-upload.vue";
@@ -158,7 +169,6 @@ const { dayjsReview, timeFilter, dayjsToTimestamp } = Util;
 import { PlusOutlined, FileWordOutlined } from '@ant-design/icons-vue';
 const $t = useI18n().t;
 const $message = getCurrentInstance().proxy.$message;
-
 const props = defineProps({
     dialogVisible: {
         type: Boolean,
@@ -183,6 +193,9 @@ const labelCol = ref({ style: { width: '100px' } });
 const wrapperCol = ref({ span: 18 });
 const option = ref([]);
 const refForm = ref(null);
+const type = computed(() => {
+    return props.modalType;
+});
 const upload = reactive({
     action: FILE_UPLOAD_END_POINT,
     headers: {
@@ -261,43 +274,6 @@ const searchForm = reactive({
 const filterOption = (input, option) => {
     return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 };
-// watch(
-//   () => props.recordItem,
-//   (val) => {
-//     if (val) {
-//       searchForm.name = val.name;
-//       searchForm.version_number = val.version_number;
-//       searchForm.coc_validity_date =
-//         val.effective_start_time && val.effective_start_time
-//           ? [
-//               dayjsReview(val.effective_start_time),
-//               dayjsReview(val.effective_end_time),
-//             ]
-//           : [];
-//       searchForm.model =
-//         val.model && val.model.length > 0 ? val.model.split(",") : [];
-//       searchForm.fileList =
-//         val.file_name && val.file_url
-//           ? [
-//               {
-//                 response: {
-//                   data: {
-//                     filename: val.file_url,
-//                     name: val.file_name,
-//                   },
-//                 },
-//                 name: val.file_name,
-//                 url: OSS_POINT + "/" + val.file_url,
-//               },
-//             ]
-//           : [];
-//       searchForm.id = val.id;
-//     }
-//   },
-//   {
-//     deep: true,
-//   }
-// );
 watch([() => props.modalType, () => props.recordItem], val => {
     console.log('val', val);
     if (val[0] === 'add') {
@@ -488,6 +464,18 @@ onMounted(() => {
             // 超出换行
             white-space: normal;
         }
+    }
+}
+.coc_lable_template_img {
+    width: 80px;
+    height: 80px;
+    border-radius: 4px;
+    border: 1px solid #eaecf1;
+    background: #fff;
+    cursor: pointer;
+    .ant-image {
+        width: 100%;
+        height: 100%;
     }
 }
 .ant-form-item-control-input-content > span {
