@@ -169,6 +169,9 @@
                                                 :placeholder="$t('def.p_set')"
                                                 :min="1"
                                             >
+                                                <template #addonAfter>
+                                                    <span class="unit"> 份 </span>
+                                                </template>
                                             </a-input-number>
                                         </div>
                                     </div>
@@ -203,13 +206,29 @@
                             </template>
                             <!-- 赠送规则 -->
                             <template v-if="column.dataIndex === 'rule'">
-                                {{
+                                <!-- {{
                                     record.type == 1
                                         ? `【每满送】 起送门槛【${record.rule.quantity_min}】 每满${record.rule.quantity_every}送${record.rule.quantity_bonus}`
                                         : record.type == 2
                                           ? `【整单送】 起送门槛【${record.rule.quantity_min}】 达到起送门槛后,赠送${record.rule.quantity_bonus}`
                                           : '-'
-                                }}
+                                }} -->
+                                <div class="type_one" v-if="record.type == 1">
+                                    <span class="area">每满送</span>
+                                    起送门槛
+                                    <span class="area">{{ record.rule.quantity_min }}</span
+                                    >, 每满
+                                    <span class="area">{{ record.rule.quantity_every }}</span>
+                                    赠送
+                                    <span class="area">{{ record.rule.quantity_bonus }} </span>
+                                </div>
+                                <div class="type_two" v-else>
+                                    <span class="area">整单送</span>
+                                    起送门槛
+                                    <span class="area">{{ record.rule.quantity_min }}</span>
+                                    达到起送门槛后,赠送
+                                    <span class="area">{{ record.rule.quantity_bonus }}</span>
+                                </div>
                             </template>
                             <!-- 操作 -->
                             <template v-if="column.dataIndex === 'operation'">
@@ -926,6 +945,22 @@ onMounted(() => {
                 font-size: 16px;
                 margin-right: 8px;
             }
+        }
+    }
+    .type_one,
+    .type_two {
+        display: flex;
+        align-items: center;
+        .area {
+            display: flex;
+            height: 24px;
+            padding: 2px 4px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            background: #f2f3f5;
+            margin: 0 8px;
+            float: left;
         }
     }
 }

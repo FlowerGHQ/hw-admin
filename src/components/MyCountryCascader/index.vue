@@ -8,7 +8,7 @@
         class="cascader-area"
         :placeholder="$t('n.choose')"
         @change="handleChange"
-        id="cascader"
+        ref="cascader"
         :popper-class="'cascader-area-popper'"
     />
 </template>
@@ -43,6 +43,8 @@ const countryOptions = ref([]);
 const props = { multiple: true };
 // 已经绑定的值
 const bindArea = ref([]);
+const cascader = ref(null);
+
 const targetCountryOptions = computed(() => {
     return addParentCode(countryOptions.value, '', '', '');
 });
@@ -52,7 +54,6 @@ const addParentCode = (arr, parentCode, parentName, parentEnName) => {
         item.parentCode = parentCode;
         item.parentName = parentName;
         item.parentEnName = parentEnName;
-        console.log('bindArea.value', $props.defaultList);
         // 如果不包含在绑定的值里面并且不在默认值里面
         if (!bindArea.value.includes(item.name) || $props.defaultList.includes(item.name)) {
             item.disabled = false;
@@ -86,32 +87,26 @@ const flatten = arr => {
 };
 // 清空搜索框的值
 const clearSearch = () => {
+    // 级联组件
     let input = document.querySelector('.el-cascader__search-input');
+    console.log('input', input);
     if (input) {
         input.value = '';
-        // 触发input事件，以通知Vue更新
-        const event = new Event('input', { bubbles: true }); //bubbles: true 事件会冒泡
+        // 触发input的change事件
+        let event = new Event('input', { bubbles: true });
         input.dispatchEvent(event);
     } else {
         console.warn('input不存在');
     }
 };
-// 检测是否选择的值已经被绑定
-const checkBind = (value, bindArea) => {
-    let arr = [];
-    console.log('props.value', $props.value);
-    value.forEach(item => {
-        console.log('item', item);
-        if (!bindArea.includes(item[1])) {
-        }
-    });
-    console.log('arr', arr);
-    message.warning($t('sales-area.bind_area_warning'));
-    return arr;
-};
 // 触发获取
 const handleChange = value => {
-    clearSearch();
+    let input = document.querySelector('.el-cascader__search-input');
+    // 查看input的值
+    console.log('input', input.value);
+    if (input.value) {
+        clearSearch();
+    }
     // 默认传递国家数据
     let arr = [];
     value.forEach(item => {

@@ -57,9 +57,9 @@
                                 起送门槛
                                 <span class="area">{{ record.rule.quantity_min }}</span
                                 >, 每满
-                                <span class="area">${{ record.rule.quantity_every }}</span>
-                                送
-                                <span class="area">${{ record.rule.quantity_bonus }} </span>
+                                <span class="area">{{ record.rule.quantity_every }}</span>
+                                赠送
+                                <span class="area">{{ record.rule.quantity_bonus }} </span>
                             </div>
                             <div class="type_two" v-else>
                                 <span class="area">整单送</span>
