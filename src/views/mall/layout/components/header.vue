@@ -6,85 +6,6 @@
                     <span>{{ $t('mall.hi') }}，{{ user.name }}，{{ $t('mall.welcome') }}</span>
                 </div>
                 <div class="header-right">
-                    <!-- 头像 -->
-                    <span class="header-menu">
-                        <a-dropdown
-                            :trigger="['click']"
-                            overlay-class-name="action-menu"
-                            placement="bottom"
-                            @visibleChange="avatarDropDownChange"
-                        >
-                            <span class="menu-item-dropdown">
-                                <span class="header-menu-img">
-                                    <a-avatar :src="$Util.imageFilter(user.avatar, 3)" :size="18" alt="user" />
-                                </span>
-                                <span class="header-menu-text tab-animate" :class="menuIndex === 0 ? 'active' : ''">{{
-                                    user.name
-                                }}</span>
-                                <svg-icon
-                                    icon-class="header-expand-icon"
-                                    :class-name="avatarShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'"
-                                />
-                            </span>
-                            <template #overlay>
-                                <a-menu style="text-align: center">
-                                    <a-menu-item @click="handleEditShow">
-                                        <a class="menu_text" :class="lang">{{ $t('n.password') }}</a>
-                                        <a-modal
-                                            v-model:visible="passShow"
-                                            :title="$t('n.password')"
-                                            class="password-edit-modal"
-                                            :after-close="handleEditClose"
-                                        >
-                                            <div class="form-title">
-                                                <div class="form-item required">
-                                                    <div class="key">{{ $t('n.old') }}:</div>
-                                                    <div class="value">
-                                                        <a-input-password
-                                                            :placeholder="$t('def.input')"
-                                                            v-model:value="form.old_password"
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div class="form-item required">
-                                                    <div class="key">{{ $t('n.new') }}:</div>
-                                                    <div class="value">
-                                                        <a-input-password
-                                                            v-model:value="form.password"
-                                                            :placeholder="$t('def.input')"
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div class="form-item required">
-                                                    <div class="key">{{ $t('n.double') }}:</div>
-                                                    <div class="value">
-                                                        <a-input-password
-                                                            v-model:value="form.new_password"
-                                                            :placeholder="$t('n.double')"
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <template #footer>
-                                                <a-button key="back" @click="handleEditSubmit" type="primary">{{
-                                                    $t('def.sure')
-                                                }}</a-button>
-                                                <a-button @click="passShow = false">{{ $t('def.cancel') }}</a-button>
-                                            </template>
-                                        </a-modal>
-                                    </a-menu-item>
-                                    <a-menu-divider class="menu_divider" />
-                                    <a-menu-item @click="routerChange('/login')" v-if="user_type_list.length > 1">
-                                        <a class="menu_text" :class="lang">{{ $t('mall.switch_identity') }}</a>
-                                    </a-menu-item>
-                                    <a-menu-divider class="menu_divider" v-if="user_type_list.length > 1" />
-                                    <a-menu-item @click="handleLogout">
-                                        <a class="menu_text" :class="lang">{{ $t('n.exit') }}</a>
-                                    </a-menu-item>
-                                </a-menu>
-                            </template>
-                        </a-dropdown>
-                    </span>
                     <!-- 收藏夹 -->
                     <span class="header-menu" @click="changeMenu(1, '/mall/favorites')">
                         <span class="header-menu-img">
@@ -169,6 +90,85 @@
                                     <a-menu-divider class="menu_divider" />
                                     <a-menu-item key="1" @click="handleLangSwitch('zh')">
                                         <a class="menu_text" :class="lang">中文</a>
+                                    </a-menu-item>
+                                </a-menu>
+                            </template>
+                        </a-dropdown>
+                    </span>
+                    <!-- 头像 -->
+                    <span class="header-menu">
+                        <a-dropdown
+                            :trigger="['click']"
+                            overlay-class-name="action-menu"
+                            placement="bottom"
+                            @visibleChange="avatarDropDownChange"
+                        >
+                            <span class="menu-item-dropdown">
+                                <span class="header-menu-img">
+                                    <a-avatar :src="$Util.imageFilter(user.avatar, 3)" :size="18" alt="user" />
+                                </span>
+                                <span class="header-menu-text tab-animate" :class="menuIndex === 0 ? 'active' : ''">{{
+                                    user.name
+                                }}</span>
+                                <svg-icon
+                                    icon-class="header-expand-icon"
+                                    :class-name="avatarShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'"
+                                />
+                            </span>
+                            <template #overlay>
+                                <a-menu style="text-align: center">
+                                    <a-menu-item @click="handleEditShow">
+                                        <a class="menu_text" :class="lang">{{ $t('n.password') }}</a>
+                                        <a-modal
+                                            v-model:visible="passShow"
+                                            :title="$t('n.password')"
+                                            class="password-edit-modal"
+                                            :after-close="handleEditClose"
+                                        >
+                                            <div class="form-title">
+                                                <div class="form-item required">
+                                                    <div class="key">{{ $t('n.old') }}:</div>
+                                                    <div class="value">
+                                                        <a-input-password
+                                                            :placeholder="$t('def.input')"
+                                                            v-model:value="form.old_password"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div class="form-item required">
+                                                    <div class="key">{{ $t('n.new') }}:</div>
+                                                    <div class="value">
+                                                        <a-input-password
+                                                            v-model:value="form.password"
+                                                            :placeholder="$t('def.input')"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div class="form-item required">
+                                                    <div class="key">{{ $t('n.double') }}:</div>
+                                                    <div class="value">
+                                                        <a-input-password
+                                                            v-model:value="form.new_password"
+                                                            :placeholder="$t('n.double')"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <template #footer>
+                                                <a-button key="back" @click="handleEditSubmit" type="primary">{{
+                                                    $t('def.sure')
+                                                }}</a-button>
+                                                <a-button @click="passShow = false">{{ $t('def.cancel') }}</a-button>
+                                            </template>
+                                        </a-modal>
+                                    </a-menu-item>
+                                    <a-menu-divider class="menu_divider" />
+                                    <a-menu-item @click="routerChange('/login')" v-if="user_type_list.length > 1">
+                                        <a class="menu_text" :class="lang">{{ $t('mall.switch_identity') }}</a>
+                                    </a-menu-item>
+                                    <a-menu-divider class="menu_divider" v-if="user_type_list.length > 1" />
+                                    <a-menu-item @click="handleLogout">
+                                        <a class="menu_text" :class="lang">{{ $t('n.exit') }}</a>
                                     </a-menu-item>
                                 </a-menu>
                             </template>

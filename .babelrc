@@ -9,5 +9,8 @@
                 "cacheDirectory": true
             }
         ]
+    ],
+    "plugins": [
+        ["import", { "libraryName": "ant-design-vue", "style": "css" }] // 确保 style 选项设置为 "css"
     ]
 }

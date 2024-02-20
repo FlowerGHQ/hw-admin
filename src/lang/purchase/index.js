@@ -91,7 +91,7 @@ export default {
         shopping_bag: 'Shopping Bag',
         select_all: 'Select All',
         free_gift: 'Free Gift',
-        settlement: 'Settlement',
+        settlement: 'Buy Now',
         selected_items: 'Selected Items (Excluding Shipping Costs )',
         s_items: 'Items Selected',
         selected_items_total: 'Total (Excluding Shipping Costs)：',

@@ -112,12 +112,12 @@
                         <template #bodyCell="{ column, text, record }">
                             <!-- 名称 -->
                             <template v-if="column.key === 'detail'">
-                                <div style="width: 200px" class="table-img afs">
+                                <div style="width: 200px" class="table-img">
                                     <a-image
                                         class="image"
                                         :width="55"
                                         :height="55"
-                                        :src="$Util.imageFilter(record.logo, 2)"
+                                        :src="$Util.imageFilter(record.logo, record.type == 2 ? 6 : 2)"
                                         :fallback="$t('def.none')"
                                     />
                                     <div class="info">

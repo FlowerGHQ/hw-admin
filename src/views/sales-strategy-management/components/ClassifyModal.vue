@@ -11,7 +11,7 @@
             <!-- 搜索固定数据 :closable="false" -->
             <div class="search-container-new">
                 <div class="item-box">
-                    <div class="key-box">选择赠送地区</div>
+                    <div class="key-box">选择地区</div>
                     <div class="value-box">
                         <a-select
                             v-model:value="searchForm.area"

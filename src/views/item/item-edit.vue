@@ -679,7 +679,9 @@
                                                 >
                                             </a-upload>
                                             <div
-                                                class="imgList-box"
+                                                :class="`imgList-box imgList-box-${index}`"
+                                                @mouseover="handleHoverImg(record, index)"
+                                                @mouseleave="handleLeaveImg(record, index)"
                                                 v-if="record.imgsList && record.imgsList.length > 0"
                                             >
                                                 <img
@@ -862,7 +864,7 @@
                                         >
                                     </template>
                                     <template v-if="column.dataIndex === 'operation'">
-                                        <a-button type="link" @click="handleDelete(record)">
+                                        <a-button type="link" danger @click="handleDelete(record)">
                                             <i class="icon i_delete" />
                                             {{ $t('def.delete') }}
                                         </a-button>
@@ -1070,7 +1072,7 @@
             </a-button>
             <!--  type="primary" ghost -->
             <a-button @click="routerChange('back')">{{ $t('def.cancel') }}</a-button>
-            <a-button type="primary" @click="handleSubmit">{{ $t('def.sure_create') }}</a-button>
+            <a-button type="primary" @click="handleSubmit">{{ $t('def.sure') }}</a-button>
             <!-- 底部障眼法-盒子 -->
             <div class="bottom-box"></div>
         </div>
@@ -1464,6 +1466,16 @@ export default {
         next();
     },
     methods: {
+        handleHoverImg(record, index) {
+            let dom = document.querySelector(`.imgList-box-${index}`);
+            // dom下的class为close-pic的元素显示
+            dom.querySelector('.close-pic').style.opacity = 1;
+        },
+        handleLeaveImg(record, index) {
+            let dom = document.querySelector(`.imgList-box-${index}`);
+            // dom下的class为close-pic的元素隐藏
+            dom.querySelector('.close-pic').style.opacity = 0;
+        },
         handleTableNameChange(type) {
             console.log(this.specific.data);
             console.log(this.form);
@@ -3226,6 +3238,7 @@ export default {
                 display: flex;
                 align-items: center;
                 border: 1px solid #eaecf1;
+                justify-content: space-between;
                 &:hover {
                     border: 1px solid rgba(0, 97, 255, 0.5);
                     border-radius: 4px;
@@ -3255,6 +3268,8 @@ export default {
         }
 
         .imgList-box {
+            display: flex;
+            align-items: center;
             .img-pic {
                 width: 36px;
                 height: 36px;
@@ -3269,6 +3284,7 @@ export default {
                 flex-shrink: 0;
                 cursor: pointer;
                 margin-left: 8px;
+                opacity: 0;
             }
         }
     }
@@ -3382,14 +3398,14 @@ export default {
 }
 :deep(.ant-input-wrapper) {
     .ant-input-group-addon:nth-of-type(1) {
-        background-color: #fff;
+        background-color: #fafafa;
     }
 }
 .not-white-space {
     white-space: nowrap;
 }
 .appearance-font {
-    color: #1d2129 !important;
+    // color: #1d2129 !important;
     font-family: PingFang SC;
     margin-top: 5px;
 }
@@ -3460,7 +3476,7 @@ export default {
     }
 }
 .i_delete {
-    color: #0061ff;
+    color: #f5222d;
 }
 .popover {
     min-width: 344px;
@@ -3550,9 +3566,17 @@ export default {
 .ant-input-group-wrapper {
     :deep(.ant-input-group-addon) {
         color: #8090a6;
+        background-color: #fafafa !important;
         .l-w-h-style-unit {
-            color: #8090a6;
+            color: #8090a6 !important;
         }
+    }
+}
+.ant-input-number-group-addon {
+    color: #8090a6;
+    background-color: #fafafa !important;
+    .l-w-h-style-unit {
+        color: #8090a6 !important;
     }
 }
 

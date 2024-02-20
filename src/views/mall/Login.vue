@@ -162,7 +162,7 @@
                 </div>
                 <div class="about">
                     <!-- {{ $t('mall.about') }} -->
-                    © 2023 | HORWIN Inc
+                    © 2024 | HORWIN Inc
                 </div>
             </div>
         </div>

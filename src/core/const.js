@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import defult_img from '@images/defult_img.png';
+import default_img2 from '@images/default_img2.png';
 import defult_mall_img from '@images/defult_mall_img.png';
 import defult_org from '@images/defult_org.png';
 import defult_item from '@images/defult_item.png';
@@ -106,6 +107,7 @@ let Const = {
         3: defult_org,
         4: defult_file,
         5: defult_mall_img,
+        6: default_img2,
     },
 
     TIME_PICKER_DEFAULT_VALUE: {
@@ -256,7 +258,7 @@ let Const = {
             { lang: 'news', path: '/mall/all-articles' },
             // { lang: 'local_deals' },
         ],
-        FOOTERMENU: [{ lang: 'conditions' }, { lang: 'legal' }],
+        // FOOTERMENU: [{ lang: 'conditions' }, { lang: 'legal' }],
     },
     FLAG: {
         YES: 1,
