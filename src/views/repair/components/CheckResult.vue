@@ -34,11 +34,8 @@
                             {{ $t(title) }}
                         </template>
                         <template #bodyCell="{ column, record, text }">
-                            <!--                        <template v-if="column.dataIndex === 'item_fault_id'">
-                            {{ faultMap[text] || '-' }}
-                        </template>-->
                             <template v-if="column.dataIndex === 'name'">
-                                {{ $i18n.locale === 'zh' ? record.item.name : record.item.name_en }}
+                                {{ $i18n.locale === 'zh' ? record.item?.name : record.item?.name_en }}
                             </template>
                             <template v-if="column.key === 'service_type'">
                                 {{ $Util.repairServiceFilter(detail.service_type, $i18n.locale) }}
