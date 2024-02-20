@@ -144,7 +144,11 @@
                         <template v-if="column.dataIndex === 'status'">
                             <div class="status status-bg status-tag" :class="$Util.repairStatusFilter(text, 'color')">
                                 <a-tooltip :title="record.audit_message" placement="topRight" destroyTooltipOnHide>
-                                    {{ $Util.repairStatusFilter(text, $i18n.locale) }}
+                                    {{
+                                        $Util.repairStatusFilter(text)
+                                            ? $Util.repairStatusFilter(text)[$i18n.locale]
+                                            : '-'
+                                    }}
                                     <template v-if="[STATUS.AUDIT_FAIL].includes(record.status)">
                                         <i class="icon i_hint" style="font-size: 12px; padding-left: 6px" />
                                     </template>
