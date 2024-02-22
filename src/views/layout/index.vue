@@ -306,13 +306,9 @@ export default {
             this.moduleAuth.forEach(el => {
                 const find = this.authFirst.find(item => el.value == item.tabPosition);
                 if (find) {
-                    arr.push({ ...el, path: find.path });
+                    arr.push(el);
                 }
             });
-
-            if (arr[0]?.path) {
-                this.$router.push({ path: arr[0]?.path });
-            }
 
             return arr;
         },
@@ -537,6 +533,10 @@ export default {
                 console.log("returnAdminFilter", this.authFirst);
                 this.tabPosition = this.authFirst[0].tabPosition
                 Core.Data.setTabPosition(this.authFirst[0].tabPosition);
+                
+                if (this.authFirst[0].path) {                    
+                    this.$router.replace({ path: this.authFirst[0]?.path });
+                }
             }
 
             return result;
