@@ -374,6 +374,24 @@
                                 <a-empty :description="null" />
                             </div>
                         </template>
+                        <p class="code-title border-top">
+                            <span class="code-title-l">{{ $t('i.invalid_encoding') }}</span>
+                            <a-button type="default" v-if="invalidCodeList.length > 0" @click="copyText('code-body-invalid')">
+                                {{ $t('i.copy_encoding') }}
+                            </a-button>
+                        </p>
+                        <template v-if="invalidCodeList.length > 0">
+                            <div class="code-body" id="code-body-invalid">
+                                <div class="code-item" v-for="item in invalidCodeList">
+                                    {{ item }}
+                                </div>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="empty">
+                                <a-empty :description="null" />
+                            </div>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -1128,6 +1146,9 @@ export default {
         background: #ffffff;
         border: 1px solid #e2e2e2;
         border-radius: 4px;
+        .border-top {
+            border-top: 1px solid #e2e2e2;
+        }
         .code-title {
             .fcc(space-between);
             background: #f2f3f5;
