@@ -67,4 +67,22 @@ export default {
             };
         });
     },
+    /**
+    * 传dom id
+    * @param {String | Number} id
+    */
+    copyText(id) {
+        const divElement = document.getElementById(id);
+        if (window.getSelection) {
+            const selection = window.getSelection();
+            const range = document.createRange();
+            range.selectNodeContents(divElement);
+            selection.removeAllRanges();
+            selection.addRange(range);
+            document.execCommand("copy");
+            selection.removeAllRanges();
+        } else {
+            throw Error('No window.getSelection!')
+        }
+    }
 };

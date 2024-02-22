@@ -62,6 +62,13 @@ export default {
         BONAFIDECLAIM: 320, // 善意索赔
         UNPACKINGDAMAGE: 330, // 开箱损
     },
+    //咨询类别
+    CONSULTATION_TYPE: {
+        110: { value: 110, t: 'customer-care.technical_consultation' }, // 技术咨询
+        120: { value: 120, t: 'customer-care.policy_consultation' }, // 政策咨询
+        130: { value: 130, t: 'customer-care.business_consultation' }, // 业务咨询
+        140: { value: 140, t: 'customer-care.other_consultation' }, // 其他咨询
+    },
     // 保内 保外 其他
     GOOD_FAITH: {
         1: { value: 1, t: 'common.within_warranty' }, // 保内
