@@ -369,7 +369,11 @@ export default {
         this.$store.state.lang = Core.Data.getLang();
         this.tabPosition = Core.Data.getTabPosition() || 1;
         if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
-            this.handleRouterSwitch();
+            this.returnAdminFilter(ROUTER_TYPE.SALES);
+            this.returnAdminFilter(ROUTER_TYPE.AFTER);
+            this.returnAdminFilter(ROUTER_TYPE.PRODUCTION);
+            this.returnAdminFilter(ROUTER_TYPE.SUPPLIER);
+            this.returnAdminFilter(ROUTER_TYPE.CRM);
         }
 
         // 监听页面窗口
@@ -378,11 +382,7 @@ export default {
             this.collapsed = true;
         }
 
-        this.returnAdminFilter(ROUTER_TYPE.SALES);
-        this.returnAdminFilter(ROUTER_TYPE.AFTER);
-        this.returnAdminFilter(ROUTER_TYPE.PRODUCTION);
-        this.returnAdminFilter(ROUTER_TYPE.SUPPLIER);
-        this.returnAdminFilter(ROUTER_TYPE.CRM);
+        
     },
     methods: {
         routerChange(type) {
@@ -523,12 +523,13 @@ export default {
                     return this.$auth(...el.meta?.auth) || !el.meta?.auth;
                 }
             });
-
-            console.log('returnAdminFilter', result);
+            
 
             if (result) {
+                console.log("this.authFirst", this.authFirst);
                 this.authFirst.push(tabPosition);
                 this.authFirst = [...new Set(this.authFirst)].sort((a, b) => a - b);
+                this.tabPosition = this.authFirst[0]
                 Core.Data.setTabPosition(this.authFirst[0]);
             }
 
