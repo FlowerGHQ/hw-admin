@@ -8,27 +8,15 @@
                 </div>
                 <div class="header-center" v-if="loginType === Core.Const.USER.TYPE.ADMIN">
                     <a-radio-group v-model:value="tabPosition" @change="handleRouterSwitch">
-                        <a-radio-button class="header-button" :value="ROUTER_TYPE.SALES">
-                            <div class="router-type">
-                                <img src="@images/router_type_3.png" alt="浩万" />{{ $t('n.sales') }}
-                            </div>
+                        <a-radio-button
+                            v-for="item in moduleAuthList"
+                            :key="item.id"
+                            class="header-button"
+                            :value="item.value"
+                        >
+                            <div class="router-type"><img :src="item.img" alt="" />{{ $t(item.t) }}</div>
                         </a-radio-button>
-                        <a-radio-button class="header-button" :value="ROUTER_TYPE.AFTER">
-                            <div class="router-type">
-                                <img src="@images/router_type_2.png" alt="浩万" />{{ $t('n.after') }}
-                            </div>
-                        </a-radio-button>
-                        <a-radio-button class="header-button" :value="ROUTER_TYPE.PRODUCTION">
-                            <div class="router-type">
-                                <img src="@images/router_type_4.png" alt="浩万" />{{ $t('n.production') }}
-                            </div>
-                        </a-radio-button>
-                        <a-radio-button class="header-button" :value="ROUTER_TYPE.CRM">
-                            <div class="router-type">
-                                <img src="@images/router_type_1.png" alt="浩万" />{{ $t('n.crm') }}
-                            </div>
-                        </a-radio-button>
-                    </a-radio-group>
+                    </a-radio-group>                    
                 </div>
                 <div class="header-right">
                     <a-button class="lang-switch" type="link" @click="handleLangSwitch(lang == 'zh' ? 'en' : 'zh')">
@@ -176,6 +164,7 @@ import { SIDER } from '../../router/routes';
 import MyBreadcrumb from './components/Breadcrumb.vue';
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
 import enUS from 'ant-design-vue/lib/locale-provider/en_US';
+const ROUTER_TYPE = Core.Const.LOGIN.ROUTER_TYPE;
 
 export default {
     components: {
@@ -190,7 +179,7 @@ export default {
 
             loginType: Core.Data.getLoginType(),
             USER_TYPE: Core.Const.USER.TYPE_MAP,
-            ROUTER_TYPE: Core.Const.LOGIN.ROUTER_TYPE,
+            ROUTER_TYPE,
             collapsed: false,
             openKeys: [],
             selectedKeys: [],
@@ -208,6 +197,39 @@ export default {
             },
             tabPosition: 1, // 顶部的 销售 售后 生产 CRM权限
             user_type_list: [],
+            authFirst: [], // 判断 CRM等模块的谁在第一
+            moduleAuth: [
+                {
+                    id: 1,
+                    value: ROUTER_TYPE.SALES,
+                    img: Core.Util.Image.getImageFile('router', 'router_type_3'),
+                    t: 'n.sales',
+                },
+                {
+                    id: 2,
+                    value: ROUTER_TYPE.AFTER,
+                    img: Core.Util.Image.getImageFile('router', 'router_type_2'),
+                    t: 'n.after',
+                },
+                {
+                    id: 3,
+                    value: ROUTER_TYPE.PRODUCTION,                    
+                    img: Core.Util.Image.getImageFile('router', 'router_type_4'),
+                    t: 'n.production',
+                },
+                {
+                    id: 4,
+                    value: ROUTER_TYPE.SUPPLIER,                    
+                    img: Core.Util.Image.getImageFile('router', 'router_type_5'),
+                    t: 'n.supplier',
+                },
+                {
+                    id: 5,
+                    value: ROUTER_TYPE.CRM,                    
+                    img: Core.Util.Image.getImageFile('router', 'router_type_1'),
+                    t: 'n.crm',
+                },
+            ],
         };
     },
     provide() {
@@ -279,6 +301,16 @@ export default {
         lang() {
             return this.$store.state.lang;
         },
+        moduleAuthList() {
+            const arr = []
+            this.moduleAuth.forEach(el => {
+                const find = this.authFirst.find(item => el.value == item);
+                if (find) {
+                    arr.push(el)
+                }
+            });            
+            return arr;
+        },
     },
     watch: {
         $route: {
@@ -326,7 +358,7 @@ export default {
     created() {
         this.user_type_list = Core.Data.getUserTypeList();
     },
-    mounted() {
+    mounted() {        
         this.loginType = Core.Data.getLoginType();
         console.log(this.loginType);
         this.getUnreadCount();
@@ -345,6 +377,12 @@ export default {
         if (window.innerWidth <= 830) {
             this.collapsed = true;
         }
+
+        this.returnAdminFilter(ROUTER_TYPE.SALES);
+        this.returnAdminFilter(ROUTER_TYPE.AFTER);
+        this.returnAdminFilter(ROUTER_TYPE.PRODUCTION);
+        this.returnAdminFilter(ROUTER_TYPE.SUPPLIER);
+        this.returnAdminFilter(ROUTER_TYPE.CRM);
     },
     methods: {
         routerChange(type) {
@@ -458,31 +496,18 @@ export default {
             // console.log('获取路由列表第一个的跳转', this.showList[0]?.path);
             switch (this.tabPosition) {
                 case this.ROUTER_TYPE.SALES:
-                    if (this.returnAdminFilter(this.ROUTER_TYPE.SALES)) {
-                        return this.$router.replace({ path: '/admin/404' });
-                    }
-
                     this.$router.replace({ path: this.showList[0]?.path });
                     break;
                 case this.ROUTER_TYPE.AFTER:
-                    if (this.returnAdminFilter(this.ROUTER_TYPE.AFTER)) {
-                        return this.$router.replace({ path: '/admin/404' });
-                    }
-
                     this.$router.replace({ path: this.showList[0]?.path });
                     break;
                 case this.ROUTER_TYPE.PRODUCTION:
-                    if (this.returnAdminFilter(this.ROUTER_TYPE.PRODUCTION)) {
-                        return this.$router.replace({ path: '/admin/404' });
-                    }
-
                     this.$router.replace({ path: this.showList[0]?.path });
                     break;
                 case this.ROUTER_TYPE.CRM:
-                    if (this.returnAdminFilter(this.ROUTER_TYPE.CRM)) {
-                        return this.$router.replace({ path: '/admin/404' });
-                    }
-
+                    this.$router.replace({ path: this.showList[0]?.path });
+                    break;
+                case this.ROUTER_TYPE.SUPPLIER:
                     this.$router.replace({ path: this.showList[0]?.path });
                     break;
                 default:
@@ -491,18 +516,23 @@ export default {
         },
         // 判断顶部的 销售/售后/生产/CRM 路口显示
         returnAdminFilter(tabPosition, data = SIDER.ADMIN) {
-            let result = [];
-            result = data.filter(el => el.type?.includes(tabPosition));
-            result = result.filter(el => {
-                // console.log('判断顶部的 销售/售后/生产/CRM 路口显示', el, el.meta?.auth);
-                if (el.meta?.auth) {
-                    return this.$auth(...el.meta?.auth);
-                } else {
-                    return true;
+            let result = undefined;
+
+            result = data.find(el => {
+                if (el.type?.includes(tabPosition)) {
+                    return this.$auth(...el.meta?.auth) || !el.meta?.auth;
                 }
             });
 
-            return result.length === 0;
+            console.log('returnAdminFilter', result);
+
+            if (result) {
+                this.authFirst.push(tabPosition);
+                this.authFirst = [...new Set(this.authFirst)].sort((a, b) => a - b);
+                Core.Data.setTabPosition(this.authFirst[0]);
+            }
+
+            return result;
         },
 
         // 监听窗口变化
@@ -829,5 +859,9 @@ export default {
             }
         }
     }
+}
+
+.transform-scale-95 {
+    transform: scale(0.95);
 }
 </style>
