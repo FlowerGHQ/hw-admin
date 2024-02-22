@@ -16,7 +16,7 @@
                         >
                             <div class="router-type"><img :src="item.img" alt="" />{{ $t(item.t) }}</div>
                         </a-radio-button>
-                    </a-radio-group>                    
+                    </a-radio-group>
                 </div>
                 <div class="header-right">
                     <a-button class="lang-switch" type="link" @click="handleLangSwitch(lang == 'zh' ? 'en' : 'zh')">
@@ -213,19 +213,19 @@ export default {
                 },
                 {
                     id: 3,
-                    value: ROUTER_TYPE.PRODUCTION,                    
+                    value: ROUTER_TYPE.PRODUCTION,
                     img: Core.Util.Image.getImageFile('router', 'router_type_4'),
                     t: 'n.production',
                 },
                 {
                     id: 4,
-                    value: ROUTER_TYPE.SUPPLIER,                    
+                    value: ROUTER_TYPE.SUPPLIER,
                     img: Core.Util.Image.getImageFile('router', 'router_type_5'),
                     t: 'n.supplier',
                 },
                 {
                     id: 5,
-                    value: ROUTER_TYPE.CRM,                    
+                    value: ROUTER_TYPE.CRM,
                     img: Core.Util.Image.getImageFile('router', 'router_type_1'),
                     t: 'n.crm',
                 },
@@ -302,13 +302,18 @@ export default {
             return this.$store.state.lang;
         },
         moduleAuthList() {
-            const arr = []
+            const arr = [];
             this.moduleAuth.forEach(el => {
-                const find = this.authFirst.find(item => el.value == item);
+                const find = this.authFirst.find(item => el.value == item.tabPosition);
                 if (find) {
-                    arr.push(el)
+                    arr.push({ ...el, path: find.path });
                 }
-            });            
+            });
+
+            if (arr[0]?.path) {
+                this.$router.push({ path: arr[0]?.path });
+            }
+
             return arr;
         },
     },
@@ -358,7 +363,7 @@ export default {
     created() {
         this.user_type_list = Core.Data.getUserTypeList();
     },
-    mounted() {        
+    mounted() {
         this.loginType = Core.Data.getLoginType();
         console.log(this.loginType);
         this.getUnreadCount();
@@ -381,8 +386,6 @@ export default {
         if (window.innerWidth <= 830) {
             this.collapsed = true;
         }
-
-        
     },
     methods: {
         routerChange(type) {
@@ -523,14 +526,17 @@ export default {
                     return this.$auth(...el.meta?.auth) || !el.meta?.auth;
                 }
             });
-            
 
             if (result) {
-                console.log("this.authFirst", this.authFirst);
-                this.authFirst.push(tabPosition);
-                this.authFirst = [...new Set(this.authFirst)].sort((a, b) => a - b);
-                this.tabPosition = this.authFirst[0]
-                Core.Data.setTabPosition(this.authFirst[0]);
+                this.authFirst.push({ tabPosition, path: result.path });
+                // 对象去重
+                this.authFirst = Array.from(
+                    this.authFirst.reduce((map, item) => map.set(item.tabPosition, item), new Map()).values(),
+                ).sort((a, b) => a.tabPosition - b.tabPosition);
+
+                console.log("returnAdminFilter", this.authFirst);
+                this.tabPosition = this.authFirst[0].tabPosition
+                Core.Data.setTabPosition(this.authFirst[0].tabPosition);
             }
 
             return result;
