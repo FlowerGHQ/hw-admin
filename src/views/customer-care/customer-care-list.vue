@@ -183,14 +183,11 @@
                         </template>
                         <!-- 车型号,公里数 -->
                         <template v-if="column.key === 'mileage'">
-                            <a-tooltip placement="topLeft">
+                            <a-tooltip placement="topLeft" :overlayStyle="{ maxWidth: 'none' }">
                                 <template #title>
-                                    <span v-for="(item, index) in record.vehicle_list">
-                                        <span>
-                                            {{ $t('customer-care.model_number') }}：{{ item.vehicle_uid }}、{{ $t('customer-care.mileage') }}：{{ item.mileage }}
-                                        </span>
-                                        <span v-if="index < record.vehicle_list.length - 1">,</span>
-                                    </span>
+                                    <p v-for="(item, index) in record.vehicle_list">
+                                        {{ $t('customer-care.model_number') }}：{{ item.vehicle_uid }}、{{ $t('customer-care.mileage') }}：{{ item.mileage }}
+                                    </p>
                                 </template>
                                 <div
                                     class="one-spils cursor"
@@ -198,10 +195,8 @@
                                         width: column.width + 'px',
                                     }"
                                 >
-                                    <span v-for="(item, index) in record.vehicle_list">
-                                        <span class="cj_bg">
-                                            {{ $t('customer-care.model_number') }}：{{ item.vehicle_uid }}、{{ $t('customer-care.mileage') }}：{{ item.mileage }}
-                                        </span>
+                                    <span class="cj_bg" v-for="(item, index) in record.vehicle_list">
+                                        {{ $t('customer-care.model_number') }}：{{ item.vehicle_uid }}、{{ $t('customer-care.mileage') }}：{{ item.mileage }}
                                     </span>
                                     <template v-if="record.vehicle_list.length === 0">-</template>
                                 </div>
@@ -529,7 +524,7 @@ const tableColumns = computed(() => {
             { title: proxy.$t('customer-care.submitter'), dataIndex: 'submit_user_name', key: 'submit_user_name' }, // 提交人
             { title: proxy.$t('customer-care.part'), dataIndex: 'part_list', key: 'part_list', width: 150 }, // 零件
             { title: proxy.$t('customer-care.processing_progress'), dataIndex: 'status', key: 'status', width: 70 }, // 处理进度
-            { title: proxy.$t('customer-care.model_number_mileage'), dataIndex: 'mileage', key: 'mileage', width: 350 }, // 车架号、公里数
+            { title: proxy.$t('customer-care.model_number_mileage'), dataIndex: 'mileage', key: 'mileage', width: 400 }, // 车架号、公里数
             {
                 title: proxy.$t('customer-care.fault_classification'),
                 dataIndex: 'fault_type',
@@ -837,10 +832,14 @@ onMounted(() => {
     }
 }
 .cj_bg {
+    display: inline-block;
     background-color: #F2F3F5;
     padding: 5px 8px;
     border-radius: 4px;
     margin-right: 10px;
     font-size: 14px;
+}
+.ant-tooltip {
+    max-width: none;
 }
 </style>
