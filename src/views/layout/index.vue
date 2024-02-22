@@ -8,22 +8,49 @@
                 </div>
                 <div class="header-center" v-if="loginType === Core.Const.USER.TYPE.ADMIN">
                     <a-radio-group v-model:value="tabPosition" @change="handleRouterSwitch">
-                        <a-radio-button class="header-button" :value="ROUTER_TYPE.SALES">
+                        <a-radio-button
+                            v-if="returnAdminFilter(ROUTER_TYPE.SALES)"
+                            class="header-button"
+                            :value="ROUTER_TYPE.SALES"
+                        >
                             <div class="router-type">
                                 <img src="@images/router_type_3.png" alt="浩万" />{{ $t('n.sales') }}
                             </div>
                         </a-radio-button>
-                        <a-radio-button class="header-button" :value="ROUTER_TYPE.AFTER">
+                        <a-radio-button
+                            v-if="returnAdminFilter(ROUTER_TYPE.AFTER)"
+                            class="header-button"
+                            :value="ROUTER_TYPE.AFTER"
+                        >
                             <div class="router-type">
                                 <img src="@images/router_type_2.png" alt="浩万" />{{ $t('n.after') }}
                             </div>
                         </a-radio-button>
-                        <a-radio-button class="header-button" :value="ROUTER_TYPE.PRODUCTION">
+                        <a-radio-button
+                            v-if="returnAdminFilter(ROUTER_TYPE.PRODUCTION)"
+                            class="header-button"
+                            :value="ROUTER_TYPE.PRODUCTION"
+                        >
                             <div class="router-type">
                                 <img src="@images/router_type_4.png" alt="浩万" />{{ $t('n.production') }}
                             </div>
                         </a-radio-button>
-                        <a-radio-button class="header-button" :value="ROUTER_TYPE.CRM">
+                        <a-radio-button
+                            v-if="returnAdminFilter(ROUTER_TYPE.SUPPLIER)"
+                            class="header-button"
+                            :value="ROUTER_TYPE.SUPPLIER"
+                        >
+                            <div class="router-type">
+                                <img class="transform-scale-95" src="@images/router_type_5.png" alt="浩万" />{{
+                                    $t('n.supplier')
+                                }}
+                            </div>
+                        </a-radio-button>
+                        <a-radio-button
+                            v-if="returnAdminFilter(ROUTER_TYPE.CRM)"
+                            class="header-button"
+                            :value="ROUTER_TYPE.CRM"
+                        >
                             <div class="router-type">
                                 <img src="@images/router_type_1.png" alt="浩万" />{{ $t('n.crm') }}
                             </div>
@@ -208,6 +235,7 @@ export default {
             },
             tabPosition: 1, // 顶部的 销售 售后 生产 CRM权限
             user_type_list: [],
+            authFirst: [],  // 判断 CRM等模块的谁在第一
         };
     },
     provide() {
@@ -278,7 +306,7 @@ export default {
         },
         lang() {
             return this.$store.state.lang;
-        },
+        },        
     },
     watch: {
         $route: {
@@ -458,37 +486,24 @@ export default {
             // console.log('获取路由列表第一个的跳转', this.showList[0]?.path);
             switch (this.tabPosition) {
                 case this.ROUTER_TYPE.SALES:
-                    if (this.returnAdminFilter(this.ROUTER_TYPE.SALES)) {
-                        return this.$router.replace({ path: '/admin/404' });
-                    }
-
                     this.$router.replace({ path: this.showList[0]?.path });
                     break;
                 case this.ROUTER_TYPE.AFTER:
-                    if (this.returnAdminFilter(this.ROUTER_TYPE.AFTER)) {
-                        return this.$router.replace({ path: '/admin/404' });
-                    }
-
                     this.$router.replace({ path: this.showList[0]?.path });
                     break;
                 case this.ROUTER_TYPE.PRODUCTION:
-                    if (this.returnAdminFilter(this.ROUTER_TYPE.PRODUCTION)) {
-                        return this.$router.replace({ path: '/admin/404' });
-                    }
-
                     this.$router.replace({ path: this.showList[0]?.path });
                     break;
                 case this.ROUTER_TYPE.CRM:
-                    if (this.returnAdminFilter(this.ROUTER_TYPE.CRM)) {
-                        return this.$router.replace({ path: '/admin/404' });
-                    }
-
+                    this.$router.replace({ path: this.showList[0]?.path });
+                    break;
+                case this.ROUTER_TYPE.SUPPLIER:
                     this.$router.replace({ path: this.showList[0]?.path });
                     break;
                 default:
                     break;
             }
-        },
+        },        
         // 判断顶部的 销售/售后/生产/CRM 路口显示
         returnAdminFilter(tabPosition, data = SIDER.ADMIN) {
             let result = [];
@@ -501,8 +516,14 @@ export default {
                     return true;
                 }
             });
+            
+            if (result.length) {                
+                this.authFirst.push(tabPosition)  
+                this.authFirst = [...new Set(this.authFirst)].sort((a,b) => a - b)
+                Core.Data.setTabPosition(this.authFirst[0])
+            }
 
-            return result.length === 0;
+            return result.length !== 0;
         },
 
         // 监听窗口变化
@@ -829,5 +850,9 @@ export default {
             }
         }
     }
+}
+
+.transform-scale-95 {
+    transform: scale(0.95);
 }
 </style>

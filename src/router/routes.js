@@ -5,7 +5,7 @@ import Data from '../core/data';
 import Layout from '../views/layout/index.vue';
 
 // 供应商路由
-import { supplyManage, supplyRouters } from './supply-router';
+import { supplyManage, supplyRouters, supplyMaterialManagement } from './supply-router';
 // 新分销商路由
 import { mallRouters, dealsPreview } from './mall';
 // 分销商路由
@@ -48,7 +48,7 @@ switch (NOW_LOGIN_TYPE) {
  * @params meta.hideen判断是否显示到侧边栏上 true为不显示
  * @params meta.not_sub_menu: true判断当前路由是否是一级标签
  * @params meta.super_admin_show: 只在权限为ADMIN(平台方的时候有用) 判断这个路由是否只展示在超级管理员中
- * @params children meta.admin_module: 区分在admin中四大 销售/售后/生产/CRM 路口的权限 子模块判断
+ * @params children meta.admin_module: 区分在admin中四大 销售/售后/生产/CRM 路口的权限 子模块判断(判断例如  商品管理(子 BOM管理)即在销售/售后中 但是需要售后有[BOM管理] 销售不需要[BOM管理])
  */
 const routes = [
     {
@@ -2839,6 +2839,7 @@ const routes = [
         },
     },
     ...supplyRouters,
+    supplyMaterialManagement
 ];
 
 export default routes;

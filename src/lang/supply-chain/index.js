@@ -27,7 +27,7 @@ export default {
         back: '返回',
         tips1: '请等待工作人员审核资质',
         tips2: '后回到首页',
-        application_Materials: '申请资料列表',
+        application_Materials: '供应商列表',
         // 其他证实性材料
         other_proving_materials: '其他证实性材料',
         // 营业执照照片
@@ -285,7 +285,7 @@ export default {
         mold_acceptance: '模具验收',
         editing_data: '编辑资料',
         position_identity: '职位身份',
-        create_data: '创建资料',
+        create_data: '新增供应商',
         cancel_editing: '取消编辑',
         submit_materials: '提交资料',
         mask_tips1: '确定退出吗？',
@@ -322,7 +322,7 @@ export default {
         back: 'Back',
         tips1: 'Please wait for the staff to review their qualifications',
         tips2: 'then go back to the home page',
-        application_Materials: 'Application Materials',
+        application_Materials: 'Supplier List',
         // 其他证实性材料
         other_proving_materials: 'Other Proving Materials',
         // 营业执照照片

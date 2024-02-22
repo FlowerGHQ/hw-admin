@@ -241,6 +241,7 @@ const messages = {
             delete: '删除',
             spec_pic: '请上传规格商品图片',
             verification_code: '验证码',
+            supplier: '供应链',
         },
         a: {
             // 零售商
@@ -2342,7 +2343,7 @@ const messages = {
                 list: '售后BOM列表',
             },
             'supplier-application': {
-                list: '申请资料列表',
+                list: '供应商列表',
             },
             'sales-strategy': {
                 list: '销售策略列表',
@@ -5166,7 +5167,7 @@ const messages = {
                 list: 'Aftermarket Bom List',
             },
             'supplier-application': {
-                list: 'Application List',
+                list: 'Supplier List',
             },
             'sales-strategy': {
                 list: 'Sales Strategy List',
