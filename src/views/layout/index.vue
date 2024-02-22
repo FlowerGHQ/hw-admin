@@ -302,6 +302,7 @@ export default {
             return this.$store.state.lang;
         },
         moduleAuthList() {
+            // 纯展示的显示模块有哪些
             const arr = [];
             this.moduleAuth.forEach(el => {
                 const find = this.authFirst.find(item => el.value == item.tabPosition);
@@ -309,6 +310,8 @@ export default {
                     arr.push(el);
                 }
             });
+
+            console.log("moduleAuth", arr);
 
             return arr;
         },
@@ -369,7 +372,9 @@ export default {
         this.$i18n.locale = Core.Data.getLang();
         this.$store.state.lang = Core.Data.getLang();
         this.tabPosition = Core.Data.getTabPosition() || 1;
+
         if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
+            // 平台方执行
             this.returnAdminFilter(ROUTER_TYPE.SALES);
             this.returnAdminFilter(ROUTER_TYPE.AFTER);
             this.returnAdminFilter(ROUTER_TYPE.PRODUCTION);
@@ -534,7 +539,7 @@ export default {
                 this.tabPosition = this.authFirst[0].tabPosition
                 Core.Data.setTabPosition(this.authFirst[0].tabPosition);
                 
-                if (this.authFirst[0].path) {                    
+                if (this.authFirst[0].path) {
                     this.$router.replace({ path: this.authFirst[0]?.path });
                 }
             }
