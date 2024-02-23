@@ -343,8 +343,7 @@ export default {
                     this.breadcrumbList.push({ text: meta.title, path: n.path, key: path[0] });
                 }
 
-                // 登录页面走过来在执行
-                console.log("ss", n.query.from);
+                // 登录页面走过来在执行                
                 if (n.query.from) {
                     if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
                         // 平台方执行
