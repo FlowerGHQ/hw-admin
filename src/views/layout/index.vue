@@ -527,7 +527,11 @@ export default {
 
             result = data.find(el => {
                 if (el.type?.includes(tabPosition)) {
-                    return this.$auth(...el.meta?.auth) || !el.meta?.auth;
+                    if (el.meta?.auth) {
+                        return this.$auth(...el.meta?.auth)
+                    } else {
+                        return true
+                    }
                 }
             });
 
