@@ -394,7 +394,9 @@
 
                 <!-- 部件 -->
                 <div class="inquiry-classification-item">
-                    <div class="inquiry-classification-key" :class="requiredType === 2 ? 'required' : ''">{{ $t('customer-care.parts') }}</div>
+                    <div class="inquiry-classification-key" :class="requiredType === 2 ? 'required' : ''">
+                        {{ $t('customer-care.parts') }}
+                    </div>
                     <div class="inquiry-classification-value">
                         <ItemSelect
                             v-if="
@@ -463,7 +465,7 @@
                             'm-t-4': $Util.Common.returnTypeBool(customerCareDetail.type, [
                                 Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY /*电池*/,
                             ]),
-                            'required': requiredType === 2
+                            required: requiredType === 2,
                         }"
                     >
                         {{ $t('customer-care.fault_classification') }}
@@ -884,8 +886,8 @@ const commentListComputed = computed(() => {
 });
 const requiredType = computed(() => {
     // 类型为咨询返回 1（归类必填） 否则 返回 2（归类、部件和故障为必填项）
-    return customerCareDetail.value.type === Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION ? 1 : 2
-})
+    return customerCareDetail.value.type === Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION ? 1 : 2;
+});
 /* computed end */
 
 /* fetch start */
@@ -1416,15 +1418,18 @@ const onClaim = value => {
 
 // 表单校验
 const validateForm = () => {
-    if (requiredType.value === 1) {// 问询类型为咨询
+    if (requiredType.value === 1) {
+        // 问询类型为咨询
         if (!customerCareDetail.value.purpose || customerCareDetail.value.purpose === 0) {
             return message.warn(proxy.$t('common.please_select') + proxy.$t('customer-care.classify'));
         }
-        if (customerCareDetail.value.purpose === Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE_MAP.CLAIMCOMPENSATION) {// 索赔
+        if (customerCareDetail.value.purpose === Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE_MAP.CLAIMCOMPENSATION) {
+            // 索赔
             if (!customerCareDetail.value.claim_type || customerCareDetail.value.claim_type === 0) {
                 return message.warn(proxy.$t('common.please_select') + proxy.$t('customer-care.classify'));
             }
-        } else if (customerCareDetail.value.purpose === Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE_MAP.CONSULTATION) {// 咨询
+        } else if (customerCareDetail.value.purpose === Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE_MAP.CONSULTATION) {
+            // 咨询
             if (!customerCareDetail.value.claim_type || customerCareDetail.value.claim_type === 0) {
                 return message.warn(proxy.$t('common.please_select') + proxy.$t('customer-care.classify'));
             }
@@ -1433,11 +1438,13 @@ const validateForm = () => {
         if (!customerCareDetail.value.purpose || customerCareDetail.value.purpose === 0) {
             return message.warn(proxy.$t('common.please_select') + proxy.$t('customer-care.classify'));
         }
-        if (customerCareDetail.value.purpose === Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE_MAP.CLAIMCOMPENSATION) {// 索赔
+        if (customerCareDetail.value.purpose === Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE_MAP.CLAIMCOMPENSATION) {
+            // 索赔
             if (!customerCareDetail.value.claim_type || customerCareDetail.value.claim_type === 0) {
                 return message.warn(proxy.$t('common.please_select') + proxy.$t('customer-care.classify'));
             }
-        } else if (customerCareDetail.value.purpose === Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE_MAP.CONSULTATION) {// 咨询
+        } else if (customerCareDetail.value.purpose === Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE_MAP.CONSULTATION) {
+            // 咨询
             if (!customerCareDetail.value.claim_type || customerCareDetail.value.claim_type === 0) {
                 return message.warn(proxy.$t('common.please_select') + proxy.$t('customer-care.classify'));
             }
@@ -1445,10 +1452,16 @@ const validateForm = () => {
         if (customerCareDetail.value.part_list.length === 0) {
             return message.warn(proxy.$t('common.please_select') + proxy.$t('customer-care.parts'));
         }
-        if (proxy.$Util.Common.returnTypeBool(customerCareDetail.value.type, [Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION /*故障*/])) {
-            for(let item of customerCareDetail.value.vehicle_list) {
+        if (
+            proxy.$Util.Common.returnTypeBool(customerCareDetail.value.type, [
+                Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION /*故障*/,
+            ])
+        ) {
+            for (let item of customerCareDetail.value.vehicle_list) {
                 if (!item.fault_type || item.fault_type === 0) {
-                    return message.warn(proxy.$t('common.please_select') + proxy.$t('customer-care.fault_classification'));
+                    return message.warn(
+                        proxy.$t('common.please_select') + proxy.$t('customer-care.fault_classification'),
+                    );
                 }
             }
         } else {
@@ -1457,11 +1470,11 @@ const validateForm = () => {
             }
         }
     }
-    return false
-}
+    return false;
+};
 const changePurpose = () => {
-    customerCareDetail.value.claim_type = 0
-}
+    customerCareDetail.value.claim_type = 0;
+};
 /* methods end */
 
 watch(
@@ -1798,10 +1811,10 @@ onMounted(() => {
                 right: 0;
                 font-size: 14px;
                 font-weight: 400;
-                color: #1d2129;
+                color: #0061ff;
                 border-radius: 4px;
-                border: 1px solid #e5e6eb;
-                background: #fff;
+                // border: 1px solid #e5e6eb;
+                background: rgba(0, 97, 255, 0.1);
                 padding: 4px 8px;
             }
         }
