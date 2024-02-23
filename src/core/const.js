@@ -100,6 +100,7 @@ let Const = {
         ADMIN_NEW_MSG: 'admin-new-msg',
         DISTRIBUTOR_NEW_MSG: 'distributor-new-msg',
         REPORT_DATA: 'report_data',
+        AUTHFIRST: 'authfirst',  // 销售/售后/生产/CRM/供应链 存储信息
     },
     DEFULT_IMG: {
         1: defult_img,

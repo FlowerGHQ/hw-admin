@@ -197,7 +197,7 @@ export default {
             },
             tabPosition: 1, // 顶部的 销售 售后 生产 CRM权限
             user_type_list: [],
-            authFirst: [], // 判断 CRM等模块的谁在第一
+            authFirst: Core.Data.getAuthFirst() || [], // 判断 CRM等模块的谁在第一
             moduleAuth: [
                 {
                     id: 1,
@@ -521,7 +521,7 @@ export default {
                     break;
             }
         },
-        // 判断顶部的 销售/售后/生产/CRM 路口显示
+        // 判断顶部的 销售/售后/生产/CRM/供应链 路口显示(根据底下是否有路由)
         returnAdminFilter(tabPosition, data = SIDER.ADMIN) {
             let result = undefined;
 
@@ -545,6 +545,7 @@ export default {
                 console.log('returnAdminFilter', this.authFirst);
                 this.tabPosition = this.authFirst[0].tabPosition;
                 Core.Data.setTabPosition(this.authFirst[0].tabPosition);
+                Core.Data.setAuthFirst(this.authFirst);
 
                 if (this.authFirst[0].path) {
                     this.$router.replace({ path: this.authFirst[0]?.path });

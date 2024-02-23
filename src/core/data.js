@@ -330,6 +330,12 @@ class StorageHandler {
     getReportData() {
         return this.getItem(Const.DATA.REPORT_DATA) || undefined;
     }
+    setAuthFirst(value) {
+        return this.setItem(Const.DATA.AUTHFIRST, value);
+    }
+    getAuthFirst() {
+        return this.getItem(Const.DATA.AUTHFIRST) || undefined;
+    }
 }
 
 export default new StorageHandler();
