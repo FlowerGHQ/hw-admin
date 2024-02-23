@@ -13,7 +13,7 @@
                     <div class="title-container">
                         <div class="title-area">{{ $t('i.item_list') }}</div>
                         <div class="btns-area">
-                            <a-radio-group>
+                            <div class="btn-group">
                                 <a-upload
                                     name="file"
                                     class="file-uploader"
@@ -25,11 +25,11 @@
                                     accept=".xlsx,.xls"
                                     @change="handleMatterChange"
                                 >
-                                    <a-radio-button value="default" @click.stop>{{ $t('i.import_name') }}</a-radio-button>
+                                    <div class="radio-btn first">{{ $t('i.import_name') }}</div>
                                 </a-upload>
-                                <a-radio-button value="default" @click="handleExportConfirm">{{ $t('i.export') }}</a-radio-button>
-                                <a-radio-button value="default" @click="downTemplate">{{ $t('i.down_template') }}</a-radio-button>
-                            </a-radio-group>
+                                <div class="radio-btn" @click="handleExportConfirm">{{ $t('i.export') }}</div>
+                                <div class="radio-btn last" @click="downTemplate">{{ $t('i.down_template') }}</div>
+                            </div>
                             <a-button class="ml-8" type="primary" @click="handleSalesAreaByIdsShow()"
                                 ><i class="icon i_edit" /> {{ $t('ar.set_sales') }}
                             </a-button>
@@ -1000,6 +1000,30 @@ export default {
                 .btns-area {
                     .file-upload-btn {
                         margin-right: 15px;
+                    }
+                    .btn-group {
+                        display: inline-flex;
+                        .radio-btn {
+                            padding: 6px 10px;
+                            border: 1px solid #eaecf1;
+                            border-right: none;
+                            cursor: pointer;
+                            font-size: 14px;
+                            font-weight: 400;
+                            text-align: center;
+                            color: #1d2129;
+                            line-height: 20px;
+                            &.first {
+                                border-radius: 4px 0 0 4px;
+                            }
+                            &.last {
+                                border-right: 1px solid #eaecf1;
+                                border-radius: 0 4px 4px 0;
+                            }
+                            &:hover {
+                                color: #1890ff;
+                            }
+                        }
                     }
                 }
             }
