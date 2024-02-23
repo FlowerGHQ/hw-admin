@@ -311,7 +311,7 @@ export default {
                 }
             });
 
-            console.log("moduleAuth", arr);
+            console.log('moduleAuth', arr);
 
             return arr;
         },
@@ -321,7 +321,7 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                // console.log("输出的路由", n);
+                console.log('输出的路由', n);
                 let meta = n.meta || {};
                 let not_sub_menu = n.matched.length > 1 ? n.matched[0].meta.not_sub_menu : n.meta.not_sub_menu;
 
@@ -341,6 +341,19 @@ export default {
                     this.breadcrumbList = [{ text: meta.title, path: n.path, key: path[0] }];
                 } else {
                     this.breadcrumbList.push({ text: meta.title, path: n.path, key: path[0] });
+                }
+
+                // 登录页面走过来在执行
+                console.log("ss", n.query.from);
+                if (n.query.from) {
+                    if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
+                        // 平台方执行
+                        this.returnAdminFilter(ROUTER_TYPE.SALES);
+                        this.returnAdminFilter(ROUTER_TYPE.AFTER);
+                        this.returnAdminFilter(ROUTER_TYPE.PRODUCTION);
+                        this.returnAdminFilter(ROUTER_TYPE.SUPPLIER);
+                        this.returnAdminFilter(ROUTER_TYPE.CRM);
+                    }
                 }
             },
         },
@@ -372,15 +385,6 @@ export default {
         this.$i18n.locale = Core.Data.getLang();
         this.$store.state.lang = Core.Data.getLang();
         this.tabPosition = Core.Data.getTabPosition() || 1;
-
-        if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
-            // 平台方执行
-            this.returnAdminFilter(ROUTER_TYPE.SALES);
-            this.returnAdminFilter(ROUTER_TYPE.AFTER);
-            this.returnAdminFilter(ROUTER_TYPE.PRODUCTION);
-            this.returnAdminFilter(ROUTER_TYPE.SUPPLIER);
-            this.returnAdminFilter(ROUTER_TYPE.CRM);
-        }
 
         // 监听页面窗口
         window.onresize = this.handleWindowResize;
@@ -535,10 +539,10 @@ export default {
                     this.authFirst.reduce((map, item) => map.set(item.tabPosition, item), new Map()).values(),
                 ).sort((a, b) => a.tabPosition - b.tabPosition);
 
-                console.log("returnAdminFilter", this.authFirst);
-                this.tabPosition = this.authFirst[0].tabPosition
+                console.log('returnAdminFilter', this.authFirst);
+                this.tabPosition = this.authFirst[0].tabPosition;
                 Core.Data.setTabPosition(this.authFirst[0].tabPosition);
-                
+
                 if (this.authFirst[0].path) {
                     this.$router.replace({ path: this.authFirst[0]?.path });
                 }
