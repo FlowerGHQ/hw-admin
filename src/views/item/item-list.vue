@@ -13,25 +13,24 @@
                     <div class="title-container">
                         <div class="title-area">{{ $t('i.item_list') }}</div>
                         <div class="btns-area">
-                            <a-button class="download" type="primary" @click="handleExportConfirm"
-                                ><i class="icon i_download" />{{ $t('i.export') }}</a-button
-                            >
-                            <a-upload
-                                name="file"
-                                class="file-uploader"
-                                :file-list="upload.fileList"
-                                :action="upload.action"
-                                :show-upload-list="false"
-                                :headers="upload.headers"
-                                :data="upload.data"
-                                accept=".xlsx,.xls"
-                                @change="handleMatterChange"
-                            >
-                                <a-button type="primary" ghost class="file-upload-btn">
-                                    <i class="icon i_add" />{{ $t('i.import') }}
-                                </a-button>
-                            </a-upload>
-                            <a-button type="primary" @click="handleSalesAreaByIdsShow()"
+                            <div class="btn-group">
+                                <a-upload
+                                    name="file"
+                                    class="file-uploader"
+                                    :file-list="upload.fileList"
+                                    :action="upload.action"
+                                    :show-upload-list="false"
+                                    :headers="upload.headers"
+                                    :data="upload.data"
+                                    accept=".xlsx,.xls"
+                                    @change="handleMatterChange"
+                                >
+                                    <div class="radio-btn first">{{ $t('i.import_name') }}</div>
+                                </a-upload>
+                                <div class="radio-btn" @click="handleExportConfirm">{{ $t('i.export') }}</div>
+                                <div class="radio-btn last" @click="downTemplate">{{ $t('i.down_template') }}</div>
+                            </div>
+                            <a-button class="ml-8" type="primary" @click="handleSalesAreaByIdsShow()"
                                 ><i class="icon i_edit" /> {{ $t('ar.set_sales') }}
                             </a-button>
                             <a-button type="primary" @click="routerChange('add')"
@@ -331,6 +330,78 @@
                 <a-button @click="handleSalesAreaByIdsClose">{{ $t('def.cancel') }}</a-button>
             </template>
         </a-modal>
+        <!-- 导出结果展示 -->
+        <a-modal
+            v-model:visible="importVisible"
+            :title="$t('i.import_data')"
+            :width="540"
+            centered
+            class="import-modal"
+        >
+            <div class="modal-content">
+                <div>
+                    <p class="title">
+                        <img src="@images/item/success.png" alt="">
+                        <span>{{ $t('i.parsing_completed') }}</span>
+                    </p>
+                    <p class="dis">
+                        {{ $t('i.analysis_total') }}
+                        <span class="success-text">{{ totalCode }}</span>
+                        {{ $t('i.strip_data') }}，{{ $t('i.success') }}
+                        <span class="success-text">{{ successCode }}</span>
+                        {{ $t('i.strip_data') }}，{{ $t('i.error') }}
+                        <span class="error-text">{{ errorCode }}</span>
+                        {{ $t('i.strip') }}，{{ $t('i.invalid_encoding') }}
+                        <span class="error-text">{{ invalidCode }}</span>
+                        {{ $t('i.strip') }}
+                    </p>
+                    <div class="code">
+                        <p class="code-title">
+                            <span class="code-title-l">{{ $t('i.failure_encoding') }}</span>
+                            <a-button type="default" v-if="errorCodeList.length > 0" @click="copyText('code-body')">
+                                {{ $t('i.copy_encoding') }}
+                            </a-button>
+                        </p>
+                        <template v-if="errorCodeList.length > 0">
+                            <div class="code-body" id="code-body">
+                                <div class="code-item" v-for="item in errorCodeList">
+                                    {{ item }}
+                                </div>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="empty">
+                                <a-empty :description="null" />
+                            </div>
+                        </template>
+                        <p class="code-title border-top">
+                            <span class="code-title-l">{{ $t('i.invalid_encoding') }}</span>
+                            <a-button type="default" v-if="invalidCodeList.length > 0" @click="copyText('code-body-invalid')">
+                                {{ $t('i.copy_encoding') }}
+                            </a-button>
+                        </p>
+                        <template v-if="invalidCodeList.length > 0">
+                            <div class="code-body" id="code-body-invalid">
+                                <div class="code-item" v-for="item in invalidCodeList">
+                                    {{ item }}
+                                </div>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="empty">
+                                <a-empty :description="null" />
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <div class="btns">
+                    <a-button @click="handleImportClose">{{ $t('def.cancel') }}</a-button>
+                    <a-button type="primary" @click="handleImportConfirm">{{ $t('def.sure') }}</a-button>
+                </div>
+            </template>
+        </a-modal>
     </div>
 </template>
 
@@ -384,7 +455,7 @@ export default {
             salesAreaIds: [],
             // 上传
             upload: {
-                action: Core.Const.NET.URL_POINT + '/admin/1/item/import',
+                action: Core.Const.NET.URL_POINT + '/admin/1/item/import-fob-price',
                 fileList: [],
                 headers: {
                     ContentType: false,
@@ -441,6 +512,13 @@ export default {
                 }, // 商品状态
             ],
             paramPrice: false,
+            importVisible: false,
+            errorCodeList: [],
+            invalidCodeList: [],
+            totalCode: 0,
+            successCode: 0,
+            errorCode: 0,
+            invalidCode: 0,
         };
     },
     watch: {},
@@ -747,6 +825,14 @@ export default {
                 if (file.response && file.response.code > 0) {
                     return this.$message.error(this.$t(file.response.code + ''));
                 } else {
+                    const resData = file.response.data
+                    this.errorCodeList = resData.fail_code_list
+                    this.invalidCodeList = resData.invalid_code_list
+                    this.totalCode = resData.total_count
+                    this.errorCode = resData.fail_count
+                    this.successCode = resData.success_count
+                    this.invalidCode = resData.invalid_code_count
+                    this.importVisible = true
                     return this.$message.success(this.$t('i.uploaded'));
                 }
             }
@@ -794,6 +880,10 @@ export default {
                 },
             });
         },
+        downTemplate() {
+            const url = Core.Api.Export.downloadImportFobPriceTemplate();
+            window.open(url, '_blank');
+        },
         handleRepairExport() {
             // 订单导出
             this.exportDisabled = true;
@@ -809,6 +899,20 @@ export default {
             window.open(exportUrl, '_self');
             this.exportDisabled = false;
         },
+        handleImportConfirm() {
+            this.importVisible = false
+        },
+        handleImportClose() {
+            this.importVisible = false
+        },
+        copyText(id) {
+            try {
+                Core.Util.Common.copyText(id)
+                this.$message.success(this.$t('i.copy_success'));
+            } catch {
+                this.$message.error(this.$t('i.copy_failed'));
+            }
+        }
 
         // // 显示导出对话框
         // showModal() {
@@ -896,6 +1000,30 @@ export default {
                 .btns-area {
                     .file-upload-btn {
                         margin-right: 15px;
+                    }
+                    .btn-group {
+                        display: inline-flex;
+                        .radio-btn {
+                            padding: 6px 10px;
+                            border: 1px solid #eaecf1;
+                            border-right: none;
+                            cursor: pointer;
+                            font-size: 14px;
+                            font-weight: 400;
+                            text-align: center;
+                            color: #1d2129;
+                            line-height: 20px;
+                            &.first {
+                                border-radius: 4px 0 0 4px;
+                            }
+                            &.last {
+                                border-right: 1px solid #eaecf1;
+                                border-radius: 0 4px 4px 0;
+                            }
+                            &:hover {
+                                color: #1890ff;
+                            }
+                        }
                     }
                 }
             }
@@ -1006,6 +1134,86 @@ export default {
                 }
             }
         }
+    }
+}
+.ml-8 {
+    margin-left: 8px;
+}
+.import-modal {
+    .title {
+        .fcc(initial);
+        font-size: 14px;
+        color: #26ab54;
+        line-height: 16px;
+        img {
+            width: 16px;
+            height: 16px;
+            margin-right: 4px;
+        }
+        margin-bottom: 6px;
+    }
+    .dis {
+        background: #f8f8f8;
+        padding: 4px 7px;
+        border-radius: 4px;
+        margin-bottom: 17px;
+        font-size: 12px;
+        color: #666666;
+        .success-text {
+            color: #26AB54;
+        }
+        .error-text {
+            color: #F53F3F;
+        }
+    }
+    .code {
+        background: #ffffff;
+        border: 1px solid #e2e2e2;
+        border-radius: 4px;
+        .border-top {
+            border-top: 1px solid #e2e2e2;
+        }
+        .code-title {
+            .fcc(space-between);
+            background: #f2f3f5;
+            padding: 8px 10px;
+            .code-title-l {
+                font-size: 14px;
+                font-weight: 500;
+                color: #1d2129;
+                line-height: 16px;
+            }
+        }
+        .code-body {
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            .code-item {
+                padding: 3px 7.5px;
+                background: #f2f3f5;
+                border-radius: 4px;
+                width: calc((100% - 32px) / 5);
+                margin-right: 8px;
+                font-size: 12px;
+                color: #1d2129;
+                line-height: 14px;
+                text-align: center;
+                &:nth-child(5n) {
+                    margin-right: 0;
+                }
+                &:nth-child(n + 6) {
+                    margin-top: 8px;
+                }
+            }
+        }
+        .empty {
+            padding: 10px;
+            width: 100%;
+            .fcc();
+        }
+    }
+    .btns {
+        text-align: center;
     }
 }
 </style>
