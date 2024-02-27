@@ -55,6 +55,7 @@ const apiList = {
         orderExport: ['GetJson', 'crm-order/export'],
         downloadTemplate: ['GetJson', 'aftermarket/bom/download-aftermarket-bom'], // 二级页面下载导入模板
         enquiryTickeTexport: ['GetJson', 'enquiry-ticket/export'], // 问询单导出接口
+        downloadImportFobPriceTemplate: ['GetJson', 'item/download-import-fob-price-template'], // 下载导入商品价格模板
     },
     User: {
         // 用户
