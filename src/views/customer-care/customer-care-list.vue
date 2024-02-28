@@ -37,7 +37,7 @@
             </div>
             <!-- table -->
             <div class="table-container">
-                <a-button v-if="isDistributerAdmin" class="m-b-10" type="primary" @click="handleExportIn; /*导出功能*/">
+                <a-button v-if="isDistributerAdmin" class="m-b-10" type="primary" @click="handleExportIn">
                     <i class="icon i_download" />{{ $t('common.export') }}
                 </a-button>
                 <a-table
@@ -186,7 +186,9 @@
                             <a-tooltip placement="topLeft" :overlayStyle="{ maxWidth: 'none' }">
                                 <template #title>
                                     <p v-for="(item, index) in record.vehicle_list">
-                                        {{ $t('customer-care.model_number') }}：{{ item.vehicle_uid }}、{{ $t('customer-care.mileage') }}：{{ item.mileage }}
+                                        {{ $t('customer-care.model_number') }}：{{ item.vehicle_uid }}、{{
+                                            $t('customer-care.mileage')
+                                        }}：{{ item.mileage }}
                                     </p>
                                 </template>
                                 <div
@@ -196,7 +198,9 @@
                                     }"
                                 >
                                     <span class="cj_bg" v-for="(item, index) in record.vehicle_list">
-                                        {{ $t('customer-care.model_number') }}：{{ item.vehicle_uid }}、{{ $t('customer-care.mileage') }}：{{ item.mileage }}
+                                        {{ $t('customer-care.model_number') }}：{{ item.vehicle_uid }}、{{
+                                            $t('customer-care.mileage')
+                                        }}：{{ item.mileage }}
                                     </span>
                                     <template v-if="record.vehicle_list.length === 0">-</template>
                                 </div>
@@ -833,7 +837,7 @@ onMounted(() => {
 }
 .cj_bg {
     display: inline-block;
-    background-color: #F2F3F5;
+    background-color: #f2f3f5;
     padding: 5px 8px;
     border-radius: 4px;
     margin-right: 10px;
