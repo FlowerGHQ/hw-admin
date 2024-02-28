@@ -341,7 +341,7 @@
             <div class="modal-content">
                 <div>
                     <p class="title">
-                        <img src="@images/item/success.png" alt="">
+                        <img src="@images/item/success.png" alt="" />
                         <span>{{ $t('i.parsing_completed') }}</span>
                     </p>
                     <p class="dis">
@@ -376,7 +376,11 @@
                         </template>
                         <p class="code-title border-top">
                             <span class="code-title-l">{{ $t('i.invalid_encoding') }}</span>
-                            <a-button type="default" v-if="invalidCodeList.length > 0" @click="copyText('code-body-invalid')">
+                            <a-button
+                                type="default"
+                                v-if="invalidCodeList.length > 0"
+                                @click="copyText('code-body-invalid')"
+                            >
                                 {{ $t('i.copy_encoding') }}
                             </a-button>
                         </p>
@@ -825,14 +829,14 @@ export default {
                 if (file.response && file.response.code > 0) {
                     return this.$message.error(this.$t(file.response.code + ''));
                 } else {
-                    const resData = file.response.data
-                    this.errorCodeList = resData.fail_code_list
-                    this.invalidCodeList = resData.invalid_code_list
-                    this.totalCode = resData.total_count
-                    this.errorCode = resData.fail_count
-                    this.successCode = resData.success_count
-                    this.invalidCode = resData.invalid_code_count
-                    this.importVisible = true
+                    const resData = file.response.data;
+                    this.errorCodeList = resData.fail_code_list;
+                    this.invalidCodeList = resData.invalid_code_list;
+                    this.totalCode = resData.total_count;
+                    this.errorCode = resData.fail_count;
+                    this.successCode = resData.success_count;
+                    this.invalidCode = resData.invalid_code_count;
+                    this.importVisible = true;
                     return this.$message.success(this.$t('i.uploaded'));
                 }
             }
@@ -900,19 +904,19 @@ export default {
             this.exportDisabled = false;
         },
         handleImportConfirm() {
-            this.importVisible = false
+            this.importVisible = false;
         },
         handleImportClose() {
-            this.importVisible = false
+            this.importVisible = false;
         },
         copyText(id) {
             try {
-                Core.Util.Common.copyText(id)
+                Core.Util.Common.copyText(id);
                 this.$message.success(this.$t('i.copy_success'));
             } catch {
                 this.$message.error(this.$t('i.copy_failed'));
             }
-        }
+        },
 
         // // 显示导出对话框
         // showModal() {
@@ -1160,10 +1164,10 @@ export default {
         font-size: 12px;
         color: #666666;
         .success-text {
-            color: #26AB54;
+            color: #26ab54;
         }
         .error-text {
-            color: #F53F3F;
+            color: #f53f3f;
         }
     }
     .code {
@@ -1192,16 +1196,16 @@ export default {
                 padding: 3px 7.5px;
                 background: #f2f3f5;
                 border-radius: 4px;
-                width: calc((100% - 32px) / 5);
+                width: calc((100% - 16px) / 3);
                 margin-right: 8px;
                 font-size: 12px;
                 color: #1d2129;
                 line-height: 14px;
                 text-align: center;
-                &:nth-child(5n) {
+                &:nth-child(3n) {
                     margin-right: 0;
                 }
-                &:nth-child(n + 6) {
+                &:nth-child(n + 4) {
                     margin-top: 8px;
                 }
             }
