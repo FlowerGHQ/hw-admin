@@ -355,10 +355,10 @@
                         <span class="error-text">{{ invalidCode }}</span>
                         {{ $t('i.strip') }}
                     </p>
-                    <div class="code">
-                        <p class="code-title">
+                    <div class="code" v-if="errorCodeList.length > 0 || invalidCodeList.length > 0">
+                        <p class="code-title" v-if="errorCodeList.length > 0">
                             <span class="code-title-l">{{ $t('i.failure_encoding') }}</span>
-                            <a-button type="default" v-if="errorCodeList.length > 0" @click="copyText('code-body')">
+                            <a-button type="default" @click="copyText('code-body')">
                                 {{ $t('i.copy_encoding') }}
                             </a-button>
                         </p>
@@ -369,18 +369,13 @@
                                 </div>
                             </div>
                         </template>
-                        <template v-else>
-                            <div class="empty">
-                                <a-empty :description="null" />
-                            </div>
-                        </template>
-                        <p class="code-title border-top">
+                        <p
+                            class="code-title"
+                            :class="errorCodeList.length > 0 ? 'border-top' : ''"
+                            v-if="invalidCodeList.length > 0"
+                        >
                             <span class="code-title-l">{{ $t('i.invalid_encoding') }}</span>
-                            <a-button
-                                type="default"
-                                v-if="invalidCodeList.length > 0"
-                                @click="copyText('code-body-invalid')"
-                            >
+                            <a-button type="default" @click="copyText('code-body-invalid')">
                                 {{ $t('i.copy_encoding') }}
                             </a-button>
                         </p>
@@ -389,11 +384,6 @@
                                 <div class="code-item" v-for="item in invalidCodeList">
                                     {{ item }}
                                 </div>
-                            </div>
-                        </template>
-                        <template v-else>
-                            <div class="empty">
-                                <a-empty :description="null" />
                             </div>
                         </template>
                     </div>
