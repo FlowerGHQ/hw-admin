@@ -779,8 +779,8 @@ export default {
                 cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Repair.delete({ id: _this.id }).then(() => {
-                        _this.$message.success(_this.$t('pop_up.save_success'));
-                        _this.getRepairDetail();
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
+                        _this.$router.replace('/repair/repair-list');
                     });
                 },
             });
