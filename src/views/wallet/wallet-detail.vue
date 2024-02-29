@@ -11,13 +11,13 @@
             <div class="panel-content desc-container">
                 <div class="desc-title">
                     <div class="title-area">
-                        <span class="title">{{ $t('w.account') }}: {{ $Util.walletTypeFilter(detail.type) }}</span>
+                        <span class="title">{{ $t('w.account') }}: {{ $t(walletTypeMap[detail.type]) }}</span>
                     </div>
                 </div>
                 <a-row class="desc-detail">
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">{{ $t('w.balance') }}：</span>
-                        <span class="value">{{ walletMap[detail.type] + detail.balance / 100 }}</span>
+                        <span class="value">{{ walletMap[detail.currency_type] + detail.balance / 100 }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">{{ $t('n.time') }}：</span>
@@ -59,6 +59,10 @@ export default {
                 2: '€',
                 3: '$',
                 4: '£',
+            },
+            walletTypeMap: {
+                1: 'ac.balance',
+                2: 'ac.security_deposit',
             },
         };
     },
