@@ -2660,7 +2660,7 @@ const routes = [
         component: Layout,
         redirect: '/system/system-file-list',
         name: 'SystemManagement',
-        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION, ROUTER_TYPE.CRM],
+        type: [ROUTER_TYPE.SYSTEM],
         meta: {
             title: '系统管理',
             title_en: 'System Management',

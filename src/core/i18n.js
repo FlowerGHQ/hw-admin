@@ -242,6 +242,7 @@ const messages = {
             spec_pic: '请上传规格商品图片',
             verification_code: '验证码',
             supplier: '供应链',
+            system_management: '系统管理',
         },
         a: {
             // 零售商
@@ -3128,6 +3129,7 @@ const messages = {
             sku_code_tip:
                 'SKU code: The sub-specifications of single-specification and multi-specification goods correspond to the SKU code',
             verification_code: 'Verification Code',
+            system_management: 'System Management',
         },
         a: {
             new_retailer: 'Create A New Retailer',
