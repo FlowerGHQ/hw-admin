@@ -89,6 +89,7 @@ const messages = {
             admin: '管理员操作',
             money: '金额',
             operation: '账户操作',
+            security_deposit: '保证金',
         },
         ad: {
             // 收货地址
@@ -2973,6 +2974,7 @@ const messages = {
             admin: 'Administrator Operation',
             money: 'Amount',
             operation: 'Account Operation',
+            security_deposit: 'Security Deposit',
         },
         ad: {
             address: 'Consignee Address List',

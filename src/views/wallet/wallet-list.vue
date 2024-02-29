@@ -42,14 +42,14 @@
                 >
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="column.key === 'detail'">
-                            <a-tooltip placement="top" :title="$Util.walletTypeFilter(text)">
+                            <a-tooltip placement="top" :title="$t(walletTypeMap[record.type])">
                                 <a-button type="link" @click="routerChange('detail', record)">
-                                    {{ $Util.walletTypeFilter(text) }}</a-button
+                                    {{ $t(walletTypeMap[record.type]) }}</a-button
                                 >
                             </a-tooltip>
                         </template>
                         <template v-if="column.dataIndex === 'balance'">
-                            {{ walletMap[record.type] + text / 100 }}
+                            {{ walletMap[record.currency_type] + text / 100 }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -109,6 +109,10 @@ export default {
                 2: '€',
                 3: '$',
                 4: '£',
+            },
+            walletTypeMap: {
+                1: 'ac.balance',
+                2: 'ac.security_deposit',
             },
         };
     },
