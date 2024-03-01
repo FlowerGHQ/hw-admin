@@ -119,6 +119,7 @@ export default {
         policy_consultation: '政策咨询',
         business_consultation: '业务咨询',
         other_consultation: '其他咨询',
+        colse_time: '关闭时间',
     },
     en: {
         inquiry_list: 'Inquiry list',
@@ -223,5 +224,6 @@ export default {
         policy_consultation: 'Policy Consultation',
         business_consultation: 'Business Consultation',
         other_consultation: 'Other Consultation',
+        colse_time: 'Colse Time',
     },
 };

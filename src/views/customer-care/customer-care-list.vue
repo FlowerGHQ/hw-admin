@@ -90,6 +90,11 @@
                                 {{ $t($Util.Common.returnTranslation(text, Core.Const.CUSTOMER_CARE.ORDER_STATUS)) }}
                             </div>
                         </template>
+                         <!-- 车型 -->
+                         <template v-if="column.key === 'category'">
+                            {{ $i18n.locale === 'en' ? record.category?.name_en : record.category?.name }}
+                        </template>
+                        
 
                         <!-- 平台方 -->
                         <!-- 归类 -->
@@ -231,11 +236,7 @@
                                     <template v-if="record.vehicle_list.length === 0">-</template>
                                 </div>
                             </a-tooltip>
-                        </template>
-                        <!-- 车型 -->
-                        <template v-if="column.key === 'category'">
-                            {{ $i18n.locale === 'en' ? record.category?.name_en : record.category?.name }}
-                        </template>
+                        </template>                       
                         <!-- 反馈类型 -->
                         <template v-if="column.key === 'type'">
                             {{ $t($Util.Common.returnTranslation(text, Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE)) }}
@@ -528,6 +529,7 @@ const tableColumns = computed(() => {
             { title: proxy.$t('customer-care.submitter'), dataIndex: 'submit_user_name', key: 'submit_user_name' }, // 提交人
             { title: proxy.$t('customer-care.part'), dataIndex: 'part_list', key: 'part_list', width: 150 }, // 零件
             { title: proxy.$t('customer-care.processing_progress'), dataIndex: 'status', key: 'status', width: 70 }, // 处理进度
+            { title: proxy.$t('common.vehicle_model'), dataIndex: 'category', key: 'category' }, // 车型
             { title: proxy.$t('customer-care.model_number_mileage'), dataIndex: 'mileage', key: 'mileage', width: 400 }, // 车架号、公里数
             {
                 title: proxy.$t('customer-care.fault_classification'),
@@ -541,6 +543,7 @@ const tableColumns = computed(() => {
                 key: 'process_user_name',
             }, // 归属客服
             { title: proxy.$t('common.create_time'), dataIndex: 'create_time', key: 'time' }, // 创建时间
+            { title: proxy.$t('customer-care.colse_time'), dataIndex: 'process_end_time', key: 'time' }, // 关闭时间
             { title: proxy.$t('customer-care.last_modification_time'), dataIndex: 'update_time', key: 'time' }, // 最近一次修改时间
             { title: proxy.$t('common.operations'), dataIndex: 'operations', key: 'operations', fixed: 'right' }, // 操作
         ];
