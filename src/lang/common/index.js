@@ -68,7 +68,7 @@ export default {
         file: 'File',
         upload_fail: 'Upload Fail',
         within_warranty: 'Within Warranty',
-        on_bail: 'On Bail',
+        on_bail: 'Out of Warranty',
         other: 'Other',
         name: 'Name',
         product_code: 'Product Code',

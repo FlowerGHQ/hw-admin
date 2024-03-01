@@ -58,7 +58,7 @@ const inquiryManagement = {
             component: () => import('@/views/customer-care/car-model-management.vue'),
             meta: {
                 title: '车型分类管理',
-                title_en: 'Car Model Management',
+                title_en: 'Vehicle Model Management',
                 auth: ['enquiry-ticket-category.list'],
             },
         },
