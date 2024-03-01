@@ -26,6 +26,9 @@ const apiList = {
         userInfo: ['Get', 'system/info'], // 获取当前登录账号的账户信息
         migrate: ['Post', 'migrate/order'], // 获取当前登录账号的账户信息
     },
+    ThirdParty: {
+        fsAuthorize:['Get', 'feishu/web/authorize'], // 飞书登录验证
+    },
     Export: {
         // 导出
         purchaseExport: ['PostJson', 'purchase-order/export'],

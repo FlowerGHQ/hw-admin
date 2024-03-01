@@ -1,8 +1,9 @@
 <template>
     <div class="login-redirect">
-        <div class="load">
+        <div id="login_container"></div>
+        <!-- <div class="load">
             <a-spin tip="Loading..." size="large" />
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -17,12 +18,36 @@ const route = useRoute();
 const router = useRouter();
 
 const token = route.query.token;
+let QRLoginObj = null;
+const appId = 'cli_a4f7ecfb66bb500d'; // 在飞书开放平台上注册的应用程序的App ID
+const REDIRECT_URI = 'http://10.10.12.91:8089/';
+const goto = `https://passport.feishu.cn/suite/passport/oauth/authorize?client_id=${appId}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
 onMounted(() => {
-    Core.Data.setToken(token);
-    loginRedirect(token);
+    // Core.Data.setToken(token);
+    // loginRedirect(token);
+    QRLoginObj = QRLogin({
+        id: 'login_container',
+        goto: goto,
+        width: '500',
+        height: '500',
+        style: 'width:500px;height:600px', //可选的，二维码html标签的style属性
+    });
 });
-
+const handleMessage = function (event) {
+    // 使用 matchOrigin 和 matchData 方法来判断 message 和来自的页面 url 是否合法
+    if (QRLoginObj.matchOrigin(event.origin) && QRLoginObj.matchData(event.data)) {
+        var loginTmpCode = event.data.tmp_code;
+        // 在授权页面地址上拼接上参数 tmp_code，并跳转
+        window.location.href = `${goto}&tmp_code=${loginTmpCode}`;
+        console.log(window.location.href);
+    }
+};
+if (typeof window.addEventListener != 'undefined') {
+    window.addEventListener('message', handleMessage, false);
+} else if (typeof window.attachEvent != 'undefined') {
+    window.attachEvent('onmessage', handleMessage);
+}
 /* Fetch */
 const loginRedirect = token => {
     axios({

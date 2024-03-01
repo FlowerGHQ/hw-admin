@@ -12,6 +12,8 @@ import { mallRouters, dealsPreview } from './mall';
 import { customerCare } from './distributor-router';
 // 平台方路由
 import { inquiryManagement, adminEmpty, operationManagement } from './admin-router';
+// 平台方路由
+import { fsLogin } from './fs-login';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE;
@@ -2688,6 +2690,16 @@ const routes = [
                 },
             },
             {
+                path: 'user-edit-fs',
+                name: 'UserEditFs',
+                component: () => import('@/views/user/user-edit-fs.vue'),
+                meta: {
+                    hidden: true,
+                    title: '飞书添加用户',
+                    parent: '/user/user-list-fs',
+                },
+            },
+            {
                 path: 'user-detail',
                 name: 'UserDetail',
                 component: () => import('@/views/user/user-detail.vue'),
@@ -2839,7 +2851,8 @@ const routes = [
         },
     },
     ...supplyRouters,
-    supplyMaterialManagement
+    supplyMaterialManagement,
+    fsLogin
 ];
 
 export default routes;

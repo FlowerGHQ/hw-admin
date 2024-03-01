@@ -36,6 +36,11 @@ export default {
         more_login: '更多登录方式',
         user_name_login: '用户名/密码登录',
         phone_login: '手机号码/验证码登录',
+        fs_login: '飞书扫码登录',
+        fs_qrcode: '请使用飞书移动端扫描二维码',
+        welcome_BOS: '欢迎登录BOS系统',
+        no_permission: '无权访问，该系统仅限内部人员使用',
+        need_permission: '当前账号没有配备权限，请联系相关部门开通权限',
     },
     en: {
         system: 'BOS',
@@ -74,5 +79,10 @@ export default {
         more_login: 'More Login Methods',
         user_name_login: 'User Name / Password Log In',
         phone_login: 'Phone Number / Verification Code Log In',
+        fs_login: 'Feishu Scan Code Login',
+        fs_qrcode: 'Please Use The Feishu Mobile App To Scan The QR Code',
+        welcome_BOS: 'Welcome To Log In To The BOS System',
+        no_permission: 'Unauthorized access, the system is limited to internal personnel only',
+        need_permission: 'The current account is not equipped with permissions. Please contact the relevant department to enable permissions',
     },
 };
