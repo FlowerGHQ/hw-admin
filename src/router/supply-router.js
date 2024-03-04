@@ -50,6 +50,15 @@ const supplyManage = {
                 hidden: true,
             },
         },
+        {
+            path: 'qualifiedList',
+            name: 'QualifiedSupplierList',
+            component: () => import('@/views/supplier/manage/qualified-list.vue'),
+            meta: {
+                title: '合格供应商名录',
+                title_en: 'Qualified Supplier List',
+            },
+        },
     ],
 };
 
@@ -165,4 +174,29 @@ const supplyMaterialManagement =  {
         },
     ],
 }
-export { supplyManage, supplyRouters, supplyMaterialManagement };
+// 成本管理
+const costManagement =  {
+    path: '/cost',
+    component: Layout,
+    redirect: '/cost/cost-list',
+    name: 'CostManagement',
+    type: [ROUTER_TYPE.SUPPLIER],
+    meta: {
+        title: '成本管理',
+        title_en: 'Cost Management',
+        icon: 'i_menu_shangpingguanli',
+        roles: [LOGIN_TYPE.ADMIN],
+    },
+    children: [
+        {
+            path: 'cost-list',
+            name: 'CostList',
+            component: () => import('@/views/supplier/cost/list.vue'),
+            meta: {
+                title: '车型成本表',
+                title_en: 'Vehicle Cost Table',
+            },
+        },
+    ],
+}
+export { supplyManage, supplyRouters, supplyMaterialManagement, costManagement };
