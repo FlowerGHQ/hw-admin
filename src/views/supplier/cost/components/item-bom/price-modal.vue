@@ -2,11 +2,11 @@
     <div ref="wrap">
         <a-modal
             v-model:visible="visibility"
-            :title="$t('item-bom.import_category_data')"
+            :title="$t('supply-chain.price_change_records')"
             :okText="$t('item-bom.confirm')"
             :cancelText="$t('item-bom.cancel')"
             @ok="handleOk"
-            width="570px"
+            width="720px"
             centered
             :closable="false"
             class="export-modal"
@@ -14,153 +14,122 @@
             :getContainer="() => wrap"
         >
             <div class="main">
-                <span class="title">{{ $t('item-bom.change_version_number') }}{{ `：${versionName}` }}</span>
-                <div class="success-tips">
-                    <div class="success-icon">
-                        <img src="../../../../assets/images/bom/ok.png" alt="" />
-                    </div>
-                    <div class="success-text">
-                        {{ $t('item-bom.parsing_completion') }}
-                    </div>
-                    <div class="success-or-fail">
-                        {{ $t('item-bom.parsing_success') }}
-                        <span class="success-txt">{{ successCount }}</span>
-                        {{ $t('item-bom.strip') }} {{ $t('item-bom.data') }}，
-                        {{ $t('item-bom.failure') }}
-                        <span class="fail-txt">{{ failCount }}</span>
-                        {{ $t('item-bom.strip') }}
-                    </div>
-                </div>
-                <div class="tips">
-                    {{ $t('item-bom.import_failure_data') }}
-                </div>
-                <div class="table">
-                    <a-table
-                        :columns="tableColumns"
-                        :data-source="tableData"
-                        bordered
-                        size="small"
-                        :pagination="false"
-                        :scroll="{ x: true, y: 282 }"
-                    >
-                        <template #bodyCell="{ record, column, text }">
-                            <!-- category_name -->
-                            <div v-if="column.key === 'category'">
-                                <a-tooltip :title="text">
-                                    <div class="ell overflow-ell">{{ text }}</div>
-                                </a-tooltip>
-                            </div>
-                            <div v-if="column.key === 'parsing_failure_number'">
-                                <span class="zero" v-if="record.fail_count == 0">0</span>
-                                <span class="fail-number" v-else>{{ text }}</span>
-                            </div>
+                <a-table
+                    :row-key="record => record.id"
+                    :data-source="tableData"
+                    :columns="tableColumns"
+                    :pagination="pagination"
+                    :loading="loading"
+                    @change="handleTableChange"
+                >
+                    <template #headerCell="{ title, column }">
+                        <div class="table-title">{{ title }}</div>
+                    </template>
+                    <template #bodyCell="{ column, text, record, index }">
+                        <!-- 序号 -->
+                        <template v-if="column.key === 'number'">
+                            {{ index + 1 }}
                         </template>
-                    </a-table>
-                </div>
+                        <template v-if="column.key === 'item'">
+                            {{ text ? text : '-' }}
+                        </template>
+                        <!-- 含税单价（人民币） -->
+                        <template v-if="column.key === 'price'">
+                            {{ $Util.Number.numFormat(text) }}
+                        </template>
+                        <!-- 修改记录 -->
+                        <template v-if="column.key === 'content'">
+                            <a-tooltip>
+                                <template #title>{{ text }}</template>
+                                <span class="content" :title="text">{{ text }}</span>
+                            </a-tooltip>
+                        </template>
+                    </template>
+                </a-table>
             </div>
         </a-modal>
     </div>
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, getCurrentInstance, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import Core from '@/core';
 
+const { proxy } = getCurrentInstance();
 const $t = useI18n().t;
 const wrap = ref(null);
-// 成功列表
-const correctList = ref([]);
-// 成功总条数
-const successCount = ref(0);
-// 失败总条数
-const failCount = ref(0);
 
-const emits = defineEmits(['update:visibility', 'refresh']);
+const emits = defineEmits(['update:visibility']);
 const props = defineProps({
-    objData: {
-        type: Object,
-        default: () => {},
+    bom_item_id: {
+        type: [String, Number],
     },
     visibility: {
         type: Boolean,
         default: false,
     },
-    versionName: {
-        type: String,
-        default: '',
-    },
-    bom_version_id: {
-        type: String,
-        default: '',
-    },
 });
-
-watch(
-    () => props.objData,
-    (newVal, oldVal) => {
-        let success_count = 0;
-        let fail_count = 0;
-        correctList.value = newVal?.correctList;
-        tableData.value = newVal?.statistics;
-        tableData.value.forEach(item => {
-            success_count += Number(item.success_count);
-            fail_count += Number(item.fail_count);
-        });
-        successCount.value = success_count;
-        failCount.value = fail_count;
-    },
-    {
-        deep: true,
-    },
-);
+const loading = ref(false);
+// 分页
+const pagination = ref({
+    current: 1,
+    pageSizeOptions: ['20', '40', '60', '80', '100'],
+    pageSize: 20,
+    showQuickJumper: true, // 是否可以快速跳转至某页
+    showSizeChanger: true, // 是否可以改变 pageSize
+    total: 0,
+    showTotal: total => `${proxy.$t('n.all_total')} ${total} ${proxy.$t('in.total')}`,
+});
 const tableColumns = computed(() => {
     const result = [
-        {
-            title: $t('item-bom.category'),
-            dataIndex: 'category_name',
-            key: 'category',
-            align: 'center',
-        },
-        {
-            title: $t('item-bom.parsing_success_number'),
-            dataIndex: 'success_count',
-            key: 'parsing_success_number',
-            align: 'center',
-        },
-        {
-            title: $t('item-bom.parsing_failure_number'),
-            dataIndex: 'fail_count',
-            key: 'parsing_failure_number',
-            align: 'center',
-        },
+        { title: proxy.$t('supply-chain.serial_number'), dataIndex: 'number', key: 'number' }, // 序号
+        { title: proxy.$t('supply-chain.unit_price_including_tax_rmb'), dataIndex: 'price', key: 'price' }, // 含税单价（人民币）
+        { title: proxy.$t('supply-chain.type'), dataIndex: 'sync_type', key: 'item' }, // 类型
+        { title: proxy.$t('supply-chain.effective_date'), dataIndex: 'effective_time', key: 'item' }, // 生效日期
+        { title: proxy.$t('supply-chain.modifying_records'), dataIndex: 'content', key: 'content' }, // 修改记录
     ];
     return result;
 });
-
-// 成功失败数据显示列表
 const tableData = ref([]);
+// 分页事件
+const handleTableChange = (p, filters, sorter) => {
+    pagination.value.current = p.current;
+    pagination.value.pageSize = p.pageSize;
+    getTableDataFetch();
+};
+// 获取表格list
+const getTableDataFetch = (parmas = {}) => {
+    if (!props.bom_item_id) return;
+    loading.value = true;
+    let obj = {
+        bom_item_id: props.bom_item_id,
+        page: pagination.value.current,
+        page_size: pagination.value.pageSize,
+        ...parmas,
+    };
 
+    Core.Api.Supplier.bomLogList(obj)
+        .then(res => {
+            pagination.value.total = res.count;
+            tableData.value = res.list;
+            loading.value = false;
+        })
+        .catch(err => {
+            console.log('getTableDataFetch', err);
+            loading.value = false;
+        });
+};
 const handCancle = () => {
     emits('update:visibility', false);
 };
 
 const handleOk = () => {
-    Core.Api.ITEM_BOM.importBindBomItem({
-        bom_version_id: props.bom_version_id,
-        item_list: correctList.value,
-    })
-        .then(res => {
-            console.log('importBindBomItem', res);
-            emits('refresh');
-        })
-        .catch(err => {
-            console.log('err', err);
-        })
-        .finally(() => {
-            emits('update:visibility', false);
-        });
+    emits('update:visibility', false);
 };
+defineExpose({
+    getTableDataFetch,
+});
 </script>
 
 <style lang="less" scoped>
@@ -265,6 +234,11 @@ const handleOk = () => {
                 }
             }
         }
+    }
+    .content {
+        .ell();
+        display: inline-block;
+        max-width: 270px;
     }
 }
 </style>

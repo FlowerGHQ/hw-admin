@@ -1,7 +1,7 @@
 <template>
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">{{ $t('supply-chain.application_Materials') }}</div>
+            <div class="title-area">{{ $t('supply-chain.qualified_supplier') }}</div>
             <div class="btns-area">
                 <div class="btn-group">
                     <a-upload
@@ -40,38 +40,22 @@
                     <template v-if="column.key === 'number'">
                         {{ index + 1 }}
                     </template>
-                    <!-- 公司名称 -->
-                    <template v-if="column.key === 'company_name'">
-                        <a-tooltip placement="topLeft">
-                            <template #title>{{ text }}</template>
-                            <div
-                                class="one-spils cursor"
-                                :style="{
-                                    width: text?.length > 15 ? 7 * 12 + 'px' : '',
-                                }"
-                            >
-                                {{ text }}
-                            </div>
-                        </a-tooltip>
-                    </template>
-                    <!-- 供应商类型 -->
-                    <template v-if="column.key === 'type'">
-                        {{ Core.Const.SUPPLAY.SUPPLAY_TYPE[text] ? $t(Core.Const.SUPPLAY.SUPPLAY_TYPE[text]?.t) : '-' }}
+                    <template v-if="column.key === 'item'">
+                        {{ text ? text : '-' }}
                     </template>
                     <!-- 提交时间 -->
-                    <template v-if="column.key === 'create_time'">
-                        {{ text ? $Util.timeFormat(text) : '-' }}
+                    <template v-if="column.key === 'time'">
+                        {{ text ? $Util.timeFormat(text, 'YYYY.MM') : '-' }}
                     </template>
-                    <!-- 操作 -->
-                    <template v-if="column.key === 'operations'">
-                        <a-button type="link" @click="onView('add', record)">
-                            <MySvgIcon icon-class="supply-view" />
-                            <span class="m-l-10">{{ $t('supply-chain.view') }}</span>
-                        </a-button>
-                        <a-button type="link" @click="onView('edit', record)">
-                            <MySvgIcon icon-class="supply-edit" />
-                            <span class="m-l-10">{{ $t('common.edit') }}</span>
-                        </a-button>
+                    <!-- 变化类 -->
+                    <template v-if="column.key === 'register_type'">
+                        <template v-if="text === 1">
+                            {{ text ? $t('supply-chain.new_addition') : '-' }}
+                        </template>
+                        <template v-if="text === 2">
+                            {{ text ? $t('supply-chain.rename') : '-' }}
+                        </template>
+                        <template v-if="!text">-</template>
                     </template>
                 </template>
             </a-table>
@@ -100,7 +84,7 @@
             class="import-modal"
         >
             <div class="modal-content">
-                <ExportResult :data="importResultData" />
+                <ExportResult :data="importResultData" :showInvalidNum="false" :showList="false" />
             </div>
             <template #footer>
                 <div class="btns">
@@ -113,7 +97,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, getCurrentInstance, computed, watch, reactive } from 'vue';
+import { onMounted, ref, getCurrentInstance, computed, nextTick, reactive } from 'vue';
 import Core from '@/core';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import ExportResult from '@/components/common/ExportResult.vue';
@@ -128,7 +112,7 @@ const $t = useI18n().t;
 const { proxy } = getCurrentInstance();
 
 const upload = reactive({
-    action: Core.Const.NET.URL_POINT + '/admin/1/item/import-fob-price',
+    action: Core.Const.NET.URL_POINT + '/admin/1/supplier/temp-import',
     fileList: [],
     headers: {
         ContentType: false,
@@ -140,20 +124,23 @@ const upload = reactive({
 });
 const importVisible = ref(false);
 const importResultData = reactive({
-    errorCodeList: [],
-    invalidCodeList: [],
     totalCode: 0,
     successCode: 0,
     errorCode: 0,
-    invalidCode: 0,
 });
 const tableColumns = computed(() => {
     let columns = [
-        { title: $t('supply-chain.serial_number'), dataIndex: 'number', key: 'number' },
-        { title: $t('supply-chain.company_name'), dataIndex: 'company_name', key: 'company_name' },
-        { title: $t('supply-chain.supplier_type'), dataIndex: 'type', key: 'type' },
-        { title: $t('supply-chain.submission_time'), dataIndex: 'create_time', key: 'create_time' },
-        { title: $t('common.operations'), key: 'operations', fixed: 'right' },
+        { title: $t('supply-chain.serial_number'), dataIndex: 'number', key: 'number', fixed: 'left' },
+        { title: $t('supply-chain.no'), dataIndex: 'no', key: 'item', fixed: 'left' },
+        { title: $t('supply-chain.supplier_code'), dataIndex: 'code', key: 'item' },
+        { title: $t('supply-chain.supplier_full_name'), dataIndex: 'name', key: 'item' },
+        { title: $t('supply-chain.supplier_abbreviation'), dataIndex: 'short_name', key: 'item' },
+        { title: $t('supply-chain.procurement_category'), dataIndex: 'purchase_category', key: 'item' },
+        { title: $t('supply-chain.main_supply'), dataIndex: 'main_supply', key: 'item' },
+        { title: $t('supply-chain.secondary_supply'), dataIndex: 'sub_supply', key: 'item' },
+        { title: $t('supply-chain.other_items'), dataIndex: 'other_supply', key: 'item' },
+        { title: $t('supply-chain.introduction_date'), dataIndex: 'register_time', key: 'item' },
+        { title: $t('supply-chain.change_class'), dataIndex: 'register_type', key: 'register_type' },
     ];
     return columns;
 });
@@ -162,16 +149,19 @@ const searchList = ref([
     {
         type: 'input',
         value: '',
-        searchParmas: 'company_name',
-        key: 'supply-chain.company_name',
+        searchParmas: 'name',
+        key: 'supply-chain.supplier_full_name',
     },
 ]);
 
 onMounted(() => {});
 /* Fetch start*/
-const request = Core.Api.SUPPLY.adminList;
+const request = Core.Api.Supplier.list;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request,
+    initParam: {
+        status: 10,
+    },
 });
 /* Fetch end*/
 
@@ -183,41 +173,6 @@ const onSearch = data => {
 const onReset = () => {
     refreshTable();
 };
-// 点击查看
-const onView = (type, record) => {
-    let routeUrl = null;
-    switch (type) {
-        case 'add':
-            routeUrl = router.resolve({
-                path: '/supply-manage/detail',
-                query: {
-                    id: record.id,
-                },
-            });
-            window.open(routeUrl.href, '_blank');
-
-            break;
-        case 'edit':
-            routeUrl = router.resolve({
-                path: '/supply-manage/detail',
-                query: {
-                    id: record.id,
-                    flag_edit: true,
-                },
-            });
-            window.open(routeUrl.href, '_blank');
-            break;
-    }
-};
-const onBtn = () => {
-    router.push({
-        path: '/supply-manage/add',
-    });
-    $store.commit('SUPPLY_CHAIN/setSupplyChain', {});
-    $store.commit('SUPPLY_CHAIN/setSupplyDraftChain', {});
-    $store.commit('SUPPLY_CHAIN/setStep', 0);
-    $store.commit('SUPPLY_CHAIN/setSubmitEd', false);
-};
 // 上传文件
 const handleMatterChange = ({ file, fileList }) => {
     if (file.status == 'done') {
@@ -225,13 +180,13 @@ const handleMatterChange = ({ file, fileList }) => {
             return proxy.$message.error(proxy.$t(file.response.code + ''));
         } else {
             const resData = file.response.data;
-            importResultData.errorCodeList = resData.fail_code_list;
-            importResultData.invalidCodeList = resData.invalid_code_list;
             importResultData.totalCode = resData.total_count;
             importResultData.errorCode = resData.fail_count;
             importResultData.successCode = resData.success_count;
-            importResultData.invalidCode = resData.invalid_code_count;
-            importVisible.value = true;
+            nextTick(() => {
+                importVisible.value = true;
+            });
+            onSearch();
             return proxy.$message.success(proxy.$t('i.uploaded'));
         }
     }
@@ -239,7 +194,7 @@ const handleMatterChange = ({ file, fileList }) => {
 };
 // 下载模板
 const downTemplate = () => {
-    const url = Core.Api.Export.downloadImportFobPriceTemplate();
+    const url = Core.Api.Common.downloadImportQualifiedListTemplate({ type: 1, locale: '' });
     window.open(url, '_blank');
 };
 const handleImportClose = () => {

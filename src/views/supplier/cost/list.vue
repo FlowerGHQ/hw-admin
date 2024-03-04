@@ -2,7 +2,7 @@
     <div class="item-bom">
         <div class="list-container item-container">
             <div class="title-container" ref="titleRefs">
-                <div class="title-area">{{ $t('item-bom.title') }}</div>
+                <div class="title-area">{{ $t('supply-chain.vehicle_cost') }}</div>
             </div>
             <div class="item-tree" :style="{ height: 'calc(100% - ' + titleHeight + ')' }">
                 <!-- 左边 -->
@@ -53,26 +53,16 @@
                 </div>
             </div>
         </div>
-        <!-- :key="dataKeyPop" -->
-        <ClassifyModal
-            v-model:visibility="classifyModalShow"
-            :activeObj="activeObj"
-            :code="level2CodeStr"
-            @refresh="refresh"
-            @update:visibility="setValue"
-        ></ClassifyModal>
     </div>
 </template>
 
 <script setup>
 // import { useRouter,onBeforeRouteUpdate } from 'vue-router';
+import Core from '@/core';
 import { ref, shallowRef, onMounted, computed, watch, provide, onBeforeUnmount, getCurrentInstance } from 'vue';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
-import fittings from './components/item-bom/Fittings.vue';
 import FittingsTwo from './components/item-bom/FittingsTwo.vue';
-import FittingsThree from './components/item-bom/FittingsThree.vue';
 import FittingsTree from './components/item-bom/FittingsTree.vue';
-import ClassifyModal from './components/item-bom/ClassifyModal.vue'; // 分类弹窗组件
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
 // const router = useRouter()
 const minWidthCount = 890;
@@ -96,29 +86,25 @@ const { proxy } = getCurrentInstance();
 // 注释-侧边栏
 const isCollapse = ref(false); //菜单Dom-是否收起
 const activeObj = ref({});
-const level2CodeStr = ref('');
 const searchOptions = ref([
     {
         id: 1,
-        type: 'input',
-        key: 'item-bom.product_name',
-        value: undefined,
-        searchParmas: 'name',
-        placeholder: 'item-bom.please_enter',
+        type: 'time-range',
+        value: [],
+        searchParmas: ['price_effective_begin_time', 'price_effective_end_time'],
+        key: 'supply-chain.effective_date',
+        defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_E,
     },
     {
         id: 2,
         type: 'input',
-        key: 'item-bom.commodity_code',
+        key: 'supply-chain.component_code',
         value: undefined,
         searchParmas: 'code_list',
         placeholder: 'item-bom.commodity_code_tips',
     },
 ]); // 搜索options
 const searchParams = ref({}); // 搜索参数
-
-// 显示分类弹窗组件-变量
-const classifyModalShow = ref(false);
 
 watch(
     activeObj,
@@ -132,20 +118,16 @@ watch(
 const componentProps = ref();
 const componentName = computed(() => {
     componentProps.value = activeObj.value;
-    if (activeObj.value.level === 1) {
-        return fittings;
-    } else if (activeObj.value.level === 2) {
+    if (activeObj.value.level === 2) {
         return FittingsTwo;
-    } else if (activeObj.value.level === 3) {
-        return FittingsThree;
     } else {
-        return fittings;
+        return FittingsTwo;
     }
 });
 
 const handleSearch = data => {
     searchParams.value = data;
-    searchParams.value.code_list = data.code_list ? data.code_list.split(',') : [];
+    searchParams.value.code_list = data?.code_list && data?.code_list.length > 0 ? data.code_list.split(',') : [];
 };
 const handleReset = () => {
     searchParams.value = {};
@@ -156,7 +138,6 @@ const searAllRef = ref(null); // searAll refs
 const screenWidth = ref(window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth);
 
 const TreeRefresh = val => {
-    console.log(val);
     if (val) {
         treeRef.value.getCurrentVersion(val.shop_id, val.version_id);
     }
@@ -178,12 +159,6 @@ onBeforeUnmount(() => {
 
 /* methods start*/
 /* methods end*/
-
-// 分类弹窗打开
-const showClassModal = data => {
-    level2CodeStr.value = data;
-    classifyModalShow.value = true;
-};
 const handleResize = () => {
     screenWidth.value = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     if (window.innerWidth < 1550) {
@@ -192,23 +167,7 @@ const handleResize = () => {
         isCollapse.value = false;
     }
 };
-provide('classifyShowModal', showClassModal); // 提供分类弹窗打开方法
 provide('bomId', activeObj.value.id); // 提供分类弹窗打开方法
-const refresh = () => {
-    if (activeObj.value.level === 2) {
-        allComRef.value.refresh();
-        return;
-    }
-    allComRef.value.getTableDataFetch();
-};
-
-const setValue = val => {
-    classifyModalShow.value = val;
-    if (!val) {
-        level2CodeStr.value = '';
-        // dataKeyPop.value = new Date();
-    }
-};
 </script>
 
 <style lang="less" scoped>
@@ -299,7 +258,7 @@ const setValue = val => {
                 overflow-y: auto;
                 padding: 0 17px;
                 .search-content {
-                    margin-bottom: 24px;
+                    margin-bottom: 20px;
                     .search-all {
                         .btn-area-box {
                             .more-btn {

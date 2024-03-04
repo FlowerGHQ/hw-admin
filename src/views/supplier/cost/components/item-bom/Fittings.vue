@@ -1,7 +1,7 @@
 <template>
     <div class="fittings">
         <div class="title">
-            {{ $t('item-bom.accessories_list') }}
+            {{ $t('supply-chain.total_amount') }}: {{ $Util.Number.numFormat($Util.countFilter(723500)) }}
         </div>
         <a-table
             :row-key="record => record.id"
@@ -15,55 +15,35 @@
             <template #headerCell="{ title, column }">
                 <div class="table-title">{{ title }}</div>
             </template>
-            <template #bodyCell="{ column, text, record }">
-                <span v-if="column.key === 'sync_name' /*商品名称*/">
-                    <a-tooltip>
-                        <template #title>{{ text }}</template>
-                        <div
-                            class="one-spils cursor"
-                            :style="{
-                                width: text?.length > 6 ? 7 * 12 + 'px' : '',
-                            }"
-                        >
-                            {{ text }}
-                        </div>
-                    </a-tooltip>
-                </span>
-                <span v-if="column.key === 'sales_area' /*销售区域*/">
-                    <a-tooltip>
-                        <template #title>
-                            {{ salesArea(record.sales_area_list) }}
-                        </template>
-                        <div class="one-spils cursor">
-                            {{ salesArea(record.sales_area_list) }}
-                        </div>
-                    </a-tooltip>
-                </span>
-                <span v-if="column.key === 'version'">
-                    {{ record?.bom?.version || '-' }}
-                </span>
-                <span v-if="column.key === 'effective_time' /*创建时间*/">
-                    {{ $Util.timeFilter(text, 3) }}
-                </span>
-                <span v-if="column.key === 'comment' /*备注*/">
-                    <a-tooltip>
-                        <template #title>{{ text }}</template>
-                        <div class="one-spils set-width cursor">
-                            {{ text }}
-                        </div>
-                    </a-tooltip>
-                </span>
+            <template #bodyCell="{ column, text, record, index }">
+                <!-- 序号 -->
+                <template v-if="column.key === 'number'">
+                    {{ index + 1 }}
+                </template>
+                <!-- 含税单价（人民币） -->
+                <template v-if="column.key === 'price'">
+                    <div class="price">
+                        <span class="price-text active" @click="priceRecords">
+                            {{ $Util.Number.numFormat($Util.countFilter(text)) }}
+                        </span>
+                        <MySvgIcon icon-class="edit" class-name="price-edit" @click.stop="changePrice(record)" />
+                    </div>
+                </template>
             </template>
         </a-table>
+        <!-- 修改价格弹窗 -->
+        <ChangePriceModal v-model:visibility="visibility" @setCancleShow="visibility = false" />
+        <!-- 价格记录弹窗 -->
+        <PriceModal v-model:visibility="priceVisibility" @setCancleShow="priceVisibility = false" />
     </div>
 </template>
 
 <script setup>
+import MySvgIcon from '@/components/MySvgIcon/index.vue';
 import { onMounted, ref, getCurrentInstance, computed, watch } from 'vue';
 import Core from '@/core';
-import { useI18n } from 'vue-i18n';
-const $i18n = useI18n();
-const locale = $i18n.locale;
+import ChangePriceModal from './change-price-modal.vue';
+import PriceModal from './price-modal.vue';
 const props = defineProps({
     searchParams: {
         type: Object,
@@ -77,76 +57,27 @@ const props = defineProps({
 const parmas = ref({});
 const { proxy } = getCurrentInstance();
 const loading = ref(false);
+const visibility = ref(false);
+const priceVisibility = ref(false);
 const tableColumns = computed(() => {
     const result = [
+        { title: proxy.$t('supply-chain.serial_number'), dataIndex: 'number', key: 'number' }, // 序号
+        { title: proxy.$t('supply-chain.component_code'), dataIndex: 'component_code', key: 'number' }, // 子件编码
+        { title: proxy.$t('supply-chain.component_name'), dataIndex: 'component_name', key: 'number' }, // 子件名称
+        { title: proxy.$t('supply-chain.supplier_name'), dataIndex: 'supplier_name', key: 'number' }, // 供应商名称
+        { title: proxy.$t('supply-chain.accumulated_usage'), dataIndex: 'accumulated_usage', key: 'number' }, // 累计用量
         {
-            // 商品名称
-            title: proxy.$t('item-bom.product_name'),
-            dataIndex: 'sync_name',
-            key: 'sync_name',
-        },
-        {
-            // 商品编码
-            title: proxy.$t('item-bom.commodity_code'),
-            dataIndex: 'sync_id',
-            key: 'sync_id',
-        },
-        {
-            // 版本号
-            title: proxy.$t('item-bom.version_number'),
-            dataIndex: 'version',
-            key: 'version',
-        },
-        {
-            // 用量
-            title: proxy.$t('item-bom.dosage'),
-            dataIndex: 'amount',
-            key: 'amount',
-        },
-        {
-            // 销售区域
-            title: proxy.$t('item-bom.sales_area'),
-            dataIndex: 'sales_area',
-            key: 'sales_area',
-        },
-        {
-            // 创建时间
-            title: proxy.$t('item-bom.create_time'),
-            dataIndex: 'effective_time',
-            key: 'effective_time',
-        },
-        {
-            // 备注
-            title: proxy.$t('item-bom.remark'),
-            dataIndex: 'comment',
-            key: 'comment',
-        },
+            title: proxy.$t('supply-chain.unit_price_including_tax_rmb'),
+            dataIndex: 'unit_price_including_tax_rmb',
+            key: 'price',
+        }, // 含税单价（人民币）
+        { title: proxy.$t('supply-chain.type'), dataIndex: 'type', key: 'number' }, // 类型
+        { title: proxy.$t('supply-chain.effective_date'), dataIndex: 'effective_date', key: 'number' }, // 生效日期
+        { title: proxy.$t('supply-chain.modifying_records'), dataIndex: 'modifying_records', key: 'number' }, // 修改记录
     ];
     return result;
 });
-const tableData = ref([
-    // {
-    //     name: "你好啊你好啊你好啊",
-    //     manufacturer_name: "你好啊你好啊你好啊",
-    //     sales_area: "你好啊你好啊你好啊",
-    //     create_time: "1702363337",
-    //     remark: "测试的东西是什么啊送达的傻大姐撒肯定撒看的艰苦撒旦就卡死进度加快撒可见度刷卡机的空间的健康撒可见度",
-    // },
-    // {
-    //     name: "你好啊世界经济发",
-    //     manufacturer_name: "你好啊世界经济发",
-    //     sales_area: "你好啊世界经济发",
-    //     create_time: "1702363337",
-    //     remark: "ss",
-    // },
-    // {
-    //     name: "你好啊sss",
-    //     manufacturer_name: "你好啊sss",
-    //     sales_area: "你好啊sss",
-    //     create_time: "1702363337",
-    //     remark: "ss",
-    // },
-]);
+const tableData = ref([]);
 // 分页
 const channelPagination = ref({
     current: 1,
@@ -157,18 +88,6 @@ const channelPagination = ref({
     total: 0,
     showTotal: total => `${proxy.$t('n.all_total')} ${total} ${proxy.$t('in.total')}`,
 });
-// 销售区域
-const salesArea = arr => {
-    let result = [];
-    arr.forEach(item => {
-        if (locale.value === 'zh') {
-            result.push(item.country);
-        } else if (locale.value === 'en') {
-            result.push(item.country_en);
-        }
-    });
-    return result.length > 0 ? result.join(',') : '-';
-};
 
 onMounted(() => {
     // getTableDataFetch();
@@ -204,6 +123,12 @@ const handleTableChange = (pagination, filters, sorter) => {
     console.log(parmas.value);
     getTableDataFetch(parmas.value);
 };
+const changePrice = record => {
+    visibility.value = true;
+};
+const priceRecords = record => {
+    priceVisibility.value = true;
+};
 /* methods end*/
 watch(
     [() => props.searchParams, () => props.activeObj],
@@ -230,16 +155,34 @@ watch(
 .fittings {
     width: 100%;
     .title {
-        color: #1d2129;
-        font-family: PingFang SC;
-        font-size: 16px;
         margin-bottom: 10px;
+        font-size: 20px;
+        font-weight: 500;
+        color: #0061ff;
+        line-height: 28px;
     }
     .table-title {
         color: #1d2129;
         font-family: PingFang SC;
         font-size: 14px;
         font-weight: 500;
+    }
+    :deep(.price) {
+        .fcc(space-between);
+        width: 112px;
+        .price-text {
+            display: inline-block;
+            color: #1d2129;
+            &.active {
+                color: #0061ff;
+                cursor: pointer;
+            }
+        }
+        .price-edit {
+            width: 13.5px;
+            height: 13.5px;
+            cursor: pointer;
+        }
     }
 }
 

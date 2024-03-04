@@ -25,6 +25,7 @@ const apiList = {
         phoneCode: ['Post', 'common/phone-verification-code-send'], // 发送手机验证码
         userInfo: ['Get', 'system/info'], // 获取当前登录账号的账户信息
         migrate: ['Post', 'migrate/order'], // 获取当前登录账号的账户信息
+        downloadImportQualifiedListTemplate: ['GetJson', 'file/download-import-template'], // 下载导入合格供应商名录模板
     },
     Export: {
         // 导出
@@ -594,6 +595,12 @@ const apiList = {
         detail: ['PostJson', 'supplier/detail'],
         delete: ['PostJson', 'supplier/delete'],
         listAll: ['PostJson', 'supplier/list-name'],
+        bomList: ['PostJson', 'supplier/bom/list'],// bom列表
+        updateName: ['PostJson', 'supplier/bom/update-name'],// 修改bom名称
+        listVersion: ['PostJson', 'supplier/bom/list-version'],// bom版本列表
+        bomItemList: ['PostJson', 'supplier/bom-item/list'],// BomItem列表
+        bomLogSave: ['PostJson', 'supplier/bom-log/save'],// 修改价格
+        bomLogList: ['PostJson', 'supplier/bom-log/list'],// 价格变化记录
     },
     SupplierItem: {
         //供应商物料管理

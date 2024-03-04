@@ -12,42 +12,46 @@
             <span class="success-text">{{ data.successCode }}</span>
             {{ $t('i.strip_data') }}，{{ $t('i.error') }}
             <span class="error-text">{{ data.errorCode }}</span>
-            {{ $t('i.strip') }}，{{ $t('i.invalid_encoding') }}
-            <span class="error-text">{{ data.invalidCode }}</span>
-            {{ $t('i.strip') }}
+            <template v-if="showInvalidNum">
+                {{ $t('i.strip') }}，{{ $t('i.invalid_encoding') }}
+                <span class="error-text">{{ data.invalidCode }}</span>
+                {{ $t('i.strip') }}
+            </template>
         </p>
-        <div class="code" v-if="data.errorCodeList.length > 0 || data.invalidCodeList.length > 0">
-            <p class="code-title" v-if="data.errorCodeList.length > 0">
-                <span class="code-title-l">{{ $t('i.failure_encoding') }}</span>
-                <a-button type="default" @click="copyText('code-body')">
-                    {{ $t('i.copy_encoding') }}
-                </a-button>
-            </p>
-            <template v-if="data.errorCodeList.length > 0">
-                <div class="code-body" id="code-body">
-                    <div class="code-item" v-for="item in data.errorCodeList">
-                        {{ item }}
+        <template v-if="showList">
+            <div class="code" v-if="data.errorCodeList.length > 0 || data.invalidCodeList.length > 0">
+                <p class="code-title" v-if="data.errorCodeList.length > 0">
+                    <span class="code-title-l">{{ $t('i.failure_encoding') }}</span>
+                    <a-button type="default" @click="copyText('code-body')">
+                        {{ $t('i.copy_encoding') }}
+                    </a-button>
+                </p>
+                <template v-if="data.errorCodeList.length > 0">
+                    <div class="code-body" id="code-body">
+                        <div class="code-item" v-for="item in data.errorCodeList">
+                            {{ item }}
+                        </div>
                     </div>
-                </div>
-            </template>
-            <p
-                class="code-title"
-                :class="data.errorCodeList.length > 0 ? 'border-top' : ''"
-                v-if="data.invalidCodeList.length > 0"
-            >
-                <span class="code-title-l">{{ $t('i.invalid_encoding') }}</span>
-                <a-button type="default" @click="copyText('code-body-invalid')">
-                    {{ $t('i.copy_encoding') }}
-                </a-button>
-            </p>
-            <template v-if="data.invalidCodeList.length > 0">
-                <div class="code-body" id="code-body-invalid">
-                    <div class="code-item" v-for="item in data.invalidCodeList">
-                        {{ item }}
+                </template>
+                <p
+                    class="code-title"
+                    :class="data.errorCodeList.length > 0 ? 'border-top' : ''"
+                    v-if="data.invalidCodeList.length > 0"
+                >
+                    <span class="code-title-l">{{ $t('i.invalid_encoding') }}</span>
+                    <a-button type="default" @click="copyText('code-body-invalid')">
+                        {{ $t('i.copy_encoding') }}
+                    </a-button>
+                </p>
+                <template v-if="data.invalidCodeList.length > 0">
+                    <div class="code-body" id="code-body-invalid">
+                        <div class="code-item" v-for="item in data.invalidCodeList">
+                            {{ item }}
+                        </div>
                     </div>
-                </div>
-            </template>
-        </div>
+                </template>
+            </div>
+        </template>
     </div>
 </template>
 
@@ -57,10 +61,28 @@ import { ref, onMounted, getCurrentInstance } from 'vue';
 
 const { proxy } = getCurrentInstance();
 const props = defineProps({
-    // v-model 绑定值
     data: {
         type: Object,
-        default: () => {},
+        default: () => {
+            return {
+                errorCodeList: [],
+                invalidCodeList: [],
+                totalCode: 0,
+                successCode: 0,
+                errorCode: 0,
+                invalidCode: 0,
+            };
+        },
+    },
+    // 是否显示无效数量
+    showInvalidNum: {
+        type: Boolean,
+        default: true,
+    },
+    // 是否显示结果列表
+    showList: {
+        type: Boolean,
+        default: true,
     },
 });
 
