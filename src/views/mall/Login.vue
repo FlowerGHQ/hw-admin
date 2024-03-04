@@ -141,25 +141,30 @@
                                 {{ $t('mall.more_login') }}
                             </span>
                         </div>
-                        <div class="select-login" @click="changeMethods">
-                            <svg-icon
-                                icon-class="phone-black-icon"
-                                class-name="phone-black-icon"
-                                v-if="login_methods === 1"
-                            />
-                            <svg-icon icon-class="phone-icon" class-name="phone-icon" v-if="login_methods === 1" />
-                            <svg-icon
-                                icon-class="user-black-icon"
-                                class-name="user-black-icon"
-                                v-if="login_methods === 2"
-                            />
-                            <svg-icon icon-class="user-icon" class-name="user-icon" v-if="login_methods === 2" />
-                            <span>{{ login_methods === 2 ? $t('mall.user_name_login') : $t('mall.phone_login') }}</span>
-                        </div>
-                        <div class="fs-body" v-if="!fsLoginShow">
-                            <div class="fs-login" @click="changeFsLoginShow">
-                                <img src="@images/mall/login/fs-login.png" alt="" />
-                                <span>{{ $t('mall.fs_login') }}</span>
+                        <div class="login-body">
+                            <div class="login-item">
+                                <div class="select-login" @click="changeMethods">
+                                    <img
+                                        src="@images/mall/login/phone.png"
+                                        class="phone-icon"
+                                        v-if="login_methods === 1"
+                                    />
+                                    <img
+                                        src="@images/mall/login/lock.png"
+                                        class="lock-icon"
+                                        v-if="login_methods === 2"
+                                    />
+                                </div>
+                                <span class="login-text" v-if="login_methods === 1">{{ $t('mall.phone_login') }}</span>
+                                <span class="login-text" v-if="login_methods === 2">{{
+                                    $t('mall.user_name_login')
+                                }}</span>
+                            </div>
+                            <div class="login-item">
+                                <div class="select-login" @click="changeFsLoginShow">
+                                    <img src="@images/mall/login/fs-login.png" class="fs-icon" />
+                                </div>
+                                <span class="login-text">{{ $t('mall.fs_login') }}</span>
                             </div>
                         </div>
                     </template>
@@ -968,51 +973,56 @@ export default {
                 background: #fff;
             }
         }
-        .select-login {
+        .login-body {
             .fcc();
-            height: 46px;
-            border: 1px solid #999;
-            > span {
-                color: #333;
-                text-align: center;
-                font-size: 12px;
-                font-style: normal;
-                font-weight: 500;
-                line-height: 22px; /* 183.333% */
-            }
-            cursor: pointer;
-
-            .phone-icon,
-            .phone-black-icon,
-            .user-icon,
-            .user-black-icon {
-                width: 20px;
-                height: 20px;
-                margin-right: 4px;
-            }
-            .phone-icon,
-            .user-icon {
-                display: none;
-            }
-            .phone-black-icon,
-            .user-black-icon {
-                display: inline-block;
-            }
-            &:hover {
-                border: 1px solid #c6f;
-                background: transparent;
-                background: linear-gradient(100deg, #c6f 0%, #66f 100%);
-                border-image: linear-gradient(100deg, #c6f 0%, #66f 100%) 1;
-                background-clip: text;
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                .phone-icon,
-                .user-icon {
-                    display: inline-block;
+            .login-item {
+                .flex();
+                &:nth-child(n + 2) {
+                    margin-left: 60px;
                 }
-                .phone-black-icon,
-                .user-black-icon {
-                    display: none;
+                .select-login {
+                    .fcc();
+                    height: 42px;
+                    width: 42px;
+                    border-radius: 50%;
+                    border: 1px solid #eeeeee;
+                    border: 1px solid #999;
+                    > span {
+                        color: #333;
+                        text-align: center;
+                        font-size: 12px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: 22px; /* 183.333% */
+                    }
+                    cursor: pointer;
+
+                    .phone-icon,
+                    .lock-icon,
+                    .fs-icon {
+                        width: 16px;
+                        height: 16px;
+                    }
+                    &:hover {
+                        border: 1px solid transparent;
+                        background-clip: padding-box, border-box;
+                        background-origin: padding-box, border-box;
+                        background-image: linear-gradient(to right, #fff, #fff),
+                            linear-gradient(90deg, #8f41e9, #578aef);
+                    }
+                    &:hover ~ .login-text {
+                        background-image: linear-gradient(100deg, #c6f 0%, #66f 100%);
+                        background-clip: text;
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                    }
+                }
+                .login-text {
+                    font-size: 12px;
+                    font-weight: 400;
+                    line-height: 15px;
+                    color: #999999;
+                    margin-top: 8px;
                 }
             }
         }
@@ -1043,20 +1053,6 @@ export default {
             }
         }
     }
-    .fs-body {
-        .fcc();
-        .fs-login {
-            .fcc();
-            margin-top: 11.5px;
-            font-size: 12px;
-            line-height: 22px;
-            margin-top: 23px;
-            cursor: pointer;
-            > img {
-                margin-right: 4px;
-            }
-        }
-    }
     .fs-back {
         width: 20px;
         height: 20px;
@@ -1068,12 +1064,18 @@ export default {
             .fcc();
         }
         .fs-body {
+            .fcc();
             padding-bottom: 30px;
             .fs-login {
                 margin-top: 10px;
                 font-size: 14px;
                 font-weight: 500;
                 line-height: 22px;
+                > img {
+                    width: 16px;
+                    height: 16px;
+                    margin-right: 8px;
+                }
             }
         }
     }
