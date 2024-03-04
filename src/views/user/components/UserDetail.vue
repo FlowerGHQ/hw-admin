@@ -115,7 +115,7 @@ export default {
     padding-left: 24px;
 }
 .title {
-    margin: 12px 0;
+    margin: 12px 20px;
     font-size: 16px;
     font-weight: 500;
     line-height: 22px;
