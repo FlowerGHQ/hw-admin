@@ -26,8 +26,8 @@ const supplyManage = {
             name: 'SupplyList',
             component: () => import('@/views/supplier/manage/list.vue'),
             meta: {
-                title: '供应商列表',
-                title_en: 'Supplier list',
+                title: '新增供应商',
+                title_en: 'Add New Suppliers',
             },
         },
         {
