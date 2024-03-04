@@ -2,9 +2,9 @@
     <div v-if="isClose" class="my-preview-image-video">
         <MyMask :isClose="true" :isClickMaskClose="true">
             <div v-if="type === 'image'" class="preview-image">
-                <slot name="image">
-                    <a-carousel arrows :dots="false">
-                        <template v-if="previewData.length > 1" #prevArrow>
+                <slot name="image">                    
+                    <a-carousel arrows :dots="false" :style="'transform: scale(' + scaleCount + ');'">
+                        <!-- <template v-if="previewData.length > 1" #prevArrow>
                             <div class="custom-slick-arrow" style="left: 60px; z-index: 1">
                                 <left-circle-outlined />
                             </div>
@@ -13,10 +13,12 @@
                             <div class="custom-slick-arrow" style="right: 60px">
                                 <right-circle-outlined />
                             </div>
+                        </template> -->
+                        <template v-for="(item, index) in previewData" :key="index">
+                            <div>
+                                <img class="preview-img" :src="previewData[0]" alt="" />
+                            </div>
                         </template>
-                        <div v-for="(item, index) in previewData" :key="index">
-                            <img class="preview-img" :src="item" alt="" />
-                        </div>
                     </a-carousel>
                 </slot>
             </div>
@@ -27,8 +29,14 @@
                     </div>
                 </slot>
             </div>
-            <div class="colos-icon" @click="onAddBtn('close')">
-                <close-outlined />
+            <div class="Icons">
+                <div class="icon-flex">
+                    <template v-if="type === 'image'">
+                        <zoom-out-outlined class="m-r-30" @click="onZoom('zoom-out')" />
+                        <zoom-in-outlined class="m-r-30" @click="onZoom('zoom-in')" />
+                    </template>
+                    <close-outlined @click="onAddBtn('close')" />
+                </div>
             </div>
         </MyMask>
     </div>
@@ -37,7 +45,13 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import MyMask from '@/components/horwin/based-on-dom/MyMask.vue';
-import { LeftCircleOutlined, RightCircleOutlined, CloseOutlined } from '@ant-design/icons-vue';
+import {
+    LeftCircleOutlined,
+    RightCircleOutlined,
+    CloseOutlined,
+    ZoomOutOutlined,
+    ZoomInOutlined,
+} from '@ant-design/icons-vue';
 
 const props = defineProps({
     // 查看的类型 是照片查看还是Video查看
@@ -58,11 +72,33 @@ const props = defineProps({
 
 const emits = defineEmits(['update:isClose']);
 
+const scaleCount = ref(1);
 /* Methods start */
 const onAddBtn = type => {
     switch (type) {
         case 'close':
+            scaleCount.value = 1
             emits('update:isClose', false);
+            break;
+    }
+};
+const onZoom = type => {    
+    switch (type) {
+        case 'zoom-out':
+            if (scaleCount.value <= 0.5) {
+                scaleCount.value = 0.5;
+            } else {
+                scaleCount.value -= 0.3;
+            }
+            console.log('放小', scaleCount.value);
+            break;
+        case 'zoom-in':                        
+            if (scaleCount.value >= 2.5) {
+                scaleCount.value = 2.5;
+            } else {
+                scaleCount.value += 0.3;
+            }
+            console.log('放大', scaleCount.value);
             break;
     }
 };
@@ -127,17 +163,19 @@ onMounted(() => {
         height: 100%;
     }
 
-    .colos-icon {
+    .Icons {
         position: absolute;
         top: 30px;
         right: 30px;
         color: #fff;
-        width: 30px;
         font-size: 30px;
-        height: 30px;
         z-index: 6;
         opacity: 0.8;
         cursor: pointer;
+
+        .icon-flex {
+            display: flex;
+        }
     }
 }
 </style>
