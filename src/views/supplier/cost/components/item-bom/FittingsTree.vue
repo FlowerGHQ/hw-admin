@@ -324,7 +324,7 @@ const generateId = item => {
         case 1:
             return String(item.code) + String(item.level);
         case 2:
-            return String(item.version) + String(item.level);
+            return String(item.id) + String(item.level);
         default:
             break;
     }
@@ -356,12 +356,17 @@ const selectKey = (parentItem = {}, item) => {
             });
             break;
         case 2:
-            nowLevel2.value = String(item.version) + String(item.level);
-            // 所有的二级收起来
-            parentItem.children.forEach(item1 => {
+            nowLevel1.value = String(parentItem.code) + String(parentItem.level);
+            nowLevel2.value = String(item.id) + String(item.level);
+            // 所有的页面收起来
+            realData.value.forEach(item1 => {
                 item1.expand = false;
                 item1.select = false;
             });
+            // 选择一级
+            parentItem.select = true;
+            // 二级展开
+            parentItem.expand = true;
             $emit('update:activeObj', {
                 level: item.level,
                 version_id: item.id,
@@ -446,10 +451,8 @@ const getVersion = item => {
             item.children = res.list;
             item.children = setChildRen(item.children, 2);
             if (nowLevel1.value === String(item.code) + String(item.level)) {
-                const arr = item.children.filter(i => nowLevel2.value === String(i.version) + String(i.level));
+                const arr = item.children.filter(i => nowLevel2.value === String(i.id) + String(i.level));
                 selectKey(item, arr.length > 0 ? arr[0] : item.children[0]);
-            } else {
-                selectKey(item, item.children[0]);
             }
             loading2.value = false;
         })
