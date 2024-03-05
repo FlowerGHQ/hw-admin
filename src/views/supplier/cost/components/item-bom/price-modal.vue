@@ -40,8 +40,8 @@
                         <!-- 修改记录 -->
                         <template v-if="column.key === 'content'">
                             <a-tooltip>
-                                <template #title>{{ text }}</template>
-                                <span class="content" :title="text">{{ text }}</span>
+                                <template #title v-if="text">{{ text }}</template>
+                                <span class="content" :title="text">{{ text ? text : '-' }}</span>
                             </a-tooltip>
                         </template>
                     </template>

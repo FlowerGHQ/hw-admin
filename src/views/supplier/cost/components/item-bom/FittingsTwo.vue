@@ -23,12 +23,19 @@
                     <template v-if="column.key === 'item'">
                         {{ text ? text : '-' }}
                     </template>
+                    <!-- 供应商名称 -->
+                    <template v-if="column.key === 'supplier_name'">
+                        <a-tooltip>
+                            <template #title v-if="text">{{ text }}</template>
+                            <span class="supplier_name" :title="text">{{ text ? text : '-' }}</span>
+                        </a-tooltip>
+                    </template>
                     <!-- 含税单价（人民币） -->
                     <template v-if="column.key === 'price'">
                         <div class="price">
                             <span
                                 class="price-text"
-                                :class="tableData.length > 0 && index === 0 ? 'active' : ''"
+                                :class="tableData.length > 1 && index === 0 ? 'active' : ''"
                                 @click="priceRecords(record)"
                             >
                                 {{ $Util.Number.numFormat(text) }}
@@ -99,7 +106,7 @@ const tableColumns = computed(() => {
         { title: proxy.$t('supply-chain.serial_number'), dataIndex: 'number', key: 'number' }, // 序号
         { title: proxy.$t('supply-chain.component_code'), dataIndex: 'code', key: 'item' }, // 子件编码
         { title: proxy.$t('supply-chain.component_name'), dataIndex: 'name', key: 'item' }, // 子件名称
-        { title: proxy.$t('supply-chain.supplier_name'), dataIndex: 'supplier_name', key: 'item' }, // 供应商名称
+        { title: proxy.$t('supply-chain.supplier_name'), dataIndex: 'supplier_name', key: 'supplier_name' }, // 供应商名称
         { title: proxy.$t('supply-chain.accumulated_usage'), dataIndex: 'amount', key: 'item' }, // 累计用量
         { title: proxy.$t('supply-chain.unit_price_including_tax_rmb'), dataIndex: 'price', key: 'price' }, // 含税单价（人民币）
         { title: proxy.$t('supply-chain.type'), dataIndex: 'sync_type', key: 'item' }, // 类型
@@ -239,7 +246,11 @@ defineExpose({
             }
         }
     }
-
+    :deep(.supplier_name) {
+        .ell();
+        width: 120px;
+        display: inline-block;
+    }
     :deep(.price) {
         .fcc(space-between);
         width: 112px;
