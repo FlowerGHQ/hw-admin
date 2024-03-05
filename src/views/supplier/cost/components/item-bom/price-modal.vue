@@ -70,7 +70,7 @@ const { proxy } = getCurrentInstance();
 const $t = useI18n().t;
 const wrap = ref(null);
 
-const emits = defineEmits(['update:visibility']);
+const emits = defineEmits(['update:visibility', 'setCancleShow']);
 const props = defineProps({
     bom_item_id: {
         type: [String, Number],
@@ -131,11 +131,11 @@ const getTableDataFetch = (parmas = {}) => {
         });
 };
 const handCancle = () => {
-    emits('update:visibility', false);
+    emits('setCancleShow');
 };
 
 const handleOk = () => {
-    emits('update:visibility', false);
+    emits('setCancleShow');
 };
 defineExpose({
     getTableDataFetch,
