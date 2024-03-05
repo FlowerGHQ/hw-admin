@@ -572,7 +572,7 @@ const handleEditName = item => {
 const getGoodsList = () => {
     loading1.value = true;
     Core.Api.ITEM_BOM.listName({
-        search_key: keyWord.value,
+        key: keyWord.value,
     })
         .then(res => {
             realData.value = res.list;
@@ -749,7 +749,7 @@ onMounted(() => {
     // 请求商品列表
     loading1.value = true;
     Core.Api.ITEM_BOM.listName({
-        search_key: keyWord.value,
+        key: keyWord.value,
     })
         .then(res => {
             realData.value = res.list;

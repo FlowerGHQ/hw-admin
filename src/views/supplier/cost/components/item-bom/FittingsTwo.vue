@@ -26,7 +26,11 @@
                     <!-- 含税单价（人民币） -->
                     <template v-if="column.key === 'price'">
                         <div class="price">
-                            <span class="price-text active" @click="priceRecords(record)">
+                            <span
+                                class="price-text"
+                                :class="tableData.length > 0 && index === 0 ? 'active' : ''"
+                                @click="priceRecords(record)"
+                            >
                                 {{ $Util.Number.numFormat(text) }}
                             </span>
                             <MySvgIcon icon-class="edit" class-name="price-edit" @click.stop="changePrice(record)" />
@@ -242,9 +246,9 @@ defineExpose({
         .price-text {
             display: inline-block;
             color: #1d2129;
+            cursor: pointer;
             &.active {
                 color: #0061ff;
-                cursor: pointer;
             }
         }
         .price-edit {

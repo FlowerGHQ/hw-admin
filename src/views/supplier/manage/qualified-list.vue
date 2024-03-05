@@ -136,9 +136,9 @@ const tableColumns = computed(() => {
         { title: $t('supply-chain.supplier_full_name'), dataIndex: 'name', key: 'item' },
         { title: $t('supply-chain.supplier_abbreviation'), dataIndex: 'short_name', key: 'item' },
         { title: $t('supply-chain.procurement_category'), dataIndex: 'purchase_category', key: 'item' },
-        { title: $t('supply-chain.main_supply'), dataIndex: 'main_supply', key: 'item' },
-        { title: $t('supply-chain.secondary_supply'), dataIndex: 'sub_supply', key: 'item' },
-        { title: $t('supply-chain.other_items'), dataIndex: 'other_supply', key: 'item' },
+        { title: $t('supply-chain.main_supply'), dataIndex: 'supply_main', key: 'item' },
+        { title: $t('supply-chain.secondary_supply'), dataIndex: 'supply_secondary', key: 'item' },
+        { title: $t('supply-chain.other_items'), dataIndex: 'supply_other', key: 'item' },
         { title: $t('supply-chain.introduction_date'), dataIndex: 'register_time', key: 'item' },
         { title: $t('supply-chain.change_class'), dataIndex: 'register_type', key: 'register_type' },
     ];
