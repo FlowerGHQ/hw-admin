@@ -139,12 +139,13 @@ const channelPagination = ref({
 onMounted(() => {});
 const refresh = () => {
     $emit('handleRefresh');
-    // getTableDataFetch();
+    getTableDataFetch();
 };
 
 /* Fetch start*/
 // 获取表格list
 const getTableDataFetch = (parmas = {}) => {
+    if (!bomId.value) return;
     loading.value = true;
     let obj = {
         // name:'主撑弹簧',
