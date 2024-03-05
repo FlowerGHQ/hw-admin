@@ -83,6 +83,7 @@ import ChangePriceModal from './change-price-modal.vue';
 import PriceModal from './price-modal.vue';
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
 import _ from 'lodash';
+const $emit = defineEmits(['handleRefresh']);
 const bomId = ref(0);
 const { proxy } = getCurrentInstance();
 const bom_item_id = ref(null);
@@ -137,7 +138,8 @@ const channelPagination = ref({
 
 onMounted(() => {});
 const refresh = () => {
-    getTableDataFetch();
+    $emit('handleRefresh');
+    // getTableDataFetch();
 };
 
 /* Fetch start*/

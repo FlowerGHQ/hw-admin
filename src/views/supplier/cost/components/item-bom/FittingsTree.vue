@@ -19,7 +19,7 @@
                         class="item pointer"
                         @click.stop="selectKey(null, item)"
                         :class="{
-                            'active-item': generateId(item) == activeKey || item.code === shopId,
+                            'active-item': generateId(item) == nowLevel1 || item.code === shopId,
                         }"
                     >
                         <div class="tree-item-main">
@@ -33,7 +33,7 @@
                                     class="group"
                                     src="@/assets/images/bom/group-active.png"
                                     alt=""
-                                    v-if="generateId(item) === activeKey || item.code === shopId"
+                                    v-if="generateId(item) === nowLevel1 || item.code === shopId"
                                 />
                                 <img class="group" src="@/assets/images/bom/group-common.png" alt="" v-else />
                                 <div class="title">
@@ -69,7 +69,7 @@
                                     v-for="(item1, index) in item.children"
                                     :key="generateId(item1)"
                                     :class="{
-                                        'active-item-one': generateId(item1) === activeKey,
+                                        'active-item-one': generateId(item1) === nowLevel2,
                                     }"
                                     @click.stop="selectKey(item, item1)"
                                 >
@@ -116,7 +116,7 @@
                         class="item pointer op-box"
                         @click.stop="selectKey(null, item)"
                         :class="{
-                            'active-item': generateId(item) == activeKey || item.code === shopId,
+                            'active-item': generateId(item) == nowLevel1 || item.code === shopId,
                         }"
                     >
                         <div class="tree-item-main">
@@ -186,7 +186,7 @@
                                             v-for="(item1, index) in item.children"
                                             :key="generateId(item1)"
                                             :class="{
-                                                'active-item-one': generateId(item1) === activeKey,
+                                                'active-item-one': generateId(item1) === nowLevel2,
                                             }"
                                             @click.stop="selectKey(item, item1)"
                                         >
@@ -221,47 +221,6 @@
                                                         >
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="expend-area-two" v-if="item1.expand">
-                                                <a-spin :spinning="loading3" :delay="500">
-                                                    <div
-                                                        class="tree-item-main-child-two"
-                                                        v-for="(item2, index) in item1.children"
-                                                        :key="generateId(item2)"
-                                                        :class="{
-                                                            'active-item-two': generateId(item2) == activeKey,
-                                                        }"
-                                                        @click.stop="selectKey(item1, item2)"
-                                                    >
-                                                        <div class="title">
-                                                            <div class="title-area">
-                                                                <span v-if="!item2.edit">{{ item2.name }}</span>
-                                                                <a-input
-                                                                    v-else
-                                                                    v-model:value="item2.name"
-                                                                    :placeholder="$t('item-bom.title_the_ph')"
-                                                                    @blur.stop="handleEditName(item2)"
-                                                                />
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- <div class="right-icon">
-                                                    <MySvgIcon
-                                                        icon-class="edit"
-                                                        @click.stop="
-                                                            handleEdit(item2)
-                                                        " />
-                                                    <MySvgIcon
-                                                        icon-class="delete"
-                                                        @click.stop="
-                                                            handleDelete(
-                                                                item1,
-                                                                item2
-                                                            )
-                                                        " />
-                                                </div> -->
-                                                    </div>
-                                                </a-spin>
                                             </div>
                                         </div>
                                     </a-spin>
@@ -307,8 +266,6 @@ import Util from '@/core/utils';
 // 搜索关键字
 let keyWord = ref('');
 let realData = ref([]);
-// 点击的key
-let activeKey = ref('');
 let loading1 = ref(false);
 let loading2 = ref(false);
 let loading3 = ref(false);
@@ -323,6 +280,10 @@ let timer1 = ref(null);
 
 // 当前父级shop_id
 const shopId = ref(null);
+// 当前选中的一级菜单
+const nowLevel1 = ref(null);
+// 当前选中的二级菜单
+const nowLevel2 = ref(null);
 
 // 接受activeObj
 const props = defineProps({
@@ -370,9 +331,10 @@ const generateId = item => {
 };
 // 选择key
 const selectKey = (parentItem = {}, item) => {
+    if (!item) return;
     switch (item.level) {
         case 1:
-            activeKey.value = String(item.code) + String(item.level);
+            nowLevel1.value = String(item.code) + String(item.level);
             // 所有的页面收起来
             realData.value.forEach(item1 => {
                 item1.expand = false;
@@ -394,7 +356,7 @@ const selectKey = (parentItem = {}, item) => {
             });
             break;
         case 2:
-            activeKey.value = String(item.version) + String(item.level);
+            nowLevel2.value = String(item.version) + String(item.level);
             // 所有的二级收起来
             parentItem.children.forEach(item1 => {
                 item1.expand = false;
@@ -483,7 +445,12 @@ const getVersion = item => {
         .then(res => {
             item.children = res.list;
             item.children = setChildRen(item.children, 2);
-            selectKey(item, item.children[0]);
+            if (nowLevel1.value === String(item.code) + String(item.level)) {
+                const arr = item.children.filter(i => nowLevel2.value === String(i.version) + String(i.level));
+                selectKey(item, arr.length > 0 ? arr[0] : item.children[0]);
+            } else {
+                selectKey(item, item.children[0]);
+            }
             loading2.value = false;
         })
         .catch(err => {
@@ -536,11 +503,9 @@ const handleOk = () => {
     visible.value = false;
 };
 // 请求请求版本下的数据
-const getCurrentVersion = (parentId, id) => {
-    let rootChildren = realData.value.find(item => item.code === parentId).children;
-    let currentVersion = rootChildren.find(item => item.id === id);
-    // 请求该版本下的分类
-    getCategory(currentVersion);
+const getCurrentVersion = () => {
+    const arr = realData.value.filter(item => item.expand);
+    getVersion(arr[0]);
 };
 defineExpose({
     getCurrentVersion,
@@ -568,7 +533,7 @@ onMounted(() => {
             // 默认展开第一
             realData.value[0].expand = true;
             realData.value[0].select = true;
-            activeKey.value = String(realData.value[0].code) + String(realData.value[0].level);
+            nowLevel1.value = String(realData.value[0].code) + String(realData.value[0].level);
             $emit('update:activeObj', {
                 level: realData.value[0].level,
                 shop_id: realData.value[0].code,

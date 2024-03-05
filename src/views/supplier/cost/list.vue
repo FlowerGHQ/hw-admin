@@ -138,9 +138,7 @@ const searAllRef = ref(null); // searAll refs
 const screenWidth = ref(window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth);
 
 const TreeRefresh = val => {
-    if (val) {
-        treeRef.value.getCurrentVersion(val.shop_id, val.version_id);
-    }
+    treeRef.value.getCurrentVersion();
 };
 
 onMounted(() => {
