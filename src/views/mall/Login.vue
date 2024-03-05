@@ -344,7 +344,7 @@ export default {
         },
         changeFsLoginShow() {
             const appId = 'cli_a4f7ecfb66bb500d'; // 在飞书开放平台上注册的应用程序的App ID
-            const REDIRECT_URI = 'http://10.10.12.91:8089/';
+            const REDIRECT_URI = window.location.host;
             this.goto = `https://passport.feishu.cn/suite/passport/oauth/authorize?client_id=${appId}&redirect_uri=${REDIRECT_URI}&response_type=code`;
             this.fsLoginShow = true;
             this.$nextTick(() => {

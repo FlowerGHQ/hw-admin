@@ -411,6 +411,9 @@ export default {
 
 <style lang="less" scoped>
 // #UserList {}
+.btns-area {
+    .fcc();
+}
 .fs-icon {
     width: 16px;
     height: 16px;
