@@ -20,7 +20,7 @@ const router = useRouter();
 const token = route.query.token;
 let QRLoginObj = null;
 const appId = 'cli_a4f7ecfb66bb500d'; // 在飞书开放平台上注册的应用程序的App ID
-const REDIRECT_URI = window.location.host;
+const REDIRECT_URI = window.location.origin; // 当前域名
 const goto = `https://passport.feishu.cn/suite/passport/oauth/authorize?client_id=${appId}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
 onMounted(() => {
