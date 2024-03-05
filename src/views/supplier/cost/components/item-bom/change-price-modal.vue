@@ -1,7 +1,7 @@
 <template>
     <div ref="wrap">
         <a-modal
-            v-model:visible="visibility"
+            v-model:visible="editVisible"
             :title="$t('supply-chain.modify_price')"
             :okText="$t('item-bom.confirm')"
             :cancelText="$t('item-bom.cancel')"
@@ -82,6 +82,11 @@ const formRef = ref(null);
 const handCancle = () => {
     emits('update:visibility', false);
 };
+const editVisible = computed({
+    // 重新定义
+    get: () => props.visibility,
+    set: value => emits('update:visibility', value),
+});
 const lang = computed(() => {
     return proxy.$store.state.lang;
 });

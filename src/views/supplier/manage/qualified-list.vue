@@ -130,8 +130,8 @@ const importResultData = reactive({
 });
 const tableColumns = computed(() => {
     let columns = [
-        { title: $t('supply-chain.serial_number'), dataIndex: 'number', key: 'number', fixed: 'left' },
-        { title: $t('supply-chain.no'), dataIndex: 'no', key: 'item', fixed: 'left' },
+        { title: $t('supply-chain.serial_number'), dataIndex: 'number', key: 'number' },
+        { title: $t('supply-chain.no'), dataIndex: 'no', key: 'item' },
         { title: $t('supply-chain.supplier_code'), dataIndex: 'code', key: 'item' },
         { title: $t('supply-chain.supplier_full_name'), dataIndex: 'name', key: 'item' },
         { title: $t('supply-chain.supplier_abbreviation'), dataIndex: 'short_name', key: 'item' },

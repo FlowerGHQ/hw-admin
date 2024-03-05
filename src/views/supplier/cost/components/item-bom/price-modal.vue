@@ -1,7 +1,7 @@
 <template>
     <div ref="wrap">
         <a-modal
-            v-model:visible="visibility"
+            v-model:visible="editVisible"
             :title="$t('supply-chain.price_change_records')"
             :okText="$t('item-bom.confirm')"
             :cancelText="$t('item-bom.cancel')"
@@ -131,12 +131,17 @@ const getTableDataFetch = (parmas = {}) => {
         });
 };
 const handCancle = () => {
-    emits('setCancleShow');
+    emits('update:visibility', false);
 };
 
 const handleOk = () => {
-    emits('setCancleShow');
+    emits('update:visibility', false);
 };
+const editVisible = computed({
+    // 重新定义
+    get: () => props.visibility,
+    set: value => emits('update:visibility', value),
+});
 defineExpose({
     getTableDataFetch,
 });
