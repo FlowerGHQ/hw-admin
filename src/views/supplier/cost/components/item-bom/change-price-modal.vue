@@ -16,7 +16,7 @@
             <div class="main">
                 <a-form
                     ref="formRef"
-                    :model="formState"
+                    :model="formData"
                     :label-col="{ span: lang === 'zh' ? 4 : 9 }"
                     :wrapper-col="{ span: lang === 'zh' ? 20 : 15 }"
                 >
@@ -32,7 +32,7 @@
                         style="margin-bottom: 0"
                     >
                         <a-input-number
-                            v-model:value="formState.price"
+                            v-model:value="formData.price"
                             style="width: 100%"
                             :min="0.0001"
                             :step="0.0001"
@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, getCurrentInstance, computed } from 'vue';
+import { ref, reactive, getCurrentInstance, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import Core from '@/core';
 import { Form } from 'ant-design-vue';
@@ -75,6 +75,9 @@ const props = defineProps({
         },
     },
 });
+const formData = ref({
+    price: '',
+});
 const formRef = ref(null);
 const handCancle = () => {
     emits('update:visibility', false);
@@ -89,10 +92,9 @@ const handleOk = () => {
 const changePriceFetch = async (parmas = {}) => {
     try {
         const values = await formRef.value.validateFields();
-        props.formState = parseFloat(Number(props.formState.price).toFixed(4));
         let obj = {
             bom_item_id: props.bom_item_id,
-            price: props.formState.price, //含税单价
+            price: parseFloat(Number(formData.value.price).toFixed(4)), //含税单价
             ...parmas,
         };
         Core.Api.Supplier.bomLogSave(obj)
@@ -107,6 +109,15 @@ const changePriceFetch = async (parmas = {}) => {
         console.log('Failed:', errorInfo);
     }
 };
+watch(
+    () => props.visibility,
+    (newVal, oldVal) => {
+        if (newVal) {
+            formData.value = props.formState;
+        }
+    },
+    { deep: true, immediate: true },
+);
 </script>
 
 <style lang="less" scoped>
