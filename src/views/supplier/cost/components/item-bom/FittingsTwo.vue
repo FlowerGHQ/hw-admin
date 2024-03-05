@@ -35,13 +35,19 @@
                         <div class="price">
                             <span
                                 class="price-text"
-                                :class="tableData.length > 1 && index === 0 ? 'active' : ''"
+                                :class="record.log_count > 1 ? 'active' : ''"
                                 @click="priceRecords(record)"
                             >
                                 {{ $Util.Number.numFormat(text) }}
                             </span>
                             <MySvgIcon icon-class="edit" class-name="price-edit" @click.stop="changePrice(record)" />
                         </div>
+                    </template>
+                    <!-- 同步类型（0.eos创建；1.u8同步） -->
+                    <template v-if="column.key === 'log_sync_type'">
+                        <template v-if="text === 0">{{ $t('supply-chain.EOS_creation') }}</template>
+                        <template v-else-if="text === 1">{{ $t('supply-chain.U8_synchronization') }}</template>
+                        <template v-else>-</template>
                     </template>
                     <!-- 生效日期 -->
                     <template v-if="column.key === 'time'">
@@ -109,9 +115,9 @@ const tableColumns = computed(() => {
         { title: proxy.$t('supply-chain.supplier_name'), dataIndex: 'supplier_name', key: 'supplier_name' }, // 供应商名称
         { title: proxy.$t('supply-chain.accumulated_usage'), dataIndex: 'amount', key: 'item' }, // 累计用量
         { title: proxy.$t('supply-chain.unit_price_including_tax_rmb'), dataIndex: 'price', key: 'price' }, // 含税单价（人民币）
-        { title: proxy.$t('supply-chain.type'), dataIndex: 'sync_type', key: 'item' }, // 类型
+        { title: proxy.$t('supply-chain.type'), dataIndex: 'log_sync_type', key: 'log_sync_type' }, // 同步类型
         { title: proxy.$t('supply-chain.effective_date'), dataIndex: 'price_effective_time', key: 'time' }, // 生效日期
-        { title: proxy.$t('supply-chain.modifying_records'), dataIndex: 'content', key: 'item' }, // 修改记录
+        { title: proxy.$t('supply-chain.modifying_records'), dataIndex: 'log_content', key: 'item' }, // 修改记录
     ];
     return result;
 });

@@ -552,6 +552,7 @@ onMounted(() => {
         key: keyWord.value,
     })
         .then(res => {
+            if (res.list.length === 0) return;
             realData.value = res.list;
             realData.value.forEach(item => {
                 item.select = false;

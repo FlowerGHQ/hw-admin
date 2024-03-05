@@ -320,6 +320,8 @@ export default {
         modifying_records: '修改记录',
         modify_price: '修改价格',
         price_change_records: '价格变化记录',
+        EOS_creation: 'EOS创建',
+        U8_synchronization: 'U8同步',
     },
     en: {
         // 年
@@ -630,5 +632,7 @@ export default {
         modifying_records: 'Modifying Records',
         modify_price: 'Modify Price',
         price_change_records: 'Price Change Records',
+        EOS_creation: 'EOS Creation',
+        U8_synchronization: 'U8 Synchronization',
     },
 };

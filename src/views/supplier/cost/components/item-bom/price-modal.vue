@@ -37,6 +37,12 @@
                         <template v-if="column.key === 'price'">
                             {{ $Util.Number.numFormat(text) }}
                         </template>
+                        <!-- 同步类型（0.eos创建；1.u8同步） -->
+                        <template v-if="column.key === 'sync_type'">
+                            <template v-if="text === 0">{{ $t('supply-chain.EOS_creation') }}</template>
+                            <template v-else-if="text === 1">{{ $t('supply-chain.U8_synchronization') }}</template>
+                            <template v-else>-</template>
+                        </template>
                         <!-- 修改记录 -->
                         <template v-if="column.key === 'content'">
                             <a-tooltip>
@@ -85,7 +91,7 @@ const tableColumns = computed(() => {
     const result = [
         { title: proxy.$t('supply-chain.serial_number'), dataIndex: 'number', key: 'number' }, // 序号
         { title: proxy.$t('supply-chain.unit_price_including_tax_rmb'), dataIndex: 'price', key: 'price' }, // 含税单价（人民币）
-        { title: proxy.$t('supply-chain.type'), dataIndex: 'sync_type', key: 'item' }, // 类型
+        { title: proxy.$t('supply-chain.type'), dataIndex: 'sync_type', key: 'sync_type' }, // 类型
         { title: proxy.$t('supply-chain.effective_date'), dataIndex: 'effective_time', key: 'item' }, // 生效日期
         { title: proxy.$t('supply-chain.modifying_records'), dataIndex: 'content', key: 'content' }, // 修改记录
     ];
