@@ -43,7 +43,7 @@
                     <template v-if="column.key === 'item'">
                         {{ text ? text : '-' }}
                     </template>
-                    <!-- 提交时间 -->
+                    <!-- 引入日期 -->
                     <template v-if="column.key === 'time'">
                         {{ text ? $Util.timeFormat(text, 'YYYY.MM') : '-' }}
                     </template>
@@ -139,7 +139,7 @@ const tableColumns = computed(() => {
         { title: $t('supply-chain.main_supply'), dataIndex: 'supply_main', key: 'item' },
         { title: $t('supply-chain.secondary_supply'), dataIndex: 'supply_secondary', key: 'item' },
         { title: $t('supply-chain.other_items'), dataIndex: 'supply_other', key: 'item' },
-        { title: $t('supply-chain.introduction_date'), dataIndex: 'register_time', key: 'item' },
+        { title: $t('supply-chain.introduction_date'), dataIndex: 'register_time', key: 'time' },
         { title: $t('supply-chain.change_class'), dataIndex: 'register_type', key: 'register_type' },
     ];
     return columns;

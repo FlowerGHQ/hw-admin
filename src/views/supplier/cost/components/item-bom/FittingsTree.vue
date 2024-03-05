@@ -405,6 +405,7 @@ const selectKey = (parentItem = {}, item) => {
                 version_id: item.id,
                 shop_id: parentItem.code,
                 version_name: item.version,
+                price_sum: item.price_sum,
             });
             break;
         default:
@@ -525,6 +526,7 @@ const handleOk = () => {
                     version_id: deleteParentItem.value.id,
                     shop_id: deleteParentItem.value.code,
                     version_name: item.version,
+                    price_sum: item.price_sum,
                 });
             });
         })

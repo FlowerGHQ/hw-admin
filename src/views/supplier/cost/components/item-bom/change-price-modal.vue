@@ -86,7 +86,7 @@ const changePriceFetch = async (parmas = {}) => {
         const values = await formRef.value.validateFields();
         props.formState = parseFloat(Number(props.formState.price).toFixed(4));
         let obj = {
-            bom_item_id: 2137,
+            bom_item_id: props.bom_item_id,
             price: props.formState.price, //含税单价
             ...parmas,
         };

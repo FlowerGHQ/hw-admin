@@ -1,7 +1,9 @@
 <template>
     <!-- code编码-二级页面 -->
     <div class="fittings-two">
-        <div class="title">{{ $t('supply-chain.total_amount') }}: {{ $Util.Number.numFormat(totalPrice) }}</div>
+        <div class="title">
+            {{ $t('supply-chain.total_amount') }}: {{ $Util.Number.numFormat(activeObj.price_sum) }}
+        </div>
         <div class="fittings-list">
             <a-table
                 :row-key="record => record.id"
@@ -196,10 +198,14 @@ const priceRecords = record => {
 // 监听弹窗关闭-更改父组件prop弹窗显隐值
 watch(
     () => props.activeObj,
-    (newValue, oldValue) => {
-        bomId.value = newValue?.version_id;
-        if (newValue && Object.keys(newValue)) {
-            refresh();
+    (newVal, oldVal) => {
+        bomId.value = newVal?.version_id;
+        const obj1 = JSON.parse(JSON.stringify(newVal || ''));
+        const obj2 = JSON.parse(JSON.stringify(oldVal || ''));
+        if (!_.isEqual(obj1, obj2)) {
+            channelPagination.value.current = 1;
+            channelPagination.value.pageSize = 20;
+            getTableDataFetch();
         }
     },
     { deep: true, immediate: true },
@@ -208,8 +214,8 @@ watch(
 watch(
     () => props.searchParams,
     (newVal, oldVal) => {
-        const obj1 = JSON.parse(JSON.stringify(newVal));
-        const obj2 = JSON.parse(JSON.stringify(oldVal));
+        const obj1 = JSON.parse(JSON.stringify(newVal || ''));
+        const obj2 = JSON.parse(JSON.stringify(oldVal || ''));
         if (!_.isEqual(obj1, obj2)) {
             channelPagination.value.current = 1;
             channelPagination.value.pageSize = 20;
