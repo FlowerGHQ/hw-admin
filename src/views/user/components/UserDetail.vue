@@ -1,44 +1,5 @@
 <template>
     <div id="UserDetailTem" class="list-container">
-        <div class="title-container">
-            <div class="title-area">{{ $t('u.detail') }}</div>
-        </div>
-        <div class="gray-panel">
-            <div class="panel-content desc-container">
-                <div class="desc-title">
-                    <div class="title-area">
-                        <span v-if="detail.department_list.length > 0">{{ detail.department_list[0].name }}-</span>
-                        <span class="title">{{ detail.name }}</span>
-                    </div>
-                </div>
-                <a-row class="desc-detail">
-                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">{{ $t('u.account') }}：</span>
-                        <span class="value">{{ detail.username }}</span>
-                    </a-col>
-                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">{{ $t('e.administrator') }}：</span>
-                        <span class="value">&nbsp; {{ detail.flag_admin ? $t('i.yes') : $t('i.no') }}</span>
-                    </a-col>
-                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">{{ $t('n.phone') }}：</span>
-                        <span class="value">{{ detail.phone }}</span>
-                    </a-col>
-                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">{{ $t('n.email') }}：</span>
-                        <span class="value">{{ detail.email }}</span>
-                    </a-col>
-                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">{{ $t('u.role') }}：</span>
-                        <span class="value">{{ detail.role_name }}</span>
-                    </a-col>
-                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">{{ $t('n.time') }}：</span>
-                        <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
-                    </a-col>
-                </a-row>
-            </div>
-        </div>
         <div>
             <p class="title">{{ $t('u.configure_permissions') }}</p>
             <UserAuth

@@ -43,12 +43,19 @@
                             <template v-if="column.key === 'item'">
                                 {{ text || '-' }}
                             </template>
+                            <!-- 角色 -->
+                            <template v-if="column.key === 'role_name'">
+                                {{ text || $t('u.no_role') }}
+                            </template>
+                            <template v-if="column.key === 'authority'">
+                                <span class="allocated" v-if="text">{{ $t('u.allocated') }}</span>
+                                <span class="unallocated" v-else>{{ $t('u.unallocated') }}</span>
+                            </template>
                             <template v-if="column.key === 'user'">
                                 <a-avatar class="user-avatar" :size="32" :src="record.avatar">
                                     {{ record.name }}
                                 </a-avatar>
                                 <span>{{ text || '-' }}</span>
-                                <template v-if="record.select"><span class="label">已配置</span></template>
                             </template>
                             <template v-if="column.key === 'department'">
                                 {{ record.department_list[0]?.name || '-' }}
@@ -79,23 +86,28 @@
                                 </a-avatar>
                                 <span>{{ text || '-' }}</span>
                             </template>
-                            <template v-if="column.key === 'role_id'">
-                                <a-select
-                                    v-model:value="record.role_id"
-                                    :options="optionsRoleId"
-                                    style="width: 170px"
-                                    :fieldNames="{ label: 'name', value: 'id' }"
-                                    :placeholder="`${$t('n.choose')}${$t('authority.title.role')}`"
-                                    allowClear
-                                    @change="(value, option) => changeRole(option, record)"
-                                ></a-select>
+                            <!-- 角色 -->
+                            <template v-if="column.key === 'role_name'">
+                                {{ text || $t('u.no_role') }}
+                            </template>
+                            <template v-if="column.key === 'authority'">
+                                <span class="allocated" v-if="text || record.authority_ids">{{
+                                    $t('u.allocated')
+                                }}</span>
+                                <span class="unallocated" v-else>{{ $t('u.unallocated') }}</span>
                             </template>
                             <template v-if="column.key === 'authority_ids'">
-                                <template v-if="text">
-                                    <span class="allocated" @click="allocat(record)">已分配</span>
+                                <template v-if="record?.user.role_name || record?.user.flag_authority">
+                                    <div class="config" @click="allocat(record)">
+                                        <img src="@images/allocation.png" class="allocation-img" />
+                                        <span class="allocation">{{ $t('u.allocation') }}</span>
+                                    </div>
                                 </template>
                                 <template v-else>
-                                    <span class="unallocated" @click="allocat(record)">请分配权限</span>
+                                    <div class="config" @click="allocat(record)">
+                                        <img src="@images/edit.png" class="edit-img" />
+                                        <span class="edit">{{ $t('def.edit') }}</span>
+                                    </div>
                                 </template>
                             </template>
                             <template v-if="column.key === 'operation'">
@@ -112,12 +124,70 @@
                 </div>
             </template>
             <template v-if="step === 3">
-                <UserDetail
-                    ref="UserDetail"
-                    :org_type="org_type"
-                    :detail="detail"
-                    @submit="setAuthorityIds"
-                ></UserDetail>
+                <div class="title-container step3">
+                    <div class="title-area">{{ $t('u.detail') }}</div>
+                </div>
+                <div class="gray-panel">
+                    <div class="panel-content desc-container">
+                        <div class="desc-title">
+                            <div class="title-area">
+                                <span v-if="detail.department_list.length > 0"
+                                    >{{ detail.department_list[0].name }}-</span
+                                >
+                                <span class="title">{{ detail.name }}</span>
+                            </div>
+                        </div>
+                        <a-row class="desc-detail">
+                            <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                                <span class="key">{{ $t('u.account') }}：</span>
+                                <span class="value">{{ detail.username }}</span>
+                            </a-col>
+                            <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                                <span class="key">{{ $t('e.administrator') }}：</span>
+                                <span class="value">&nbsp; {{ detail.flag_admin ? $t('i.yes') : $t('i.no') }}</span>
+                            </a-col>
+                            <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                                <span class="key">{{ $t('n.phone') }}：</span>
+                                <span class="value">{{ detail.phone }}</span>
+                            </a-col>
+                            <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                                <span class="key">{{ $t('n.email') }}：</span>
+                                <span class="value">{{ detail.email }}</span>
+                            </a-col>
+                            <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                                <span class="key">{{ $t('u.role') }}：</span>
+                                <span class="value">{{ detail.role_name }}</span>
+                            </a-col>
+                            <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                                <span class="key">{{ $t('n.time') }}：</span>
+                                <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
+                            </a-col>
+                        </a-row>
+                    </div>
+                </div>
+                <div class="tabs-container">
+                    <a-tabs v-model:activeKey="activeKey">
+                        <a-tab-pane key="UserRole" :tab="$t('u.role_assign')" forceRender>
+                            <UserRoleTem
+                                ref="UserRoleTem"
+                                type="item"
+                                :org_type="org_type"
+                                :detail="detail"
+                                @submit="setRoleIds"
+                                v-show="activeKey === 'UserRole'"
+                            />
+                        </a-tab-pane>
+                        <a-tab-pane key="UserAuth" :tab="$t('u.authority')" forceRender>
+                            <UserDetail
+                                ref="UserDetail"
+                                :org_type="org_type"
+                                :detail="detail"
+                                @submit="setAuthorityIds"
+                                v-show="activeKey === 'UserAuth'"
+                            ></UserDetail>
+                        </a-tab-pane>
+                    </a-tabs>
+                </div>
             </template>
             <div class="form-btns">
                 <a-button @click="handleClose" type="primary" ghost>{{ $t('def.cancel') }}</a-button>
@@ -178,12 +248,14 @@
 <script>
 import Core from '../../core';
 import TimeSearch from '@/components/common/TimeSearch.vue';
+import UserRoleTem from './components/UserRoleTem.vue';
 import UserDetail from './components/UserDetail.vue';
 
 export default {
     name: 'UserList',
     components: {
         TimeSearch,
+        UserRoleTem,
         UserDetail,
     },
     props: {},
@@ -215,6 +287,8 @@ export default {
                 { title: 'u.employee_no', dataIndex: 'employee_no', key: 'item' },
                 { title: 'n.phone', dataIndex: 'phone', key: 'item' },
                 { title: 'n.email', dataIndex: 'email', key: 'item' },
+                { title: 'u.role', dataIndex: ['user', 'role_name'], key: 'role_name' },
+                { title: 'u.authority_abbreviation', dataIndex: ['user', 'flag_authority'], key: 'authority' },
             ],
             // 分页
             paginationAdd: {
@@ -231,7 +305,8 @@ export default {
                 { title: 'u.employee_no', dataIndex: 'employee_no', key: 'item' },
                 { title: 'n.phone', dataIndex: 'phone', key: 'item' },
                 { title: 'n.email', dataIndex: 'email', key: 'item' },
-                { title: 'authority.title.role', dataIndex: 'role_id', key: 'role_id' },
+                { title: 'u.role', dataIndex: ['user', 'role_name'], key: 'role_name' },
+                { title: 'u.authority_abbreviation', dataIndex: ['user', 'flag_authority'], key: 'authority' },
                 { title: 'role.assignment', dataIndex: 'authority_ids', key: 'authority_ids', align: 'center' },
                 { title: 'def.operate', key: 'operation', fixed: 'right', width: 100 },
             ],
@@ -240,21 +315,19 @@ export default {
             allocatId: null, // 分配权限时传入 id
             detail: {},
             cancelModalShow: false,
+            //标签页
+            activeKey: 'UserRole',
         };
     },
     watch: {},
     computed: {
         selectedRowKeysObj() {
             let arr = [];
-            this.tableData.forEach(item => {
-                this.selectedRowKeys.forEach(selectId => {
-                    if (item.id === selectId) {
-                        arr.push({
-                            id: item.id, //id
-                            role_id: item.role_id, //角色id
-                            authority_ids: item.authority_ids, //权限ids
-                        });
-                    }
+            this.tableDataAdd.forEach(item => {
+                arr.push({
+                    id: item.id, //id
+                    role_id: item.user.role_id, //角色id
+                    authority_ids: item.authority_ids, //权限ids
                 });
             });
             return arr;
@@ -366,6 +439,7 @@ export default {
         },
         // 分配权限
         allocat(record) {
+            console.log(record);
             this.step = 3;
             this.allocatId = record.id;
             this.detail = record;
@@ -401,9 +475,26 @@ export default {
                 });
         },
         handleSave() {
-            this.$refs.UserDetail.save();
+            if (this.$refs?.UserRoleTem) this.$refs.UserRoleTem.handleEditSubmit();
+            if (this.$refs?.UserDetail) this.$refs?.UserDetail.save();
+        },
+        setRoleIds(data) {
+            this.activeKey = 'UserRole';
+            if (data.length === 0) return (this.detail.user = {});
+            const user = {
+                role_id: data[0].id,
+                role_name: data[0].name,
+                roleList: data,
+            };
+            const index = this.tableDataAdd.findIndex(i => i.id === this.allocatId);
+            this.tableDataAdd[index].user = user;
+            this.detail.user = user;
+            this.step = 2;
         },
         setAuthorityIds(ids) {
+            this.activeKey = 'UserRole';
+            const index = this.tableDataAdd.findIndex(i => i.id === this.allocatId);
+            this.tableDataAdd[index].authority_ids = ids;
             this.detail.authority_ids = ids;
             this.step = 2;
         },
@@ -427,6 +518,10 @@ export default {
     margin: 0 8px;
     padding: 16px 0;
     border-radius: 0;
+    &.step3 {
+        background: #fff;
+        margin: 0 20px;
+    }
     .left-arrow {
         height: 17px;
         width: 17px;
@@ -539,13 +634,37 @@ export default {
         color: #00b42a;
         margin-left: 4px;
     }
+    .allocated,
+    .unallocated {
+        padding: 5px 14px;
+        border-radius: 4px;
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 400;
+    }
     .allocated {
         color: #00b42a;
-        cursor: pointer;
+        background: rgba(0, 180, 42, 0.1);
     }
     .unallocated {
-        color: #0061ff;
+        color: #ff7d00;
+        background: rgba(255, 125, 0, 0.1);
+    }
+    .config {
+        .fcc();
         cursor: pointer;
+        .allocation-img,
+        .edit-img {
+            width: 16px;
+            height: 16px;
+        }
+        .allocation,
+        .edit {
+            color: #0061ff;
+            font-size: 14px;
+            line-height: 20px;
+            margin-left: 10px;
+        }
     }
 }
 </style>

@@ -1201,9 +1201,11 @@ const messages = {
             department: '部门',
             sure_exit_fs: '确定退出从飞书添加用户？',
             not_been_successfully: '用户还未添加成功，是否要退出当前操作',
-            authority: '权限',
+            authority_abbreviation: '权限',
             allocated: '已分配',
             unallocated: '未分配',
+            no_role: '无角色',
+            allocation: '配置',
         },
         c: {
             // 客户
@@ -4080,9 +4082,11 @@ const messages = {
             department: 'Department',
             sure_exit_fs: 'Are You Sure To Exit And Add Users From Feishu?',
             not_been_successfully: 'The user has not been successfully added yet. Do you want to exit the current operation',
-            authority: 'Authority',
+            authority_abbreviation: 'Authority',
             allocated: 'Allocated',
             unallocated: 'Unallocated',
+            no_role: 'No Role',
+            allocation: 'Allocation',
         },
         c: {
             //客户列表

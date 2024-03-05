@@ -216,7 +216,7 @@ export default {
                 { title: 'n.email', dataIndex: ['account', 'email'], key: 'item' },
                 { title: 'u.employee_no', dataIndex: 'employee_no', key: 'item' },
                 { title: 'u.role', dataIndex: 'role_name', key: 'item' },
-                { title: 'u.authority', dataIndex: 'flag_authority', key: 'authority' },
+                { title: 'u.authority_abbreviation', dataIndex: 'flag_authority', key: 'authority' },
                 { title: 'e.administrator', dataIndex: 'flag_admin', align: 'center' },
                 { title: 'u.login', dataIndex: ['account', 'last_login_time'], key: 'time' },
                 { title: 'd.create_time', dataIndex: 'create_time', key: 'time' },
