@@ -23,7 +23,12 @@
                     <a-form-item
                         :label="$t('supply-chain.unit_price_including_tax')"
                         name="price"
-                        :rules="[{ required: true, message: 'Please input your username!' }]"
+                        :rules="[
+                            {
+                                required: true,
+                                message: `${$t('n.enter')} ${$t('supply-chain.unit_price_including_tax')}`,
+                            },
+                        ]"
                         style="margin-bottom: 0"
                     >
                         <a-input-number

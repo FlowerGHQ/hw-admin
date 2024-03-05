@@ -322,6 +322,10 @@ export default {
         price_change_records: '价格变化记录',
         EOS_creation: 'EOS创建',
         U8_synchronization: 'U8同步',
+        remark: '备注',
+        province: '省份',
+        city: '城市',
+        detailed_address: '详细地址',
     },
     en: {
         // 年
@@ -634,5 +638,9 @@ export default {
         price_change_records: 'Price Change Records',
         EOS_creation: 'EOS Creation',
         U8_synchronization: 'U8 Synchronization',
+        remark: 'Remark',
+        province: 'Province',
+        city: 'City',
+        detailed_address: 'Detailed Address',
     },
 };

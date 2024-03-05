@@ -141,6 +141,10 @@ const tableColumns = computed(() => {
         { title: $t('supply-chain.other_items'), dataIndex: 'supply_other', key: 'item' },
         { title: $t('supply-chain.introduction_date'), dataIndex: 'register_time', key: 'time' },
         { title: $t('supply-chain.change_class'), dataIndex: 'register_type', key: 'register_type' },
+        { title: $t('supply-chain.remark'), dataIndex: 'remark', key: 'item' },
+        { title: $t('supply-chain.province'), dataIndex: 'province', key: 'item' },
+        { title: $t('supply-chain.city'), dataIndex: 'city', key: 'item' },
+        { title: $t('supply-chain.detailed_address'), dataIndex: 'address', key: 'item' },
     ];
     return columns;
 });
