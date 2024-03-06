@@ -243,6 +243,7 @@ const messages = {
             verification_code: '验证码',
             supplier: '供应链',
             system_management: '系统管理',
+            
         },
         a: {
             // 零售商
@@ -3141,6 +3142,7 @@ const messages = {
             sku_code_tip:
                 'SKU code: The sub-specifications of single-specification and multi-specification goods correspond to the SKU code',
             verification_code: 'Verification Code',
+            supplier: 'Supplier',
             system_management: 'System Management',
         },
         a: {

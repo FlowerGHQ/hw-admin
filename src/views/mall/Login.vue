@@ -43,6 +43,7 @@
             </div>
         </div>
         <div class="login-container" :style="{ padding: fsLoginShow ? '48px 40px' : '48px 40px 20px 40px' }">
+            <!-- 密码手机号登录 -->
             <template v-if="!fsLoginShow">
                 <div class="form-title">{{ token ? $t('mall.choose_identity') : $t('mall.account_login') }}</div>
                 <div class="form-content">
@@ -170,21 +171,43 @@
                     </template>
                 </div>
             </template>
+            <!-- 飞书二维码 -->
             <template v-else>
-                <div class="form-title">
-                    <img src="@images/mall/login/back-arrow.png" class="fs-back" @click="fsLoginShow = false" />{{
-                        $t('mall.fs_login')
-                    }}
-                </div>
-                <div class="form-content fs-form-content">
-                    <div id="login_container"></div>
-                    <div class="fs-body">
-                        <div class="fs-login">
-                            <img src="@images/mall/login/fs-login.png" alt="" />
-                            <span>{{ $t('mall.fs_qrcode') }}</span>
+                <!-- 飞书扫码成功页 -->
+                <template v-if="$route.path === '/login/fs'">
+                    <div class="form-title">
+                        <img
+                            src="@images/mall/login/back-arrow.png"
+                            class="fs-back"
+                            @click="$router.push('/login')"
+                        />{{ $t('mall.fs_login') }}
+                    </div>
+                    <div class="form-content fs-form-content">
+                        <router-view></router-view>
+                        <div class="fs-body">
+                            <div class="fs-login">
+                                <img src="@images/mall/login/fs-login.png" alt="" />
+                                <span>{{ $t('mall.scan_successful') }}!</span>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </template>
+                <template v-else>
+                    <div class="form-title">
+                        <img src="@images/mall/login/back-arrow.png" class="fs-back" @click="fsLoginShow = false" />{{
+                            $t('mall.fs_login')
+                        }}
+                    </div>
+                    <div class="form-content fs-form-content">
+                        <div id="login_container"></div>
+                        <div class="fs-body">
+                            <div class="fs-login">
+                                <img src="@images/mall/login/fs-login.png" alt="" />
+                                <span>{{ $t('mall.fs_qrcode') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </template>
             </template>
         </div>
         <div class="login-footer">
@@ -304,9 +327,9 @@ export default {
         // Core.Data.clearUserTypeList();// 用于测试
         this.user_type_list = Core.Data.getUserTypeList();
         window.addEventListener('message', this.handleMessage, false);
+        this.getCode();
     },
     mounted() {
-        this.getCode();
         this.fsLogin();
         if (Number(this.$route.query?.user_type) === Core.Const.USER.TYPE.SUPPLIER) {
             // 供应链的时候自动切换到手机中
@@ -345,7 +368,6 @@ export default {
         changeFsLoginShow() {
             const appId = 'cli_a4f7ecfb66bb500d'; // 在飞书开放平台上注册的应用程序的App ID
             const REDIRECT_URI = window.location.origin; // 当前域名
-            console.log(window.location);
             this.goto = `https://passport.feishu.cn/suite/passport/oauth/authorize?client_id=${appId}&redirect_uri=${REDIRECT_URI}&response_type=code`;
             this.fsLoginShow = true;
             this.$nextTick(() => {
@@ -371,6 +393,8 @@ export default {
             const href = window.location.href;
             let code;
             if (/code=/.test(href)) {
+                this.fsLoginShow = true;
+                this.$router.push('/login/fs');
                 code = getUrlParams('code');
                 Core.Api.ThirdParty.fsAuthorize({ code })
                     .then(res => {

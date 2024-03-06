@@ -41,6 +41,7 @@ export default {
         welcome_BOS: '欢迎登录BOS系统',
         no_permission: '无权访问，该系统仅限内部人员使用',
         need_permission: '当前账号没有配备权限，请联系相关部门开通权限',
+        scan_successful: '扫描成功',
     },
     en: {
         system: 'BOS',
@@ -84,5 +85,6 @@ export default {
         welcome_BOS: 'Welcome To Log In To The BOS System',
         no_permission: 'Unauthorized access, the system is limited to internal personnel only',
         need_permission: 'The current account is not equipped with permissions. Please contact the relevant department to enable permissions',
+        scan_successful: 'Scan Successful',
     },
 };

@@ -97,16 +97,18 @@
                                 <span class="unallocated" v-else>{{ $t('u.unallocated') }}</span>
                             </template>
                             <template v-if="column.key === 'authority_ids'">
-                                <template v-if="record?.user.role_name || record?.user.flag_authority">
+                                <template
+                                    v-if="record?.user.role_name || record?.user.flag_authority || record.authority_ids"
+                                >
                                     <div class="config" @click="allocat(record)">
-                                        <img src="@images/allocation.png" class="allocation-img" />
-                                        <span class="allocation">{{ $t('u.allocation') }}</span>
+                                        <img src="@images/edit.png" class="edit-img" />
+                                        <span class="edit">{{ $t('def.edit') }}</span>
                                     </div>
                                 </template>
                                 <template v-else>
                                     <div class="config" @click="allocat(record)">
-                                        <img src="@images/edit.png" class="edit-img" />
-                                        <span class="edit">{{ $t('def.edit') }}</span>
+                                        <img src="@images/allocation.png" class="allocation-img" />
+                                        <span class="allocation">{{ $t('u.allocation') }}</span>
                                     </div>
                                 </template>
                             </template>

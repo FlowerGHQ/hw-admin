@@ -76,6 +76,18 @@ const routes = [
             title: '登录',
             title_en: 'Login',
         },
+        children: [
+            {
+                path: 'fs',
+                name: 'LoginFs',
+                component: () => import('@/views/mall/Login-fs.vue'),
+                meta: {
+                    hidden: true,
+                    title: '登录',
+                    title_en: 'Login',
+                },
+            }
+        ]
     },
     // { // 分销商登录
     //     path: '/loginMall',
