@@ -49,10 +49,7 @@
                         </template>
                         <!-- 修改记录 -->
                         <template v-if="column.key === 'content'">
-                            <a-tooltip>
-                                <template #title v-if="text">{{ text }}</template>
-                                <span class="content" :title="text">{{ text ? text : '-' }}</span>
-                            </a-tooltip>
+                            <span class="content">{{ text ? text : '-' }}</span>
                         </template>
                     </template>
                 </a-table>
@@ -250,8 +247,8 @@ defineExpose({
             }
         }
     }
-    .content {
-        .ell();
+    .ant-modal-content .ant-modal-body .content {
+        white-space: normal;
         display: inline-block;
         max-width: 270px;
     }
