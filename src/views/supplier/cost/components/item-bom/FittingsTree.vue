@@ -367,6 +367,8 @@ const selectKey = (parentItem = {}, item) => {
             parentItem.select = true;
             // 二级展开
             parentItem.expand = true;
+            // 收起状态 一级选中颜色控制
+            shopId.value = parentItem.code;
             $emit('update:activeObj', {
                 level: item.level,
                 version_id: item.id,
