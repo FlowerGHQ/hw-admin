@@ -191,6 +191,7 @@ const changePrice = record => {
     visibility.value = true;
 };
 const priceRecords = record => {
+    if (record.log_count < 2) return;
     bom_item_id.value = record.id;
     priceVisibility.value = true;
     nextTick(() => {
@@ -272,9 +273,9 @@ defineExpose({
         .price-text {
             display: inline-block;
             color: #1d2129;
-            cursor: pointer;
             &.active {
                 color: #0061ff;
+                cursor: pointer;
             }
         }
         .price-edit {
