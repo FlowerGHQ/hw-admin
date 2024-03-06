@@ -186,6 +186,7 @@ const costManagement =  {
         title_en: 'Cost Management',
         icon: 'i_menu_shangpingguanli',
         roles: [LOGIN_TYPE.ADMIN],
+        auth: ['supplier-cost-management.model-cost-list'],
     },
     children: [
         {
@@ -195,6 +196,7 @@ const costManagement =  {
             meta: {
                 title: '车型成本表',
                 title_en: 'Vehicle Cost Table',
+                auth: ['supplier-cost-management.model-cost-list'],
             },
         },
     ],
