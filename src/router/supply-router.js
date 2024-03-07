@@ -79,7 +79,7 @@ const supplyMaterialManagement =  {
         title_en: 'Material Management',
         icon: 'i_menu_shangpingguanli',
         roles: [LOGIN_TYPE.ADMIN],
-        // auth: ['item.list', 'item-category.list'],
+        auth: ['supplier-material.list'],
     },
     children: [
         {
@@ -89,7 +89,7 @@ const supplyMaterialManagement =  {
             meta: {
                 title: '物料列表',
                 title_en: 'Material list',
-                // auth: ['item.list'],
+                auth: ['supplier-material.list'],
             },
         },
         {
@@ -100,7 +100,6 @@ const supplyMaterialManagement =  {
                 hidden: true,
                 title: '物料编辑',
                 parent: '/material/material-list',
-                // auth: ['item.save'],
             },
         },
         {
@@ -111,7 +110,6 @@ const supplyMaterialManagement =  {
                 hidden: true,
                 title: '物料详情',
                 parent: '/material/material-list',
-                // auth: ['item.detail'],
             },
         },
         {
@@ -122,7 +120,6 @@ const supplyMaterialManagement =  {
                 hidden: true,
                 title: '物料爆炸图详情',
                 parent: '/material/material-list',
-                // auth: ['item.save'],
             },
         },
         {
@@ -132,7 +129,7 @@ const supplyMaterialManagement =  {
             meta: {
                 title: '物料分类',
                 title_en: 'Material Categories',
-                // auth: ['item-category.list'],
+                auth: ['supplier-material.category-list'],
             },
         },
         {
@@ -160,7 +157,7 @@ const supplyMaterialManagement =  {
             meta: {
                 title: 'BOM管理',
                 title_en: 'BOM Management',
-                // auth: ['aftermarket-bom.list'],
+                auth: ['supplier-material.bom-list'],
             },
         },
     ],
