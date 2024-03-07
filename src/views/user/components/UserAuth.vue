@@ -4,7 +4,7 @@
             <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
                 <template #expandIcon></template>
                 <a-collapse-panel v-for="(org, key) of orgType" :key="key" :header="name" class="gray-collapse-panel">
-                    <template #extra>
+                    <template #extra v-if="showExtra">
                         <a-button
                             @click.stop="handleEditShow(key)"
                             type="link"
@@ -27,7 +27,7 @@
                             >
                         </template>
                     </template>
-                    <div class="panel-content" v-if="!edit">
+                    <div class="panel-content" v-if="!edit && showExtra">
                         <SimpleImageEmpty v-if="$Util.isEmptyObj(selected)" desc="该用户尚未分配可管理权限" />
                         <template v-for="item of options" :key="item.key">
                             <div class="form-item afs" v-if="item.select.length">
@@ -118,6 +118,10 @@ export default {
         type: {
             type: String,
         },
+        showExtra: {
+            type: Boolean,
+            default: true,
+        },
     },
     data() {
         return {
@@ -132,6 +136,7 @@ export default {
             disabled: {},
             itemCheckAll: {},
             indeterminate: {},
+            ids_arr: [],
         };
     },
 
@@ -177,6 +182,15 @@ export default {
                     console.log('checkAll authItems', this.itemCheckAll);
                     console.log('indeterminate authItems', this.indeterminate);
                     console.log('getAllAuthItem authItems', this.authItems);
+                    this.ids_arr = [];
+                    if (!this.showExtra) {
+                        if (this.detail.authority_ids) {
+                            const ids = this.detail.authority_ids.split(',');
+                            this.ids_arr = list.filter(item => {
+                                return ids.includes(String(item.id));
+                            });
+                        }
+                    }
 
                     this.getUserRoleAuth();
                 })
@@ -224,6 +238,9 @@ export default {
             })
                 .then(res => {
                     let selected = this.selected;
+                    if (!this.showExtra) {
+                        res.list = [...res.list, ...this.ids_arr];
+                    }
                     res.list.forEach(auth => {
                         let selectedInfo = {
                             key: auth.key,
@@ -236,7 +253,6 @@ export default {
                             if (item.select.indexOf(auth.id) == -1) {
                                 item.select.push(auth.id);
                             }
-
                             selected[auth.id].scope_type = auth.scope_type;
                         }
                     });
@@ -260,7 +276,9 @@ export default {
                 let add = item.select.filter(it => !item.list.some(ele => ele.value === it && ele.disabled == true));
                 list.push(...add);
             }
-            console.log('add', list);
+            if (!this.showExtra) {
+                return this.$emit('submit', list.join(','));
+            }
             Core.Api.Authority.allotUser({
                 user_id: this.userId,
                 user_type: this.detail.type,

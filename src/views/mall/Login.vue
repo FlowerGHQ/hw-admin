@@ -42,18 +42,25 @@
                 </div>
             </div>
         </div>
-        <div class="login-container">
-            <div class="form-title">{{ token ? $t('mall.choose_identity') : $t('mall.account_login') }}</div>
-            <div class="form-content">
-                <template v-if="token && user_type_list > 0">
-                    <div class="user-list">
-                        <div class="user-item" v-for="item in user_type_list" :key="item" @click="handleLogin(item)">
-                            {{ Core.Const.USER.TYPE_MAP[item][lang] }}
+        <div class="login-container" :style="{ padding: fsLoginShow ? '48px 40px' : '48px 40px 20px 40px' }">
+            <!-- 密码手机号登录 -->
+            <template v-if="!fsLoginShow">
+                <div class="form-title">{{ token ? $t('mall.choose_identity') : $t('mall.account_login') }}</div>
+                <div class="form-content">
+                    <template v-if="token && user_type_list > 0">
+                        <div class="user-list">
+                            <div
+                                class="user-item"
+                                v-for="item in user_type_list"
+                                :key="item"
+                                @click="handleLogin(item)"
+                            >
+                                {{ Core.Const.USER.TYPE_MAP[item][lang] }}
+                            </div>
                         </div>
-                    </div>
-                </template>
-                <template v-else>
-                    <!-- <div class="login-type">
+                    </template>
+                    <template v-else>
+                        <!-- <div class="login-type">
                         <div class="type-item" v-for="item of loginMethodsList" :key="item.id"
                             :class="login_methods === item.id ? 'active' : ''"
                             @click="login_methods = item.id">
@@ -62,96 +69,146 @@
                             {{ $t(`mall.${item.name_lang}`) }}
                         </div>
                     </div> -->
-                    <!-- 手机号登录 -->
-                    <template v-if="login_methods === 2">
-                        <!-- 手机号 -->
-                        <FormModel
-                            key="phone"
-                            @handleValid="handleChangePhoneValid"
-                            :unValid="unPhoneValid"
-                            type="Basic"
-                            :placeholder="$t('mall.enter_phone')"
-                            @keydownEnter="handleFocusCode"
-                            :value="loginPhoneForm.phone"
-                            @input="loginPhoneForm.phone = $event.target.value"
-                        />
-                        <!-- 验证码 -->
-                        <div class="web-value">
-                            <input
-                                ref="code"
-                                @focus="handleCodeFocus"
-                                :placeholder="$t('mall.enter_code')"
-                                v-model="loginPhoneForm.code"
-                                :class="codeInputClassName"
-                                type="text"
+                        <!-- 手机号登录 -->
+                        <template v-if="login_methods === 2">
+                            <!-- 手机号 -->
+                            <FormModel
+                                key="phone"
+                                @handleValid="handleChangePhoneValid"
+                                :unValid="unPhoneValid"
+                                type="Basic"
+                                :placeholder="$t('mall.enter_phone')"
+                                @keydownEnter="handleFocusCode"
+                                :value="loginPhoneForm.phone"
+                                @input="loginPhoneForm.phone = $event.target.value"
                             />
-                            <button
-                                :class="['web-verification', loginPhoneForm.phone ? 'can-hover' : 'grey']"
-                                v-if="!countdown"
-                                @click="sendCode"
-                            >
-                                {{ $t(/*发送验证码*/ 'mall.verification_code') }}
-                            </button>
-                            <button class="web-verification grey" v-else disabled>
-                                {{ $t(/*已发送*/ 'mall.sented') }}({{ countdown }})
-                            </button>
+                            <!-- 验证码 -->
+                            <div class="web-value">
+                                <input
+                                    ref="code"
+                                    @focus="handleCodeFocus"
+                                    :placeholder="$t('mall.enter_code')"
+                                    v-model="loginPhoneForm.code"
+                                    :class="codeInputClassName"
+                                    type="text"
+                                />
+                                <button
+                                    :class="['web-verification', loginPhoneForm.phone ? 'can-hover' : 'grey']"
+                                    v-if="!countdown"
+                                    @click="sendCode"
+                                >
+                                    {{ $t(/*发送验证码*/ 'mall.verification_code') }}
+                                </button>
+                                <button class="web-verification grey" v-else disabled>
+                                    {{ $t(/*已发送*/ 'mall.sented') }}({{ countdown }})
+                                </button>
+                            </div>
+                        </template>
+                        <!-- 密码登录 -->
+                        <template v-else>
+                            <!-- 用户名 -->
+                            <FormModel
+                                key="username"
+                                @handleValid="handleChangeUserNameValid"
+                                :unValid="unUserNameValid"
+                                type="Basic"
+                                :placeholder="$t('n.username')"
+                                @keydownEnter="handleFocusPwd"
+                                :value="loginForm.username"
+                                @input="loginForm.username = $event.target.value"
+                            />
+                            <!-- 密码 -->
+                            <FormModel
+                                key="password"
+                                @handleValid="handleChangePassWordValid"
+                                :unValid="unPassWordValid"
+                                type="Password"
+                                :placeholder="$t('n.enter_password')"
+                                @keydownEnter="handleAccount"
+                                :value="loginForm.password"
+                                @input="loginForm.password = $event.target.value"
+                                ref="password-input"
+                            />
+                        </template>
+                        <div class="login-btn" @click="handleAccount">
+                            <my-button type="primary" showRightIcon>
+                                {{ $t('mall.account_login') }}
+                            </my-button>
                         </div>
                     </template>
-                    <!-- 密码登录 -->
-                    <template v-else>
-                        <!-- 用户名 -->
-                        <FormModel
-                            key="username"
-                            @handleValid="handleChangeUserNameValid"
-                            :unValid="unUserNameValid"
-                            type="Basic"
-                            :placeholder="$t('n.username')"
-                            @keydownEnter="handleFocusPwd"
-                            :value="loginForm.username"
-                            @input="loginForm.username = $event.target.value"
-                        />
-                        <!-- 密码 -->
-                        <FormModel
-                            key="password"
-                            @handleValid="handleChangePassWordValid"
-                            :unValid="unPassWordValid"
-                            type="Password"
-                            :placeholder="$t('n.enter_password')"
-                            @keydownEnter="handleAccount"
-                            :value="loginForm.password"
-                            @input="loginForm.password = $event.target.value"
-                            ref="password-input"
-                        />
+                    <template v-if="!token">
+                        <div class="more-login">
+                            <span class="more-login-text">
+                                {{ $t('mall.more_login') }}
+                            </span>
+                        </div>
+                        <div class="login-body">
+                            <div class="login-item">
+                                <div class="select-login" @click="changeMethods">
+                                    <img
+                                        src="@images/mall/login/phone.png"
+                                        class="phone-icon"
+                                        v-if="login_methods === 1"
+                                    />
+                                    <img
+                                        src="@images/mall/login/lock.png"
+                                        class="lock-icon"
+                                        v-if="login_methods === 2"
+                                    />
+                                </div>
+                                <span class="login-text" v-if="login_methods === 1">{{ $t('mall.phone_login') }}</span>
+                                <span class="login-text" v-if="login_methods === 2">{{
+                                    $t('mall.user_name_login')
+                                }}</span>
+                            </div>
+                            <div class="login-item">
+                                <div class="select-login" @click="changeFsLoginShow">
+                                    <img src="@images/mall/login/fs-login.png" class="fs-icon" />
+                                </div>
+                                <span class="login-text">{{ $t('mall.fs_login') }}</span>
+                            </div>
+                        </div>
                     </template>
-                    <div class="login-btn" @click="handleAccount">
-                        <my-button type="primary" showRightIcon>
-                            {{ $t('mall.account_login') }}
-                        </my-button>
+                </div>
+            </template>
+            <!-- 飞书二维码 -->
+            <template v-else>
+                <!-- 飞书扫码成功页 -->
+                <template v-if="$route.path === '/login/fs'">
+                    <div class="form-title">
+                        <img
+                            src="@images/mall/login/back-arrow.png"
+                            class="fs-back"
+                            @click="$router.push('/login')"
+                        />{{ $t('mall.fs_login') }}
+                    </div>
+                    <div class="form-content fs-form-content">
+                        <router-view></router-view>
+                        <div class="fs-body">
+                            <div class="fs-login">
+                                <img src="@images/mall/login/fs-login.png" alt="" />
+                                <span>{{ $t('mall.scan_successful') }}!</span>
+                            </div>
+                        </div>
                     </div>
                 </template>
-                <template v-if="!token">
-                    <div class="more-login">
-                        <span class="more-login-text">
-                            {{ $t('mall.more_login') }}
-                        </span>
+                <template v-else>
+                    <div class="form-title">
+                        <img src="@images/mall/login/back-arrow.png" class="fs-back" @click="fsLoginShow = false" />{{
+                            $t('mall.fs_login')
+                        }}
                     </div>
-                    <div class="select-login" @click="changeMethods">
-                        <svg-icon
-                            icon-class="phone-black-icon"
-                            class-name="phone-black-icon"
-                            v-if="login_methods === 1"
-                        />
-                        <svg-icon icon-class="phone-icon" class-name="phone-icon" v-if="login_methods === 1" />
-                        <svg-icon
-                            icon-class="user-black-icon"
-                            class-name="user-black-icon"
-                            v-if="login_methods === 2"
-                        />
-                        <svg-icon icon-class="user-icon" class-name="user-icon" v-if="login_methods === 2" />
-                        <span>{{ login_methods === 2 ? $t('mall.user_name_login') : $t('mall.phone_login') }}</span>
+                    <div class="form-content fs-form-content">
+                        <div id="login_container"></div>
+                        <div class="fs-body">
+                            <div class="fs-login">
+                                <img src="@images/mall/login/fs-login.png" alt="" />
+                                <span>{{ $t('mall.fs_qrcode') }}</span>
+                            </div>
+                        </div>
                     </div>
                 </template>
-            </div>
+            </template>
         </div>
         <div class="login-footer">
             <div class="content">
@@ -179,6 +236,12 @@ import FormModel from '@/components/common/FormModel.vue';
 import MyButton from '@/components/common/MyButton.vue';
 const TYPE = Core.Const.LOGIN.TYPE;
 const TYPE_MAP = Core.Const.LOGIN.TYPE_MAP;
+function getUrlParams(name) {
+    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i'); //定义正则表达式
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+    return null;
+}
 export default {
     name: 'Login',
     components: {
@@ -232,6 +295,9 @@ export default {
             user_type: '',
             user_type_list: [],
             token: Core.Data.getToken(),
+            fsLoginShow: false,
+            QRLoginObj: null,
+            goto: '',
         };
     },
     watch: {},
@@ -260,6 +326,8 @@ export default {
         this.handleLangSwitch(Core.Data.getLang());
         // Core.Data.clearUserTypeList();// 用于测试
         this.user_type_list = Core.Data.getUserTypeList();
+        window.addEventListener('message', this.handleMessage, false);
+        this.getCode();
     },
     mounted() {
         this.fsLogin();
@@ -271,6 +339,7 @@ export default {
     unmounted() {
         clearInterval(this.countdownTime);
         this.countdownTime = null;
+        window.removeEventListener('message', this.handleMessage, false);
     },
     methods: {
         /* Fetch start*/
@@ -294,6 +363,60 @@ export default {
         fsLogin() {
             if (window.h5sdk) {
                 jsapi.apiAuth();
+            }
+        },
+        changeFsLoginShow() {
+            const appId = 'cli_a4f7ecfb66bb500d'; // 在飞书开放平台上注册的应用程序的App ID
+            const REDIRECT_URI = window.location.origin; // 当前域名
+            this.goto = `https://passport.feishu.cn/suite/passport/oauth/authorize?client_id=${appId}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+            this.fsLoginShow = true;
+            this.$nextTick(() => {
+                this.QRLoginObj = QRLogin({
+                    id: 'login_container',
+                    goto: this.goto,
+                    width: '260px',
+                    height: '260px',
+                    style: 'width:260px;height:260px;border:none', //可选的，二维码html标签的style属性
+                });
+            });
+        },
+        handleMessage(event) {
+            // 使用 matchOrigin 和 matchData 方法来判断 message 和来自的页面 url 是否合法
+            if (this.QRLoginObj.matchOrigin(event.origin) && this.QRLoginObj.matchData(event.data)) {
+                var loginTmpCode = event.data.tmp_code;
+                // 在授权页面地址上拼接上参数 tmp_code，并跳转
+                window.location.href = `${this.goto}&tmp_code=${loginTmpCode}`;
+            }
+        },
+        // 获取飞书重定向后返回的 code 用于登录
+        getCode() {
+            const href = window.location.href;
+            let code;
+            if (/code=/.test(href)) {
+                this.fsLoginShow = true;
+                this.$router.push('/login/fs');
+                code = getUrlParams('code');
+                Core.Api.ThirdParty.fsAuthorize({ code })
+                    .then(res => {
+                        Core.Data.setToken(res.token);
+                        Core.Data.setUser(res.user.account);
+                        res.user.type = 10; // 飞书登录默认给 10
+                        Core.Data.setLoginType(res.user.type); // 设置登录方的数字
+                        let loginType = TYPE_MAP[res.user.type];
+                        Core.Data.setUserType(loginType); // 设置登录方的文字
+                        this.getAuthority(
+                            res.user.id,
+                            res.user.type,
+                            loginType,
+                            res.user.role_id,
+                            res.user.flag_admin,
+                            res.user.flag_group_customer_admin,
+                        );
+                        this.isAdminFetch();
+                    })
+                    .finally(() => {
+                        window.history.replaceState({}, '', '/' + window.location.hash);
+                    });
             }
         },
         handleFocusCode() {
@@ -875,51 +998,56 @@ export default {
                 background: #fff;
             }
         }
-        .select-login {
+        .login-body {
             .fcc();
-            height: 46px;
-            border: 1px solid #999;
-            > span {
-                color: #333;
-                text-align: center;
-                font-size: 12px;
-                font-style: normal;
-                font-weight: 500;
-                line-height: 22px; /* 183.333% */
-            }
-            cursor: pointer;
-
-            .phone-icon,
-            .phone-black-icon,
-            .user-icon,
-            .user-black-icon {
-                width: 20px;
-                height: 20px;
-                margin-right: 4px;
-            }
-            .phone-icon,
-            .user-icon {
-                display: none;
-            }
-            .phone-black-icon,
-            .user-black-icon {
-                display: inline-block;
-            }
-            &:hover {
-                border: 1px solid #c6f;
-                background: transparent;
-                background: linear-gradient(100deg, #c6f 0%, #66f 100%);
-                border-image: linear-gradient(100deg, #c6f 0%, #66f 100%) 1;
-                background-clip: text;
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                .phone-icon,
-                .user-icon {
-                    display: inline-block;
+            .login-item {
+                .flex();
+                &:nth-child(n + 2) {
+                    margin-left: 60px;
                 }
-                .phone-black-icon,
-                .user-black-icon {
-                    display: none;
+                .select-login {
+                    .fcc();
+                    height: 42px;
+                    width: 42px;
+                    border-radius: 50%;
+                    border: 1px solid #eeeeee;
+                    border: 1px solid #999;
+                    > span {
+                        color: #333;
+                        text-align: center;
+                        font-size: 12px;
+                        font-style: normal;
+                        font-weight: 500;
+                        line-height: 22px; /* 183.333% */
+                    }
+                    cursor: pointer;
+
+                    .phone-icon,
+                    .lock-icon,
+                    .fs-icon {
+                        width: 16px;
+                        height: 16px;
+                    }
+                    &:hover {
+                        border: 1px solid transparent;
+                        background-clip: padding-box, border-box;
+                        background-origin: padding-box, border-box;
+                        background-image: linear-gradient(to right, #fff, #fff),
+                            linear-gradient(90deg, #8f41e9, #578aef);
+                    }
+                    &:hover ~ .login-text {
+                        background-image: linear-gradient(100deg, #c6f 0%, #66f 100%);
+                        background-clip: text;
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                    }
+                }
+                .login-text {
+                    font-size: 12px;
+                    font-weight: 400;
+                    line-height: 15px;
+                    color: #999999;
+                    margin-top: 8px;
                 }
             }
         }
@@ -946,6 +1074,32 @@ export default {
                     &:hover {
                         color: rgba(255, 255, 255, 0.7);
                     }
+                }
+            }
+        }
+    }
+    .fs-back {
+        width: 20px;
+        height: 20px;
+        margin-right: 8px;
+        cursor: pointer;
+    }
+    .fs-form-content {
+        #login_container {
+            .fcc();
+        }
+        .fs-body {
+            .fcc();
+            padding-bottom: 30px;
+            .fs-login {
+                margin-top: 10px;
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 22px;
+                > img {
+                    width: 16px;
+                    height: 16px;
+                    margin-right: 8px;
                 }
             }
         }

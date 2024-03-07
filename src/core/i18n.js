@@ -243,6 +243,8 @@ const messages = {
             spec_pic: '请上传规格商品图片',
             verification_code: '验证码',
             supplier: '供应链',
+            system_management: '系统管理',
+            
         },
         a: {
             // 零售商
@@ -1194,6 +1196,18 @@ const messages = {
             select_all: '全选/全不选',
             choose_role: '请选择角色',
             sure_delete_role: '确定要删除该角色吗？',
+            employee_no: '工号',
+            manually_add: '手动添加用户',
+            fs_add: '飞书添加用户',
+            configure_permissions: '配置权限',
+            department: '部门',
+            sure_exit_fs: '确定退出从飞书添加用户？',
+            not_been_successfully: '用户还未添加成功，是否要退出当前操作',
+            authority_abbreviation: '权限',
+            allocated: '已分配',
+            unallocated: '未分配',
+            no_role: '无角色',
+            allocation: '配置',
         },
         c: {
             // 客户
@@ -3130,6 +3144,8 @@ const messages = {
             sku_code_tip:
                 'SKU code: The sub-specifications of single-specification and multi-specification goods correspond to the SKU code',
             verification_code: 'Verification Code',
+            supplier: 'Supplier',
+            system_management: 'System Management',
         },
         a: {
             new_retailer: 'Create A New Retailer',
@@ -4063,6 +4079,18 @@ const messages = {
             select_all: 'Select All/None',
             choose_role: 'Please select a role',
             sure_delete_role: 'Are you sure you want to delete this role?',
+            employee_no: 'Employee No',
+            manually_add: 'Manually Adding Users',
+            fs_add: 'Add Users To Feishu',
+            configure_permissions: 'Configure Permissions',
+            department: 'Department',
+            sure_exit_fs: 'Are You Sure To Exit And Add Users From Feishu?',
+            not_been_successfully: 'The user has not been successfully added yet. Do you want to exit the current operation',
+            authority_abbreviation: 'Authority',
+            allocated: 'Allocated',
+            unallocated: 'Unallocated',
+            no_role: 'No Role',
+            allocation: 'Allocation',
         },
         c: {
             //客户列表

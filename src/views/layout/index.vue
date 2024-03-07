@@ -229,6 +229,12 @@ export default {
                     img: Core.Util.Image.getImageFile('router', 'router_type_1'),
                     t: 'n.crm',
                 },
+                {
+                    id: 6,
+                    value: ROUTER_TYPE.SYSTEM,
+                    img: Core.Util.Image.getImageFile('router', 'router_type_1'),
+                    t: 'n.system_management',
+                },
             ],
         };
     },
@@ -343,7 +349,7 @@ export default {
                     this.breadcrumbList.push({ text: meta.title, path: n.path, key: path[0] });
                 }
 
-                // 登录页面走过来在执行                
+                // 登录页面走过来在执行
                 if (n.query.from) {
                     if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
                         // 平台方执行
@@ -352,6 +358,7 @@ export default {
                         this.returnAdminFilter(ROUTER_TYPE.PRODUCTION);
                         this.returnAdminFilter(ROUTER_TYPE.SUPPLIER);
                         this.returnAdminFilter(ROUTER_TYPE.CRM);
+                        this.returnAdminFilter(ROUTER_TYPE.SYSTEM);
                     }
                 }
             },
@@ -517,6 +524,10 @@ export default {
                 case this.ROUTER_TYPE.SUPPLIER:
                     this.$router.replace({ path: this.showList[0]?.path });
                     break;
+                case this.ROUTER_TYPE.SYSTEM:
+                    console.log(this.showList);
+                    this.$router.replace({ path: this.showList[0]?.path });
+                    break;
                 default:
                     break;
             }
@@ -528,9 +539,9 @@ export default {
             result = data.find(el => {
                 if (el.type?.includes(tabPosition)) {
                     if (el.meta?.auth) {
-                        return this.$auth(...el.meta?.auth)
+                        return this.$auth(...el.meta?.auth);
                     } else {
-                        return true
+                        return true;
                     }
                 }
             });

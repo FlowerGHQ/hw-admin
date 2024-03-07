@@ -14,6 +14,7 @@ const showMessage = msg => {
 };
 
 const errorHandle = (status, message = i18n.global.t('error_code.unknown')) => {
+    console.log(status)
     if (message.includes('登录状态已过期，请重新登录')) {
         if (Number(Data.getLoginType()) === Const.USER.TYPE.SUPPLIER) {
             window.location.href = window.location.href.split('#')[0] + `#/login?user_type=${Data.getLoginType()}`;
@@ -29,6 +30,9 @@ const errorHandle = (status, message = i18n.global.t('error_code.unknown')) => {
     }
     if (status === -1) {
         return showMessage(i18n.global.t('error_code.system'));
+    }
+    if (status === 1108 || status === 1109 || status === 2103) {
+        return window.location.href = window.location.href.split('#')[0] + `#/fs-login?code=${status}&message=${message}`;
     }
     if (status >= 1000) {
         try {
@@ -59,6 +63,8 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
     res => {
         if (res.status === 200) {
+            // res.data.code = 1108
+            // res.data.message = ''
             if (res.data.code === 0) {
                 return res.data.data;
                 // return Promise.resolve(res.data.data);

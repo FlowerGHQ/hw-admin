@@ -1,7 +1,7 @@
 <template>
     <div id="UserEdit" class="edit-container">
         <div class="title-container">
-            <div class="title-area">{{ form.id ? $t('u.edit') : $t('u.save') }}</div>
+            <div class="title-area">{{ form.id ? $t('u.edit') : $t('u.manually_add') }}</div>
         </div>
         <div class="form-block">
             <div class="form-title">
