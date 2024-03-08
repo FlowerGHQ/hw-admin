@@ -86,7 +86,7 @@
                                         </div>
                                         <div class="row">
                                             <p>{{ $t('r.amount_paid') }}</p>
-                                            <span>€0</span>
+                                            <span>€{{ $Util.countFilter(sum_price) }}</span>
                                         </div>
                                     </div>
                                 </a-table-summary-cell>
@@ -96,7 +96,6 @@
                 </a-table>
             </div>
         </div>
-        F
         <div class="btn-area">
             <a-button type="primary" @click="routerChange('export')">{{ $t('r.download') }}</a-button>
             <a-button type="primary" @click="routerChange('back')" ghost>{{ $t('r.details') }}</a-button>
