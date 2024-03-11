@@ -246,12 +246,13 @@ export default {
         handleSearchReset() {
             this.options.forEach(el => {
                 el.value = undefined;
+                if (el.isShowAll) {
+                    el.value = '';
+                }
                 if (el.type === 'time-range') {
                     el.value = [];
                 }
             });
-            console.log('重置', this.options);
-
             this.$emit('reset');
         },
         // 展开更多

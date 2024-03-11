@@ -37,7 +37,7 @@
                 <a-row class="desc-detail has-logo">
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">{{ $t('d.abbreviation') }}：</span>
-                        <span class="value">&nbsp{{ detail.short_name }}</span>
+                        <span class="value">&nbsp;{{ detail.short_name }}</span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">{{ $t('d.pay_type') }}：</span>
@@ -133,15 +133,9 @@
                             v-if="activeKey === 'StoreList'"
                         />
                     </a-tab-pane>
-                    <!-- <a-tab-pane key="PricingStructure" tab="商品价格">
-                        <PricingStructure :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'PricingStructure'"/>
-                    </a-tab-pane>-->
-                    <a-tab-pane key="WalletList" :tab="$t('d.manage_account')">
-                        <WalletList
-                            :orgId="distributor_id"
-                            :orgType="USER_TYPE.DISTRIBUTOR"
-                            v-if="activeKey === 'WalletList'"
-                        />
+                    <!-- 钱包 -->
+                    <a-tab-pane key="WalletList" :tab="$t('distributor-detail.wallet')">
+                        <AccountWallet v-if="activeKey === 'WalletList'" :detail="detail" />
                     </a-tab-pane>
                 </template>
                 <a-tab-pane key="ReceiverAddress" :tab="$t('d.address')">
@@ -151,10 +145,18 @@
                         v-if="activeKey === 'ReceiverAddress'"
                     />
                 </a-tab-pane>
-                <!-- 账户钱包 -->
-                <a-tab-pane key="AccountWallet" :tab="$t('d.account_wallet')">
-                    <AccountWallet v-if="activeKey === 'AccountWallet'" :detail="detail" />
-                </a-tab-pane>
+                <template v-if="$auth('DISTRIBUTOR')">
+                    <!-- 账户钱包 -->
+                    <a-tab-pane key="AccountWallet" :tab="$t('distributor-detail.wallet')">
+                        <AccountWallet v-if="activeKey === 'AccountWallet'" :detail="detail" />
+                    </a-tab-pane>
+                </template>
+                <template v-if="$auth('ADMIN')">
+                    <!-- 支付设置 -->
+                    <a-tab-pane key="PaymentSetting" :tab="$t('distributor-detail.payment_settings')">
+                        <PaymentSetting v-if="activeKey === 'PaymentSetting'" :detail="detail" />
+                    </a-tab-pane>
+                </template>
             </a-tabs>
         </div>
     </div>
@@ -169,9 +171,7 @@ import WalletList from '@/components/panel/WalletList.vue';
 import PurchaseList from '@/components/panel/PurchaseList.vue';
 import ReceiverAddress from '@/components/panel/ReceiverAddress.vue';
 import AccountWallet from './components/AccountWallet.vue';
-
-// import PricingStructure from '@/components/panel/PricingStructure.vue';
-
+import PaymentSetting from './components/PaymentSetting.vue';
 const USER_TYPE = Core.Const.USER.TYPE;
 export default {
     name: 'DistributorDetail',
@@ -184,6 +184,7 @@ export default {
         WalletList,
         ReceiverAddress,
         AccountWallet,
+        PaymentSetting,
     },
     props: {},
     data() {
@@ -305,6 +306,4 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-// #DistributorDetail {}
-</style>
+<style lang="less" scoped></style>
