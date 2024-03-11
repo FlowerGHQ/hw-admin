@@ -239,7 +239,7 @@ const routerChange = (type, record) => {
     switch (type) {
         case 'edit':
             router.push({
-                path: '/operation/report-edit',
+                path: '/payment-info-management/payment-info-edit',
                 query: {
                     id: record.id,
                 },
@@ -247,7 +247,7 @@ const routerChange = (type, record) => {
             break;
         case 'add':
             router.push({
-                path: '/operation/report-edit',
+                path: '/payment-info-management/payment-info-edit',
             });
             break;
     }
