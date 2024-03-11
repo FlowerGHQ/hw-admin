@@ -2,13 +2,24 @@
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">
-                {{ $t(/*付款信息管理*/ 'payment-management.list_title') }}
+                {{ $t(/*充值审核*/ 'payment-management.recharge_audit') }}
             </div>
             <div class="btns-area">
                 <a-button type="primary" @click="routerChange('add')">
                     {{ $t(/*新增收款账号*/ 'payment-management.new_account') }}
                 </a-button>
             </div>
+        </div>
+        <div class="tabs-container colorful" v-if="!purchaseMode">
+            <a-tabs v-model:activeKey="searchParam.status" @change="handleSearch">
+                <a-tab-pane :key="item.key" v-for="item of statusList">
+                    <template #tab>
+                        <div class="tabs-title">
+                            {{ item[$i18n.locale] }}<span :class="item.color">{{ item.value }}</span>
+                        </div>
+                    </template>
+                </a-tab-pane>
+            </a-tabs>
         </div>
         <!-- search -->
         <div class="search">
@@ -93,13 +104,13 @@
                     </template>
                     <!-- 操作 -->
                     <template v-if="column.key === 'operations'">
-                        <a-button type="link" @click="routerChange('edit', record)">
-                            <MySvgIcon icon-class="supply-edit" />
-                            <span class="m-l-10">{{ $t('common.edit') }}</span>
+                        <a-button type="link" @click="routerChange('detail', record)">
+                            <!-- <MySvgIcon icon-class="supply-edit" /> -->
+                            <span class="m-l-10">{{ $t(/*审核*/'payment-management.audit') }}</span>
                         </a-button>
-                        <a-button type="link" @click="handleDelete(record)">
-                            <MySvgIcon icon-class="sales-delete" />
-                            <span class="m-l-10">{{ $t('def.delete') }}</span>
+                        <a-button type="link" @click="handleAudit(record)">
+                            <!-- <MySvgIcon icon-class="sales-delete" /> -->
+                            <span class="m-l-10">{{ $t('def.detail') }}</span>
                         </a-button>
                     </template>
                 </template>
@@ -138,44 +149,47 @@ const { proxy } = getCurrentInstance();
 const tableColumns = computed(() => {
     let columns = [
         { title: $t(/*序号*/ 'n.index'), dataIndex: 'id', key: 'number' },
-        { title: $t(/*地区*/ 'payment-management.region'), dataIndex: 'region', key: 'item' },
-        { title: $t(/*账户信息*/ 'payment-management.acc_info'), dataIndex: 'acc_info', key: 'item' },
-        { title: $t(/*美元付款信息*/ 'payment-management.dollar_info'), dataIndex: 'dollar_info', key: 'item' },
-        { title: $t(/*欧元付款信息*/ 'payment-management.eur_info'), dataIndex: 'eur_info', key: 'item' },
-        { title: $t(/*创建时间*/ 'n.time'), dataIndex: 'create_time', key: 'create_time' },
-        { title: $t(/*生效状态*/ 'operation.effective_state'), key: 'effective_state', fixed: 'right' },
+        { title: $t(/*充值单号*/ 'payment-management.recharge_order_number'), dataIndex: 'region', key: 'item' },
+        { title: $t(/*分销商名称*/ 'payment-management.distributor_name'), dataIndex: 'acc_info', key: 'item' },
+        { title: $t(/*提交申请时间*/ 'payment-management.app_submit_time'), dataIndex: 'create_time', key: 'create_time' },
+        { title: $t(/*收款账号信息*/ 'payment-management.receiving_acc_info'), dataIndex: 'dollar_info', key: 'item' },
+        { title: $t(/*整车余额充值金额*/ 'payment-management.vehicle_balance_amount'), dataIndex: 'eur_info', key: 'item' },
+        { title: $t(/*配件余额充值金额*/ 'payment-management.spare_parts_balance_amount'), dataIndex: 'eur_info', key: 'item' },
+        { title: $t(/*总充值金额*/ 'payment-management.total_top_up_amount'), dataIndex: 'eur_info', key: 'item' },
+        { title: $t(/*状态*/ 'payment-management.state'), dataIndex: 'eur_info', key: 'item' },
         { title: $t(/*操作*/ 'common.operations'), key: 'operations', fixed: 'right' },
+        { title: $t(/*操作记录*/ 'payment-management.operation_record'), dataIndex: 'create_time', key: 'item', fixed: 'right' },
     ];
     return columns;
 });
 
 const searchList = ref([
-    // 地区
+    // 名称
     {
         type: 'input',
         value: '',
-        searchParmas: 'region',
-        key: 'payment-management.region',
+        searchParmas: 'name',
+        key: 'payment-management.name',
     },
-    // 账户信息
+    // 提交时间
     {
-        type: 'input',
-        value: '',
-        searchParmas: 'area',
-        key: 'payment-management.acc_info',
-    },
-    // 生效状态
-    {
-        type: 'select',
-        value: undefined,
-        searchParmas: 'status',
-        key: 'payment-management.effective_state',
-        selectMap: Core.Const.PAYMENT_MANAGEMENT.EFFECTIVE_TYPE,
+        type: 'time-range',
+        value: [],
+        searchParmas: ['begin_time', 'end_time'],
+        key: 'payment-management.submission_time',
     },
 ]);
 const regionList = ref([
     '美国','意大利','西班牙','菲律宾'
 ])
+const statusList = ref([
+    { zh: '全  部', en: 'All', value: '0', color: 'primary', key: '0' },
+    { zh: '等待一审', en: 'Pending First Audit', value: '0', color: 'yellow', key: '50' },
+    { zh: '等待二审', en: 'Pending Second Audit', value: '0', color: 'yellow', key: '60' },
+    { zh: '二审通过', en: 'Approval Second Audit', value: '0', color: 'yellow', key: '100' },
+    { zh: '一审不通过', en: 'The First Audit Was Rejected', value: '0', color: 'yellow', key: '630' },
+    { zh: '二审不通过', en: 'The Second Audit Was Rejected', value: '0', color: 'yellow', key: '150' },
+]);
 
 onMounted(() => {});
 /* Fetch start*/
@@ -193,7 +207,7 @@ const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPa
     initParam: { type: Core.Const.OPERATION.OPERATION_TYPE_MAP.REPORT },
     dataCallBack: dataCallBack,
 });
-const deleteFetch = id => {
+const auditFetch = id => {
     Core.Api.Operation.delete({
         id: id,
     })
@@ -237,22 +251,17 @@ const onReset = () => {
 };
 const routerChange = (type, record) => {
     switch (type) {
-        case 'edit':
+        case 'detail':
             router.push({
-                path: '/payment-info-management/payment-info-edit',
+                path: '/recharge/detail',
                 query: {
                     id: record.id,
                 },
             });
             break;
-        case 'add':
-            router.push({
-                path: '/payment-info-management/payment-info-edit',
-            });
-            break;
     }
 };
-const handleDelete = record => {
+const handleAudit = record => {
     Core.Util.confirm({
         title: $t('pop_up.sure_delete'),
         okText: $t('def.sure'),

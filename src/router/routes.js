@@ -88,8 +88,8 @@ const routes = [
                     title: '登录',
                     title_en: 'Login',
                 },
-            }
-        ]
+            },
+        ],
     },
     // { // 分销商登录
     //     path: '/loginMall',
@@ -258,6 +258,43 @@ const routes = [
                     auth: ['distributor.detail'],
                 },
             },
+            // 资金变化明细
+            {
+                path: 'distributor-fund-change-detail',
+                name: 'FundChangeDetail',
+                component: () => import('@/views/distributor/fund-change-detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '资金变动明细',
+                    title_en: 'Fund Change Detail',
+                    parent: '/distributor/distributor-list',
+                },
+            },
+            // 授信变化
+            {
+                path: 'distributor-credit-change',
+                name: 'CreditChange',
+                component: () => import('@/views/distributor/credit-detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '授信变动',
+                    title_en: 'Credit Change',
+                    parent: '/distributor/distributor-list',
+                },
+            },
+            // 充值记录
+            {
+                path: 'distributor-recharge-record',
+                name: 'RechargeRecord',
+                component: () => import('@/views/distributor/recharge-record.vue'),
+                meta: {
+                    hidden: true,
+                    title: '充值记录',
+                    title_en: 'Recharge Record',
+                    parent: '/distributor/distributor-list',
+                },
+            },
+
             {
                 path: 'agent-list',
                 name: 'AgentList',
@@ -389,6 +426,33 @@ const routes = [
             cancellationOrderRequest,
             unpaidFinalPayment,
         ],
+    },
+    {
+        // 分销管理 - 平台端
+        path: '/recharge',
+        component: Layout,
+        redirect: '/recharge/recharge-audit',
+        name: 'RechargeManagement',
+        type: [ROUTER_TYPE.FINANCE],
+        meta: {
+            title: '审核',
+            title_en: 'Audit',
+            icon: 'i_s_agent',
+            // auth: ['distributor.list', 'agent.list', 'store.list', 'purchase-order.list', 'sales-area.list'],
+        },
+        children: [
+            {
+                path: 'recharge-audit',
+                name: 'RechargeAudit',
+                component: () => import('@/views/recharge-audit/index.vue'),
+                meta: {
+                    title: '充值审核',
+                    title_en: 'Recharge Audit',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    // auth: ['purchase-order.list'],
+                },
+            }
+        ]
     },
     /* { // 分销商管理 - 分销商端
         path: '/distributor/distributor-detail-sp',
@@ -2907,7 +2971,7 @@ const routes = [
     },
     ...supplyRouters,
     supplyMaterialManagement,
-    fsLogin
+    fsLogin,
 ];
 
 export default routes;

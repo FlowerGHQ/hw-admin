@@ -109,7 +109,7 @@
                         <a-input v-model:value="form.phone" :placeholder="$t('def.input')" />
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('n.email') /*邮箱*/ }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.email" :placeholder="$t('def.input')" />
@@ -278,7 +278,7 @@ export default {
                 { key: 'OA', msg: this.$t('def.enter') + '(' + this.$t('d.OA') + ')', isVerification: Number(form.pay_type) === PAY_METHODS.OA }, // OA
                 { key: 'currency', msg: this.$t('def.enter') + '(' + this.$t('p.currency') + ')', isVerification: true }, // 货币
                 { key: 'type', msg: this.$t('def.enter') + '(' + this.$t('n.type') + ')', isVerification: true }, // 类型
-                { key: 'email', msg: this.$t('def.enter') + '(' + this.$t('n.email') + ')', isVerification: true }, // 邮箱
+                // { key: 'email', msg: this.$t('def.enter') + '(' + this.$t('n.email') + ')', isVerification: true }, // 邮箱
                 { key: 'sales_area_ids', msg: this.$t('def.enter') + '(' + this.$t('d.sales_area') + ')', isVerification: true }, // 销售区域
             ];
             for (let index in requireList) {
@@ -304,8 +304,6 @@ export default {
             }
 
             form.sales_area_ids = form.sales_area_ids.join(',');
-            console.log("最后的结果", form);
-
             Core.Api.Distributor.save({
                 ...form,
                 ...area,
