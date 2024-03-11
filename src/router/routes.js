@@ -2669,6 +2669,44 @@ const routes = [
         ],
     },
     {
+        // 收款账号（付款信息管理）
+        path: '/payment-info-management',
+        component: Layout,
+        redirect: '/payment-info-management/payment-info-list',
+        name: 'PaymentInfoManagement',
+        type: [ROUTER_TYPE.SALES],
+        meta: {
+            title: '收款账号',
+            title_en: 'Receivables Account',
+            icon: 'i_a-iconmenu_xiaoshoucelue',
+            roles: [LOGIN_TYPE.ADMIN],
+            // auth: ['sales-strategy.list'],
+        },
+        children: [
+            // 付款信息列表
+            {
+                path: 'payment-info-list',
+                name: 'PaymentInfoList',
+                component: () => import('@/views/payment-info-management/index.vue'),
+                meta: {
+                    title: '付款信息管理',
+                    title_en: 'Payment Infomation Management',
+                },
+            },
+            // 编辑收款账号
+            {
+                path: 'payment-info-edit',
+                name: 'PaymentInfoEdit',
+                component: () => import('@/views/payment-info-management/payment-info-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '新增收款账号',
+                    title_en: 'New Collection Account',
+                },
+            },
+        ],
+    },
+    {
         // 系统管理
         path: '/system',
         component: Layout,
