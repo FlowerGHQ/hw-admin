@@ -37,16 +37,30 @@
                     @reset="handleSearchReset"
                 >
                     <template v-slot:extend>
-                        <a-col v-if="options.type === 'input'" :xs="24" :sm="15" :xl="15" :xxl="15" class="search-box">
+                        <a-col v-if="options[0].type === 'input'" :xs="24" :sm="12" :xl="12" :xxl="12" class="search-box">
                             <div class="item-box">
                                 <div class="key-box">
-                                    {{ $t(options.key) }}
+                                    {{ $t(options[0].key) }}
                                 </div>
                                 <div class="value-box">
                                     <a-input
                                         :disabled="level === 2"
-                                        :placeholder="$t(`${options.placeholder || 'def.input'}`)"
+                                        :placeholder="$t(`${options[0].placeholder || 'def.input'}`)"
                                         v-model:value="codeStr"
+                                        @keydown.enter="handleSearch"
+                                    />
+                                </div>
+                            </div>
+                        </a-col>
+                        <a-col v-if="options[1].type === 'input'" :xs="24" :sm="12" :xl="12" :xxl="12" class="search-box">
+                            <div class="item-box">
+                                <div class="key-box">
+                                    {{ $t(options[1].key) }}
+                                </div>
+                                <div class="value-box">
+                                    <a-input
+                                        :placeholder="$t(`${options[1].placeholder || 'def.input'}`)"
+                                        v-model:value="options[1].value"
                                         @keydown.enter="handleSearch"
                                     />
                                 </div>
@@ -91,7 +105,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, getCurrentInstance, computed, watch } from 'vue';
+import { onMounted, ref, getCurrentInstance, computed, watch, reactive } from 'vue';
 import Core from '@/core';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import TableSelect from './ItemTale.vue';
@@ -139,16 +153,26 @@ const searchForm = ref({
     // 商品编码
     codeList: [],
     area: [],
+    names: [], // 产品名称
 });
 // 分类列表
 // 搜索列表组件
-const options = ref({
-    type: 'input',
-    value: '',
-    searchParmas: 'code',
-    key: 'item-bom.commodity_code',
-    placeholder: 'item-bom.filter_multiple_codes',
-});
+const options = reactive([
+    {
+        type: 'input',
+        value: '',
+        searchParmas: 'code',
+        key: 'item-bom.commodity_code',
+        placeholder: 'item-bom.filter_multiple_codes',
+    },
+    {
+        type: 'input',
+        value: '',
+        searchParmas: 'names',
+        key: 'item-bom.product_name',
+        placeholder: 'item-bom.filter_multiple_name',
+    },
+]);
 // 商品编码-字符串
 const codeStr = ref();
 const isEdit = ref(false);
@@ -216,6 +240,7 @@ const handleSearch = () => {
     //更换数组形式传参,字符串逗号分隔输入--编码
     let arr = codeStr?.value?.trim().split(',');
     arr = arr?.map(item => item?.trim());
+    searchForm.value.names = options[1].value?.trim().split(',')
     searchForm.value.codeList = arr?.filter(item => item !== '');
     getTableDataFetch();
 };
@@ -292,6 +317,7 @@ const filterOption = (input, option) => {
 const getTableDataFetch = (parmas = {}) => {
     loading.value = true;
     let obj = {
+        names: searchForm.value.names,
         code_list: searchForm.value.codeList, //同步编号
         flag_set: 1,
         page: current.value,
