@@ -230,6 +230,12 @@ export default {
                     t: 'n.crm',
                 },
                 {
+                    id: 7,
+                    value: ROUTER_TYPE.FINANCE,
+                    img: Core.Util.Image.getImageFile('router', 'router_type_1'),
+                    t: 'payment-management.finance',
+                },
+                {
                     id: 6,
                     value: ROUTER_TYPE.SYSTEM,
                     img: Core.Util.Image.getImageFile('router', 'router_type_1'),
@@ -359,6 +365,7 @@ export default {
                         this.returnAdminFilter(ROUTER_TYPE.SUPPLIER);
                         this.returnAdminFilter(ROUTER_TYPE.CRM);
                         this.returnAdminFilter(ROUTER_TYPE.SYSTEM);
+                        this.returnAdminFilter(ROUTER_TYPE.FINANCE);
                     }
                 }
             },
@@ -525,6 +532,10 @@ export default {
                     this.$router.replace({ path: this.showList[0]?.path });
                     break;
                 case this.ROUTER_TYPE.SYSTEM:
+                    console.log(this.showList);
+                    this.$router.replace({ path: this.showList[0]?.path });
+                    break;
+                case this.ROUTER_TYPE.FINANCE:
                     console.log(this.showList);
                     this.$router.replace({ path: this.showList[0]?.path });
                     break;

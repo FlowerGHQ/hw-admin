@@ -234,6 +234,7 @@ let Const = {
             CRM: 4, // CRM
             SUPPLIER: 5, // 供应商
             SYSTEM: 6, // 系统管理
+            FINANCE: 7, // 财务
         },
     },
     LOGINMALL: {

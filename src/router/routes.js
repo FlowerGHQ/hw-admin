@@ -385,6 +385,33 @@ const routes = [
             },
         ],
     },
+    {
+        // 分销管理 - 平台端
+        path: '/recharge',
+        component: Layout,
+        redirect: '/recharge/recharge-audit',
+        name: 'RechargeManagement',
+        type: [ROUTER_TYPE.FINANCE],
+        meta: {
+            title: '审核',
+            title_en: 'Audit',
+            icon: 'i_s_agent',
+            // auth: ['distributor.list', 'agent.list', 'store.list', 'purchase-order.list', 'sales-area.list'],
+        },
+        children: [
+            {
+                path: 'recharge-audit',
+                name: 'RechargeAudit',
+                component: () => import('@/views/recharge-audit/index.vue'),
+                meta: {
+                    title: '充值审核',
+                    title_en: 'Recharge Audit',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    // auth: ['purchase-order.list'],
+                },
+            }
+        ]
+    },
     /* { // 分销商管理 - 分销商端
         path: '/distributor/distributor-detail-sp',
         component: Layout,
