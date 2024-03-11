@@ -41,6 +41,7 @@ export default {
         submit: '提交',
         download: '下载',
         preview: '预览',
+        day:'天',
     },
     en: {
         operations: 'Operations',
@@ -84,5 +85,6 @@ export default {
         submit: 'Submit',
         download: 'Download',
         preview: 'Preview',
+        day:'Day',
     },
 };

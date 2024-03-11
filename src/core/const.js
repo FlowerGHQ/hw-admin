@@ -268,42 +268,6 @@ let Const = {
         NO: 0,
     },
 
-    DISTRIBUTOR: {
-        // 代理商
-        TYPE: {
-            INTERNAL: 1, //国内
-            EXPORT: 2, //出口
-        },
-        TYPE_LIST: [
-            { zh: '国内', en: 'Internal', value: 1 },
-            { zh: '出口', en: 'Export', value: 2 },
-        ],
-        TYPE_MAP: {
-            1: { key: 1, zh: '国内', en: 'Internal' },
-            2: { key: 2, zh: '出口', en: 'Export' },
-        },
-        PAY_TIME: {
-            PAYMENT_TYPE_ALL_PAYMENT: 10,
-            PAYMENT_TYPE_DOWN_PAYMENT: 20,
-            PAYMENT_TYPE_PAYMENT_DAYS_30: 30,
-            PAYMENT_TYPE_PAYMENT_DAYS_60: 40,
-            PAYMENT_TYPE_PAYMENT_DAYS_90: 50,
-        },
-        PAY_TIME_LIST: {
-            10: { key: 10, zh: '全款发货', en: 'Full payment delivery' },
-            20: { key: 20, zh: 'TT(30%定金,70%尾款)', en: 'TT' },
-            30: { key: 30, zh: 'OA 30天', en: 'OA 30 days' },
-            40: { key: 40, zh: 'OA 60天', en: 'OA 60 days' },
-            50: { key: 50, zh: 'OA 90天', en: 'OA 90 days' },
-        },
-        PAY_TIME_MAP: {
-            10: 'TT(30%定金,70%尾款)',
-            20: 'OA 30天',
-            30: 'OA 60天',
-            40: 'OA 90天',
-        },
-    },
-
     ORG_STATUS_LIST: [
         // 组织状态
         { value: 1, zh: '启用', en: 'enable' },

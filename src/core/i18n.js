@@ -495,6 +495,8 @@ const messages = {
             p_enter_amount: '请输入定金金额',
             not_null_and_0: '不能为空或为0',
             not_null_and_1: '不能填写小于0',
+            advance_payment: '预付款',
+            OA: 'OA',
         },
         e: {
             // 用户
@@ -1084,6 +1086,8 @@ const messages = {
             synchronization_to_erp: '同步至ERP',
             reason_fail: '失败原因',
             upload_explosion: '上传爆炸图',
+            payable_time: '应付款时间',
+            estimated_shipping_data: '预计船期',
         },
         s: {
             // 门店
@@ -3396,6 +3400,8 @@ const messages = {
             p_enter_amount: 'Please enter the deposit amount',
             not_null_and_0: 'Cannot be empty or 0',
             not_null_and_1: 'The value cannot be less than 0',
+            advance_payment: 'Advance Payment',
+            OA: 'OA',
         },
         e: {
             employee_list: 'employee list',
@@ -3969,6 +3975,8 @@ const messages = {
             synchronization_to_erp: 'Synchronization to ERP',
             reason_fail: 'Reason for Failure',
             upload_explosion: 'Upload Explosion Map',
+            payable_time: 'Payable Time',
+            estimated_shipping_data: 'Estimated Shipping Date',
         },
         s: {
             store_list: 'Shop list',
