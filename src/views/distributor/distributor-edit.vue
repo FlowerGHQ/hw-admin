@@ -31,14 +31,31 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('d.pay_type') /*付款方式*/ }}:</div>
                     <div class="value">
-                        <a-select v-model:value="form.pay_type" :placeholder="$t('def.select_payment_term')">
-                            <a-select-option
-                                v-for="(val, key) in PAY_TIME_LIST"
-                                :key="val['key']"
-                                :value="val['key']"
-                                >{{ val[$i18n.locale] }}</a-select-option
-                            >
-                        </a-select>
+                        <a-radio-group v-model:value="form.pay_type">
+                            <a-radio v-for="item in PAY_METHODS_MAP" :key="item.key" :value="item.key">
+                                {{ item.t }}
+                            </a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('d.advance_payment') /*预付款*/ }}:</div>
+                    <div class="value d-f-a">
+                        <a-input-number
+                            class="w-100"
+                            v-model:value="form.advance_payment"
+                            :placeholder="$t('n.enter') + $t('d.advance_payment')"
+                            :min="0"
+                            :max="100"
+                        />
+                        <span class="m-l-8">%</span>
+                    </div>
+                </div>
+                <div v-if="Number(form.pay_type) === PAY_METHODS.OA" class="form-item required">
+                    <div class="key">{{ $t('d.OA') /*OA*/ }}:</div>
+                    <div class="value d-f-a">
+                        <a-input v-model:value="form.OA" :placeholder="$t('n.enter') + $t('d.OA')" />
+                        <span class="m-l-8">{{ $t('common.day') }}</span>
                     </div>
                 </div>
                 <div class="form-item required">
@@ -140,7 +157,9 @@
 import Core from '../../core';
 import CountryCascader from '@/components/common/CountryCascader.vue';
 import Const from '../../core/const';
-
+const PAY_METHODS = Const.DISTRIBUTOR.PAY_METHODS;
+const PAY_METHODS_MAP = Const.DISTRIBUTOR.PAY_METHODS_MAP;
+const TYPE = Const.DISTRIBUTOR.TYPE;
 export default {
     name: 'DistributorEdit',
     components: {
@@ -150,8 +169,9 @@ export default {
     data() {
         return {
             Core,
-            TYPE: Core.Const.DISTRIBUTOR.TYPE,
-            PAY_TIME_LIST: Const.DISTRIBUTOR.PAY_TIME_LIST,
+            TYPE,
+            PAY_METHODS,
+            PAY_METHODS_MAP,
             // 加载
             loading: false,
             detail: {},
@@ -170,7 +190,9 @@ export default {
                 email: '',
                 type: undefined,
                 sales_area_ids: undefined,
-                pay_type: undefined,
+                pay_type: PAY_METHODS.TT, // 支付方式
+                advance_payment: undefined, // 预付款
+                OA: undefined, // OA
                 currency: undefined,
                 flag_stock_change_use_pda: Const.FLAG.YES,
             },
@@ -248,18 +270,23 @@ export default {
             let area = Core.Util.deepCopy(this.area);
 
             const requireList = [
-                { key: 'code', msg: this.$t('def.enter') + '(' + this.$t('d.code') + ')' }, // 编码
-                { key: 'name', msg: this.$t('def.enter') + '(' + this.$t('d.name') + ')' }, // 分销商名称
-                { key: 'short_name', msg: this.$t('def.enter') + '(' + this.$t('d.short_name') + ')' }, // 简称
-                { key: 'pay_type', msg: this.$t('def.enter') + '(' + this.$t('d.pay_type') + ')' }, // 付款方式
-                { key: 'currency', msg: this.$t('def.enter') + '(' + this.$t('p.currency') + ')' }, // 货币
-                { key: 'type', msg: this.$t('def.enter') + '(' + this.$t('n.type') + ')' }, // 类型
-                { key: 'email', msg: this.$t('def.enter') + '(' + this.$t('n.email') + ')' }, // 邮箱
-                { key: 'sales_area_ids', msg: this.$t('def.enter') + '(' + this.$t('d.sales_area') + ')' }, // 销售区域
+                { key: 'code', msg: this.$t('def.enter') + '(' + this.$t('d.code') + ')', isVerification: true }, // 编码
+                { key: 'name', msg: this.$t('def.enter') + '(' + this.$t('d.name') + ')', isVerification: true }, // 分销商名称
+                { key: 'short_name', msg: this.$t('def.enter') + '(' + this.$t('d.short_name') + ')', isVerification: true }, // 简称
+                { key: 'pay_type', msg: this.$t('def.enter') + '(' + this.$t('d.pay_type') + ')', isVerification: true }, // 付款方式
+                { key: 'advance_payment', msg: this.$t('def.enter') + '(' + this.$t('d.advance_payment') + ')', isVerification: true }, // 预付款
+                { key: 'OA', msg: this.$t('def.enter') + '(' + this.$t('d.OA') + ')', isVerification: Number(form.pay_type) === PAY_METHODS.OA }, // OA
+                { key: 'currency', msg: this.$t('def.enter') + '(' + this.$t('p.currency') + ')', isVerification: true }, // 货币
+                { key: 'type', msg: this.$t('def.enter') + '(' + this.$t('n.type') + ')', isVerification: true }, // 类型
+                { key: 'email', msg: this.$t('def.enter') + '(' + this.$t('n.email') + ')', isVerification: true }, // 邮箱
+                { key: 'sales_area_ids', msg: this.$t('def.enter') + '(' + this.$t('d.sales_area') + ')', isVerification: true }, // 销售区域
             ];
             for (let index in requireList) {
-                if (!form[requireList[index].key]) {
-                    return this.$message.warning(requireList[index].msg);
+                if (requireList[index]?.isVerification) {
+                    // 判断这个对象在哪种情况需要验证
+                    if (!form[requireList[index].key]) {
+                        return this.$message.warning(requireList[index].msg);
+                    }
                 }
             }
 
@@ -277,6 +304,7 @@ export default {
             }
 
             form.sales_area_ids = form.sales_area_ids.join(',');
+            console.log("最后的结果", form);
 
             Core.Api.Distributor.save({
                 ...form,
@@ -296,4 +324,12 @@ export default {
 
 <style lang="less" scoped>
 // #DistributorEdit {}
+.d-f-a {
+    display: flex;
+    align-items: center;
+}
+
+.w-100 {
+    width: 100%;
+}
 </style>
