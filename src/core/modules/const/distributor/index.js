@@ -40,6 +40,17 @@ const DISTRIBUTOR = {
     PAY_METHODS_MAP: {
         1: { key: 1, t: "TT" },
         2: { key: 2, t: "OA" },
+    },
+    // 运费状态
+    FREIGHT_STATUS: { 
+        to_be_determined: 1, // 待确定
+        determined: 2, // 已确定
+        rejected: 3, // 已拒绝
+    },
+    FREIGHT_STATUS_MAP: {
+        1: { key: 1, t: "distributor.to_be_determined"}, // 待确定
+        2: { key: 2, t: "distributor.determined"}, // 已确定
+        3: { key: 3, t: "distributor.rejected"}, // 已拒绝
     }
 };
 

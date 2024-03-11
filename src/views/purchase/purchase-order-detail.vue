@@ -523,9 +523,81 @@
                             </div>
                             <div class="value" v-else>-</div>
                         </div>
+                        <!-- 打托 -->
+                        <div class="info-item">
+                            <div class="key">{{ $t('p.playing_tricks') }}</div>
+                            <div class="value">{{ '待联调' || '-' }}</div>
+                        </div>
+                        <!-- 期望交期 -->
+                        <div class="info-item">
+                            <div class="key">{{ $t('p.expected_delivery_time') }}</div>
+                            <!-- $Util.timeFilter(detail.create_time) -->
+                            <div class="value">{{ '待联调' || '-' }}</div>
+                        </div>
                     </div>
                 </a-col>
             </a-row>
+        </div>
+
+        <!-- 船期及运费 -->
+        <div class="list-container3">
+            <div class="title-container">
+                <div class="title-area" style="font-weight: 600">{{ $t('distributor.shipping_freight') }}</div>
+                <div class="btn-area">
+                    <a-button class="freight_status_style">
+                        {{ $t($Util.Common.returnTranslation(detail.freight_status, FREIGHT_STATUS_MAP)) }}
+                    </a-button>
+                </div>
+            </div>
+            <a-row>
+                <a-col :xs="24" :sm="24" :lg="12" :xl="12" class="info-block">
+                    <!-- 预计船期 -->
+                    <div class="info-item">
+                        <div class="key">{{ $t('p.estimated_shipping_data') }}:</div>
+                        <div class="value d-f-a">
+                            <span>{{ detail.sn || '-' }}</span>
+                            <a-button
+                                v-if="
+                                    user_type &&
+                                    $Util.Common.returnTypeBool(1, [
+                                        FREIGHT_STATUS.to_be_determined,
+                                        FREIGHT_STATUS.rejected,
+                                    ])
+                                "
+                                class="m-l-8"
+                                type="link"
+                                @click="onModify"
+                                >{{ $t('common.modify') }}</a-button
+                            >
+                        </div>
+                    </div>
+                </a-col>
+                <a-col :xs="24" :sm="24" :lg="12" :xl="12" class="info-block">
+                    <!-- 运费 -->
+                    <div class="info-item">
+                        <div class="key">{{ $t('p.freight') }}:</div>
+                        <div class="value d-f-a">
+                            <span>{{ detail.sn || '-' }}</span>
+                            <a-button
+                                v-if="
+                                    user_type &&
+                                    $Util.Common.returnTypeBool(detail.freight_status, [
+                                        FREIGHT_STATUS.to_be_determined,
+                                        FREIGHT_STATUS.rejected,
+                                    ])
+                                "
+                                class="m-l-8"
+                                type="link"
+                                @click="onModify"
+                                >{{ $t('common.modify') }}</a-button
+                            >
+                        </div>
+                    </div>
+                </a-col>
+            </a-row>
+            <div v-if="$Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR])" class="all-btn">
+                <a-button type="primary">{{ $t('distributor.confirm_freight') }}</a-button>
+            </div>
         </div>
 
         <!-- 付款明细、发货记录、收货记录、合同、操作记录 -->
@@ -542,7 +614,7 @@
                 </div>
             </div>
             <div class="container-body">
-                <!-- 付款明细 -->
+                <!-- 付款记录-->
                 <template v-if="activeValue == 'payment_detail'">
                     <paymentList
                         :target_id="id"
@@ -781,11 +853,14 @@
                 </div>
             </a-modal>
         </template>
+
+        <!-- 预计船期及运费 -->
+        <shippingFreight v-model:visible="freightVisible" :title="$t('distributor.expected_shipping_freight')">
+        </shippingFreight>
     </div>
 </template>
 <script>
 import Core from '../../core';
-import PurchaseInfo from './components/PurchaseInfo.vue';
 import MySteps from './components/MySteps.vue';
 import AttachmentFile from './components/AttachmentFile.vue';
 import DeliveryLogs from './components/DeliveryLogs.vue';
@@ -798,6 +873,7 @@ import eosTabs from '@/components/common/eos-tabs.vue';
 import EditItem from './components/EditItem.vue';
 import { DownOutlined } from '@ant-design/icons-vue';
 import CoCList from '@/views/coc/certificate-list.vue';
+import shippingFreight from './components/shipping-freight-model.vue';
 const PURCHASE = Core.Const.PURCHASE;
 const DISTRIBUTOR = Core.Const.DISTRIBUTOR;
 const WAYBILL = Core.Const.WAYBILL;
@@ -812,6 +888,9 @@ const PAYMENT_STATUS = Core.Const.PURCHASE.PAYMENT_STATUS;
 const FLAG_PART_SHIPMENT_MAP = Core.Const.PURCHASE.FLAG_PART_SHIPMENT_MAP;
 const FLAG_TRANSFER_MAP = Core.Const.PURCHASE.FLAG_TRANSFER_MAP;
 const USER_TYPE = Core.Const.USER.TYPE;
+const FREIGHT_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_STATUS_MAP;
+const FREIGHT_STATUS = Core.Const.DISTRIBUTOR.FREIGHT_STATUS;
+
 export default {
     name: 'PurchaseOrderDetail',
     components: {
@@ -827,12 +906,15 @@ export default {
         receivingDetails,
         DownOutlined,
         CoCList,
+        shippingFreight,
     },
     data() {
         return {
             Core,
             FLAG,
             TYPE,
+            FREIGHT_STATUS_MAP,
+            FREIGHT_STATUS,
             PARENT_TYPE,
             FLAG_ORDER_TYPE,
             STOCK_TYPE: Core.Const.STOCK_RECORD.TYPE,
@@ -931,6 +1013,7 @@ export default {
             activeValue: 'payment_detail', // nameList的value
             outStockBtnShow: false, // 商品剩余数量为0 就不展示出库按钮
             cocProps: {},
+            freightVisible: false, // 船期及运费model
         };
     },
     computed: {
@@ -1654,6 +1737,11 @@ export default {
             this.total.amount = total_amount;
             this.total.price = this.$Util.countFilter(total_price, 100, 2, true);
         },
+
+        // 船期及运费(修改)
+        onModify() {
+            this.freightVisible = true;
+        },
     },
 };
 </script>
@@ -1763,6 +1851,7 @@ export default {
 
         .info-item {
             display: flex;
+            align-items: center;
             margin-bottom: 10px;
 
             .key {
@@ -1779,6 +1868,19 @@ export default {
                 line-height: 22px;
             }
         }
+
+        .all-btn {
+            display: flex;
+            justify-content: flex-end;
+        }
     }
+}
+
+.d-f-a {
+    display: flex;
+    align-items: center;
+}
+
+.freight_status_style {
 }
 </style>
