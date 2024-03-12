@@ -560,8 +560,8 @@
                                 v-if="
                                     user_type &&
                                     $Util.Common.returnTypeBool(1, [
-                                        FREIGHT_STATUS.to_be_determined,
-                                        FREIGHT_STATUS.rejected,
+                                        FREIGHT_STATUS.TO_BE_DETERMINED,
+                                        FREIGHT_STATUS.REJECTED,
                                     ])
                                 "
                                 class="m-l-8"
@@ -582,8 +582,8 @@
                                 v-if="
                                     user_type &&
                                     $Util.Common.returnTypeBool(detail.freight_status, [
-                                        FREIGHT_STATUS.to_be_determined,
-                                        FREIGHT_STATUS.rejected,
+                                        FREIGHT_STATUS.TO_BE_DETERMINED,
+                                        FREIGHT_STATUS.REJECTED,
                                     ])
                                 "
                                 class="m-l-8"
