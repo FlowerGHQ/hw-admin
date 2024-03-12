@@ -273,8 +273,8 @@ const routes = [
             // 授信变化
             {
                 path: 'distributor-credit-change',
-                name: 'CreditChange',
-                component: () => import('@/views/distributor/credit-detail.vue'),
+                name: 'DistributorCreditChange',
+                component: () => import('@/views/distributor/distributor-credit-change.vue'),
                 meta: {
                     hidden: true,
                     title: '授信变动',
@@ -460,6 +460,7 @@ const routes = [
                     title: '充值审核详情',
                     title_en: 'Recharge Audit Details',
                     roles: [LOGIN_TYPE.ADMIN],
+                    hidden: true,
                     // auth: ['purchase-order.list'],
                 },
             },

@@ -27,19 +27,11 @@
                                         $t('distributor-detail.recharge')
                                     }}</a-button>
                                     <!-- 资金变动明细 -->
-                                    <div class="line-item">
+                                    <div class="line-item" @click="handleRouteChange(1)">
                                         {{ $t('distributor-detail.fund_change_detail') }}
                                     </div>
                                     <!-- 充值记录 -->
-                                    <div
-                                        class="line-item"
-                                        @click="
-                                            routerChange('recharge_record', {
-                                                type: 'vehicle',
-                                                selectType: 'available_amount',
-                                            })
-                                        "
-                                    >
+                                    <div class="line-item" @click="handleRouteChange(2)">
                                         {{ $t('distributor-detail.recharge_record') }}
                                     </div>
                                 </div>
@@ -89,7 +81,7 @@
                                         $t('distributor-detail.adjust_amount')
                                     }}</a-button>
                                     <!-- 授信变化 -->
-                                    <div class="line-item">
+                                    <div class="line-item" @click="handleRouteChange(3)">
                                         {{ $t('distributor-detail.credit_change') }}
                                     </div>
                                 </div>
@@ -136,15 +128,7 @@
                                         $t('distributor-detail.recharge')
                                     }}</a-button>
                                     <!-- 资金变动明细 -->
-                                    <div
-                                        class="line-item"
-                                        @click="
-                                            routerChange('fund_change_detail', {
-                                                type: 'parts_account',
-                                                selectType: 'available_amount',
-                                            })
-                                        "
-                                    >
+                                    <div class="line-item">
                                         {{ $t('distributor-detail.fund_change_detail') }}
                                     </div>
                                     <!-- 充值记录 -->
@@ -161,7 +145,7 @@
                             <div class="account-card-content-item">
                                 <div class="account-card-content-item-top">
                                     <div class="account-card-content-item-title">
-                                        {{ $t('distributor-detail.credit_balance') }}：
+                                        {{ $t('distributor-detail.credit_balance_re') }}：
                                     </div>
                                     <div class="account-card-content-item-value">0.00</div>
                                     <div class="line-item">
@@ -189,6 +173,27 @@ const $t = useI18n().t;
 const route = useRoute();
 const router = useRouter();
 const props = defineProps({});
+
+// methods
+const handleRouteChange = type => {
+    console.log('type', type);
+    switch (type) {
+        case 1:
+            //    跳转到distributor-fund-change-detail
+            router.push('/distributor/distributor-fund-change-detail');
+            break;
+        case 2:
+            router.push('/distributor/distributor-recharge-record');
+            break;
+        case 3:
+            router.push({
+                path: '/distributor/distributor-credit-change',
+            });
+            break;
+        default:
+            break;
+    }
+};
 
 onMounted(() => {});
 </script>

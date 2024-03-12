@@ -1,7 +1,7 @@
 <template>
     <div class="credit-detail list-container">
         <div class="title-container">
-            <div class="title-area">{{ $t('distributor-detail.credit_change') }}</div>
+            <div class="title-area">{{ /*授信变化*/ $t('distributor-detail.credit_change') }}</div>
         </div>
         <div class="search-container">
             <SearchAll :options="searchList" @search="onSearch" @reset="onReset" :isShowMore="false" />

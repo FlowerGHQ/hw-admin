@@ -10,7 +10,8 @@
                 <a-tab-pane :key="item.key" v-for="item of statusList">
                     <template #tab>
                         <div class="tabs-title">
-                            {{ item[$i18n.locale] }}<span :class="item.color">{{ item.value }}</span>
+                            {{ item[$i18n.locale] }}
+                            <!-- <span :class="item.color">{{ item.value }}</span> -->
                         </div>
                     </template>
                 </a-tab-pane>
@@ -20,9 +21,6 @@
         <div class="search">
             <SearchAll :options="searchList" :isShowMore="false" @search="onSearch" @reset="onReset" ref="searchAllRef">
             </SearchAll>
-        </div>
-        <div class="current-region-wrap">
-            {{$t(/*当前生效的地区*/ 'payment-management.current_effect')}}:{{ regionList.length }}{{$t(/*个*/ 'payment-management.unit')}}
         </div>
         <!-- table -->
         <div class="table-container">
@@ -52,13 +50,22 @@
                             </div>
                         </a-tooltip>
                     </template>
+                    <template v-if="column.key === 'status'">
+                        <div
+                            class="status-box"
+                            :class="$Util.auditStatusFilter(text, 'color')"
+                        >
+                            {{ $Util.auditStatusFilter(text, 'text', [$i18n.locale]) }}
+                        </div>
+                    </template>
                     <template v-if="column.key === 'create_time'">
                         {{ text ? $Util.timeFormat(text) : '-' }}
                     </template>
                     <!-- 操作 -->
                     <template v-if="column.key === 'operations'">
                         <a-button type="link" @click="routerChange('detail', record.id)">
-                            {{ $t('def.detail') }}
+                            <MySvgIcon icon-class="eyes-icon" class-name="eyes" />
+                            <span class="m-l-10">{{ $t(/*查看详情*/'item_order.see_detail') }}</span>
                         </a-button>
                     </template>
                 </template>
@@ -93,6 +100,7 @@ const router = useRouter();
 const $t = useI18n().t;
 const searchAllRef = ref(null);
 const { proxy } = getCurrentInstance();
+import MySvgIcon from '@/components/MySvgIcon/index.vue';
 const tableColumns = computed(() => {
     let columns = [
         { title: $t(/*序号*/ 'n.index'), dataIndex: 'id', key: 'number' },
@@ -103,9 +111,9 @@ const tableColumns = computed(() => {
         { title: $t(/*整车余额充值金额*/ 'payment-management.vehicle_balance_amount'), dataIndex: 'eur_info', key: 'item' },
         { title: $t(/*配件余额充值金额*/ 'payment-management.spare_parts_balance_amount'), dataIndex: 'eur_info', key: 'item' },
         { title: $t(/*总充值金额*/ 'payment-management.total_top_up_amount'), dataIndex: 'eur_info', key: 'item' },
-        { title: $t(/*状态*/ 'payment-management.state'), dataIndex: 'eur_info', key: 'item' },
+        { title: $t(/*状态*/ 'payment-management.state'), dataIndex: 'status', key: 'status' },
+        { title: $t(/*操作记录*/ 'payment-management.operation_record'), dataIndex: 'create_time', key: 'item' },
         { title: $t(/*操作*/ 'common.operations'), key: 'operations', fixed: 'right' },
-        { title: $t(/*操作记录*/ 'payment-management.operation_record'), dataIndex: 'create_time', key: 'item', fixed: 'right' },
     ];
     return columns;
 });
@@ -126,9 +134,6 @@ const searchList = ref([
         key: 'payment-management.submission_time',
     },
 ]);
-const regionList = ref([
-    '美国','意大利','西班牙','菲律宾'
-])
 const statusList = ref([
     { zh: '全  部', en: 'All', value: '0', color: 'primary', key: '0' },
     { zh: '等待一审', en: 'Pending First Audit', value: '0', color: 'yellow', key: '50' },
@@ -176,6 +181,10 @@ const routerChange = (type, record) => {
             break;
     }
 };
+const handleSearch = (e) => {
+    searchParam.value.status = e
+    search();
+}
 /* methods end*/
 </script>
 
@@ -213,11 +222,32 @@ const routerChange = (type, record) => {
             }
         }
     }
-    .current-region-wrap {
-        padding: 0 20px;
+    .eyes {
+        margin-bottom: 1.5px;
+    }
+    .status-box {
+        padding: 5px 12px;
         box-sizing: border-box;
-        margin-top: 20px;
-        width: 100%;
+        font-size: 14px;
+        font-weight: 400;
+        text-align: center;
+        border-radius: 4px;
+        &.yellow {
+            background: #FEF7E7;
+            color: #FAAD14;
+        }
+        &.green {
+            background: #E9F6EE;
+            color: #26AB54;
+        }
+        &.red {
+            color: #FF3D40;
+            background: #FFEBEC;
+        }
+        &.grey {
+            color: #8090a6;
+            background: rgba(140, 140, 140, 0.05);
+        }
     }
 }
 </style>
