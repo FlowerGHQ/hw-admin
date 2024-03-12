@@ -1,10 +1,16 @@
 <template>
-    <div id="cancellation-order">
+    <div id="final-payment">
         <div class="list-container">
             <!-- 头部 -->
             <div class="title-container">
-                <!-- 取消订单申请表 -->
-                <div class="title-area">{{ $t('distributor.cancel_order_application_form') }}</div>
+                <!-- 尾款待支付订单表 -->
+                <div class="title-area">
+                    {{
+                        isDistributerAdmin
+                            ? $t('distributor.final_payment_order_form')
+                            : $t('distributor.unpaid_payment')
+                    }}
+                </div>
             </div>
             <!-- tabs 切换 -->
             <div class="tabs-container colorful">
@@ -22,14 +28,7 @@
                 </a-tabs>
             </div>
             <div class="search">
-                <SearchAll
-                    ref="search_all_ref"
-                    :isShowMore="false"
-                    :options="searchList"
-                    @search="onSearch"
-                    @reset="onReset"
-                >
-                </SearchAll>
+                <SearchAll ref="search_all_ref" :options="searchList" @search="onSearch" @reset="onReset"> </SearchAll>
             </div>
             <!-- table -->
             <div class="table-container">
@@ -75,6 +74,11 @@
                             {{ text || '-' }}
                         </template>
 
+                        <!-- 支付方式 -->
+                        <template v-if="column.key === 'pay_type'">
+                            {{ $Util.purchasePayTypeFilter(text, $i18n.locale) }}
+                        </template>
+
                         <!-- 总价 -->
                         <template v-if="column.key === 'total_price'">
                             <span v-if="text >= 0">{{ $Util.priceUnitFilter(record.currency) }}</span>
@@ -114,21 +118,15 @@
                         <!-- 支付状态 -->
                         <template v-if="column.key === 'payment_status'">
                             <div class="status status-bg status-tag" :class="$Util.paymentStatusFilter(text, 'color')">
-                                {{ $Util.paymentStatusFilter(text, $i18n.locale) || "-" }}
+                                {{ $Util.paymentStatusFilter(text, $i18n.locale) || '-' }}
                             </div>
                         </template>
 
-                        <!-- 操作 -->
                         <template v-if="column.key === 'operations'">
-                            <!-- <a-button type="link" @click="routerChange('pay', record)">
+                            <a-button type="link" @click="routerChange('pay', record)">
                                 <MySvgIcon icon-class="common-view" />
                                 <span class="m-l-4">{{ $t('p.payment') }}</span>
-                            </a-button> -->
-                        </template>
-
-                        <!-- 操作记录 -->
-                        <template v-if="column.key === 'operation_record'">
-                            操作记录
+                            </a-button>
                         </template>
                     </template>
                 </a-table>
@@ -170,43 +168,99 @@ const route = useRoute();
 
 const searchForm = ref({
     sn: undefined, // 订单编号
-    distributor_id: undefined, // 分销商分销商
 });
 const search_all_ref = ref(null);
+const isDistributerAdmin = ref(false); // 根据路由判断其是用在分销商(false) 还是平台方(true)
 
 const statusData = ref({
-    has_agreed: 0, // 已同意
-    rejected: 0, // 已拒绝
-    dealt_with: 0, // 待处理
+    delay: 0, // 延期
+    within_week: 0, // 一周内
     all_total: 0, // 全部
 }); // 平台方tab数据
 const distributorList = ref([]);
 
 /* computed start */
 const searchList = computed(() => {
-    let result = [
-        {
-            // 订单编号
-            type: 'input',
-            value: '',
-            searchParmas: 'sn',
-            key: 'p.order_number',
-        },
-        {
-            // 分销商
-            type: 'select',
-            value: '',
-            searchParmas: 'distributor_id',
-            key: 'n.distributor',
-            selectMap: distributorList.value.map(el => {
-                return {
-                    zh: el.name,
-                    en: el.name,
-                    value: el.id,
-                };
-            }),
-        },
-    ];
+    let result = [];
+
+    if (isDistributerAdmin.value) {
+        result = [
+            {
+                // 订单编号
+                type: 'input',
+                value: '',
+                searchParmas: 'sn',
+                key: 'p.order_number',
+            },
+            {
+                // 分销商
+                type: 'select',
+                value: '',
+                searchParmas: 'distributor_id',
+                key: 'n.distributor',
+                selectMap: distributorList.value.map(el => {
+                    return {
+                        zh: el.name,
+                        en: el.name,
+                        value: el.id,
+                    };
+                }),
+            },
+            {
+                // 支付状态
+                type: 'select',
+                value: '',
+                searchParmas: 'payment_status',
+                key: 'p.payment_status',
+                selectMap: distributorList.value.map(el => {
+                    return {
+                        zh: el.name,
+                        en: el.name,
+                        value: el.id,
+                    };
+                }),
+            },
+            {
+                // 应付尾款时间
+                type: 'time-range',
+                value: '',
+                searchParmas: '',
+                key: 'p.payable_time',               
+            },
+           
+        ];
+    } else {
+        result = [
+            {
+                // 订单编号
+                type: 'input',
+                value: '',
+                searchParmas: 'sn',
+                key: 'p.order_number',
+            },
+            {
+                // 运费支付状态
+                type: 'select',
+                value: '',
+                searchParmas: '',
+                key: 'distributor.freight_payment_status',
+                selectMap: distributorList.value.map(el => {
+                    return {
+                        zh: el.name,
+                        en: el.name,
+                        value: el.id,
+                    };
+                }),
+            },
+            {
+                // 应付尾款时间
+                type: 'time-range',
+                value: '',
+                searchParmas: '',
+                key: 'p.payable_time',               
+            },
+        ];
+    }
 
     return result;
 });
@@ -217,25 +271,19 @@ const statusList = computed(() => {
             t: 'common.all',
             count: statusData.value.all_total,
             color: 'primary',
-            key: Core.Const.DISTRIBUTOR.CANCELLATION_ORDER_TAB.ALL,
+            key: Core.Const.DISTRIBUTOR.FINAL_UNPAID_ORDER_TAB.ALL,
         },
         {
-            t: 'distributor.dealt_with',
-            count: statusData.value.dealt_with,
+            t: 'distributor.within_week',
+            count: statusData.value.delay,
             color: 'yellow',
-            key: Core.Const.DISTRIBUTOR.CANCELLATION_ORDER_TAB.DEALT_WITH,
+            key: Core.Const.DISTRIBUTOR.FINAL_UNPAID_ORDER_TAB.WITHIN_WEEK,
         },
         {
-            t: 'distributor.rejected',
-            count: statusData.value.rejected,
+            t: 'distributor.delay',
+            count: statusData.value.within_week,
             color: 'yellow',
-            key: Core.Const.DISTRIBUTOR.CANCELLATION_ORDER_TAB.REJECTED,
-        },
-        {
-            t: 'distributor.has_agreed',
-            count: statusData.value.has_agreed,
-            color: 'yellow',
-            key: Core.Const.DISTRIBUTOR.CANCELLATION_ORDER_TAB.HAS_AGREED,
+            key: Core.Const.DISTRIBUTOR.FINAL_UNPAID_ORDER_TAB.DELAY,
         },
     ];
 
@@ -244,23 +292,42 @@ const statusList = computed(() => {
 
 const tableColumns = computed(() => {
     let columns = [];
-    columns = [
-        { title: proxy.$t('p.order_number'), dataIndex: 'sn', key: 'sn' }, // 订单编号
-        { title: proxy.$t('distributor.superior_order_number'), dataIndex: 'parent_sn', key: 'parent_sn' }, // 上级订单号
-        { title: proxy.$t('p.order_type'), dataIndex: 'type', key: 'type' }, // 订单类型
-        { title: proxy.$t('distributor.institution'), dataIndex: ['create_org', 'name'], key: 'item' }, // 创建单位
-        { title: proxy.$t('p.total_price'), dataIndex: 'total_price', key: 'total_price' }, // 总价
-        { title: proxy.$t('p.freight'), dataIndex: 'freight', key: 'freight' }, // 运费
-        { title: proxy.$t('p.amount_paid'), dataIndex: 'payment', key: 'amount_paid' }, // 已支付金额
-        { title: proxy.$t('p.order_time'), dataIndex: 'create_time', key: 'time' }, // 下单时间
-        { title: proxy.$t('p.time_payment'), dataIndex: 'pay_time', key: 'time' }, // 支付时间
-        { title: proxy.$t('p.order_status'), dataIndex: 'status', key: 'order_status' }, // 订单状态
-        { title: proxy.$t('p.payment_status'), dataIndex: 'payment_status', key: 'payment_status' }, // 支付状态
-
-        { title: proxy.$t('distributor.apply_reason'), dataIndex: 'uid', key: 'uid' }, // 申请原因
-        { title: proxy.$t('common.operations'), dataIndex: 'operations', key: 'operations', fixed: 'right' }, // 操作
-        { title: proxy.$t('p.record'), dataIndex: '', key: 'operation_record', fixed: 'right' }, // 操作记录
-    ];
+    console.log('isDistributerAdmin.value', isDistributerAdmin.value);
+    if (isDistributerAdmin.value) {
+        columns = [
+            { title: proxy.$t('p.order_number'), dataIndex: 'sn', key: 'sn' }, // 订单编号
+            { title: proxy.$t('distributor.superior_order_number'), dataIndex: 'parent_sn', key: 'parent_sn' }, // 上级订单号
+            { title: proxy.$t('p.order_type'), dataIndex: 'type', key: 'type' }, // 订单类型
+            { title: proxy.$t('distributor.institution'), dataIndex: ['create_org', 'name'], key: 'item' }, // 创建单位
+            { title: proxy.$t('p.payment_method'), dataIndex: 'pay_type', key: 'pay_type' }, // 支付方式
+            { title: proxy.$t('p.total_price'), dataIndex: 'total_price', key: 'total_price' }, // 总价
+            { title: proxy.$t('p.freight'), dataIndex: 'freight', key: 'freight' }, // 运费
+            { title: proxy.$t('p.amount_paid'), dataIndex: 'payment', key: 'amount_paid' }, // 已支付金额
+            { title: proxy.$t('p.payable_time'), dataIndex: 'uid', key: 'time' }, // 应付尾款时间
+            { title: proxy.$t('p.order_time'), dataIndex: 'create_time', key: 'time' }, // 下单时间
+            { title: proxy.$t('p.time_payment'), dataIndex: 'pay_time', key: 'time' }, // 支付时间
+            { title: proxy.$t('p.order_status'), dataIndex: 'status', key: 'order_status' }, // 订单状态
+            { title: proxy.$t('p.payment_status'), dataIndex: 'payment_status', key: 'payment_status' }, // 支付状态
+            { title: proxy.$t('common.operations'), dataIndex: 'operations', key: 'operations', fixed: 'right' }, // 操作
+        ];
+    } else {
+        columns = [
+            { title: proxy.$t('p.order_number'), dataIndex: 'sn', key: 'sn' }, // 订单编号
+            { title: proxy.$t('p.order_type'), dataIndex: 'type', key: 'type' }, // 订单类型
+            { title: proxy.$t('distributor.institution'), dataIndex: ['create_org', 'name'], key: 'item' }, // 创建单位
+            { title: proxy.$t('p.payment_method'), dataIndex: 'pay_type', key: 'pay_type' }, // 支付方式
+            { title: proxy.$t('p.total_price'), dataIndex: 'total_price', key: 'total_price' }, // 总价
+            { title: proxy.$t('p.freight'), dataIndex: 'freight', key: 'freight' }, // 运费
+            { title: proxy.$t('distributor.freight_confirmation_status'), dataIndex: 'uid', key: 'uid' }, // 运费确认状态
+            { title: proxy.$t('distributor.freight_payment_status'), dataIndex: 'uid', key: 'uid' }, // 运费支付状态
+            { title: proxy.$t('p.payable_time'), dataIndex: 'uid', key: 'time' }, // 应付尾款时间
+            { title: proxy.$t('p.order_time'), dataIndex: 'create_time', key: 'time' }, // 下单时间
+            { title: proxy.$t('p.time_payment'), dataIndex: 'pay_time', key: 'time' }, // 支付时间
+            { title: proxy.$t('p.order_status'), dataIndex: 'status', key: 'order_status' }, // 订单状态
+            { title: proxy.$t('p.payment_status'), dataIndex: 'payment_status', key: 'payment_status' }, // 支付状态
+            { title: proxy.$t('common.operations'), dataIndex: 'operations', key: 'operations', fixed: 'right' }, // 操作
+        ];
+    }
     return columns;
 });
 /* computed end */
@@ -283,7 +350,6 @@ const getStatusFetch = (params = {}) => {
         .statusList(obj)
         .then(res => {
             console.log('获取状态数据 res', res);
-            statusData.value = res;
         })
         .catch(err => {
             console.log('获取状态数据 err', err);
@@ -332,14 +398,20 @@ const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPa
 /* methods start*/
 const routerChange = (type, record) => {
     let routeUrl = '';
-    // 分销商
-    switch (type) {
-        case 'pay': // 付款
-            // routeUrl = router.resolve({
-            //     path: '/customer-care/edit',
-            // });
-            // window.open(routeUrl.href, '_blank');
-            break;
+    if (!isDistributerAdmin.value) {
+        // 分销商
+        switch (type) {
+            case 'add': // 添加
+                // routeUrl = router.resolve({
+                //     path: '/customer-care/edit',
+                // });
+                // window.open(routeUrl.href, '_blank');
+                break;
+        }
+    } else {
+        // 平台方
+        switch (type) {
+        }
     }
 };
 const onSearch = data => {
@@ -353,28 +425,33 @@ const onReset = () => {
 
 /* methods end*/
 
-// watch(
-//     () => router.currentRoute.value,
-//     (newValue, oldValue) => {
-//         console.log('newValue', newValue);
-
-//     },
-//     {
-//         deep: true,
-//         immediate: true,
-//     },
-// );
+watch(
+    () => router.currentRoute.value,
+    (newValue, oldValue) => {
+        // console.log('newValue', newValue);
+        if (newValue.path === '/distributor/unpaid-final-list') {
+            // 分销商 (尾款未支付订单表)
+            isDistributerAdmin.value = false;
+        } else if (newValue.path === '/distributor/final-payment-list') {
+            // 平台方 (尾款待支付订单表)
+            isDistributerAdmin.value = true;
+        }
+    },
+    {
+        deep: true,
+        immediate: true,
+    },
+);
 
 onMounted(() => {
     searchParam.value.status = -1;
     search();
-
     getDistributorListAll();
 });
 </script>
 
 <style lang="less" scoped>
-#cancellation-order {
+#final-payment {
     .table-title {
         color: #1d2129;
         font-size: 14px;
