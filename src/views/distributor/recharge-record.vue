@@ -1,7 +1,7 @@
 <template>
     <div class="recharge-record list-container">
         <div class="title-container">
-            <div class="title-area">{{ $t('distributor-detail.recharge_record') }}</div>
+            <div class="title-area">{{ /*充值记录*/ $t('distributor-detail.recharge_record') }}</div>
         </div>
         <div class="search-container">
             <SearchAll :options="searchList" @search="onSearch" @reset="onReset" :isShowMore="false" />

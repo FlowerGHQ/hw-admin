@@ -23,7 +23,7 @@ export default {
         // 零部件——warningtips ： 该功能将于近期开发
         parts_warning_tips: '用于支付零配件订单，最多可支付订单金额的 50% ；工单赔付金额会放入信用余额中。',
         // 售后备件信用余额
-        credit_balance: '售后备件信用余额',
+        credit_balance_re: '售后备件信用余额',
         // 时间
         time: '时间',
         // 类型
@@ -88,6 +88,8 @@ export default {
         remark: '备注',
         // 查看详情
         check_detail: '查看详情',
+        // 售后备件信用余额：可抵扣订单金额
+        payment_tips: '售后备件信用余额：可抵扣订单金额',
     },
     en: {
         vehicle_account: 'Vehicle Account',
@@ -102,7 +104,7 @@ export default {
         parts_tips: 'Used for parts-related orders, can be recharged.',
         parts_warning_tips:
             'Used to pay for spare parts orders, up to 50% of the order amount; the compensation amount for work orders will be placed in the credit balance.',
-        credit_balance: 'After-sales spare parts credit balance',
+        credit_balance_re: 'After-sales spare parts credit balance',
         time: 'Time',
         type: 'Type',
         recharge_account: 'Recharge Account',
@@ -147,5 +149,6 @@ export default {
         remark: 'Remark',
         // 查看详情
         check_detail: 'Check Detail',
+        payment_tips: 'After-sales spare parts credit balance: can offset the order amount',
     },
 };

@@ -271,8 +271,8 @@ const routes = [
             // 授信变化
             {
                 path: 'distributor-credit-change',
-                name: 'CreditChange',
-                component: () => import('@/views/distributor/credit-detail.vue'),
+                name: 'DistributorCreditChange',
+                component: () => import('@/views/distributor/distributor-credit-change.vue'),
                 meta: {
                     hidden: true,
                     title: '授信变动',

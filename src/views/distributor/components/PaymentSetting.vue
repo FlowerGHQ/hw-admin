@@ -1,11 +1,11 @@
 <template>
     <div class="payment-setting gray-panel no-margin">
         <div class="panel-title">
-            <div class="title">{{ $t('distributor-detail.payment_settings') }}</div>
+            <div class="title">{{ /*支付设置*/ $t('distributor-detail.payment_settings') }}</div>
         </div>
         <div class="panel-content">
             <div class="content-area-list">
-                售后备件信用余额：可抵扣订单金额
+                {{ $t('distributor-detail.payment_tips') }}
                 <a-input-number
                     :placeholder="$t('distributor-detail.please_enter_0_100')"
                     :min="0"
