@@ -137,6 +137,25 @@
                         <div class="key">{{ $t('p.payable_time') }}:</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch1" ref="TimeSearch1" /></div>
                     </a-col>
+                    <!-- 运费状态 -->
+                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
+                        <div class="key">{{ $t('p.freight_status') }}:</div>
+                        <div class="value">
+                            <a-select
+                                v-model:value="searchForm.freight_status"
+                                @change="handleSearch"
+                                :placeholder="$t('def.select')"
+                            >
+                                <a-select-option
+                                    v-for="(item, index) of FREIGHT_STATUS_MAP"
+                                    :key="index"
+                                    :value="item.key"
+                                >
+                                    {{ $t(`${item.t}`) }}
+                                </a-select-option>
+                            </a-select>
+                        </div>
+                    </a-col>
                 </a-row>
                 <div class="btn-area">
                     <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
@@ -236,6 +255,10 @@
                             <span>
                                 {{ $Util.countFilter(text) }}
                             </span>
+                        </template>
+                        <!-- 运费状态 -->
+                        <template v-else-if="column.key === 'freight_status'">
+                            {{ FREIGHT_STATUS_MAP[text]?.t ? $t(`${FREIGHT_STATUS_MAP[text]?.t}`) : '-'  }} 
                         </template>
                         <!-- 已支付金额 -->
                         <template v-else-if="column.key === 'amount_paid'">
@@ -368,6 +391,7 @@ const PAYMENT_TYPE_LIST = Core.Const.PURCHASE.FLAG_ORDER_TYPE_LIST;
 const FLAG_ORDER_TYPE = Core.Const.PURCHASE.FLAG_ORDER_TYPE;
 const PAY_TIME_LIST = Core.Const.DISTRIBUTOR.PAY_TIME_LIST;
 const STATUS = Core.Const.PURCHASE.STATUS;
+const FREIGHT_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_STATUS_MAP;
 
 import { message } from 'ant-design-vue';
 
@@ -390,6 +414,7 @@ export default {
             PAYMENT_TYPE_LIST,
             PAY_TIME_LIST,
             FLAG_ORDER_TYPE,
+            FREIGHT_STATUS_MAP,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -418,6 +443,7 @@ export default {
                 subject: 0,
                 begin_time: '',
                 end_time: '',
+                freight_status: undefined, // 运费状态
             },
             // 表格
             tableData: [],
@@ -474,6 +500,11 @@ export default {
                 });
                 columns.splice(5, 0, { title: this.$t('p.total_price'), dataIndex: 'total_price', key: 'total_price' });
                 columns.splice(6, 0, { title: this.$t('p.freight'), dataIndex: 'freight', key: 'freight' });
+                columns.splice(7, 0, {
+                    title: this.$t('p.freight_status'),
+                    dataIndex: 'freight_status',
+                    key: 'freight_status',
+                });
                 columns.splice(9, 0, { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'amount_paid' });
             }
             // 失败原因列表-仅存在与待生产tab
@@ -690,7 +721,7 @@ export default {
         },
         // 应付款时间搜索
         handleOtherSearch1(params) {
-            console.log("应付款时间搜索", params);
+            console.log('应付款时间搜索', params);
             // 时间等组件化的搜索
             // for (const key in params) {
             //     this.searchForm[key] = params[key];

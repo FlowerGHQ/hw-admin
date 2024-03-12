@@ -297,13 +297,13 @@ export default {
             showList = showList.map(item => {
                 item.auth = item.meta ? item.meta.auth || [] : [];
                 item.not_sub_menu = item.meta ? item.meta.not_sub_menu || false : false;
-                if (item.children) {
+                if (item.children && item.children.length > 0) {
                     item.children = item.children.map(i => {
                         i.auth = i.meta ? i.meta.auth || [] : [];
                         return i;
                     });
                     if (!item.children.find(i => item.redirect === `${item.path}/${i.path}`)) {
-                        item.redirect = `${item.path}/${item.children[0].path}`;
+                        item.redirect = `${item.path}/${item.children[0]?.path}`;
                     }
                 }
                 return item;

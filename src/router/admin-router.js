@@ -160,4 +160,29 @@ const adminEmpty = {
         },
     ],
 };
-export { inquiryManagement, operationManagement, adminEmpty };
+
+// 尾款待支付订单表
+const finalPaymentOrder = {
+    path: 'final-payment-list',
+    name: 'finalPaymentList',
+    component: () => import('@/views/distributor/final-unpaid-payment/list.vue'),
+    meta: {
+        title: '尾款待支付订单表',
+        title_en: 'Final Payment List',
+        icon: 'i_menu_fankuguanli',
+        roles: [LOGIN_TYPE.ADMIN],
+    },
+};
+// 取消订单申请列表
+const cancellationOrderRequest = {
+    path: 'cancellation-order-list',
+    name: 'cancellationOrderList',
+    component: () => import('@/views/distributor/cancellation-order/list.vue'),
+    meta: {
+        title: '取消订单申请列表',
+        title_en: 'Cancellation Order List',
+        icon: 'i_menu_fankuguanli',
+        roles: [LOGIN_TYPE.ADMIN],
+    },
+};
+export { inquiryManagement, operationManagement, adminEmpty, finalPaymentOrder, cancellationOrderRequest };

@@ -40,6 +40,38 @@ const DISTRIBUTOR = {
     PAY_METHODS_MAP: {
         1: { key: 1, t: "TT" },
         2: { key: 2, t: "OA" },
+    },
+    // 运费状态
+    FREIGHT_STATUS: { 
+        to_be_determined: 1, // 待确定
+        determined: 2, // 已确定
+        rejected: 3, // 已拒绝
+    },
+    FREIGHT_STATUS_MAP: {
+        1: { key: 1, t: "distributor.to_be_determined"}, // 待确定
+        2: { key: 2, t: "distributor.determined"}, // 已确定
+        3: { key: 3, t: "distributor.rejected"}, // 已拒绝
+    },
+    AUDIT_RESULT: {
+        no: 0, // 不通过
+        yes: 1, // 通过
+    },
+    AUDIT_RESULT_MAP_ARR: [
+       { key: 1, t: 'common.adopt' }, // 不通过
+       { key: 0, t: 'common.not_passed' }, // 通过
+    ],
+    // 取消订单申请表 下的状态
+    CANCELLATION_ORDER_TAB: {
+        ALL: -1,
+        DEALT_WITH: 1, // 待处理
+        REJECTED: 2, // 已拒绝
+        HAS_AGREED: 3, // 已同意
+    },
+    // 尾款未支付订单表 和 尾款待支付订单表
+    FINAL_UNPAID_ORDER_TAB: {
+        ALL: -1,
+        WITHIN_WEEK: 1, // 一周内
+        DELAY: 2, // 延期
     }
 };
 
