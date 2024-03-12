@@ -57,7 +57,7 @@ const customerCare = {
 const unpaidFinalPayment = {
     path: 'unpaid-final-list',
     name: 'unpaidFinalList',
-    component: () => import('@/views/distributor/final-payment/list.vue'),
+    component: () => import('@/views/distributor/final-unpaid-payment/list.vue'),
     meta: {
         title: '尾款未支付订单表',
         title_en: 'Unpaid Final List',

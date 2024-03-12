@@ -1772,6 +1772,20 @@ const Util = {
             return parseFloat(value / 1000).toFixed(dp) + 'k';
         }
     },
+    auditStatusFilter(val, to = 'text', lang) {
+        const MAP = Const.AUDIT_MANAGEMENT.STATUS_MAP;
+        const COLOR_MAP = Const.AUDIT_MANAGEMENT.STATUS_COLOR_MAP;
+        switch (to) {
+            case 'text':
+                const status = MAP[val + ''];
+                if (status) {
+                  return status[lang] || '未知';
+                }
+                return '未知';
+            case 'color':
+                return COLOR_MAP[val + ''] || 'grey';
+        }
+    },
     // 公共样式
     Common,
     // 照片逻辑

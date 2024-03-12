@@ -165,7 +165,7 @@ const adminEmpty = {
 const finalPaymentOrder = {
     path: 'final-payment-list',
     name: 'finalPaymentList',
-    component: () => import('@/views/distributor/final-payment/list.vue'),
+    component: () => import('@/views/distributor/final-unpaid-payment/list.vue'),
     meta: {
         title: '尾款待支付订单表',
         title_en: 'Final Payment List',
