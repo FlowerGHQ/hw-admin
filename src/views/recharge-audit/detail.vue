@@ -18,7 +18,7 @@
                                 {{ $t(/*本次充值总金额*/'payment-management.total_amount') }}
                             </div>
                             <div class="info-value flex">
-                                {{ detail.total_amount || '-' }}{{ currencyValue }}
+                                {{ currencyValue }}{{ detail.total_amount || '-' }}
                             </div>    
                         </div>
                         <div class="info-block">
@@ -26,7 +26,7 @@
                                 {{ $t(/*整车余额充值金额*/'payment-management.vehicle_amount') }}
                             </div>
                             <div class="info-value flex">
-                                {{ detail.vehicle_amount || '-' }}{{ currencyValue }}
+                                {{ currencyValue }}{{ detail.vehicle_amount || '-' }}
                             </div>    
                         </div>
                         <div class="info-block">
@@ -34,7 +34,7 @@
                                 {{ $t(/*配件余额充值金额*/'payment-management.module_amount') }}
                             </div>
                             <div class="info-value flex">
-                                {{ detail.module_amount || '-' }}{{ currencyValue }}
+                                {{ currencyValue }}{{ detail.module_amount || '-' }}
                             </div>    
                         </div>
                     </div>

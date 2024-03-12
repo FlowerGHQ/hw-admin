@@ -366,10 +366,12 @@ export default {
                     min-width: 140px;
                     text-align: right;
                     margin-right: 8px;
+                    font-size: 14px;
                 }
-                .value.input-number {
+                .value input {
                     display: flex;
                     flex: 1;
+                    font-size: 14px;
                 }
             }
         }
