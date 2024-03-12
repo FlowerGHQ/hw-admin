@@ -9,7 +9,8 @@
         :bodyStyle="bodyStyle"
     >
         <div class="modal-header">
-            {{ $t(/*确定退出吗*/ 'operation.sure_tip') }}
+            <!-- {{ $t(/*确定退出吗*/ 'operation.sure_tip') }} -->
+            {{ $t(title) }}
         </div>
         <div class="modal-content">
             {{ bodyText }}
@@ -32,6 +33,10 @@ const props = defineProps({
     bodyText: {
         type: String,
     },
+    title: {
+        type: String,
+        default: 'operation.sure_tip'   
+    }
 });
 
 const emits = defineEmits(['exit', 'continue']);

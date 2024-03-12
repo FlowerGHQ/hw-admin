@@ -423,7 +423,7 @@ const routes = [
         ],
     },
     {
-        // 分销管理 - 平台端
+        // 财务审核
         path: '/recharge',
         component: Layout,
         redirect: '/recharge/recharge-audit',
@@ -446,7 +446,18 @@ const routes = [
                     roles: [LOGIN_TYPE.ADMIN],
                     // auth: ['purchase-order.list'],
                 },
-            }
+            },
+            {
+                path: 'detail',
+                name: 'RechargeDetail',
+                component: () => import('@/views/recharge-audit/detail.vue'),
+                meta: {
+                    title: '充值审核详情',
+                    title_en: 'Recharge Audit Details',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    // auth: ['purchase-order.list'],
+                },
+            },
         ]
     },
     /* { // 分销商管理 - 分销商端
