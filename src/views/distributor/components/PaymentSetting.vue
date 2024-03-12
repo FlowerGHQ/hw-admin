@@ -15,9 +15,11 @@
                     v-model:value="value"
                     addon-after="%"
                 />
+                <a-button type="primary">{{ $t('retail.confirm') }}</a-button>
             </div>
             <!-- 操作记录 按钮-->
             <div class="opreation">
+                <!-- 确定按钮 -->
                 <div class="line-item">
                     {{ $t('distributor-detail.operation_record') }}
                 </div>
@@ -44,6 +46,7 @@ const value = ref(undefined);
         align-items: center;
         .ant-input-number-group-wrapper {
             margin-left: 16px;
+            margin-right: 16px;
         }
     }
     .opreation {
