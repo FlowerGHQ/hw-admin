@@ -460,6 +460,7 @@ const routes = [
                     title: '充值审核详情',
                     title_en: 'Recharge Audit Details',
                     roles: [LOGIN_TYPE.ADMIN],
+                    hidden: true,
                     // auth: ['purchase-order.list'],
                 },
             },

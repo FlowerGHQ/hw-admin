@@ -21,9 +21,6 @@
             <SearchAll :options="searchList" :isShowMore="false" @search="onSearch" @reset="onReset" ref="searchAllRef">
             </SearchAll>
         </div>
-        <div class="current-region-wrap">
-            {{$t(/*当前生效的地区*/ 'payment-management.current_effect')}}:{{ regionList.length }}{{$t(/*个*/ 'payment-management.unit')}}
-        </div>
         <!-- table -->
         <div class="table-container">
             <a-table
@@ -212,12 +209,6 @@ const routerChange = (type, record) => {
                 color: #8e8e8e;
             }
         }
-    }
-    .current-region-wrap {
-        padding: 0 20px;
-        box-sizing: border-box;
-        margin-top: 20px;
-        width: 100%;
     }
 }
 </style>

@@ -16,7 +16,17 @@
             </SearchAll>
         </div>
         <div class="current-region-wrap">
-            {{$t(/*当前生效的地区*/ 'payment-management.current_effect')}}:{{ regionList.length }}{{$t(/*个*/ 'payment-management.unit')}}
+            <div class="region-key">
+                {{$t(/*当前生效的地区*/ 'payment-management.current_effect')}}:
+            </div>
+            <div class="region-count">
+                {{ regionList.length }}{{$t(/*个*/ 'payment-management.unit')}}
+            </div>
+        </div>
+        <div class="current-region-list-container">
+            <div v-for="(item, index) in regionList" :key="index" class="current-region">
+                {{ item }}
+            </div>
         </div>
         <!-- table -->
         <div class="table-container">
@@ -174,7 +184,7 @@ const searchList = ref([
     },
 ]);
 const regionList = ref([
-    '美国','意大利','西班牙','菲律宾'
+    '美国','意大利','西班牙','菲律宾','美国','意大利','西班牙','菲律宾','美国','意大利'
 ])
 
 onMounted(() => {});
@@ -194,7 +204,7 @@ const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPa
     dataCallBack: dataCallBack,
 });
 const deleteFetch = id => {
-    Core.Api.Operation.delete({
+    Core.Api.PayAccount.delete({
         id: id,
     })
         .then(res => {
@@ -208,7 +218,7 @@ const deleteFetch = id => {
 };
 
 const updateStatusFetch = (record, type) => {
-    Core.Api.Operation.updateStatus({
+    Core.Api.PayAccount.updateStatus({
         id: record.id,
         status: record.status,
         sort: record.sort,
@@ -266,13 +276,6 @@ const handleDelete = record => {
 const onSwitch = (e, record) => {
     updateStatusFetch(record, 'switch');
 };
-const onBlur = record => {
-    if (!record.sort) {
-        // 如果输入为空则赋值之前的排序
-        record.sort = record.old_sort;
-    }
-    updateStatusFetch(record, 'input');
-};
 /* methods end*/
 </script>
 
@@ -315,6 +318,43 @@ const onBlur = record => {
         box-sizing: border-box;
         margin-top: 20px;
         width: 100%;
+        display: flex;
+        align-items: center;
+        .region-key {
+            font-size: 16px;
+            color: #1D2129;
+            font-weight: 500;
+        }
+        .region-count {
+            font-size: 16px;
+            color: #0061FF;
+            font-weight: 500;
+            margin-left: 4px;
+        }
     }
+    .current-region-list-container {
+        padding: 0 20px;
+        box-sizing: border-box;
+        margin-top: 8px;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        .current-region {
+            padding: 2px 8px;
+            box-sizing: border-box;
+            background: #EAECF1;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 400;
+            color: #1D2129;
+            text-align: center;
+            margin-right: 6px;
+            margin-bottom: 8px;
+        }
+    }
+}
+.table-container {
+    margin-top: 0;
 }
 </style>
