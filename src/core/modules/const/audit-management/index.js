@@ -21,8 +21,8 @@ const AUDIT_MANAGEMENT = {
         4: { zh: '二审不通过', en: 'The Second Audit Was Rejected' },
     },
     STATUS_COLOR_MAP: {
-        0: 'blue',
-        1: 'blue',
+        0: 'yellow',
+        1: 'yellow',
         2: 'green',
         3: 'red',
         4: 'red',
