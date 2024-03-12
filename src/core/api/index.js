@@ -1079,6 +1079,11 @@ const apiList = {
         save: ['PostJson', 'announcement/save'], // 新增
         updateStatus: ['PostJson', 'announcement/update-status'], // 修改排序和状态
     },
+    RechargeAudit: {
+        audit: ['PostJson', 'RechargeAudit/audit'], // 审核
+        detail: ['PostJson', 'RechargeAudit/detail'], // 详情
+        list: ['PostJson', 'RechargeAudit/list'], // 列表
+    }
 };
 
 export default new Api(baseUrl, apiList);

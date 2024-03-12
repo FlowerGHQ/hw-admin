@@ -4,11 +4,6 @@
             <div class="title-area">
                 {{ $t(/*充值审核*/ 'payment-management.recharge_audit') }}
             </div>
-            <div class="btns-area">
-                <a-button type="primary" @click="routerChange('add')">
-                    {{ $t(/*新增收款账号*/ 'payment-management.new_account') }}
-                </a-button>
-            </div>
         </div>
         <div class="tabs-container colorful" v-if="!purchaseMode">
             <a-tabs v-model:activeKey="searchParam.status" @change="handleSearch">
@@ -39,16 +34,6 @@
                 :row-key="record => record.id"
                 :pagination="false"
             >
-                <template #headerCell="{ column }">
-                    <!-- 排序 -->
-                    <template v-if="column.key === 'input'">
-                        {{ column.title }}
-                        <a-tooltip>
-                            <template #title>{{ $t('operation.input_pla') }}</template>
-                            <MySvgIcon icon-class="info" class-name="icon-info" />
-                        </a-tooltip>
-                    </template>
-                </template>
                 <template #bodyCell="{ column, text, record, index }">
                     <!-- 序号 -->
                     <template v-if="column.key === 'number'">
@@ -67,50 +52,13 @@
                             </div>
                         </a-tooltip>
                     </template>
-                    <template v-if="column.key === 'content'">
-                        <a-tooltip placement="topLeft">
-                            <template #title>{{ record.firstSentence }}</template>
-                            <div
-                                class="one-spils cursor"
-                                :style="{
-                                    width: record.firstSentence?.length > 20 ? 18 + 'rem' : '',
-                                }"
-                            >
-                                {{ record.firstSentence }}
-                            </div>
-                        </a-tooltip>
-                    </template>
                     <template v-if="column.key === 'create_time'">
                         {{ text ? $Util.timeFormat(text) : '-' }}
                     </template>
-                    <!-- 生效状态 -->
-                    <template v-if="column.key === 'effective_state'">
-                        <div class="effective-state">
-                            <a-switch
-                                v-model:checked="record.status"
-                                size="small"
-                                :checked-value="1"
-                                :un-checked-value="2"
-                                @change="event => onSwitch(event, record)"
-                            />
-                            <div :class="record.status === 1 ? 'switch-state blue' : 'switch-state grey'">
-                                {{
-                                    record.status === 1
-                                        ? $t(/*已生效*/ 'operation.took_effect')
-                                        : $t(/*未生效*/ 'operation.invalid')
-                                }}
-                            </div>
-                        </div>
-                    </template>
                     <!-- 操作 -->
                     <template v-if="column.key === 'operations'">
-                        <a-button type="link" @click="routerChange('detail', record)">
-                            <!-- <MySvgIcon icon-class="supply-edit" /> -->
-                            <span class="m-l-10">{{ $t(/*审核*/'payment-management.audit') }}</span>
-                        </a-button>
-                        <a-button type="link" @click="handleAudit(record)">
-                            <!-- <MySvgIcon icon-class="sales-delete" /> -->
-                            <span class="m-l-10">{{ $t('def.detail') }}</span>
+                        <a-button type="link" @click="routerChange('detail', record.id)">
+                            {{ $t('def.detail') }}
                         </a-button>
                     </template>
                 </template>
@@ -141,7 +89,6 @@ import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import { useTable } from '@/hooks/useTable';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import MySvgIcon from '@/components/MySvgIcon/index.vue';
 const router = useRouter();
 const $t = useI18n().t;
 const searchAllRef = ref(null);
@@ -207,38 +154,6 @@ const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPa
     initParam: { type: Core.Const.OPERATION.OPERATION_TYPE_MAP.REPORT },
     dataCallBack: dataCallBack,
 });
-const auditFetch = id => {
-    Core.Api.Operation.delete({
-        id: id,
-    })
-        .then(res => {
-            console.log('deleteFetch res', res);
-            searchAllRef.value.handleSearch();
-            proxy.$message.success($t('pop_up.delete_success'));
-        })
-        .catch(err => {
-            console.log('deleteFetch err', err);
-        });
-};
-
-const updateStatusFetch = (record, type) => {
-    Core.Api.Operation.updateStatus({
-        id: record.id,
-        status: record.status,
-        sort: record.sort,
-        type: 1,
-    })
-        .then(res => {
-            console.log('updateStatusFetch res', res);
-            searchAllRef.value.handleSearch();
-            if (record.status === 1 && type === 'switch') {
-                proxy.$message.success($t('operation.ad_success_tip'));
-            }
-        })
-        .catch(err => {
-            console.log('updateStatusFetch err', err);
-        });
-};
 /* Fetch end*/
 
 /* methods start*/
@@ -260,27 +175,6 @@ const routerChange = (type, record) => {
             });
             break;
     }
-};
-const handleAudit = record => {
-    Core.Util.confirm({
-        title: $t('pop_up.sure_delete'),
-        okText: $t('def.sure'),
-        okType: 'danger',
-        cancelText: $t('def.cancel'),
-        onOk: () => {
-            deleteFetch(record.id);
-        },
-    });
-};
-const onSwitch = (e, record) => {
-    updateStatusFetch(record, 'switch');
-};
-const onBlur = record => {
-    if (!record.sort) {
-        // 如果输入为空则赋值之前的排序
-        record.sort = record.old_sort;
-    }
-    updateStatusFetch(record, 'input');
 };
 /* methods end*/
 </script>
