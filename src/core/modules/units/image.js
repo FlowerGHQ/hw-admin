@@ -10,4 +10,11 @@ export default {
         const path = `../../../assets/images/${file}/${precise_file}.${type}`;
         return Modules[path].default;
     },
+    ifImageUrl(url, host = '') {
+        if (url) {
+            return host + url
+        } else {
+            return Modules[`../assets/images/defult_img.png`].default
+        }
+    },
 };
