@@ -205,7 +205,7 @@
                                 {{
                                     record.item_list
                                         .map((item, index) => {
-                                            return $i18n.locale === 'zh' ? item.item.name : item.item.name_en;
+                                            return $i18n.locale === 'zh' ? item.item?.name : item.item?.name_en;
                                         })
                                         .join(',') || '-'
                                 }}
