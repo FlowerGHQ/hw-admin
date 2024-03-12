@@ -1086,8 +1086,11 @@ const messages = {
             synchronization_to_erp: '同步至ERP',
             reason_fail: '失败原因',
             upload_explosion: '上传爆炸图',
-            payable_time: '应付款时间',
+            payable_time: '应付尾款时间',
             estimated_shipping_data: '预计船期',
+            playing_tricks: "打托",
+            expected_delivery_time: "期望交期",
+            freight_status: "运费状态",
         },
         s: {
             // 门店
@@ -3977,6 +3980,9 @@ const messages = {
             upload_explosion: 'Upload Explosion Map',
             payable_time: 'Payable Time',
             estimated_shipping_data: 'Estimated Shipping Date',
+            playing_tricks: "Playing Tricks",
+            expected_delivery_time: "Expected Delivery Time",
+            freight_status: "Freight Status",
         },
         s: {
             store_list: 'Shop list',

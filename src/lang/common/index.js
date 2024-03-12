@@ -42,6 +42,9 @@ export default {
         download: '下载',
         preview: '预览',
         day:'天',
+        modify:'修改',
+        adopt: "通过",
+        not_passed: "不通过",
     },
     en: {
         operations: 'Operations',
@@ -86,5 +89,8 @@ export default {
         download: 'Download',
         preview: 'Preview',
         day:'Day',
+        modify:'Modify',
+        adopt: "Adopt",
+        not_passed: "Not Passed",
     },
 };

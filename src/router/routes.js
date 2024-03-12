@@ -9,11 +9,13 @@ import { supplyManage, supplyRouters, supplyMaterialManagement } from './supply-
 // 新分销商路由
 import { mallRouters, dealsPreview } from './mall';
 // 分销商路由
-import { customerCare } from './distributor-router';
+import { customerCare, unpaidFinalPayment } from './distributor-router';
 // 平台方路由
-import { inquiryManagement, adminEmpty, operationManagement } from './admin-router';
+import { inquiryManagement, adminEmpty, operationManagement, finalPaymentOrder, cancellationOrderRequest } from './admin-router';
 // 平台方路由
 import { fsLogin } from './fs-login';
+// 公共的路由
+import { freightConfirmed, } from './common';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE;
@@ -404,8 +406,7 @@ const routes = [
                     hidden: true,
                     title: '销售区域详情',
                     parent: '/sales-area-list',
-                    auth: ['sales-area.detail'],
-                    // auth: ['warehouse.list'],
+                    auth: ['sales-area.detail'],                    
                 },
             },
             {
@@ -420,6 +421,10 @@ const routes = [
                     auth: ['sales-area.save'],
                 },
             },
+            freightConfirmed,
+            finalPaymentOrder,
+            cancellationOrderRequest,
+            unpaidFinalPayment,
         ],
     },
     {
