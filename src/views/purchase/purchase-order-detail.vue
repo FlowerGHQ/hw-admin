@@ -596,7 +596,7 @@
                 </a-col>
             </a-row>
             <div v-if="$Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR])" class="all-btn">
-                <a-button type="primary">{{ $t('distributor.confirm_freight') }}</a-button>
+                <a-button type="primary" @click="onConfirmFreight">{{ $t('distributor.confirm_freight') }}</a-button>
             </div>
         </div>
 
@@ -855,8 +855,11 @@
         </template>
 
         <!-- 预计船期及运费 -->
-        <shippingFreight v-model:visible="freightVisible" :title="$t('distributor.expected_shipping_freight')">
-        </shippingFreight>
+        <ShippingFreight v-model:visible="freightVisible" :title="$t('distributor.expected_shipping_freight')">
+        </ShippingFreight>
+
+        <!-- 确认运费弹窗 -->
+        <ConfirmFreight v-model:visible="confirmFreightVisible" :title="$t('distributor.expected_shipping_freight')"></ConfirmFreight>
     </div>
 </template>
 <script>
@@ -873,7 +876,8 @@ import eosTabs from '@/components/common/eos-tabs.vue';
 import EditItem from './components/EditItem.vue';
 import { DownOutlined } from '@ant-design/icons-vue';
 import CoCList from '@/views/coc/certificate-list.vue';
-import shippingFreight from './components/shipping-freight-model.vue';
+import ShippingFreight from './components/ShippingFreightModel.vue';
+import ConfirmFreight from './components/ConfirmFreightModel.vue';
 const PURCHASE = Core.Const.PURCHASE;
 const DISTRIBUTOR = Core.Const.DISTRIBUTOR;
 const WAYBILL = Core.Const.WAYBILL;
@@ -906,7 +910,8 @@ export default {
         receivingDetails,
         DownOutlined,
         CoCList,
-        shippingFreight,
+        ShippingFreight,
+        ConfirmFreight
     },
     data() {
         return {
@@ -1014,6 +1019,7 @@ export default {
             outStockBtnShow: false, // 商品剩余数量为0 就不展示出库按钮
             cocProps: {},
             freightVisible: false, // 船期及运费model
+            confirmFreightVisible: false, // 船期及运费确认model
         };
     },
     computed: {
@@ -1742,6 +1748,11 @@ export default {
         onModify() {
             this.freightVisible = true;
         },
+
+        // 确认运费
+        onConfirmFreight() {
+            this.confirmFreightVisible = true
+        }
     },
 };
 </script>
@@ -1883,4 +1894,4 @@ export default {
 
 .freight_status_style {
 }
-</style>
+</style>./components/ShippingFreightModel.vue

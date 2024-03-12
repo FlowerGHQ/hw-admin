@@ -51,7 +51,15 @@ const DISTRIBUTOR = {
         1: { key: 1, t: "distributor.to_be_determined"}, // 待确定
         2: { key: 2, t: "distributor.determined"}, // 已确定
         3: { key: 3, t: "distributor.rejected"}, // 已拒绝
-    }
+    },
+    AUDIT_RESULT: {
+        no: 0, // 不通过
+        yes: 1, // 通过
+    },
+    AUDIT_RESULT_MAP_ARR: [
+       { key: 1, t: 'common.adopt' }, // 不通过
+       { key: 0, t: 'common.not_passed' }, // 通过
+    ]
 };
 
 export default DISTRIBUTOR;
