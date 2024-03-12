@@ -90,6 +90,8 @@ export default {
         check_detail: '查看详情',
         // 售后备件信用余额：可抵扣订单金额
         payment_tips: '售后备件信用余额：可抵扣订单金额',
+        payment_account_number: '支付账号',
+        actual_amount_paid: '实付金额',
     },
     en: {
         vehicle_account: 'Vehicle Account',
@@ -150,5 +152,7 @@ export default {
         // 查看详情
         check_detail: 'Check Detail',
         payment_tips: 'After-sales spare parts credit balance: can offset the order amount',
+        payment_account_number: 'Payment account number',
+        actual_amount_paid: 'Actual amount paid',
     },
 };

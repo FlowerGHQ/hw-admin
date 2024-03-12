@@ -616,13 +616,7 @@
             <div class="container-body">
                 <!-- 付款记录-->
                 <template v-if="activeValue == 'payment_detail'">
-                    <paymentList
-                        :target_id="id"
-                        :order_detail="detail"
-                        :sn="detail.sn"
-                        @submit="getList"
-                        ref="payment"
-                    />
+                    <paymentList :target_id="id" :order_detail="detail" :sn="detail.sn"/>
                 </template>
                 <!-- displayIn 这个变量是为了区分是收货记录和发货记录 因为现在收货记录和发货记录展示的信息基本相同 但是收货记录不需要展示收货明细 -->
                 <!-- 发货记录 -->
@@ -1234,8 +1228,7 @@ export default {
             this.itemEditShow = false;
             // this.giveOrderShow = false
             this.getPurchaseItemList(); // 获取商品列表
-            this.getPurchaseInfo(); // 获取订单信息
-            this.$refs.payment.getPurchasePayList();
+            this.getPurchaseInfo(); // 获取订单信息            
         },
 
         // 经销商钱包详情
