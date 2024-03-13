@@ -83,7 +83,7 @@
                         </template>
 
                         <!-- 总价 -->
-                        <template v-if="column.key === 'price'">
+                        <template v-if="column.key === 'total_price'">
                             <span v-if="text >= 0">{{ $Util.priceUnitFilter(record.currency) }}</span>
                             <span>
                                 {{ $Util.countFilter(text) }}
@@ -358,7 +358,7 @@ const tableColumns = computed(() => {
         { title: proxy.$t('p.freight'), dataIndex: ['audit_record_content', 'freight'], key: 'freight' }, // 运费
         { title: proxy.$t('p.freight_status'), dataIndex: 'freight_status', key: 'freight_status' }, // 运费状态
         { title: proxy.$t('p.order_time'), dataIndex: 'create_time', key: 'time' }, // 下单时间
-        { title: proxy.$t('p.total_price'), dataIndex: 'price', key: 'price' }, // 总价
+        { title: proxy.$t('p.total_price'), dataIndex: 'total_price', key: 'total_price' }, // 总价
         { title: proxy.$t('p.amount_paid'), dataIndex: 'payment', key: 'amount_paid' }, // 已支付金额
         { title: proxy.$t('p.time_payment'), dataIndex: 'pay_time', key: 'time' }, // 支付时间
         { title: proxy.$t('p.order_status'), dataIndex: 'status', key: 'order_status' }, // 订单状态

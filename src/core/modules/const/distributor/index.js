@@ -73,17 +73,29 @@ const DISTRIBUTOR = {
     ],
     // 取消订单申请表 下的状态
     CANCELLATION_ORDER_TAB: {
-        ALL: -1,
+        ALL: 0,
         DEALT_WITH: 1, // 待处理
-        REJECTED: 2, // 已拒绝
-        HAS_AGREED: 3, // 已同意
+        HAS_AGREED: 2, // 已同意
+        REJECTED: 3, // 已拒绝
     },
     // 尾款未支付订单表 和 尾款待支付订单表
     FINAL_UNPAID_ORDER_TAB: {
-        ALL: -1,
+        ALL: 0,
         WITHIN_WEEK: 1, // 一周内
         DELAY: 2, // 延期
     },
+    // 详情中的 cancel_status  和 list中 audit_status
+    AUDIT_CANCEL_STATUS: {
+        // 1 审核中 2 审核通过  3 审核拒绝
+        WAITING_FOR_APPROVAL: 1,
+        APPROVED_AND_APPROVED: 2,
+        AUDIT_REJECTION: 3,
+    },
+    AUDIT_CANCEL_STATUS_MAP: {
+        1: { key: 1, t: "distributor-detail.under_review", },
+        2: { key: 2, t: "distributor-detail.audit_pass", },
+        3: { key: 3, t: "distributor-detail.audit_rejection", },
+    }   
 };
 
 export default DISTRIBUTOR;
