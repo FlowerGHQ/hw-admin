@@ -205,7 +205,7 @@
                                 {{
                                     record.item_list
                                         .map((item, index) => {
-                                            return $i18n.locale === 'zh' ? item.item.name : item.item.name_en;
+                                            return $i18n.locale === 'zh' ? item.item?.name : item.item?.name_en;
                                         })
                                         .join(',') || '-'
                                 }}
@@ -258,7 +258,7 @@
                         </template>
                         <!-- 运费状态 -->
                         <template v-else-if="column.key === 'freight_status'">
-                            {{ FREIGHT_STATUS_MAP[text]?.t ? $t(`${FREIGHT_STATUS_MAP[text]?.t}`) : '-'  }} 
+                            {{ FREIGHT_STATUS_MAP[text]?.t ? $t(`${FREIGHT_STATUS_MAP[text]?.t}`) : '-' }}
                         </template>
                         <!-- 已支付金额 -->
                         <template v-else-if="column.key === 'amount_paid'">
@@ -360,7 +360,16 @@
                     <div class="shop">
                         {{ $i18n.locale === 'zh' ? item.item.name : item.item.name_en }}
                         <!-- 修改按钮 -->
-                        <a-button @click="routerChange('editBom', item)">{{ $t('def.edit') }}</a-button>
+                        <ItemSelect
+                            btnType="default"
+                            :disabled-checked="item?.accessory_list?.map(el => el.target_id)"
+                            @select="
+                                (selectItemIds, selectItems, faultName) =>
+                                    handleSelectItem(selectItemIds, selectItems, faultName, item)
+                            "
+                        >
+                            {{ $t('def.edit') }}
+                        </ItemSelect>
                     </div>
                     <div class="bom">
                         <div
@@ -372,7 +381,13 @@
                             <div class="bom-item-name">
                                 {{ $i18n.locale === 'zh' ? item.target_name : item.target_name_en }}
                             </div>
-                            <div class="bom-item-num">x{{ item.amount }}</div>
+                            <div class="bom-item-num">
+                                <span class="m-r-30">x{{ item.amount }}</span>
+
+                                <a-button type="link" @click="handleDelete(item.id)">
+                                    <i class="icon i_delete" />{{ $t('def.delete') }}
+                                </a-button>
+                            </div>
                         </div>
                         <a-empty v-else />
                     </div>
@@ -392,7 +407,7 @@ const FLAG_ORDER_TYPE = Core.Const.PURCHASE.FLAG_ORDER_TYPE;
 const PAY_TIME_LIST = Core.Const.DISTRIBUTOR.PAY_TIME_LIST;
 const STATUS = Core.Const.PURCHASE.STATUS;
 const FREIGHT_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_STATUS_MAP;
-
+import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 import { message } from 'ant-design-vue';
 
 import TimeSearch from '@/components/common/TimeSearch.vue';
@@ -401,12 +416,14 @@ export default {
     name: 'PurchaseList',
     components: {
         TimeSearch,
+        ItemSelect,
     },
     props: {},
     data() {
         return {
             visible: false,
             bomModalData: [],
+            singleRecordData: {}, // 单个表格数据
             LOGIN_TYPE,
             SEARCH_TYPE,
             STATUS,
@@ -609,7 +626,8 @@ export default {
         // 打开销售bom弹窗
         openBomModal(record) {
             this.visible = true;
-            this.bomModalData = record.item_list;
+            this.singleRecordData = record;
+            this.bomModalData = this.singleRecordData.item_list;
         },
         getContainer() {
             return this.$refs.container;
@@ -685,16 +703,6 @@ export default {
                     });
                     window.open(routeUrl.href, '_self');
                     break;
-                case 'editBom':
-                    routeUrl = this.$router.resolve({
-                        path: '/item/item-detail',
-                        query: {
-                            id: item.item_id,
-                            tab: 3,
-                        },
-                    });
-                    window.open(routeUrl.href, '_self');
-                    break;
             }
         },
         pageChange(curr) {
@@ -737,7 +745,7 @@ export default {
             }
             this.pageChange(1);
         },
-        getTableData() {
+        getTableData(type = false) {
             // 获取 表格 数据
             this.loading = true;
             Core.Api.Purchase.list({
@@ -750,9 +758,12 @@ export default {
                     this.total = res.count;
                     this.tableData = res.list;
                     this.loading = false;
-                    // this.tableData.forEach(item=>{
-                    //     item['total_price'] = (item['price'] || 0) + (item['freight'] || 0);
-                    // })
+
+                    // 为了让销售bom弹窗刷新修改刷新
+                    if (type) {
+                        this.singleRecordData = this.tableData.find(el => el.id === this.singleRecordData.id);
+                        this.bomModalData = this.singleRecordData.item_list;
+                    }
                 })
                 .catch(err => {
                     console.log('getTableData err:', err);
@@ -914,6 +925,57 @@ export default {
             });
             window.open(exportUrl, '_blank');
             this.exportDisabled = false;
+        },
+
+        // ItemSelect 组件事件
+        handleSelectItem(ids, items, faultName, bomModalItem) {
+            console.log('handleSelectItem ids, items:', ids, items);
+            console.log('bomModalItem:', bomModalItem);
+
+            // 多选操作
+            let params = {
+                item_id: bomModalItem.item_id,
+                target_list: [],
+            };
+
+            ids.forEach(el => {
+                params.target_list.push({
+                    target_id: el,
+                    target_type: Core.Const.ITEM_ACCESSORY.TARGET_TYPE_MAP.ITEM,
+                });
+            });
+
+            console.log('params', params);
+
+            Core.Api.ItemAccessory.save(params)
+                .then(() => {
+                    this.$message.success(this.$t('pop_up.save_success'));
+                    this.getTableData(true);
+                })
+                .catch(err => {
+                    console.log('handleDelete err', err);
+                });
+        },
+
+        // 删除BOM商品
+        handleDelete(id) {
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
+                okType: 'danger',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.ItemAccessory.delete({ id })
+                        .then(() => {
+                            _this.$message.success(_this.$t('pop_up.delete_success'));
+                            _this.getTableData(true);
+                        })
+                        .catch(err => {
+                            console.log('handleDelete err', err);
+                        });
+                },
+            });
         },
     },
 };

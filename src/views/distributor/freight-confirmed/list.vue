@@ -1,9 +1,12 @@
 <template>
-    <div id="freight-confirmed">
+    <div id="final-payment">
         <div class="list-container">
             <!-- 头部 -->
             <div class="title-container">
-                <div class="title-area">{{ $t('customer-care.inquiry_list') }}</div>
+                <!-- 尾款待支付订单表 -->
+                <div class="title-area">
+                    {{ $t('distributor.confirmation_freight') }}
+                </div>
             </div>
             <!-- tabs 切换 -->
             <div class="tabs-container colorful">
@@ -23,7 +26,8 @@
             <div class="search">
                 <SearchAll
                     ref="search_all_ref"
-                    :options="isDistributerAdmin ? searchAdminList : searchDistributerList"
+                    :isShowMore="false"
+                    :options="searchList"
                     @search="onSearch"
                     @reset="onReset"
                 >
@@ -44,40 +48,125 @@
                         <span class="table-title">{{ title }}</span>
                     </template>
                     <template #bodyCell="{ column, text, record }">
-                        <!-- 公共 -->
-                        <template v-if="column.key === 'uid'">
-                            <div>{{ text || '-' }}</div>
+                        <!-- 订单编号 -->
+                        <template v-if="column.key === 'sn'">
+                            <a-tooltip placement="top" :title="text">
+                                <a-button v-if="text" type="link" @click="routerChange('detail', record)">
+                                    {{ text }}
+                                </a-button>
+                                <a-button v-else type="link">-</a-button>
+                            </a-tooltip>
+                        </template>
+                        <!-- 上级订单编号 -->
+                        <template v-if="column.key === 'parent_sn'">
+                            <a-tooltip placement="top" :title="text">
+                                <a-button v-if="text" type="link" @click="routerChange('detail', record)">
+                                    {{ text }}
+                                </a-button>
+                                <a-button v-else type="link">-</a-button>
+                            </a-tooltip>
                         </template>
 
-                        <template v-if="column.key === 'operations'">
-                            <a-button type="link" @click="routerChange('detail', record)">
-                                <MySvgIcon icon-class="common-view" />
-                                <span class="m-l-4">{{ $t('common.detail') }}</span>
-                            </a-button>
-                            <template
-                                v-if="
-                                    !$Util.Common.returnTypeBool(record.status, [
-                                        Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED,
-                                    ])
-                                "
-                            >
-                                <a-button
-                                    v-if="$auth('enquiry-ticket.edit')"
-                                    type="link"
-                                    @click="routerChange('edit', record)"
-                                >
-                                    <MySvgIcon icon-class="common-edit" />
-                                    <span class="m-l-4">{{ $t('common.edit') }}</span>
-                                </a-button>
-                                <a-button
-                                    v-if="$auth('enquiry-ticket.comment')"
-                                    type="link"
-                                    @click="routerChange('msg', record)"
-                                >
-                                    <MySvgIcon icon-class="common-leave" />
-                                    <span class="m-l-4">{{ $t('customer-care.leave_message') }}</span>
+                        <!-- 订单类型 -->
+                        <template v-if="column.key === 'type'">
+                            {{ $Util.purchaseTypeFilter(text, $i18n.locale) }}
+                        </template>
+
+                        <!-- 创建单位 -->
+                        <template v-else-if="column.key === 'item'">
+                            {{ text || '-' }}
+                        </template>
+
+                        <!-- 支付方式 -->
+                        <template v-if="column.key === 'pay_type'">
+                            {{ $Util.purchasePayTypeFilter(text, $i18n.locale) }}
+                        </template>
+
+                        <!-- 总价 -->
+                        <template v-if="column.key === 'total_price'">
+                            <span v-if="text >= 0">{{ $Util.priceUnitFilter(record.currency) }}</span>
+                            <span>
+                                {{ $Util.countFilter(text) }}
+                            </span>
+                        </template>
+
+                        <!-- 运费 -->
+                        <template v-if="column.key === 'freight'">
+                            <template v-if="isDistributerAdmin">
+                                <a-button @click="onModify" type="link">
+                                    <span v-if="text >= 0">
+                                        {{ $Util.priceUnitFilter(record.currency) }}
+                                    </span>
+                                    <span>
+                                        {{ $Util.countFilter(text) }}
+                                    </span>
                                 </a-button>
                             </template>
+                            <template v-else>
+                                <span v-if="text >= 0">
+                                    {{ $Util.priceUnitFilter(record.currency) }}
+                                </span>
+                                <span>
+                                    {{ $Util.countFilter(text) }}
+                                </span>
+                            </template>
+                        </template>
+
+                        <!-- 运费状态 -->
+                        <template v-else-if="column.key === 'freight_status'">
+                            <template v-if="isDistributerAdmin">
+                                <a-button @click="onConfirmFreight" type="link">
+                                    {{ FREIGHT_STATUS_MAP[text]?.t ? $t(`${FREIGHT_STATUS_MAP[text]?.t}`) : '-' }}
+                                </a-button>
+                            </template>
+                            <template v-else>
+                                {{ FREIGHT_STATUS_MAP[text]?.t ? $t(`${FREIGHT_STATUS_MAP[text]?.t}`) : '-' }}
+                            </template>
+                        </template>
+
+                        <!-- 已支付金额 -->
+                        <template v-if="column.key === 'amount_paid'">
+                            <span v-if="text >= 0">{{ $Util.priceUnitFilter(record.currency) }}</span>
+                            <span>
+                                {{ $Util.countFilter(text) }}
+                            </span>
+                        </template>
+
+                        <!-- 时间 -->
+                        <template v-if="column.key === 'time'">
+                            {{ $Util.timeFilter(text) }}
+                        </template>
+
+                        <!-- 订单状态 -->
+                        <template v-if="column.key === 'order_status'">
+                            <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text, 'color')">
+                                {{ $Util.purchaseStatusFilter(text, $i18n.locale) || '-' }}
+                            </div>
+                        </template>
+
+                        <!-- 支付状态 -->
+                        <template v-if="column.key === 'payment_status'">
+                            <div class="status status-bg status-tag" :class="$Util.paymentStatusFilter(text, 'color')">
+                                {{ $Util.paymentStatusFilter(text, $i18n.locale) || '-' }}
+                            </div>
+                        </template>
+
+                        <!-- 操作记录 -->
+                        <template v-if="column.key === 'operation_record'"> 操作记录 </template>
+
+                        <template v-if="column.key === 'operations'">
+                            <a-button
+                                v-if="$Util.Common.returnTypeBool(1, [FREIGHT_STATUS.TO_BE_DETERMINED])"
+                                type="link"
+                                @click="routerChange('confirm_freight', record)"
+                            >
+                                <!-- <MySvgIcon icon-class="common-view" /> -->
+                                <span class="m-l-4">{{ $t('distributor.confirm_freight') }}</span>
+                            </a-button>
+                            <a-button type="link" @click="routerChange('detail', record)">
+                                <!-- <MySvgIcon icon-class="common-view" /> -->
+                                <span class="m-l-4">{{ $t('common.detail') }}</span>
+                            </a-button>
                         </template>
                     </template>
                 </a-table>
@@ -99,6 +188,16 @@
             </div>
         </div>
     </div>
+
+    <!-- 预计船期及运费 -->
+    <ShippingFreight v-model:visible="freightVisible" :title="$t('distributor.expected_shipping_freight')">
+    </ShippingFreight>
+
+    <!-- 确认运费弹窗 -->
+    <ConfirmFreight
+        v-model:visible="confirmFreightVisible"
+        :title="$t('distributor.shipping_freight')"
+    ></ConfirmFreight>
 </template>
 
 <script setup>
@@ -109,8 +208,12 @@ import { useTable } from '@/hooks/useTable';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';
 import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
+import ShippingFreight from '../../purchase/components/ShippingFreightModel.vue';
+import ConfirmFreight from '../../purchase/components/ConfirmFreightModel.vue';
 
-import TimeSearch from '@/components/common/TimeSearch.vue';
+const FREIGHT_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_STATUS_MAP;
+const FREIGHT_STATUS = Core.Const.DISTRIBUTOR.FREIGHT_STATUS;
+
 import { useRouter, useRoute } from 'vue-router';
 
 const { proxy } = getCurrentInstance();
@@ -118,162 +221,78 @@ const router = useRouter();
 const route = useRoute();
 
 const searchForm = ref({
-    status: undefined,
+    sn: undefined, // 订单编号
+    freight_status: undefined, // 运费状态
 });
 const search_all_ref = ref(null);
-
 const isDistributerAdmin = ref(false); // 根据路由判断其是用在分销商(false) 还是平台方(true)
+const freightVisible = ref(false); // 船期及运费model
+const confirmFreightVisible = ref(false); // 船期及运费确认model
+
 const statusData = ref({
-    process_total: 0, //处理中总数
-    resolved_total: 0, //问题解决总数
-    waiting_total: 0, //等待处理总数
-    all_total: 0, //所有数量
+    all_total: 0, // 全部
+    to_be_filled_in: 0, // 待填写
+    to_be_confirmed: 0, // 待确认
+    confirmed: 0, // 已确认
+    rejected: 0, // 已拒绝
 }); // 平台方tab数据
+const distributorList = ref([]);
 
 /* computed start */
-// 筛选条件
-// 分销商查询
-const searchDistributerList = ref([
-    {
-        // 问询单号
-        type: 'input',
-        value: '',
-        searchParmas: 'uid',
-        key: 'customer-care.inquiry_number',
-    },
-    {
-        // 车架号
-        type: 'input',
-        value: '',
-        searchParmas: 'vehicle_uid',
-        key: 'common.vehicle_no',
-    },
-    {
-        // 状态
-        type: 'select',
-        value: undefined,
-        searchParmas: 'status',
-        key: 'common.status',
-        selectMap: (() => {
-            let result = [];
-            for (const key in Core.Const.CUSTOMER_CARE.ORDER_STATUS) {
-                if (key === '-1') {
-                    result.unshift(Core.Const.CUSTOMER_CARE.ORDER_STATUS[key]);
-                } else {
-                    result.push(Core.Const.CUSTOMER_CARE.ORDER_STATUS[key]);
-                }
-            }
-            return result;
-        })(),
-    },
-]);
-// 平台方
-const searchAdminList = ref([
-    {
-        // 国家
-        type: 'input',
-        value: undefined,
-        searchParmas: 'country',
-        key: 'common.country',
-    },
-    {
-        // 车架号
-        type: 'input',
-        value: undefined,
-        searchParmas: 'vehicle_uid',
-        key: 'common.vehicle_no',
-    },
-    {
-        // 零件
-        type: 'input',
-        value: undefined,
-        searchParmas: 'part_name',
-        key: 'customer-care.part',
-    },
-    {
-        // 车型
-        type: 'input',
-        value: undefined,
-        searchParmas: 'category_name',
-        key: 'common.vehicle_model',
-    },
-    {
-        // 问询标签
-        type: 'select',
-        value: undefined,
-        searchParmas: 'purpose',
-        key: 'customer-care.inquiry_label',
-        selectMap: (() => {
-            let result = [];
-            for (const key in Core.Const.CUSTOMER_CARE.SORTING_TYPE) {
-                if (key === '-1') {
-                    result.unshift(Core.Const.CUSTOMER_CARE.SORTING_TYPE[key]);
-                } else {
-                    result.push(Core.Const.CUSTOMER_CARE.SORTING_TYPE[key]);
-                }
-            }
-            return result;
-        })(),
-    },
-    // {
-    //     // 处理进度
-    //     type: "select",
-    //     value: undefined,
-    //     searchParmas: "status",
-    //     key: "customer-care.processing_progress",
-    //     selectMap: (() => {
-    //         let result = [];
-    //         for (const key in Core.Const.CUSTOMER_CARE.ORDER_STATUS) {
-    //             if (key === "-1") {
-    //                 result.unshift(Core.Const.CUSTOMER_CARE.ORDER_STATUS[key]);
-    //             } else {
-    //                 result.push(Core.Const.CUSTOMER_CARE.ORDER_STATUS[key]);
-    //             }
-    //         }
-    //         return result;
-    //     })(),
-    // },
-    {
-        // 故障分类
-        type: 'select',
-        value: undefined,
-        searchParmas: 'fault_type',
-        key: 'customer-care.fault_classification',
-        selectMap: (() => {
-            let result = [];
-            for (const key in Core.Const.CUSTOMER_CARE.FAULT_TYPE) {
-                if (key === '-1') {
-                    result.unshift(Core.Const.CUSTOMER_CARE.FAULT_TYPE[key]);
-                } else {
-                    result.push(Core.Const.CUSTOMER_CARE.FAULT_TYPE[key]);
-                }
-            }
-            return result;
-        })(),
-    },
-    {
-        // 类型
-        type: 'select',
-        value: undefined,
-        searchParmas: 'type',
-        key: 'common.type',
-        selectMap: (() => {
-            let result = [];
-            for (const key in Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE) {
-                result.push(Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE[key]);
-            }
-            return result;
-        })(),
-    },
-    {
-        // 归属客服
-        type: 'input',
-        value: undefined,
-        searchParmas: 'process_user_name',
-        key: 'customer-care.belonging_customer_service',
-    },
-]);
+const searchList = computed(() => {
+    let result = [];
 
+    if (isDistributerAdmin.value) {
+        result = [
+            {
+                // 运费状态
+                type: 'select',
+                value: '',
+                searchParmas: 'freight_status',
+                key: 'p.freight_status',
+                selectMap: (() => {
+                    let result = [];
+                    for (const key in FREIGHT_STATUS_MAP) {
+                        result.push({
+                            t: FREIGHT_STATUS_MAP[key].t,
+                            value: FREIGHT_STATUS_MAP[key].key,
+                        });
+                    }
+                    return result;
+                })(),
+            },
+        ];
+    } else {
+        result = [
+            {
+                // 订单编号
+                type: 'input',
+                value: '',
+                searchParmas: 'sn',
+                key: 'p.order_number',
+            },
+            {
+                // 运费状态
+                type: 'select',
+                value: '',
+                searchParmas: 'freight_status',
+                key: 'p.freight_status',
+                selectMap: (() => {
+                    let result = [];
+                    for (const key in FREIGHT_STATUS_MAP) {
+                        result.push({
+                            t: FREIGHT_STATUS_MAP[key].t,
+                            value: FREIGHT_STATUS_MAP[key].key,
+                        });
+                    }
+                    return result;
+                })(),
+            },
+        ];
+    }
+
+    return result;
+});
 // tabs 的数据
 const statusList = computed(() => {
     let result = [
@@ -281,81 +300,74 @@ const statusList = computed(() => {
             t: 'common.all',
             count: statusData.value.all_total,
             color: 'primary',
-            key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.ALL,
+            key: Core.Const.DISTRIBUTOR.FREIGHT_CONFIRMED.ALL,
         },
         {
-            t: 'customer-care.waiting_for_processing',
-            count: statusData.value.waiting_total,
+            t: 'distributor.to_be_determined',
+            count: statusData.value.to_be_confirmed,
             color: 'yellow',
-            key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.EQUALTREATMENT,
+            key: Core.Const.DISTRIBUTOR.FREIGHT_CONFIRMED.TO_BE_CONFIRMED,
         },
         {
-            t: 'customer-care.processing',
-            count: statusData.value.process_total,
+            t: 'distributor.determined',
+            count: statusData.value.confirmed,
             color: 'yellow',
-            key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.INPROCESS,
+            key: Core.Const.DISTRIBUTOR.FREIGHT_CONFIRMED.CONFIRMED,
         },
         {
-            t: 'customer-care.problem_solving',
-            count: statusData.value.resolved_total,
+            t: 'distributor.rejected',
+            count: statusData.value.rejected,
             color: 'yellow',
-            key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED,
+            key: Core.Const.DISTRIBUTOR.FREIGHT_CONFIRMED.REJECTED,
         },
     ];
+
+    if (isDistributerAdmin.value) {
+        result.splice(1, 0, {
+            t: 'distributor.to_be_filled_in',
+            count: statusData.value.to_be_filled_in,
+            color: 'yellow',
+            key: Core.Const.DISTRIBUTOR.FREIGHT_CONFIRMED.TO_BE_FILLED_IN,
+        });
+    }
 
     return result;
 });
 
 const tableColumns = computed(() => {
     let columns = [];
+    columns = [
+        { title: proxy.$t('p.order_number'), dataIndex: 'sn', key: 'sn' }, // 订单编号
+        { title: proxy.$t('distributor.superior_order_number'), dataIndex: 'parent_sn', key: 'parent_sn' }, // 上级订单号
+        { title: proxy.$t('p.order_type'), dataIndex: 'type', key: 'type' }, // 订单类型
+        { title: proxy.$t('distributor.institution'), dataIndex: ['create_org', 'name'], key: 'item' }, // 创建单位
+        { title: proxy.$t('p.payment_method'), dataIndex: 'pay_type', key: 'pay_type' }, // 支付方式
+        { title: proxy.$t('p.estimated_shipping_data'), dataIndex: 'uid', key: 'uid' }, // 预计船期
+        { title: proxy.$t('p.freight'), dataIndex: 'freight', key: 'freight' }, // 运费
+        { title: proxy.$t('p.freight_status'), dataIndex: 'freight_status', key: 'freight_status' }, // 运费状态
+        { title: proxy.$t('p.order_time'), dataIndex: 'create_time', key: 'time' }, // 下单时间
+        { title: proxy.$t('p.total_price'), dataIndex: 'total_price', key: 'total_price' }, // 总价
+        { title: proxy.$t('p.amount_paid'), dataIndex: 'payment', key: 'amount_paid' }, // 已支付金额
+        { title: proxy.$t('p.time_payment'), dataIndex: 'pay_time', key: 'time' }, // 支付时间
+        { title: proxy.$t('p.order_status'), dataIndex: 'status', key: 'order_status' }, // 订单状态
+        { title: proxy.$t('p.payment_status'), dataIndex: 'payment_status', key: 'payment_status' }, // 支付状态
+        { title: proxy.$t('p.record'), dataIndex: '', key: 'operation_record' }, // 操作记录
+    ];
+
     if (!isDistributerAdmin.value) {
-        columns = [
-            { title: proxy.$t('customer-care.inquiry_number'), dataIndex: 'uid', key: 'uid' }, // 问询单号
-            { title: proxy.$t('common.vehicle_no'), dataIndex: 'vehicle_list', key: 'vehicle_list', width: 150 }, // 车架号
-            { title: proxy.$t('customer-care.feedback_type'), dataIndex: 'type', key: 'type' }, // 反馈类型
-            { title: proxy.$t('common.vehicle_model'), dataIndex: 'category', key: 'category' }, // 车型
-            { title: proxy.$t('common.status'), dataIndex: 'status', key: 'status', width: 70 }, // 状态
-            { title: proxy.$t('common.create_time'), dataIndex: 'create_time', key: 'time' }, // 创建时间
-            {
-                title: proxy.$t('common.operations'),
-                dataIndex: 'operations',
-                key: 'operations',
-                fixed: 'right',
-                width: 200,
-            }, // 操作
-        ];
-    } else if (isDistributerAdmin.value) {
-        columns = [
-            { title: proxy.$t('customer-care.Construction_site_number'), dataIndex: 'uid', key: 'uid' }, // 工单编号
-            { title: proxy.$t('customer-care.classify'), dataIndex: 'purpose', key: 'purpose' }, // 归类
-            { title: proxy.$t('common.type'), dataIndex: 'type', key: 'type' }, // 类型
-            { title: proxy.$t('customer-care.submitter'), dataIndex: 'submit_user_name', key: 'submit_user_name' }, // 提交人
-            { title: proxy.$t('customer-care.part'), dataIndex: 'part_list', key: 'part_list', width: 150 }, // 零件
-            { title: proxy.$t('customer-care.processing_progress'), dataIndex: 'status', key: 'status', width: 70 }, // 处理进度
-            { title: proxy.$t('common.vehicle_model'), dataIndex: 'category', key: 'category' }, // 车型
-            { title: proxy.$t('customer-care.model_number_mileage'), dataIndex: 'mileage', key: 'mileage', width: 400 }, // 车架号、公里数
-            {
-                title: proxy.$t('customer-care.fault_classification'),
-                dataIndex: 'fault_type',
-                key: 'fault_type',
-                width: 150,
-            }, // 故障分类
-            {
-                title: proxy.$t('customer-care.belonging_customer_service'),
-                dataIndex: 'process_user_name',
-                key: 'process_user_name',
-            }, // 归属客服
-            { title: proxy.$t('common.create_time'), dataIndex: 'create_time', key: 'time' }, // 创建时间
-            { title: proxy.$t('customer-care.colse_time'), dataIndex: 'process_end_time', key: 'time' }, // 关闭时间
-            { title: proxy.$t('customer-care.last_modification_time'), dataIndex: 'update_time', key: 'time' }, // 最近一次修改时间
-            { title: proxy.$t('common.operations'), dataIndex: 'operations', key: 'operations', fixed: 'right' }, // 操作
-        ];
+        columns.push({ title: proxy.$t('common.operations'), key: 'operations', fixed: 'right' });
     }
     return columns;
 });
 /* computed end */
 
 /* fetch start*/
+// 获得所有分销商
+const getDistributorListAll = () => {
+    Core.Api.Distributor.listAll().then(res => {
+        distributorList.value = res.list;
+    });
+};
 // 获取状态数据
 const getStatusFetch = (params = {}) => {
     const obj = {
@@ -366,7 +378,6 @@ const getStatusFetch = (params = {}) => {
         .statusList(obj)
         .then(res => {
             console.log('获取状态数据 res', res);
-            statusData.value = res;
         })
         .catch(err => {
             console.log('获取状态数据 err', err);
@@ -418,11 +429,17 @@ const routerChange = (type, record) => {
     if (!isDistributerAdmin.value) {
         // 分销商
         switch (type) {
-            case 'add': // 添加
-                // routeUrl = router.resolve({
-                //     path: '/customer-care/edit',
-                // });
-                // window.open(routeUrl.href, '_blank');
+            case 'confirm_freight': // 确认运费
+                console.log('确认运费');
+                onConfirmFreight();
+                break;
+            case 'detail':
+                routeUrl = router.resolve({
+                    path: '/purchase/purchase-order-detail',
+                    query: { id: record.id },
+                });
+
+                window.open(routeUrl.href, '_self');
                 break;
         }
     } else {
@@ -440,35 +457,28 @@ const onReset = () => {
     refreshTable();
 };
 
+// 船期及运费(修改)
+const onModify = () => {
+    freightVisible.value = true;
+};
+// 确认运费
+const onConfirmFreight = () => {
+    confirmFreightVisible.value = true;
+};
+
 /* methods end*/
 
-watch(
-    () => router.currentRoute.value,
-    (newValue, oldValue) => {
-        console.log('newValue', newValue);
-        if (newValue.matched[0].path === '/customer-care') {
-            // 分销商的客户关怀
-            isDistributerAdmin.value = false;
-        } else if (newValue.matched[0].path === '/inquiry-management') {
-            // 平台方
-            isDistributerAdmin.value = true;
-            getStatusFetch();
-        }
-    },
-    {
-        deep: true,
-        immediate: true,
-    },
-);
-
 onMounted(() => {
+    isDistributerAdmin.value = Core.Util.Common.returnTypeBool(Core.Data.getLoginType(), [Core.Const.LOGIN.TYPE.ADMIN]);
+    console.log('isDistributerAdmin.value', isDistributerAdmin.value);
+
     searchParam.value.status = -1;
     search();
 });
 </script>
 
 <style lang="less" scoped>
-#freight-confirmed {
+#final-payment {
     .table-title {
         color: #1d2129;
         font-size: 14px;

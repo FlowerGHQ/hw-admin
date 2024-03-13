@@ -1,7 +1,7 @@
 <template>
     <div class="recharge-record list-container">
         <div class="title-container">
-            <div class="title-area">{{ $t('distributor-detail.recharge_record') }}</div>
+            <div class="title-area">{{ /*充值记录*/ $t('distributor-detail.recharge_record') }}</div>
         </div>
         <div class="search-container">
             <SearchAll :options="searchList" @search="onSearch" @reset="onReset" :isShowMore="false" />
@@ -16,11 +16,38 @@
                 :pagination="false"
             >
                 <template #bodyCell="{ record, column }">
+                    <!-- recharge_uid -->
+                    <template v-if="column.key === 'recharge_uid'">{{
+                        record.content_json.recharge_uid || '-'
+                    }}</template>
+                    <!-- 充值金额 -->
+                    <template v-if="column.key === 'recharge_amount'">
+                        <div class="total_amount">
+                            <span class="label">整车余额账户</span>
+                            <span class="value">
+                                {{ route.query.currency }}
+                                {{ Core.Util.countFilter(record.content_json.vehicle_balance) || 0 }}</span
+                            >
+                        </div>
+                        <div class="part_balance">
+                            <span class="label">配件余额账户</span>
+                            <span class="value">
+                                {{ route.query.currency }}
+                                {{ Core.Util.countFilter(record.content_json.part_balance) || 0 }}</span
+                            >
+                        </div>
+                    </template>
+                    <!-- arrival_progress -->
+                    <template v-if="column.key === 'arrival_progress'">{{ statusMap[record.status] || '-' }}</template>
+                    <!-- 备注 -->
+                    <template v-if="column.key === 'remark'">{{
+                        record.content_json.payment_information || '-'
+                    }}</template>
                     <!-- 操作 -->
                     <template v-if="column.key === 'operation'">
-                        <a-button type="link" @click="handleDetail(record)">{{
-                            $t('distributor-detail.check_detail')
-                        }}</a-button>
+                        <a-button type="link" @click="routerChange('detail', record)">
+                            <i class="icon i_detail" /> {{ $t('def.detail') }}
+                        </a-button>
                     </template>
                 </template>
             </a-table>
@@ -49,56 +76,55 @@ import { useI18n } from 'vue-i18n';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import Core from '@/core';
 import { useTable } from '@/hooks/useTable';
+import { useRoute } from 'vue-router';
+const route = useRoute();
 const $t = useI18n().t;
-
 const tableColumns = computed(() => {
     let columns = [
         // 充值单号
         {
             title: $t('distributor-detail.recharge_order_number'),
-            dataIndex: 'recharge_order_number',
-            key: 'recharge_order_number',
+            dataIndex: 'recharge_uid',
+            key: 'recharge_uid',
         },
-        // 充值u账户
-        { title: $t('distributor-detail.recharge_account'), dataIndex: 'recharge_account', key: 'recharge_account' },
         // 充值金额
-        { title: $t('distributor-detail.recharge_amount'), dataIndex: 'recharge_amount', key: 'recharge_amount' },
+        {
+            title: `${$t('distributor-detail.recharge_account')}、${$t('distributor-detail.recharge_amount')}`,
+            dataIndex: 'recharge_amount',
+            key: 'recharge_amount',
+        },
         // 到账进度
         { title: $t('distributor-detail.arrival_progress'), dataIndex: 'arrival_progress', key: 'arrival_progress' },
         // 备注
         { title: $t('distributor-detail.remark'), dataIndex: 'remark', key: 'remark' },
         // 操作
-        { title: $t('distributor-detail.operation'), dataIndex: 'operation', key: 'operation' },
+        {
+            title: $t('distributor-detail.operation'),
+            dataIndex: 'operation',
+            key: 'operation',
+            width: 100,
+            fixed: 'right',
+        },
     ];
     return columns;
 });
-// 模拟request
-const request = async params => {
-    return {
-        list: [
-            {
-                id: 1,
-                recharge_order_number: '202108010001',
-                recharge_account: '余额',
-                recharge_amount: 100,
-                arrival_progress: '已到账',
-                remark: '无',
-            },
-            {
-                id: 2,
-                recharge_order_number: '202108010002',
-                recharge_account: '余额',
-                recharge_amount: 200,
-                arrival_progress: '已到账',
-                remark: '无',
-            },
-        ],
-        count: 2,
-    };
-};
+const statusMap = ref({
+    //  //1.待审核(一审)；2.审核通过；3.审核不通过(一审) 4 等待二审 5 二审不通过
+    1: $t('distributor-detail.pending_audit'),
+    2: $t('distributor-detail.audit_pass'),
+    3: $t('distributor-detail.audit_not_pass'),
+    4: $t('distributor-detail.waiting_for_review'),
+    5: $t('distributor-detail.second_review_not_passed'),
+});
 
+// 模拟request
+const request = Core.Api.Distributor.rechargeList;
+const initParam = ref({
+    target_id: route.query.org_id,
+});
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request,
+    initParam: initParam.value,
 });
 const searchList = ref([
     {
@@ -111,32 +137,36 @@ const searchList = ref([
     },
 ]);
 
-const typeMap = ref([
-    {
-        id: 1,
-        title: $t('distributor-detail.all'),
-        value: 1,
-    },
-    {
-        id: 2,
-        title: $t('distributor-detail.account_recharge'),
-        value: 2,
-    },
-    {
-        id: 3,
-        title: $t('distributor-detail.account_expenditure'),
-        value: 3,
-    },
-]);
-const activeTypeValue = ref(1);
-
 // methods
 const onSearch = params => {
     console.log(params);
+    searchParam.value = params;
+    search();
 };
 const onReset = () => {
     console.log('reset');
+    refreshTable();
+};
+// 查看详情
+const routerChange = (type, record) => {
+    console.log(type, record);
 };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+:deep(.ant-table-cell) {
+    .total_amount {
+        margin-bottom: 8px;
+    }
+    .total_amount,
+    .part_balance {
+        .label {
+            color: #666;
+            margin-right: 8px;
+        }
+        .value {
+            color: #181818;
+        }
+    }
+}
+</style>

@@ -23,7 +23,7 @@ export default {
         // 零部件——warningtips ： 该功能将于近期开发
         parts_warning_tips: '用于支付零配件订单，最多可支付订单金额的 50% ；工单赔付金额会放入信用余额中。',
         // 售后备件信用余额
-        credit_balance: '售后备件信用余额',
+        credit_balance_re: '售后备件信用余额',
         // 时间
         time: '时间',
         // 类型
@@ -88,6 +88,41 @@ export default {
         remark: '备注',
         // 查看详情
         check_detail: '查看详情',
+        // 售后备件信用余额：可抵扣订单金额
+        payment_tips: '售后备件信用余额：可抵扣订单金额',
+        // 充值详情
+        recharge_detail: '充值详情',
+        recharge_info: '充值信息',
+        // 本次需转账金额：
+        current_transfer_amount: '本次需转账金额：',
+        // 整车可用余额：
+        vehicle_available_balance: '整车可用余额：',
+        // 零部件可用余额账户：
+        parts_available_balance: '零部件可用余额：',
+        // 付款凭证
+        payment_voucher: '付款凭证',
+        // modify_voucher\
+        modify_voucher: '修改凭证',
+        save_modify: '保存修改',
+        payment_account_number: '支付账号',
+        actual_amount_paid: '实付金额',
+        //1.待审核(一审)；2.审核通过；3.审核不通过(一审) 4 等待二审 5 二审不通过
+        // 待审核(一审)
+        pending_audit: '待审核(一审)',
+        // 审核通过
+        audit_pass: '审核通过',
+        // 审核不通过(一审)
+        audit_not_pass: '审核不通过(一审)',
+        // 等待二审
+        waiting_for_review: '等待二审',
+        // 二审不通过
+        second_review_not_passed: '二审不通过',
+        cancel_order: '取消订单',
+        cancel_order_tips1: '取消订单需要业务人员审核，是否提交取消订单审核',
+        cancel_order_tips2: '为促使审核人员同意您的申请，请输入取消原因',
+        under_review: '审核中',
+        cancel_record: '取消记录',
+        application_time: '申请时间',
     },
     en: {
         vehicle_account: 'Vehicle Account',
@@ -102,7 +137,7 @@ export default {
         parts_tips: 'Used for parts-related orders, can be recharged.',
         parts_warning_tips:
             'Used to pay for spare parts orders, up to 50% of the order amount; the compensation amount for work orders will be placed in the credit balance.',
-        credit_balance: 'After-sales spare parts credit balance',
+        credit_balance_re: 'After-sales spare parts credit balance',
         time: 'Time',
         type: 'Type',
         recharge_account: 'Recharge Account',
@@ -147,5 +182,29 @@ export default {
         remark: 'Remark',
         // 查看详情
         check_detail: 'Check Detail',
+        payment_tips: 'After-sales spare parts credit balance: can offset the order amount',
+        recharge_detail: 'Recharge Detail',
+        recharge_info: 'Recharge Information',
+        current_transfer_amount: 'Current Transfer Amount:',
+        vehicle_available_balance: 'Vehicle Available Balance:',
+        parts_available_balance: 'Parts Available Balance:',
+        payment_voucher: 'Payment Voucher',
+        modify_voucher: 'Modify Voucher',
+        save_modify: 'Save Modify',
+        payment_account_number: 'Payment account number',
+        actual_amount_paid: 'Actual amount paid',
+        pending_audit: 'Pending Audit',
+        audit_pass: 'Audit Pass',
+        audit_not_pass: 'Audit Not Pass',
+        waiting_for_review: 'Waiting For Review',
+        second_review_not_passed: 'Second Review Not Passed',
+        cancel_order: 'Cancel Order',
+        cancel_order_tips1:
+            'The cancellation of the order needs to be reviewed by the business staff, and whether to submit the cancellation order for review',
+        cancel_order_tips2:
+            'In order to urge the auditor to agree to your application, please enter the reason for cancellation',
+        under_review: 'Under Review',
+        cancel_record: 'Cancel Record',
+        application_time: 'Application Time',
     },
 };

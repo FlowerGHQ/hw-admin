@@ -18,7 +18,7 @@
                                 {{ $t(/*本次充值总金额*/'payment-management.total_amount') }}
                             </div>
                             <div class="info-value flex">
-                                {{ detail.total_amount || '-' }}{{ currencyValue }}
+                                {{ currencyValue }}{{ detail.total_amount || '-' }}
                             </div>    
                         </div>
                         <div class="info-block">
@@ -26,7 +26,7 @@
                                 {{ $t(/*整车余额充值金额*/'payment-management.vehicle_amount') }}
                             </div>
                             <div class="info-value flex">
-                                {{ detail.vehicle_amount || '-' }}{{ currencyValue }}
+                                {{ currencyValue }}{{ detail.vehicle_amount || '-' }}
                             </div>    
                         </div>
                         <div class="info-block">
@@ -34,7 +34,7 @@
                                 {{ $t(/*配件余额充值金额*/'payment-management.module_amount') }}
                             </div>
                             <div class="info-value flex">
-                                {{ detail.module_amount || '-' }}{{ currencyValue }}
+                                {{ currencyValue }}{{ detail.module_amount || '-' }}
                             </div>    
                         </div>
                     </div>
@@ -142,8 +142,8 @@ const currencyValue = computed(() => {
 const CONST = Core.Const.AUDIT_MANAGEMENT
 const OSS_URL = 'https://horwin-app.oss-cn-hangzhou.aliyuncs.com'
 const approveImg = `${OSS_URL}/png/323d149575aa263510339aeb319f6739b85a35e03788ca30a6ea119b004e7d46.png`
-const pendingImg = `${OSS_URL}/png/bbd9f5596c19a20b7542f89c78b2070a416693a5bb09141581137622f2654d56.png`
-const rejectImg = `${OSS_URL}/png/cb2e66d9a70fe035f2616d5d8710b05a8ab0825bff3a8776d57b4e6307ddf932.png`
+const pendingImg = `${OSS_URL}/png/c82cb239af7563f5062ffbb4bd199d0512b15c062a97323a34113a198b447853.png`
+const rejectImg = `${OSS_URL}/png/92c9d1c2acbce09186c357d0e7cc7f16304ee584eeb69b7b639aa15c793b9104.png`
 const modalShow = ref(false)
 const modalTitle = ref('payment-management.sure_fail')
 const modalText = ref($t('payment-management.sure_tip'))
@@ -153,7 +153,7 @@ onMounted(() => {
 });
 /* Fetch start*/
 const handleAuditService = (params) => {
-    Core.Api.xxx.audit({
+    Core.Api.RechargeAudit.audit({
         ...params
     }).then(res => {
         console.log('handleAuditService res', res);
@@ -164,7 +164,7 @@ const handleAuditService = (params) => {
     })
 }
 const getDetailService = (id) => {
-    Core.Api.xxx.detail({
+    Core.Api.RechargeAudit.detail({
         id: id   
     }).then(res => {
         console.log('getDetailService res', res);
@@ -200,11 +200,11 @@ const radioGroupChange = (e) => {
     if(e.target.value === 1) {
         modalTitle.value = 'payment-management.sure_success'
         modalText.value = proxy.$t('payment-management.sure_approve_tip')
-        submitText.value = proxy.$t('payment-management.confirm_reject')
+        submitText.value = proxy.$t('payment-management.confirm_through')
     } else {
         modalTitle.value = 'payment-management.sure_fail'
         modalText.value = proxy.$t('payment-management.sure_tip')
-        submitText.value = proxy.$t('payment-management.confirm_through')
+        submitText.value = proxy.$t('payment-management.confirm_reject')
     }
 }
 const handleModalSubmit = () => {
@@ -316,9 +316,9 @@ const handleModalSubmit = () => {
                     height: 18px;
                     margin-right: 4px;
                 }
-                &.blue {
-                    background: rgba(0, 97, 255, 0.05);
-                    color: #0061FF;
+                &.yellow {
+                    background: #FEF7E7;
+                    color: #FAAD14;
                 }
                 &.green {
                     background: rgba(38, 171, 84, 0.05);

@@ -43,9 +43,9 @@ const DISTRIBUTOR = {
     },
     // 运费状态
     FREIGHT_STATUS: { 
-        to_be_determined: 1, // 待确定
-        determined: 2, // 已确定
-        rejected: 3, // 已拒绝
+        TO_BE_DETERMINED: 1, // 待确定
+        DETERMINED: 2, // 已确定
+        REJECTED: 3, // 已拒绝
     },
     FREIGHT_STATUS_MAP: {
         1: { key: 1, t: "distributor.to_be_determined"}, // 待确定
@@ -53,12 +53,12 @@ const DISTRIBUTOR = {
         3: { key: 3, t: "distributor.rejected"}, // 已拒绝
     },
     AUDIT_RESULT: {
-        no: 0, // 不通过
-        yes: 1, // 通过
+        REFUSE: 0, // 不通过
+        CONFIRM: 1, // 确认
     },
     AUDIT_RESULT_MAP_ARR: [
-       { key: 1, t: 'common.adopt' }, // 不通过
-       { key: 0, t: 'common.not_passed' }, // 通过
+        { key: 1, t: 'common.confirm' }, // 确认 
+        { key: 0, t: 'common.refuse' }, // 拒绝
     ],
     // 取消订单申请表 下的状态
     CANCELLATION_ORDER_TAB: {
@@ -72,6 +72,14 @@ const DISTRIBUTOR = {
         ALL: -1,
         WITHIN_WEEK: 1, // 一周内
         DELAY: 2, // 延期
+    },
+    // 运费待确认订单表
+    FREIGHT_CONFIRMED: {
+        ALL: -1,
+        TO_BE_FILLED_IN: 0,
+        TO_BE_CONFIRMED: 1,
+        CONFIRMED: 3,
+        REJECTED: 2,
     }
 };
 

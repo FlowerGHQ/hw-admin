@@ -546,7 +546,6 @@ export default {
         // 判断顶部的 销售/售后/生产/CRM/供应链 路口显示(根据底下是否有路由)
         returnAdminFilter(tabPosition, data = SIDER.ADMIN) {
             let result = undefined;
-
             result = data.find(el => {
                 if (el.type?.includes(tabPosition)) {
                     if (el.meta?.auth) {

@@ -4,12 +4,6 @@
         <div class="list-container">
             <div class="title-container">
                 <div class="title-area" style="font-weight: 600">{{ $t('p.details') }}</div>
-                <!-- <div class="center-info">
-                    <span class="header-info">{{ $t('p.order_number') }}：{{ detail.sn || '-' }}</span>
-                    <span class="header-info">{{ $t('p.order_time') }}：{{ $Util.timeFilter(detail.create_time) || '-'
-                    }}</span>
-                    <span class="header-info">{{ $t('p.person') }}：{{ detail.user_name || '-' }}</span>
-                </div> -->
                 <div
                     class="btns-area"
                     v-if="
@@ -30,9 +24,6 @@
                                         <div @click="handleExportIn">
                                             {{ $t('p.export_purchase') }}
                                         </div>
-                                        <!-- <a-button @click="handleExportIn"><i class="icon i_download" />
-                                            {{ $t('p.export_purchase') }}
-                                        </a-button> -->
                                     </a-menu-item>
                                     <a-menu-item key="1">
                                         <!-- 修改PI -->
@@ -66,10 +57,6 @@
                                         <div v-if="$auth('ADMIN')" @click="handleExport">
                                             {{ $t('def.export_as_supplier_report') }}
                                         </div>
-                                        <!-- <a-button v-if="$auth('ADMIN')" type="primary" @click="handleExport">
-                                            <i class="icon i_download" />
-                                            {{ $t('def.export_as_supplier_report') }}
-                                        </a-button> -->
                                     </a-menu-item>
                                 </template>
                             </a-menu>
@@ -116,21 +103,50 @@
                             {{ $t('p.give_order') }}
                         </a-button>
                     </template>
+                    <!-- 平台方(待审核)可看 | 分销(任何状态)不可见 | 售前订单,售后订单显示  -->
+                    <a-button
+                        v-if="
+                            $Util.Common.returnTypeBool(loginType, [USER_TYPE.ADMIN]) &&
+                            $Util.Common.returnTypeBool(detail.type, [
+                                FLAG_ORDER_TYPE.PRE_SALES,
+                                FLAG_ORDER_TYPE.AFTER_SALES,
+                            ]) &&
+                            $Util.Common.returnTypeBool(detail.status, [STATUS.REVISE_AUDIT])
+                        "
+                        type="primary"
+                        ghost
+                        @click="itemEditShow = true"
+                    >
+                        {{ $t('p.change_item') }}
+                    </a-button>
+                    <!-- 取消 仅分销商(可见) | 混合订单、赠品单无取消按钮 | 订单状态(待审核 二次确认框 非审核状态 填写原因弹窗) | 取消订单(审核中弹出记录) -->
+                    <a-button
+                        v-if="
+                            $Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) &&
+                            !$Util.Common.returnTypeBool(detail.type, [
+                                FLAG_ORDER_TYPE.Mix_SALES,
+                                FLAG_ORDER_TYPE.Gift_SALES,
+                            ])
+                        "
+                        type="primary"
+                        @click="
+                            $Util.Common.returnTypeBool(detail.status, [STATUS.REVISE_AUDIT])
+                                ? handleCancel()
+                                : onCancelReason()
+                        "
+                    >
+                        <i class="icon i_close_c" />{{ $t('def.cancel') }}
+                        <!-- <span>({{ $t('distributor-detail.under_review') }})</span> -->
+                    </a-button>
+                    <!-- 取消记录按钮 仅分销商(可见) -->
+                    <a-button
+                        v-if="$Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) && true"
+                        type="primary"
+                        @click="onCancelRecord"
+                    >
+                        {{ $t('distributor-detail.cancel_record') }}
+                    </a-button>
                     <template v-if="authOrg(detail.org_id, detail.org_type) && detail.status !== STATUS.REVISE_AUDIT">
-                        <!-- 更换商品 (1.赠送订单(type = 40)不会显示按钮)-->
-                        <a-button
-                            v-if="
-                                detail.type !== FLAG_ORDER_TYPE.Gift_SALES &&
-                                beforeDeliver &&
-                                !itemEditShow &&
-                                $auth('purchase-order.save')
-                            "
-                            type="primary"
-                            ghost
-                            @click="itemEditShow = true"
-                        >
-                            {{ $t('p.change_item') }}
-                        </a-button>
                         <!-- 付款 -->
                         <a-button
                             v-if="
@@ -147,17 +163,6 @@
                             @click="handleModalShow('payment')"
                         >
                             <i class="icon i_received" />{{ $t('p.payment') }}
-                        </a-button>
-                        <!-- 取消 -->
-                        <a-button
-                            v-if="
-                                detail.status === STATUS.WAIT_PAY ||
-                                (detail.payment_status !== PAYMENT_STATUS.WAIT_PAY && detail.WAIT_DELIVER)
-                            "
-                            type="primary"
-                            @click="handleCancel()"
-                        >
-                            <i class="icon i_close_c" />{{ $t('def.cancel') }}
                         </a-button>
                         <!-- 申请售后 -->
                         <a-button
@@ -541,7 +546,7 @@
 
         <!-- 船期及运费 -->
         <div class="list-container3">
-            <div class="title-container">
+            <div class="title-container d-f-j">
                 <div class="title-area" style="font-weight: 600">{{ $t('distributor.shipping_freight') }}</div>
                 <div class="btn-area">
                     <a-button class="freight_status_style">
@@ -551,39 +556,39 @@
             </div>
             <a-row>
                 <a-col :xs="24" :sm="24" :lg="12" :xl="12" class="info-block">
-                    <!-- 预计船期 -->
+                    <!-- 预计船期 仅平台方 &  运费状态 待确定、已拒绝状态支持(可修改) -->
                     <div class="info-item">
                         <div class="key">{{ $t('p.estimated_shipping_data') }}:</div>
                         <div class="value d-f-a">
-                            <span>{{ detail.sn || '-' }}</span>
                             <a-button
                                 v-if="
                                     user_type &&
                                     $Util.Common.returnTypeBool(1, [
-                                        FREIGHT_STATUS.to_be_determined,
-                                        FREIGHT_STATUS.rejected,
+                                        FREIGHT_STATUS.TO_BE_DETERMINED,
+                                        FREIGHT_STATUS.REJECTED,
                                     ])
                                 "
                                 class="m-l-8"
                                 type="link"
                                 @click="onModify"
-                                >{{ $t('common.modify') }}</a-button
                             >
+                                {{ detail.sn || '-' }}
+                            </a-button>
+                            <span v-else>{{ detail.sn || '-' }}</span>
                         </div>
                     </div>
                 </a-col>
                 <a-col :xs="24" :sm="24" :lg="12" :xl="12" class="info-block">
-                    <!-- 运费 -->
+                    <!-- 运费 仅平台方 &  运费状态 待确定、已拒绝状态支持(可修改)-->
                     <div class="info-item">
                         <div class="key">{{ $t('p.freight') }}:</div>
                         <div class="value d-f-a">
-                            <span>{{ detail.sn || '-' }}</span>
                             <a-button
                                 v-if="
                                     user_type &&
                                     $Util.Common.returnTypeBool(detail.freight_status, [
-                                        FREIGHT_STATUS.to_be_determined,
-                                        FREIGHT_STATUS.rejected,
+                                        FREIGHT_STATUS.TO_BE_DETERMINED,
+                                        FREIGHT_STATUS.REJECTED,
                                     ])
                                 "
                                 class="m-l-8"
@@ -591,11 +596,19 @@
                                 @click="onModify"
                                 >{{ $t('common.modify') }}</a-button
                             >
+                            <span v-else>{{ detail.sn || '-' }}</span>
                         </div>
                     </div>
                 </a-col>
             </a-row>
-            <div v-if="$Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR])" class="all-btn">
+            <!-- 分销商显示 分销商 & 待确定 可见-->
+            <div
+                v-if="
+                    $Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) &&
+                    $Util.Common.returnTypeBool(detail.freight_status, [FREIGHT_STATUS.TO_BE_DETERMINED])
+                "
+                class="all-btn"
+            >
                 <a-button type="primary" @click="onConfirmFreight">{{ $t('distributor.confirm_freight') }}</a-button>
             </div>
         </div>
@@ -616,13 +629,7 @@
             <div class="container-body">
                 <!-- 付款记录-->
                 <template v-if="activeValue == 'payment_detail'">
-                    <paymentList
-                        :target_id="id"
-                        :order_detail="detail"
-                        :sn="detail.sn"
-                        @submit="getList"
-                        ref="payment"
-                    />
+                    <paymentList :target_id="id" :order_detail="detail" :sn="detail.sn" />
                 </template>
                 <!-- displayIn 这个变量是为了区分是收货记录和发货记录 因为现在收货记录和发货记录展示的信息基本相同 但是收货记录不需要展示收货明细 -->
                 <!-- 发货记录 -->
@@ -859,7 +866,37 @@
         </ShippingFreight>
 
         <!-- 确认运费弹窗 -->
-        <ConfirmFreight v-model:visible="confirmFreightVisible" :title="$t('distributor.expected_shipping_freight')"></ConfirmFreight>
+        <ConfirmFreight
+            v-model:visible="confirmFreightVisible"
+            :title="$t('distributor.shipping_freight')"
+        ></ConfirmFreight>
+
+        <!-- 取消二次弹窗操作记录查看 -->
+        <CancelOperation
+            v-model:visible="operationVisible"
+            :title="$t('distributor-detail.cancel_record')"
+        ></CancelOperation>
+
+        <!-- 取消二次弹窗填写原因 -->
+        <CheckModal :visible="cancelVisible" :title="$t('distributor-detail.cancel_order')">
+            <template #content>
+                <div class="content">
+                    <div class="content-text m-b-10">{{ $t('distributor-detail.cancel_order_tips1') }}</div>
+                    <a-textarea
+                        v-model:value="cancelParams.remark"
+                        :placeholder="$t('distributor-detail.cancel_order_tips2')"
+                        show-count
+                        :maxlength="1000"
+                    />
+                </div>
+            </template>
+            <template #footer>
+                <div class="footer">
+                    <a-button @click="onCheckModalCancel">{{ $t('common.cancel') }}</a-button>
+                    <a-button type="primary" @click="onCheckModalOK">{{ $t('common.confirm') }}</a-button>
+                </div>
+            </template>
+        </CheckModal>
     </div>
 </template>
 <script>
@@ -878,6 +915,9 @@ import { DownOutlined } from '@ant-design/icons-vue';
 import CoCList from '@/views/coc/certificate-list.vue';
 import ShippingFreight from './components/ShippingFreightModel.vue';
 import ConfirmFreight from './components/ConfirmFreightModel.vue';
+import CancelOperation from './components/CancelOperation.vue';
+import CheckModal from '@/components/horwin/based-on-ant/CheckModal.vue';
+
 const PURCHASE = Core.Const.PURCHASE;
 const DISTRIBUTOR = Core.Const.DISTRIBUTOR;
 const WAYBILL = Core.Const.WAYBILL;
@@ -911,7 +951,9 @@ export default {
         DownOutlined,
         CoCList,
         ShippingFreight,
-        ConfirmFreight
+        ConfirmFreight,
+        CancelOperation,
+        CheckModal,
     },
     data() {
         return {
@@ -1020,6 +1062,11 @@ export default {
             cocProps: {},
             freightVisible: false, // 船期及运费model
             confirmFreightVisible: false, // 船期及运费确认model
+            cancelVisible: false, // 船期及运费确认model
+            cancelParams: {
+                remark: undefined,
+            },
+            operationVisible: false, // 船期及运费确认model
         };
     },
     computed: {
@@ -1235,7 +1282,6 @@ export default {
             // this.giveOrderShow = false
             this.getPurchaseItemList(); // 获取商品列表
             this.getPurchaseInfo(); // 获取订单信息
-            this.$refs.payment.getPurchasePayList();
         },
 
         // 经销商钱包详情
@@ -1383,7 +1429,7 @@ export default {
                 },
             });
         },
-        // 取消采购
+        // 取消采购(二次弹窗确认)
         handleCancel() {
             let _this = this;
             this.$confirm({
@@ -1403,6 +1449,11 @@ export default {
                         });
                 },
             });
+        },
+        // 取消采购弹窗填写原因
+        onCancelReason() {
+            console.log('取消采购弹窗填写原因');
+            this.cancelVisible = true;
         },
 
         /*== header options end ==*/
@@ -1751,8 +1802,22 @@ export default {
 
         // 确认运费
         onConfirmFreight() {
-            this.confirmFreightVisible = true
-        }
+            this.confirmFreightVisible = true;
+        },
+
+        // 取消二次弹窗填写原因
+        onCheckModalCancel() {
+            this.cancelVisible = false;
+        },
+        onCheckModalOK() {
+            console.log('点击确定 onCheckModalOK', this.cancelParams);
+            this.onCheckModalCancel();
+        },
+
+        // 取消记录按钮
+        onCancelRecord() {
+            this.operationVisible = true;
+        },
     },
 };
 </script>
@@ -1882,7 +1947,10 @@ export default {
 
         .all-btn {
             display: flex;
-            justify-content: flex-end;
+            justify-content: center;
+            border-top: 1px solid #eaecf1;
+            padding-top: 18px;
+            margin-top: 30px;
         }
     }
 }
@@ -1892,6 +1960,17 @@ export default {
     align-items: center;
 }
 
-.freight_status_style {
+.d-f-j {
+    display: flex;
+    justify-content: space-between !important;
 }
-</style>./components/ShippingFreightModel.vue
+
+.content {
+    .content-title {
+        background: #1d2129;
+        font-size: 14px;
+        font-weight: 400;
+    }
+}
+</style>
+./components/ShippingFreightModel.vue

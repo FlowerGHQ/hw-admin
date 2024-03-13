@@ -2,13 +2,16 @@
     <div class="confirm-freight">
         <a-modal v-model:visible="visible" :title="title" @cancel="handleCancel">
             <div class="audit">
+                <div class="tip-text">
+                    请确认该订单的船期和运费。确认后，请按时缴纳运费。运费缴纳完成，将按预计船期发货。若拒绝，请说明原因。
+                </div>
                 <div class="content level-search-row">
                     <div class="estimated-shipping-data search-col">
-                        <div class="key w-120 t-a-r">{{ $t('p.estimated_shipping_data') }}：</div>
+                        <div class="key">{{ $t('distributor.shipping_date') }}：</div>
                         <div class="value flex-1">1312414124124</div>
                     </div>
                     <div class="freight search-col">
-                        <div class="key w-120 t-a-r">{{ $t('p.freight') }}：</div>
+                        <div class="key">{{ $t('p.freight') }}：</div>
                         <div class="value flex-1">
                             <span>1000</span>
                             <span>unit</span>
@@ -17,7 +20,7 @@
                 </div>
                 <div class="input-operation horizontal-search-row">
                     <div class="audit-result search-col required">
-                        <div class="key w-120 t-a-r">{{ $t('distributor.audit_result') }}：</div>
+                        <div class="key w-80 t-a-r">{{ $t('distributor.confirmation_result') }}：</div>
                         <div class="value flex-1">
                             <a-radio-group v-model:value="search_params.result">
                                 <a-radio v-for="item in AUDIT_RESULT_MAP_ARR" :key="item.key" :value="item.key">
@@ -26,10 +29,18 @@
                             </a-radio-group>
                         </div>
                     </div>
-                    <div class="reason search-col required d-a-s">
-                        <div class="key w-120 t-a-r">{{ $t('distributor.no_reason') }}：</div>
+                    <div
+                        class="reason search-col d-a-s"
+                        :class="{ required: $Util.Common.returnTypeBool(search_params.result, [AUDIT_RESULT.REFUSE]) }"
+                    >
+                        <div class="key w-80 t-a-r">{{ $t('common.reason') }}：</div>
                         <div class="value flex-1">
-                            <a-textarea v-model:value="search_params.remark" show-count :maxlength="1000" />
+                            <a-textarea
+                                v-model:value="search_params.remark"
+                                :placeholder="$t('common.please_enter') + $t('common.reason')"
+                                show-count
+                                :maxlength="1000"
+                            />
                         </div>
                     </div>
                 </div>
@@ -47,10 +58,12 @@
 
 <script setup>
 import dayjs from 'dayjs';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, getCurrentInstance } from 'vue';
 import Core from '@/core';
 const AUDIT_RESULT_MAP_ARR = Core.Const.DISTRIBUTOR.AUDIT_RESULT_MAP_ARR;
+const AUDIT_RESULT = Core.Const.DISTRIBUTOR.AUDIT_RESULT;
 
+const { proxy } = getCurrentInstance();
 const props = defineProps({
     visible: {
         type: Boolean,
@@ -63,7 +76,7 @@ const props = defineProps({
 });
 
 const search_params = ref({
-    result: undefined,
+    result: 1,
     remark: undefined,
 });
 
@@ -75,6 +88,25 @@ const emits = defineEmits(['update:visible', 'ok', 'cancel']);
 /* methods start*/
 const handleOk = () => {
     console.log('search_params.value', search_params.value);
+    let form = search_params.value
+    
+    const requireList = [
+        { 
+            key: 'remark', 
+            msg: proxy.$t('def.enter') + '(' + proxy.$t('common.reason') + ')', 
+            isVerification: proxy.$Util.Common.returnTypeBool(search_params.value.result, [AUDIT_RESULT.REFUSE]) 
+        },
+    ];
+
+    for (let index in requireList) {
+        if (requireList[index]?.isVerification) {
+            // 判断这个对象在哪种情况需要验证
+            if (!form[requireList[index].key]) {
+                return proxy.$message.warning(requireList[index].msg);
+            }
+        }
+    }
+
     emits('ok', search_params.value);
 };
 
@@ -95,8 +127,21 @@ onMounted(() => {});
     .input-operation {
     }
 
-    .w-120 {
-        width: 120px;
+    .tip-text {
+        padding: 9px 16px;
+        border-radius: 2px;
+        background: rgba(0, 97, 255, 0.1);
+        font-size: 12px;
+        font-family:
+            Alibaba PuHuiTi 3,
+            Alibaba PuHuiTi 3-400;
+        font-weight: 400;
+        color: #464e5e;
+        margin-bottom: 14px;
+    }
+
+    .w-80 {
+        width: 80px;
     }
     .d-f-a {
         display: flex;

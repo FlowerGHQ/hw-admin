@@ -140,6 +140,7 @@
                             <ExplosionImage :detailId="id" :id="currentSpecId" />
                         </template>
                         <template v-else-if="tabKey === 3">
+                            <!-- 销售BOM -->
                             <ItemAccessory
                                 :item_id="currentSpecId || id"
                                 :target_type="ATTACHMENT_TYPE.ITEM"

@@ -218,7 +218,6 @@ export default {
     },
     created() {
         this.distributor_id = Number(this.$route.query.id) || Core.Data.getOrgId();
-        // this.activeKey = this.$route.query.activeKey || 'UserList'
         this.getDistributorDetail();
     },
     methods: {
@@ -241,7 +240,6 @@ export default {
                     break;
             }
         },
-
         getDistributorDetail() {
             console.log('this.distributor_id', this.distributor_id);
             this.loading = true;
@@ -259,24 +257,6 @@ export default {
                     this.loading = false;
                 });
         },
-        /*   // 删除 零售商
-        handleDelete(id) {
-            let _this = this;
-            this.$confirm({
-                title: '确定要删除该分销商吗？',
-                okText: '确定',
-                okType: 'danger',
-                cancelText: '取消',
-                onOk() {
-                    Core.Api.Distributor.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
-                        _this.routerChange('list');
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
-                },
-            });
-        },*/
         handleStatusChange() {
             let _this = this;
             this.$confirm({
