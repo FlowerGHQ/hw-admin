@@ -1080,9 +1080,9 @@ const apiList = {
         updateStatus: ['PostJson', 'announcement/update-status'], // 修改排序和状态
     },
     RechargeAudit: {
-        audit: ['PostJson', 'RechargeAudit/audit'], // 审核
-        detail: ['PostJson', 'RechargeAudit/detail'], // 详情
-        list: ['PostJson', 'RechargeAudit/list'], // 列表
+        audit: ['PostJson', 'audit-record/audit'], // 审核
+        detail: ['PostJson', 'audit-record/detail'], // 详情
+        list: ['PostJson', 'audit-record/list-distributor-recharge'], // 列表
     },
     PayAccount: {
         detail: ['PostJson', 'pay-in-account/detail'], // 详情
