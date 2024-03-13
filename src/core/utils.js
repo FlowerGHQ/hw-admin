@@ -1779,7 +1779,7 @@ const Util = {
             case 'text':
                 const status = MAP[val + ''];
                 if (status) {
-                  return status[lang] || '未知';
+                    return status[lang] || '未知';
                 }
                 return '未知';
             case 'color':

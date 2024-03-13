@@ -252,7 +252,7 @@ export default {
             switch (type) {
                 case 'settle': // 结算
                     routeUrl = this.$router.resolve({
-                        path: '/purchase/item-settle',
+                        path: '/mall/confirm-order',
                         query: {
                             unit: this.currency,
                             currency: this.unitMap[this.currency].key,
@@ -284,7 +284,7 @@ export default {
             }
 
             var routeUrl = this.$router.resolve({
-                path: '/purchase/item-settle',
+                path: '/mall/confirm-order',
                 query: {
                     unit: this.currency,
                     currency: this.unitMap[this.currency].key,

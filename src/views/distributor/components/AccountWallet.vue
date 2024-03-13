@@ -21,21 +21,31 @@
                                     <div class="account-card-content-item-title">
                                         {{ $t('distributor-detail.available_amount') }}：
                                     </div>
-                                    <div class="account-card-content-item-value">0.00</div>
+                                    <div class="account-card-content-item-value">
+                                        {{ currency }} {{ dataObject.vehicleData.balance }}
+                                    </div>
                                     <!-- 充值按钮 -->
                                     <a-button
-                                        v-if="$auth('DISTRIBUTOR')"
+                                        v-if="$auth('DISTRIBUTOR') && payType !== 'OLD'"
                                         type="primary"
                                         size="small"
-                                        @click="handleRouteChange(0)"
+                                        @click="handleRouteChange(0, dataObject.vehicleData)"
                                         >{{ $t('distributor-detail.recharge') }}</a-button
                                     >
                                     <!-- 资金变动明细 -->
-                                    <div class="line-item" @click="handleRouteChange(1)">
+                                    <div
+                                        class="line-item"
+                                        @click="handleRouteChange(1, dataObject.vehicleData)"
+                                        v-if="payType !== 'OLD'"
+                                    >
                                         {{ $t('distributor-detail.fund_change_detail') }}
                                     </div>
                                     <!-- 充值记录 -->
-                                    <div class="line-item" @click="handleRouteChange(2)">
+                                    <div
+                                        class="line-item"
+                                        @click="handleRouteChange(2, dataObject.vehicleData)"
+                                        v-if="payType !== 'OLD'"
+                                    >
                                         {{ $t('distributor-detail.recharge_record') }}
                                     </div>
                                 </div>
@@ -62,7 +72,7 @@
             </a-row>
         </div>
         <!-- 授权账户 -->
-        <div class="account-card">
+        <div class="account-card" v-if="isShowCreditAccount">
             <a-row :gutter="24">
                 <a-col :span="24">
                     <div class="account-card-title">
@@ -79,13 +89,19 @@
                                     <div class="account-card-content-item-title">
                                         {{ $t('distributor-detail.credit_amount') }}：
                                     </div>
-                                    <div class="account-card-content-item-value">0.00</div>
+                                    <div class="account-card-content-item-value">
+                                        {{ currency }} {{ Core.Util.countFilter(detail.credit) }}
+                                    </div>
                                     <!-- 调整额度 -->
-                                    <a-button v-if="$auth('ADMIN')" type="primary" size="small">{{
+                                    <a-button v-if="$auth('ADMIN') && payType !== 'OLD'" type="primary" size="small">{{
                                         $t('distributor-detail.adjust_amount')
                                     }}</a-button>
                                     <!-- 授信变化 -->
-                                    <div class="line-item" @click="handleRouteChange(3)">
+                                    <div
+                                        class="line-item"
+                                        @click="handleRouteChange(3, dataObject.creditData)"
+                                        v-if="payType !== 'OLD'"
+                                    >
                                         {{ $t('distributor-detail.credit_change') }}
                                     </div>
                                 </div>
@@ -100,7 +116,9 @@
                                     <div class="account-card-content-item-title">
                                         {{ $t('distributor-detail.credit_balance') }}：
                                     </div>
-                                    <div class="account-card-content-item-value">0</div>
+                                    <div class="account-card-content-item-value">
+                                        {{ currency }} {{ dataObject.creditData.balance }}
+                                    </div>
                                 </div>
                             </div></a-col
                         >
@@ -126,17 +144,30 @@
                                     <div class="account-card-content-item-title">
                                         {{ $t('distributor-detail.available_amount') }}：
                                     </div>
-                                    <div class="account-card-content-item-value">0.00</div>
+                                    <div class="account-card-content-item-value">
+                                        {{ currency }} {{ dataObject.partsData.balance }}
+                                    </div>
                                     <!-- 充值按钮 -->
-                                    <a-button v-if="$auth('DISTRIBUTOR')" type="primary" size="small">{{
-                                        $t('distributor-detail.recharge')
-                                    }}</a-button>
+                                    <a-button
+                                        v-if="$auth('DISTRIBUTOR') && payType !== 'OLD'"
+                                        type="primary"
+                                        size="small"
+                                        >{{ $t('distributor-detail.recharge') }}</a-button
+                                    >
                                     <!-- 资金变动明细 -->
-                                    <div class="line-item">
+                                    <div
+                                        class="line-item"
+                                        v-if="payType !== 'OLD'"
+                                        @click="handleRouteChange(1, dataObject.partsData)"
+                                    >
                                         {{ $t('distributor-detail.fund_change_detail') }}
                                     </div>
                                     <!-- 充值记录 -->
-                                    <div class="line-item">
+                                    <div
+                                        class="line-item"
+                                        v-if="payType !== 'OLD'"
+                                        @click="handleRouteChange(2, dataObject.partsData)"
+                                    >
                                         {{ $t('distributor-detail.recharge_record') }}
                                     </div>
                                 </div>
@@ -151,8 +182,14 @@
                                     <div class="account-card-content-item-title">
                                         {{ $t('distributor-detail.credit_balance_re') }}：
                                     </div>
-                                    <div class="account-card-content-item-value">0.00</div>
-                                    <div class="line-item">
+                                    <div class="account-card-content-item-value">
+                                        {{ currency }} {{ dataObject.afterSaleData.balance }}
+                                    </div>
+                                    <div
+                                        class="line-item"
+                                        v-if="payType !== 'OLD'"
+                                        @click="handleRouteChange(1, dataObject.afterSaleData)"
+                                    >
                                         {{ $t('distributor-detail.fund_change_detail') }}
                                     </div>
                                 </div>
@@ -172,19 +209,108 @@
 import { ref, onMounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+import Core from '@/core';
 const $t = useI18n().t;
 const router = useRouter();
-const props = defineProps({});
+const props = defineProps({
+    detail: {
+        type: Object,
+        default: () => ({}),
+    },
+});
+const payType = computed(() => {
+    console.log('payType', props.detail.pay_type);
+    switch (props.detail.pay_type) {
+        case 60:
+            return 'OA'; // 60:OA 70:TT OLD:老系统
+        case 70:
+            return 'TT';
+        default:
+            return 'OLD';
+    }
+});
+// 是否显示授信账户
+const isShowCreditAccount = computed(() => {
+    switch (props.detail.payType) {
+        case 60:
+            return true;
+        case 70:
+            return false;
+        default:
+            return true;
+    }
+});
+// 货币
+const currency = computed(() => {
+    switch (props.detail.currency) {
+        //    EUR
+        case 'EUR':
+            return '€';
+        //    usd
+        case 'USD':
+            return '$';
+        // 容错
+        default:
+            return '';
+    }
+});
 
+const dataObject = ref({
+    vehicleData: {}, // 整车账户
+    partsData: {}, // 零部件账户
+    afterSaleData: {}, // 售后账户
+    creditData: {}, // 授信账户
+});
+
+const getWalletList = () => {
+    console.log('查询钱包明细');
+    let params = {
+        org_id: props.detail.id,
+        org_type: 15,
+    };
+    Core.Api.Wallet.list(params).then(res => {
+        console.log('res', res.list);
+        const typeMap = {
+            10: 'vehicleData',
+            20: 'partsData',
+            30: 'afterSaleData',
+            40: 'creditData',
+        };
+        for (let i = 0; i < res.list.length; i++) {
+            let item = res.list[i];
+            let key = typeMap[item.type];
+            console.log('key', key);
+            item.balance = Core.Util.countFilter(item.balance);
+            dataObject.value[key] = item;
+        }
+        for (let key in dataObject.value) {
+            console.log('key', key);
+            if (!dataObject.value[key].balance) {
+                dataObject.value[key].balance = 0;
+            }
+        }
+
+        console.log('dataObject', dataObject.value);
+    });
+};
 // methods
-const handleRouteChange = type => {
+const handleRouteChange = (type, item) => {
     console.log('type', type);
+    console.log('item', item);
+    const query = {
+        org_id: props.detail.id,
+        org_type: 15, //分销商类型
+        wallet_type: item.type, //钱包类型
+        subject: 101, //操作分类 (类型有点多 用到了call我)
+        currency: currency.value,
+    };
+
     let routeUrl = '';
     switch (type) {
         case 0:
             routeUrl = router.resolve({
                 path: '/distributor/distributor-recharge-detail',
-                query: {},
+                query,
             });
             console.log('routeUrl', routeUrl);
             window.open(routeUrl.href, '_blank');
@@ -192,7 +318,7 @@ const handleRouteChange = type => {
         case 1:
             routeUrl = router.resolve({
                 path: '/distributor/distributor-fund-change-detail',
-                query: {},
+                query,
             });
             console.log('routeUrl', routeUrl);
             window.open(routeUrl.href, '_blank');
@@ -200,14 +326,14 @@ const handleRouteChange = type => {
         case 2:
             routeUrl = router.resolve({
                 path: '/distributor/distributor-recharge-record',
-                query: {},
+                query,
             });
             window.open(routeUrl.href, '_blank');
             break;
         case 3:
             routeUrl = router.resolve({
                 path: '/distributor/distributor-credit-change',
-                query: {},
+                query,
             });
             window.open(routeUrl.href, '_blank');
             break;
@@ -215,8 +341,9 @@ const handleRouteChange = type => {
             break;
     }
 };
-
-onMounted(() => {});
+onMounted(() => {
+    getWalletList();
+});
 </script>
 
 <style lang="less" scoped>
