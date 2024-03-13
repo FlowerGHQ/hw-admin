@@ -1,13 +1,7 @@
 <template>
-    <a-button
-        class="ReceiverAddressEdit"
-        @click.stop="handleAddressShow()"
-        :ghost="ghost"
-        :type="btnType"
-        :class="btnClass"
-    >
+    <span class="ReceiverAddressEdit" @click.stop="handleAddressShow()" :class="btnClass">
         <slot>{{ btnText }}</slot>
-    </a-button>
+    </span>
     <a-modal
         :title="$t('ad.add')"
         v-model:visible="modalShow"
@@ -62,16 +56,8 @@ export default {
             type: String,
             default: '新增收货地址',
         },
-        btnType: {
-            type: String,
-            default: 'primary',
-        },
         btnClass: {
             type: String,
-        },
-        ghost: {
-            type: Boolean,
-            default: true,
         },
         detail: {
             type: Object,
@@ -184,12 +170,11 @@ export default {
 
 <style lang="less" scoped>
 .ReceiverAddressEdit {
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: 400;
     line-height: 20px;
-    height: 30px;
-    padding: 4px 14px;
-    margin-bottom: 10px;
-
+    color: #8f00ff;
+    cursor: pointer;
     .icon {
         font-size: 12px;
     }

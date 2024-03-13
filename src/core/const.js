@@ -849,19 +849,19 @@ let Const = {
             ALL: 3, //所有子级采购单
         },
         // 分批发货
-        FLAG_PART_SHIPMENT_LIST: {
-            1: { key: 1, zh: '同意', en: 'Agree' },
-            2: { key: 2, zh: '不同意', en: 'Disagree' },
-        },
+        FLAG_PART_SHIPMENT_LIST: [
+            { nameLang: 'i.yes', value: 1 },
+            { nameLang: 'i.no', value: 2 },
+        ],
         FLAG_PART_SHIPMENT_MAP: {
             1: '同意',
             2: '不同意',
         },
         // 转运
-        FLAG_TRANSFER_LIST: {
-            1: { key: 1, zh: '同意', en: 'Agree' },
-            2: { key: 2, zh: '不同意', en: 'Disagree' },
-        },
+        FLAG_TRANSFER_LIST: [
+            { nameLang: 'i.yes', value: 1 },
+            { nameLang: 'i.no', value: 2 },
+        ],
         FLAG_TRANSFER_MAP: {
             1: { key: 1, zh: '同意', en: 'Allowed' },
             2: { key: 2, zh: '不同意', en: 'Disagreed' },
@@ -914,6 +914,29 @@ let Const = {
             UPDATE: 30, // 修改
             TYPE_GIVE: 40, // 修改
         },
+        // 运输方式选项列表
+        TRANSFER_METHODS: [
+            { nameLang: 'mall.by_truck', value: 1 },
+            { nameLang: 'mall.by_air', value: 2 },
+            { nameLang: 'mall.by_water_transportation', value: 3 },
+        ],
+        // 目的港
+        DESTINATION_PORT: [
+            { nameLang: 'mall.victoria_harbour', value: 1 },
+            { nameLang: 'mall.dubai_port', value: 2 },
+            { nameLang: 'mall.singapore_port', value: 3 },
+            { nameLang: 'mall.busan_port', value: 4 },
+        ],
+        // 参保
+        INSURED: [
+            { nameLang: 'i.yes', value: 1 },
+            { nameLang: 'i.no', value: 2 },
+        ],
+        // 打托
+        PALLETIZE: [
+            { nameLang: 'i.yes', value: 1 },
+            { nameLang: 'i.no', value: 2 },
+        ],
     },
 
     WAYBILL: {
