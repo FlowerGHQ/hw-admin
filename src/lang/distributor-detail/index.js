@@ -106,6 +106,17 @@ export default {
         save_modify: '保存修改',
         payment_account_number: '支付账号',
         actual_amount_paid: '实付金额',
+        //1.待审核(一审)；2.审核通过；3.审核不通过(一审) 4 等待二审 5 二审不通过
+        // 待审核(一审)
+        pending_audit: '待审核(一审)',
+        // 审核通过
+        audit_pass: '审核通过',
+        // 审核不通过(一审)
+        audit_not_pass: '审核不通过(一审)',
+        // 等待二审
+        waiting_for_review: '等待二审',
+        // 二审不通过
+        second_review_not_passed: '二审不通过',
     },
     en: {
         vehicle_account: 'Vehicle Account',
@@ -176,5 +187,10 @@ export default {
         save_modify: 'Save Modify',
         payment_account_number: 'Payment account number',
         actual_amount_paid: 'Actual amount paid',
+        pending_audit: 'Pending Audit',
+        audit_pass: 'Audit Pass',
+        audit_not_pass: 'Audit Not Pass',
+        waiting_for_review: 'Waiting For Review',
+        second_review_not_passed: 'Second Review Not Passed',
     },
 };

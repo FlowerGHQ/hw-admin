@@ -27,19 +27,19 @@ const apiList = {
         migrate: ['Post', 'migrate/order'], // 获取当前登录账号的账户信息
     },
     ThirdParty: {
-        fsAuthorize:['Get', 'feishu/web/authorize'], // 飞书登录验证
+        fsAuthorize: ['Get', 'feishu/web/authorize'], // 飞书登录验证
     },
     Export: {
         // 导出
         purchaseExport: ['PostJson', 'purchase-order/export'],
         purchaseTemplateExport: ['PostJson', 'purchase-order/export-template'], // 采购单模版导出
-	    purchaseOrderExport: ['PostJson', 'purchase-order/export-order'], // 采购单模版导出
+        purchaseOrderExport: ['PostJson', 'purchase-order/export-order'], // 采购单模版导出
         repairExport: ['PostJson', 'repair/export-repair-order-record'],
-        invoiceOutExport: ['PostJson', 'invoice/export-out-invoice'],//导出
-        invoiceInExport: ['PostJson', 'invoice/export-in-invoice'],//导出
-        invoiceDetailExport: ['PostJson', 'invoice/export-detail'],//导出
-        materialPurchaseExport: ['PostJson', '/material-purchase-order/export'],//导出
-        ItemCollectExport: ['PostJson', '/shopping-cart/download-import-template'],//导出
+        invoiceOutExport: ['PostJson', 'invoice/export-out-invoice'], //导出
+        invoiceInExport: ['PostJson', 'invoice/export-in-invoice'], //导出
+        invoiceDetailExport: ['PostJson', 'invoice/export-detail'], //导出
+        materialPurchaseExport: ['PostJson', '/material-purchase-order/export'], //导出
+        ItemCollectExport: ['PostJson', '/shopping-cart/download-import-template'], //导出
         feedbackTemplateExport: ['PostJson', 'feedback/export-template'], // 采购单模版导出
 
         exportOrderPrice: ['GetJson', 'purchase-order/export-item-price'], // 采购数据导出
@@ -225,12 +225,12 @@ const apiList = {
     Repair: {
         // 维修单
         list: ['PostJson', 'repair/list'], // 列表
-	    create: ['PostJson', 'repair/save'], // 新建工单
-	    hand: ['PostJson', 'repair/hand'],
+        create: ['PostJson', 'repair/save'], // 新建工单
+        hand: ['PostJson', 'repair/hand'],
         detail: ['PostJson', 'repair/detail'], // 工单详情
-	    check: ['PostJson', 'repair/check'], // 确认
-	    audit: ['PostJson', 'repair/audit'], // 审批
-	    delete: ['PostJson', 'repair/delete'], // 审批
+        check: ['PostJson', 'repair/check'], // 确认
+        audit: ['PostJson', 'repair/audit'], // 审批
+        delete: ['PostJson', 'repair/delete'], // 审批
         statusList: ['PostJson', 'repair/status-list'], // 保存
         repair: ['PostJson', 'repair/repair'], // 维修结束
         secondDoor: ['PostJson', 'repair/second-door'], // 二次上门
@@ -484,6 +484,8 @@ const apiList = {
         updateStatus: ['PostJson', 'distributor/update-status'], //修改状态
         walletMoneyList: ['PostJson', 'wallet-money/list'], //钱包余额明细列表
         walletDetail: ['PostJson', 'wallet/detail'], //钱包详情
+        // 充值记录
+        rechargeList: ['PostJson', 'audit-record/list-distributor-recharge'],
     },
     Fault: {
         // 产品故障管理
@@ -1090,7 +1092,7 @@ const apiList = {
         list: ['PostJson', 'PayAccount/list'], // 列表
         update: ['PostJson', 'PayAccount/update'], // 修改状态
         delete: ['PostJson', 'PayAccount/delete'], // 删除
-    }
+    },
 };
 
 export default new Api(baseUrl, apiList);

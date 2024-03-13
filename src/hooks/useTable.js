@@ -1,5 +1,6 @@
 import { ref, reactive, onMounted, computed, toRefs, onBeforeMount } from 'vue';
 import _ from 'lodash';
+import { init } from 'echarts';
 
 /**
  * @description table 页面表格操作方法封装
@@ -55,6 +56,7 @@ export function useTable({
     });
     //获取数据
     const getTableData = async () => {
+        console.log('getTableData', initParam);
         Object.assign(state.totalParam, isPageAble ? pageParam.value : {}, initParam);
         initParam && (state.searchInitParam = initParam);
         state.loading = true;
