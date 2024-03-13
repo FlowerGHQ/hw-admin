@@ -8,22 +8,26 @@
         :footer="null"
         :bodyStyle="bodyStyle"
     >
-        <div class="modal-header">
-            <!-- {{ $t(/*确定退出吗*/ 'operation.sure_tip') }} -->
-            {{ $t(title) }}
+        <div class="modal-header">            
+            <slot name="title">
+                {{ $t(title) }}
+            </slot>
         </div>
         <div class="modal-content">
-            {{ bodyText }}
+            <slot name="content">
+                {{ bodyText }}
+            </slot>
         </div>
         <div class="divide-line"></div>
         <div class="modal-footer">
             <slot></slot>
+            <slot name="footer"></slot>
         </div>
     </a-modal>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, getCurrentInstance } from 'vue';
 const props = defineProps({
     // 弹框显隐
     visible: {
@@ -35,7 +39,7 @@ const props = defineProps({
     },
     title: {
         type: String,
-        default: 'operation.sure_tip'   
+        default: 'operation.sure_tip' 
     }
 });
 

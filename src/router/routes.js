@@ -11,11 +11,17 @@ import { mallRouters, dealsPreview } from './mall';
 // 分销商路由
 import { customerCare, unpaidFinalPayment } from './distributor-router';
 // 平台方路由
-import { inquiryManagement, adminEmpty, operationManagement, finalPaymentOrder, cancellationOrderRequest } from './admin-router';
+import {
+    inquiryManagement,
+    adminEmpty,
+    operationManagement,
+    finalPaymentOrder,
+    cancellationOrderRequest,
+} from './admin-router';
 // 平台方路由
 import { fsLogin } from './fs-login';
 // 公共的路由
-import { freightConfirmed, } from './common';
+import { freightConfirmed } from './common';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE;
@@ -294,7 +300,18 @@ const routes = [
                     parent: '/distributor/distributor-list',
                 },
             },
-
+            // 充值详情
+            {
+                path: 'distributor-recharge-detail',
+                name: 'DistributorRechargeDetail',
+                component: () => import('@/views/distributor/recharge-detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '充值详情',
+                    title_en: 'Recharge Detail',
+                    parent: '/distributor/distributor-list',
+                },
+            },
             {
                 path: 'agent-list',
                 name: 'AgentList',
@@ -406,7 +423,7 @@ const routes = [
                     hidden: true,
                     title: '销售区域详情',
                     parent: '/sales-area-list',
-                    auth: ['sales-area.detail'],                    
+                    auth: ['sales-area.detail'],
                 },
             },
             {
@@ -464,7 +481,7 @@ const routes = [
                     // auth: ['purchase-order.list'],
                 },
             },
-        ]
+        ],
     },
     /* { // 分销商管理 - 分销商端
         path: '/distributor/distributor-detail-sp',

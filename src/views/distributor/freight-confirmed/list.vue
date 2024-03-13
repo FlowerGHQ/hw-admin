@@ -196,7 +196,7 @@
     <!-- 确认运费弹窗 -->
     <ConfirmFreight
         v-model:visible="confirmFreightVisible"
-        :title="$t('distributor.expected_shipping_freight')"
+        :title="$t('distributor.shipping_freight')"
     ></ConfirmFreight>
 </template>
 

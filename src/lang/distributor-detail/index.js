@@ -90,8 +90,28 @@ export default {
         check_detail: '查看详情',
         // 售后备件信用余额：可抵扣订单金额
         payment_tips: '售后备件信用余额：可抵扣订单金额',
+        // 充值详情
+        recharge_detail: '充值详情',
+        recharge_info: '充值信息',
+        // 本次需转账金额：
+        current_transfer_amount: '本次需转账金额：',
+        // 整车可用余额：
+        vehicle_available_balance: '整车可用余额：',
+        // 零部件可用余额账户：
+        parts_available_balance: '零部件可用余额：',
+        // 付款凭证
+        payment_voucher: '付款凭证',
+        // modify_voucher\
+        modify_voucher: '修改凭证',
+        save_modify: '保存修改',
         payment_account_number: '支付账号',
         actual_amount_paid: '实付金额',
+        cancel_order: '取消订单',
+        cancel_order_tips1: '取消订单需要业务人员审核，是否提交取消订单审核',
+        cancel_order_tips2: '为促使审核人员同意您的申请，请输入取消原因',
+        under_review: '审核中',
+        cancel_record: '取消记录',        
+        application_time: '申请时间',
     },
     en: {
         vehicle_account: 'Vehicle Account',
@@ -152,7 +172,21 @@ export default {
         // 查看详情
         check_detail: 'Check Detail',
         payment_tips: 'After-sales spare parts credit balance: can offset the order amount',
+        recharge_detail: 'Recharge Detail',
+        recharge_info: 'Recharge Information',
+        current_transfer_amount: 'Current Transfer Amount:',
+        vehicle_available_balance: 'Vehicle Available Balance:',
+        parts_available_balance: 'Parts Available Balance:',
+        payment_voucher: 'Payment Voucher',
+        modify_voucher: 'Modify Voucher',
+        save_modify: 'Save Modify',
         payment_account_number: 'Payment account number',
         actual_amount_paid: 'Actual amount paid',
+        cancel_order: 'Cancel Order',
+        cancel_order_tips1: 'The cancellation of the order needs to be reviewed by the business staff, and whether to submit the cancellation order for review',
+        cancel_order_tips2: 'In order to urge the auditor to agree to your application, please enter the reason for cancellation',
+        under_review: 'Under Review',
+        cancel_record: 'Cancel Record',        
+        application_time: 'Application Time',
     },
 };

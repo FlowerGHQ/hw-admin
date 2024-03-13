@@ -45,6 +45,8 @@ export default {
         modify:'修改',
         adopt: "通过",
         not_passed: "不通过",
+        reason: '原因',
+        refuse: '拒绝',
     },
     en: {
         operations: 'Operations',
@@ -92,5 +94,7 @@ export default {
         modify:'Modify',
         adopt: "Adopt",
         not_passed: "Not Passed",
+        reason: 'Reason',
+        refuse: 'Refuse',
     },
 };
