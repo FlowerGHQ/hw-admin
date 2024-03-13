@@ -133,7 +133,6 @@ const getBindValue = () => {
             res.list.forEach(item => {
                 bindArea.value = bindArea.value.concat(item.country.split(','));
             });
-            console.log('bindArea', bindArea.value);
         } else {
             bindArea.value = [];
         }

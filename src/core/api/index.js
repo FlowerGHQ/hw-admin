@@ -1085,11 +1085,12 @@ const apiList = {
         list: ['PostJson', 'RechargeAudit/list'], // 列表
     },
     PayAccount: {
-        detail: ['PostJson', 'PayAccount/detail'], // 详情
-        save: ['PostJson', 'PayAccount/save'], // 保存
-        list: ['PostJson', 'PayAccount/list'], // 列表
-        update: ['PostJson', 'PayAccount/update'], // 修改状态
-        delete: ['PostJson', 'PayAccount/delete'], // 删除
+        detail: ['PostJson', 'pay-in-account/detail'], // 详情
+        save: ['PostJson', 'pay-in-account/save'], // 保存
+        list: ['PostJson', 'pay-in-account/list'], // 列表
+        updateStatus: ['PostJson', 'pay-in-account/update-status'], // 修改状态
+        delete: ['PostJson', 'pay-in-account/delete'], // 删除
+        countryList: ['PostJson', 'pay-in-account/list-effective-country'], // 生效中的国家列表
     }
 };
 

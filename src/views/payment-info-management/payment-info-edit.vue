@@ -26,7 +26,7 @@
                     </div>
                     <div class="value">
                         <a-input
-                            v-model:value="form.account_info"
+                            v-model:value="form.name"
                             :placeholder="$t('def.input')"
                             :maxlength="150"
                         />
@@ -43,7 +43,7 @@
                     </div>
                     <div class="value">
                         <a-input
-                            v-model:value="form.name"
+                            v-model:value="usdForm.beneficiary_bank"
                             :placeholder="$t('def.input')"
                             :maxlength="150"
                         />
@@ -55,7 +55,7 @@
                     </div>
                     <div class="value">
                         <a-input
-                            v-model:value="form.name_en"
+                            v-model:value="usdForm.swift_code"
                             :placeholder="$t('def.input')"
                             :maxlength="150"
                         />
@@ -67,7 +67,7 @@
                     </div>
                     <div class="value">
                         <a-input
-                            v-model:value="form.name"
+                            v-model:value="usdForm.bank_address"
                             :placeholder="$t('def.input')"
                             :maxlength="150"
                         />
@@ -79,7 +79,7 @@
                     </div>
                     <div class="value">
                         <a-input
-                            v-model:value="form.name_en"
+                            v-model:value="usdForm.account_number"
                             :placeholder="$t('def.input')"
                             :maxlength="150"
                         />
@@ -91,7 +91,7 @@
                     </div>
                     <div class="value">
                         <a-input
-                            v-model:value="form.name"
+                            v-model:value="usdForm.company_name"
                             :placeholder="$t('def.input')"
                             :maxlength="150"
                         />
@@ -103,7 +103,7 @@
                     </div>
                     <div class="value">
                         <a-input
-                            v-model:value="form.name_en"
+                            v-model:value="usdForm.company_address"
                             :placeholder="$t('def.input')"
                             :maxlength="150"
                         />
@@ -115,7 +115,7 @@
                     </div>
                     <div class="value">
                         <a-input
-                            v-model:value="form.name_en"
+                            v-model:value="usdForm.remark"
                             :placeholder="$t('def.input')"
                             :maxlength="500"
                         />
@@ -132,7 +132,7 @@
                     </div>
                     <div class="value">
                         <a-input
-                            v-model:value="form.name"
+                            v-model:value="eurForm.beneficiary_bank"
                             :placeholder="$t('def.input')"
                             :maxlength="150"
                         />
@@ -144,7 +144,7 @@
                     </div>
                     <div class="value">
                         <a-input
-                            v-model:value="form.name_en"
+                            v-model:value="eurForm.swift_code"
                             :placeholder="$t('def.input')"
                             :maxlength="150"
                         />
@@ -156,7 +156,7 @@
                     </div>
                     <div class="value">
                         <a-input
-                            v-model:value="form.name"
+                            v-model:value="eurForm.bank_address"
                             :placeholder="$t('def.input')"
                             :maxlength="150"
                         />
@@ -168,7 +168,7 @@
                     </div>
                     <div class="value">
                         <a-input
-                            v-model:value="form.name_en"
+                            v-model:value="eurForm.account_number"
                             :placeholder="$t('def.input')"
                             :maxlength="150"
                         />
@@ -180,7 +180,7 @@
                     </div>
                     <div class="value">
                         <a-input
-                            v-model:value="form.name"
+                            v-model:value="eurForm.company_name"
                             :placeholder="$t('def.input')"
                             :maxlength="150"
                         />
@@ -192,7 +192,7 @@
                     </div>
                     <div class="value">
                         <a-input
-                            v-model:value="form.name_en"
+                            v-model:value="eurForm.company_address"
                             :placeholder="$t('def.input')"
                             :maxlength="150"
                         />
@@ -204,7 +204,7 @@
                     </div>
                     <div class="value">
                         <a-input
-                            v-model:value="form.name_en"
+                            v-model:value="eurForm.remark"
                             :placeholder="$t('def.input')"
                             :maxlength="500"
                         />
@@ -213,9 +213,9 @@
             </div>
         </div>
         <div class="form-btns fixed-btns" ref="fixBox" :style="{ width: fixedWidth }">
-            <a-button @click="handleSubmit('draft')">{{ $t(/*预览*/'payment-management.preview') }}</a-button>
+            <a-button @click="submit">{{ $t(/*预览*/'payment-management.preview') }}</a-button>
             <a-button @click="routerChange('back')">{{ $t(/*取消*/'def.cancel') }}</a-button>
-            <a-button type="primary" @click="handleSubmit">{{ $t(/*确定*/'def.sure') }}</a-button>
+            <a-button type="primary" @click="submit">{{ $t(/*确定*/'def.sure') }}</a-button>
             <div class="bottom-box"></div>
         </div>
         <div :style="{ height: fixedHeight }"></div>
@@ -238,8 +238,31 @@ export default {
             detail: {},
             form: {
                 id: '',
-                name: '',
-                account_info: undefined, // 账号信息
+                name: undefined, // 账号信息
+                country_list: [], // 国家列表
+                bank_list: [], // 付款路径
+            },
+            usdForm: {
+                id: 0,
+                currency: 'USD', // 货币类型
+                beneficiary_bank: "", // 收款行
+                swift_code: "", // 银行代码
+                bank_address: "", // 银行地址
+                account_number: "", // 账号
+                company_name: "", // 公司名称
+                company_address: "", // 公司地址
+                remark: "" // 其他付款方式
+            },
+            eurForm: {
+                id: 0,
+                currency: 'EUR', // 货币类型
+                beneficiary_bank: "", // 收款行
+                swift_code: "", // 银行代码
+                bank_address: "", // 银行地址
+                account_number: "", // 账号
+                company_name: "", // 公司名称
+                company_address: "", // 公司地址
+                remark: "" // 其他付款方式
             },
             areaList: [],
             defaultAreaList: [],
@@ -276,7 +299,41 @@ export default {
         next();
     },
     methods: {
-        /* 监听 */
+        // fetch
+        getDetailService() {
+            this.loading = true;
+            Core.Api.PayAccount.detail({
+                id: this.form.id,
+            }).then(res => {
+                console.log('getDetailService res', res);
+                let detail = res.detail
+                this.form = detail
+                this.usdForm = detail.bank_list.find(item => item.currency === 'USD')
+                this.eurForm = detail.bank_list.find(item => item.currency === 'EUR')
+                this.areaList = this.reverseConvertAreaData(detail.country_list);
+                this.defaultAreaList = this.reverseConvertAreaData(detail.country_list);
+            }).catch(err => {
+                console.log('getDetailService err', err);
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        // fetch
+        handleSubmitService(params) {
+            this.loading = true
+            Core.Api.PayAccount.save({
+                ...params
+            }).then((res) => {
+                console.log('handleSubmitService res', res);
+                this.$message.success(this.$t('pop_up.save_success'));
+                this.routerChange('back');
+            }).catch(err => {
+                console.log('handleSubmitService err:', err);
+            }).finally(() => {
+                this.loading = false
+            });
+        },
+        // resize
         handleResize() {
             const width = this.$refs.bigBox && this.$refs.bigBox.offsetWidth;
             const height = this.$refs.fixBox && this.$refs.fixBox.offsetHeight;
@@ -298,43 +355,8 @@ export default {
                     break;
             }
         },
-        getDetailService() {
-            this.loading = true;
-            Core.Api.PayAccount.detail({
-                id: this.form.id,
-            }).then(res => {
-                console.log('getDetailService res', res);
-                this.detail = res.detail
-                for (const key in this.form) {
-                    this.form[key] = this.detail[key];
-                }
-                for (const key in this.area) {
-                    this.area[key] = this.detail[key];
-                }
-                this.areaList = this.detail.country.split(',');
-                this.defaultAreaList = this.detail.country.split(',');
-            }).catch(err => {
-                console.log('getDetailService err', err);
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-        handleSubmit() {
-            this.loading = true
-            let form = Core.Util.deepCopy(this.form);
-            if(this.checkFormInput(form)) return
-            Core.Api.PayAccount.save(form).then((res) => {
-                console.log('handleSubmit res', res);
-                this.$message.success(this.$t('pop_up.save_success'));
-                this.routerChange('back');
-            }).catch(err => {
-                console.log('handleSubmit err:', err);
-            }).finally(() => {
-                this.loading = false
-            });
-        },
         checkFormInput(form) {
-            if (!form.account_info) {
+            if (!form.name) {
                 return this.$message.warning(`${this.$t('def.enter')}(${this.$t(/*账户信息*/'payment-management.acc_info')})`);
             }
             if (!this.area.country) {
@@ -342,6 +364,44 @@ export default {
             }
             return 0;
         },
+        submit() {
+            this.form.bank_list.push(this.usdForm)
+            this.form.bank_list.push(this.eurForm)
+            let form = Core.Util.deepCopy(this.form);
+            if(this.checkFormInput(form)) return
+            console.log('form', this.form);
+            this.handleSubmitService(this.form)
+        },
+        handleGetItem(item) {
+            this.area = {
+                continent: item.map(obj => obj.parentName).join(','),
+                continent_en: item.map(obj => obj.parentEnName).join(','),
+                country: item.map(obj => obj.name).join(','),
+                country_en: item.map(obj => obj.name_en).join(','),
+                country_code: item.map(obj => obj.code).join(','),
+            };
+            let _area = Core.Util.deepCopy(this.area)
+            this.form.country_list = this.convertAreaData(_area)
+        },
+        convertAreaData(area) {
+            const countryList = [];
+            const countryNames = area.country.split(',');
+            const countryCodes = area.country_code.split(',');
+            const countryNamesEn = area.country_en.split(',');
+            for (let i = 0; i < countryNames.length; i++) {
+                const country = {
+                    name: countryNames[i].trim(),
+                    name_en: countryNamesEn[i].trim(),
+                    code: countryCodes[i].trim()
+                };
+                countryList.push(country);
+            }
+            return countryList;
+        },
+        reverseConvertAreaData(countryList) {
+            const area = countryList.map(country => country.name);
+            return area;
+        }
     },
 };
 </script>
