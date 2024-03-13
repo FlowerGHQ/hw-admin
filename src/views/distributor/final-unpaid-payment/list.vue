@@ -425,25 +425,10 @@ const onReset = () => {
 
 /* methods end*/
 
-watch(
-    () => router.currentRoute.value,
-    (newValue, oldValue) => {
-        // console.log('newValue', newValue);
-        if (newValue.path === '/distributor/unpaid-final-list') {
-            // 分销商 (尾款未支付订单表)
-            isDistributerAdmin.value = false;
-        } else if (newValue.path === '/distributor/final-payment-list') {
-            // 平台方 (尾款待支付订单表)
-            isDistributerAdmin.value = true;
-        }
-    },
-    {
-        deep: true,
-        immediate: true,
-    },
-);
-
 onMounted(() => {
+    isDistributerAdmin.value = Core.Util.Common.returnTypeBool(Core.Data.getLoginType(), [Core.Const.LOGIN.TYPE.ADMIN])
+    console.log("isDistributerAdmin.value", isDistributerAdmin.value);
+    
     searchParam.value.status = -1;
     search();
     getDistributorListAll();

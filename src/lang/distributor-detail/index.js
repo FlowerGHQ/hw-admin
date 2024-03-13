@@ -104,6 +104,8 @@ export default {
         // modify_voucher\
         modify_voucher: '修改凭证',
         save_modify: '保存修改',
+        payment_account_number: '支付账号',
+        actual_amount_paid: '实付金额',
     },
     en: {
         vehicle_account: 'Vehicle Account',
@@ -172,5 +174,7 @@ export default {
         payment_voucher: 'Payment Voucher',
         modify_voucher: 'Modify Voucher',
         save_modify: 'Save Modify',
+        payment_account_number: 'Payment account number',
+        actual_amount_paid: 'Actual amount paid',
     },
 };

@@ -4,12 +4,6 @@
         <div class="list-container">
             <div class="title-container">
                 <div class="title-area" style="font-weight: 600">{{ $t('p.details') }}</div>
-                <!-- <div class="center-info">
-                    <span class="header-info">{{ $t('p.order_number') }}：{{ detail.sn || '-' }}</span>
-                    <span class="header-info">{{ $t('p.order_time') }}：{{ $Util.timeFilter(detail.create_time) || '-'
-                    }}</span>
-                    <span class="header-info">{{ $t('p.person') }}：{{ detail.user_name || '-' }}</span>
-                </div> -->
                 <div
                     class="btns-area"
                     v-if="
@@ -30,9 +24,6 @@
                                         <div @click="handleExportIn">
                                             {{ $t('p.export_purchase') }}
                                         </div>
-                                        <!-- <a-button @click="handleExportIn"><i class="icon i_download" />
-                                            {{ $t('p.export_purchase') }}
-                                        </a-button> -->
                                     </a-menu-item>
                                     <a-menu-item key="1">
                                         <!-- 修改PI -->
@@ -66,10 +57,6 @@
                                         <div v-if="$auth('ADMIN')" @click="handleExport">
                                             {{ $t('def.export_as_supplier_report') }}
                                         </div>
-                                        <!-- <a-button v-if="$auth('ADMIN')" type="primary" @click="handleExport">
-                                            <i class="icon i_download" />
-                                            {{ $t('def.export_as_supplier_report') }}
-                                        </a-button> -->
                                     </a-menu-item>
                                 </template>
                             </a-menu>
@@ -116,21 +103,23 @@
                             {{ $t('p.give_order') }}
                         </a-button>
                     </template>
+                    <!-- 更换商品按钮 平台方(待审核)可看 | 分销(任何状态)不可见 | 售前订单,售后订单显示  -->
+                    <a-button
+                        v-if="
+                            $Util.Common.returnTypeBool(loginType, [USER_TYPE.ADMIN]) &&
+                            $Util.Common.returnTypeBool(detail.type, [
+                                FLAG_ORDER_TYPE.PRE_SALES,
+                                FLAG_ORDER_TYPE.AFTER_SALES,
+                            ]) &&
+                            $Util.Common.returnTypeBool(detail.status, [STATUS.REVISE_AUDIT])
+                        "
+                        type="primary"
+                        ghost
+                        @click="itemEditShow = true"
+                    >
+                        {{ $t('p.change_item') }}
+                    </a-button>
                     <template v-if="authOrg(detail.org_id, detail.org_type) && detail.status !== STATUS.REVISE_AUDIT">
-                        <!-- 更换商品 (1.赠送订单(type = 40)不会显示按钮)-->
-                        <a-button
-                            v-if="
-                                detail.type !== FLAG_ORDER_TYPE.Gift_SALES &&
-                                beforeDeliver &&
-                                !itemEditShow &&
-                                $auth('purchase-order.save')
-                            "
-                            type="primary"
-                            ghost
-                            @click="itemEditShow = true"
-                        >
-                            {{ $t('p.change_item') }}
-                        </a-button>
                         <!-- 付款 -->
                         <a-button
                             v-if="
@@ -560,8 +549,8 @@
                                 v-if="
                                     user_type &&
                                     $Util.Common.returnTypeBool(1, [
-                                        FREIGHT_STATUS.to_be_determined,
-                                        FREIGHT_STATUS.rejected,
+                                        FREIGHT_STATUS.TO_BE_DETERMINED,
+                                        FREIGHT_STATUS.REJECTED,
                                     ])
                                 "
                                 class="m-l-8"
@@ -582,8 +571,8 @@
                                 v-if="
                                     user_type &&
                                     $Util.Common.returnTypeBool(detail.freight_status, [
-                                        FREIGHT_STATUS.to_be_determined,
-                                        FREIGHT_STATUS.rejected,
+                                        FREIGHT_STATUS.TO_BE_DETERMINED,
+                                        FREIGHT_STATUS.REJECTED,
                                     ])
                                 "
                                 class="m-l-8"
@@ -595,6 +584,7 @@
                     </div>
                 </a-col>
             </a-row>
+            <!-- 分销商显示 -->
             <div v-if="$Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR])" class="all-btn">
                 <a-button type="primary" @click="onConfirmFreight">{{ $t('distributor.confirm_freight') }}</a-button>
             </div>
@@ -616,13 +606,7 @@
             <div class="container-body">
                 <!-- 付款记录-->
                 <template v-if="activeValue == 'payment_detail'">
-                    <paymentList
-                        :target_id="id"
-                        :order_detail="detail"
-                        :sn="detail.sn"
-                        @submit="getList"
-                        ref="payment"
-                    />
+                    <paymentList :target_id="id" :order_detail="detail" :sn="detail.sn" />
                 </template>
                 <!-- displayIn 这个变量是为了区分是收货记录和发货记录 因为现在收货记录和发货记录展示的信息基本相同 但是收货记录不需要展示收货明细 -->
                 <!-- 发货记录 -->
@@ -859,7 +843,10 @@
         </ShippingFreight>
 
         <!-- 确认运费弹窗 -->
-        <ConfirmFreight v-model:visible="confirmFreightVisible" :title="$t('distributor.expected_shipping_freight')"></ConfirmFreight>
+        <ConfirmFreight
+            v-model:visible="confirmFreightVisible"
+            :title="$t('distributor.expected_shipping_freight')"
+        ></ConfirmFreight>
     </div>
 </template>
 <script>
@@ -911,7 +898,7 @@ export default {
         DownOutlined,
         CoCList,
         ShippingFreight,
-        ConfirmFreight
+        ConfirmFreight,
     },
     data() {
         return {
@@ -1235,7 +1222,6 @@ export default {
             // this.giveOrderShow = false
             this.getPurchaseItemList(); // 获取商品列表
             this.getPurchaseInfo(); // 获取订单信息
-            this.$refs.payment.getPurchasePayList();
         },
 
         // 经销商钱包详情
@@ -1751,8 +1737,8 @@ export default {
 
         // 确认运费
         onConfirmFreight() {
-            this.confirmFreightVisible = true
-        }
+            this.confirmFreightVisible = true;
+        },
     },
 };
 </script>
@@ -1894,4 +1880,5 @@ export default {
 
 .freight_status_style {
 }
-</style>./components/ShippingFreightModel.vue
+</style>
+./components/ShippingFreightModel.vue

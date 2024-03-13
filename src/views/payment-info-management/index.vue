@@ -321,15 +321,15 @@ const onSwitch = (e, record) => {
         display: flex;
         align-items: center;
         .region-key {
-            font-size: 16px;
+            font-size: 14px;
             color: #1D2129;
             font-weight: 500;
         }
         .region-count {
-            font-size: 16px;
+            font-size: 14px;
             color: #0061FF;
             font-weight: 500;
-            margin-left: 4px;
+            margin-left: 15px;
         }
     }
     .current-region-list-container {
@@ -340,6 +340,7 @@ const onSwitch = (e, record) => {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
+        margin-bottom: 8px;
         .current-region {
             padding: 2px 8px;
             box-sizing: border-box;
