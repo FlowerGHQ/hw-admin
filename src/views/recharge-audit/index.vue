@@ -58,12 +58,15 @@
                             {{ $Util.auditStatusFilter(text, 'text', [$i18n.locale]) }}
                         </div>
                     </template>
-                    <template v-if="column.key === 'create_time'">
+                    <template v-if="column.key === 'time'">
                         {{ text ? $Util.timeFormat(text) : '-' }}
+                    </template>
+                    <template v-if="column.key === 'money'">
+                        {{ text ? $Util.countFilter(text) : '-' }}
                     </template>
                     <!-- 操作 -->
                     <template v-if="column.key === 'operations'">
-                        <a-button type="link" @click="routerChange('detail', record.id)">
+                        <a-button type="link" @click="routerChange('detail', record)">
                             <MySvgIcon icon-class="eyes-icon" class-name="eyes" />
                             <span class="m-l-10">{{ $t(/*查看详情*/'item_order.see_detail') }}</span>
                         </a-button>
@@ -104,13 +107,13 @@ import MySvgIcon from '@/components/MySvgIcon/index.vue';
 const tableColumns = computed(() => {
     let columns = [
         { title: $t(/*序号*/ 'n.index'), dataIndex: 'id', key: 'number' },
-        { title: $t(/*充值单号*/ 'payment-management.recharge_order_number'), dataIndex: 'region', key: 'item' },
-        { title: $t(/*分销商名称*/ 'payment-management.distributor_name'), dataIndex: 'acc_info', key: 'item' },
-        { title: $t(/*提交申请时间*/ 'payment-management.app_submit_time'), dataIndex: 'create_time', key: 'create_time' },
-        { title: $t(/*收款账号信息*/ 'payment-management.receiving_acc_info'), dataIndex: 'dollar_info', key: 'item' },
-        { title: $t(/*整车余额充值金额*/ 'payment-management.vehicle_balance_amount'), dataIndex: 'eur_info', key: 'item' },
-        { title: $t(/*配件余额充值金额*/ 'payment-management.spare_parts_balance_amount'), dataIndex: 'eur_info', key: 'item' },
-        { title: $t(/*总充值金额*/ 'payment-management.total_top_up_amount'), dataIndex: 'eur_info', key: 'item' },
+        { title: $t(/*充值单号*/ 'payment-management.recharge_order_number'), dataIndex: ['content_json', 'recharge_uid'], key: 'item' },
+        { title: $t(/*分销商名称*/ 'payment-management.distributor_name'), dataIndex: 'name', key: 'item' },
+        { title: $t(/*提交申请时间*/ 'payment-management.app_submit_time'), dataIndex: 'time', key: 'time' },
+        { title: $t(/*收款账号信息*/ 'payment-management.receiving_acc_info'), dataIndex: ['content_json', 'payment_information'], key: 'item' },
+        { title: $t(/*整车余额充值金额*/ 'payment-management.vehicle_balance_amount'), dataIndex: ['content_json', 'vehicle_balance'], key: 'money' },
+        { title: $t(/*配件余额充值金额*/ 'payment-management.spare_parts_balance_amount'), dataIndex: ['content_json', 'part_balance'], key: 'money' },
+        { title: $t(/*总充值金额*/ 'payment-management.total_top_up_amount'), dataIndex: ['content_json', 'total_amount'], key: 'money' },
         { title: $t(/*状态*/ 'payment-management.state'), dataIndex: 'status', key: 'status' },
         { title: $t(/*操作记录*/ 'payment-management.operation_record'), dataIndex: 'create_time', key: 'item' },
         { title: $t(/*操作*/ 'common.operations'), key: 'operations', fixed: 'right' },
@@ -135,29 +138,29 @@ const searchList = ref([
     },
 ]);
 const statusList = ref([
-    { zh: '全  部', en: 'All', value: '0', color: 'primary', key: '0' },
-    { zh: '等待一审', en: 'Pending First Audit', value: '0', color: 'yellow', key: '50' },
-    { zh: '等待二审', en: 'Pending Second Audit', value: '0', color: 'yellow', key: '60' },
-    { zh: '二审通过', en: 'Approval Second Audit', value: '0', color: 'yellow', key: '100' },
-    { zh: '一审不通过', en: 'The First Audit Was Rejected', value: '0', color: 'yellow', key: '630' },
-    { zh: '二审不通过', en: 'The Second Audit Was Rejected', value: '0', color: 'yellow', key: '150' },
+    { zh: '全  部', en: 'All', value: 0, color: 'primary', key: 0 },
+    { zh: '等待一审', en: 'Pending First Audit', value: 0, color: 'yellow', key: 1 },
+    { zh: '等待二审', en: 'Pending Second Audit', value: 0, color: 'yellow', key: 4 },
+    { zh: '一审不通过', en: 'The First Audit Was Rejected', value: 0, color: 'yellow', key: 3 },
+    { zh: '二审通过', en: 'Approval Second Audit', value: 0, color: 'yellow', key: 2 },
+    { zh: '二审不通过', en: 'The Second Audit Was Rejected', value: 0, color: 'yellow', key: 5 },
 ]);
 
 onMounted(() => {});
 /* Fetch start*/
-const request = Core.Api.Operation.list;
-const dataCallBack = res => {
-    // 处理数据
-    return res.list.map(item => {
-        item.old_sort = Core.Util.deepCopy(item.sort);
-        item.firstSentence = Core.Util.Common.getFirstSentence(item.content);
-        return item;
-    });
-};
+const request = Core.Api.RechargeAudit.list;
+// const dataCallBack = res => {
+//     // 处理数据
+//     return res.list.map(item => {
+//         item.old_sort = Core.Util.deepCopy(item.sort);
+//         item.firstSentence = Core.Util.Common.getFirstSentence(item.content);
+//         return item;
+//     });
+// };
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request,
-    initParam: { type: Core.Const.OPERATION.OPERATION_TYPE_MAP.REPORT },
-    dataCallBack: dataCallBack,
+    // initParam: { type: Core.Const.OPERATION.OPERATION_TYPE_MAP.REPORT },
+    // dataCallBack: dataCallBack,
 });
 /* Fetch end*/
 

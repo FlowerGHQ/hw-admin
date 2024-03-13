@@ -102,17 +102,19 @@
                             </div>
                         </template>
                     </div>
-                    <div class="steps-action">
-                        <a-button v-if="current < steps.length - 1" type="primary" @click="next">{{
-                            $t('mall.next_step')
-                        }}</a-button>
-                        <a-button v-if="current == steps.length - 1" type="primary" @click="submit">
-                            {{ $t('common.submit') }}
-                        </a-button>
-                        <a-button v-if="current > 0" style="margin-left: 8px" @click="prev">{{
-                            $t('mall.previous_step')
-                        }}</a-button>
-                    </div>
+                    <template v-if="type !== 'preview'">
+                        <div class="steps-action">
+                            <a-button v-if="current < steps.length - 1" type="primary" @click="next">{{
+                                $t('mall.next_step')
+                            }}</a-button>
+                            <a-button v-if="current == steps.length - 1" type="primary" @click="submit">
+                                {{ $t('common.submit') }}
+                            </a-button>
+                            <a-button v-if="current > 0" style="margin-left: 8px" @click="prev">{{
+                                $t('mall.previous_step')
+                            }}</a-button>
+                        </div>
+                    </template>
                 </div>
             </template>
             <!-- 已提交 -->
@@ -144,6 +146,7 @@ const steps = [
         content: '提交付款凭证',
     },
 ];
+const type = ref(''); // 从 route 获取的 type
 const formRef = ref();
 const formState = reactive({
     price: '',

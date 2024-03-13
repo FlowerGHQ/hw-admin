@@ -1,132 +1,169 @@
 <template>
-    <div id="ItemSettle" class="list-container">
-        <a-spin :spinning="loading" class="loading-incontent" v-if="loading"></a-spin>
-        <div class="title-area">{{ $t('i.settle') }}</div>
-        <div class="config-list">
-            <div class="config-item receive">
-                <div class="config-title">1.{{ $t('i.shipping_options') }}</div>
-                <div class="config-content select-mode">
-                    <div
-                        class="select-item"
-                        :class="selectIndex === item.id ? 'active' : ''"
-                        v-for="item of receiveList"
-                        :key="item.id"
-                        @click="handleConfigSelect(item)"
+    <div id="ItemSettle">
+        <div class="content">
+            <!-- 确认订单信息 -->
+            <p class="title">{{ $t('mall.confirm_order_information') }}</p>
+            <div class="box table-info">
+                <OrderInformation :list="shopCartList" :unit="unit" />
+            </div>
+            <!-- 收货地址 -->
+            <p class="title">
+                {{ $t('mall.receiving_address') }}
+                <MyButton padding="8px">
+                    <ReceiverAddressEdit
+                        :orgId="orgId"
+                        :orgType="orgType"
+                        btnClass="edit-btn"
+                        @submit="getReceiveList"
+                        >{{ $t('i.new_address') }}</ReceiverAddressEdit
                     >
-                        <div class="info">
-                            <i class="icon i_point" />
-                            <div class="desc">
-                                <p>{{ item.name }} {{ item.phone }}</p>
-                                <p>{{ item.email }}</p>
-                                <p v-if="$i18n.locale === 'zh'">
-                                    {{ item.country }} {{ item.province }} {{ item.city }} {{ item.county }}
-                                    {{ item.address }}
-                                </p>
-                                <p v-if="$i18n.locale === 'en'">
-                                    {{ item.country_en }} {{ item.province_en }} {{ item.city_en }} {{ item.county }}
-                                    {{ item.address }}
-                                </p>
-                            </div>
+                </MyButton>
+            </p>
+            <div class="box select">
+                <div
+                    class="select-item"
+                    :class="selectIndex === item.id ? 'active' : ''"
+                    v-for="item of receiveList"
+                    :key="item.id"
+                    @click="handleConfigSelect(item)"
+                >
+                    <div class="info">
+                        <div class="desc">
+                            <p class="name">{{ item.name }}</p>
+                            <p class="email"><img src="@images/mall/order/email.png" />{{ item.email || '-' }}</p>
+                            <p class="phone"><img src="@images/mall/order/phone.png" />{{ item.phone || '-' }}</p>
                         </div>
-                        <div class="btn">
-                            <ReceiverAddressEdit
-                                btnType="link"
-                                :detail="item"
-                                :orgId="orgId"
-                                :orgType="orgType"
-                                btnClass="edit-btn"
-                                @submit="getReceiveList"
-                                >{{ $t('def.edit') }}</ReceiverAddressEdit
-                            >
-                            <a-button type="link" @click.stop="handleConfigDelete(item)">{{
-                                $t('def.delete')
-                            }}</a-button>
-                        </div>
+                        <p class="address" v-if="$i18n.locale === 'zh'">
+                            {{ item.country }} {{ item.province }} {{ item.city }} {{ item.county }}
+                            {{ item.address }}
+                        </p>
+                        <p class="address" v-if="$i18n.locale === 'en'">
+                            {{ item.country_en }} {{ item.province_en }} {{ item.city_en }} {{ item.county }}
+                            {{ item.address }}
+                        </p>
                     </div>
-                    <div class="add">
+                    <div class="btn">
                         <ReceiverAddressEdit
-                            btnType="link"
+                            :detail="item"
                             :orgId="orgId"
                             :orgType="orgType"
                             btnClass="edit-btn"
                             @submit="getReceiveList"
-                            >{{ $t('i.new_address') }}</ReceiverAddressEdit
+                            >{{ $t('def.edit') }}</ReceiverAddressEdit
                         >
+                        <a-button type="link" class="delete" @click.stop="handleConfigDelete(item)">{{
+                            $t('def.delete')
+                        }}</a-button>
                     </div>
                 </div>
             </div>
-            <div class="config-item pay" v-if="$auth('DISTRIBUTOR')">
-                <div class="config-title">2.{{ $t('i.shipping_settings') }}</div>
-                <div class="config-content">
-                    <div class="radio-item">
-                        <div class="desc">{{ $t('p.partial_shipments') }}：</div>
-                        <div class="value">
-                            <a-radio-group v-model:value="form.flag_part_shipment">
-                                <a-radio v-for="item of flagPartShipmentList" :key="item.key" :value="item.key">{{
-                                    item[$i18n.locale]
-                                }}</a-radio>
-                            </a-radio-group>
-                        </div>
+            <!-- 运输信息 -->
+            <p class="title">{{ $t('mall.transportation_information') }}</p>
+            <div class="box transport">
+                <div class="key-value">
+                    <div class="key">{{ $t('mall.transportation_method') }}:</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.transportation_method">
+                            <a-radio v-for="item in TRANSFER_METHODS" :value="item.value">
+                                {{ $t(item.nameLang) }}
+                            </a-radio>
+                        </a-radio-group>
                     </div>
-                    <div class="radio-item">
-                        <div class="desc">{{ $t('p.transshipment') }}：</div>
-                        <div class="value">
-                            <a-radio-group v-model:value="form.flag_transfer">
-                                <a-radio v-for="item of flagTransferList" :key="item.key" :value="item.key">{{
-                                    item[$i18n.locale]
-                                }}</a-radio>
-                            </a-radio-group>
-                        </div>
+                </div>
+                <div class="key-value">
+                    <div class="key">{{ $t('mall.destination_port') }}:</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.destination_port">
+                            <a-radio v-for="item in DESTINATION_PORT" :value="item.value">
+                                {{ $t(item.nameLang) }}
+                            </a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="key-value">
+                    <div class="key">{{ $t('mall.allowed_batch') }}:</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.flag_part_shipment">
+                            <a-radio v-for="item in flagPartShipmentList" :value="item.value">
+                                {{ $t(item.nameLang) }}
+                            </a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="key-value">
+                    <div class="key">{{ $t('mall.forwarding_allowed') }}:</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.flag_transfer">
+                            <a-radio v-for="item in flagTransferList" :value="item.value">
+                                {{ $t(item.nameLang) }}
+                            </a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="key-value">
+                    <div class="key">{{ $t('mall.insured') }}:</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.insured">
+                            <a-radio v-for="item in INSURED" :value="item.value">
+                                {{ $t(item.nameLang) }}
+                            </a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="key-value">
+                    <div class="key">{{ $t('mall.palletize') }}:</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.palletize">
+                            <a-radio v-for="item in PALLETIZE" :value="item.value">
+                                {{ $t(item.nameLang) }}
+                            </a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="key-value">
+                    <div class="key">
+                        {{ $t('mall.expected_delivery') }}:<a-tooltip>
+                            <template #title>{{ $t('mall.calculation') }}</template>
+                            <img class="tips" src="@images/mall/order/tips.png" />
+                        </a-tooltip>
+                    </div>
+                    <div class="value">
+                        <a-date-picker v-model:value="form.time" :placeholder="$t('mall.select_date')" />
                     </div>
                 </div>
             </div>
-            <a-button type="primary" class="orange" @click="handleCreateOrder()">{{ $t('p.confirm_order') }}</a-button>
         </div>
-        <div class="settel-item">
-            <div class="item-title">
-                <span>{{ $t('p.cart') }}</span>
-                <a-button type="link" @click="routerChange('back')">{{ $t('def.edit') }}</a-button>
-            </div>
-            <div class="item-content">
-                <div class="price-item" v-for="item of shopCartList" :key="item.id">
-                    <p class="name">{{ item.item ? (lang == 'zh' ? item.item.name : item.item.name_en) : '-' }}</p>
-                    <span class="price"
-                        >{{ unit }}
-                        {{
-                            $Util.Number.numFormat(
-                                $Util.countFilter(
-                                    item.amount * item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)],
-                                ),
-                            )
-                        }}
-                    </span>
+        <!-- 底部支付栏 -->
+        <div class="settlement-fixed">
+            <div class="settlement-fixed-body">
+                <div class="sub-price">
+                    <p class="sub-price-item">
+                        <span>{{ $t('mall.whole_vehicle_orders') }}：</span>
+                        <span>{{ unit }} {{ sum_price }}</span>
+                    </p>
+                    <p class="sub-price-item">
+                        <span>{{ $t('mall.accessory_order') }}：</span>
+                        <span>{{ unit }} {{ sum_price }}</span>
+                    </p>
                 </div>
-                <div class="price-item sum">
-                    <p class="name">{{ $t('p.total') }}</p>
-                    <span class="price">{{ unit }} {{ sum_price }}</span>
-                </div>
-                <div class="sub-title">{{ $t('p.preview') }}</div>
-                <div class="item-item" v-for="item of shopCartList" :key="item.id">
-                    <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
-                    <div class="info">
-                        <p>{{ item.item ? (lang == 'zh' ? item.item.name : item.item.name_en) : '-' }}</p>
-                        <span>{{ $t('p.code') }}：{{ item.item ? item.item.code : '-' }}</span>
-                        <span v-if="item.item && item.item.attr_str"
-                            >{{ $t('i.spec') }}：{{
-                                item.item ? (lang == 'zh' ? item.item.attr_str : item.item.attr_str_en) : '-'
-                            }}</span
-                        >
-                        <span>{{ $t('i.amount') }}：{{ item.amount }}</span>
-                        <span
-                            >{{ $t('p.unit_price') }}：{{ unit }}
-                            {{
-                                $Util.Number.numFormat(
-                                    $Util.countFilter(item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]),
-                                )
-                            }}</span
-                        >
-                        <span>{{ $t('i.remark') }}：{{ item.remark }}</span>
+                <div class="settlement">
+                    <div class="settlement-mes">
+                        <div class="settlement-price">
+                            <span class="dis"> {{ $t('mall.payable_amount') }}: </span>
+                            <span class="price"> {{ unit }} {{ sum_price }} </span>
+                        </div>
+                        <!-- 余额 -->
+                        <p class="settlement-balance">{{ $t('ac.balance') }}: {{ unit }} 30,000</p>
                     </div>
+                    <my-button
+                        showRightIcon
+                        type="primary"
+                        padding="12px 32px"
+                        font="14px"
+                        @click.native="handleCreateOrder"
+                    >
+                        {{ $t('mall.submit_order') }}
+                    </my-button>
                 </div>
             </div>
         </div>
@@ -137,11 +174,12 @@
 import Core from '@/core';
 
 import ReceiverAddressEdit from '@/components/popup-btn/ReceiverAddressEdit.vue';
+import MyButton from '../../../components/common/MyButton.vue';
+import OrderInformation from './components/order-information.vue';
 const PURCHASE = Core.Const.PURCHASE;
 export default {
     name: 'ItemSettle',
-    components: { ReceiverAddressEdit },
-    props: {},
+    components: { ReceiverAddressEdit, MyButton, OrderInformation },
     data() {
         return {
             // 加载
@@ -150,9 +188,12 @@ export default {
             loading: false, // 按钮防重复点击 loading
             PURCHASE,
             receiveList: [],
+            TRANSFER_METHODS: PURCHASE.TRANSFER_METHODS, // 运输方式选项列表
+            DESTINATION_PORT: PURCHASE.DESTINATION_PORT, // 目的港
             flagPartShipmentList: PURCHASE.FLAG_PART_SHIPMENT_LIST, // 分批发货
             flagTransferList: PURCHASE.FLAG_TRANSFER_LIST, // 转运
-            flagOrderTypeList: PURCHASE.FLAG_ORDER_TYPE_LIST, // 转运
+            INSURED: PURCHASE.INSURED, // 是否参保
+            PALLETIZE: PURCHASE.PALLETIZE, // 是否打托
             selectIndex: '',
 
             countryList: Core.Const.COUNTRY_LIST,
@@ -167,8 +208,13 @@ export default {
                 address: '',
                 email: '',
                 flag_order_type: undefined,
-                flag_part_shipment: undefined,
-                flag_transfer: undefined,
+                transportation_method: undefined, // 运输方式选项列表
+                destination_port: undefined, // 目的港
+                flag_part_shipment: undefined, // 分批发货
+                flag_transfer: undefined, // 转运
+                insured: undefined, // 是否参保
+                palletize: undefined, // 是否打托
+                time: undefined, // 期望交付时间
             },
             defAddr: [],
 
@@ -182,6 +228,9 @@ export default {
                 $: { key: '_usd', text: '$ (USD)', currency: 'USD' },
             },
             selectedId: [],
+            value1: 'Apple',
+            value2: '',
+            plainOptions: ['Apple', 'Pear', 'Orange'],
         };
     },
     watch: {},
@@ -189,6 +238,7 @@ export default {
         sum_price() {
             let sum = 0;
             for (const item of this.shopCartList) {
+                if (item.item?.isGift) continue;
                 sum += item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)] * item.amount;
             }
             return Core.Util.countFilter(sum);
@@ -245,7 +295,9 @@ export default {
                         element.attr_str_en = str_en;
                     }
                 });
+                res.list = this.getVehicleListHasGift(res.list);
                 this.shopCartList = res.list.filter(item => this.selectedId.indexOf(item.id) !== -1);
+                console.log(this.shopCartList);
             });
         },
 
@@ -327,19 +379,50 @@ export default {
         handleConfigSelect(item) {
             this.selectIndex = item.id;
         },
-
-        // 创建订单
-        handleCreateOrder() {
+        checkForm() {
             if (!this.selectIndex) {
                 return this.$message.warning(this.$t('def.enter'));
             }
-
+            if (this.$auth('DISTRIBUTOR') && !this.form.transportation_method) {
+                return this.$message.warning(this.$t('def.enter'));
+            }
+            if (this.$auth('DISTRIBUTOR') && !this.form.destination_port) {
+                return this.$message.warning(this.$t('def.enter'));
+            }
             if (this.$auth('DISTRIBUTOR') && !this.form.flag_part_shipment) {
                 return this.$message.warning(this.$t('def.enter'));
             }
             if (this.$auth('DISTRIBUTOR') && !this.form.flag_transfer) {
                 return this.$message.warning(this.$t('def.enter'));
             }
+            if (this.$auth('DISTRIBUTOR') && !this.form.insured) {
+                return this.$message.warning(this.$t('def.enter'));
+            }
+            if (this.$auth('DISTRIBUTOR') && !this.form.palletize) {
+                return this.$message.warning(this.$t('def.enter'));
+            }
+            if (this.$auth('DISTRIBUTOR') && !this.form.time) {
+                return this.$message.warning(this.$t('def.enter'));
+            }
+            return false;
+        },
+        // 创建订单
+        handleCreateOrder() {
+            if (this.checkForm()) return;
+            const item_list = this.shopCartList.map(item => {
+                if (!item.item?.isGift) {
+                    return {
+                        item_code: item.item.item_code,
+                        type: item.item.type,
+                        amount: item.amount,
+                        item_id: item.item_id,
+                        charge: item.amount * item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)],
+                        price: item.amount * item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)],
+                        unit_price: item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)],
+                        remark: item.remark,
+                    };
+                }
+            });
             const parms = {
                 price: Math.round(this.sum_price * 100),
                 charge: Math.round(this.sum_price * 100),
@@ -348,20 +431,16 @@ export default {
                 receive_info_id: this.selectIndex,
                 currency: this.currency,
                 flag_part_shipment: this.form.flag_part_shipment,
-                item_list: this.shopCartList.map(item => ({
-                    item_code: item.item.item_code,
-                    type: item.item.type,
-                    amount: item.amount,
-                    item_id: item.item_id,
-                    charge: item.amount * item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)],
-                    price: item.amount * item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)],
-                    unit_price: item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)],
-                    remark: item.remark,
-                })),
+                item_list: item_list.filter(item => item),
             };
             if (this.$auth('DISTRIBUTOR')) {
+                parms['transportation_method'] = this.form.transportation_method;
+                parms['destination_port'] = this.form.destination_port;
                 parms['flag_part_shipment'] = this.form.flag_part_shipment;
                 parms['flag_transfer'] = this.form.flag_transfer;
+                parms['insured'] = this.form.insured;
+                parms['palletize'] = this.form.palletize;
+                parms['time'] = Date.parse(this.form.time) / 1000;
             }
             if (this.loading) return;
             this.loading = true;
@@ -383,234 +462,232 @@ export default {
         handleClearShopCart() {
             Core.Api.ShopCart.clear();
         },
+        // 获取包括礼物的列表
+        getVehicleListHasGift(list) {
+            const obj = Core.Util.deepCopy(list[2]);
+            Object.assign(obj?.item, {
+                isGift: true,
+            });
+            list[2].item.giftList = [obj, obj];
+            list.forEach((item, index) => {
+                if (item.item?.giftList && item.item?.giftList.length > 0) {
+                    item.item?.giftList.forEach(iGift => {
+                        Object.assign(iGift?.item, {
+                            isGift: true,
+                        });
+                    });
+                    list.splice(index + 1, 0, ...item.item?.giftList);
+                }
+            });
+            return list;
+        },
     },
 };
 </script>
 
+<style lang="scss" scoped src="../css/layout.css"></style>
 <style lang="less">
 #ItemSettle {
-    padding: 60px 105px 150px;
     display: flex;
     flex-wrap: wrap;
     position: relative;
-    .monetary-select {
-        position: absolute;
-        top: 60px;
-        right: 105px;
-        min-width: 126px;
-        .ant-select-selector {
-            border-color: #006ef9;
-        }
-        .ant-select-selection-item {
-            color: #006ef9;
-        }
+    .content {
+        padding-top: 48px;
     }
-    .ant-btn-link,
-    .edit-btn {
-        color: #757575;
-        border-bottom: 1px solid #757575;
-        border-radius: 0;
-        height: 22px;
-        font-size: 14px;
-        margin-bottom: 0;
-        &:hover {
-            opacity: 0.8;
-        }
-    }
-    .ant-btn.orange {
-        width: 112px;
-        height: 40px;
-        margin-top: 30px;
-        background: #f4752e;
-        border-radius: 2px;
-        border-color: #f4752e;
-    }
-    .title-area {
+    .title {
+        .flex(space-between, center, row);
         font-size: 24px;
-        font-weight: 500;
-        color: #111111;
-        line-height: 28px;
-        text-align: center;
-        width: 100%;
-        padding-bottom: 30px;
+        line-height: 24px;
+        margin-bottom: 19px;
     }
-    .config-list {
-        width: 70%;
-        box-sizing: border-box;
-        padding-right: 40px;
-        .config-item {
-            + .config-item {
-                margin-top: 30px;
-            }
-            .config-title {
-                height: 56px;
-                line-height: 56px;
-                background: #f7f8fa;
-                border-radius: 4px 4px 0px 0px;
-                font-size: 20px;
-                font-weight: 500;
-                color: #252526;
-                padding-left: 34px;
-            }
-            .config-content {
-                box-sizing: border-box;
-                padding: 32px 34px 30px;
-                border: 1px solid #e6eaee;
-                &.edit-mode {
-                    .form-item.btn {
-                        margin-top: 30px;
-                        .value {
-                            display: flex;
-                            align-items: center;
-                        }
-                        .ant-btn-primary {
-                            border-radius: 0;
-                            height: 34px;
-                        }
-                    }
-                }
-                &.select-mode {
-                    min-height: 428px;
-                    overflow: auto;
-                    .select-item {
-                        .fsb();
-                        cursor: pointer;
-                        border-radius: 2px;
-                        border: 1px solid #e5e8eb;
-                        margin-bottom: 20px;
-                        padding: 11px 20px;
-                        box-sizing: border-box;
-                        transition: border-color 0.3s ease;
-                        .info {
-                            width: calc(~'100% - 64px');
-                            .fac();
-                            .icon.i_point {
-                                width: 30px;
-                                box-sizing: border-box;
-                                font-size: 16px;
-                                padding-right: 16px;
-                            }
-                            .desc {
-                                width: calc(~'100% - 30px');
-                                font-size: 14px;
-                                font-weight: 400;
-                                p {
-                                    .ell();
-                                    color: #181818;
-                                    line-height: 20px;
-                                    + p {
-                                        margin-top: 4px;
-                                    }
-                                }
-                            }
-                        }
-                        .btn {
-                            width: 64px;
-                            .fac(flex-end);
-                        }
-                        &.active {
-                            border-color: @BC_P;
-                            .icon.i_point {
-                                color: @TC_P;
-                            }
-                        }
-                    }
-                    .add {
-                        display: flex;
-                        justify-content: flex-end;
-                        margin-bottom: 10px;
-                    }
-                }
-                .radio-item {
-                    + .radio-item {
-                        margin-top: 12px;
-                    }
-                    .fac();
-                    .desc {
-                        position: relative;
-                        font-size: 14px;
-                        font-weight: 400;
-                        color: #181818;
-                        line-height: 20px;
-                        //width: 100px;
-                        // &:after {
-                        //     content: ':';
-                        //     position: absolute;
-                        //     top: 0;
-                        //     right: 0;
-                        // }
-                    }
-                }
-            }
-        }
-    }
-    .settel-item {
-        width: 30%;
-        .item-title {
-            height: 56px;
-            line-height: 56px;
-            background: #f8fafc;
-            font-size: 20px;
-            font-weight: 500;
-            color: #252526;
-            padding: 0 20px;
-            .fsb();
-        }
-        .item-content {
-            border: 1px solid #e6eaee;
-            padding: 22px 20px 32px;
-        }
-        .price-item {
-            width: 100%;
-            .fsb();
-            font-size: 14px;
-            color: #111111;
-            line-height: 20px;
-            margin-bottom: 4px;
-            &.sum {
-                line-height: 22px;
-                margin: 10px 0 0;
-                padding-bottom: 22px;
-                border-bottom: 1px solid #e6eaee;
-                p {
-                    font-size: 16px;
-                    color: #000000;
-                    font-weight: 500;
-                }
-                span {
-                    color: #f4752e;
-                }
-            }
-        }
-        .sub-title {
-            font-size: 16px;
-            font-weight: 500;
-            color: #111111;
-            line-height: 19px;
-            padding: 20px 0 24px;
-        }
-        .item-item {
-            display: flex;
-            margin-bottom: 40px;
-            .cover {
-                width: 60px;
-                height: 60px;
-                background: #f3f3f3;
-            }
-            .info {
-                width: calc(~'100% - 60px');
-                padding-left: 20px;
-                box-sizing: border-box;
-                display: flex;
-                flex-direction: column;
-                line-height: 20px;
+    .box {
+        background: #fff;
+        margin-bottom: 43px;
+        .ant-radio-group {
+            .ant-radio-wrapper {
                 font-size: 14px;
-                p {
-                    color: #111111;
-                    margin-bottom: 6px;
+            }
+            .ant-radio-inner {
+                border-color: #e5e6eb;
+                border-width: 2px;
+            }
+            .ant-radio-input:focus + .ant-radio-inner {
+                box-shadow: 0 0 0 3px rgba(143, 0, 255, 0.1);
+            }
+            .ant-radio-checked .ant-radio-inner {
+                border-color: #8f00ff;
+                border-width: 4px;
+                &::after {
+                    background: #fff;
                 }
-                span {
-                    color: #757575;
+            }
+        }
+    }
+    .select {
+        background: none;
+    }
+    .select-item {
+        padding: 20px;
+        background: #fff;
+        .flex(space-between, center, row);
+        &:nth-child(n + 2) {
+            margin-top: 16px;
+        }
+        &.active {
+            outline: 0.5px solid #8f00ff;
+        }
+        .info {
+            .desc {
+                .flex(initial, center, row);
+                .name {
+                    font-size: 18px;
+                    font-weight: 600;
+                    line-height: 27px;
+                    color: #1d2129;
+                }
+                .email {
+                    margin-left: 12px;
+                    .flex(initial, center, row);
+                    > img {
+                        margin-right: 7px;
+                        height: 12px;
+                    }
+                }
+                .phone {
+                    margin-left: 12px;
+                    .flex(initial, center, row);
+                    > img {
+                        margin-right: 7px;
+                        height: 12px;
+                    }
+                }
+            }
+            .address {
+                margin-top: 4px;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 20px;
+                color: #4e5969;
+            }
+        }
+        .delete {
+            color: #f53f3f;
+            margin-left: 8px;
+        }
+    }
+    .transport {
+        .flex(initial, center, row);
+        flex-wrap: wrap;
+        padding: 20px 20px 0 20px;
+        .key-value {
+            .flex(initial, center, row);
+            margin-bottom: 20px;
+            margin-right: 60px;
+            &:last-child {
+                margin-right: 0;
+            }
+            .key {
+                margin-right: 16px;
+                .tips {
+                    margin-left: 4px;
+                    width: 13.3px;
+                    height: 13.3px;
+                }
+            }
+        }
+    }
+
+    .table-info {
+        padding-left: 56px;
+    }
+    .settlement-fixed {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: #fff;
+        border-top: 1px solid #e5e6eb;
+        z-index: 999;
+
+        .settlement-fixed-body {
+            min-height: 80px;
+            width: 75%;
+            margin: 0 auto;
+            padding: 12px 0;
+            padding-left: 24px;
+            .flex(space-between, center, row);
+
+            .sub-price {
+                .flex(initial, center, row);
+                flex-wrap: wrap;
+                .sub-price-item {
+                    margin-right: 32px;
+                    > span {
+                        &:nth-of-type(1) {
+                            font-size: 14px;
+                            font-weight: 400;
+                            line-height: 20px;
+                            color: #86909c;
+                        }
+                        &:nth-of-type(2) {
+                            font-size: 14px;
+                            font-weight: 400;
+                            line-height: 20px;
+                            color: #1d2129;
+                        }
+                    }
+                }
+            }
+
+            .settlement {
+                .flex(initial, center, row);
+                .settlement-mes {
+                    margin-right: 24px;
+                    .settlement-price {
+                        .flex(initial, center, row);
+                    }
+                }
+                .settlement-balance {
+                    line-height: 21px;
+                    color: #666666;
+                    text-align: right;
+                    &.warn {
+                        color: #ff3636;
+                    }
+                }
+                .select-nums {
+                    color: #000;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: 24px;
+                    margin-right: 24px;
+
+                    .nums {
+                        background: linear-gradient(100deg, #c6f 0%, #66f 100%);
+                        background-clip: text;
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                    }
+                }
+
+                .dis {
+                    color: #000;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: 24px;
+                    white-space: nowrap;
+                    margin-right: 8px;
+                }
+
+                .price {
+                    color: #ff3636;
+                    font-size: 24px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: 29px;
+                    white-space: nowrap;
                 }
             }
         }
