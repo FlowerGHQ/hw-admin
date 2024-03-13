@@ -117,6 +117,12 @@ export default {
         waiting_for_review: '等待二审',
         // 二审不通过
         second_review_not_passed: '二审不通过',
+        cancel_order: '取消订单',
+        cancel_order_tips1: '取消订单需要业务人员审核，是否提交取消订单审核',
+        cancel_order_tips2: '为促使审核人员同意您的申请，请输入取消原因',
+        under_review: '审核中',
+        cancel_record: '取消记录',
+        application_time: '申请时间',
     },
     en: {
         vehicle_account: 'Vehicle Account',
@@ -192,5 +198,13 @@ export default {
         audit_not_pass: 'Audit Not Pass',
         waiting_for_review: 'Waiting For Review',
         second_review_not_passed: 'Second Review Not Passed',
+        cancel_order: 'Cancel Order',
+        cancel_order_tips1:
+            'The cancellation of the order needs to be reviewed by the business staff, and whether to submit the cancellation order for review',
+        cancel_order_tips2:
+            'In order to urge the auditor to agree to your application, please enter the reason for cancellation',
+        under_review: 'Under Review',
+        cancel_record: 'Cancel Record',
+        application_time: 'Application Time',
     },
 };

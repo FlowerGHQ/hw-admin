@@ -53,12 +53,12 @@ const DISTRIBUTOR = {
         3: { key: 3, t: "distributor.rejected"}, // 已拒绝
     },
     AUDIT_RESULT: {
-        no: 0, // 不通过
-        yes: 1, // 通过
+        REFUSE: 0, // 不通过
+        CONFIRM: 1, // 确认
     },
     AUDIT_RESULT_MAP_ARR: [
-       { key: 1, t: 'common.adopt' }, // 不通过
-       { key: 0, t: 'common.not_passed' }, // 通过
+        { key: 1, t: 'common.confirm' }, // 确认 
+        { key: 0, t: 'common.refuse' }, // 拒绝
     ],
     // 取消订单申请表 下的状态
     CANCELLATION_ORDER_TAB: {

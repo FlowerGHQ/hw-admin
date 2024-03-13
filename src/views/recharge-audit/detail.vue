@@ -200,11 +200,11 @@ const radioGroupChange = (e) => {
     if(e.target.value === 1) {
         modalTitle.value = 'payment-management.sure_success'
         modalText.value = proxy.$t('payment-management.sure_approve_tip')
-        submitText.value = proxy.$t('payment-management.confirm_reject')
+        submitText.value = proxy.$t('payment-management.confirm_through')
     } else {
         modalTitle.value = 'payment-management.sure_fail'
         modalText.value = proxy.$t('payment-management.sure_tip')
-        submitText.value = proxy.$t('payment-management.confirm_through')
+        submitText.value = proxy.$t('payment-management.confirm_reject')
     }
 }
 const handleModalSubmit = () => {
