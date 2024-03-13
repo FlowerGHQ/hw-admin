@@ -23,9 +23,13 @@
                                     </div>
                                     <div class="account-card-content-item-value">0.00</div>
                                     <!-- 充值按钮 -->
-                                    <a-button v-if="$auth('DISTRIBUTOR')" type="primary" size="small">{{
-                                        $t('distributor-detail.recharge')
-                                    }}</a-button>
+                                    <a-button
+                                        v-if="$auth('DISTRIBUTOR')"
+                                        type="primary"
+                                        size="small"
+                                        @click="handleRouteChange(0)"
+                                        >{{ $t('distributor-detail.recharge') }}</a-button
+                                    >
                                     <!-- 资金变动明细 -->
                                     <div class="line-item" @click="handleRouteChange(1)">
                                         {{ $t('distributor-detail.fund_change_detail') }}
@@ -168,27 +172,44 @@
 import { ref, onMounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import Core from '@/core';
 const $t = useI18n().t;
-const route = useRoute();
 const router = useRouter();
 const props = defineProps({});
 
 // methods
 const handleRouteChange = type => {
     console.log('type', type);
+    let routeUrl = '';
     switch (type) {
+        case 0:
+            routeUrl = router.resolve({
+                path: '/distributor/distributor-recharge-detail',
+                query: {},
+            });
+            console.log('routeUrl', routeUrl);
+            window.open(routeUrl.href, '_blank');
+            break;
         case 1:
-            //    跳转到distributor-fund-change-detail
-            router.push('/distributor/distributor-fund-change-detail');
+            routeUrl = router.resolve({
+                path: '/distributor/distributor-fund-change-detail',
+                query: {},
+            });
+            console.log('routeUrl', routeUrl);
+            window.open(routeUrl.href, '_blank');
             break;
         case 2:
-            router.push('/distributor/distributor-recharge-record');
+            routeUrl = router.resolve({
+                path: '/distributor/distributor-recharge-record',
+                query: {},
+            });
+            window.open(routeUrl.href, '_blank');
             break;
         case 3:
-            router.push({
+            routeUrl = router.resolve({
                 path: '/distributor/distributor-credit-change',
+                query: {},
             });
+            window.open(routeUrl.href, '_blank');
             break;
         default:
             break;
