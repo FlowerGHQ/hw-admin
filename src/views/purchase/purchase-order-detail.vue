@@ -531,13 +531,14 @@
                         <!-- 打托 -->
                         <div class="info-item">
                             <div class="key">{{ $t('p.playing_tricks') }}</div>
-                            <div class="value">{{ '待联调' || '-' }}</div>
+                            <div class="value">
+                                {{ $Util.purchaseTransferFilter(detail.flag_pallet, $i18n.locale) || '-' }}
+                            </div>
                         </div>
                         <!-- 期望交期 -->
                         <div class="info-item">
                             <div class="key">{{ $t('p.expected_delivery_time') }}</div>
-                            <!-- $Util.timeFilter(detail.create_time) -->
-                            <div class="value">{{ '待联调' || '-' }}</div>
+                            <div class="value">{{ $Util.timeFilter(detail.deliver_time_expected) || '-' }}</div>
                         </div>
                     </div>
                 </a-col>
@@ -563,8 +564,9 @@
                             <a-button
                                 v-if="
                                     user_type &&
-                                    $Util.Common.returnTypeBool(1, [
-                                        FREIGHT_STATUS.TO_BE_DETERMINED,
+                                    $Util.Common.returnTypeBool(detail.freight_status, [
+                                        FREIGHT_STATUS.TO_BE_FILLED_IN,
+                                        FREIGHT_STATUS.TO_BE_CONFIRMED,
                                         FREIGHT_STATUS.REJECTED,
                                     ])
                                 "
@@ -572,9 +574,11 @@
                                 type="link"
                                 @click="onModify"
                             >
-                                {{ detail.sn || '-' }}
+                                {{ $Util.timeFilter(detail?.freight_audit_record?.content?.shipping_time_estimated) }}
                             </a-button>
-                            <span v-else>{{ detail.sn || '-' }}</span>
+                            <span v-else>
+                                {{ $Util.timeFilter(detail?.freight_audit_record?.content?.shipping_time_estimated) }}
+                            </span>
                         </div>
                     </div>
                 </a-col>
@@ -587,16 +591,22 @@
                                 v-if="
                                     user_type &&
                                     $Util.Common.returnTypeBool(detail.freight_status, [
-                                        FREIGHT_STATUS.TO_BE_DETERMINED,
+                                        FREIGHT_STATUS.TO_BE_FILLED_IN,
+                                        FREIGHT_STATUS.TO_BE_CONFIRMED,
                                         FREIGHT_STATUS.REJECTED,
                                     ])
                                 "
                                 class="m-l-8"
                                 type="link"
                                 @click="onModify"
-                                >{{ $t('common.modify') }}</a-button
                             >
-                            <span v-else>{{ detail.sn || '-' }}</span>
+                                <span>{{ $Util.priceUnitFilter(detail?.currency) }}</span>
+                                <span>{{ $Util.countFilter(detail?.freight_audit_record?.content?.freight) }}</span>
+                            </a-button>
+                            <span v-else>
+                                <span>{{ $Util.priceUnitFilter(detail.currency) }}</span>
+                                <span>{{ $Util.countFilter(detail?.freight_audit_record?.content?.freight) }}</span>
+                            </span>
                         </div>
                     </div>
                 </a-col>
@@ -605,7 +615,7 @@
             <div
                 v-if="
                     $Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) &&
-                    $Util.Common.returnTypeBool(detail.freight_status, [FREIGHT_STATUS.TO_BE_DETERMINED])
+                    $Util.Common.returnTypeBool(detail.freight_status, [FREIGHT_STATUS.TO_BE_CONFIRMED])
                 "
                 class="all-btn"
             >
@@ -862,19 +872,28 @@
         </template>
 
         <!-- 预计船期及运费 -->
-        <ShippingFreight v-model:visible="freightVisible" :title="$t('distributor.expected_shipping_freight')">
+        <ShippingFreight
+            v-if="freightVisible"
+            :detailRecord="detailRecord"
+            v-model:visible="freightVisible"
+            :title="$t('distributor.expected_shipping_freight')"
+            @ok="onUpdateTable"
+        >
         </ShippingFreight>
 
         <!-- 确认运费弹窗 -->
         <ConfirmFreight
+            v-if="confirmFreightVisible"
+            :detailRecord="detailRecord"
             v-model:visible="confirmFreightVisible"
             :title="$t('distributor.shipping_freight')"
+            @ok="onUpdateTable"
         ></ConfirmFreight>
 
         <!-- 取消二次弹窗操作记录查看 -->
         <CancelOperation
             v-model:visible="operationVisible"
-            :title="$t('distributor-detail.cancel_record')"
+            :title="$t('distributor-detail.cancel_record')"            
         ></CancelOperation>
 
         <!-- 取消二次弹窗填写原因 -->
@@ -1067,6 +1086,7 @@ export default {
                 remark: undefined,
             },
             operationVisible: false, // 船期及运费确认model
+            detailRecord: {}, // 给 ShippingFreight | ConfirmFreight 数据
         };
     },
     computed: {
@@ -1236,6 +1256,14 @@ export default {
             })
                 .then(res => {
                     this.detail = res.detail;
+
+                    this.detail.freight_audit_record = {
+                        ...this.detail?.freight_audit_record,
+                        content: this.detail?.freight_audit_record?.content
+                            ? JSON.parse(this.detail?.freight_audit_record?.content)
+                            : {},
+                    };
+
                     if (this.detail.status === Core.Const.PURCHASE.STATUS.TAKE_DELIVER) {
                         this.detail.status = Core.Const.PURCHASE.STATUS.WAIT_DELIVER;
                     }
@@ -1798,11 +1826,25 @@ export default {
         // 船期及运费(修改)
         onModify() {
             this.freightVisible = true;
+            this.detailRecord = {
+                id: this.detail.id,
+                currency: this.detail.currency,
+                freight_audit_record_id: this.detail.freight_audit_record_id,                
+                freight: this.detail?.freight_audit_record?.content?.freight,
+                shipping_time_estimated: this.detail?.freight_audit_record?.content?.shipping_time_estimated,
+            };
         },
 
         // 确认运费
         onConfirmFreight() {
             this.confirmFreightVisible = true;
+            this.detailRecord = {
+                id: this.detail.id,
+                freight_status: this.detail.freight_status,
+                freight_audit_record_id: this.detail.freight_audit_record_id,                
+                shipping_time_estimated: this.detail?.freight_audit_record?.content?.shipping_time_estimated,
+                freight: this.detail?.freight_audit_record?.content?.freight,
+            };
         },
 
         // 取消二次弹窗填写原因
@@ -1817,6 +1859,11 @@ export default {
         // 取消记录按钮
         onCancelRecord() {
             this.operationVisible = true;
+        },
+
+        // 预计船期及运费 确认运费 返回
+        onUpdateTable() {
+            this.getPurchaseInfo()
         },
     },
 };

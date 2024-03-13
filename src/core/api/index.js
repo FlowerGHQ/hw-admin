@@ -1090,7 +1090,14 @@ const apiList = {
         list: ['PostJson', 'PayAccount/list'], // 列表
         update: ['PostJson', 'PayAccount/update'], // 修改状态
         delete: ['PostJson', 'PayAccount/delete'], // 删除
-    }
+    },
+    // 船期以及运费
+    ShippingDateFreight: {
+        list: ['PostJson', 'purchase-order/pending-freight-confirm/list'], // 列表
+        status: ['PostJson', 'purchase-order/pending-freight-confirm/count-by-status'], // 状态数据
+        add: ['PostJson', 'purchase-order/pending-freight-confirm/save'], // 新增/修改 预计船期及运费
+        confirm: ['PostJson', 'purchase-order/pending-freight-confirm/audit'], // 确认运费
+    },
 };
 
 export default new Api(baseUrl, apiList);

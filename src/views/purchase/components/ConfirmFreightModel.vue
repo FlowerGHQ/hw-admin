@@ -8,13 +8,13 @@
                 <div class="content level-search-row">
                     <div class="estimated-shipping-data search-col">
                         <div class="key">{{ $t('distributor.shipping_date') }}：</div>
-                        <div class="value flex-1">1312414124124</div>
+                        <div class="value flex-1">{{ $Util.timeFilter(detailRecord.shipping_time_estimated) }}</div>
                     </div>
                     <div class="freight search-col">
                         <div class="key">{{ $t('p.freight') }}：</div>
                         <div class="value flex-1">
-                            <span>1000</span>
-                            <span>unit</span>
+                            <span>{{ $Util.countFilter(detailRecord.freight) }}</span>
+                            <span>{{ $Util.priceUnitFilter(detailRecord.currency) }}</span>
                         </div>
                     </div>
                 </div>
@@ -73,16 +73,41 @@ const props = defineProps({
         type: String,
         default: '',
     },
+    detailRecord: {
+        type: Object,
+        default: () => {},
+    },
 });
 
 const search_params = ref({
-    result: 1,
+    result: 200,
     remark: undefined,
 });
 
 const emits = defineEmits(['update:visible', 'ok', 'cancel']);
 
 /* fetch start*/
+// 确认运费
+const saveFreightFetch = (params = {}) => {
+    const obj = {
+        id: props.detailRecord.freight_audit_record_id, // 审核记录id（audit_record_id）
+        status: search_params.value.result, //审核内容
+        ...params,
+    };
+
+    console.log('obj', obj);
+    Core.Api.ShippingDateFreight.confirm(obj)
+        .then(res => {
+            console.log('确认和修改运费和船期 res', res);
+            proxy.$message.success('提交成功');
+            handleCancel();
+            emits('ok', search_params.value);
+        })
+        .catch(err => {
+            console.log('确认和修改运费和船期 err', err);
+            proxy.$message.error('提交失败');
+        });
+};
 /* fetch end*/
 
 /* methods start*/
@@ -107,7 +132,7 @@ const handleOk = () => {
         }
     }
 
-    emits('ok', search_params.value);
+    saveFreightFetch()    
 };
 
 const handleCancel = () => {
