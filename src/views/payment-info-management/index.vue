@@ -59,27 +59,17 @@
                         </a-tooltip>
                     </template>
                     <template v-if="column.key === 'country'">
-                        <a-tooltip placement="top">
+                        <a-tooltip placement="topLeft">
                             <template #title>
-                                <div class="ell mr2" 
-                                    v-if="record.country.length" 
-                                    v-for="(item, index) in record.country" 
-                                    :key="index"
-                                >
-                                    {{ lang === 'en' ? item.name_en : item.name }}
+                                <div v-if="record.country" class="ell mw160">
+                                    {{ lang === 'en' ? record.country_en : record.country }}
                                 </div>
                                 <div v-else>
                                     -
                                 </div>
                             </template>
-                            <div class="ell mr2" 
-                                v-if="record.country.length" 
-                                v-for="(item, index) in record.country" 
-                                :key="index"
-                            >
-                                <span>
-                                    {{ lang === 'en' ? item.name_en : item.name }}
-                                </span>
+                            <div v-if="record.country" class="ell mw160">
+                                {{ lang === 'en' ? record.country_en : record.country }}
                             </div>
                             <div v-else>
                                 -
@@ -87,7 +77,7 @@
                         </a-tooltip>
                     </template>
                     <template v-if="column.key === 'usd'">
-                        <a-tooltip placement="top">
+                        <a-tooltip placement="topLeft">
                             <template #title>
                                 <div v-for="item in tableFields" :key="item.key">
                                     <div>
@@ -257,7 +247,14 @@ onMounted(() => {
 const request = Core.Api.PayAccount.list;
 const dataCallBack = res => {
     return res.list.map(item => {
-        item.country = item.country ? JSON.parse(item.country) : [];
+        item.country = item.country_list.map(name => {
+            return name.name   
+        });
+        item.country = item.country.join(', ')
+        item.country_en = item.country_list.map(name => {
+            return name.name_en   
+        });
+        item.country_en = item.country_en.join(', ')
         item.usd_map = item.bank_list.find(item => item.currency === 'USD') || {}
         item.eur_map = item.bank_list.find(item => item.currency === 'EUR') || {}
         return item;
