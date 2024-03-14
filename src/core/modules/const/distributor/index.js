@@ -84,6 +84,20 @@ const DISTRIBUTOR = {
         WITHIN_WEEK: 1, // 一周内
         DELAY: 2, // 延期
     },
+    // 钱包类型
+    WALLET_TYPE: {
+        10: { title: 'distributor-detail.vehicle_account', value: 10 },
+        20: { title: 'distributor-detail.parts_account', value: 20 },
+        30: { title: 'distributor-detail.after_sales_spare_parts_credit_account', value: 30 },
+        40: { title: 'distributor-detail.credit_account', value: 40 },
+    },
+    // 开支类型  //100 老数据转出 101 老数据转入 102 工单赔付 103 账号充值  104 订单退款 105 支付尾款 106 总额提升 107 总额下调
+    EXPENDITURE_TYPE: {
+        102: { title: 'distributor-detail.work_order_compensation', value: 102, addOrSubtract: '+' },
+        103: { title: 'distributor-detail.account_recharge', value: 103, addOrSubtract: '+' },
+        104: { title: 'distributor-detail.order_refund', value: 104, addOrSubtract: '-' },
+        105: { title: 'distributor-detail.pay_final_payment', value: 105, addOrSubtract: '+' },
+    },
     // 取消的状态
     AUDIT_CANCEL_STATUS: {
         // 1 审核中 2 审核通过  3 审核拒绝

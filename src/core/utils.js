@@ -295,13 +295,19 @@ const Util = {
      * @param {Number} divisor 除数 默认为100
      * @param {Number} dp 保留几位小数 默认为2
      * @param {Number} type 乘法/除法 false=除法 true=乘法
+     * @param {boolean} isNegative   //是否支出负数
      */
-    countFilter(val = 0, divisor = 100, dp = 2, type = false) {
+    countFilter(val = 0, divisor = 100, dp = 2, type = false, isNegative = false) {
         if (val === 0) {
             return '0';
         }
         if (val < 0) {
-            return 'N/A';
+            // return 'N/A';
+            if (!isNegative) {
+                return 'N/A';
+            } else {
+                return this.countFilter(Math.abs(val), divisor, dp, type, isNegative) * -1;
+            }
         }
         if (type) {
             return parseFloat((val * divisor).toFixed(dp));

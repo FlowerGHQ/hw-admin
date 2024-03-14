@@ -767,7 +767,7 @@ const amount = computed(() => {
     );
 });
 const isBalanceEnough = computed(() => {
-    return false;
+    return true;
 });
 // 计算是否全选车辆
 const vehicleListSelected = computed(() => {

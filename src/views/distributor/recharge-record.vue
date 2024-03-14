@@ -40,9 +40,7 @@
                     <!-- arrival_progress -->
                     <template v-if="column.key === 'arrival_progress'">{{ statusMap[record.status] || '-' }}</template>
                     <!-- 备注 -->
-                    <template v-if="column.key === 'remark'">{{
-                        record.content_json.payment_information || '-'
-                    }}</template>
+                    <template v-if="column.key === 'remark'">{{ record.remark || '-' }}</template>
                     <!-- 操作 -->
                     <template v-if="column.key === 'operation'">
                         <a-button type="link" @click="routerChange('detail', record)">
@@ -76,8 +74,9 @@ import { useI18n } from 'vue-i18n';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import Core from '@/core';
 import { useTable } from '@/hooks/useTable';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
+const router = useRouter();
 const $t = useI18n().t;
 const tableColumns = computed(() => {
     let columns = [
@@ -149,7 +148,11 @@ const onReset = () => {
 };
 // 查看详情
 const routerChange = (type, record) => {
-    console.log(type, record);
+    let routeUrl = '';
+    routeUrl = router.resolve({
+        path: '/distributor/distributor-recharge-detail',
+    });
+    window.open(routeUrl.href, '_self');
 };
 </script>
 

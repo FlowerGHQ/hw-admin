@@ -93,9 +93,13 @@
                                         {{ currency }} {{ Core.Util.countFilter(detail.credit) }}
                                     </div>
                                     <!-- 调整额度 -->
-                                    <a-button v-if="$auth('ADMIN') && payType !== 'OLD'" type="primary" size="small">{{
-                                        $t('distributor-detail.adjust_amount')
-                                    }}</a-button>
+                                    <a-button
+                                        v-if="$auth('ADMIN') && payType !== 'OLD'"
+                                        type="primary"
+                                        size="small"
+                                        @click="handleAdjustmentLimit"
+                                        >{{ $t('distributor-detail.adjust_amount') }}</a-button
+                                    >
                                     <!-- 授信变化 -->
                                     <div
                                         class="line-item"
@@ -202,6 +206,45 @@
                 </a-col>
             </a-row>
         </div>
+        <div class="modal-area" ref="modalRefs">
+            <!-- 弹框 调整额度-->
+            <a-modal
+                v-model:visible="visible"
+                centered
+                :getContainer="() => modalRefs"
+                :closable="false"
+                :title="$t('distributor-detail.credit_balance')"
+                @ok="handleOk"
+                @cancel="handleCancel"
+            >
+                <div class="modal-content">
+                    <a-form :model="formState">
+                        <a-form-item :label="$t('distributor-detail.order_final_payment')">
+                            {{ formState.orderBalance }} {{ currency }}
+                        </a-form-item>
+                        <a-form-item :label="$t('distributor-detail.available_balance')">
+                            {{ formState.availableBalance }} {{ currency }}
+                        </a-form-item>
+                        <a-form-item :label="$t('distributor-detail.credit_amount')">
+                            <a-input-number v-model:value="formState.creditBalance" :min="0" :precision="0">
+                                <template #addonAfter>
+                                    <span>{{ currency }}</span>
+                                </template>
+                            </a-input-number>
+                        </a-form-item>
+                    </a-form>
+                </div>
+                <!-- footer -->
+                <template #footer>
+                    <a-button key="back" @click="handleCancel">
+                        {{ $t('common.cancel') }}
+                    </a-button>
+                    <a-button key="submit" type="primary" @click="handleOk">
+                        {{ $t('common.confirm') }}
+                    </a-button>
+                </template>
+            </a-modal>
+        </div>
     </div>
 </template>
 
@@ -210,6 +253,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import Core from '@/core';
+import { message } from 'ant-design-vue';
 const $t = useI18n().t;
 const router = useRouter();
 const props = defineProps({
@@ -218,6 +262,7 @@ const props = defineProps({
         default: () => ({}),
     },
 });
+const emit = defineEmits(['handleUpdateDetails']);
 const payType = computed(() => {
     console.log('payType', props.detail.pay_type);
     switch (props.detail.pay_type) {
@@ -254,12 +299,31 @@ const currency = computed(() => {
             return '';
     }
 });
+const visible = ref(false);
+const modalRefs = ref(null);
 
 const dataObject = ref({
-    vehicleData: {}, // 整车账户
-    partsData: {}, // 零部件账户
-    afterSaleData: {}, // 售后账户
-    creditData: {}, // 授信账户
+    vehicleData: {
+        balance: 0,
+    }, // 整车账户
+    partsData: {
+        balance: 0,
+    }, // 零部件账户
+    afterSaleData: {
+        balance: 0,
+    }, // 售后账户
+    creditData: {
+        balance: 0,
+    }, // 授信账户
+});
+
+const formState = ref({
+    //订单尾款占用额度
+    orderBalance: 0,
+    // 可用余额
+    availableBalance: 0,
+    // 授信总额
+    creditBalance: 0,
 });
 
 const getWalletList = () => {
@@ -309,8 +373,7 @@ const handleRouteChange = (type, item) => {
     switch (type) {
         case 0:
             routeUrl = router.resolve({
-                path: '/distributor/distributor-recharge-detail',
-                query,
+                path: '/mall/recharge ',
             });
             console.log('routeUrl', routeUrl);
             window.open(routeUrl.href, '_blank');
@@ -341,6 +404,31 @@ const handleRouteChange = (type, item) => {
             break;
     }
 };
+// 调整额度
+const handleAdjustmentLimit = () => {
+    formState.value.orderBalance = dataObject.value.creditData.balance * 1;
+    formState.value.creditBalance = Core.Util.countFilter(props.detail.credit) * 1;
+    formState.value.availableBalance = formState.value.creditBalance + formState.value.orderBalance;
+    visible.value = true;
+};
+// handleCancel
+const handleCancel = () => {
+    visible.value = false;
+};
+// handleOk
+const handleOk = () => {
+    let params = {
+        id: props.detail.id,
+        credit: Core.Util.countFilter(formState.value.creditBalance, 100, 2, true, false),
+    };
+    Core.Api.Distributor.updateCredit(params).then(res => {
+        console.log('res', res);
+        visible.value = false;
+        message.success($t('distributor-detail.operation_success'));
+        emit('handleUpdateDetails');
+    });
+};
+
 onMounted(() => {
     getWalletList();
 });
@@ -395,6 +483,32 @@ onMounted(() => {
                 margin-top: 16px;
                 color: #8c8c8c;
                 font-size: 12px;
+            }
+        }
+    }
+    .modal-area {
+        :deep(.ant-modal-content) {
+            border-radius: 4px;
+            .ant-modal-header {
+                padding: 16px 24px;
+                height: auto !important;
+                border-color: #e2e2e2;
+                .ant-modal-title {
+                    color: #1d2129;
+                    font-weight: 600;
+                    font-size: 16px;
+                    line-height: 1;
+                    text-align: center;
+                }
+            }
+            .ant-modal-footer {
+                padding: 18px 0;
+                height: auto;
+                text-align: center;
+                .ant-btn {
+                    border-radius: 4px;
+                    font-size: 14px;
+                }
             }
         }
     }
