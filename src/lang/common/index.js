@@ -47,6 +47,8 @@ export default {
         not_passed: "不通过",
         reason: '原因',
         refuse: '拒绝',
+        to_be_paid: '待支付',
+        paid: '已支付',
     },
     en: {
         operations: 'Operations',
@@ -96,5 +98,7 @@ export default {
         not_passed: "Not Passed",
         reason: 'Reason',
         refuse: 'Refuse',
+        to_be_paid: 'To Be paid',
+        paid: 'Paid',
     },
 };

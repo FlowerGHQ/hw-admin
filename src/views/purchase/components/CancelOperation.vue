@@ -22,7 +22,15 @@
                         </template>
                         <!-- 原因 -->
                         <template v-if="column.key === 'cancel_remark'">
-                            {{ text || '-' }}
+                            <a-tooltip>
+                                <template #title>{{ text }}</template>
+                                <div
+                                    class="one-spils cursor"
+                                    :style="{ width: text?.length > 15 ? 15 * 12 + 'px' : '' }"
+                                >
+                                    {{ text }}
+                                </div>
+                            </a-tooltip>
                         </template>
                         <!-- 时间 -->
                         <template v-if="column.key === 'time'">

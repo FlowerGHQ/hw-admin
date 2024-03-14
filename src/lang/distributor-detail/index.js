@@ -81,7 +81,7 @@ export default {
         // 充值金额
         recharge_amount: '充值金额',
         // 到账进度
-        arrival_progress: '到账进度',        // 操作
+        arrival_progress: '到账进度', // 操作
         operation: '操作',
         // 备注
         remark: '备注',
@@ -121,8 +121,42 @@ export default {
         cancel_order_tips2: '为促使审核人员同意您的申请，请输入取消原因',
         under_review: '审核中',
         cancel_record: '取消记录',
-        application_time: '申请时间',                
-        audit_rejection: "审核拒绝",
+        application_time: '申请时间',
+        //vehicle_account
+        // parts_account
+        // after_sales_spare_parts_credit_account
+        // credit_account
+
+        vehicle_account: '整车账户(售前账户)',
+        parts_account: '零部件账户(售后账户)',
+        after_sales_spare_parts_credit_account: '售后备件信用账户',
+        credit_account: '授信账户',
+
+        // old_data_transfer_out
+        // old_data_transfer_in
+        // work_order_compensation
+        // account_recharge
+        // order_refund
+        // pay_final_payment
+        // total_amount_increase
+        // total_amount_reduction
+        // 100 老数据转出 101 老数据转入 102 工单赔付 103 账号充值  104 订单退款 105 支付尾款 106 总额提升 107 总额下调
+        old_data_transfer_out: '老数据转出',
+        old_data_transfer_in: '老数据转入',
+        work_order_compensation: '工单赔付',
+        account_recharge: '账号充值',
+        order_refund: '订单退款',
+        pay_final_payment: '支付尾款',
+        total_amount_increase: '总额提升',
+        total_amount_reduction: '总额下调',
+        // 订单尾款占用额度
+        order_final_payment: '订单尾款占用额度',
+        // 可用余额
+        available_balance: '可用余额',
+        // “操作成功
+        operation_success: '操作成功',
+        application_time: '申请时间',
+        audit_rejection: '审核拒绝',
     },
     en: {
         vehicle_account: 'Vehicle Account',
@@ -206,8 +240,23 @@ export default {
         under_review: 'Under Review',
         cancel_record: 'Cancel Record',
         application_time: 'Application Time',
-        waiting_for_approval: "waiting for approval",
-        approved_and_approved: "approved and approved",
-        audit_rejection: "audit rejection",
+        vehicle_account: 'Vehicle Account (Pre-sale Account)',
+        parts_account: 'Parts Account (After-sale Account)',
+        after_sales_spare_parts_credit_account: 'After-sales spare parts credit account',
+        credit_account: 'Credit Account',
+        old_data_transfer_out: 'Old data transfer out',
+        old_data_transfer_in: 'Old data transfer in',
+        work_order_compensation: 'Work order compensation',
+        account_recharge: 'Account recharge',
+        order_refund: 'Order refund',
+        pay_final_payment: 'Pay final payment',
+        total_amount_increase: 'Total amount increase',
+        total_amount_reduction: 'Total amount reduction',
+        order_final_payment: 'Order final payment',
+        available_balance: 'Available balance',
+        operation_success: 'Operation success',
+        waiting_for_approval: 'waiting for approval',
+        approved_and_approved: 'approved and approved',
+        audit_rejection: 'audit rejection',
     },
 };

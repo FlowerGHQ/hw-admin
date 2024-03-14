@@ -135,7 +135,11 @@
                     </a-tab-pane>
                     <!-- 钱包 -->
                     <a-tab-pane key="WalletList" :tab="$t('distributor-detail.wallet')">
-                        <AccountWallet v-if="activeKey === 'WalletList'" :detail="detail" />
+                        <AccountWallet
+                            v-if="activeKey === 'WalletList'"
+                            :detail="detail"
+                            @handleUpdateDetails="getDistributorDetail"
+                        />
                     </a-tab-pane>
                 </template>
                 <a-tab-pane key="ReceiverAddress" :tab="$t('d.address')">
@@ -148,7 +152,11 @@
                 <template v-if="$auth('DISTRIBUTOR')">
                     <!-- 账户钱包 -->
                     <a-tab-pane key="AccountWallet" :tab="$t('distributor-detail.wallet')">
-                        <AccountWallet v-if="activeKey === 'AccountWallet'" :detail="detail" />
+                        <AccountWallet
+                            v-if="activeKey === 'AccountWallet'"
+                            :detail="detail"
+                            @handleUpdateDetails="getDistributorDetail"
+                        />
                     </a-tab-pane>
                 </template>
                 <template v-if="$auth('ADMIN')">

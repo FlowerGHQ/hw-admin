@@ -155,6 +155,10 @@
                                 <!-- <MySvgIcon icon-class="common-view" /> -->
                                 <span class="m-l-4">{{ $t('p.audit') }}</span>
                             </a-button>
+                            <a-button type="link" @click="routerChange('detail', record)">
+                                <!-- <MySvgIcon icon-class="common-view" /> -->
+                                <span class="m-l-4">{{ $t('common.detail') }}</span>
+                            </a-button>
                         </template>
                     </template>
                 </a-table>
@@ -340,7 +344,7 @@ const routerChange = (type, record) => {
     let routeUrl = '';
     // 分销商
     switch (type) {
-        case 'detail': // 付款
+        case 'detail': // 详情
             routeUrl = router.resolve({
                 path: '/purchase/purchase-order-detail',
                 query: { id: record.id },
@@ -348,13 +352,13 @@ const routerChange = (type, record) => {
 
             window.open(routeUrl.href, '_self');
             break;
-        case 'audit': // 付款            
+        case 'audit': // 审核            
             break;
     }
 };
 const onSearch = data => {
     console.log('data', data);
-    searchParam.value = { ...searchForm.value, ...data };
+    searchParam.value = Core.Util.searchFilter({ ...searchForm.value, ...data });
     search();
 };
 const onReset = () => {

@@ -398,6 +398,9 @@ const getStatusFetch = (params = {}) => {
 const getInquirySheet = Core.Api.ShippingDateFreight.list;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request: getInquirySheet,
+    initParam: {
+        freight_status: 0
+    }
     // dataCallBack(res) {
     // }
 });
@@ -426,7 +429,7 @@ const routerChange = (type, record) => {
 };
 const onSearch = data => {
     console.log('data', data);
-    searchParam.value = { ...searchForm.value, ...data };
+    searchParam.value = Core.Util.searchFilter({ ...searchForm.value, ...data });
     search();
 };
 const onReset = () => {    
@@ -468,10 +471,7 @@ const onUpdateTable = () => {
 
 onMounted(() => {
     getStatusFetch();
-    isDistributerAdmin.value = Core.Util.Common.returnTypeBool(Core.Data.getLoginType(), [Core.Const.LOGIN.TYPE.ADMIN]);
-
-    searchParam.value.freight_status = 0;
-    search();
+    isDistributerAdmin.value = Core.Util.Common.returnTypeBool(Core.Data.getLoginType(), [Core.Const.LOGIN.TYPE.ADMIN]);    
 });
 </script>
 

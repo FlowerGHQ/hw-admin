@@ -563,9 +563,9 @@
             <div class="title-container d-f-j">
                 <div class="title-area" style="font-weight: 600">{{ $t('distributor.shipping_freight') }}</div>
                 <div class="btn-area">
-                    <a-button class="freight_status_style">
+                    <div class="freight-status-style">
                         {{ $t($Util.Common.returnTranslation(detail.freight_status, FREIGHT_STATUS_MAP)) }}
-                    </a-button>
+                    </div>
                 </div>
             </div>
             <a-row>
@@ -895,8 +895,7 @@
         </ShippingFreight>
 
         <!-- 确认运费弹窗 -->
-        <ConfirmFreight
-            v-if="confirmFreightVisible"
+        <ConfirmFreight            
             :detailRecord="detailRecord"
             v-model:visible="confirmFreightVisible"
             :title="$t('distributor.shipping_freight')"
@@ -904,8 +903,7 @@
         ></ConfirmFreight>
 
         <!-- 取消二次弹窗操作记录查看 -->
-        <CancelOperation
-            v-if="operationVisible"
+        <CancelOperation            
             v-model:visible="operationVisible"
             :title="$t('distributor-detail.cancel_record')"
         ></CancelOperation>
@@ -2066,5 +2064,11 @@ export default {
         font-size: 14px;
         font-weight: 400;
     }
+}
+
+.freight-status-style {
+    padding: 5px 12px;
+    box-sizing: border-box;  
+    border: 1px solid black;  
 }
 </style>
