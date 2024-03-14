@@ -103,7 +103,7 @@
                             {{ $t('p.give_order') }}
                         </a-button>
                     </template>
-                    <!-- 平台方(待审核)可看 | 分销(任何状态)不可见 | 售前订单,售后订单显示  -->
+                    <!-- 更换商品 平台方(待审核)可看 | 分销(任何状态)不可见 | 售前订单,售后订单显示  -->
                     <a-button
                         v-if="
                             $Util.Common.returnTypeBool(loginType, [USER_TYPE.ADMIN]) &&
@@ -563,7 +563,7 @@
             <div class="title-container d-f-j">
                 <div class="title-area" style="font-weight: 600">{{ $t('distributor.shipping_freight') }}</div>
                 <div class="btn-area">
-                    <div class="freight-status-style">
+                    <div class="status status-bg freight-status-style" :class="$Util.Common.returenValue(FREIGHT_STATUS_MAP, detail.freight_status, 'color')">
                         {{ $t($Util.Common.returnTranslation(detail.freight_status, FREIGHT_STATUS_MAP)) }}
                     </div>
                 </div>
@@ -2068,7 +2068,6 @@ export default {
 
 .freight-status-style {
     padding: 5px 12px;
-    box-sizing: border-box;  
-    border: 1px solid black;  
+    box-sizing: border-box;       
 }
 </style>
