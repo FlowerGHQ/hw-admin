@@ -148,9 +148,14 @@ const onReset = () => {
 };
 // 查看详情
 const routerChange = (type, record) => {
+    console.log(type, record);
     let routeUrl = '';
     routeUrl = router.resolve({
         path: '/distributor/distributor-recharge-detail',
+        query: {
+            id: record.id,
+            currency: route.query.currency,
+        },
     });
     window.open(routeUrl.href, '_self');
 };

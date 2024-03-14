@@ -157,6 +157,8 @@ export default {
         operation_success: '操作成功',
         application_time: '申请时间',
         audit_rejection: '审核拒绝',
+        // 上传
+        upload: '上传',
     },
     en: {
         vehicle_account: 'Vehicle Account',
@@ -258,5 +260,7 @@ export default {
         waiting_for_approval: 'waiting for approval',
         approved_and_approved: 'approved and approved',
         audit_rejection: 'audit rejection',
+        // 上传
+        upload: 'Upload',
     },
 };

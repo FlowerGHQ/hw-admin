@@ -17,14 +17,14 @@
                 <div class="status-tips">
                     <div class="left-tips">
                         <!-- 充值中 -->
-                        <div class="recharging" v-if="details.status === 0">
+                        <div class="recharging" v-if="details.mapStatus === 0">
                             <div class="tips-top">预计到账需要3-5天，请耐心等待</div>
                             <div class="tips-bottom">
                                 充值结果将通过邮箱发送给您，请注意查收邮箱。也可进入充值进度页面查看进度。
                             </div>
                         </div>
                         <!-- 到账失败 -->
-                        <div class="recharg-fail" v-else-if="details.status === 1">
+                        <div class="recharg-fail" v-else-if="details.mapStatus === 1">
                             <div class="tips-area">账户存在异常，请仔细查看充值帐户是否正常</div>
                         </div>
                         <!-- 到账成功 -->
@@ -54,7 +54,10 @@
                         <div class="title">
                             {{ /*本次需要转账金额 */ $t('distributor-detail.current_transfer_amount') }}
                         </div>
-                        <div class="content">€{{ details.amount }}</div>
+                        <div class="content">
+                            {{ route.query.currency }}
+                            {{ Core.Util.countFilter(details?.content_json?.total_amount || 0) }}
+                        </div>
                     </a-col>
                 </a-row>
                 <a-row :gutter="[16, 30]">
@@ -62,13 +65,19 @@
                         <div class="title">
                             {{ /*整车可用余额 */ $t('distributor-detail.vehicle_available_balance') }}
                         </div>
-                        <div class="content">€{{ details.balance }}</div>
+                        <div class="content">
+                            {{ route.query.currency }}
+                            {{ Core.Util.countFilter(details?.content_json?.vehicle_balance || 0) }}
+                        </div>
                     </a-col>
                     <a-col :span="6">
                         <div class="title">
                             {{ /*零部件可用余额 */ $t('distributor-detail.parts_available_balance') }}
                         </div>
-                        <div class="content">€{{ details.partBalance }}</div>
+                        <div class="content">
+                            {{ route.query.currency }}
+                            {{ Core.Util.countFilter(details?.content_json?.part_balance || 0) }}
+                        </div>
                     </a-col>
                 </a-row>
             </div>
@@ -76,36 +85,18 @@
             <div class="account-info">
                 <div class="title-area">
                     <div class="title">Receivables Account</div>
-                    <div class="copy-area">
+                    <div class="copy-area" @click="handleCopy('paymentInfo')">
                         <MySvgIcon iconClass="recharge-detail-copy" />
                         <div class="copy-tips">Copy Payment Account Information</div>
                     </div>
                 </div>
-                <div class="gird-area">
-                    <a-row>
-                        <a-col :span="8">
-                            <div class="title">Account Holder：</div>
-                            <div class="content">{{ details.accountHolder }}</div>
-                        </a-col>
-                        <a-col :span="8">
-                            <div class="title">Account Nickname：</div>
-                            <div class="content">{{ details.accountNickname }}</div>
-                        </a-col>
-                        <a-col :span="8">
-                            <div class="title">IBAN：：</div>
-                            <div class="content">{{ details.iban }}</div>
-                        </a-col>
-                    </a-row>
-                    <a-row>
-                        <a-col :span="8">
-                            <div class="title">SWIFT/BIC：</div>
-                            <div class="content">{{ details.swift }}</div>
-                        </a-col>
-                        <a-col :span="8">
-                            <div class="title">Bank Name：</div>
-                            <div class="content">{{ details.bankName }}</div>
-                        </a-col>
-                    </a-row>
+                <div class="gird-area-info" id="paymentInfo">
+                    <div class="info-item" v-for="item in labelMap" :key="item.key">
+                        <!-- label -->
+                        <div class="title">{{ item.label }}</div>
+                        <!-- value -->
+                        <div class="content">{{ item.value }}</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -113,37 +104,38 @@
         <div class="gray-panel payment-voucher">
             <div class="title-content">
                 <div class="title">{{ /*充值信息 */ $t('distributor-detail.payment_voucher') }}</div>
-                <div class="button-area">
+                <div class="button-area" v-if="details.mapStatus == 1">
                     <!-- 修改凭证 -->
-                    <a-button>{{ /*修改凭证 */ $t('distributor-detail.modify_voucher') }}</a-button>
+                    <a-button v-if="!isEdit" @click="handleEdit">{{
+                        /*修改凭证 */ $t('distributor-detail.modify_voucher')
+                    }}</a-button>
                     <!-- 保存修改 -->
-                    <a-button type="primary">{{ /*保存修改 */ $t('distributor-detail.save_modify') }}</a-button>
+                    <a-button type="primary" v-else @click="handleSaveModify">{{
+                        /*保存修改 */ $t('distributor-detail.save_modify')
+                    }}</a-button>
                 </div>
-            </div>
-            <div class="tips">
-                <ul>
-                    <li>You can upload images in PNG, JPG, JPEG format, up to 9 images per file.</li>
-                    <li>For documents, only PDF format is supported, with a maximum of 3 files.</li>
-                </ul>
             </div>
             <div class="image-pdf-area">
-                <div class="image">
-                    <img src="" alt="" v-for="item in 9" />
-                </div>
-                <div class="pdf">
-                    <div class="pdf-item" v-for="item in 2"></div>
-                </div>
+                <MyFileUpload @handleUpload="handleUpload" :isShowUpload="isShowUpload" />
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { LeftOutlined } from '@ant-design/icons-vue';
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
+import { message } from 'ant-design-vue';
+import Core from '../../core';
+import { useI18n } from 'vue-i18n';
+import { forEach, uniqueId, cloneDeep } from 'lodash';
+import MyFileUpload from './components/MyFileUpload.vue';
+
+const $t = useI18n().t;
 const router = useRouter();
+const route = useRoute();
 const statusMap = {
     0: {
         value: '充值中',
@@ -183,6 +175,113 @@ const details = ref({
     swift: 'CHASIE2X',
     // Bank Name：
     bankName: 'JPMORGAN CHASE BANK, N.A.',
+});
+
+const labelMap = ref([
+    { key: 'beneficiary_bank', label: 'BENEFICIARY BANK' },
+    { key: 'swift_code', label: 'SWIFT CODE' },
+    { key: 'bank_address', label: 'BANK ADDRESS' },
+    { key: 'account_number', label: 'ACCOUNT NUMBER' },
+    { key: 'company_name', label: 'COMPANY NAME' },
+    { key: 'company_address', label: 'COMPANY ADDRESS' },
+    { key: 'remark', label: $t(/*其他汇款信息*/ 'payment-management.other_remittance_info') },
+]);
+
+const defaultList = ref([]);
+const myUploadRef = ref(null);
+const isShowUpload = ref(false);
+const isEdit = ref(false);
+
+// 获取订单详情
+const getRechargeDetail = () => {
+    let params = {
+        id: route.query.id,
+    };
+    Core.Api.RechargeAudit.detail(params).then(res => {
+        details.value = res.detail;
+        console.log('details', details.value);
+        //1.待审核(一审)；2.审核通过；3.审核不通过(一审) 4 等待二审 5 二审不通过
+        switch (details.value.status) {
+            case 1:
+                details.value.mapStatus = 0;
+                break;
+            case 2:
+                details.value.mapStatus = 2;
+                break;
+            case 3:
+                details.value.mapStatus = 1;
+                break;
+            case 4:
+                details.value.mapStatus = 0;
+                break;
+            case 5:
+                details.value.mapStatus = 1;
+                break;
+
+            default:
+                break;
+        }
+
+        let paymenyInfo = res?.detail?.content_json?.payment_information || {};
+        defaultList.value = res?.detail?.content_json?.payment_information?.img || [];
+        // 判断payment_information是否为空
+        if (Object.keys(paymenyInfo).length) {
+            // 遍历对象
+            for (let key in paymenyInfo) {
+                forEach(labelMap.value, item => {
+                    if (key === item.key) {
+                        item.value = paymenyInfo[key];
+                    }
+                });
+            }
+        }
+        // 将value为空的或者不存在的过滤掉
+        labelMap.value = labelMap.value.filter(item => item.value);
+    });
+};
+
+// 复制
+const handleCopy = id => {
+    const copyText = document.getElementById(id);
+    const range = document.createRange();
+    range.selectNode(copyText);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand('copy');
+    window.getSelection().removeAllRanges();
+    message.success('Copy Success');
+};
+
+const handleEdit = () => {
+    isShowUpload.value = true;
+    isEdit.value = true;
+};
+
+const handleSaveModify = () => {
+    console.log('details', details.value);
+    let params = cloneDeep(details.value);
+    delete params.mapStatus;
+    delete params.id;
+    params.content_json.payment_information.img = defaultList.value;
+    params.content = JSON.stringify(params.content_json);
+    Core.Api.RechargeAudit.save(params).then(res => {
+        message.success('Save Success');
+        isShowUpload.value = false;
+        isEdit.value = false;
+    });
+};
+
+// 上传成功
+const handleUpload = fileList => {
+    console.log(fileList);
+    defaultList.value = fileList.map(item => {
+        return item.file;
+    });
+    console.log('defaultList', defaultList.value);
+};
+
+onMounted(() => {
+    getRechargeDetail();
 });
 </script>
 
@@ -353,18 +452,35 @@ const details = ref({
                 }
             }
         }
-        .gird-area {
-            margin-bottom: 0;
-            .ant-row {
-                .ant-col {
-                    .content {
-                        font-size: 14px;
-                        color: #1d2129 !important;
-                        line-height: 22px;
+        .gird-area-info {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            .info-item {
+                width: 30%;
+                display: flex;
+                margin-bottom: 20px;
+                .title {
+                    font-size: 14px;
+                    color: #7f8e9f;
+                    line-height: 22px;
+                    // 增加:
+                    &::after {
+                        content: '：';
+                        display: inline-block;
                     }
+                }
+                .content {
+                    font-size: 14px;
+                    color: #1d2129;
+                    line-height: 22px;
+                    margin-left: 16px;
                 }
             }
         }
+    }
+    .recharge-info {
+        padding-bottom: 0 !important;
     }
 }
 </style>
