@@ -23,7 +23,7 @@ export default {
         confirmation_freight: '船期及运费确认表',
         to_be_filled_in: '待填写',
         confirmation_result: '确认结果',
-        shipping_date: '船期',
+        shipping_date: '船期',        
     },
     en: {
         to_be_determined: 'To Be Determined',
@@ -49,6 +49,6 @@ export default {
         confirmation_freight: 'Confirmation form of shipping schedule and freight',
         to_be_filled_in: 'To Be Filled In',
         confirmation_result: 'Confirmation Result',
-        shipping_date: 'Shipping Date',
+        shipping_date: 'Shipping Date',        
     },
 };

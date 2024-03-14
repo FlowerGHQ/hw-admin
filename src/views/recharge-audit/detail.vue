@@ -9,7 +9,7 @@
                             {{ $t(/*分销商名称*/'payment-management.dis_name') }}
                         </div>
                         <div class="info-value">
-                            {{ detail.name || '-' }}
+                            {{ detail.distributor_name || '-' }}
                         </div>
                     </div>
                     <div class="info-line">
@@ -18,7 +18,7 @@
                                 {{ $t(/*本次充值总金额*/'payment-management.total_amount') }}
                             </div>
                             <div class="info-value flex">
-                                {{ currencyValue }}{{ detail.total_amount || '-' }}
+                                {{ currencyValue }}{{ $Util.countFilter(detail?.content?.total_amount) || '-' }}
                             </div>    
                         </div>
                         <div class="info-block">
@@ -26,7 +26,7 @@
                                 {{ $t(/*整车余额充值金额*/'payment-management.vehicle_amount') }}
                             </div>
                             <div class="info-value flex">
-                                {{ currencyValue }}{{ detail.vehicle_amount || '-' }}
+                                {{ currencyValue }}{{ $Util.countFilter(detail?.content?.vehicle_balance) || '-' }} 
                             </div>    
                         </div>
                         <div class="info-block">
@@ -34,7 +34,7 @@
                                 {{ $t(/*配件余额充值金额*/'payment-management.module_amount') }}
                             </div>
                             <div class="info-value flex">
-                                {{ currencyValue }}{{ detail.module_amount || '-' }}
+                                {{ currencyValue }}{{ $Util.countFilter(detail?.content?.part_balance) || '-' }} 
                             </div>    
                         </div>
                     </div>
@@ -43,16 +43,17 @@
                             {{ $t(/*收款账户信息*/'payment-management.collection_acc_info') }}
                         </div>
                         <div class="info-value w725">
-                            {{ detail.account_info || '-' }}
+                            <div v-for="(item, index) in fields" :key="index">{{ item.label }}: {{ detail?.content?.payment_information[item.key] || '-' }}</div>
                         </div>
                     </div>
                     <div class="info-line start">
                         <div class="info-key">
                             {{ $t(/*支付凭证*/'payment-management.payment_document') }}
                         </div>
-                        <div class="info-value w725 img">
-                            <img class="img-value" v-for="item in detail.img_list" :src="item" >
+                        <div v-if="detail?.content?.payment_information ? detail?.content?.payment_information.img.length : false" class="info-value w725 img">
+                            <img class="img-value" v-for="item in detail?.content?.payment_information.img" :src="$Util.imageFilter(item)" >
                         </div>
+                        <div class="info-value" v-else>-</div>
                     </div>
                 </div>
                 <div class="info-status">
@@ -66,7 +67,7 @@
             </div>
         </div>
         <div class="detail-panel" v-if="detail.status === CONST.AUDIT_STATUS_MAP.PENDING_FIRST || detail.status === CONST.AUDIT_STATUS_MAP.PENDING_SECOND">
-            <div :class="form.result === CONST.AUDIT_RESULT_MAP.REJECT ? 'info-line center required' : 'info-line center required mb'">
+            <div :class="detail.result === CONST.AUDIT_RESULT_MAP.REJECT ? 'info-line center required' : 'info-line center required mb'">
                 <div class="info-key">
                     {{ $t(/*审核结果*/'payment-management.audit_result') }}
                 </div>
@@ -88,6 +89,24 @@
                         :placeholder="$t(/*请输入不通过原因*/'payment-management.textarea')"
                         :auto-size="{ minRows: 6, maxRows: 6 }"
                     />
+                </div>
+            </div>
+        </div>
+        <div class="detail-panel" v-if="detail.status === CONST.AUDIT_STATUS_MAP.REJECT_FIRST || detail.status === CONST.AUDIT_STATUS_MAP.REJECT_SECOND">
+            <div :class="detail.result === CONST.AUDIT_RESULT_MAP.REJECT ? 'info-line center' : 'info-line center mb'">
+                <div class="info-key">
+                    {{ $t(/*审核结果*/'payment-management.audit_result') }}
+                </div>
+                <div class="info-value">
+                    {{ $Util.auditStatusFilter(detail.status, 'text', $i18n.locale) }}
+                </div>
+            </div>
+            <div v-if="form.result === CONST.AUDIT_RESULT_MAP.REJECT" class="info-line start">
+                <div class="info-key">
+                    {{ $t(/*不通过原因*/'payment-management.caus_result') }}
+                </div>
+                <div class="info-value">
+                    {{ detail?.content?.payment_information?.remark }}
                 </div>
             </div>
         </div>
@@ -133,12 +152,25 @@ const detail = ref({
 })
 const form = ref({
     id: 0,
-    result: 2,   
-    remark: '',
+    result: 3,
+    remark: undefined,   
 })
 const currencyValue = computed(() => {
-    return '$';
+    if(detail.value.currency === 'EUR') {
+        return '€';        
+    } else {
+        return '$';           
+    }
 });
+const fields = ref([
+    { key: 'beneficiary_bank', label: 'BENEFICIARY BANK' },
+    { key: 'swift_code', label: 'SWIFT CODE' },
+    { key: 'bank_address', label: 'BANK ADDRESS' },
+    { key: 'account_number', label: 'ACCOUNT NUMBER' },
+    { key: 'company_name', label: 'COMPANY NAME' },
+    { key: 'company_address', label: 'COMPANY ADDRESS' },
+    { key: 'remark', label: $t(/*其他汇款信息*/'payment-management.other_remittance_info') }
+])
 const CONST = Core.Const.AUDIT_MANAGEMENT
 const OSS_URL = 'https://horwin-app.oss-cn-hangzhou.aliyuncs.com'
 const approveImg = `${OSS_URL}/png/323d149575aa263510339aeb319f6739b85a35e03788ca30a6ea119b004e7d46.png`
@@ -149,7 +181,11 @@ const modalTitle = ref('payment-management.sure_fail')
 const modalText = ref($t('payment-management.sure_tip'))
 const submitText = ref($t('payment-management.confirm_reject'))
 onMounted(() => {
-    form.id = Number(route.query.id) || 0;
+    form.value.id = Number(route.query.id) || 0;
+    detail.value.id = Number(route.query.id) || 0;
+    if(form.value.id) {
+        getDetailService(form.value.id);
+    }
 });
 /* Fetch start*/
 const handleAuditService = (params) => {
@@ -158,7 +194,8 @@ const handleAuditService = (params) => {
     }).then(res => {
         console.log('handleAuditService res', res);
         proxy.$message.success(proxy.$t(/*审核成功*/'payment-management.successful_audit'));
-        getDetailService(form.value.id)
+        modalShow.value = false
+        getDetailService(detail.value.id)
     }).catch(err => {
         console.log('handleAuditService err', err);
     })
@@ -168,7 +205,11 @@ const getDetailService = (id) => {
         id: id   
     }).then(res => {
         console.log('getDetailService res', res);
-        form.value = res
+        detail.value = res.detail
+        if(detail.value.content) {
+            detail.value.content = JSON.parse(detail.value.content)
+        }
+        console.log('detail?.content?.payment_information.img', detail.value.content.payment_information.img);
     }).catch(err => {
         console.log('getDetailService err', err);
     })
@@ -208,7 +249,11 @@ const radioGroupChange = (e) => {
     }
 }
 const handleModalSubmit = () => {
-    handleAuditService(form.value)
+    handleAuditService({
+        id: form.value.id,
+        status: form.value.result,
+        remark: form.value.remark,  
+    })
 }
 /* methods end*/
 </script>
@@ -281,11 +326,13 @@ const handleModalSubmit = () => {
                 font-size: 14px;
                 color: #1D2129;
                 font-weight: 400;
+                line-height: 22px;
             }
             .info-value {
                 font-size: 16px;
                 color: #4E5969;
                 font-weight: 400;
+                line-height: 22px;
                 &.w725 {
                     width: 725px;
                 }

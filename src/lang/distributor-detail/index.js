@@ -81,8 +81,7 @@ export default {
         // 充值金额
         recharge_amount: '充值金额',
         // 到账进度
-        arrival_progress: '到账进度',
-        // 操作
+        arrival_progress: '到账进度',        // 操作
         operation: '操作',
         // 备注
         remark: '备注',
@@ -122,7 +121,8 @@ export default {
         cancel_order_tips2: '为促使审核人员同意您的申请，请输入取消原因',
         under_review: '审核中',
         cancel_record: '取消记录',
-        application_time: '申请时间',
+        application_time: '申请时间',                
+        audit_rejection: "审核拒绝",
     },
     en: {
         vehicle_account: 'Vehicle Account',
@@ -206,5 +206,8 @@ export default {
         under_review: 'Under Review',
         cancel_record: 'Cancel Record',
         application_time: 'Application Time',
+        waiting_for_approval: "waiting for approval",
+        approved_and_approved: "approved and approved",
+        audit_rejection: "audit rejection",
     },
 };

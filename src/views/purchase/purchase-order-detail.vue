@@ -128,6 +128,11 @@
                                 FLAG_ORDER_TYPE.Gift_SALES,
                             ])
                         "
+                        :disabled="
+                            $Util.Common.returnTypeBool(detail.cancel_status, [
+                                AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL,
+                            ])
+                        "
                         type="primary"
                         @click="
                             $Util.Common.returnTypeBool(detail.status, [STATUS.REVISE_AUDIT])
@@ -136,11 +141,19 @@
                         "
                     >
                         <i class="icon i_close_c" />{{ $t('def.cancel') }}
-                        <!-- <span>({{ $t('distributor-detail.under_review') }})</span> -->
+                        <!-- 目前仅展示待审核 -->
+                        <span
+                            v-if="
+                                $Util.Common.returnTypeBool(detail.cancel_status, [
+                                    AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL,
+                                ])
+                            "
+                            >({{ $t('distributor-detail.under_review') }})</span
+                        >
                     </a-button>
-                    <!-- 取消记录按钮 仅分销商(可见) -->
+                    <!-- 取消记录 按钮 仅分销商(可见) 取消记录是否有数据 -->
                     <a-button
-                        v-if="$Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) && true"
+                        v-if="$Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) && isCancelRecord"
                         type="primary"
                         @click="onCancelRecord"
                     >
@@ -531,13 +544,14 @@
                         <!-- 打托 -->
                         <div class="info-item">
                             <div class="key">{{ $t('p.playing_tricks') }}</div>
-                            <div class="value">{{ '待联调' || '-' }}</div>
+                            <div class="value">
+                                {{ $Util.purchaseTransferFilter(detail.flag_pallet, $i18n.locale) || '-' }}
+                            </div>
                         </div>
                         <!-- 期望交期 -->
                         <div class="info-item">
                             <div class="key">{{ $t('p.expected_delivery_time') }}</div>
-                            <!-- $Util.timeFilter(detail.create_time) -->
-                            <div class="value">{{ '待联调' || '-' }}</div>
+                            <div class="value">{{ $Util.timeFilter(detail.deliver_time_expected) || '-' }}</div>
                         </div>
                     </div>
                 </a-col>
@@ -563,8 +577,9 @@
                             <a-button
                                 v-if="
                                     user_type &&
-                                    $Util.Common.returnTypeBool(1, [
-                                        FREIGHT_STATUS.TO_BE_DETERMINED,
+                                    $Util.Common.returnTypeBool(detail.freight_status, [
+                                        FREIGHT_STATUS.TO_BE_FILLED_IN,
+                                        FREIGHT_STATUS.TO_BE_CONFIRMED,
                                         FREIGHT_STATUS.REJECTED,
                                     ])
                                 "
@@ -572,9 +587,11 @@
                                 type="link"
                                 @click="onModify"
                             >
-                                {{ detail.sn || '-' }}
+                                {{ $Util.timeFilter(detail?.freight_audit_record?.content?.shipping_time_estimated) }}
                             </a-button>
-                            <span v-else>{{ detail.sn || '-' }}</span>
+                            <span v-else>
+                                {{ $Util.timeFilter(detail?.freight_audit_record?.content?.shipping_time_estimated) }}
+                            </span>
                         </div>
                     </div>
                 </a-col>
@@ -587,16 +604,22 @@
                                 v-if="
                                     user_type &&
                                     $Util.Common.returnTypeBool(detail.freight_status, [
-                                        FREIGHT_STATUS.TO_BE_DETERMINED,
+                                        FREIGHT_STATUS.TO_BE_FILLED_IN,
+                                        FREIGHT_STATUS.TO_BE_CONFIRMED,
                                         FREIGHT_STATUS.REJECTED,
                                     ])
                                 "
                                 class="m-l-8"
                                 type="link"
                                 @click="onModify"
-                                >{{ $t('common.modify') }}</a-button
                             >
-                            <span v-else>{{ detail.sn || '-' }}</span>
+                                <span>{{ $Util.priceUnitFilter(detail?.currency) }}</span>
+                                <span>{{ $Util.countFilter(detail?.freight_audit_record?.content?.freight) }}</span>
+                            </a-button>
+                            <span v-else>
+                                <span>{{ $Util.priceUnitFilter(detail.currency) }}</span>
+                                <span>{{ $Util.countFilter(detail?.freight_audit_record?.content?.freight) }}</span>
+                            </span>
                         </div>
                     </div>
                 </a-col>
@@ -605,7 +628,7 @@
             <div
                 v-if="
                     $Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) &&
-                    $Util.Common.returnTypeBool(detail.freight_status, [FREIGHT_STATUS.TO_BE_DETERMINED])
+                    $Util.Common.returnTypeBool(detail.freight_status, [FREIGHT_STATUS.TO_BE_CONFIRMED])
                 "
                 class="all-btn"
             >
@@ -862,17 +885,27 @@
         </template>
 
         <!-- 预计船期及运费 -->
-        <ShippingFreight v-model:visible="freightVisible" :title="$t('distributor.expected_shipping_freight')">
+        <ShippingFreight
+            v-if="freightVisible"
+            :detailRecord="detailRecord"
+            v-model:visible="freightVisible"
+            :title="$t('distributor.expected_shipping_freight')"
+            @ok="onUpdateTable"
+        >
         </ShippingFreight>
 
         <!-- 确认运费弹窗 -->
         <ConfirmFreight
+            v-if="confirmFreightVisible"
+            :detailRecord="detailRecord"
             v-model:visible="confirmFreightVisible"
             :title="$t('distributor.shipping_freight')"
+            @ok="onUpdateTable"
         ></ConfirmFreight>
 
         <!-- 取消二次弹窗操作记录查看 -->
         <CancelOperation
+            v-if="operationVisible"
             v-model:visible="operationVisible"
             :title="$t('distributor-detail.cancel_record')"
         ></CancelOperation>
@@ -934,6 +967,7 @@ const FLAG_TRANSFER_MAP = Core.Const.PURCHASE.FLAG_TRANSFER_MAP;
 const USER_TYPE = Core.Const.USER.TYPE;
 const FREIGHT_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_STATUS_MAP;
 const FREIGHT_STATUS = Core.Const.DISTRIBUTOR.FREIGHT_STATUS;
+const AUDIT_CANCEL_STATUS = Core.Const.DISTRIBUTOR.AUDIT_CANCEL_STATUS;
 
 export default {
     name: 'PurchaseOrderDetail',
@@ -960,6 +994,7 @@ export default {
             Core,
             FLAG,
             TYPE,
+            AUDIT_CANCEL_STATUS,
             FREIGHT_STATUS_MAP,
             FREIGHT_STATUS,
             PARENT_TYPE,
@@ -1067,6 +1102,8 @@ export default {
                 remark: undefined,
             },
             operationVisible: false, // 船期及运费确认model
+            detailRecord: {}, // 给 ShippingFreight | ConfirmFreight 数据
+            isCancelRecord: false, // 是否显示取消记录按钮
         };
     },
     computed: {
@@ -1211,6 +1248,7 @@ export default {
         this.getList(); // 获取列表
         this.getWarehouseList(); // 获取仓库列表
         this.getGiveawayList(); // 获取赠品列表
+        this.getCancelRecordFetch() // 取消记录接口(用来判断 取消记录显影)
     },
     created() {
         this.id = Number(this.$route.query.id) || 0;
@@ -1236,6 +1274,14 @@ export default {
             })
                 .then(res => {
                     this.detail = res.detail;
+
+                    this.detail.freight_audit_record = {
+                        ...this.detail?.freight_audit_record,
+                        content: this.detail?.freight_audit_record?.content
+                            ? JSON.parse(this.detail?.freight_audit_record?.content)
+                            : {},
+                    };
+
                     if (this.detail.status === Core.Const.PURCHASE.STATUS.TAKE_DELIVER) {
                         this.detail.status = Core.Const.PURCHASE.STATUS.WAIT_DELIVER;
                     }
@@ -1379,6 +1425,42 @@ export default {
                 this.getPurchaseInfo();
             });
         },
+
+        // 取消接口
+        cancelFetch(params = {}) {
+            let obj = {
+                id: this.id,
+                ...params,
+            };
+            return new Promise((resolve, reject) => {
+                Core.Api.Purchase.cancel(obj)
+                    .then(res => {
+                        this.$message.success(this.$t('pop_up.canceled'));
+                        this.routerChange('orderList');
+                        resolve();
+                    })
+                    .catch(err => {
+                        console.log('handleCancel err', err);
+                        reject();
+                    });
+            });
+        },
+        // 取消记录接口
+        getCancelRecordFetch(params = {}) {
+            let obj = {
+                order_id: this.id,
+                ...params,
+            };
+            Core.Api.CancelOrderList.list(obj)
+                .then(res => {
+                    console.log("取消记录接口", res);
+                    this.isCancelRecord = res.list.length ? true : false
+                })
+                .catch(err => {
+                    console.log('handleCancel err', err);                    
+                });
+        },
+
         /*== FETCH end==*/
 
         /*== header options start ==*/
@@ -1437,16 +1519,7 @@ export default {
                 okText: _this.$t('def.sure'),
                 cancelText: _this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.Purchase.cancel({
-                        id: _this.id,
-                    })
-                        .then(res => {
-                            _this.$message.success(_this.$t('pop_up.canceled'));
-                            _this.routerChange('orderList');
-                        })
-                        .catch(err => {
-                            console.log('handleCancel err', err);
-                        });
+                    this.cancelFetch();
                 },
             });
         },
@@ -1798,25 +1871,47 @@ export default {
         // 船期及运费(修改)
         onModify() {
             this.freightVisible = true;
+            this.detailRecord = {
+                id: this.detail.id,
+                currency: this.detail.currency,
+                freight_audit_record_id: this.detail.freight_audit_record_id,
+                freight: this.detail?.freight_audit_record?.content?.freight,
+                shipping_time_estimated: this.detail?.freight_audit_record?.content?.shipping_time_estimated,
+            };
         },
 
         // 确认运费
         onConfirmFreight() {
             this.confirmFreightVisible = true;
+            this.detailRecord = {
+                id: this.detail.id,
+                freight_status: this.detail.freight_status,
+                freight_audit_record_id: this.detail.freight_audit_record_id,
+                shipping_time_estimated: this.detail?.freight_audit_record?.content?.shipping_time_estimated,
+                freight: this.detail?.freight_audit_record?.content?.freight,
+            };
         },
 
         // 取消二次弹窗填写原因
         onCheckModalCancel() {
             this.cancelVisible = false;
+            this.cancelParams.remark = undefined;
         },
         onCheckModalOK() {
             console.log('点击确定 onCheckModalOK', this.cancelParams);
-            this.onCheckModalCancel();
+            this.cancelFetch({ remark: this.cancelParams.remark }).then(() => {
+                this.onCheckModalCancel();
+            });
         },
 
         // 取消记录按钮
         onCancelRecord() {
             this.operationVisible = true;
+        },
+
+        // 预计船期及运费 确认运费 返回
+        onUpdateTable() {
+            this.getPurchaseInfo();
         },
     },
 };
@@ -1973,4 +2068,3 @@ export default {
     }
 }
 </style>
-./components/ShippingFreightModel.vue

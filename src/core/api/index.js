@@ -1082,9 +1082,9 @@ const apiList = {
         updateStatus: ['PostJson', 'announcement/update-status'], // 修改排序和状态
     },
     RechargeAudit: {
-        audit: ['PostJson', 'RechargeAudit/audit'], // 审核
-        detail: ['PostJson', 'RechargeAudit/detail'], // 详情
-        list: ['PostJson', 'RechargeAudit/list'], // 列表
+        audit: ['PostJson', 'audit-record/audit'], // 审核
+        detail: ['PostJson', 'audit-record/detail'], // 详情
+        list: ['PostJson', 'audit-record/list-distributor-recharge'], // 列表
     },
     PayAccount: {
         detail: ['PostJson', 'pay-in-account/detail'], // 详情
@@ -1092,8 +1092,21 @@ const apiList = {
         list: ['PostJson', 'pay-in-account/list'], // 列表
         updateStatus: ['PostJson', 'pay-in-account/update-status'], // 修改状态
         delete: ['PostJson', 'pay-in-account/delete'], // 删除
-        countryList: ['PostJson', 'pay-in-account/list-effective-country'], // 生效中的国家列表
+        countryList: ['PostJson', 'pay-in-account/list-country'], // 生效中的国家列表
     },
+    // 船期以及运费
+    ShippingDateFreight: {
+        list: ['PostJson', 'purchase-order/pending-freight-confirm/list'], // 列表
+        status: ['PostJson', 'purchase-order/pending-freight-confirm/count-by-status'], // 状态数据
+        add: ['PostJson', 'purchase-order/pending-freight-confirm/save'], // 新增/修改 预计船期及运费
+        confirm: ['PostJson', 'purchase-order/pending-freight-confirm/audit'], // 确认运费
+    },    
+    // 取消订单申请表
+    CancelOrderList: {
+        list: ['PostJson', 'purchase-order/cancel/list'], // 列表
+        audit: ['PostJson', 'purchase-order/cancel/audit'], // 审核
+        count: ['PostJson', 'purchase-order/cancel/count'], // 计数
+    }
 };
 
 export default new Api(baseUrl, apiList);

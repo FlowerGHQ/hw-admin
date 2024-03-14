@@ -49,6 +49,7 @@ export default {
         other_remittance_info: '其他汇款信息',
         euro_pay_path: '欧元付款路径',
         preview: '预览',
+        caus_result: '不通过原因',
     },
     en: {
         list_title: 'Payment Information Management',
@@ -99,5 +100,6 @@ export default {
         other_remittance_info: 'Other Remittance Information',
         euro_pay_path: 'Euro Payment Path',
         preview: 'Preview',
+        caus_result: 'Cause Of Disqualification',
     },
 };
