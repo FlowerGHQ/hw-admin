@@ -2038,6 +2038,7 @@ const messages = {
                 'allocation-rules': '分配规则',
                 'good-goods-order': '好物订单',
                 email: '邮件管理',
+                'recharge-review': '充值审核',
             },
             distributor: {
                 list: '查看分销商列表',
@@ -2415,6 +2416,10 @@ const messages = {
             email: {
                 'email-list': '邮件列表',
                 'email-statistics': '邮件列表',
+            },
+            'recharge-review': {
+                'list': '充值审核列表',
+                'first_instance': '一审审核',
             },
         },
         error_code: {
@@ -4900,6 +4905,7 @@ const messages = {
                 'allocation-rules': 'Allocation Rules',
                 'good-goods-order': 'Good Goods Order',
                 email: 'Email',
+                'recharge-review': 'Recharge Audit'
             },
             distributor: {
                 list: 'View Distributor List',
@@ -5275,6 +5281,10 @@ const messages = {
             email: {
                 'email-list': 'Email List',
                 'email-statistics': 'Email Statistics',
+            },
+            'recharge-review': {
+                'list': 'Recharge Audit List',
+                'first_instance': 'First Audit',
             },
         },
         error_code: {

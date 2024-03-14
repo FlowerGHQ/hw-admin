@@ -88,14 +88,14 @@
                         {{ record.currency === 'EUR' ? '€' : '$' }}{{ text ? $Util.countFilter(text) : '-' }}
                     </template>
                     <template v-if="column.key === 'log'">
-                        #{{ '账号' }}#, 
-                        #{{ $Util.timeFormat(record.action_log.create_time) }}#, 
-                        #{{ record.action_log.content }}#
+                        #{{ record.action_log.user_name || '-' }}#, 
+                        #{{ $Util.timeFormat(record.action_log.create_time) || '-' }}#, 
+                        #{{ record.action_log.content || '-' }}#
                         <span 
                             v-if="record.status === Core.Const.AUDIT_MANAGEMENT.AUDIT_STATUS_MAP.REJECT_FIRST || 
                                 record.status === Core.Const.AUDIT_MANAGEMENT.AUDIT_STATUS_MAP.REJECT_SECOND"
                         >
-                            #{{ $t(/*原因*/'n.reason') }}:{{ record.action_log.remark }}#
+                            #{{ $t(/*原因*/'n.reason') }}:{{ record.action_log.remark || '-' }}#
                         </span>
                     </template>
                     <!-- 操作 -->
@@ -154,6 +154,19 @@ const tableColumns = computed(() => {
     ];
     return columns;
 });
+const statusList = computed(() => {
+    let list = [
+        { zh: '全  部', en: 'All', value: 0, color: 'primary', key: 0 },
+        { zh: '等待二审', en: 'Pending Second Audit', value: 0, color: 'yellow', key: 4 },        
+        { zh: '二审通过', en: 'Approval Second Audit', value: 0, color: 'yellow', key: 2 },
+        { zh: '二审不通过', en: 'The Second Audit Was Rejected', value: 0, color: 'yellow', key: 5 },
+    ];
+    if(Core.Data.getAuthority()['recharge-review.first_instance']) {
+        list.push({ zh: '等待一审', en: 'Pending First Audit', value: 0, color: 'yellow', key: 1 })
+        list.push({ zh: '一审不通过', en: 'The First Audit Was Rejected', value: 0, color: 'yellow', key: 3 })
+    }
+    return list;
+})
 const tableFields = ref([
     { key: 'beneficiary_bank', label: 'BENEFICIARY BANK' },
     { key: 'swift_code', label: 'SWIFT CODE' },
@@ -179,29 +192,15 @@ const searchList = ref([
         key: 'payment-management.submission_time',
     },
 ]);
-const statusList = ref([
-    { zh: '全  部', en: 'All', value: 0, color: 'primary', key: 0 },
-    { zh: '等待一审', en: 'Pending First Audit', value: 0, color: 'yellow', key: 1 },
-    { zh: '等待二审', en: 'Pending Second Audit', value: 0, color: 'yellow', key: 4 },
-    { zh: '一审不通过', en: 'The First Audit Was Rejected', value: 0, color: 'yellow', key: 3 },
-    { zh: '二审通过', en: 'Approval Second Audit', value: 0, color: 'yellow', key: 2 },
-    { zh: '二审不通过', en: 'The Second Audit Was Rejected', value: 0, color: 'yellow', key: 5 },
-]);
 
-onMounted(() => {});
+onMounted(() => {
+    console.log('auth', Core.Data.getAuthority()['recharge-review.first_instance']);
+});
 /* Fetch start*/
 const request = Core.Api.RechargeAudit.list;
-// const dataCallBack = res => {
-//     // 处理数据
-//     return res.list.map(item => {
-//         item.old_sort = Core.Util.deepCopy(item.sort);
-//         item.firstSentence = Core.Util.Common.getFirstSentence(item.content);
-//         return item;
-//     });
-// };
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request,
-    // dataCallBack: dataCallBack,
+    initParam: { is_finance: Number(!Core.Data.getAuthority()['recharge-review.first_instance']) },
 });
 /* Fetch end*/
 
@@ -227,6 +226,9 @@ const routerChange = (type, record) => {
 };
 const handleSearch = (e) => {
     searchParam.value.status = e
+    if(searchParam.value.status === 0) {
+        searchParam.value.is_finance = !Number(Core.Data.getAuthority()['recharge-review.first_instance']);        
+    }
     search();
 }
 /* methods end*/
