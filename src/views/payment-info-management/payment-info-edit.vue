@@ -214,7 +214,7 @@
             </div>
         </div>
         <div class="form-btns fixed-btns" ref="fixBox" :style="{ width: fixedWidth }">
-            <a-button @click="submit">{{ $t(/*预览*/'payment-management.preview') }}</a-button>
+            <a-button @click="preview">{{ $t(/*预览*/'payment-management.preview') }}</a-button>
             <a-button @click="routerChange('back')">{{ $t(/*取消*/'def.cancel') }}</a-button>
             <a-button type="primary" @click="submit">{{ $t(/*确定*/'def.sure') }}</a-button>
             <div class="bottom-box"></div>
@@ -367,13 +367,6 @@ export default {
                 case 'back':
                     this.$router.go(-1);
                     break;
-                case 'preview': // 详情
-                    routeUrl = this.$router.resolve({
-                        path: '/item/item-detail',
-                        query: { id: item.id },
-                    });
-                    window.open(routeUrl.href, '_self');
-                    break;
             }
         },
         checkFormInput(form) {
@@ -385,13 +378,25 @@ export default {
             }
             return 0;
         },
-        submit() {
+        handleFormData() {
             this.form.bank_list.push(this.usdForm)
             this.form.bank_list.push(this.eurForm)
             let form = Core.Util.deepCopy(this.form);
             if(this.checkFormInput(form)) return
             console.log('form', this.form);
+        },
+        submit() {
+            this.handleFormData();
             this.handleSubmitService(this.form)
+        },
+        preview() {
+            this.handleFormData();
+            let routeUrl = '';
+            routeUrl = this.$router.resolve({
+                path: '/payment-info-management/pending-payment',
+                query: { form: this.form },
+            });
+            window.open(routeUrl.href, '_blank');
         },
         handleGetItem(item) {
             this.area = {
