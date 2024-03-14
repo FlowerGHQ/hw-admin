@@ -107,7 +107,7 @@
                         </template>
 
                         <!-- 运费支付状态 -->
-                        <template v-if="column.key === 'freight_pay_status'">                            
+                        <template v-if="column.key === 'freight_pay_status'">
                             {{ FREIGHT_PAY_STATUS_MAP[text]?.t ? $t(`${FREIGHT_PAY_STATUS_MAP[text]?.t}`) : '-' }}
                         </template>
 
@@ -320,7 +320,12 @@ const tableColumns = computed(() => {
         { title: proxy.$t('p.payment_status'), dataIndex: 'payment_status', key: 'payment_status' }, // 支付状态
     ];
     if (!isDistributerAdmin.value) {
-        columns.push({ title: proxy.$t('common.operations'), dataIndex: 'operations', key: 'operations', fixed: 'right' }) // 操作
+        columns.push({
+            title: proxy.$t('common.operations'),
+            dataIndex: 'operations',
+            key: 'operations',
+            fixed: 'right',
+        }); // 操作
     }
     return columns;
 });
@@ -366,22 +371,33 @@ const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPa
     request: getInquirySheet,
     initParam: {
         search_type: searchForm.value.search_type,
-    }
+    },
 });
 
 /* fetch end*/
 
 /* methods start*/
+const initData = () => {
+    tabStatus.value = 0
+    searchForm.value = {
+        final_pay_due_begin_time: undefined, // 应付尾款开始时间
+        final_pay_due_end_time: undefined, // 应付尾款结束时间
+        freight_pay_status: undefined, // 运费支付状态
+        sn: undefined, // 订单编号
+        distributor_id: undefined, // 分销商id
+        search_type: 3,
+    };
+};
 const routerChange = (type, record) => {
     let routeUrl = '';
     if (!isDistributerAdmin.value) {
         // 分销商
         switch (type) {
             case 'pay': // 付款
-                // routeUrl = router.resolve({
-                //     path: '/customer-care/edit',
-                // });
-                // window.open(routeUrl.href, '_blank');
+                routeUrl = router.resolve({
+                    path: '/mall/confirm-order',
+                });
+                window.open(routeUrl.href, '_blank');
                 break;
             case 'detail':
                 routeUrl = router.resolve({
@@ -408,22 +424,16 @@ const routerChange = (type, record) => {
 };
 
 const onSearch = data => {
-    console.log('data', data);
-
-    let data1 = Core.Util.searchFilter(data)
-    let data2 = Core.Util.searchFilter(searchForm.value)
-    searchParam.value = {
-        ...data1,
-        ...data2
-    };    
+    searchParam.value = Core.Util.searchFilter({ ...searchForm.value, ...data });
     search();
 };
 const onReset = () => {
     refreshTable();
+    initData();
 };
-// tab数据
-const onTabChange = type => {    
-    search_all_ref.value.handleSearchReset()  // 清除输入框数据
+// tab事件
+const onTabChange = type => {
+    search_all_ref.value.onResetData(); // 清除输入框数据
 
     searchForm.value.final_pay_due_begin_time = undefined;
     searchForm.value.final_pay_due_end_time = undefined;
@@ -438,7 +448,7 @@ const onTabChange = type => {
         case FINAL_UNPAID_ORDER_TAB.DELAY:
             searchForm.value.final_pay_due_begin_time = dayjs().unix();
             break;
-    }    
+    }
     searchParam.value = Core.Util.searchFilter(searchForm.value);
     search();
 };

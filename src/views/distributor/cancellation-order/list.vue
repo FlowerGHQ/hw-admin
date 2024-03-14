@@ -8,7 +8,7 @@
             </div>
             <!-- tabs 切换 -->
             <div class="tabs-container colorful">
-                <a-tabs v-model:activeKey="searchForm.audit_status" @change="onSearch">
+                <a-tabs v-model:activeKey="searchForm.audit_status" @change="onTabChange">
                     <a-tab-pane :key="item.key" v-for="item of statusList">
                         <template #tab>
                             <div class="tabs-title">
@@ -258,7 +258,7 @@ const search_all_ref = ref(null);
 const searchForm = ref({
     sn: undefined, // 订单编号
     distributor_id: undefined, // 分销商分销商
-    audit_status: undefined, // 类型
+    audit_status: 0, // 类型
 });
 const isAuditShow = ref(false); // 是否显示审核按钮
 const auditParams = ref({
@@ -393,12 +393,12 @@ const saveAuditFetch = (params = {}) => {
     Core.Api.CancelOrderList.audit(obj)
         .then(res => {
             console.log('审核接口 res', res);
-            onCheckModalCancel()
-            proxy.$message.success($t('distributor.audit_success'))
-            search()
+            onCheckModalCancel();
+            proxy.$message.success(proxy.$t('distributor.audit_success'));
+            search();
         })
         .catch(err => {
-            proxy.$message.success($t('distributor.audit_error'))
+            proxy.$message.success(proxy.$t('distributor.audit_error'));
             console.log('审核接口 err', err);
         });
 };
@@ -411,6 +411,11 @@ const initData = () => {
         id: undefined,
         status: IS_PASS_OPTIONS.ADOPT,
         remark: undefined,
+    };
+    searchForm.value = {
+        sn: undefined, // 订单编号
+        distributor_id: undefined, // 分销商分销商
+        audit_status: 0, // 类型
     };
 };
 const routerChange = (type, record) => {
@@ -427,32 +432,34 @@ const routerChange = (type, record) => {
             break;
         case 'audit': // 审核
             isAuditShow.value = true;
-            auditParams.value.id = record.audit_id
+            auditParams.value.id = record.audit_id;
             break;
     }
 };
 
 const onSearch = data => {
-    let data1 = Core.Util.searchFilter(data);
-    let data2 = Core.Util.searchFilter(searchForm.value);
-    searchParam.value = {
-        ...data1,
-        ...data2,
-    };
+    searchParam.value = Core.Util.searchFilter({ ...searchForm.value, ...data });
     search();
 };
 const onReset = () => {
     refreshTable();
+    initData()
+};
+// tab事件
+const onTabChange = () => {        
+    search_all_ref.value.onResetData()  // 清除输入框数据
+    searchParam.value = Core.Util.searchFilter(searchForm.value);
+    search();
 };
 
 // 审核
 const onCheckModalCancel = () => {
     isAuditShow.value = false;
-    initData()
+    initData();
 };
 
 const onCheckModalOK = () => {
-    saveAuditFetch(auditParams.value)
+    saveAuditFetch(auditParams.value);
 };
 
 /* methods end*/

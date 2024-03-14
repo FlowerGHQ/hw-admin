@@ -267,10 +267,19 @@
                                 {{ $Util.countFilter(text) }}
                             </span>
                         </template>
-                        <template v-else-if="column.dataIndex === 'status'">
+                        <!-- 订单状态 -->
+                        <template v-else-if="column.key === 'order_status'">
                             <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text, 'color')">
-                                {{ $Util.purchaseStatusFilter(text, $i18n.locale) }}
-                                {{ record.cancel_status }}
+                                {{ $Util.purchaseStatusFilter(text, $i18n.locale) }} {{ record.cancel_status }}
+                            </div>
+                            <div
+                                v-if="AUDIT_CANCEL_STATUS_MAP[record.cancel_status]"
+                                class="m-l-8 status status-bg status-tag"
+                                :class="$Util.purchaseStatusFilter(text, 'color')"
+                            >
+                                {{ $t('distributor-detail.cancel_order') }}({{
+                                    $t(`${AUDIT_CANCEL_STATUS_MAP[record.cancel_status]?.t}`)
+                                }})
                             </div>
                         </template>
                         <template v-else-if="column.dataIndex === 'payment_status'">
@@ -408,9 +417,10 @@ const FLAG_ORDER_TYPE = Core.Const.PURCHASE.FLAG_ORDER_TYPE;
 const PAY_TIME_LIST = Core.Const.DISTRIBUTOR.PAY_TIME_LIST;
 const STATUS = Core.Const.PURCHASE.STATUS;
 const FREIGHT_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_STATUS_MAP;
+const AUDIT_CANCEL_STATUS_MAP = Core.Const.DISTRIBUTOR.AUDIT_CANCEL_STATUS_MAP;
+
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 import { message } from 'ant-design-vue';
-
 import TimeSearch from '@/components/common/TimeSearch.vue';
 
 export default {
@@ -433,6 +443,7 @@ export default {
             PAY_TIME_LIST,
             FLAG_ORDER_TYPE,
             FREIGHT_STATUS_MAP,
+            AUDIT_CANCEL_STATUS_MAP,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -497,7 +508,7 @@ export default {
                     dataIndex: 'estimated_shipping_datas',
                     key: 'estimated_shipping_data',
                 }, // 预计船期
-                { title: this.$t('p.order_status'), dataIndex: 'status' },
+                { title: this.$t('p.order_status'), dataIndex: 'status', key: 'order_status' },
                 { title: this.$t('n.order_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('p.payment_status'), dataIndex: 'payment_status' },
                 { title: this.$t('p.payment_time'), dataIndex: 'pay_time', key: 'time' },
