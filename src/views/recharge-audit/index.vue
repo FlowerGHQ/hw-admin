@@ -50,6 +50,29 @@
                             </div>
                         </a-tooltip>
                     </template>
+                    <template v-if="column.key === 'info'">
+                        <a-tooltip placement="top">
+                            <template #title>
+                                <div v-for="item in tableFields" :key="item.key">
+                                    <div>
+                                        {{ item.label }}:
+                                        <div>
+                                            {{ record.content_json.payment_information[item.key] || '-' }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                            <div class="ell mw160">
+                                BENEFICIARY BANK: {{ record.content_json.payment_information.beneficiary_bank || '-' }}
+                                SWIFT CODE: {{ record.content_json.payment_information.swift_code || '-' }}
+                                BANK ADDRESS: {{ record.content_json.payment_information.bank_address || '-' }}
+                                ACCOUNT NUMBER: {{ record.content_json.payment_information.account_number || '-' }}
+                                COMPANY NAME: {{ record.content_json.payment_information.company_name || '-' }}
+                                COMAPANY ADDRESS: {{ record.content_json.payment_information.company_address || '-' }}
+                                {{ $t(/*其他汇款信息*/'payment-management.other_remittance_info') }}: {{ record.content_json.payment_information.remark || '-' }}
+                            </div>
+                        </a-tooltip>
+                    </template>
                     <template v-if="column.key === 'status'">
                         <div
                             class="status-box"
@@ -62,7 +85,18 @@
                         {{ text ? $Util.timeFormat(text) : '-' }}
                     </template>
                     <template v-if="column.key === 'money'">
-                        {{ text ? $Util.countFilter(text) : '-' }}
+                        {{ record.currency === 'EUR' ? '€' : '$' }}{{ text ? $Util.countFilter(text) : '-' }}
+                    </template>
+                    <template v-if="column.key === 'log'">
+                        #{{ '账号' }}#, 
+                        #{{ $Util.timeFormat(record.action_log.create_time) }}#, 
+                        #{{ record.action_log.content }}#
+                        <span 
+                            v-if="record.status === Core.Const.AUDIT_MANAGEMENT.AUDIT_STATUS_MAP.REJECT_FIRST || 
+                                record.status === Core.Const.AUDIT_MANAGEMENT.AUDIT_STATUS_MAP.REJECT_SECOND"
+                        >
+                            #{{ $t(/*原因*/'n.reason') }}:{{ record.action_log.remark }}#
+                        </span>
                     </template>
                     <!-- 操作 -->
                     <template v-if="column.key === 'operations'">
@@ -109,18 +143,26 @@ const tableColumns = computed(() => {
         { title: $t(/*序号*/ 'n.index'), dataIndex: 'id', key: 'number' },
         { title: $t(/*充值单号*/ 'payment-management.recharge_order_number'), dataIndex: ['content_json', 'recharge_uid'], key: 'item' },
         { title: $t(/*分销商名称*/ 'payment-management.distributor_name'), dataIndex: 'name', key: 'item' },
-        { title: $t(/*提交申请时间*/ 'payment-management.app_submit_time'), dataIndex: 'time', key: 'time' },
-        { title: $t(/*收款账号信息*/ 'payment-management.receiving_acc_info'), dataIndex: ['content_json', 'payment_information'], key: 'item' },
+        { title: $t(/*提交申请时间*/ 'payment-management.app_submit_time'), dataIndex: 'create_time', key: 'time' },
+        { title: $t(/*收款账号信息*/ 'payment-management.receiving_acc_info'), dataIndex: ['content_json', 'payment_information'], key: 'info' },
         { title: $t(/*整车余额充值金额*/ 'payment-management.vehicle_balance_amount'), dataIndex: ['content_json', 'vehicle_balance'], key: 'money' },
         { title: $t(/*配件余额充值金额*/ 'payment-management.spare_parts_balance_amount'), dataIndex: ['content_json', 'part_balance'], key: 'money' },
         { title: $t(/*总充值金额*/ 'payment-management.total_top_up_amount'), dataIndex: ['content_json', 'total_amount'], key: 'money' },
         { title: $t(/*状态*/ 'payment-management.state'), dataIndex: 'status', key: 'status' },
-        { title: $t(/*操作记录*/ 'payment-management.operation_record'), dataIndex: 'create_time', key: 'item' },
+        { title: $t(/*操作记录*/ 'payment-management.operation_record'), dataIndex: 'action_log', key: 'log' },
         { title: $t(/*操作*/ 'common.operations'), key: 'operations', fixed: 'right' },
     ];
     return columns;
 });
-
+const tableFields = ref([
+    { key: 'beneficiary_bank', label: 'BENEFICIARY BANK' },
+    { key: 'swift_code', label: 'SWIFT CODE' },
+    { key: 'bank_address', label: 'BANK ADDRESS' },
+    { key: 'account_number', label: 'ACCOUNT NUMBER' },
+    { key: 'company_name', label: 'COMPANY NAME' },
+    { key: 'company_address', label: 'COMPANY ADDRESS' },
+    { key: 'remark', label: $t(/*其他汇款信息*/'payment-management.other_remittance_info') }
+])
 const searchList = ref([
     // 名称
     {
@@ -159,7 +201,6 @@ const request = Core.Api.RechargeAudit.list;
 // };
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request,
-    // initParam: { type: Core.Const.OPERATION.OPERATION_TYPE_MAP.REPORT },
     // dataCallBack: dataCallBack,
 });
 /* Fetch end*/
@@ -252,5 +293,10 @@ const handleSearch = (e) => {
             background: rgba(140, 140, 140, 0.05);
         }
     }
+}
+.ell {
+    &.mw160 {
+        max-width: 160px;
+    } 
 }
 </style>

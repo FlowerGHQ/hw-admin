@@ -1092,7 +1092,7 @@ const apiList = {
         list: ['PostJson', 'pay-in-account/list'], // 列表
         updateStatus: ['PostJson', 'pay-in-account/update-status'], // 修改状态
         delete: ['PostJson', 'pay-in-account/delete'], // 删除
-        countryList: ['PostJson', 'pay-in-account/list-effective-country'], // 生效中的国家列表
+        countryList: ['PostJson', 'pay-in-account/list-country'], // 生效中的国家列表
     },
 };
 

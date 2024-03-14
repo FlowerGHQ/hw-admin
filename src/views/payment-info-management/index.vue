@@ -296,7 +296,9 @@ const updateStatusFetch = (record) => {
 };
 
 const getCountryListService = () => {
-    Core.Api.PayAccount.countryList().then(res => {
+    Core.Api.PayAccount.countryList({
+        status: Core.Const.PAYMENT_MANAGEMENT.EFFECTIVE_TYPE_MAP.YES
+    }).then(res => {
         console.log('getCountryListService res', res);
         regionList.value = res.list
     }).catch(err => {
