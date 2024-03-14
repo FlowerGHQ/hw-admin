@@ -1094,6 +1094,19 @@ const apiList = {
         delete: ['PostJson', 'pay-in-account/delete'], // 删除
         countryList: ['PostJson', 'pay-in-account/list-country'], // 生效中的国家列表
     },
+    // 船期以及运费
+    ShippingDateFreight: {
+        list: ['PostJson', 'purchase-order/pending-freight-confirm/list'], // 列表
+        status: ['PostJson', 'purchase-order/pending-freight-confirm/count-by-status'], // 状态数据
+        add: ['PostJson', 'purchase-order/pending-freight-confirm/save'], // 新增/修改 预计船期及运费
+        confirm: ['PostJson', 'purchase-order/pending-freight-confirm/audit'], // 确认运费
+    },    
+    // 取消订单申请表
+    CancelOrderList: {
+        list: ['PostJson', 'purchase-order/cancel/list'], // 列表
+        audit: ['PostJson', 'purchase-order/cancel/audit'], // 审核
+        count: ['PostJson', 'purchase-order/cancel/count'], // 计数
+    }
 };
 
 export default new Api(baseUrl, apiList);

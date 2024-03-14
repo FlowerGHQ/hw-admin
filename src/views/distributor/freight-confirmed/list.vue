@@ -10,7 +10,7 @@
             </div>
             <!-- tabs 切换 -->
             <div class="tabs-container colorful">
-                <a-tabs v-model:activeKey="searchForm.status" @change="onSearch">
+                <a-tabs v-model:activeKey="searchForm.freight_status" @change="onSearch">
                     <a-tab-pane :key="item.key" v-for="item of statusList">
                         <template #tab>
                             <div class="tabs-title">
@@ -27,7 +27,7 @@
                 <SearchAll
                     ref="search_all_ref"
                     :isShowMore="false"
-                    :options="searchList"
+                    :options="isDistributerAdmin ? searchAdminList : searchDistributorList"
                     @search="onSearch"
                     @reset="onReset"
                 >
@@ -54,7 +54,7 @@
                                 <a-button v-if="text" type="link" @click="routerChange('detail', record)">
                                     {{ text }}
                                 </a-button>
-                                <a-button v-else type="link">-</a-button>
+                                <span v-else type="link">-</span>
                             </a-tooltip>
                         </template>
                         <!-- 上级订单编号 -->
@@ -63,7 +63,7 @@
                                 <a-button v-if="text" type="link" @click="routerChange('detail', record)">
                                     {{ text }}
                                 </a-button>
-                                <a-button v-else type="link">-</a-button>
+                                <span v-else type="link">-</span>
                             </a-tooltip>
                         </template>
 
@@ -90,10 +90,19 @@
                             </span>
                         </template>
 
-                        <!-- 运费 -->
+                        <!-- 运费 待确定、已拒绝状态支持修改 -->
                         <template v-if="column.key === 'freight'">
-                            <template v-if="isDistributerAdmin">
-                                <a-button @click="onModify" type="link">
+                            <template
+                                v-if="
+                                    isDistributerAdmin &&
+                                    $Util.Common.returnTypeBool(record.freight_status, [
+                                        FREIGHT_STATUS.TO_BE_FILLED_IN,
+                                        FREIGHT_STATUS.TO_BE_CONFIRMED,
+                                        FREIGHT_STATUS.REJECTED,
+                                    ])
+                                "
+                            >
+                                <a-button @click="onModify(record)" type="link">
                                     <span v-if="text >= 0">
                                         {{ $Util.priceUnitFilter(record.currency) }}
                                     </span>
@@ -112,10 +121,19 @@
                             </template>
                         </template>
 
-                        <!-- 运费状态 -->
+                        <!-- 运费状态 待确定、已拒绝状态支持修改-->
                         <template v-else-if="column.key === 'freight_status'">
-                            <template v-if="isDistributerAdmin">
-                                <a-button @click="onConfirmFreight" type="link">
+                            <template
+                                v-if="
+                                    isDistributerAdmin &&
+                                    $Util.Common.returnTypeBool(record.freight_status, [
+                                        FREIGHT_STATUS.TO_BE_FILLED_IN,
+                                        FREIGHT_STATUS.TO_BE_CONFIRMED,
+                                        FREIGHT_STATUS.REJECTED,
+                                    ])
+                                "
+                            >
+                                <a-button @click="onModify(record)" type="link">
                                     {{ FREIGHT_STATUS_MAP[text]?.t ? $t(`${FREIGHT_STATUS_MAP[text]?.t}`) : '-' }}
                                 </a-button>
                             </template>
@@ -152,13 +170,29 @@
                         </template>
 
                         <!-- 操作记录 -->
-                        <template v-if="column.key === 'operation_record'"> 操作记录 </template>
+                        <template v-if="column.key === 'action_log_content'">
+                            <a-tooltip>
+                                <template #title>{{ text }}</template>
+                                <div
+                                    class="one-spils cursor"
+                                    :style="{ width: text?.length > 15 ? 15 * 12 + 'px' : '' }"
+                                >
+                                    {{ text }}
+                                </div>
+                            </a-tooltip>
+                        </template>
 
                         <template v-if="column.key === 'operations'">
+                            <!-- 分销商 | 待确认显示 -->
                             <a-button
-                                v-if="$Util.Common.returnTypeBool(1, [FREIGHT_STATUS.TO_BE_DETERMINED])"
+                                v-if="
+                                    $Util.Common.returnTypeBool(Core.Data.getLoginType(), [
+                                        Core.Const.LOGIN.TYPE.DISTRIBUTOR,
+                                    ]) &&
+                                    $Util.Common.returnTypeBool(record.freight_status, [FREIGHT_STATUS.TO_BE_CONFIRMED])
+                                "
                                 type="link"
-                                @click="routerChange('confirm_freight', record)"
+                                @click="onConfirmFreight(record)"
                             >
                                 <!-- <MySvgIcon icon-class="common-view" /> -->
                                 <span class="m-l-4">{{ $t('distributor.confirm_freight') }}</span>
@@ -190,13 +224,22 @@
     </div>
 
     <!-- 预计船期及运费 -->
-    <ShippingFreight v-model:visible="freightVisible" :title="$t('distributor.expected_shipping_freight')">
+    <ShippingFreight
+        v-if="freightVisible"
+        v-model:visible="freightVisible"
+        :detailRecord="detailRecord"
+        :title="$t('distributor.expected_shipping_freight')"
+        @ok="onUpdateTable"
+    >
     </ShippingFreight>
 
     <!-- 确认运费弹窗 -->
     <ConfirmFreight
+        v-if="confirmFreightVisible"
         v-model:visible="confirmFreightVisible"
         :title="$t('distributor.shipping_freight')"
+        :detailRecord="detailRecord"
+        @ok="onUpdateTable"
     ></ConfirmFreight>
 </template>
 
@@ -231,68 +274,33 @@ const confirmFreightVisible = ref(false); // 船期及运费确认model
 
 const statusData = ref({
     all_total: 0, // 全部
-    to_be_filled_in: 0, // 待填写
-    to_be_confirmed: 0, // 待确认
-    confirmed: 0, // 已确认
-    rejected: 0, // 已拒绝
+    pending_fill_count: 0, // 待填写
+    pending_confirm_count: 0, // 待确认
+    confirmed_count: 0, // 已确认
+    refused_count: 0, // 已拒绝
 }); // 平台方tab数据
-const distributorList = ref([]);
+const detailRecord = ref({}); // 表格单条数据
+
+const searchAdminList = ref([
+    {
+        // 订单编号
+        type: 'input',
+        value: '',
+        searchParmas: 'sn',
+        key: 'p.order_number',
+    },  
+]);
+const searchDistributorList = ref([
+    {
+        // 订单编号
+        type: 'input',
+        value: '',
+        searchParmas: 'sn',
+        key: 'p.order_number',
+    },
+]);
 
 /* computed start */
-const searchList = computed(() => {
-    let result = [];
-
-    if (isDistributerAdmin.value) {
-        result = [
-            {
-                // 运费状态
-                type: 'select',
-                value: '',
-                searchParmas: 'freight_status',
-                key: 'p.freight_status',
-                selectMap: (() => {
-                    let result = [];
-                    for (const key in FREIGHT_STATUS_MAP) {
-                        result.push({
-                            t: FREIGHT_STATUS_MAP[key].t,
-                            value: FREIGHT_STATUS_MAP[key].key,
-                        });
-                    }
-                    return result;
-                })(),
-            },
-        ];
-    } else {
-        result = [
-            {
-                // 订单编号
-                type: 'input',
-                value: '',
-                searchParmas: 'sn',
-                key: 'p.order_number',
-            },
-            {
-                // 运费状态
-                type: 'select',
-                value: '',
-                searchParmas: 'freight_status',
-                key: 'p.freight_status',
-                selectMap: (() => {
-                    let result = [];
-                    for (const key in FREIGHT_STATUS_MAP) {
-                        result.push({
-                            t: FREIGHT_STATUS_MAP[key].t,
-                            value: FREIGHT_STATUS_MAP[key].key,
-                        });
-                    }
-                    return result;
-                })(),
-            },
-        ];
-    }
-
-    return result;
-});
 // tabs 的数据
 const statusList = computed(() => {
     let result = [
@@ -300,34 +308,34 @@ const statusList = computed(() => {
             t: 'common.all',
             count: statusData.value.all_total,
             color: 'primary',
-            key: Core.Const.DISTRIBUTOR.FREIGHT_CONFIRMED.ALL,
+            key: Core.Const.DISTRIBUTOR.FREIGHT_STATUS.ALL,
         },
         {
             t: 'distributor.to_be_determined',
-            count: statusData.value.to_be_confirmed,
+            count: statusData.value.pending_confirm_count,
             color: 'yellow',
-            key: Core.Const.DISTRIBUTOR.FREIGHT_CONFIRMED.TO_BE_CONFIRMED,
+            key: Core.Const.DISTRIBUTOR.FREIGHT_STATUS.TO_BE_CONFIRMED,
         },
         {
             t: 'distributor.determined',
-            count: statusData.value.confirmed,
+            count: statusData.value.confirmed_count,
             color: 'yellow',
-            key: Core.Const.DISTRIBUTOR.FREIGHT_CONFIRMED.CONFIRMED,
+            key: Core.Const.DISTRIBUTOR.FREIGHT_STATUS.CONFIRMED,
         },
         {
             t: 'distributor.rejected',
-            count: statusData.value.rejected,
+            count: statusData.value.refused_count,
             color: 'yellow',
-            key: Core.Const.DISTRIBUTOR.FREIGHT_CONFIRMED.REJECTED,
+            key: Core.Const.DISTRIBUTOR.FREIGHT_STATUS.REJECTED,
         },
     ];
 
     if (isDistributerAdmin.value) {
         result.splice(1, 0, {
             t: 'distributor.to_be_filled_in',
-            count: statusData.value.to_be_filled_in,
+            count: statusData.value.pending_fill_count,
             color: 'yellow',
-            key: Core.Const.DISTRIBUTOR.FREIGHT_CONFIRMED.TO_BE_FILLED_IN,
+            key: Core.Const.DISTRIBUTOR.FREIGHT_STATUS.TO_BE_FILLED_IN,
         });
     }
 
@@ -342,8 +350,12 @@ const tableColumns = computed(() => {
         { title: proxy.$t('p.order_type'), dataIndex: 'type', key: 'type' }, // 订单类型
         { title: proxy.$t('distributor.institution'), dataIndex: ['create_org', 'name'], key: 'item' }, // 创建单位
         { title: proxy.$t('p.payment_method'), dataIndex: 'pay_type', key: 'pay_type' }, // 支付方式
-        { title: proxy.$t('p.estimated_shipping_data'), dataIndex: 'uid', key: 'uid' }, // 预计船期
-        { title: proxy.$t('p.freight'), dataIndex: 'freight', key: 'freight' }, // 运费
+        {
+            title: proxy.$t('p.estimated_shipping_data'),
+            dataIndex: ['audit_record_content', 'shipping_time_estimated'],
+            key: 'time',
+        }, // 预计船期
+        { title: proxy.$t('p.freight'), dataIndex: ['audit_record_content', 'freight'], key: 'freight' }, // 运费
         { title: proxy.$t('p.freight_status'), dataIndex: 'freight_status', key: 'freight_status' }, // 运费状态
         { title: proxy.$t('p.order_time'), dataIndex: 'create_time', key: 'time' }, // 下单时间
         { title: proxy.$t('p.total_price'), dataIndex: 'total_price', key: 'total_price' }, // 总价
@@ -351,33 +363,31 @@ const tableColumns = computed(() => {
         { title: proxy.$t('p.time_payment'), dataIndex: 'pay_time', key: 'time' }, // 支付时间
         { title: proxy.$t('p.order_status'), dataIndex: 'status', key: 'order_status' }, // 订单状态
         { title: proxy.$t('p.payment_status'), dataIndex: 'payment_status', key: 'payment_status' }, // 支付状态
-        { title: proxy.$t('p.record'), dataIndex: '', key: 'operation_record' }, // 操作记录
+        { title: proxy.$t('p.record'), dataIndex: 'action_log_content', key: 'action_log_content' }, // 操作记录
+        { title: proxy.$t('common.operations'), key: 'operations', fixed: 'right' },
     ];
-
-    if (!isDistributerAdmin.value) {
-        columns.push({ title: proxy.$t('common.operations'), key: 'operations', fixed: 'right' });
-    }
     return columns;
 });
 /* computed end */
 
 /* fetch start*/
-// 获得所有分销商
-const getDistributorListAll = () => {
-    Core.Api.Distributor.listAll().then(res => {
-        distributorList.value = res.list;
-    });
-};
 // 获取状态数据
 const getStatusFetch = (params = {}) => {
     const obj = {
         ...params,
     };
 
-    Core.Api.inquiry_sheet
-        .statusList(obj)
+    Core.Api.ShippingDateFreight.status(obj)
         .then(res => {
             console.log('获取状态数据 res', res);
+            statusData.value = {
+                all_total: Number(res.pending_confirm_count) + Number(res.confirmed_count) + Number(res.refused_count),
+                ...res,
+            };
+
+            if (isDistributerAdmin.value) {
+                statusData.value.all_total = statusData.value.all_total + Number(res.pending_fill_count);
+            }
         })
         .catch(err => {
             console.log('获取状态数据 err', err);
@@ -385,67 +395,33 @@ const getStatusFetch = (params = {}) => {
 };
 
 // 获取询问单列表
-const getInquirySheet = Core.Api.inquiry_sheet.list;
+const getInquirySheet = Core.Api.ShippingDateFreight.list;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request: getInquirySheet,
     // dataCallBack(res) {
-    //     console.log("数据 ", res);
-    //     return [
-    //         {
-    //             id: 1,
-    //             new_msg_id: 2,
-    //             uid : 1231241414,  // 订单号
-    //             vehicle_list: [
-    //                 { vehicle_uid: "12312414214124", mileage: 20 },
-    //                 { vehicle_uid: "12312414214124", mileage: 20 },
-    //             ], // 车架号
-    //             type: 1,  // 反馈类型
-    //             status: 10, // 状态
-    //             category: { name: "你好啊", name_en: "hello World", },
-    //             create_time: 1705667814,
-    //             submit_user_name: "admin1", // 提交人
-    //             part_list: [
-    //                 {
-    //                     item: {
-    //                         name: "零件名称",
-    //                         name_en: "gagag",
-    //                     }
-    //                 }
-    //             ], // 零件
-    //             fault_type: 1, // 故障类型
-    //             purpose: 1, // 归类
-    //             update_time: 1705993554, // 最后一次时间
-    //             process_user_name: "admin1", // 归属人名称
-    //         }
-    //     ]
     // }
 });
 
 /* fetch end*/
 
 /* methods start*/
+const init = () => {
+    searchForm.value = {
+        sn: undefined, // 订单编号
+        freight_status: 0, // 运费状态
+    };    
+};
 const routerChange = (type, record) => {
     let routeUrl = '';
-    if (!isDistributerAdmin.value) {
-        // 分销商
-        switch (type) {
-            case 'confirm_freight': // 确认运费
-                console.log('确认运费');
-                onConfirmFreight();
-                break;
-            case 'detail':
-                routeUrl = router.resolve({
-                    path: '/purchase/purchase-order-detail',
-                    query: { id: record.id },
-                });
+    switch (type) {
+        case 'detail':
+            routeUrl = router.resolve({
+                path: '/purchase/purchase-order-detail',
+                query: { id: record.id },
+            });
 
-                window.open(routeUrl.href, '_self');
-                break;
-        }
-    } else {
-        // 平台方
-        switch (type) {
-        }
+            window.open(routeUrl.href, '_self');
+            break;
     }
 };
 const onSearch = data => {
@@ -453,26 +429,48 @@ const onSearch = data => {
     searchParam.value = { ...searchForm.value, ...data };
     search();
 };
-const onReset = () => {
+const onReset = () => {    
     refreshTable();
+    init();
 };
 
 // 船期及运费(修改)
-const onModify = () => {
+const onModify = record => {
     freightVisible.value = true;
+    detailRecord.value = {
+        id: record.id,
+        freight_status: record.freight_status,
+        freight_audit_record_id: record.freight_audit_record_id,
+        shipping_time_estimated: record?.audit_record_content?.shipping_time_estimated,
+        freight: record?.audit_record_content?.freight,
+    };
+    console.log("船期及运费", detailRecord.value);
 };
 // 确认运费
-const onConfirmFreight = () => {
+const onConfirmFreight = record => {
     confirmFreightVisible.value = true;
+    detailRecord.value = {
+        freight_audit_record_id: record.freight_audit_record_id,
+        shipping_time_estimated: record?.audit_record_content?.shipping_time_estimated,
+        freight: record?.audit_record_content?.freight,
+        currency: record.currency,
+    };
+    console.log("确认运费", detailRecord.value);
+};
+
+// 预计船期及运费 确认运费 返回
+const onUpdateTable = () => {
+    search();
+    getStatusFetch();
 };
 
 /* methods end*/
 
 onMounted(() => {
+    getStatusFetch();
     isDistributerAdmin.value = Core.Util.Common.returnTypeBool(Core.Data.getLoginType(), [Core.Const.LOGIN.TYPE.ADMIN]);
-    console.log('isDistributerAdmin.value', isDistributerAdmin.value);
 
-    searchParam.value.status = -1;
+    searchParam.value.freight_status = 0;
     search();
 });
 </script>
