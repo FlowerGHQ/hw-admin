@@ -8,7 +8,7 @@
             </div>
             <!-- tabs 切换 -->
             <div class="tabs-container colorful">
-                <a-tabs v-model:activeKey="searchForm.status" @change="onSearch">
+                <a-tabs v-model:activeKey="searchForm.audit_status" @change="onSearch">
                     <a-tab-pane :key="item.key" v-for="item of statusList">
                         <template #tab>
                             <div class="tabs-title">
@@ -91,6 +91,11 @@
                             </span>
                         </template>
 
+                        <!-- 运费状态 待确定、已拒绝状态支持修改-->
+                        <template v-else-if="column.key === 'freight_status'">
+                            {{ FREIGHT_STATUS_MAP[text]?.t ? $t(`${FREIGHT_STATUS_MAP[text]?.t}`) : '-' }}
+                        </template>
+
                         <!-- 已支付金额 -->
                         <template v-if="column.key === 'amount_paid'">
                             <span v-if="text >= 0">{{ $Util.priceUnitFilter(record.currency) }}</span>
@@ -114,21 +119,46 @@
                         <!-- 支付状态 -->
                         <template v-if="column.key === 'payment_status'">
                             <div class="status status-bg status-tag" :class="$Util.paymentStatusFilter(text, 'color')">
-                                {{ $Util.paymentStatusFilter(text, $i18n.locale) || "-" }}
+                                {{ $Util.paymentStatusFilter(text, $i18n.locale) || '-' }}
                             </div>
+                        </template>
+
+                        <!-- 申请原因 -->
+                        <template v-if="column.key === 'cancel_remark'">
+                            <a-tooltip>
+                                <template #title>{{ text }}</template>
+                                <div
+                                    class="one-spils cursor"
+                                    :style="{ width: text?.length > 15 ? 15 * 12 + 'px' : '' }"
+                                >
+                                    {{ text || '-' }}
+                                </div>
+                            </a-tooltip>
+                        </template>
+
+                        <!-- 操作记录 -->
+                        <template v-if="column.key === 'action_log_content'">
+                            <a-tooltip>
+                                <template #title>{{ text }}</template>
+                                <div
+                                    class="one-spils cursor"
+                                    :style="{ width: text?.length > 15 ? 15 * 12 + 'px' : '' }"
+                                >
+                                    {{ text }}
+                                </div>
+                            </a-tooltip>
                         </template>
 
                         <!-- 操作 -->
                         <template v-if="column.key === 'operations'">
-                            <!-- <a-button type="link" @click="routerChange('pay', record)">
-                                <MySvgIcon icon-class="common-view" />
-                                <span class="m-l-4">{{ $t('p.payment') }}</span>
-                            </a-button> -->
-                        </template>
-
-                        <!-- 操作记录 -->
-                        <template v-if="column.key === 'operation_record'">
-                            操作记录
+                            <a-button type="link" @click="routerChange('audit', record)">
+                                <!-- <MySvgIcon icon-class="common-view" /> -->
+                                <span class="m-l-4">{{ $t('p.audit') }}</span>
+                            </a-button>
+                            <a-button type="link" @click="routerChange('detail', record)">
+                                <!-- <MySvgIcon icon-class="common-view" /> -->
+                                <span class="m-l-4">{{ $t('common.detail') }}</span>
+                            </a-button>
                         </template>
                     </template>
                 </a-table>
@@ -160,80 +190,72 @@ import { useTable } from '@/hooks/useTable';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';
 import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
-
-import TimeSearch from '@/components/common/TimeSearch.vue';
 import { useRouter, useRoute } from 'vue-router';
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
 
+const FREIGHT_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_STATUS_MAP;
+
 const searchForm = ref({
     sn: undefined, // 订单编号
     distributor_id: undefined, // 分销商分销商
+    audit_status: undefined, // 类型
 });
 const search_all_ref = ref(null);
 
 const statusData = ref({
-    has_agreed: 0, // 已同意
-    rejected: 0, // 已拒绝
-    dealt_with: 0, // 待处理
-    all_total: 0, // 全部
+    total: 2, // 全部
+    pass_total: 0, // 已同意
+    refuse_total: 0, // 已拒绝
+    wait_total: 2, // 待处理
 }); // 平台方tab数据
 const distributorList = ref([]);
 
+const searchList = ref([
+    {
+        // 订单编号
+        type: 'input',
+        value: '',
+        searchParmas: 'sn',
+        key: 'p.order_number',
+    },
+    {
+        // 分销商
+        id: 2,
+        type: 'select',
+        value: '',
+        searchParmas: 'distributor_id',
+        key: 'n.distributor',
+        selectMap: [],
+    },
+]);
 /* computed start */
-const searchList = computed(() => {
-    let result = [
-        {
-            // 订单编号
-            type: 'input',
-            value: '',
-            searchParmas: 'sn',
-            key: 'p.order_number',
-        },
-        {
-            // 分销商
-            type: 'select',
-            value: '',
-            searchParmas: 'distributor_id',
-            key: 'n.distributor',
-            selectMap: distributorList.value.map(el => {
-                return {
-                    zh: el.name,
-                    en: el.name,
-                    value: el.id,
-                };
-            }),
-        },
-    ];
-
-    return result;
-});
 // tabs 的数据
 const statusList = computed(() => {
     let result = [
         {
             t: 'common.all',
-            count: statusData.value.all_total,
+            count: statusData.value.total,
             color: 'primary',
             key: Core.Const.DISTRIBUTOR.CANCELLATION_ORDER_TAB.ALL,
         },
         {
             t: 'distributor.dealt_with',
-            count: statusData.value.dealt_with,
+            count: statusData.value.wait_total,
             color: 'yellow',
             key: Core.Const.DISTRIBUTOR.CANCELLATION_ORDER_TAB.DEALT_WITH,
         },
         {
             t: 'distributor.rejected',
-            count: statusData.value.rejected,
+            count: statusData.value.refuse_total,
             color: 'yellow',
             key: Core.Const.DISTRIBUTOR.CANCELLATION_ORDER_TAB.REJECTED,
         },
         {
             t: 'distributor.has_agreed',
-            count: statusData.value.has_agreed,
+            count: statusData.value.pass_total,
             color: 'yellow',
             key: Core.Const.DISTRIBUTOR.CANCELLATION_ORDER_TAB.HAS_AGREED,
         },
@@ -257,9 +279,9 @@ const tableColumns = computed(() => {
         { title: proxy.$t('p.order_status'), dataIndex: 'status', key: 'order_status' }, // 订单状态
         { title: proxy.$t('p.payment_status'), dataIndex: 'payment_status', key: 'payment_status' }, // 支付状态
 
-        { title: proxy.$t('distributor.apply_reason'), dataIndex: 'uid', key: 'uid' }, // 申请原因
+        { title: proxy.$t('distributor.apply_reason'), dataIndex: 'cancel_remark', key: 'cancel_remark' }, // 申请原因
+        { title: proxy.$t('p.record'), dataIndex: 'action_log_content', key: 'action_log_content' }, // 操作记录
         { title: proxy.$t('common.operations'), dataIndex: 'operations', key: 'operations', fixed: 'right' }, // 操作
-        { title: proxy.$t('p.record'), dataIndex: '', key: 'operation_record', fixed: 'right' }, // 操作记录
     ];
     return columns;
 });
@@ -270,7 +292,13 @@ const tableColumns = computed(() => {
 const getDistributorListAll = () => {
     Core.Api.Distributor.listAll().then(res => {
         distributorList.value = res.list;
-        console.log('sss', res.list);
+        searchList.value[1].selectMap = distributorList.value.map(el => {
+            return {
+                zh: el.name,
+                en: el.name,
+                value: el.id,
+            };
+        });
     });
 };
 // 获取状态数据
@@ -279,8 +307,7 @@ const getStatusFetch = (params = {}) => {
         ...params,
     };
 
-    Core.Api.inquiry_sheet
-        .statusList(obj)
+    Core.Api.CancelOrderList.count(obj)
         .then(res => {
             console.log('获取状态数据 res', res);
             statusData.value = res;
@@ -290,42 +317,25 @@ const getStatusFetch = (params = {}) => {
         });
 };
 
-// 获取询问单列表
-const getInquirySheet = Core.Api.inquiry_sheet.list;
+const getInquirySheet = Core.Api.CancelOrderList.list;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request: getInquirySheet,
-    // dataCallBack(res) {
-    //     console.log("数据 ", res);
-    //     return [
-    //         {
-    //             id: 1,
-    //             new_msg_id: 2,
-    //             uid : 1231241414,  // 订单号
-    //             vehicle_list: [
-    //                 { vehicle_uid: "12312414214124", mileage: 20 },
-    //                 { vehicle_uid: "12312414214124", mileage: 20 },
-    //             ], // 车架号
-    //             type: 1,  // 反馈类型
-    //             status: 10, // 状态
-    //             category: { name: "你好啊", name_en: "hello World", },
-    //             create_time: 1705667814,
-    //             submit_user_name: "admin1", // 提交人
-    //             part_list: [
-    //                 {
-    //                     item: {
-    //                         name: "零件名称",
-    //                         name_en: "gagag",
-    //                     }
-    //                 }
-    //             ], // 零件
-    //             fault_type: 1, // 故障类型
-    //             purpose: 1, // 归类
-    //             update_time: 1705993554, // 最后一次时间
-    //             process_user_name: "admin1", // 归属人名称
-    //         }
-    //     ]
-    // }
 });
+
+// 审核接口
+const saveAuditFetch = (params = {}) => {
+    const obj = {
+        ...params,
+    };
+
+    Core.Api.CancelOrderList.audit(obj)
+        .then(res => {
+            console.log('审核接口 res', res);
+        })
+        .catch(err => {
+            console.log('审核接口 err', err);
+        });
+};
 
 /* fetch end*/
 
@@ -334,17 +344,21 @@ const routerChange = (type, record) => {
     let routeUrl = '';
     // 分销商
     switch (type) {
-        case 'pay': // 付款
-            // routeUrl = router.resolve({
-            //     path: '/customer-care/edit',
-            // });
-            // window.open(routeUrl.href, '_blank');
+        case 'detail': // 详情
+            routeUrl = router.resolve({
+                path: '/purchase/purchase-order-detail',
+                query: { id: record.id },
+            });
+
+            window.open(routeUrl.href, '_self');
+            break;
+        case 'audit': // 审核            
             break;
     }
 };
 const onSearch = data => {
     console.log('data', data);
-    searchParam.value = { ...searchForm.value, ...data };
+    searchParam.value = Core.Util.searchFilter({ ...searchForm.value, ...data });
     search();
 };
 const onReset = () => {
@@ -353,22 +367,10 @@ const onReset = () => {
 
 /* methods end*/
 
-// watch(
-//     () => router.currentRoute.value,
-//     (newValue, oldValue) => {
-//         console.log('newValue', newValue);
-
-//     },
-//     {
-//         deep: true,
-//         immediate: true,
-//     },
-// );
-
 onMounted(() => {
-    searchParam.value.status = -1;
     search();
 
+    getStatusFetch();
     getDistributorListAll();
 });
 </script>

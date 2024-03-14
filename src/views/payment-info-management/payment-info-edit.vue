@@ -14,8 +14,9 @@
                     </div>
                     <div class="value">
                         <MyCountryCascader
+                            ref="countryCascaderRef"
                             v-model:value="areaList"
-                            :defaultList="defaultAreaList"
+                            :defaultAreaList="defaultAreaList"
                             @handleGetItem="handleGetItem"
                         />
                     </div>
@@ -275,6 +276,8 @@ export default {
                 country_en: '',
                 country_code: '',
             },
+            disableList: [],
+            countryCascaderRef: null,
         };
     },
     watch: {},
@@ -284,6 +287,7 @@ export default {
         if (this.form.id) {
             this.getDetailService();
         }
+        this.getCountryListService();
     },
     mounted() {
         window.addEventListener('resize', this.handleResize);
@@ -308,8 +312,12 @@ export default {
                 console.log('getDetailService res', res);
                 let detail = res.detail
                 this.form = detail
-                this.usdForm = detail.bank_list.find(item => item.currency === 'USD')
-                this.eurForm = detail.bank_list.find(item => item.currency === 'EUR')
+                if(detail.bank_list.find(item => item.currency === 'USD')) {
+                    this.usdForm = detail.bank_list.find(item => item.currency === 'USD')
+                }
+                if(detail.bank_list.find(item => item.currency === 'EUR')) {
+                    this.eurForm = detail.bank_list.find(item => item.currency === 'EUR')
+                }
                 this.areaList = this.reverseConvertAreaData(detail.country_list);
                 this.defaultAreaList = this.reverseConvertAreaData(detail.country_list);
             }).catch(err => {
@@ -332,6 +340,19 @@ export default {
             }).finally(() => {
                 this.loading = false
             });
+        },
+        getCountryListService() {
+            Core.Api.PayAccount.countryList({
+                status: 0   
+            }).then(res => {
+                console.log('getCountryListService res', res);
+                if(res.list.length) {
+                    this.disableList = this.reverseConvertAreaData(res.list)
+                }
+                this.$refs.countryCascaderRef.checkDisableList(this.disableList)
+            }).catch(err => {
+                console.log('getCountryListService err', err);
+            })
         },
         // resize
         handleResize() {

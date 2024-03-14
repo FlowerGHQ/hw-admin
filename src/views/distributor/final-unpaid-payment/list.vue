@@ -14,7 +14,7 @@
             </div>
             <!-- tabs 切换 -->
             <div class="tabs-container colorful">
-                <a-tabs v-model:activeKey="searchForm.status" @change="onSearch">
+                <a-tabs v-model:activeKey="tabStatus" @change="onTabChange">
                     <a-tab-pane :key="item.key" v-for="item of statusList">
                         <template #tab>
                             <div class="tabs-title">
@@ -28,7 +28,13 @@
                 </a-tabs>
             </div>
             <div class="search">
-                <SearchAll ref="search_all_ref" :options="searchList" @search="onSearch" @reset="onReset"> </SearchAll>
+                <SearchAll
+                    ref="search_all_ref"
+                    :options="isDistributerAdmin ? searchAdminList : searchDistributorList"
+                    @search="onSearch"
+                    @reset="onReset"
+                >
+                </SearchAll>
             </div>
             <!-- table -->
             <div class="table-container">
@@ -95,6 +101,16 @@
                             </span>
                         </template>
 
+                        <!-- 运费确认状态 -->
+                        <template v-if="column.key === 'freight_status'">
+                            {{ FREIGHT_STATUS_MAP[text]?.t ? $t(`${FREIGHT_STATUS_MAP[text]?.t}`) : '-' }}
+                        </template>
+
+                        <!-- 运费支付状态 -->
+                        <template v-if="column.key === 'freight_pay_status'">                            
+                            {{ FREIGHT_PAY_STATUS_MAP[text]?.t ? $t(`${FREIGHT_PAY_STATUS_MAP[text]?.t}`) : '-' }}
+                        </template>
+
                         <!-- 已支付金额 -->
                         <template v-if="column.key === 'amount_paid'">
                             <span v-if="text >= 0">{{ $Util.priceUnitFilter(record.currency) }}</span>
@@ -124,7 +140,7 @@
 
                         <template v-if="column.key === 'operations'">
                             <a-button type="link" @click="routerChange('pay', record)">
-                                <MySvgIcon icon-class="common-view" />
+                                <!-- <MySvgIcon icon-class="common-view" /> -->
                                 <span class="m-l-4">{{ $t('p.payment') }}</span>
                             </a-button>
                         </template>
@@ -158,132 +174,119 @@ import { useTable } from '@/hooks/useTable';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';
 import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
-
-import TimeSearch from '@/components/common/TimeSearch.vue';
 import { useRouter, useRoute } from 'vue-router';
+import dayjs from 'dayjs';
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
+const FREIGHT_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_STATUS_MAP;
+const FINAL_UNPAID_ORDER_TAB = Core.Const.DISTRIBUTOR.FINAL_UNPAID_ORDER_TAB;
+const FREIGHT_PAY_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_PAY_STATUS_MAP;
+const PAYMENT_STATUS_MAP = Core.Const.PURCHASE.PAYMENT_STATUS_MAP;
 
 const searchForm = ref({
+    final_pay_due_begin_time: undefined, // 应付尾款开始时间
+    final_pay_due_end_time: undefined, // 应付尾款结束时间
+    freight_pay_status: undefined, // 运费支付状态
     sn: undefined, // 订单编号
+    distributor_id: undefined, // 分销商id
+    search_type: 3,
 });
+const tabStatus = ref(0); // tabs-status
 const search_all_ref = ref(null);
 const isDistributerAdmin = ref(false); // 根据路由判断其是用在分销商(false) 还是平台方(true)
 
 const statusData = ref({
-    delay: 0, // 延期
-    within_week: 0, // 一周内
-    all_total: 0, // 全部
+    delay_count: 0, //延期数量
+    count: 0, // 总数
+    in_one_week_count: 0, //一周内数量
 }); // 平台方tab数据
 const distributorList = ref([]);
 
+const searchAdminList = ref([
+    {
+        // 订单编号
+        type: 'input',
+        value: '',
+        searchParmas: 'sn',
+        key: 'p.order_number',
+    },
+    {
+        // 分销商
+        id: 'distributor',
+        type: 'select',
+        value: '',
+        searchParmas: 'distributor_id',
+        key: 'n.distributor',
+        selectMap: [],
+    },
+    {
+        // 运费支付状态
+        type: 'select',
+        value: '',
+        searchParmas: 'freight_pay_status',
+        key: 'distributor.freight_payment_status',
+        selectMap: Object.values(FREIGHT_PAY_STATUS_MAP).map(el => {
+            return { ...el, value: el.key };
+        }),
+    },
+    {
+        // 应付尾款时间
+        type: 'time-range',
+        value: [],
+        searchParmas: ['final_pay_due_begin_time', 'final_pay_due_end_time'],
+        key: 'p.payable_time',
+    },
+]);
+const searchDistributorList = ref([
+    {
+        // 订单编号
+        type: 'input',
+        value: '',
+        searchParmas: 'sn',
+        key: 'p.order_number',
+    },
+    {
+        // 运费支付状态
+        type: 'select',
+        value: '',
+        searchParmas: 'freight_pay_status',
+        key: 'distributor.freight_payment_status',
+        selectMap: Object.values(FREIGHT_PAY_STATUS_MAP).map(el => {
+            return { ...el, value: el.key };
+        }),
+    },
+    {
+        // 应付尾款时间
+        type: 'time-range',
+        value: [],
+        searchParmas: ['final_pay_due_begin_time', 'final_pay_due_end_time'],
+        key: 'p.payable_time',
+    },
+]);
+
 /* computed start */
-const searchList = computed(() => {
-    let result = [];
-
-    if (isDistributerAdmin.value) {
-        result = [
-            {
-                // 订单编号
-                type: 'input',
-                value: '',
-                searchParmas: 'sn',
-                key: 'p.order_number',
-            },
-            {
-                // 分销商
-                type: 'select',
-                value: '',
-                searchParmas: 'distributor_id',
-                key: 'n.distributor',
-                selectMap: distributorList.value.map(el => {
-                    return {
-                        zh: el.name,
-                        en: el.name,
-                        value: el.id,
-                    };
-                }),
-            },
-            {
-                // 支付状态
-                type: 'select',
-                value: '',
-                searchParmas: 'payment_status',
-                key: 'p.payment_status',
-                selectMap: distributorList.value.map(el => {
-                    return {
-                        zh: el.name,
-                        en: el.name,
-                        value: el.id,
-                    };
-                }),
-            },
-            {
-                // 应付尾款时间
-                type: 'time-range',
-                value: '',
-                searchParmas: '',
-                key: 'p.payable_time',               
-            },
-           
-        ];
-    } else {
-        result = [
-            {
-                // 订单编号
-                type: 'input',
-                value: '',
-                searchParmas: 'sn',
-                key: 'p.order_number',
-            },
-            {
-                // 运费支付状态
-                type: 'select',
-                value: '',
-                searchParmas: '',
-                key: 'distributor.freight_payment_status',
-                selectMap: distributorList.value.map(el => {
-                    return {
-                        zh: el.name,
-                        en: el.name,
-                        value: el.id,
-                    };
-                }),
-            },
-            {
-                // 应付尾款时间
-                type: 'time-range',
-                value: '',
-                searchParmas: '',
-                key: 'p.payable_time',               
-            },
-        ];
-    }
-
-    return result;
-});
 // tabs 的数据
 const statusList = computed(() => {
     let result = [
         {
             t: 'common.all',
-            count: statusData.value.all_total,
+            count: statusData.value.count,
             color: 'primary',
-            key: Core.Const.DISTRIBUTOR.FINAL_UNPAID_ORDER_TAB.ALL,
+            key: FINAL_UNPAID_ORDER_TAB.ALL,
         },
         {
             t: 'distributor.within_week',
-            count: statusData.value.delay,
+            count: statusData.value.in_one_week_count,
             color: 'yellow',
-            key: Core.Const.DISTRIBUTOR.FINAL_UNPAID_ORDER_TAB.WITHIN_WEEK,
+            key: FINAL_UNPAID_ORDER_TAB.WITHIN_WEEK,
         },
         {
             t: 'distributor.delay',
-            count: statusData.value.within_week,
+            count: statusData.value.delay_count,
             color: 'yellow',
-            key: Core.Const.DISTRIBUTOR.FINAL_UNPAID_ORDER_TAB.DELAY,
+            key: FINAL_UNPAID_ORDER_TAB.DELAY,
         },
     ];
 
@@ -293,40 +296,31 @@ const statusList = computed(() => {
 const tableColumns = computed(() => {
     let columns = [];
     console.log('isDistributerAdmin.value', isDistributerAdmin.value);
-    if (isDistributerAdmin.value) {
-        columns = [
-            { title: proxy.$t('p.order_number'), dataIndex: 'sn', key: 'sn' }, // 订单编号
-            { title: proxy.$t('distributor.superior_order_number'), dataIndex: 'parent_sn', key: 'parent_sn' }, // 上级订单号
-            { title: proxy.$t('p.order_type'), dataIndex: 'type', key: 'type' }, // 订单类型
-            { title: proxy.$t('distributor.institution'), dataIndex: ['create_org', 'name'], key: 'item' }, // 创建单位
-            { title: proxy.$t('p.payment_method'), dataIndex: 'pay_type', key: 'pay_type' }, // 支付方式
-            { title: proxy.$t('p.total_price'), dataIndex: 'total_price', key: 'total_price' }, // 总价
-            { title: proxy.$t('p.freight'), dataIndex: 'freight', key: 'freight' }, // 运费
-            { title: proxy.$t('p.amount_paid'), dataIndex: 'payment', key: 'amount_paid' }, // 已支付金额
-            { title: proxy.$t('p.payable_time'), dataIndex: 'uid', key: 'time' }, // 应付尾款时间
-            { title: proxy.$t('p.order_time'), dataIndex: 'create_time', key: 'time' }, // 下单时间
-            { title: proxy.$t('p.time_payment'), dataIndex: 'pay_time', key: 'time' }, // 支付时间
-            { title: proxy.$t('p.order_status'), dataIndex: 'status', key: 'order_status' }, // 订单状态
-            { title: proxy.$t('p.payment_status'), dataIndex: 'payment_status', key: 'payment_status' }, // 支付状态
-            { title: proxy.$t('common.operations'), dataIndex: 'operations', key: 'operations', fixed: 'right' }, // 操作
-        ];
-    } else {
-        columns = [
-            { title: proxy.$t('p.order_number'), dataIndex: 'sn', key: 'sn' }, // 订单编号
-            { title: proxy.$t('p.order_type'), dataIndex: 'type', key: 'type' }, // 订单类型
-            { title: proxy.$t('distributor.institution'), dataIndex: ['create_org', 'name'], key: 'item' }, // 创建单位
-            { title: proxy.$t('p.payment_method'), dataIndex: 'pay_type', key: 'pay_type' }, // 支付方式
-            { title: proxy.$t('p.total_price'), dataIndex: 'total_price', key: 'total_price' }, // 总价
-            { title: proxy.$t('p.freight'), dataIndex: 'freight', key: 'freight' }, // 运费
-            { title: proxy.$t('distributor.freight_confirmation_status'), dataIndex: 'uid', key: 'uid' }, // 运费确认状态
-            { title: proxy.$t('distributor.freight_payment_status'), dataIndex: 'uid', key: 'uid' }, // 运费支付状态
-            { title: proxy.$t('p.payable_time'), dataIndex: 'uid', key: 'time' }, // 应付尾款时间
-            { title: proxy.$t('p.order_time'), dataIndex: 'create_time', key: 'time' }, // 下单时间
-            { title: proxy.$t('p.time_payment'), dataIndex: 'pay_time', key: 'time' }, // 支付时间
-            { title: proxy.$t('p.order_status'), dataIndex: 'status', key: 'order_status' }, // 订单状态
-            { title: proxy.$t('p.payment_status'), dataIndex: 'payment_status', key: 'payment_status' }, // 支付状态
-            { title: proxy.$t('common.operations'), dataIndex: 'operations', key: 'operations', fixed: 'right' }, // 操作
-        ];
+    columns = [
+        { title: proxy.$t('p.order_number'), dataIndex: 'sn', key: 'sn' }, // 订单编号
+        { title: proxy.$t('p.order_type'), dataIndex: 'type', key: 'type' }, // 订单类型
+        { title: proxy.$t('distributor.institution'), dataIndex: ['create_org', 'name'], key: 'item' }, // 创建单位
+        { title: proxy.$t('p.payment_method'), dataIndex: 'pay_type', key: 'pay_type' }, // 支付方式
+        { title: proxy.$t('p.total_price'), dataIndex: 'total_price', key: 'total_price' }, // 总价
+        { title: proxy.$t('p.freight'), dataIndex: 'freight', key: 'freight' }, // 运费
+        {
+            title: proxy.$t('p.freight_status'),
+            dataIndex: 'freight_status',
+            key: 'freight_status',
+        }, // 运费确认状态
+        {
+            title: proxy.$t('distributor.freight_payment_status'),
+            dataIndex: 'freight_pay_status',
+            key: 'freight_pay_status',
+        }, // 运费支付状态
+        { title: proxy.$t('p.payable_time'), dataIndex: 'final_pay_due_time', key: 'time' }, // 应付尾款时间
+        { title: proxy.$t('p.order_time'), dataIndex: 'create_time', key: 'time' }, // 下单时间
+        { title: proxy.$t('p.time_payment'), dataIndex: 'pay_time', key: 'time' }, // 支付时间
+        { title: proxy.$t('p.order_status'), dataIndex: 'status', key: 'order_status' }, // 订单状态
+        { title: proxy.$t('p.payment_status'), dataIndex: 'payment_status', key: 'payment_status' }, // 支付状态
+    ];
+    if (!isDistributerAdmin.value) {
+        columns.push({ title: proxy.$t('common.operations'), dataIndex: 'operations', key: 'operations', fixed: 'right' }) // 操作
     }
     return columns;
 });
@@ -337,7 +331,17 @@ const tableColumns = computed(() => {
 const getDistributorListAll = () => {
     Core.Api.Distributor.listAll().then(res => {
         distributorList.value = res.list;
-        console.log('sss', res.list);
+        const findItem = searchAdminList.value.find(el => el.id === 'distributor');
+
+        if (findItem) {
+            findItem.selectMap = distributorList.value.map(el => {
+                return {
+                    zh: el.name,
+                    en: el.name,
+                    value: el.id,
+                };
+            });
+        }
     });
 };
 // 获取状态数据
@@ -346,51 +350,23 @@ const getStatusFetch = (params = {}) => {
         ...params,
     };
 
-    Core.Api.inquiry_sheet
-        .statusList(obj)
+    Core.Api.FinalPayment.count(obj)
         .then(res => {
             console.log('获取状态数据 res', res);
+            statusData.value = res;
         })
         .catch(err => {
             console.log('获取状态数据 err', err);
         });
 };
 
-// 获取询问单列表
-const getInquirySheet = Core.Api.inquiry_sheet.list;
+// 获取尾款列表
+const getInquirySheet = Core.Api.FinalPayment.list;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request: getInquirySheet,
-    // dataCallBack(res) {
-    //     console.log("数据 ", res);
-    //     return [
-    //         {
-    //             id: 1,
-    //             new_msg_id: 2,
-    //             uid : 1231241414,  // 订单号
-    //             vehicle_list: [
-    //                 { vehicle_uid: "12312414214124", mileage: 20 },
-    //                 { vehicle_uid: "12312414214124", mileage: 20 },
-    //             ], // 车架号
-    //             type: 1,  // 反馈类型
-    //             status: 10, // 状态
-    //             category: { name: "你好啊", name_en: "hello World", },
-    //             create_time: 1705667814,
-    //             submit_user_name: "admin1", // 提交人
-    //             part_list: [
-    //                 {
-    //                     item: {
-    //                         name: "零件名称",
-    //                         name_en: "gagag",
-    //                     }
-    //                 }
-    //             ], // 零件
-    //             fault_type: 1, // 故障类型
-    //             purpose: 1, // 归类
-    //             update_time: 1705993554, // 最后一次时间
-    //             process_user_name: "admin1", // 归属人名称
-    //         }
-    //     ]
-    // }
+    initParam: {
+        search_type: searchForm.value.search_type,
+    }
 });
 
 /* fetch end*/
@@ -401,36 +377,78 @@ const routerChange = (type, record) => {
     if (!isDistributerAdmin.value) {
         // 分销商
         switch (type) {
-            case 'add': // 添加
+            case 'pay': // 付款
                 // routeUrl = router.resolve({
                 //     path: '/customer-care/edit',
                 // });
                 // window.open(routeUrl.href, '_blank');
                 break;
+            case 'detail':
+                routeUrl = router.resolve({
+                    path: '/purchase/purchase-order-detail',
+                    query: { id: record.id },
+                });
+
+                window.open(routeUrl.href, '_self');
+                break;
         }
     } else {
         // 平台方
         switch (type) {
+            case 'detail':
+                routeUrl = router.resolve({
+                    path: '/purchase/purchase-order-detail',
+                    query: { id: record.id },
+                });
+
+                window.open(routeUrl.href, '_self');
+                break;
         }
     }
 };
+
 const onSearch = data => {
     console.log('data', data);
-    searchParam.value = { ...searchForm.value, ...data };
+
+    let data1 = Core.Util.searchFilter(data)
+    let data2 = Core.Util.searchFilter(searchForm.value)
+    searchParam.value = {
+        ...data1,
+        ...data2
+    };    
     search();
 };
 const onReset = () => {
     refreshTable();
 };
+// tab数据
+const onTabChange = type => {    
+    search_all_ref.value.handleSearchReset()  // 清除输入框数据
+
+    searchForm.value.final_pay_due_begin_time = undefined;
+    searchForm.value.final_pay_due_end_time = undefined;
+    switch (type) {
+        case FINAL_UNPAID_ORDER_TAB.ALL:
+            break;
+        case FINAL_UNPAID_ORDER_TAB.WITHIN_WEEK:
+            // 一周
+            searchForm.value.final_pay_due_begin_time = dayjs().unix();
+            searchForm.value.final_pay_due_end_time = dayjs().subtract(7, 'day').unix();
+            break;
+        case FINAL_UNPAID_ORDER_TAB.DELAY:
+            searchForm.value.final_pay_due_begin_time = dayjs().unix();
+            break;
+    }    
+    searchParam.value = Core.Util.searchFilter(searchForm.value);
+    search();
+};
 
 /* methods end*/
 
 onMounted(() => {
-    isDistributerAdmin.value = Core.Util.Common.returnTypeBool(Core.Data.getLoginType(), [Core.Const.LOGIN.TYPE.ADMIN])
-    console.log("isDistributerAdmin.value", isDistributerAdmin.value);
-    
-    searchParam.value.status = -1;
-    search();
+    isDistributerAdmin.value = Core.Util.Common.returnTypeBool(Core.Data.getLoginType(), [Core.Const.LOGIN.TYPE.ADMIN]);
+
+    getStatusFetch();
     getDistributorListAll();
 });
 </script>

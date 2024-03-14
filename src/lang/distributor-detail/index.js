@@ -81,8 +81,7 @@ export default {
         // 充值金额
         recharge_amount: '充值金额',
         // 到账进度
-        arrival_progress: '到账进度',
-        // 操作
+        arrival_progress: '到账进度', // 操作
         operation: '操作',
         // 备注
         remark: '备注',
@@ -156,6 +155,8 @@ export default {
         available_balance: '可用余额',
         // “操作成功
         operation_success: '操作成功',
+        application_time: '申请时间',
+        audit_rejection: '审核拒绝',
     },
     en: {
         vehicle_account: 'Vehicle Account',
@@ -254,5 +255,8 @@ export default {
         order_final_payment: 'Order final payment',
         available_balance: 'Available balance',
         operation_success: 'Operation success',
+        waiting_for_approval: 'waiting for approval',
+        approved_and_approved: 'approved and approved',
+        audit_rejection: 'audit rejection',
     },
 };

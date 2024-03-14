@@ -281,7 +281,7 @@ export default {
                     break;
                 case 'settle': // 结算
                     routeUrl = this.$router.resolve({
-                        path: '/purchase/item-settle',
+                        path: '/mall/confirm-order',
                     });
                     window.open(routeUrl.href, '_self');
                     break;

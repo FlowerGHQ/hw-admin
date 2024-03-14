@@ -5,62 +5,7 @@
             <div class="order-mes box">
                 <p class="box-title">Pending Payment Order</p>
                 <div class="box-content">
-                    <table style="width: 100%">
-                        <tbody v-if="vehicleList.length !== 0" class="list-body">
-                            <tr v-for="item in vehicleList" class="row">
-                                <td
-                                    v-for="columnsItem in columns"
-                                    class="row-item"
-                                    :class="
-                                        (!item.flag_item_valid ? 'invalid' : '',
-                                        columnsItem.dataIndex === 'check' ? 'row-item-check' : '')
-                                    "
-                                >
-                                    <template v-if="columnsItem.dataIndex === 'product'">
-                                        <div class="product">
-                                            <div class="product-img">
-                                                <a-image :src="$Util.imageFilter(item?.item?.logo, 5)" />
-                                            </div>
-                                            <div class="product-mes">
-                                                <p
-                                                    class="name"
-                                                    :title="item?.item[$Util.regionalUnitMoney().name_index]"
-                                                >
-                                                    {{ item?.item[$Util.regionalUnitMoney().name_index] }}
-                                                </p>
-                                                <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
-                                                <p class="version" @click="showDrawer(item)" v-if="item?.item.set_id">
-                                                    <span>
-                                                        {{ $Util.itemSpecFilter(item.item.attr_list, lang) }}
-                                                    </span>
-                                                    <svg-icon
-                                                        icon-class="cart-arrow-right"
-                                                        class-name="cart-arrow-right"
-                                                    />
-                                                    <svg-icon
-                                                        icon-class="cart-arrow-right-active"
-                                                        class-name="cart-arrow-right-active"
-                                                    />
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </template>
-                                    <template v-if="columnsItem.dataIndex === 'price'">
-                                        <span class="row-text unit-price"
-                                            >{{ currency
-                                            }}{{
-                                                $Util.Number.numFormat(
-                                                    $Util.countFilter(
-                                                        item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)],
-                                                    ),
-                                                )
-                                            }}</span
-                                        >
-                                    </template>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <OrderInformation :list="vehicleList" :unit="currency" />
                 </div>
             </div>
             <!-- 支付信息 -->
@@ -88,6 +33,7 @@ import Core from '@/core';
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import MyButton from '@/components/common/MyButton.vue';
+import OrderInformation from './components/order-information.vue';
 
 const router = useRouter();
 

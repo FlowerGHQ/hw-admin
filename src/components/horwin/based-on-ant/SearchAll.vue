@@ -30,7 +30,16 @@
                         '1': { vlaue: 1, zh: '整车', en: 'Vehicle', key: 1 }, 
                     }            
               * placeholder: "def.select",
-            }
+            },
+            时间
+            {
+                id: 0,
+                type: 'time-range',
+                value: [],
+                searchParmas: ['begin_time', 'end_time'],
+                key: 'distributor-detail.time',
+                defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_E,
+            },
         ]
         isShowMore  // 是否需要-展开收起(默认true)
         isShowButton  // 是否需要-搜索重置按钮(默认true)

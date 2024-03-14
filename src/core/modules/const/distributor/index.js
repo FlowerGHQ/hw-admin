@@ -18,19 +18,26 @@ const DISTRIBUTOR = {
         PAYMENT_TYPE_PAYMENT_DAYS_30: 30,
         PAYMENT_TYPE_PAYMENT_DAYS_60: 40,
         PAYMENT_TYPE_PAYMENT_DAYS_90: 50,
+        TT: 60,
+        OA: 70,
     },
     PAY_TIME_LIST: {
-        10: { key: 10, zh: '全款发货', en: 'Full payment delivery' },
+        10: { key: 10, zh: '全款支付', en: 'Full payment' },
         20: { key: 20, zh: 'TT(30%定金,70%尾款)', en: 'TT' },
         30: { key: 30, zh: 'OA 30天', en: 'OA 30 days' },
         40: { key: 40, zh: 'OA 60天', en: 'OA 60 days' },
         50: { key: 50, zh: 'OA 90天', en: 'OA 90 days' },
+        60: { key: 50, zh: 'TT', en: 'TT' },
+        70: { key: 50, zh: 'OA', en: 'OA' },
     },
     PAY_TIME_MAP: {
-        10: 'TT(30%定金,70%尾款)',
-        20: 'OA 30天',
-        30: 'OA 60天',
-        40: 'OA 90天',
+        10: '全款支付',
+        20: 'TT(30%定金,70%尾款)',
+        30: 'OA 30天',
+        40: 'OA 60天',
+        50: 'OA 90天',
+        60: 'TT',
+        70: 'OA',
     },
     // 创建分销商 支付方式
     PAY_METHODS: {
@@ -43,33 +50,37 @@ const DISTRIBUTOR = {
     },
     // 运费状态
     FREIGHT_STATUS: {
-        TO_BE_DETERMINED: 1, // 待确定
-        DETERMINED: 2, // 已确定
-        REJECTED: 3, // 已拒绝
+        ALL: 0, // 全部
+        TO_BE_FILLED_IN: 50, // 待填写
+        TO_BE_CONFIRMED: 100, // 待确认
+        CONFIRMED: 200, // 已确认
+        REJECTED: -200, // 已拒绝
     },
     FREIGHT_STATUS_MAP: {
-        1: { key: 1, t: 'distributor.to_be_determined' }, // 待确定
-        2: { key: 2, t: 'distributor.determined' }, // 已确定
-        3: { key: 3, t: 'distributor.rejected' }, // 已拒绝
+        // 0: { key: 0, t: "common.all"}, // 全部
+        50: { key: 50, t: 'distributor.to_be_filled_in' }, // 待填写
+        100: { key: 100, t: 'distributor.to_be_determined' }, // 待确认
+        200: { key: 200, t: 'distributor.determined' }, // 已确认
+        '-200': { key: -200, t: 'distributor.rejected' }, // 已拒绝
     },
     AUDIT_RESULT: {
-        REFUSE: 0, // 不通过
-        CONFIRM: 1, // 确认
+        REFUSE: -200, // 不通过
+        CONFIRM: 200, // 确认
     },
     AUDIT_RESULT_MAP_ARR: [
-        { key: 1, t: 'common.confirm' }, // 确认
-        { key: 0, t: 'common.refuse' }, // 拒绝
+        { key: 200, t: 'common.confirm' }, // 确认
+        { key: -200, t: 'common.refuse' }, // 拒绝
     ],
     // 取消订单申请表 下的状态
     CANCELLATION_ORDER_TAB: {
-        ALL: -1,
+        ALL: 0,
         DEALT_WITH: 1, // 待处理
-        REJECTED: 2, // 已拒绝
-        HAS_AGREED: 3, // 已同意
+        HAS_AGREED: 2, // 已同意
+        REJECTED: 3, // 已拒绝
     },
     // 尾款未支付订单表 和 尾款待支付订单表
     FINAL_UNPAID_ORDER_TAB: {
-        ALL: -1,
+        ALL: 0,
         WITHIN_WEEK: 1, // 一周内
         DELAY: 2, // 延期
     },
@@ -94,6 +105,27 @@ const DISTRIBUTOR = {
         103: { title: 'distributor-detail.account_recharge', value: 103, addOrSubtract: '+' },
         104: { title: 'distributor-detail.order_refund', value: 104, addOrSubtract: '-' },
         105: { title: 'distributor-detail.pay_final_payment', value: 105, addOrSubtract: '+' },
+    },
+    // 取消的状态
+    AUDIT_CANCEL_STATUS: {
+        // 1 审核中 2 审核通过  3 审核拒绝
+        WAITING_FOR_APPROVAL: 1,
+        APPROVED_AND_APPROVED: 2,
+        AUDIT_REJECTION: 3,
+    },
+    AUDIT_CANCEL_STATUS_MAP: {
+        1: { key: 1, t: 'distributor-detail.under_review' },
+        2: { key: 2, t: 'distributor-detail.audit_pass' },
+        3: { key: 3, t: 'distributor-detail.audit_rejection' },
+    },
+    // 运费支付状态
+    FREIGHT_PAY_STATUS_MAP: {
+        100: { key: 100, t: 'common.to_be_paid' },
+        200: { key: 200, t: 'common.paid' },
+    },
+    FREIGHT_PAY_STATUS: {
+        to_be_paid: 100,
+        paid: 200,
     },
 };
 
