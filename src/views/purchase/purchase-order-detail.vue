@@ -7,10 +7,10 @@
                 <div
                     class="btns-area"
                     v-if="
-                        detail.status != STATUS.CANCEL &&
-                        detail.status != STATUS.RE_REVISE &&
-                        detail.status != STATUS.REVISE &&
-                        detail.status != STATUS.ORDER_TRANSFERRED &&
+                        detail.status != STATUS.INIT &&
+                        detail.status != STATUS.SPLIT &&
+                        detail.status != STATUS.WAIT_AUDIT &&
+                        // detail.status != STATUS.ORDER_TRANSFERRED &&
                         !$auth('purchase-order.supply-detail')
                     "
                 >
@@ -25,40 +25,40 @@
                                             {{ $t('p.export_purchase') }}
                                         </div>
                                     </a-menu-item>
-                                    <a-menu-item key="1">
-                                        <!-- 修改PI -->
+                                    <!-- 修改PI -->
+                                    <!-- <a-button @click="handleUpdatePI"><i class="icon i_edit" />{{ $t('p.update_PI') }}</a-button> -->
+                                    <!-- <a-menu-item key="1">
                                         <div @click="handleUpdatePI">
                                             {{ $t('p.update_PI') }}
                                         </div>
-                                        <!-- <a-button @click="handleUpdatePI"><i class="icon i_edit" />{{ $t('p.update_PI') }}</a-button> -->
-                                    </a-menu-item>
+                                    </a-menu-item> -->
                                 </template>
-
-                                <template v-if="!$auth('ADMIN') && $auth('purchase-order.export')">
-                                    <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
+                                
+                                <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
+                                <!-- 导出商品信息 -->
+                                <!-- <template v-if="!$auth('ADMIN') && $auth('purchase-order.export')">
                                     <a-menu-item key="3">
-                                        <!-- 导出商品信息 -->
                                         <div @click="handleExportInfo">
                                             {{ $t('p.export_product_information') }}
                                         </div>
-                                        <!-- <a-button @click="handleExportInfo">{{ $t('p.export_product_information') }}</a-button> -->
                                     </a-menu-item>
-                                </template>
+                                </template> -->
+                                <!-- <a-button @click="handleExportInfo">{{ $t('p.export_product_information') }}</a-button> -->
 
-                                <template
+                                <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
+                                <!-- 以供应商报表方式导出 -->
+                                <!-- <template
                                     v-if="
                                         authOrg(detail.supply_org_id, detail.supply_org_type) &&
                                         detail.status !== STATUS.REVISE_AUDIT
                                     "
                                 >
-                                    <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
                                     <a-menu-item key="3">
-                                        <!-- 以供应商报表方式导出 -->
                                         <div v-if="$auth('ADMIN')" @click="handleExport">
                                             {{ $t('def.export_as_supplier_report') }}
                                         </div>
                                     </a-menu-item>
-                                </template>
+                                </template> -->
                             </a-menu>
                         </template>
                         <a-button>
