@@ -8,7 +8,7 @@
             </div>
             <!-- tabs 切换 -->
             <div class="tabs-container colorful">
-                <a-tabs v-model:activeKey="searchForm.audit_status" @change="onSearch">
+                <a-tabs v-model:activeKey="searchForm.audit_status" @change="onTabChange">
                     <a-tab-pane :key="item.key" v-for="item of statusList">
                         <template #tab>
                             <div class="tabs-title">
@@ -114,6 +114,15 @@
                             <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text, 'color')">
                                 {{ $Util.purchaseStatusFilter(text, $i18n.locale) || '-' }}
                             </div>
+                            <div
+                                v-if="AUDIT_CANCEL_STATUS_MAP[record.audit_status]"
+                                class="m-l-8 status status-bg status-tag"
+                                :class="$Util.purchaseStatusFilter(text, 'color')"
+                            >
+                                {{ $t('distributor-detail.cancel_order') }}({{
+                                    $t(`${AUDIT_CANCEL_STATUS_MAP[record.audit_status]?.t}`)
+                                }})
+                            </div>
                         </template>
 
                         <!-- 支付状态 -->
@@ -151,7 +160,15 @@
 
                         <!-- 操作 -->
                         <template v-if="column.key === 'operations'">
-                            <a-button type="link" @click="routerChange('audit', record)">
+                            <a-button
+                                v-if="
+                                    $Util.Common.returnTypeBool(record.audit_status, [
+                                        AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL,
+                                    ])
+                                "
+                                type="link"
+                                @click="routerChange('audit', record)"
+                            >
                                 <!-- <MySvgIcon icon-class="common-view" /> -->
                                 <span class="m-l-4">{{ $t('p.audit') }}</span>
                             </a-button>
@@ -180,6 +197,34 @@
             </div>
         </div>
     </div>
+
+    <!-- 审核弹出 -->
+    <CheckModal :visible="isAuditShow" :title="$t('distributor.audit')">
+        <template #content>
+            <div class="content">
+                <a-radio-group v-model:value="auditParams.status">
+                    <a-radio v-for="item in IS_PASS_OPTIONS_MAP" :key="item.key" :value="item.key">
+                        {{ $t(`${item.t}`) }}
+                    </a-radio>
+                </a-radio-group>
+                <!-- 不通过 出现 -->
+                <a-textarea
+                    v-if="$Util.Common.returnTypeBool(auditParams.status, [IS_PASS_OPTIONS.NOT_PASSED])"
+                    class="w-100 m-t-20"
+                    v-model:value="auditParams.remark"
+                    :placeholder="$t('common.please_enter') + $t('common.reason')"
+                    show-count
+                    :maxlength="1000"
+                />
+            </div>
+        </template>
+        <template #footer>
+            <div class="footer">
+                <a-button @click="onCheckModalCancel">{{ $t('common.cancel') }}</a-button>
+                <a-button type="primary" @click="onCheckModalOK">{{ $t('common.confirm') }}</a-button>
+            </div>
+        </template>
+    </CheckModal>
 </template>
 
 <script setup>
@@ -191,19 +236,36 @@ import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';
 import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
 import { useRouter, useRoute } from 'vue-router';
+import CheckModal from '@/components/horwin/based-on-ant/CheckModal.vue';
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
 
 const FREIGHT_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_STATUS_MAP;
+const AUDIT_CANCEL_STATUS_MAP = Core.Const.DISTRIBUTOR.AUDIT_CANCEL_STATUS_MAP;
+const AUDIT_CANCEL_STATUS = Core.Const.DISTRIBUTOR.AUDIT_CANCEL_STATUS;
+const IS_PASS_OPTIONS_MAP = {
+    2: { key: 2, t: 'common.adopt' }, // 通过
+    3: { key: 3, t: 'common.not_passed' }, // 不通过
+};
+const IS_PASS_OPTIONS = {
+    ADOPT: 2,
+    NOT_PASSED: 3,
+};
 
+const search_all_ref = ref(null);
 const searchForm = ref({
     sn: undefined, // 订单编号
     distributor_id: undefined, // 分销商分销商
-    audit_status: undefined, // 类型
+    audit_status: 0, // 类型
 });
-const search_all_ref = ref(null);
+const isAuditShow = ref(false); // 是否显示审核按钮
+const auditParams = ref({
+    id: undefined,
+    status: IS_PASS_OPTIONS.ADOPT,
+    remark: undefined,
+}); // 审核弹出的参数
 
 const statusData = ref({
     total: 2, // 全部
@@ -211,7 +273,7 @@ const statusData = ref({
     refuse_total: 0, // 已拒绝
     wait_total: 2, // 待处理
 }); // 平台方tab数据
-const distributorList = ref([]);
+const distributorList = ref([]); // 分销商数据
 
 const searchList = ref([
     {
@@ -331,8 +393,12 @@ const saveAuditFetch = (params = {}) => {
     Core.Api.CancelOrderList.audit(obj)
         .then(res => {
             console.log('审核接口 res', res);
+            onCheckModalCancel();
+            proxy.$message.success(proxy.$t('distributor.audit_success'));
+            search();
         })
         .catch(err => {
+            proxy.$message.success(proxy.$t('distributor.audit_error'));
             console.log('审核接口 err', err);
         });
 };
@@ -340,6 +406,18 @@ const saveAuditFetch = (params = {}) => {
 /* fetch end*/
 
 /* methods start*/
+const initData = () => {
+    auditParams.value = {
+        id: undefined,
+        status: IS_PASS_OPTIONS.ADOPT,
+        remark: undefined,
+    };
+    searchForm.value = {
+        sn: undefined, // 订单编号
+        distributor_id: undefined, // 分销商分销商
+        audit_status: 0, // 类型
+    };
+};
 const routerChange = (type, record) => {
     let routeUrl = '';
     // 分销商
@@ -352,24 +430,41 @@ const routerChange = (type, record) => {
 
             window.open(routeUrl.href, '_self');
             break;
-        case 'audit': // 审核            
+        case 'audit': // 审核
+            isAuditShow.value = true;
+            auditParams.value.id = record.audit_id;
             break;
     }
 };
+
 const onSearch = data => {
-    console.log('data', data);
     searchParam.value = Core.Util.searchFilter({ ...searchForm.value, ...data });
     search();
 };
 const onReset = () => {
     refreshTable();
+    initData()
+};
+// tab事件
+const onTabChange = () => {        
+    search_all_ref.value.onResetData()  // 清除输入框数据
+    searchParam.value = Core.Util.searchFilter(searchForm.value);
+    search();
+};
+
+// 审核
+const onCheckModalCancel = () => {
+    isAuditShow.value = false;
+    initData();
+};
+
+const onCheckModalOK = () => {
+    saveAuditFetch(auditParams.value);
 };
 
 /* methods end*/
 
 onMounted(() => {
-    search();
-
     getStatusFetch();
     getDistributorListAll();
 });
@@ -404,5 +499,17 @@ onMounted(() => {
         background: rgba(38, 171, 84, 0.1);
         color: #00b42a !important;
     }
+}
+
+.content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.w-100 {
+    width: 100%;
 }
 </style>

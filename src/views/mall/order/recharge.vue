@@ -20,44 +20,60 @@
                         <!-- 第一步 -->
                         <template v-if="current === 0">
                             <p class="title">{{ $t('mall.recharge_amount') }}</p>
-                            <a-form
-                                ref="formRef"
-                                :model="formState"
-                                name="dynamic_rule"
-                                v-bind="formItemLayout"
-                                labelAlign="left"
-                            >
-                                <a-form-item
-                                    label="Price"
-                                    name="price"
-                                    :rules="[{ required: true, message: 'Please input your price!' }]"
+                            <div class="form-body">
+                                <a-form
+                                    ref="formRef"
+                                    layout="vertical"
+                                    :model="formState"
+                                    name="dynamic_rule"
+                                    v-bind="formItemLayout"
+                                    labelAlign="left"
                                 >
-                                    <a-input v-model:value="formState.price" :suffix="currency" />
-                                </a-form-item>
-                                <a-form-item
-                                    label="Price2"
-                                    name="price2"
-                                    :rules="[{ required: true, message: 'Please input your price2!' }]"
-                                >
-                                    <a-input v-model:value="formState.price2" :suffix="currency" />
-                                </a-form-item>
-                            </a-form>
+                                    <a-row :gutter="72">
+                                        <a-col :span="12">
+                                            <a-form-item
+                                                label="Vehicle available balance account"
+                                                name="price"
+                                                :rules="[{ required: false, message: 'Please input your price!' }]"
+                                            >
+                                                <a-input
+                                                    v-model:value="formState.price"
+                                                    :suffix="currency"
+                                                    placeholder="123"
+                                                />
+                                            </a-form-item>
+                                        </a-col>
+                                        <a-col :span="12">
+                                            <a-form-item
+                                                label="Parts Available Balance Account"
+                                                name="price2"
+                                                :rules="[{ required: false, message: 'Please input your price2!' }]"
+                                            >
+                                                <a-input v-model:value="formState.price2" :suffix="currency" />
+                                            </a-form-item>
+                                        </a-col>
+                                    </a-row>
+                                </a-form>
+                                <div class="amount">
+                                    <span class="amount-text">The amount to be transferred this time:</span>
+                                    <span class="amount-price">€999,012</span>
+                                </div>
+                            </div>
                             <p class="title">{{ $t('p.Payment_information') }}</p>
                             <PaymentInformation />
                         </template>
                         <!-- 第二步 -->
                         <template v-if="current === 1">
-                            <div class="documents-row">
-                                <div class="documents-row-key" :class="uploadClass">Certificate Upload</div>
-                                <div class="documents-row-label">
-                                    <MyUpload
-                                        ref="myUpload"
-                                        :isWrite="isWrite"
-                                        :defaultList="detail.file"
-                                        :type="isMobile ? 'image' : 'file'"
-                                        @handleUpload="handleUpload"
-                                    />
-                                </div>
+                            <p class="title">{{ $t('mall.recharge_amount') }}</p>
+                            <div class="upload-body">
+                                <div class="record">{{ $t('mall.recharge_record') }}</div>
+                                <MyUpload
+                                    ref="myUpload"
+                                    :isWrite="isWrite"
+                                    :defaultList="detail.file"
+                                    :type="isMobile ? 'image' : 'file'"
+                                    @handleUpload="handleUpload"
+                                />
                             </div>
                         </template>
                     </div>
@@ -120,8 +136,8 @@ const formState = reactive({
     price2: '',
 });
 const formItemLayout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 18 },
+    labelCol: { span: 24 },
+    wrapperCol: { span: 24 },
 };
 const isMobile = ref(false);
 const isWrite = ref(true);
@@ -242,6 +258,61 @@ onMounted(() => {
             font-weight: 500;
             line-height: 39px;
         }
+        .form-body {
+            padding: 56px 72px;
+            background: #fff;
+            :deep(.ant-row) {
+                .ant-form-item-label {
+                    padding-bottom: 21px;
+                    > label {
+                        color: #000;
+                        font-size: 24px;
+                        line-height: 24px;
+                    }
+                }
+                .ant-form-item-control {
+                    .ant-input-affix-wrapper {
+                        padding: 32px;
+                        border-radius: 0;
+                        border-color: #bfbfbf;
+                        .ant-input {
+                            font-size: 35px;
+                            line-height: 36px !important;
+                            color: #8f00ff;
+                            &::-webkit-input-placeholder {
+                                color: #bfbfbf;
+                                font-size: 24px;
+                                line-height: 24px;
+                            }
+                        }
+                        .ant-input-suffix {
+                            font-size: 35px;
+                            line-height: 36px !important;
+                            color: #999999;
+                        }
+                    }
+                }
+            }
+            .amount {
+                .flex(initial, center, row);
+                width: 100%;
+                padding: 39px 32px;
+                margin-top: 24px;
+                background: #f8f8f8;
+                .amount-text {
+                    font-size: 24px;
+                    line-height: 24px;
+                    color: #666;
+                    margin-right: 24px;
+                }
+                .amount-price {
+                    font-size: 36px;
+                    font-weight: 500;
+                    line-height: 36px;
+                    color: #8f00ff;
+                }
+            }
+        }
         .deposit-payment {
             .title {
                 .deposit-payment-row-left {
@@ -283,6 +354,20 @@ onMounted(() => {
                     display: flex;
                     align-items: center;
                 }
+            }
+        }
+        .upload-body {
+            position: relative;
+            background: #fff;
+            padding: 40px 84px;
+            .record {
+                position: absolute;
+                top: 40px;
+                right: 84px;
+                font-weight: 500;
+                line-height: 21px;
+                color: #8f00ff;
+                cursor: pointer;
             }
         }
     }

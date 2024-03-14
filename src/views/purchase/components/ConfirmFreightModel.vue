@@ -91,7 +91,8 @@ const emits = defineEmits(['update:visible', 'ok', 'cancel']);
 const saveFreightFetch = (params = {}) => {
     const obj = {
         id: props.detailRecord.freight_audit_record_id, // 审核记录id（audit_record_id）
-        status: search_params.value.result, //审核内容
+        status: search_params.value.result, // 审核内容
+        remark: search_params.value.remark, // 审核内容
         ...params,
     };
 

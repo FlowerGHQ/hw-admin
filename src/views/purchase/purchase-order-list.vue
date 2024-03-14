@@ -132,10 +132,10 @@
                         <div class="key">{{ $t('n.order_time') }}:</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref="TimeSearch" /></div>
                     </a-col>
-                    <!-- 应付款时间 -->
+                    <!-- 应付尾款时间 -->
                     <a-col :xs="24" :sm="24" :xl="16" :xxl="12" class="search-item">
                         <div class="key">{{ $t('p.payable_time') }}:</div>
-                        <div class="value"><TimeSearch @search="handleOtherSearch1" ref="TimeSearch1" /></div>
+                        <div class="value"><TimeSearch @search="handleOtherPayableSearch" ref="TimeSearch1" /></div>
                     </a-col>
                     <!-- 运费状态 -->
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
@@ -267,10 +267,18 @@
                                 {{ $Util.countFilter(text) }}
                             </span>
                         </template>
-                        <template v-else-if="column.dataIndex === 'status'">
+                        <!-- 订单状态 -->
+                        <template v-else-if="column.key === 'order_status'">
                             <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text, 'color')">
                                 {{ $Util.purchaseStatusFilter(text, $i18n.locale) }}
-                                {{ record.cancel_status }}
+                            </div>
+                            <div
+                                v-if="AUDIT_CANCEL_STATUS_MAP[record.cancel_status]"
+                                class="m-l-8 status status-bg status-tag"
+                                :class="$Util.purchaseStatusFilter(text, 'color')"
+                            >
+                                {{ $t('distributor-detail.cancel_order') }}
+                                ({{ $t(`${AUDIT_CANCEL_STATUS_MAP[record.cancel_status]?.t}`) }})
                             </div>
                         </template>
                         <template v-else-if="column.dataIndex === 'payment_status'">
@@ -306,14 +314,6 @@
                         </template>
                         <template v-else-if="column.key === 'sync_failure_reason'">
                             {{ text || '-' }}
-                        </template>
-                        <!-- 预计船期 -->
-                        <template v-else-if="column.key === 'estimated_shipping_data'">
-                            {{ $Util.timeFilter('1710126420', 3) }} - {{ $Util.timeFilter('1710126420', 3) }}
-                        </template>
-                        <!-- 应付款时间 -->
-                        <template v-else-if="column.key === 'payable_time'">
-                            {{ $Util.timeFilter('1710126420', 3) }} - {{ $Util.timeFilter('1710126420', 3) }}
                         </template>
                         <template v-else-if="column.key === 'operation'">
                             <a-button
@@ -408,9 +408,10 @@ const FLAG_ORDER_TYPE = Core.Const.PURCHASE.FLAG_ORDER_TYPE;
 const PAY_TIME_LIST = Core.Const.DISTRIBUTOR.PAY_TIME_LIST;
 const STATUS = Core.Const.PURCHASE.STATUS;
 const FREIGHT_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_STATUS_MAP;
+const AUDIT_CANCEL_STATUS_MAP = Core.Const.DISTRIBUTOR.AUDIT_CANCEL_STATUS_MAP;
+
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 import { message } from 'ant-design-vue';
-
 import TimeSearch from '@/components/common/TimeSearch.vue';
 
 export default {
@@ -433,6 +434,7 @@ export default {
             PAY_TIME_LIST,
             FLAG_ORDER_TYPE,
             FREIGHT_STATUS_MAP,
+            AUDIT_CANCEL_STATUS_MAP,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -462,6 +464,8 @@ export default {
                 begin_time: '',
                 end_time: '',
                 freight_status: undefined, // 运费状态
+                final_pay_due_begin_time: undefined, // 应付尾款时间开始
+                final_pay_due_end_time: undefined, // 应付尾款时间结束
             },
             // 表格
             tableData: [],
@@ -494,15 +498,15 @@ export default {
                 { title: this.$t('p.payment_method'), dataIndex: 'pay_type', key: 'pay_type' },
                 {
                     title: this.$t('p.estimated_shipping_data'),
-                    dataIndex: 'estimated_shipping_datas',
-                    key: 'estimated_shipping_data',
+                    dataIndex: 'shipping_time_estimated',
+                    key: 'time',
                 }, // 预计船期
-                { title: this.$t('p.order_status'), dataIndex: 'status' },
+                { title: this.$t('p.order_status'), dataIndex: 'status', key: 'order_status' },
                 { title: this.$t('n.order_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('p.payment_status'), dataIndex: 'payment_status' },
                 { title: this.$t('p.payment_time'), dataIndex: 'pay_time', key: 'time' },
                 { title: this.$t('p.complete_time'), dataIndex: 'close_time', key: 'time' },
-                { title: this.$t('p.payable_time'), dataIndex: 'payable_times', key: 'payable_time' }, // 应付款时间
+                { title: this.$t('p.payable_time'), dataIndex: 'final_pay_due_time', key: 'time' }, // 应付尾款时间
             ];
             if (this.$auth('DISTRIBUTOR')) {
                 const index = columns.findIndex(column => column.dataIndex === 'accessory_list');
@@ -729,13 +733,11 @@ export default {
             this.pageChange(1);
         },
         // 应付款时间搜索
-        handleOtherSearch1(params) {
+        handleOtherPayableSearch(params) {
             console.log('应付款时间搜索', params);
-            // 时间等组件化的搜索
-            // for (const key in params) {
-            //     this.searchForm[key] = params[key];
-            // }
-            // this.pageChange(1);
+            this.searchForm.final_pay_due_begin_time = params.begin_time;
+            this.searchForm.final_pay_due_end_time = params.end_time;
+            this.pageChange(1);
         },
         handleSearchReset(flag = true) {
             // 重置搜索
