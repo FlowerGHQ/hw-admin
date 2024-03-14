@@ -2,7 +2,7 @@
     <div class="payment">
         <div class="payment-content">
             <div class="deposit-payment" id="deposit-payment">
-                <div class="deposit-payment-row" style="margin-top: 12px">
+                <div class="deposit-payment-row">
                     <div class="deposit-payment-row-left">payment method:</div>
                     <div class="deposit-payment-row-right">{{ mes.accountHolder }}</div>
                 </div>
@@ -47,11 +47,6 @@ const props = defineProps({
 .payment {
     flex: 1;
     .flex(initial,initial);
-    .payment-title {
-        font-size: 24px;
-        line-height: 24px;
-        margin-bottom: 25px;
-    }
     .payment-content {
         flex: 1;
         background-color: #fff;
