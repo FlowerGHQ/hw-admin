@@ -270,7 +270,7 @@
                         <!-- 订单状态 -->
                         <template v-else-if="column.key === 'order_status'">
                             <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text, 'color')">
-                                {{ $Util.purchaseStatusFilter(text, $i18n.locale) }} {{ record.cancel_status }}
+                                {{ $Util.purchaseStatusFilter(text, $i18n.locale) }}
                             </div>
                             <div
                                 v-if="AUDIT_CANCEL_STATUS_MAP[record.cancel_status]"
