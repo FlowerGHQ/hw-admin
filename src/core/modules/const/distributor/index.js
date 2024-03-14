@@ -38,26 +38,26 @@ const DISTRIBUTOR = {
         OA: 2,
     },
     PAY_METHODS_MAP: {
-        1: { key: 1, t: "TT" },
-        2: { key: 2, t: "OA" },
+        1: { key: 1, t: 'TT' },
+        2: { key: 2, t: 'OA' },
     },
     // 运费状态
-    FREIGHT_STATUS: { 
+    FREIGHT_STATUS: {
         TO_BE_DETERMINED: 1, // 待确定
         DETERMINED: 2, // 已确定
         REJECTED: 3, // 已拒绝
     },
     FREIGHT_STATUS_MAP: {
-        1: { key: 1, t: "distributor.to_be_determined"}, // 待确定
-        2: { key: 2, t: "distributor.determined"}, // 已确定
-        3: { key: 3, t: "distributor.rejected"}, // 已拒绝
+        1: { key: 1, t: 'distributor.to_be_determined' }, // 待确定
+        2: { key: 2, t: 'distributor.determined' }, // 已确定
+        3: { key: 3, t: 'distributor.rejected' }, // 已拒绝
     },
     AUDIT_RESULT: {
         REFUSE: 0, // 不通过
         CONFIRM: 1, // 确认
     },
     AUDIT_RESULT_MAP_ARR: [
-        { key: 1, t: 'common.confirm' }, // 确认 
+        { key: 1, t: 'common.confirm' }, // 确认
         { key: 0, t: 'common.refuse' }, // 拒绝
     ],
     // 取消订单申请表 下的状态
@@ -80,7 +80,21 @@ const DISTRIBUTOR = {
         TO_BE_CONFIRMED: 1,
         CONFIRMED: 3,
         REJECTED: 2,
-    }
+    },
+    // 钱包类型
+    WALLET_TYPE: {
+        10: { title: 'distributor-detail.vehicle_account', value: 10 },
+        20: { title: 'distributor-detail.parts_account', value: 20 },
+        30: { title: 'distributor-detail.after_sales_spare_parts_credit_account', value: 30 },
+        40: { title: 'distributor-detail.credit_account', value: 40 },
+    },
+    // 开支类型  //100 老数据转出 101 老数据转入 102 工单赔付 103 账号充值  104 订单退款 105 支付尾款 106 总额提升 107 总额下调
+    EXPENDITURE_TYPE: {
+        102: { title: 'distributor-detail.work_order_compensation', value: 102, addOrSubtract: '+' },
+        103: { title: 'distributor-detail.account_recharge', value: 103, addOrSubtract: '+' },
+        104: { title: 'distributor-detail.order_refund', value: 104, addOrSubtract: '-' },
+        105: { title: 'distributor-detail.pay_final_payment', value: 105, addOrSubtract: '+' },
+    },
 };
 
 export default DISTRIBUTOR;

@@ -486,6 +486,8 @@ const apiList = {
         walletDetail: ['PostJson', 'wallet/detail'], //钱包详情
         // 充值记录
         rechargeList: ['PostJson', 'audit-record/list-distributor-recharge'],
+        // 修改授信总额和备用件抵扣比率
+        updateCredit: ['PostJson', 'distributor/update-credit-spare-part'],
     },
     Fault: {
         // 产品故障管理
