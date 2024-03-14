@@ -2800,6 +2800,17 @@ const routes = [
                     title_en: 'New Collection Account',
                 },
             },
+            // 账号信息预览页
+            {
+                path: 'pending-payment',
+                name: 'pendingPayment',
+                component: () => import('@/views/payment-info-management/pending-payment.vue'),
+                meta: {
+                    hidden: true,
+                    title: '账号信息预览',
+                    title_en: 'Account Information Preview',
+                },
+            },
         ],
     },
     {

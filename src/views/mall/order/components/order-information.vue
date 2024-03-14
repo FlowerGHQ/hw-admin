@@ -1,88 +1,109 @@
 <template>
-    <table style="width: 100%">
-        <tbody v-if="list.length !== 0" class="list-body">
-            <tr v-for="(item, index) in list" class="row" :class="[!item.item?.isGift ? '' : 'gift']">
-                <td
-                    v-for="columnsItem in columns"
-                    class="row-item"
-                    :class="
-                        (!item.flag_item_valid ? 'invalid' : '',
-                        columnsItem.dataIndex === 'check' ? 'row-item-check' : '')
-                    "
-                    :style="{ width: `${columnsItem.width}px` || 'auto' }"
-                >
-                    <template v-if="columnsItem.dataIndex === 'product'">
-                        <div class="product">
-                            <div class="product-img">
-                                <a-image :src="$Util.imageFilter(item?.item?.logo, 5)" />
+    <div
+        class="order-information"
+        :style="{
+            maxHeight:
+                list.length > expendConuts && !expend
+                    ? `${expendConuts * 160 + (list.length > expendConuts ? 72 : 0)}px`
+                    : 'none',
+            paddingBottom: list.length > expendConuts && expend ? '72px' : '',
+        }"
+    >
+        <table style="width: 100%">
+            <tbody v-if="list.length !== 0" class="list-body">
+                <tr v-for="(item, index) in list" class="row" :class="[!item.item?.isGift ? '' : 'gift']">
+                    <td
+                        v-for="columnsItem in columns"
+                        class="row-item"
+                        :class="
+                            (!item.flag_item_valid ? 'invalid' : '',
+                            columnsItem.dataIndex === 'check' ? 'row-item-check' : '')
+                        "
+                        :style="{ width: `${columnsItem.width}px` || 'auto' }"
+                    >
+                        <template v-if="columnsItem.dataIndex === 'product'">
+                            <div class="product">
+                                <div class="product-img">
+                                    <a-image :src="$Util.imageFilter(item?.item?.logo, 5)" />
+                                </div>
+                                <div class="product-mes">
+                                    <p class="name">
+                                        <span
+                                            class="name-text"
+                                            :title="item?.item[$Util.regionalUnitMoney().name_index]"
+                                        >
+                                            {{ item?.item[$Util.regionalUnitMoney().name_index] }}
+                                        </span>
+                                        <span class="label" v-if="item.item?.isGift">
+                                            {{ $t('purchase.free_gift') }}
+                                        </span>
+                                    </p>
+                                    <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
+                                    <p
+                                        class="version"
+                                        @click="showDrawer(item)"
+                                        v-if="item?.item.set_id && !item.item?.isGift"
+                                    >
+                                        <span>
+                                            {{ $Util.itemSpecFilter(item.item.attr_list, lang) }}
+                                        </span>
+                                        <svg-icon icon-class="cart-arrow-right" class-name="cart-arrow-right" />
+                                        <svg-icon
+                                            icon-class="cart-arrow-right-active"
+                                            class-name="cart-arrow-right-active"
+                                        />
+                                    </p>
+                                </div>
                             </div>
-                            <div class="product-mes">
-                                <p class="name">
-                                    <span class="name-text" :title="item?.item[$Util.regionalUnitMoney().name_index]">
-                                        {{ item?.item[$Util.regionalUnitMoney().name_index] }}
-                                    </span>
-                                    <span class="label" v-if="item.item?.isGift">
-                                        {{ $t('purchase.free_gift') }}
-                                    </span>
-                                </p>
-                                <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
-                                <p
-                                    class="version"
-                                    @click="showDrawer(item)"
-                                    v-if="item?.item.set_id && !item.item?.isGift"
-                                >
-                                    <span>
-                                        {{ $Util.itemSpecFilter(item.item.attr_list, lang) }}
-                                    </span>
-                                    <svg-icon icon-class="cart-arrow-right" class-name="cart-arrow-right" />
-                                    <svg-icon
-                                        icon-class="cart-arrow-right-active"
-                                        class-name="cart-arrow-right-active"
-                                    />
-                                </p>
+                        </template>
+                        <template v-if="columnsItem.dataIndex === 'price'">
+                            <span class="row-text unit-price"
+                                >{{ unit
+                                }}{{
+                                    $Util.Number.numFormat(
+                                        $Util.countFilter(
+                                            item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)],
+                                        ),
+                                    )
+                                }}</span
+                            >
+                        </template>
+                        <template v-if="columnsItem.dataIndex === 'quantity'">
+                            <div class="count-edit">
+                                <span class="count-number"> ×{{ item.amount }} </span>
                             </div>
-                        </div>
-                    </template>
-                    <template v-if="columnsItem.dataIndex === 'price'">
-                        <span class="row-text unit-price"
-                            >{{ unit
-                            }}{{
-                                $Util.Number.numFormat(
-                                    $Util.countFilter(item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]),
-                                )
-                            }}</span
-                        >
-                    </template>
-                    <template v-if="columnsItem.dataIndex === 'quantity'">
-                        <div class="count-edit">
-                            <span class="count-number"> ×{{ item.amount }} </span>
-                        </div>
-                    </template>
-                    <template v-if="columnsItem.dataIndex === 'operation'">
-                        <div class="operation">
-                            <span class="row-text price">
-                                <template v-if="!item.item?.isGift">
-                                    {{ unit
-                                    }}{{
-                                        $Util.Number.numFormat(
-                                            $Util.countFilter(
-                                                item.amount *
-                                                    item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)],
-                                            ),
-                                        )
-                                    }}
+                        </template>
+                        <template v-if="columnsItem.dataIndex === 'operation'">
+                            <div class="operation">
+                                <span class="row-text price">
+                                    <template v-if="!item.item?.isGift">
+                                        {{ unit
+                                        }}{{
+                                            $Util.Number.numFormat(
+                                                $Util.countFilter(
+                                                    item.amount *
+                                                        item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)],
+                                                ),
+                                            )
+                                        }}
+                                    </template>
+                                    <template v-else> {{ unit }}0<span class="original-price">12123</span> </template>
+                                </span>
+                                <template v-if="item.item?.isGift">
+                                    <span class="row-text excluding">{{ $t('mall.excluding') }}</span>
                                 </template>
-                                <template v-else> {{ unit }}0<span class="original-price">12123</span> </template>
-                            </span>
-                            <template v-if="item.item?.isGift">
-                                <span class="row-text excluding">{{ $t('mall.excluding') }}</span>
-                            </template>
-                        </div>
-                    </template>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                            </div>
+                        </template>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <template v-if="list.length > expendConuts">
+            <div class="expend" @click="expendChange">
+                <img src="@images/mall/order/expend.png" :class="expend ? 'expended' : ''" />
+            </div>
+        </template>
+    </div>
 </template>
 
 <script>
@@ -127,14 +148,45 @@ export default {
     data() {
         return {
             columns,
+            expendConuts: 5,
+            expend: false,
         };
     },
     created() {},
-    methods: {},
+    methods: {
+        expendChange() {
+            this.expend = !this.expend;
+        },
+    },
 };
 </script>
 
 <style lang="less" scoped>
+.order-information {
+    position: relative;
+    padding-left: 56px;
+    overflow: hidden;
+}
+.expend {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 72px;
+    background: #fff;
+    .fcc();
+    border: 1px solid #e5e6eb;
+    border-bottom: none;
+    z-index: 1;
+    cursor: pointer;
+    > img {
+        height: 48px;
+        width: 48px;
+    }
+    .expended {
+        transform: rotate(180deg);
+    }
+}
 .invalid-box {
     background: #ddd;
     padding: 4px;

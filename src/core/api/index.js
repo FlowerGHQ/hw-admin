@@ -486,6 +486,8 @@ const apiList = {
         walletDetail: ['PostJson', 'wallet/detail'], //钱包详情
         // 充值记录
         rechargeList: ['PostJson', 'audit-record/list-distributor-recharge'],
+        // 修改授信总额和备用件抵扣比率
+        updateCredit: ['PostJson', 'distributor/update-credit-spare-part'],
     },
     Fault: {
         // 产品故障管理
@@ -1106,6 +1108,11 @@ const apiList = {
         list: ['PostJson', 'purchase-order/cancel/list'], // 列表
         audit: ['PostJson', 'purchase-order/cancel/audit'], // 审核
         count: ['PostJson', 'purchase-order/cancel/count'], // 计数
+    },
+    // 尾款未支付 待支付
+    FinalPayment: {
+        list: ['PostJson', 'purchase-order/pending-final-pay/list'], // 列表
+        count: ['PostJson', 'purchase-order/pending-final-pay/count-by-status'], // 状态计数
     }
 };
 

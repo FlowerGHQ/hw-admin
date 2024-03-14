@@ -7,16 +7,10 @@
             <SearchAll :options="searchList" @search="onSearch" @reset="onReset" :isShowMore="false" />
         </div>
         <div class="table-container">
-            <div class="type-map">
-                <div
-                    :class="{ 'type-map-item': true, active: activeTypeValue === item.value }"
-                    v-for="item in typeMap"
-                    :key="item.id"
-                    @click="activeTypeValue = item.value"
-                >
-                    {{ item.title }}
-                </div>
-            </div>
+            <a-tabs v-model:activeKey="activeTypeValue" @change="hanleTabChange">
+                <a-tab-pane v-for="item in typeMap" :key="item.value" :tab="item.title"></a-tab-pane>
+            </a-tabs>
+
             <div class="table-area">
                 <a-table
                     :columns="tableColumns"
@@ -26,7 +20,32 @@
                     :row-key="record => record.id"
                     :pagination="false"
                 >
-                    <template #bodyCell> </template>
+                    <template #bodyCell="{ column, text, record }">
+                        <!-- 创建时间 -->
+                        <template v-if="column.key === 'create_time'">
+                            {{ Core.Util.timeFormat(record.create_time) }}
+                        </template>
+                        <!-- 账户 -->
+                        <template v-else-if="column.key === 'account'">
+                            {{ $t(Core.Const.DISTRIBUTOR.WALLET_TYPE[record.type]?.title || '') }}
+                        </template>
+                        <!-- 类型 -->
+                        <template v-else-if="column.key === 'type'">
+                            {{ $t(Core.Const.DISTRIBUTOR.EXPENDITURE_TYPE[record.subject]?.title || '-') }}
+                        </template>
+                        <!-- 资金变动 -->
+                        <template v-else-if="column.key === 'fund_change'">
+                            <span class="money">
+                                {{ Core.Const.DISTRIBUTOR.EXPENDITURE_TYPE[record.subject]?.addOrSubtract || '' }}
+                                {{ Core.Util.countFilter(record.money, 100, 2, false, true) || 0 }}
+                                {{ route.query.currency }}
+                            </span>
+                            <span class="balance"
+                                >余额：{{ Core.Util.countFilter(record.balance, 100, 2, false, true) || 0 }}
+                                {{ route.query.currency }}</span
+                            >
+                        </template>
+                    </template>
                 </a-table>
             </div>
         </div>
@@ -54,44 +73,60 @@ import { useI18n } from 'vue-i18n';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import Core from '@/core';
 import { useTable } from '@/hooks/useTable';
+import { useRoute } from 'vue-router';
+const route = useRoute();
 const $t = useI18n().t;
 
 const tableColumns = computed(() => {
     let columns = [
         { title: $t('distributor-detail.account'), dataIndex: 'account', key: 'account' },
         { title: $t('distributor-detail.type'), dataIndex: 'type', key: 'type' },
-        { title: $t('distributor-detail.work_order_number'), dataIndex: 'work_order_number', key: 'work_order_number' },
-        { title: $t('distributor-detail.fund_change'), dataIndex: 'fund_change', key: 'fund_change' },
+        {
+            title: $t('distributor-detail.work_order_number'),
+            dataIndex: 'uid',
+            key: 'uid',
+            customRender: record => {
+                return record.uid || '-';
+            },
+        },
+        {
+            title: $t('distributor-detail.fund_change'),
+            dataIndex: 'fund_change',
+            key: 'fund_change',
+        },
         { title: $t('distributor-detail.create_time'), dataIndex: 'create_time', key: 'create_time' },
     ];
     return columns;
 });
-// 模拟request
-const request = async params => {
-    return {
-        list: [
-            {
-                account: '余额',
-                type: '账户充值',
-                work_order_number: '202108180001',
-                fund_change: '+100.00',
-                create_time: '2021-08-18 15:00:00',
-            },
-            {
-                account: '积分',
-                type: '工单赔付',
-                work_order_number: '202108180002',
-                fund_change: '-100.00',
-                create_time: '2021-08-18 15:00:00',
-            },
-        ],
-        count: 2,
-    };
-};
-
+const request = Core.Api.Distributor.walletMoneyList;
+const initParam = ref({
+    org_id: route.query.org_id,
+    org_type: 15,
+});
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request,
+    initParam: initParam.value,
 });
+
+// 收入支出类型
+const typeMap = ref([
+    {
+        id: 0,
+        title: $t('distributor-detail.all'),
+        value: '',
+    },
+    {
+        id: 1,
+        title: $t('distributor-detail.account_recharge'),
+        value: 1,
+    },
+    {
+        id: 2,
+        title: $t('distributor-detail.account_expenditure'),
+        value: 2,
+    },
+]);
+
 const searchList = ref([
     {
         id: 0,
@@ -104,7 +139,7 @@ const searchList = ref([
     {
         type: 'select',
         value: '',
-        searchParmas: 'type',
+        searchParmas: 'subject',
         key: 'distributor-detail.type',
         // 是否需要展示全部
         isShowAll: true,
@@ -114,17 +149,27 @@ const searchList = ref([
                 en: 'All',
                 value: '',
             },
-            // 账户充值
-            {
-                zh: '账户充值',
-                en: 'Account recharge',
-                value: 1,
-            },
-            // 工单赔付
+            //100 老数据转出 101 老数据转入 102 工单赔付 103 账号充值  104 订单退款 105 支付尾款 106 总额提升 107 总额下调
+
             {
                 zh: '工单赔付',
-                en: 'Order compensation',
-                value: 2,
+                en: 'Work order compensation',
+                value: 102,
+            },
+            {
+                zh: '账号充值',
+                en: 'Account recharge',
+                value: 103,
+            },
+            {
+                zh: '订单退款',
+                en: 'Order refund',
+                value: 104,
+            },
+            {
+                zh: '支付尾款',
+                en: 'Pay the balance',
+                value: 105,
             },
         ],
     },
@@ -132,7 +177,7 @@ const searchList = ref([
     {
         type: 'select',
         value: '',
-        searchParmas: 'recharge_account',
+        searchParmas: 'wallet_type',
         key: 'distributor-detail.recharge_account',
         // 是否需要展示全部
         isShowAll: true,
@@ -143,71 +188,55 @@ const searchList = ref([
                 value: '',
             },
             {
-                zh: '余额',
-                en: 'Balance',
-                value: 1,
+                zh: '整车账户(售前账户)',
+                en: 'Vehicle account (pre-sale account)',
+                value: 10,
             },
             {
-                zh: '积分',
-                en: 'Integral',
-                value: 2,
+                zh: '零部件账户(售后账户)',
+                en: 'Parts account (after-sales account)',
+                value: 20,
+            },
+            {
+                zh: '售后备件信用账户',
+                en: 'After-sales spare parts credit account',
+                value: 30,
+            },
+            {
+                zh: '授信账户',
+                en: 'Credit account',
+                value: 40,
             },
         ],
     },
 ]);
-
-const typeMap = ref([
-    {
-        id: 1,
-        title: $t('distributor-detail.all'),
-        value: 1,
-    },
-    {
-        id: 2,
-        title: $t('distributor-detail.account_recharge'),
-        value: 2,
-    },
-    {
-        id: 3,
-        title: $t('distributor-detail.account_expenditure'),
-        value: 3,
-    },
-]);
-const activeTypeValue = ref(1);
-
+const activeTypeValue = ref('');
+// tab change
+const hanleTabChange = value => {
+    activeTypeValue.value = value;
+    searchParam.value.type = value;
+    search();
+};
 // methods
 const onSearch = params => {
-    console.log(params);
+    searchParam.value = params;
+    searchParam.value.type = activeTypeValue.value;
+    search();
 };
 const onReset = () => {
     console.log('reset');
+    activeTypeValue.value = '';
+    refreshTable();
 };
 </script>
 
 <style lang="less" scoped>
-.fund-change-details {
-    .table-container {
-        display: flex;
-        .type-map {
-            min-width: 200px;
-            .type-map-item {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 40px;
-                cursor: pointer;
-                background-color: #f5f5f5;
-
-                &.active {
-                    background-color: #1890ff;
-                    color: #fff;
-                }
-            }
-        }
-        .table-area {
-            flex: 1;
-            margin-left: 20px;
-        }
+:deep(.ant-table-cell) {
+    .money {
+        display: inline-block;
+        min-width: 40px;
+        color: #0061ff;
+        margin-right: 20px;
     }
 }
 </style>
