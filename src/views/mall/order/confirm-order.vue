@@ -3,17 +3,17 @@
         <div class="content">
             <!-- 确认订单信息 -->
             <p class="title">{{ $t('mall.confirm_order_information') }}</p>
-            <div class="box table-info">
+            <div class="box">
                 <OrderInformation :list="shopCartList" :unit="unit" />
             </div>
             <!-- 收货地址 -->
             <p class="title">
                 {{ $t('mall.receiving_address') }}
-                <MyButton padding="8px">
+                <MyButton type="line" padding="8px">
                     <ReceiverAddressEdit
                         :orgId="orgId"
                         :orgType="orgType"
-                        btnClass="edit-btn"
+                        btnClass="add-btn"
                         @submit="getReceiveList"
                         >{{ $t('i.new_address') }}</ReceiverAddressEdit
                     >
@@ -488,6 +488,7 @@ export default {
 <style lang="scss" scoped src="../css/layout.css"></style>
 <style lang="less">
 #ItemSettle {
+    min-height: calc(100vh - var(--header-h-pc-mall));
     display: flex;
     flex-wrap: wrap;
     position: relative;
@@ -522,6 +523,9 @@ export default {
                 }
             }
         }
+    }
+    .add-btn {
+        color: #7f7f7f;
     }
     .select {
         background: none;
@@ -597,9 +601,6 @@ export default {
         }
     }
 
-    .table-info {
-        padding-left: 56px;
-    }
     .settlement-fixed {
         position: fixed;
         bottom: 0;
@@ -610,7 +611,7 @@ export default {
         z-index: 999;
 
         .settlement-fixed-body {
-            min-height: 80px;
+            height: 72px;
             width: 75%;
             margin: 0 auto;
             padding: 12px 0;
