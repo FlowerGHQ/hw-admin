@@ -74,8 +74,9 @@ import { useI18n } from 'vue-i18n';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import Core from '@/core';
 import { useTable } from '@/hooks/useTable';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
+const router = useRouter();
 const $t = useI18n().t;
 const tableColumns = computed(() => {
     let columns = [
@@ -147,7 +148,11 @@ const onReset = () => {
 };
 // 查看详情
 const routerChange = (type, record) => {
-    console.log(type, record);
+    let routeUrl = '';
+    routeUrl = router.resolve({
+        path: '/distributor/distributor-recharge-detail',
+    });
+    window.open(routeUrl.href, '_self');
 };
 </script>
 
