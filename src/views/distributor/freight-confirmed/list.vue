@@ -10,7 +10,7 @@
             </div>
             <!-- tabs 切换 -->
             <div class="tabs-container colorful">
-                <a-tabs v-model:activeKey="searchForm.freight_status" @change="onSearch">
+                <a-tabs v-model:activeKey="searchForm.freight_status" @change="onTabChange">
                     <a-tab-pane :key="item.key" v-for="item of statusList">
                         <template #tab>
                             <div class="tabs-title">
@@ -263,9 +263,8 @@ const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
 
-const searchForm = ref({
-    sn: undefined, // 订单编号
-    freight_status: undefined, // 运费状态
+const searchForm = ref({    
+    freight_status: 0, // tab 运费状态
 });
 const search_all_ref = ref(null);
 const isDistributerAdmin = ref(false); // 根据路由判断其是用在分销商(false) 还是平台方(true)
@@ -398,22 +397,17 @@ const getStatusFetch = (params = {}) => {
 const getInquirySheet = Core.Api.ShippingDateFreight.list;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request: getInquirySheet,
-    initParam: {
-        freight_status: 0
-    }
-    // dataCallBack(res) {
-    // }
+
 });
 
 /* fetch end*/
 
 /* methods start*/
-const init = () => {
+const initData = () => {
     searchForm.value = {
-        sn: undefined, // 订单编号
-        freight_status: 0, // 运费状态
-    };    
-};
+        freight_status: 0
+    }
+}
 const routerChange = (type, record) => {
     let routeUrl = '';
     switch (type) {
@@ -427,14 +421,19 @@ const routerChange = (type, record) => {
             break;
     }
 };
-const onSearch = data => {
-    console.log('data', data);
+const onSearch = data => {    
     searchParam.value = Core.Util.searchFilter({ ...searchForm.value, ...data });
     search();
 };
 const onReset = () => {    
-    refreshTable();
-    init();
+    refreshTable();    
+    initData()
+};
+// tab事件
+const onTabChange = () => {        
+    search_all_ref.value.onResetData()  // 清除输入框数据
+    searchParam.value = Core.Util.searchFilter(searchForm.value);
+    search();
 };
 
 // 船期及运费(修改)

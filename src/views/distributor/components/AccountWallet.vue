@@ -373,8 +373,7 @@ const handleRouteChange = (type, item) => {
     switch (type) {
         case 0:
             routeUrl = router.resolve({
-                path: '/distributor/distributor-recharge-detail',
-                query,
+                path: '/mall/recharge ',
             });
             console.log('routeUrl', routeUrl);
             window.open(routeUrl.href, '_blank');

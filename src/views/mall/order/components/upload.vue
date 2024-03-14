@@ -28,8 +28,8 @@
                 </span>
             </a-upload>
             <div class="image-rule" v-if="!isMobile">
-                <p>Images can be uploaded to PNG, JPG, JPEG, up to {{ maxImageNum }}</p>
-                <p>Files only support pdf, up to {{ maxFileNum }}</p>
+                <p>{{ $t('mall.upload_img') }} {{ maxImageNum }}</p>
+                <p>{{ $t('mall.upload_file') }} {{ maxFileNum }}</p>
             </div>
         </div>
         <!-- 预览样式 -->
@@ -73,7 +73,7 @@
                         @click="previewFile(index, item.file)"
                     >
                         <img src="@/assets/images/mall/order/pdf.png" class="file-img" />
-                        <span class="file-content-text">{{ item.name }}</span>
+                        <span class="file-content-text" :title="item.name">{{ item.name }}</span>
                         <svg-icon
                             v-if="isWrite"
                             icon-class="payment_close"
@@ -305,10 +305,10 @@ export default {
 <style lang="less" scoped>
 .upload-body {
     display: flex;
-    margin-bottom: 10px;
+    margin-bottom: 40px;
     .upload {
-        width: 64px;
-        height: 64px;
+        width: 130px;
+        height: 130px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -406,8 +406,8 @@ export default {
     .image-item {
         position: relative;
         display: inline-block;
-        width: 64px;
-        height: 64px;
+        width: 130px;
+        height: 130px;
         margin-right: 10px;
         margin-bottom: 10px;
     }
@@ -423,26 +423,29 @@ export default {
 .file {
     position: relative;
     display: inline-block;
-    height: 55px;
+    height: 130px;
+    width: 130px;
     background-color: #f9f9f9;
     &-content {
         height: 100%;
         width: 100%;
         display: flex;
+        flex-direction: column;
         align-items: center;
+        justify-content: center;
         padding: 10px;
         cursor: pointer;
     }
     &-img {
-        width: 35px;
-        height: 35px;
+        width: 50px;
+        height: 50px;
         object-fit: cover;
         vertical-align: middle;
         margin-right: 4px;
     }
     &-loading {
-        width: 64px;
-        height: 64px;
+        width: 130px;
+        height: 130px;
         padding: 20px 10px;
         position: absolute;
         top: 0;
@@ -461,14 +464,17 @@ export default {
         }
     }
     .file-content-text {
-        display: inline-block;
-        flex: 1;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        word-break: break-all;
+        .ell();
+        margin-top: 20px;
+        width: 100%;
+        font-size: 17px;
+        line-height: 25px;
+        color: #333;
     }
     .file-close {
+        position: absolute;
+        top: 4px;
+        right: 4px;
         cursor: pointer;
     }
 }

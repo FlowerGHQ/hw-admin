@@ -96,6 +96,9 @@ export default {
         top_up: '充值',
         top_up_first: '可用余额不足，请先充值',
         recharge_amount: '充值金额',
+        upload_img: '图像可以上传到PNG、JPG、JPEG，最高可达',
+        upload_file: '文件仅支持pdf，最多支持',
+        recharge_record: '充值记录',
     },
     en: {
         system: 'BOS',
@@ -194,5 +197,8 @@ export default {
         top_up: 'Top Up',
         top_up_first: 'The available balance is insufficient, please top up first',
         recharge_amount: 'Recharge Amount',
+        upload_img: 'Images can be uploaded to PNG, JPG, JPEG, up to',
+        upload_file: 'Files only support pdf, up to',
+        recharge_record: 'Recharge Record',
     },
 };
