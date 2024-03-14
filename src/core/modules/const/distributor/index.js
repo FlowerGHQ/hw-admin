@@ -45,30 +45,30 @@ const DISTRIBUTOR = {
         OA: 2,
     },
     PAY_METHODS_MAP: {
-        1: { key: 1, t: "TT" },
-        2: { key: 2, t: "OA" },
+        1: { key: 1, t: 'TT' },
+        2: { key: 2, t: 'OA' },
     },
     // 运费状态
-    FREIGHT_STATUS: { 
+    FREIGHT_STATUS: {
         ALL: 0, // 全部
-        TO_BE_FILLED_IN: 50,  // 待填写
+        TO_BE_FILLED_IN: 50, // 待填写
         TO_BE_CONFIRMED: 100, // 待确认
         CONFIRMED: 200, // 已确认
         REJECTED: -200, // 已拒绝
     },
     FREIGHT_STATUS_MAP: {
         // 0: { key: 0, t: "common.all"}, // 全部
-        50: { key: 50, t: "distributor.to_be_filled_in"}, // 待填写
-        100: { key: 100, t: "distributor.to_be_determined"}, // 待确认
-        200: { key: 200, t: "distributor.determined"}, // 已确认
-        '-200': { key: -200, t: "distributor.rejected"}, // 已拒绝
+        50: { key: 50, t: 'distributor.to_be_filled_in' }, // 待填写
+        100: { key: 100, t: 'distributor.to_be_determined' }, // 待确认
+        200: { key: 200, t: 'distributor.determined' }, // 已确认
+        '-200': { key: -200, t: 'distributor.rejected' }, // 已拒绝
     },
     AUDIT_RESULT: {
         REFUSE: -200, // 不通过
         CONFIRM: 200, // 确认
     },
     AUDIT_RESULT_MAP_ARR: [
-        { key: 200, t: 'common.confirm' }, // 确认 
+        { key: 200, t: 'common.confirm' }, // 确认
         { key: -200, t: 'common.refuse' }, // 拒绝
     ],
     // 取消订单申请表 下的状态
@@ -84,7 +84,7 @@ const DISTRIBUTOR = {
         WITHIN_WEEK: 1, // 一周内
         DELAY: 2, // 延期
     },
-    // 详情中的 cancel_status  和 list中 audit_status
+    // 取消的状态
     AUDIT_CANCEL_STATUS: {
         // 1 审核中 2 审核通过  3 审核拒绝
         WAITING_FOR_APPROVAL: 1,
@@ -92,10 +92,19 @@ const DISTRIBUTOR = {
         AUDIT_REJECTION: 3,
     },
     AUDIT_CANCEL_STATUS_MAP: {
-        1: { key: 1, t: "distributor-detail.under_review", },
-        2: { key: 2, t: "distributor-detail.audit_pass", },
-        3: { key: 3, t: "distributor-detail.audit_rejection", },
-    }   
+        1: { key: 1, t: 'distributor-detail.under_review' },
+        2: { key: 2, t: 'distributor-detail.audit_pass' },
+        3: { key: 3, t: 'distributor-detail.audit_rejection' },
+    },
+    // 运费支付状态
+    FREIGHT_PAY_STATUS_MAP: {
+        100: { key: 100, t: 'common.to_be_paid' },
+        200: { key: 200, t: 'common.paid' },
+    },
+    FREIGHT_PAY_STATUS: {
+        to_be_paid: 100,
+        paid: 200,
+    },
 };
 
 export default DISTRIBUTOR;

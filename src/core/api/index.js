@@ -1106,6 +1106,11 @@ const apiList = {
         list: ['PostJson', 'purchase-order/cancel/list'], // 列表
         audit: ['PostJson', 'purchase-order/cancel/audit'], // 审核
         count: ['PostJson', 'purchase-order/cancel/count'], // 计数
+    },
+    // 尾款未支付 待支付
+    FinalPayment: {
+        list: ['PostJson', 'purchase-order/pending-final-pay/list'], // 列表
+        count: ['PostJson', 'purchase-order/pending-final-pay/count-by-status'], // 状态计数
     }
 };
 

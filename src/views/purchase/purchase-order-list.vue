@@ -270,6 +270,7 @@
                         <template v-else-if="column.dataIndex === 'status'">
                             <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text, 'color')">
                                 {{ $Util.purchaseStatusFilter(text, $i18n.locale) }}
+                                {{ record.cancel_status }}
                             </div>
                         </template>
                         <template v-else-if="column.dataIndex === 'payment_status'">
