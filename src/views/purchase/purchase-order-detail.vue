@@ -119,14 +119,14 @@
                     >
                         {{ $t('p.change_item') }}
                     </a-button>
-                    <!-- 取消 仅分销商(可见) | 混合订单、赠品单无取消按钮 | 订单状态(待审核 二次确认框 非审核状态 填写原因弹窗) | 取消订单(审核中弹出记录) -->
+                    <!-- 取消 仅分销商(可见) | 混合订单、赠品单无取消按钮 | 订单状态(待审核 二次确认框 非审核状态 填写原因弹窗) | 取消订单(审核中弹出记录) | 交易关闭不显示 -->
                     <a-button
                         v-if="
                             $Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) &&
                             !$Util.Common.returnTypeBool(detail.type, [
                                 FLAG_ORDER_TYPE.Mix_SALES,
                                 FLAG_ORDER_TYPE.Gift_SALES,
-                            ])
+                            ]) && $Util.Common.returnTypeBool(detail.status, [STATUS.REVISE_AUDIT])
                         "
                         :disabled="
                             $Util.Common.returnTypeBool(detail.cancel_status, [
@@ -151,13 +151,13 @@
                             >({{ $t('distributor-detail.under_review') }})</span
                         >
                     </a-button>
-                    <!-- 取消记录 按钮 仅分销商(可见) 取消记录是否有数据 -->
+                    <!-- 取消记录 按钮 仅分销商(可见) | 取消记录是否有数据 | 交易关闭不显示 -->
                     <a-button
-                        v-if="$Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) && isCancelRecord"
+                        v-if="$Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) && isCancelRecord && $Util.Common.returnTypeBool(detail.status, [STATUS.REVISE_AUDIT])"
                         type="primary"
                         @click="onCancelRecord"
                     >
-                        {{ $t('distributor-detail.cancel_record') }}
+                        {{ $t('distributor-detail.cancel_record') }}{{ detail.status }}
                     </a-button>
                     <template v-if="authOrg(detail.org_id, detail.org_type) && detail.status !== STATUS.REVISE_AUDIT">
                         <!-- 付款 -->
@@ -902,10 +902,12 @@
             @ok="onUpdateTable"
         ></ConfirmFreight>
 
-        <!-- 取消二次弹窗操作记录查看 -->
-        <CancelOperation            
+        <!-- 取消操作记录查看 -->
+        <CancelOperation   
+            v-if="operationVisible"         
             v-model:visible="operationVisible"
             :title="$t('distributor-detail.cancel_record')"
+            :id="id"
         ></CancelOperation>
 
         <!-- 取消二次弹窗填写原因 -->

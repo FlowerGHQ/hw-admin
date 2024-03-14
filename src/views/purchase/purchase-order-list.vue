@@ -277,9 +277,8 @@
                                 class="m-l-8 status status-bg status-tag"
                                 :class="$Util.purchaseStatusFilter(text, 'color')"
                             >
-                                {{ $t('distributor-detail.cancel_order') }}({{
-                                    $t(`${AUDIT_CANCEL_STATUS_MAP[record.cancel_status]?.t}`)
-                                }})
+                                {{ $t('distributor-detail.cancel_order') }}
+                                ({{ $t(`${AUDIT_CANCEL_STATUS_MAP[record.cancel_status]?.t}`) }})
                             </div>
                         </template>
                         <template v-else-if="column.dataIndex === 'payment_status'">
@@ -315,7 +314,7 @@
                         </template>
                         <template v-else-if="column.key === 'sync_failure_reason'">
                             {{ text || '-' }}
-                        </template>                                      
+                        </template>
                         <template v-else-if="column.key === 'operation'">
                             <a-button
                                 type="link"
@@ -736,8 +735,8 @@ export default {
         // 应付款时间搜索
         handleOtherPayableSearch(params) {
             console.log('应付款时间搜索', params);
-            this.searchForm.final_pay_due_begin_time = params.begin_time
-            this.searchForm.final_pay_due_end_time = params.end_time      
+            this.searchForm.final_pay_due_begin_time = params.begin_time;
+            this.searchForm.final_pay_due_end_time = params.end_time;
             this.pageChange(1);
         },
         handleSearchReset(flag = true) {

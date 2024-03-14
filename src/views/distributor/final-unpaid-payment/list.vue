@@ -129,6 +129,14 @@
                             <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text, 'color')">
                                 {{ $Util.purchaseStatusFilter(text, $i18n.locale) || '-' }}
                             </div>
+                            <div
+                                v-if="AUDIT_CANCEL_STATUS_MAP[record.cancel_status]"
+                                class="m-l-8 status status-bg status-tag"
+                                :class="$Util.purchaseStatusFilter(text, 'color')"
+                            >
+                                {{ $t('distributor-detail.cancel_order') }}
+                                ({{ $t(`${AUDIT_CANCEL_STATUS_MAP[record.cancel_status]?.t}`) }})
+                            </div>
                         </template>
 
                         <!-- 支付状态 -->
@@ -183,19 +191,20 @@ const route = useRoute();
 const FREIGHT_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_STATUS_MAP;
 const FINAL_UNPAID_ORDER_TAB = Core.Const.DISTRIBUTOR.FINAL_UNPAID_ORDER_TAB;
 const FREIGHT_PAY_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_PAY_STATUS_MAP;
-const PAYMENT_STATUS_MAP = Core.Const.PURCHASE.PAYMENT_STATUS_MAP;
+const AUDIT_CANCEL_STATUS_MAP = Core.Const.DISTRIBUTOR.AUDIT_CANCEL_STATUS_MAP;
+const SEARCH_TYPE = Core.Const.PURCHASE.SEARCH_TYPE;
 
+const isDistributerAdmin = ref(Core.Util.Common.returnTypeBool(Core.Data.getLoginType(), [Core.Const.LOGIN.TYPE.ADMIN])); // 根据路由判断其是用在分销商(false) 还是平台方(true)
 const searchForm = ref({
     final_pay_due_begin_time: undefined, // 应付尾款开始时间
     final_pay_due_end_time: undefined, // 应付尾款结束时间
     freight_pay_status: undefined, // 运费支付状态
     sn: undefined, // 订单编号
-    distributor_id: undefined, // 分销商id
-    search_type: 3,
+    distributor_id: undefined, // 分销商id    
 });
 const tabStatus = ref(0); // tabs-status
 const search_all_ref = ref(null);
-const isDistributerAdmin = ref(false); // 根据路由判断其是用在分销商(false) 还是平台方(true)
+
 
 const statusData = ref({
     delay_count: 0, //延期数量
@@ -365,12 +374,13 @@ const getStatusFetch = (params = {}) => {
         });
 };
 
+
 // 获取尾款列表
 const getInquirySheet = Core.Api.FinalPayment.list;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request: getInquirySheet,
     initParam: {
-        search_type: searchForm.value.search_type,
+        search_type: isDistributerAdmin.value ? SEARCH_TYPE.ALL : SEARCH_TYPE.SELF,
     },
 });
 
@@ -384,8 +394,7 @@ const initData = () => {
         final_pay_due_end_time: undefined, // 应付尾款结束时间
         freight_pay_status: undefined, // 运费支付状态
         sn: undefined, // 订单编号
-        distributor_id: undefined, // 分销商id
-        search_type: 3,
+        distributor_id: undefined, // 分销商id        
     };
 };
 const routerChange = (type, record) => {
@@ -396,6 +405,7 @@ const routerChange = (type, record) => {
             case 'pay': // 付款
                 routeUrl = router.resolve({
                     path: '/mall/confirm-order',
+                    query: { id: record.id },
                 });
                 window.open(routeUrl.href, '_blank');
                 break;
@@ -456,8 +466,6 @@ const onTabChange = type => {
 /* methods end*/
 
 onMounted(() => {
-    isDistributerAdmin.value = Core.Util.Common.returnTypeBool(Core.Data.getLoginType(), [Core.Const.LOGIN.TYPE.ADMIN]);
-
     getStatusFetch();
     getDistributorListAll();
 });

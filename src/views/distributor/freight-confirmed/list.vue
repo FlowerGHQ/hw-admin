@@ -160,6 +160,14 @@
                             <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text, 'color')">
                                 {{ $Util.purchaseStatusFilter(text, $i18n.locale) || '-' }}
                             </div>
+                            <div
+                                v-if="AUDIT_CANCEL_STATUS_MAP[record.cancel_status]"
+                                class="m-l-8 status status-bg status-tag"
+                                :class="$Util.purchaseStatusFilter(text, 'color')"
+                            >
+                                {{ $t('distributor-detail.cancel_order') }}
+                                ({{ $t(`${AUDIT_CANCEL_STATUS_MAP[record.cancel_status]?.t}`) }})
+                            </div>
                         </template>
 
                         <!-- 支付状态 -->
@@ -254,6 +262,7 @@ import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
 import ShippingFreight from '../../purchase/components/ShippingFreightModel.vue';
 import ConfirmFreight from '../../purchase/components/ConfirmFreightModel.vue';
 
+const AUDIT_CANCEL_STATUS_MAP = Core.Const.DISTRIBUTOR.AUDIT_CANCEL_STATUS_MAP;
 const FREIGHT_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_STATUS_MAP;
 const FREIGHT_STATUS = Core.Const.DISTRIBUTOR.FREIGHT_STATUS;
 
