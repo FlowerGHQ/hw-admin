@@ -12,7 +12,7 @@ const COMMON = {
         // SUPPLIER(4,"供应商"),
         // 看后期要不要
         SUPPLY: 4, // 供应商
-    },
+    },   
 };
 
 export default COMMON;

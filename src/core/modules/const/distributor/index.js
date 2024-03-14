@@ -84,14 +84,6 @@ const DISTRIBUTOR = {
         WITHIN_WEEK: 1, // 一周内
         DELAY: 2, // 延期
     },
-    // 运费待确认订单表
-    FREIGHT_CONFIRMED: {
-        ALL: -1,
-        TO_BE_FILLED_IN: 0,
-        TO_BE_CONFIRMED: 1,
-        CONFIRMED: 3,
-        REJECTED: 2,
-    },
     // 钱包类型
     WALLET_TYPE: {
         10: { title: 'distributor-detail.vehicle_account', value: 10 },

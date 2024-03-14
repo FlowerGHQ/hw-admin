@@ -455,7 +455,7 @@ const routes = [
             title: '审核',
             title_en: 'Audit',
             icon: 'i_s_agent',
-            // auth: ['distributor.list', 'agent.list', 'store.list', 'purchase-order.list', 'sales-area.list'],
+            auth: ['recharge-review.list', 'recharge-review.detail'],
         },
         children: [
             {
@@ -465,8 +465,7 @@ const routes = [
                 meta: {
                     title: '充值审核',
                     title_en: 'Recharge Audit',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    // auth: ['purchase-order.list'],
+                    auth: ['recharge-review.list'],
                 },
             },
             {
@@ -476,9 +475,8 @@ const routes = [
                 meta: {
                     title: '充值审核详情',
                     title_en: 'Recharge Audit Details',
-                    roles: [LOGIN_TYPE.ADMIN],
                     hidden: true,
-                    // auth: ['purchase-order.list'],
+                    auth: ['recharge-review.detail'],
                 },
             },
         ],
