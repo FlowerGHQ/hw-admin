@@ -286,15 +286,25 @@ const after_price_credit = computed(() => {
 });
 // 需付余额
 const need_balance = computed(() => {
-    if (!isPre.value) return detail.freight; // 部分付款后支付运费
+    if (!isPre.value) return freight_price.value; // 部分付款后支付运费
     return parseFloat((sum_price.value - this_time_credit.value).toFixed(4));
 });
 const need_pay = computed(() => {
     if (isAfter.value) {
-        return isPre.value ? after_price.value : detail.freight;
+        return isPre.value ? after_price.value : freight_price.value;
     } else {
-        return isPre.value ? pre_price.value : isSelectEnd.value ? detail.freight + end_price.value : detail.freight;
+        return isPre.value
+            ? pre_price.value
+            : isSelectEnd.value
+              ? freight_price.value + end_price.value
+              : detail.freight_pay_status === 100
+                ? detail.freight
+                : 0;
     }
+});
+// 是否已支付运费-运费
+const freight_price = computed(() => {
+    return detail.freight_pay_status === 100 ? detail.freight : 0;
 });
 const getOrderSrc = (name, type = 'png') => {
     const path = `../../../assets/images/mall/order/${name}.${type}`;
