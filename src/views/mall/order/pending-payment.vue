@@ -300,6 +300,7 @@ const getDetail = () => {
         .then(res => {
             Object.assign(detail, res.detail);
             isAfter.value = detail.type !== Core.Const.PURCHASE.FLAG_ORDER_TYPE.PRE_SALES;
+            getWallet();
             // 假数据
 
             //售前
@@ -333,6 +334,26 @@ const getDetail = () => {
         .catch(err => {
             console.log('handleCreateOrder err', err);
         });
+};
+const getWallet = async () => {
+    const params = {
+        org_id: orgId, //组织id
+        org_type: orgType, //组织类型
+        type: 30, //钱包类型：10.售前余额；20.售后余额；30.售后备件账户；40.授信账户
+        currency_type: Core.Const.WALLET.TYPE[detail.currency], //货币类型：1.人民币；2.欧元；3.美元；4.英镑
+    };
+    balance.value = Core.Util.countFilter(
+        (await Core.Api.Purchase.getWallet({ ...params, type: 10 }))?.detail?.balance || 0,
+    );
+    balanceAfter.value = Core.Util.countFilter(
+        (await Core.Api.Purchase.getWallet({ ...params, type: 20 }))?.detail?.balance || 0,
+    );
+    balanceParts.value = Core.Util.countFilter(
+        (await Core.Api.Purchase.getWallet({ ...params, type: 30 }))?.detail?.balance || 0,
+    );
+    balanceCredit.value = Core.Util.countFilter(
+        ((await Core.Api.Purchase.getWallet({ ...params, type: 40 }))?.detail?.balance || 0) + Number(org.credit),
+    );
 };
 const handlePayOrder = () => {
     let subject;
@@ -406,24 +427,6 @@ onMounted(async () => {
         currency.value = '$';
     }
     getDetail();
-    const params = {
-        org_id: orgId, //组织id
-        org_type: orgType, //组织类型
-        type: 30, //钱包类型：10.售前余额；20.售后余额；30.售后备件账户；40.授信账户
-        currency_type: Core.Const.WALLET.TYPE[currency.value], //货币类型：1.人民币；2.欧元；3.美元；4.英镑
-    };
-    balance.value = Core.Util.countFilter(
-        (await Core.Api.Purchase.getWallet({ ...params, type: 10 }))?.detail?.balance || 0,
-    );
-    balanceAfter.value = Core.Util.countFilter(
-        (await Core.Api.Purchase.getWallet({ ...params, type: 20 }))?.detail?.balance || 0,
-    );
-    balanceParts.value = Core.Util.countFilter(
-        (await Core.Api.Purchase.getWallet({ ...params, type: 30 }))?.detail?.balance || 0,
-    );
-    balanceCredit.value = Core.Util.countFilter(
-        ((await Core.Api.Purchase.getWallet({ ...params, type: 40 }))?.detail?.balance || 0) + Number(org.credit),
-    );
 });
 </script>
 <style lang="less" scoped src="../css/layout.css"></style>
