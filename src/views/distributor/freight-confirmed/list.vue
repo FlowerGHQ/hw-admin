@@ -155,6 +155,11 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
 
+                        <!-- 预计船期 -->
+                        <template v-if="column.key === 'shipping_time_estimated'">
+                            {{ $Util.timeFilter(text, 3) }}
+                        </template>
+
                         <!-- 订单状态 -->
                         <template v-if="column.key === 'order_status'">
                             <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text, 'color')">
@@ -361,7 +366,7 @@ const tableColumns = computed(() => {
         {
             title: proxy.$t('p.estimated_shipping_data'),
             dataIndex: ['audit_record_content', 'shipping_time_estimated'],
-            key: 'time',
+            key: 'shipping_time_estimated',
         }, // 预计船期
         { title: proxy.$t('p.freight'), dataIndex: ['audit_record_content', 'freight'], key: 'freight' }, // 运费
         { title: proxy.$t('p.freight_status'), dataIndex: 'freight_status', key: 'freight_status' }, // 运费状态

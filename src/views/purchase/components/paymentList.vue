@@ -1,6 +1,6 @@
 <template>
     <div id="payment-record">
-        <div>          
+        <div>
             <!-- table -->
             <div>
                 <a-table
@@ -15,8 +15,11 @@
                     <template #headerCell="{ title }">
                         <span class="table-title">{{ title }}</span>
                     </template>
-                    <template #bodyCell="{ column, text, record }">                       
-
+                    <template #bodyCell="{ column, text, record }">
+                        <!-- 已支付金额 -->
+                        <template v-if="column.key === 'type'">
+                            {{ TYPE_WALLET[text]?.t ? $t(`${ TYPE_WALLET[text]?.t }`) : '-' }}
+                        </template>
                         <!-- 已支付金额 -->
                         <template v-if="column.key === 'money'">
                             <span v-if="text >= 0">{{ $Util.priceUnitFilter(record.currency) }}</span>
@@ -28,7 +31,7 @@
                         <!-- 时间 -->
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
-                        </template>                       
+                        </template>
                     </template>
                 </a-table>
             </div>
@@ -57,6 +60,7 @@ import Core from '@/core';
 import { useTable } from '@/hooks/useTable';
 import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';
 import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
+const TYPE_WALLET = Core.Const.DISTRIBUTOR.TYPE_WALLET;
 
 import { useRouter, useRoute } from 'vue-router';
 
@@ -70,14 +74,15 @@ const props = defineProps({
     },
 });
 
-
 /* computed start */
 const tableColumns = computed(() => {
     let columns = [];
     columns = [
-        { title: proxy.$t('distributor-detail.payment_account_number'), dataIndex: 'sn', key: 'sn' }, // 支付账号
-        { title: proxy.$t('p.payment_time'), dataIndex: 'create_time', key: 'time' },, // 支付时间
-        { title: proxy.$t('p.pay_amount'), dataIndex: 'price', key: 'money' },, // 实付金额
+        { title: proxy.$t('distributor-detail.payment_account_number'), dataIndex: 'type', key: 'type' }, // 支付账号
+        { title: proxy.$t('p.payment_time'), dataIndex: 'create_time', key: 'time' }, // 支付时间
+        ,
+        { title: proxy.$t('p.pay_amount'), dataIndex: 'price', key: 'money' }, // 实付金额
+        ,
     ];
     return columns;
 });
@@ -91,13 +96,12 @@ const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPa
     request: getInquirySheet,
     initParam: {
         target_id: props.target_id,
-    }
+    },
 });
 
 /* fetch end*/
 
 /* methods start*/
-
 
 onMounted(() => {});
 </script>

@@ -154,6 +154,7 @@
                                     <!-- 充值按钮 -->
                                     <a-button
                                         v-if="$auth('DISTRIBUTOR') && payType !== 'OLD'"
+                                        @click="handleRouteChange(0, dataObject.partsData)"
                                         type="primary"
                                         size="small"
                                         >{{ $t('distributor-detail.recharge') }}</a-button
@@ -352,6 +353,10 @@ const getWalletList = () => {
             if (!dataObject.value[key].balance) {
                 dataObject.value[key].balance = 0;
             }
+            if (key === 'creditData') {
+                dataObject.value[key].balance =
+                    Core.Util.countFilter(props.detail.credit) * 1 + dataObject.value[key].balance * 1;
+            }
         }
 
         console.log('dataObject', dataObject.value);
@@ -373,7 +378,10 @@ const handleRouteChange = (type, item) => {
     switch (type) {
         case 0:
             routeUrl = router.resolve({
-                path: '/mall/recharge ',
+                path: '/mall/recharge',
+                query: {
+                    id: props.detail.id,
+                },
             });
             console.log('routeUrl', routeUrl);
             window.open(routeUrl.href, '_blank');
@@ -426,6 +434,7 @@ const handleOk = () => {
         visible.value = false;
         message.success($t('distributor-detail.operation_success'));
         emit('handleUpdateDetails');
+        getWalletList();
     });
 };
 
