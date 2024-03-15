@@ -331,10 +331,18 @@ const getWalletList = () => {
             30: 'afterSaleData',
             40: 'creditData',
         };
+        const currencyMap = {
+            EUR: 2,
+            USD: 3,
+        };
+        let typeNumber = currencyMap[props.detail.currency];
+        // 过虑数据
+        res.list = res.list.filter(item => item.currency_type === typeNumber);
+        console.log('res.list', res.list);
         for (let i = 0; i < res.list.length; i++) {
             let item = res.list[i];
             let key = typeMap[item.type];
-            item.balance = Core.Util.countFilter(item?.balance || 0) * 1;
+            item.balance = Core.Util.countFilter(item?.balance || 0, 100, 2, false, true) * 1;
             dataObject.value[key] = item;
         }
         console.log('dataObject', dataObject.value);
@@ -420,7 +428,8 @@ watch(
     () => props.detail,
     (newV, oldV) => {
         console.log('newV', newV);
-        creditBalance.value = Core.Util.countFilter(newV.credit) * 1 + dataObject.value.creditData.balance * 1;
+        creditBalance.value =
+            Core.Util.countFilter(newV.credit, 100, 2, false, true) * 1 + dataObject.value.creditData.balance * 1;
     },
 );
 

@@ -3,7 +3,7 @@
         <!-- 采购订单详情 -->
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area" style="font-weight: 600">{{ $t('p.details') }}{{ detail.status }}</div>
+                <div class="title-area" style="font-weight: 600">{{ $t('p.details') }}</div>
                 <!--
                     (订单状态和订单类型) => 售前订单,售后订单 有按钮 & 
                     订单状态(等待审核 待支付 待生产 生产中)
@@ -198,7 +198,7 @@
                     <a-button
                         v-if="
                             $Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) &&
-                            $Util.Common.returnTypeBool(detail.status, [STATUS.WAIT_PAY, STATUS.WAIT_PRODUCED]) &&
+                            $Util.Common.returnTypeBool(detail.status, [STATUS.WAIT_PAY]) &&
                             $auth('purchase-order.collection')
                         "
                         type="primary"
@@ -1419,7 +1419,7 @@ export default {
                 okText: _this.$t('def.sure'),
                 cancelText: _this.$t('def.cancel'),
                 onOk() {
-                    this.cancelFetch();
+                    _this.cancelFetch();
                 },
             });
         },
