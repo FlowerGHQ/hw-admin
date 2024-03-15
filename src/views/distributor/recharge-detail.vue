@@ -18,32 +18,32 @@
                     <div class="left-tips">
                         <!-- 充值中 -->
                         <div class="recharging" v-if="details.mapStatus === 0">
-                            <div class="tips-top">预计到账需要3-5天，请耐心等待</div>
+                            <div class="tips-top">{{ $t('distributor-detail.arrival_progress_tips') }}</div>
                             <div class="tips-bottom">
-                                充值结果将通过邮箱发送给您，请注意查收邮箱。也可进入充值进度页面查看进度。
+                                {{ $t('distributor-detail.recharge_result_tips') }}
                             </div>
                         </div>
                         <!-- 到账失败 -->
                         <div class="recharg-fail" v-else-if="details.mapStatus === 1">
-                            <div class="tips-area">账户存在异常，请仔细查看充值帐户是否正常</div>
+                            <div class="tips-area">{{ $t('distributor-detail.recharge_account_tips') }}</div>
                         </div>
                         <!-- 到账成功 -->
-                        <div class="recharg-success" v-else>
-                            <div class="tips-area">资金已打入对应帐户</div>
+                        <div class="recharg-success" v-else-if="details.mapStatus === 2">
+                            <div class="tips-area">{{ $t('distributor-detail.fund_has_been_transferred') }}</div>
                         </div>
                     </div>
                     <div
                         class="right-icon-text"
                         :style="{
-                            backgroundColor: statusMap[details.status].backgroundColor,
-                            color: statusMap[details.status].color,
+                            backgroundColor: statusMap[details.mapStatus].backgroundColor,
+                            color: statusMap[details.mapStatus].color,
                         }"
                     >
                         <div class="icon">
-                            <my-svg-icon :iconClass="statusMap[details.status].icon" />
+                            <my-svg-icon :iconClass="statusMap[details.mapStatus].icon" />
                         </div>
                         <div class="text">
-                            {{ statusMap[details.status].value }}
+                            {{ statusMap[details.mapStatus].value }}
                         </div>
                     </div>
                 </div>
@@ -124,7 +124,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { LeftOutlined } from '@ant-design/icons-vue';
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
 import { useRouter, useRoute } from 'vue-router';
@@ -137,29 +137,32 @@ import MyFileUpload from './components/MyFileUpload.vue';
 const $t = useI18n().t;
 const router = useRouter();
 const route = useRoute();
-const statusMap = {
-    0: {
-        value: '充值中',
-        icon: 'recharge-detail-warning',
-        backgroundColor: 'rgba(255,147,21,0.1)',
-        color: 'rgba(255,147,21,1)',
-    },
-    1: {
-        value: '到账失败',
-        icon: 'recharge-detail-fail',
-        backgroundColor: 'rgba(255,61,64,0.1)',
-        color: 'rgba(255,61,64,1)',
-    },
-    2: {
-        value: '到账成功',
-        icon: 'recharge-detail-success',
-        backgroundColor: 'rgba(38,171,84,0.1)',
-        color: 'rgba(0,204,153,1)',
-    },
-};
+const statusMap = computed(() => {
+    return {
+        0: {
+            value: $t('distributor-detail.rechargeing'),
+            icon: 'recharge-detail-warning',
+            backgroundColor: 'rgba(255,147,21,0.1)',
+            color: 'rgba(255,147,21,1)',
+        },
+        1: {
+            value: $t('distributor-detail.arrival_failed'),
+            icon: 'recharge-detail-fail',
+            backgroundColor: 'rgba(255,61,64,0.1)',
+            color: 'rgba(255,61,64,1)',
+        },
+        2: {
+            value: $t('distributor-detail.arrival_success'),
+            icon: 'recharge-detail-success',
+            backgroundColor: 'rgba(38,171,84,0.1)',
+            color: 'rgba(0,204,153,1)',
+        },
+    };
+});
 
 const details = ref({
     status: 0,
+    mapStatus: 0,
     // 本次需要转账金额
     amount: 0,
     // 整车可用余额
@@ -236,6 +239,8 @@ const getRechargeDetail = () => {
         }
         // 将value为空的或者不存在的过滤掉
         labelMap.value = labelMap.value.filter(item => item.value);
+
+        console.log('details', details.value);
     });
 };
 
@@ -298,7 +303,7 @@ onMounted(() => {
             align-items: flex-start;
             margin-bottom: 10px;
             .title {
-                width: 63px;
+                min-width: 63px;
                 height: 24px;
                 font-size: 16px;
                 font-weight: 500;

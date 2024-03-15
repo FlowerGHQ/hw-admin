@@ -23,14 +23,14 @@
                     <!-- 充值金额 -->
                     <template v-if="column.key === 'recharge_amount'">
                         <div class="total_amount">
-                            <span class="label">整车余额账户</span>
+                            <span class="label">{{ $t('distributor-detail.vehicle_available_balance') }} </span>
                             <span class="value">
                                 {{ route.query.currency }}
                                 {{ Core.Util.countFilter(record.content_json.vehicle_balance) || 0 }}</span
                             >
                         </div>
                         <div class="part_balance">
-                            <span class="label">配件余额账户</span>
+                            <span class="label">{{ $t('distributor-detail.parts_available_balance') }} </span>
                             <span class="value">
                                 {{ route.query.currency }}
                                 {{ Core.Util.countFilter(record.content_json.part_balance) || 0 }}</span
@@ -107,13 +107,15 @@ const tableColumns = computed(() => {
     ];
     return columns;
 });
-const statusMap = ref({
-    //  //1.待审核(一审)；2.审核通过；3.审核不通过(一审) 4 等待二审 5 二审不通过
-    1: $t('distributor-detail.pending_audit'),
-    2: $t('distributor-detail.audit_pass'),
-    3: $t('distributor-detail.audit_not_pass'),
-    4: $t('distributor-detail.waiting_for_review'),
-    5: $t('distributor-detail.second_review_not_passed'),
+const statusMap = computed(() => {
+    return {
+        //  //1.待审核(一审)；2.审核通过；3.审核不通过(一审) 4 等待二审 5 二审不通过
+        1: $t('distributor-detail.rechargeing'),
+        2: $t('distributor-detail.arrival_success'),
+        3: $t('distributor-detail.arrival_failed'),
+        4: $t('distributor-detail.rechargeing'),
+        5: $t('distributor-detail.arrival_failed'),
+    };
 });
 
 // 模拟request

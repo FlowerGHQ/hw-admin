@@ -218,20 +218,6 @@ const DISTRIBUTOR = {
             en: 'Pay final payment',
             addOrSubtract: '-',
         },
-        // 总额提升
-        106: {
-            value: 106,
-            zh: '总额提升',
-            en: 'Total amount increase',
-            addOrSubtract: '+',
-        },
-        // 总额下降
-        107: {
-            value: 107,
-            zh: '总额下降',
-            en: 'Total amount reduction',
-            addOrSubtract: '-',
-        },
     },
     // 取消状态
     AUDIT_CANCEL_STATUS: {
