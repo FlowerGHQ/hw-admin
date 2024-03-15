@@ -141,9 +141,9 @@
                     <div class="key">{{ $t('d.sales_area') /*销售区域*/ }}:</div>
                     <div class="value">
                         <a-select v-model:value="form.sales_area_ids" mode="multiple" :placeholder="$t('def.select')">
-                            <a-select-option v-for="(item, index) of salesList" :key="index" :value="item.id">{{
-                                $i18n.locale === 'zh' ? item.name : item.name_en
-                            }}</a-select-option>
+                            <a-select-option v-for="(item, index) of salesList" :key="index" :value="item.id">
+                                {{ $i18n.locale === 'zh' ? item.name : item.name_en }}
+                            </a-select-option>
                         </a-select>
                     </div>
                 </div>
@@ -250,12 +250,14 @@ export default {
                     for (const key in this.form) {
                         this.form[key] = d[key];
                     }
-                    for (const key in this.area) {
-                        this.area[key] = d[key];
-                    }
                     this.form.sales_area_ids = this.detail.sales_area_list
                         ? this.detail.sales_area_list.map(i => i.id)
                         : [];
+
+                    // 国家数据回显
+                    for (const key in this.area) {
+                        this.area[key] = d[key] || undefined;
+                    }
                     this.defArea = [d.continent || '', d.country || ''];
                 })
                 .catch(err => {
@@ -305,7 +307,6 @@ export default {
                     isVerification: true,
                 }, // 货币
                 { key: 'type', msg: this.$t('def.enter') + '(' + this.$t('n.type') + ')', isVerification: true }, // 类型
-                // { key: 'email', msg: this.$t('def.enter') + '(' + this.$t('n.email') + ')', isVerification: true }, // 邮箱
                 {
                     key: 'sales_area_ids',
                     msg: this.$t('def.enter') + '(' + this.$t('d.sales_area') + ')',
@@ -321,8 +322,8 @@ export default {
                 }
             }
 
-            // 国家的校验
             if (this.areaList.length) {
+                // 为了赋值
                 area = {
                     continent: this.areaList[0].name,
                     continent_en: this.areaList[0].name_en,
@@ -330,12 +331,14 @@ export default {
                     country_en: this.areaList[1].name_en,
                     country_code: this.areaList[1].code,
                 };
-            } else {
-                this.$message.warning(this.$t('def.enter') + '(' + this.$t('n.country') + ')');
+            } else if (Object.keys(area).every(key => !area[key])) {
+                // 国家的校验 [判断对象数据是否为空]
+                return this.$message.warning(this.$t('def.enter') + '(' + this.$t('n.country') + ')');
             }
-
+            
             form.sales_area_ids = form.sales_area_ids.join(',');
-            // console.log("最后的结果", form);
+            
+
             Core.Api.Distributor.save({
                 ...form,
                 ...area,
