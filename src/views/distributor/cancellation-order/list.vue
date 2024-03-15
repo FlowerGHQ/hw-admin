@@ -245,6 +245,8 @@ const route = useRoute();
 const FREIGHT_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_STATUS_MAP;
 const AUDIT_CANCEL_STATUS_MAP = Core.Const.DISTRIBUTOR.AUDIT_CANCEL_STATUS_MAP;
 const AUDIT_CANCEL_STATUS = Core.Const.DISTRIBUTOR.AUDIT_CANCEL_STATUS;
+const SEARCH_TYPE = Core.Const.PURCHASE.SEARCH_TYPE;
+
 const IS_PASS_OPTIONS_MAP = {
     2: { key: 2, t: 'common.adopt' }, // 通过
     3: { key: 3, t: 'common.not_passed' }, // 不通过
@@ -266,6 +268,7 @@ const auditParams = ref({
     status: IS_PASS_OPTIONS.ADOPT,
     remark: undefined,
 }); // 审核弹出的参数
+const isDistributerAdmin = ref(Core.Util.Common.returnTypeBool(Core.Data.getLoginType(), [Core.Const.LOGIN.TYPE.ADMIN])); // 根据路由判断其是用在分销商(false) 还是平台方(true)
 
 const statusData = ref({
     total: 2, // 全部
@@ -366,6 +369,7 @@ const getDistributorListAll = () => {
 // 获取状态数据
 const getStatusFetch = (params = {}) => {
     const obj = {
+        search_type: isDistributerAdmin.value ? SEARCH_TYPE.ALL : SEARCH_TYPE.SELF,
         ...params,
     };
 
@@ -382,6 +386,9 @@ const getStatusFetch = (params = {}) => {
 const getInquirySheet = Core.Api.CancelOrderList.list;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request: getInquirySheet,
+    initParam: {
+        search_type: isDistributerAdmin.value ? SEARCH_TYPE.ALL : SEARCH_TYPE.SELF,
+    },
 });
 
 // 审核接口
