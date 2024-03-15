@@ -262,7 +262,7 @@ const sum_price = computed(() => {
 });
 // 预付款(售前)
 const pre_price = computed(() => {
-    return Math.floor((sum_price.value * detail.pay_pre_pay_ratio) / 100);
+    return Math.ceil((sum_price.value * detail.pay_pre_pay_ratio) / 100);
 });
 // 尾款(售前)
 const end_price = computed(() => {
@@ -274,7 +274,7 @@ const after_price = computed(() => {
 });
 // 售后备件
 const after_price_credit = computed(() => {
-    return Math.floor((balanceParts.value * detail.spare_part_deduction_ratio) / 100);
+    return Math.ceil((balanceParts.value * detail.spare_part_deduction_ratio) / 100);
 });
 // 需付余额
 const need_balance = computed(() => {
