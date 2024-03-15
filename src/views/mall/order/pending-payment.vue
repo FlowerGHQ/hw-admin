@@ -47,7 +47,7 @@
                                 <div class="deposit-payment-row">
                                     <div class="deposit-payment-row-left">{{ $t('mall.freight_amount') }}:</div>
                                     <div class="deposit-payment-row-right">
-                                        {{ detail.freight || $t('mall.undetermined') }}
+                                        {{ unit }} {{ detail.freight || $t('mall.undetermined') }}
                                     </div>
                                 </div>
                                 <div class="deposit-payment-row">
@@ -307,7 +307,7 @@ const getDetail = () => {
     Core.Api.Purchase.detail(params)
         .then(res => {
             Object.assign(detail, res.detail);
-            detail.freight = $Util.countFilter(detail.freight);
+            detail.freight = Core.Util.countFilter(detail.freight);
             isAfter.value = detail.type !== Core.Const.PURCHASE.FLAG_ORDER_TYPE.PRE_SALES;
             unit.value = Core.Const.ITEM.MONETARY_TYPE_MAP[detail.currency];
             getWallet();
