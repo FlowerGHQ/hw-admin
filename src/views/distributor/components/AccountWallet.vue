@@ -353,6 +353,10 @@ const getWalletList = () => {
             if (!dataObject.value[key].balance) {
                 dataObject.value[key].balance = 0;
             }
+            if (key === 'creditData') {
+                dataObject.value[key].balance =
+                    Core.Util.countFilter(props.detail.credit) * 1 + dataObject.value[key].balance * 1;
+            }
         }
 
         console.log('dataObject', dataObject.value);
