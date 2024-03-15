@@ -211,7 +211,7 @@ const orgId = Core.Data.getOrgId();
 const orgType = Core.Data.getOrgType();
 const org = Core.Data.getOrgObj();
 const unit = ref('€');
-const pay_type = ref(org?.pay_type); // 60:OA 70:TT
+const pay_type = ref(''); // 60:OA 70:TT
 const isSelectEnd = ref(true); // 是否选中支付尾款
 const isAfter = ref(''); // 售前
 const detail = reactive({});
@@ -310,6 +310,7 @@ const getDetail = () => {
             detail.freight = Core.Util.countFilter(detail.freight);
             isAfter.value = detail.type !== Core.Const.PURCHASE.FLAG_ORDER_TYPE.PRE_SALES;
             unit.value = Core.Const.ITEM.MONETARY_TYPE_MAP[detail.currency];
+            pay_type.value = detail.pay_type;
             getWallet();
             // 假数据
 
