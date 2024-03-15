@@ -18,7 +18,7 @@
                     <template #bodyCell="{ column, text, record }">                       
 
                         <!-- 已支付金额 -->
-                        <template v-if="column.key === 'amount_paid'">
+                        <template v-if="column.key === 'money'">
                             <span v-if="text >= 0">{{ $Util.priceUnitFilter(record.currency) }}</span>
                             <span>
                                 {{ $Util.countFilter(text) }}
@@ -64,14 +64,20 @@ const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
 
+const props = defineProps({
+    target_id: {
+        type: [Number, String],
+    },
+});
+
 
 /* computed start */
 const tableColumns = computed(() => {
     let columns = [];
     columns = [
         { title: proxy.$t('distributor-detail.payment_account_number'), dataIndex: 'sn', key: 'sn' }, // 支付账号
-        { title: proxy.$t('p.time_payment'), dataIndex: 'pay_time', key: 'time' }, // 支付时间
-        { title: proxy.$t('distributor-detail.actual_amount_paid'), dataIndex: 'amount_paid', key: 'amount_paid' }, // 实付金额
+        { title: proxy.$t('p.payment_time'), dataIndex: 'create_time', key: 'time' },, // 支付时间
+        { title: proxy.$t('p.pay_amount'), dataIndex: 'price', key: 'money' },, // 实付金额
     ];
     return columns;
 });
@@ -79,10 +85,13 @@ const tableColumns = computed(() => {
 
 /* fetch start*/
 
-// 获取询问单列表
-const getInquirySheet = Core.Api.inquiry_sheet.list;
+// 获取付款记录
+const getInquirySheet = Core.Api.Purchase.payList;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request: getInquirySheet,
+    initParam: {
+        target_id: props.target_id,
+    }
 });
 
 /* fetch end*/

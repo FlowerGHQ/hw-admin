@@ -7,10 +7,10 @@
                 <div
                     class="btns-area"
                     v-if="
-                        detail.status != STATUS.CANCEL &&
-                        detail.status != STATUS.RE_REVISE &&
-                        detail.status != STATUS.REVISE &&
-                        detail.status != STATUS.ORDER_TRANSFERRED &&
+                        detail.status != STATUS.INIT &&
+                        detail.status != STATUS.SPLIT &&
+                        detail.status != STATUS.WAIT_AUDIT &&
+                        // detail.status != STATUS.ORDER_TRANSFERRED &&
                         !$auth('purchase-order.supply-detail')
                     "
                 >
@@ -25,40 +25,40 @@
                                             {{ $t('p.export_purchase') }}
                                         </div>
                                     </a-menu-item>
-                                    <a-menu-item key="1">
-                                        <!-- 修改PI -->
+                                    <!-- 修改PI -->
+                                    <!-- <a-button @click="handleUpdatePI"><i class="icon i_edit" />{{ $t('p.update_PI') }}</a-button> -->
+                                    <!-- <a-menu-item key="1">
                                         <div @click="handleUpdatePI">
                                             {{ $t('p.update_PI') }}
                                         </div>
-                                        <!-- <a-button @click="handleUpdatePI"><i class="icon i_edit" />{{ $t('p.update_PI') }}</a-button> -->
-                                    </a-menu-item>
+                                    </a-menu-item> -->
                                 </template>
-
-                                <template v-if="!$auth('ADMIN') && $auth('purchase-order.export')">
-                                    <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
+                                
+                                <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
+                                <!-- 导出商品信息 -->
+                                <!-- <template v-if="!$auth('ADMIN') && $auth('purchase-order.export')">
                                     <a-menu-item key="3">
-                                        <!-- 导出商品信息 -->
                                         <div @click="handleExportInfo">
                                             {{ $t('p.export_product_information') }}
                                         </div>
-                                        <!-- <a-button @click="handleExportInfo">{{ $t('p.export_product_information') }}</a-button> -->
                                     </a-menu-item>
-                                </template>
+                                </template> -->
+                                <!-- <a-button @click="handleExportInfo">{{ $t('p.export_product_information') }}</a-button> -->
 
-                                <template
+                                <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
+                                <!-- 以供应商报表方式导出 -->
+                                <!-- <template
                                     v-if="
                                         authOrg(detail.supply_org_id, detail.supply_org_type) &&
                                         detail.status !== STATUS.REVISE_AUDIT
                                     "
                                 >
-                                    <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
                                     <a-menu-item key="3">
-                                        <!-- 以供应商报表方式导出 -->
                                         <div v-if="$auth('ADMIN')" @click="handleExport">
                                             {{ $t('def.export_as_supplier_report') }}
                                         </div>
                                     </a-menu-item>
-                                </template>
+                                </template> -->
                             </a-menu>
                         </template>
                         <a-button>
@@ -103,7 +103,7 @@
                             {{ $t('p.give_order') }}
                         </a-button>
                     </template>
-                    <!-- 平台方(待审核)可看 | 分销(任何状态)不可见 | 售前订单,售后订单显示  -->
+                    <!-- 更换商品 平台方(待审核)可看 | 分销(任何状态)不可见 | 售前订单,售后订单显示  -->
                     <a-button
                         v-if="
                             $Util.Common.returnTypeBool(loginType, [USER_TYPE.ADMIN]) &&
@@ -119,14 +119,14 @@
                     >
                         {{ $t('p.change_item') }}
                     </a-button>
-                    <!-- 取消 仅分销商(可见) | 混合订单、赠品单无取消按钮 | 订单状态(待审核 二次确认框 非审核状态 填写原因弹窗) | 取消订单(审核中弹出记录) -->
+                    <!-- 取消 仅分销商(可见) | 混合订单、赠品单无取消按钮 | 订单状态(待审核 二次确认框 非审核状态 填写原因弹窗) | 取消订单(审核中弹出记录) | 交易关闭不显示 -->
                     <a-button
                         v-if="
                             $Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) &&
                             !$Util.Common.returnTypeBool(detail.type, [
                                 FLAG_ORDER_TYPE.Mix_SALES,
                                 FLAG_ORDER_TYPE.Gift_SALES,
-                            ])
+                            ]) && $Util.Common.returnTypeBool(detail.status, [STATUS.REVISE_AUDIT])
                         "
                         :disabled="
                             $Util.Common.returnTypeBool(detail.cancel_status, [
@@ -151,13 +151,13 @@
                             >({{ $t('distributor-detail.under_review') }})</span
                         >
                     </a-button>
-                    <!-- 取消记录 按钮 仅分销商(可见) 取消记录是否有数据 -->
+                    <!-- 取消记录 按钮 仅分销商(可见) | 取消记录是否有数据 | 交易关闭不显示 -->
                     <a-button
-                        v-if="$Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) && isCancelRecord"
+                        v-if="$Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) && isCancelRecord && $Util.Common.returnTypeBool(detail.status, [STATUS.REVISE_AUDIT])"
                         type="primary"
                         @click="onCancelRecord"
                     >
-                        {{ $t('distributor-detail.cancel_record') }}
+                        {{ $t('distributor-detail.cancel_record') }}{{ detail.status }}
                     </a-button>
                     <template v-if="authOrg(detail.org_id, detail.org_type) && detail.status !== STATUS.REVISE_AUDIT">
                         <!-- 付款 -->
@@ -563,7 +563,7 @@
             <div class="title-container d-f-j">
                 <div class="title-area" style="font-weight: 600">{{ $t('distributor.shipping_freight') }}</div>
                 <div class="btn-area">
-                    <div class="freight-status-style">
+                    <div class="status status-bg freight-status-style" :class="$Util.Common.returenValue(FREIGHT_STATUS_MAP, detail.freight_status, 'color')">
                         {{ $t($Util.Common.returnTranslation(detail.freight_status, FREIGHT_STATUS_MAP)) }}
                     </div>
                 </div>
@@ -902,10 +902,12 @@
             @ok="onUpdateTable"
         ></ConfirmFreight>
 
-        <!-- 取消二次弹窗操作记录查看 -->
-        <CancelOperation            
+        <!-- 取消操作记录查看 -->
+        <CancelOperation   
+            v-if="operationVisible"         
             v-model:visible="operationVisible"
             :title="$t('distributor-detail.cancel_record')"
+            :id="id"
         ></CancelOperation>
 
         <!-- 取消二次弹窗填写原因 -->
@@ -2068,7 +2070,6 @@ export default {
 
 .freight-status-style {
     padding: 5px 12px;
-    box-sizing: border-box;  
-    border: 1px solid black;  
+    box-sizing: border-box;       
 }
 </style>

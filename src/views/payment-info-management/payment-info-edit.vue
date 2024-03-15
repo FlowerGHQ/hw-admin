@@ -373,24 +373,25 @@ export default {
             if (!form.name) {
                 return this.$message.warning(`${this.$t('def.enter')}(${this.$t(/*账户信息*/'payment-management.acc_info')})`);
             }
-            if (!this.area.country) {
+            if (!this.areaList.length && !this.area.country) {
                 return this.$message.warning(this.$t('def.select') + this.$t('n.area'));
             }
             return 0;
         },
-        handleFormData() {
+        submit() {
             this.form.bank_list.push(this.usdForm)
             this.form.bank_list.push(this.eurForm)
             let form = Core.Util.deepCopy(this.form);
             if(this.checkFormInput(form)) return
             console.log('form', this.form);
-        },
-        submit() {
-            this.handleFormData();
             this.handleSubmitService(this.form)
         },
         preview() {
-            this.handleFormData();
+            this.form.bank_list.push(this.usdForm)
+            this.form.bank_list.push(this.eurForm)
+            let form = Core.Util.deepCopy(this.form);
+            if(this.checkFormInput(form)) return
+            console.log('form', this.form);
             let routeUrl = '';
             routeUrl = this.$router.resolve({
                 path: '/payment-info-management/pending-payment',

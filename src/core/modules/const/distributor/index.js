@@ -41,12 +41,12 @@ const DISTRIBUTOR = {
     },
     // 创建分销商 支付方式
     PAY_METHODS: {
-        TT: 1,
-        OA: 2,
+        TT: 60,
+        OA: 70,
     },
     PAY_METHODS_MAP: {
-        1: { key: 1, t: 'TT' },
-        2: { key: 2, t: 'OA' },
+        60: { key: 60, t: 'TT' },
+        70: { key: 70, t: 'OA' },
     },
     // 运费状态
     FREIGHT_STATUS: {
@@ -58,10 +58,10 @@ const DISTRIBUTOR = {
     },
     FREIGHT_STATUS_MAP: {
         // 0: { key: 0, t: "common.all"}, // 全部
-        50: { key: 50, t: 'distributor.to_be_filled_in' }, // 待填写
-        100: { key: 100, t: 'distributor.to_be_determined' }, // 待确认
-        200: { key: 200, t: 'distributor.determined' }, // 已确认
-        '-200': { key: -200, t: 'distributor.rejected' }, // 已拒绝
+        50: { key: 50, t: 'distributor.to_be_filled_in', color: 'yellow',  }, // 待填写
+        100: { key: 100, t: 'distributor.to_be_determined', color: 'orange',  }, // 待确认
+        200: { key: 200, t: 'distributor.determined', color: 'green',  }, // 已确认
+        '-200': { key: -200, t: 'distributor.rejected', color: 'red',  }, // 已拒绝
     },
     AUDIT_RESULT: {
         REFUSE: -200, // 不通过

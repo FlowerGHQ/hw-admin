@@ -253,15 +253,7 @@ export default {
         },
         // 重置
         handleSearchReset() {
-            this.options.forEach(el => {
-                el.value = undefined;
-                if (el.isShowAll) {
-                    el.value = '';
-                }
-                if (el.type === 'time-range') {
-                    el.value = [];
-                }
-            });
+            this.onResetData()
             this.$emit('reset');
         },
         // 展开更多
@@ -282,6 +274,18 @@ export default {
             this.searchDom.forEach((el, index) => {
                 if (index > this.preSentationNumber) {
                     el.style.display = type;
+                }
+            });
+        },
+        // 重置数据暴露给外面的
+        onResetData() {
+            this.options.forEach(el => {
+                el.value = undefined;
+                if (el.isShowAll) {
+                    el.value = '';
+                }
+                if (el.type === 'time-range') {
+                    el.value = [];
                 }
             });
         },

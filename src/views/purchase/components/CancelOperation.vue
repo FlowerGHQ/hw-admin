@@ -76,6 +76,9 @@ const props = defineProps({
         type: String,
         default: '',
     },
+    id: {
+        type: [Number, String],        
+    },
 });
 const emits = defineEmits(['update:visible', 'ok', 'cancel']);
 
@@ -94,6 +97,9 @@ const tableColumns = computed(() => {
 const getInquirySheet = Core.Api.CancelOrderList.list;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request: getInquirySheet,
+    initParam: {
+        order_id: props.id
+    }
 });
 /* fetch end*/
 

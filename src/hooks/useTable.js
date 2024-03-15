@@ -18,16 +18,15 @@ export function useTable({
     immediate = true,
     dataCallBack,
     minPageShowCount = 10,
-}) {
-    //初始页面
-    const INITIAL_PAGE_PARAMS = {
+    INITIAL_PAGE_PARAMS = {
         // 当前页数
         current: 1,
         // 每页显示条数
         size: 10,
         // 总条数
         total: 0,
-    };
+    },
+}) {
     const state = reactive({
         tableData: [],
         //分页数据
@@ -56,8 +55,8 @@ export function useTable({
     });
     //获取数据
     const getTableData = async () => {
-        console.log('getTableData', initParam);
         Object.assign(state.totalParam, isPageAble ? pageParam.value : {}, initParam);
+        console.log('state.totalParam', state.totalParam);
         initParam && (state.searchInitParam = initParam);
         state.loading = true;
         // const [error, res] = await request(state.totalParam)

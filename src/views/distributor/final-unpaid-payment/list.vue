@@ -107,7 +107,7 @@
                         </template>
 
                         <!-- 运费支付状态 -->
-                        <template v-if="column.key === 'freight_pay_status'">                            
+                        <template v-if="column.key === 'freight_pay_status'">
                             {{ FREIGHT_PAY_STATUS_MAP[text]?.t ? $t(`${FREIGHT_PAY_STATUS_MAP[text]?.t}`) : '-' }}
                         </template>
 
@@ -128,6 +128,14 @@
                         <template v-if="column.key === 'order_status'">
                             <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text, 'color')">
                                 {{ $Util.purchaseStatusFilter(text, $i18n.locale) || '-' }}
+                            </div>
+                            <div
+                                v-if="AUDIT_CANCEL_STATUS_MAP[record.cancel_status]"
+                                class="m-l-8 status status-bg status-tag"
+                                :class="$Util.purchaseStatusFilter(text, 'color')"
+                            >
+                                {{ $t('distributor-detail.cancel_order') }}
+                                ({{ $t(`${AUDIT_CANCEL_STATUS_MAP[record.cancel_status]?.t}`) }})
                             </div>
                         </template>
 
@@ -183,19 +191,20 @@ const route = useRoute();
 const FREIGHT_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_STATUS_MAP;
 const FINAL_UNPAID_ORDER_TAB = Core.Const.DISTRIBUTOR.FINAL_UNPAID_ORDER_TAB;
 const FREIGHT_PAY_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_PAY_STATUS_MAP;
-const PAYMENT_STATUS_MAP = Core.Const.PURCHASE.PAYMENT_STATUS_MAP;
+const AUDIT_CANCEL_STATUS_MAP = Core.Const.DISTRIBUTOR.AUDIT_CANCEL_STATUS_MAP;
+const SEARCH_TYPE = Core.Const.PURCHASE.SEARCH_TYPE;
 
+const isDistributerAdmin = ref(Core.Util.Common.returnTypeBool(Core.Data.getLoginType(), [Core.Const.LOGIN.TYPE.ADMIN])); // 根据路由判断其是用在分销商(false) 还是平台方(true)
 const searchForm = ref({
     final_pay_due_begin_time: undefined, // 应付尾款开始时间
     final_pay_due_end_time: undefined, // 应付尾款结束时间
     freight_pay_status: undefined, // 运费支付状态
     sn: undefined, // 订单编号
-    distributor_id: undefined, // 分销商id
-    search_type: 3,
+    distributor_id: undefined, // 分销商id    
 });
 const tabStatus = ref(0); // tabs-status
 const search_all_ref = ref(null);
-const isDistributerAdmin = ref(false); // 根据路由判断其是用在分销商(false) 还是平台方(true)
+
 
 const statusData = ref({
     delay_count: 0, //延期数量
@@ -320,7 +329,12 @@ const tableColumns = computed(() => {
         { title: proxy.$t('p.payment_status'), dataIndex: 'payment_status', key: 'payment_status' }, // 支付状态
     ];
     if (!isDistributerAdmin.value) {
-        columns.push({ title: proxy.$t('common.operations'), dataIndex: 'operations', key: 'operations', fixed: 'right' }) // 操作
+        columns.push({
+            title: proxy.$t('common.operations'),
+            dataIndex: 'operations',
+            key: 'operations',
+            fixed: 'right',
+        }); // 操作
     }
     return columns;
 });
@@ -360,28 +374,40 @@ const getStatusFetch = (params = {}) => {
         });
 };
 
+
 // 获取尾款列表
 const getInquirySheet = Core.Api.FinalPayment.list;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request: getInquirySheet,
     initParam: {
-        search_type: searchForm.value.search_type,
-    }
+        search_type: isDistributerAdmin.value ? SEARCH_TYPE.ALL : SEARCH_TYPE.SELF,
+    },
 });
 
 /* fetch end*/
 
 /* methods start*/
+const initData = () => {
+    tabStatus.value = 0
+    searchForm.value = {
+        final_pay_due_begin_time: undefined, // 应付尾款开始时间
+        final_pay_due_end_time: undefined, // 应付尾款结束时间
+        freight_pay_status: undefined, // 运费支付状态
+        sn: undefined, // 订单编号
+        distributor_id: undefined, // 分销商id        
+    };
+};
 const routerChange = (type, record) => {
     let routeUrl = '';
     if (!isDistributerAdmin.value) {
         // 分销商
         switch (type) {
             case 'pay': // 付款
-                // routeUrl = router.resolve({
-                //     path: '/customer-care/edit',
-                // });
-                // window.open(routeUrl.href, '_blank');
+                routeUrl = router.resolve({
+                    path: '/mall/confirm-order',
+                    query: { id: record.id },
+                });
+                window.open(routeUrl.href, '_blank');
                 break;
             case 'detail':
                 routeUrl = router.resolve({
@@ -408,22 +434,16 @@ const routerChange = (type, record) => {
 };
 
 const onSearch = data => {
-    console.log('data', data);
-
-    let data1 = Core.Util.searchFilter(data)
-    let data2 = Core.Util.searchFilter(searchForm.value)
-    searchParam.value = {
-        ...data1,
-        ...data2
-    };    
+    searchParam.value = Core.Util.searchFilter({ ...searchForm.value, ...data });
     search();
 };
 const onReset = () => {
     refreshTable();
+    initData();
 };
-// tab数据
-const onTabChange = type => {    
-    search_all_ref.value.handleSearchReset()  // 清除输入框数据
+// tab事件
+const onTabChange = type => {
+    search_all_ref.value.onResetData(); // 清除输入框数据
 
     searchForm.value.final_pay_due_begin_time = undefined;
     searchForm.value.final_pay_due_end_time = undefined;
@@ -438,7 +458,7 @@ const onTabChange = type => {
         case FINAL_UNPAID_ORDER_TAB.DELAY:
             searchForm.value.final_pay_due_begin_time = dayjs().unix();
             break;
-    }    
+    }
     searchParam.value = Core.Util.searchFilter(searchForm.value);
     search();
 };
@@ -446,8 +466,6 @@ const onTabChange = type => {
 /* methods end*/
 
 onMounted(() => {
-    isDistributerAdmin.value = Core.Util.Common.returnTypeBool(Core.Data.getLoginType(), [Core.Const.LOGIN.TYPE.ADMIN]);
-
     getStatusFetch();
     getDistributorListAll();
 });

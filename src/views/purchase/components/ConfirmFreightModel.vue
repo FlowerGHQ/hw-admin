@@ -3,7 +3,7 @@
         <a-modal v-model:visible="visible" :title="title" @cancel="handleCancel">
             <div class="audit">
                 <div class="tip-text">
-                    请确认该订单的船期和运费。确认后，请按时缴纳运费。运费缴纳完成，将按预计船期发货。若拒绝，请说明原因。
+                    {{ $t('distributor.confirm_freight_tips') }}
                 </div>
                 <div class="content level-search-row">
                     <div class="estimated-shipping-data search-col">
@@ -91,7 +91,8 @@ const emits = defineEmits(['update:visible', 'ok', 'cancel']);
 const saveFreightFetch = (params = {}) => {
     const obj = {
         id: props.detailRecord.freight_audit_record_id, // 审核记录id（audit_record_id）
-        status: search_params.value.result, //审核内容
+        status: search_params.value.result, // 审核内容
+        remark: search_params.value.remark, // 审核内容
         ...params,
     };
 

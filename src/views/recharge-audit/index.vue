@@ -51,7 +51,7 @@
                         </a-tooltip>
                     </template>
                     <template v-if="column.key === 'info'">
-                        <a-tooltip placement="top">
+                        <a-tooltip placement="topLeft">
                             <template #title>
                                 <div v-for="item in tableFields" :key="item.key">
                                     <div>

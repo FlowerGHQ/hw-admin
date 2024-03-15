@@ -1089,6 +1089,10 @@ const apiList = {
         audit: ['PostJson', 'audit-record/audit'], // 审核
         detail: ['PostJson', 'audit-record/detail'], // 详情
         list: ['PostJson', 'audit-record/list-distributor-recharge'], // 列表
+        // audit-record/save
+        save: ['PostJson', 'audit-record/save'], // 新增
+        //修改备用件抵扣比率
+        updateDeductionRate: ['PostJson', 'distributor/deduction-rate-update'],
     },
     PayAccount: {
         detail: ['PostJson', 'pay-in-account/detail'], // 详情
@@ -1104,7 +1108,7 @@ const apiList = {
         status: ['PostJson', 'purchase-order/pending-freight-confirm/count-by-status'], // 状态数据
         add: ['PostJson', 'purchase-order/pending-freight-confirm/save'], // 新增/修改 预计船期及运费
         confirm: ['PostJson', 'purchase-order/pending-freight-confirm/audit'], // 确认运费
-    },    
+    },
     // 取消订单申请表
     CancelOrderList: {
         list: ['PostJson', 'purchase-order/cancel/list'], // 列表
@@ -1115,7 +1119,7 @@ const apiList = {
     FinalPayment: {
         list: ['PostJson', 'purchase-order/pending-final-pay/list'], // 列表
         count: ['PostJson', 'purchase-order/pending-final-pay/count-by-status'], // 状态计数
-    }
+    },
 };
 
 export default new Api(baseUrl, apiList);
