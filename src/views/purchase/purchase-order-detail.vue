@@ -10,6 +10,8 @@
                     ||
                     订单取消状态(待审核)
                     需要按钮
+
+                    兼顾老数据 老数据不需要按钮  只有 TT和OA显示
                 -->
                 <div
                     class="btns-area"
@@ -23,7 +25,8 @@
                                 STATUS.WAIT_PAY,
                                 STATUS.WAIT_PRODUCED,
                                 STATUS.IN_PRODUCTION,
-                            ])) ||
+                            ]) &&
+                            $Util.Common.returnTypeBool(detail.pay_type, [PAY_TIME.TT, PAY_TIME.OA])) ||
                         $Util.Common.returnTypeBool(detail.cancel_status, [AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL])
                     "
                 >
@@ -1597,7 +1600,7 @@ export default {
                     window.open(routeUrl.href, '_self');
                     break;
                 case 'payment':
-                    // 付款                    
+                    // 付款
                     routeUrl = this.$router.resolve({
                         path: '/mall/pending-payment',
                         query: {

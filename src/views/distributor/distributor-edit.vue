@@ -31,7 +31,7 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('d.pay_type') /*付款方式*/ }}:</div>
                     <div class="value">
-                        <a-radio-group v-model:value="form.pay_type">
+                        <a-radio-group v-model:value="form.pay_type" @change="onPayType">
                             <a-radio v-for="item in PAY_METHODS_MAP" :key="item.key" :value="item.key">
                                 {{ item.t }}
                             </a-radio>
@@ -345,6 +345,14 @@ export default {
                     console.log('handleSubmit err:', err);
                 });
         },
+        // 付款方式
+        onPayType(e) {            
+            let type = e.target.value
+
+            if (type === PAY_METHODS.TT) {
+                this.form.pay_oa_day = undefined
+            }
+        }
     },
 };
 </script>
