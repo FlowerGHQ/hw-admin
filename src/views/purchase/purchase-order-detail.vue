@@ -3,7 +3,7 @@
         <!-- 采购订单详情 -->
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area" style="font-weight: 600">{{ $t('p.details') }}{{ detail.status }}</div>
+                <div class="title-area" style="font-weight: 600">{{ $t('p.details') }}</div>
                 <!--
                     (订单状态和订单类型) => 售前订单,售后订单 有按钮 & 
                     订单状态(等待审核 待支付 待生产 生产中)
