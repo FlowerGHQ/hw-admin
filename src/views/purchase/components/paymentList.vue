@@ -96,6 +96,7 @@ const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPa
     request: getInquirySheet,
     initParam: {
         target_id: props.target_id,
+        subject_list: [2000, 2100, 2200, 2300] // 过滤数据
     },
 });
 
