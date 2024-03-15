@@ -776,7 +776,8 @@ const amount = computed(() => {
     );
 });
 const isBalanceEnough = computed(() => {
-    return allPrice.value <= balance.value;
+    const sum = parseFloat((allPrice.value - Math.floor((allPrice.value * org.pay_pre_pay_ratio) / 100)).toFixed(4)); // 总尾款
+    return sum <= balance.value;
 });
 // 计算是否全选车辆
 const vehicleListSelected = computed(() => {
