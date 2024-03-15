@@ -27,8 +27,8 @@ const DISTRIBUTOR = {
         30: { key: 30, zh: 'OA 30天', en: 'OA 30 days' },
         40: { key: 40, zh: 'OA 60天', en: 'OA 60 days' },
         50: { key: 50, zh: 'OA 90天', en: 'OA 90 days' },
-        60: { key: 50, zh: 'TT', en: 'TT' },
-        70: { key: 50, zh: 'OA', en: 'OA' },
+        60: { key: 60, zh: 'TT', en: 'TT' },
+        70: { key: 70, zh: 'OA', en: 'OA' },
     },
     PAY_TIME_MAP: {
         10: '全款支付',
