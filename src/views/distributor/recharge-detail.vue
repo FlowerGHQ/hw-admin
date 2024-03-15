@@ -133,7 +133,6 @@ import Core from '../../core';
 import { useI18n } from 'vue-i18n';
 import { forEach, uniqueId, cloneDeep } from 'lodash';
 import MyFileUpload from './components/MyFileUpload.vue';
-import $ from 'lib/query';
 
 const $t = useI18n().t;
 const router = useRouter();
