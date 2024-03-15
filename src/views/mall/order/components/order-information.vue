@@ -24,7 +24,7 @@
                         <template v-if="columnsItem.dataIndex === 'product'">
                             <div class="product">
                                 <div class="product-img">
-                                    <a-image :src="$Util.imageFilter(item?.item?.logo, 5)" />
+                                    <a-image :src="$Util.imageFilter(item?.item?.imgs, 5)" />
                                 </div>
                                 <div class="product-mes">
                                     <p class="name">
@@ -39,34 +39,30 @@
                                         </span>
                                     </p>
                                     <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
-                                    <p
-                                        class="version"
-                                        @click="showDrawer(item)"
-                                        v-if="item?.item.set_id && !item.item?.isGift"
-                                    >
+                                    <p class="version" v-if="item?.item.set_id && !item.item?.isGift">
                                         <span>
                                             {{ $Util.itemSpecFilter(item.item.attr_list, lang) }}
                                         </span>
-                                        <svg-icon icon-class="cart-arrow-right" class-name="cart-arrow-right" />
-                                        <svg-icon
-                                            icon-class="cart-arrow-right-active"
-                                            class-name="cart-arrow-right-active"
-                                        />
                                     </p>
                                 </div>
                             </div>
                         </template>
                         <template v-if="columnsItem.dataIndex === 'price'">
-                            <span class="row-text unit-price"
-                                >{{ unit
-                                }}{{
-                                    $Util.Number.numFormat(
-                                        $Util.countFilter(
-                                            item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)],
-                                        ),
-                                    )
-                                }}</span
-                            >
+                            <span class="row-text unit-price">
+                                <template v-if="isConfirmPrice">
+                                    {{ unit }} {{ $Util.Number.numFormat($Util.countFilter(item.unit_price)) }}
+                                </template>
+                                <template v-else>
+                                    {{ unit }}
+                                    {{
+                                        $Util.Number.numFormat(
+                                            $Util.countFilter(
+                                                item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)],
+                                            ),
+                                        )
+                                    }}
+                                </template>
+                            </span>
                         </template>
                         <template v-if="columnsItem.dataIndex === 'quantity'">
                             <div class="count-edit">
@@ -77,15 +73,22 @@
                             <div class="operation">
                                 <span class="row-text price">
                                     <template v-if="!item.item?.isGift">
-                                        {{ unit
-                                        }}{{
-                                            $Util.Number.numFormat(
-                                                $Util.countFilter(
-                                                    item.amount *
-                                                        item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)],
-                                                ),
-                                            )
-                                        }}
+                                        <template v-if="isConfirmPrice">
+                                            {{ unit }} {{ $Util.Number.numFormat($Util.countFilter(item.price)) }}
+                                        </template>
+                                        <template v-else>
+                                            {{ unit }}
+                                            {{
+                                                $Util.Number.numFormat(
+                                                    $Util.countFilter(
+                                                        item.amount *
+                                                            item?.item[
+                                                                $Util.Number.getStepPriceIndexByNums(item.amount)
+                                                            ],
+                                                    ),
+                                                )
+                                            }}
+                                        </template>
                                     </template>
                                     <template v-else> {{ unit }}0<span class="original-price">12123</span> </template>
                                 </span>
@@ -142,6 +145,10 @@ export default {
         unit: {
             type: String,
             default: '€',
+        },
+        isConfirmPrice: {
+            type: Boolean,
+            default: false,
         },
     },
     computed: {},
@@ -250,6 +257,7 @@ export default {
             font-style: normal;
             font-weight: 500;
             line-height: 150%;
+            white-space: nowrap;
 
             /* 21px */
             &.select-all-text {

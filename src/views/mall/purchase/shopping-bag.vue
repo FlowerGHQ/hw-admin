@@ -577,17 +577,22 @@
                             </span>
                             <span class="price"> {{ currency }} {{ allPrice }} </span>
                         </div>
-                        <!-- 授信余额足 -->
-                        <template v-if="isBalanceEnough">
-                            <p class="settlement-balance">{{ $t('mall.credit_balance') }}: {{ currency }} 30,000</p>
-                        </template>
-                        <!-- 授信余额不足 -->
-                        <template v-else>
-                            <p class="settlement-balance warn">
-                                {{ $t('mall.credit_balance') }}: {{ currency }} 30,000 ({{
-                                    $t('mall.insufficient_balance')
-                                }})
-                            </p>
+                        <template v-if="org?.pay_type === 70">
+                            <!-- 授信余额足 -->
+                            <template v-if="isBalanceEnough">
+                                <p class="settlement-balance">
+                                    {{ $t('mall.credit_balance') }}: {{ currency }} {{ balance }}
+                                </p>
+                            </template>
+                            <!-- 授信余额不足 -->
+                            <template v-else>
+                                <p class="settlement-balance warn">
+                                    {{ $t('mall.credit_balance') }}: {{ currency }} {{ balance }} ({{
+                                        $t('mall.insufficient_balance')
+                                    }}
+                                    {{ allPrice }})
+                                </p>
+                            </template>
                         </template>
                     </div>
                     <my-button
@@ -720,6 +725,10 @@ const columns = [
     },
 ];
 /* state start */
+const orgId = Core.Data.getOrgId();
+const orgType = Core.Data.getOrgType();
+const org = Core.Data.getOrgObj();
+const balance = ref(0);
 const reminderVisible = ref(false);
 const payType = ref(2);
 const currency = ref('€');
@@ -767,7 +776,7 @@ const amount = computed(() => {
     );
 });
 const isBalanceEnough = computed(() => {
-    return true;
+    return allPrice.value <= balance.value;
 });
 // 计算是否全选车辆
 const vehicleListSelected = computed(() => {
@@ -859,6 +868,7 @@ onMounted(() => {
         currency.value = '$';
     }
     getData();
+    getWallet();
 });
 
 /* methods start */
@@ -1069,7 +1079,7 @@ const getVehicleList = () => {
             accessoriesList.value = res[1]?.list;
             peripheralList.value = res[2]?.list;
             promotionalList.value = res[3]?.list;
-            getVehicleListHasGift(vehicleList.value);
+            // getVehicleListHasGift(vehicleList.value);// 获取赠品
             filterData(vehicleList.value, 'vehicleList');
             filterData(accessoriesList.value, 'accessoriesList');
             filterData(peripheralList.value, 'peripheralList');
@@ -1158,8 +1168,7 @@ const changeItem = () => {
 };
 // 创建订单
 const handleCreateOrder = () => {
-    console.log(selectedId.value);
-    if (!isBalanceEnough.value) {
+    if (org?.pay_type === 70 && !isBalanceEnough.value) {
         reminderVisible.value = true;
         return;
     }
@@ -1184,6 +1193,21 @@ const handleClose = () => {
 };
 const handleConfirm = () => {
     reminderVisible.value = false;
+};
+const getWallet = () => {
+    const params = {
+        org_id: orgId, //组织id
+        org_type: orgType, //组织类型
+        type: 40, //钱包类型：10.售前余额；20.售后余额；30.售后备件账户；40.授信账户
+        currency_type: Core.Const.WALLET.TYPE[currency.value], //货币类型：1.人民币；2.欧元；3.美元；4.英镑
+    };
+    Core.Api.Purchase.getWallet(params)
+        .then(res => {
+            balance.value = res.balance || 0;
+        })
+        .catch(err => {
+            console.log('handleCreateOrder err', err);
+        });
 };
 /* fetch end */
 </script>

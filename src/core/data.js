@@ -336,6 +336,13 @@ class StorageHandler {
     getAuthFirst() {
         return this.getItem(Const.DATA.AUTHFIRST) || undefined;
     }
+
+    setOrgObj(value) {
+        this.setItem(Const.DATA.KEY_ORG, value);
+    }
+    getOrgObj() {
+        return this.getItem(Const.DATA.KEY_ORG);
+    }
 }
 
 export default new StorageHandler();

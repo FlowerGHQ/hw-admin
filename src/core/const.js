@@ -53,7 +53,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'https://eos-api-release.horwincloud.com'; // 预发环境
         // URL_POINT = 'http://10.0.0.170:8889'
         // URL_POINT = 'http://10.10.12.194:8889'
-        URL_POINT = 'http://10.10.12.65:8889'
+        URL_POINT = 'http://10.10.12.75:8889'
         break;
 }
 
@@ -71,6 +71,7 @@ let Const = {
         KEY_PREFIX: 'haowan.admin.data.',
         KEY_TOKEN: 'token',
         KEY_USER: 'user',
+        KEY_ORG: 'org.obj',
         KEY_ORG_ID: 'org.id',
         KEY_ORG_TYPE: 'org.type',
         KEY_LOGIN_TYPE: 'login.type',
