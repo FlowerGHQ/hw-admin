@@ -31,12 +31,18 @@
                         </template>
                         <!-- 类型 -->
                         <template v-else-if="column.key === 'type'">
-                            {{ $t(Core.Const.DISTRIBUTOR.EXPENDITURE_TYPE[record.subject]?.title || '-') }}
+                            {{
+                                $i18n.locale === 'zh'
+                                    ? Core.Const.DISTRIBUTOR.EXPENDITURE_TYPE[record.subject].zh
+                                    : Core.Const.DISTRIBUTOR.EXPENDITURE_TYPE[record.subject].en
+                            }}
                         </template>
                         <!-- 资金变动 -->
                         <template v-else-if="column.key === 'fund_change'">
                             <span class="money">
-                                {{ Core.Const.DISTRIBUTOR.EXPENDITURE_TYPE[record.subject]?.addOrSubtract || '' }}
+                                <span v-if="Core.Util.countFilter(record.money, 100, 2, false, true) > 0">
+                                    {{ Core.Const.DISTRIBUTOR.EXPENDITURE_TYPE[record.subject]?.addOrSubtract || '' }}
+                                </span>
                                 {{ Core.Util.countFilter(record.money, 100, 2, false, true) || 0 }}
                                 {{ route.query.currency }}
                             </span>
@@ -127,6 +133,15 @@ const typeMap = ref([
     },
 ]);
 
+const subject = Core.Const.DISTRIBUTOR.EXPENDITURE_TYPE;
+
+// 将:key :value 转化成 [value]
+const subjectMap = ref([]);
+for (let key in subject) {
+    subjectMap.value.push(subject[key]);
+}
+console.log('subjectMap', subjectMap.value);
+
 const searchList = ref([
     {
         id: 0,
@@ -149,28 +164,7 @@ const searchList = ref([
                 en: 'All',
                 value: '',
             },
-            //100 老数据转出 101 老数据转入 102 工单赔付 103 账号充值  104 订单退款 105 支付尾款 106 总额提升 107 总额下调
-
-            {
-                zh: '工单赔付',
-                en: 'Work order compensation',
-                value: 102,
-            },
-            {
-                zh: '账号充值',
-                en: 'Account recharge',
-                value: 103,
-            },
-            {
-                zh: '订单退款',
-                en: 'Order refund',
-                value: 104,
-            },
-            {
-                zh: '支付尾款',
-                en: 'Pay the balance',
-                value: 105,
-            },
+            ...subjectMap.value,
         ],
     },
     // 充值账户

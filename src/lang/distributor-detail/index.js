@@ -132,19 +132,9 @@ export default {
         after_sales_spare_parts_credit_account: '售后备件信用账户',
         credit_account: '授信账户',
 
-        // old_data_transfer_out
-        // old_data_transfer_in
-        // work_order_compensation
-        // account_recharge
-        // order_refund
-        // pay_final_payment
-        // total_amount_increase
-        // total_amount_reduction
-        // 100 老数据转出 101 老数据转入 102 工单赔付 103 账号充值  104 订单退款 105 支付尾款 106 总额提升 107 总额下调
         old_data_transfer_out: '老数据转出',
         old_data_transfer_in: '老数据转入',
         work_order_compensation: '工单赔付',
-        account_recharge: '账号充值',
         order_refund: '订单退款',
         pay_final_payment: '支付尾款',
         total_amount_increase: '总额提升',
@@ -252,7 +242,6 @@ export default {
         old_data_transfer_out: 'Old data transfer out',
         old_data_transfer_in: 'Old data transfer in',
         work_order_compensation: 'Work order compensation',
-        account_recharge: 'Account recharge',
         order_refund: 'Order refund',
         pay_final_payment: 'Pay final payment',
         total_amount_increase: 'Total amount increase',

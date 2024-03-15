@@ -291,11 +291,13 @@ export default {
                     key: 'pay_pre_pay_ratio',
                     msg: this.$t('def.enter') + '(' + this.$t('d.advance_payment') + ')',
                     isVerification: true,
+                    isZero: Number(form['pay_pre_pay_ratio']) === 0,
                 }, // 预付款
                 {
                     key: 'pay_oa_day',
                     msg: this.$t('def.enter') + '(' + this.$t('d.OA') + ')',
                     isVerification: Number(form.pay_type) === PAY_METHODS.OA,
+                    isZero: Number(form['pay_oa_day']) === 0,
                 }, // OA
                 {
                     key: 'currency',
@@ -311,7 +313,7 @@ export default {
                 }, // 销售区域
             ];
             for (let index in requireList) {
-                if (requireList[index]?.isVerification) {
+                if (requireList[index]?.isVerification && !requireList[index]?.isZero) {
                     // 判断这个对象在哪种情况需要验证
                     if (!form[requireList[index].key]) {
                         return this.$message.warning(requireList[index].msg);
@@ -333,6 +335,7 @@ export default {
             }
 
             form.sales_area_ids = form.sales_area_ids.join(',');
+            // console.log("最后的结果", form);
             Core.Api.Distributor.save({
                 ...form,
                 ...area,
@@ -346,13 +349,13 @@ export default {
                 });
         },
         // 付款方式
-        onPayType(e) {            
-            let type = e.target.value
+        onPayType(e) {
+            let type = e.target.value;
 
             if (type === PAY_METHODS.TT) {
-                this.form.pay_oa_day = undefined
+                this.form.pay_oa_day = undefined;
             }
-        }
+        },
     },
 };
 </script>
