@@ -28,11 +28,11 @@
                                     <div class="deposit-payment-row-right">{{ unit }} {{ pre_price }}</div>
                                 </div>
                                 <div class="deposit-payment-row">
-                                    <!-- 支付尾款 && OA时存在 -->
+                                    <!-- 支付尾款 && OA时存在 && 售前 -->
                                     <div
                                         class="select"
                                         @click="isSelectEnd = !isSelectEnd"
-                                        v-if="pay_type === 60 && !isPre"
+                                        v-if="!isAfter && pay_type === Core.Const.DISTRIBUTOR.PAY_TIME.OA && !isPre"
                                     >
                                         <img
                                             :src="isSelectEnd ? getOrderSrc('selected') : getOrderSrc('select')"
@@ -46,7 +46,9 @@
                                 </div>
                                 <div class="deposit-payment-row">
                                     <div class="deposit-payment-row-left">{{ $t('mall.freight_amount') }}:</div>
-                                    <div class="deposit-payment-row-right">{{ detail.freight || '-' }}</div>
+                                    <div class="deposit-payment-row-right">
+                                        {{ unit }} {{ detail.freight || $t('mall.undetermined') }}
+                                    </div>
                                 </div>
                                 <div class="deposit-payment-row">
                                     <div class="deposit-payment-row-left">{{ $t('mall.this_need') }}:</div>
@@ -148,7 +150,7 @@
                                 <p class="dis" v-else>{{ $t('mall.required_balance') }} {{ unit }} {{ need_pay }}</p>
                             </div>
                             <!-- OA -->
-                            <div class="balance-item" v-if="pay_type === 60 && isPre">
+                            <div class="balance-item" v-if="pay_type === Core.Const.DISTRIBUTOR.PAY_TIME.OA && isPre">
                                 <div class="recharge">
                                     <span class="recharge-balance"
                                         >{{ $t('mall.credit_balance') }}：<span class="price"
@@ -209,7 +211,7 @@ const orgId = Core.Data.getOrgId();
 const orgType = Core.Data.getOrgType();
 const org = Core.Data.getOrgObj();
 const unit = ref('€');
-const pay_type = ref(org?.pay_type); // 60:OA 70:TT
+const pay_type = ref(''); // 60:OA 70:TT
 const isSelectEnd = ref(true); // 是否选中支付尾款
 const isAfter = ref(''); // 售前
 const detail = reactive({});
@@ -305,8 +307,10 @@ const getDetail = () => {
     Core.Api.Purchase.detail(params)
         .then(res => {
             Object.assign(detail, res.detail);
+            detail.freight = Core.Util.countFilter(detail.freight);
             isAfter.value = detail.type !== Core.Const.PURCHASE.FLAG_ORDER_TYPE.PRE_SALES;
             unit.value = Core.Const.ITEM.MONETARY_TYPE_MAP[detail.currency];
+            pay_type.value = detail.pay_type;
             getWallet();
             // 假数据
 

@@ -58,10 +58,10 @@ const DISTRIBUTOR = {
     },
     FREIGHT_STATUS_MAP: {
         // 0: { key: 0, t: "common.all"}, // 全部
-        50: { key: 50, t: 'distributor.to_be_filled_in', color: 'yellow',  }, // 待填写
-        100: { key: 100, t: 'distributor.to_be_determined', color: 'orange',  }, // 待确认
-        200: { key: 200, t: 'distributor.determined', color: 'green',  }, // 已确认
-        '-200': { key: -200, t: 'distributor.rejected', color: 'red',  }, // 已拒绝
+        50: { key: 50, t: 'distributor.to_be_filled_in', color: 'yellow' }, // 待填写
+        100: { key: 100, t: 'distributor.to_be_determined', color: 'orange' }, // 待确认
+        200: { key: 200, t: 'distributor.determined', color: 'green' }, // 已确认
+        '-200': { key: -200, t: 'distributor.rejected', color: 'red' }, // 已拒绝
     },
     AUDIT_RESULT: {
         REFUSE: -200, // 不通过
@@ -91,12 +91,133 @@ const DISTRIBUTOR = {
         30: { title: 'distributor-detail.after_sales_spare_parts_credit_account', value: 30 },
         40: { title: 'distributor-detail.credit_account', value: 40 },
     },
-    // 开支类型  //100 老数据转出 101 老数据转入 102 工单赔付 103 账号充值  104 订单退款 105 支付尾款 106 总额提升 107 总额下调
     EXPENDITURE_TYPE: {
-        102: { title: 'distributor-detail.work_order_compensation', value: 102, addOrSubtract: '+' },
-        103: { title: 'distributor-detail.account_recharge', value: 103, addOrSubtract: '+' },
-        104: { title: 'distributor-detail.order_refund', value: 104, addOrSubtract: '-' },
-        105: { title: 'distributor-detail.pay_final_payment', value: 105, addOrSubtract: '+' },
+        // 调整余额
+        1: {
+            value: 1,
+            zh: '调整余额',
+            en: 'Adjust balance',
+            addOrSubtract: '',
+        },
+        // 采购单支付
+        201: {
+            value: 201,
+            zh: '采购单支付',
+            en: 'Purchase order payment',
+            addOrSubtract: '-',
+        },
+        // 采购单补偿
+        202: {
+            value: 202,
+            zh: '采购单补偿',
+            en: 'Purchase order compensation',
+            addOrSubtract: '+',
+        },
+        // 采购单取消退还
+        203: {
+            value: 203,
+            zh: '采购单取消退还',
+            en: 'Purchase order cancellation refund',
+            addOrSubtract: '+',
+        },
+        // 采购单取消运费退还
+        204: {
+            value: 204,
+            zh: '采购单取消运费退还',
+            en: 'Purchase order cancellation freight refund',
+            addOrSubtract: '+',
+        },
+        // 采购订单支付预付款
+        205: {
+            value: 205,
+            zh: '采购订单支付预付款',
+            en: 'Purchase order payment advance payment',
+            addOrSubtract: '-',
+        },
+        // 采购订单支付尾款
+        206: {
+            value: 206,
+            zh: '采购订单支付尾款',
+            en: 'Purchase order payment final payment',
+            addOrSubtract: '-',
+        },
+        // 采购订单支付全款（不包含运费）
+        207: {
+            value: 207,
+            zh: '采购订单支付全款（不包含运费）',
+            en: 'Purchase order payment full payment',
+            addOrSubtract: '-',
+        },
+        // 采购订单支付运费
+        208: {
+            value: 208,
+            zh: '采购订单支付运费',
+            en: 'Purchase order payment freight',
+            addOrSubtract: '-',
+        },
+        // 采购订单支付信用额度
+        209: {
+            value: 209,
+            zh: '采购订单支付信用额度',
+            en: 'Purchase order payment credit line',
+            addOrSubtract: '-',
+        },
+        // 维修单扣款
+        501: {
+            value: 501,
+            zh: '维修单扣款',
+            en: 'Maintenance order deduction',
+            addOrSubtract: '-',
+        },
+        // 维修单补偿
+        502: {
+            value: 502,
+            zh: '维修单补偿',
+            en: 'Maintenance order compensation',
+            addOrSubtract: '+',
+        },
+        // 老数据转出
+        100: {
+            value: 100,
+            zh: '老数据转出',
+            en: 'Old data transfer out',
+            addOrSubtract: '-',
+        },
+        // 老数据转入
+        101: {
+            value: 101,
+            zh: '老数据转入',
+            en: 'Old data transfer in',
+            addOrSubtract: '+',
+        },
+        // 工单赔付
+        102: {
+            value: 102,
+            zh: '工单赔付',
+            en: 'Work order compensation',
+            addOrSubtract: '+',
+        },
+        // 账户充值
+        103: {
+            value: 103,
+            zh: '账户充值',
+            en: 'Account recharge',
+            addOrSubtract: '+',
+        },
+        // 订单充值
+        104: {
+            value: 104,
+            zh: '订单充值',
+            en: 'Order recharge',
+            addOrSubtract: '+',
+        },
+        // 支付尾款
+        105: {
+            value: 105,
+            zh: '支付尾款',
+            en: 'Pay final payment',
+            addOrSubtract: '-',
+        },
     },
     // 取消状态
     AUDIT_CANCEL_STATUS: {
@@ -125,7 +246,7 @@ const DISTRIBUTOR = {
         320: { key: 320, t: 'distributor-detail.parts_account' },
         330: { key: 330, t: 'distributor-detail.after_sales_spare_parts_credit_account' },
         340: { key: 340, t: 'distributor-detail.credit_account' },
-    }
+    },
 };
 
 export default DISTRIBUTOR;
