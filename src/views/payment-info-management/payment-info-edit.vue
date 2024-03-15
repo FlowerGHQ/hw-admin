@@ -3,14 +3,18 @@
         <a-spin :spinning="loading" class="loading-incontent" v-if="loading"></a-spin>
         <div class="title-container">
             <div class="title-area">
-                {{ form.id ? $t(/*编辑收款账号*/'payment-management.edit_account') : $t(/*新增收款账号*/'payment-management.new_account') }}
+                {{
+                    form.id
+                        ? $t(/*编辑收款账号*/ 'payment-management.edit_account')
+                        : $t(/*新增收款账号*/ 'payment-management.new_account')
+                }}
             </div>
         </div>
         <div class="form-block">
             <div class="form-content">
                 <div class="form-item required">
                     <div class="key">
-                        {{ $t(/*地区*/'payment-management.region') }}
+                        {{ $t(/*地区*/ 'payment-management.region') }}
                     </div>
                     <div class="value">
                         <MyCountryCascader
@@ -23,25 +27,19 @@
                 </div>
                 <div class="form-item required">
                     <div class="key">
-                        {{ $t(/*账户信息*/'payment-management.acc_info') }}
+                        {{ $t(/*账户信息*/ 'payment-management.acc_info') }}
                     </div>
                     <div class="value">
-                        <a-input
-                            v-model:value="form.name"
-                            :placeholder="$t('def.input')"
-                            :maxlength="150"
-                        />
+                        <a-input v-model:value="form.name" :placeholder="$t('def.input')" :maxlength="150" />
                     </div>
                 </div>
             </div>
             <div class="form-head">
-                {{ $t(/*美元付款路径*/'payment-management.dollar_pay_path') }}
+                {{ $t(/*美元付款路径*/ 'payment-management.dollar_pay_path') }}
             </div>
             <div class="form-content">
                 <div class="form-item">
-                    <div class="key">
-                        BENEFICIARY BANK
-                    </div>
+                    <div class="key">BENEFICIARY BANK</div>
                     <div class="value">
                         <a-input
                             v-model:value="usdForm.beneficiary_bank"
@@ -51,33 +49,19 @@
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">
-                        SWIFT CODE
-                    </div>
+                    <div class="key">SWIFT CODE</div>
                     <div class="value">
-                        <a-input
-                            v-model:value="usdForm.swift_code"
-                            :placeholder="$t('def.input')"
-                            :maxlength="150"
-                        />
+                        <a-input v-model:value="usdForm.swift_code" :placeholder="$t('def.input')" :maxlength="150" />
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">
-                        BANK ADDRESS
-                    </div>
+                    <div class="key">BANK ADDRESS</div>
                     <div class="value">
-                        <a-input
-                            v-model:value="usdForm.bank_address"
-                            :placeholder="$t('def.input')"
-                            :maxlength="150"
-                        />
+                        <a-input v-model:value="usdForm.bank_address" :placeholder="$t('def.input')" :maxlength="150" />
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">
-                        ACCOUNT NUMBER
-                    </div>
+                    <div class="key">ACCOUNT NUMBER</div>
                     <div class="value">
                         <a-input
                             v-model:value="usdForm.account_number"
@@ -87,21 +71,13 @@
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">
-                        COMPANY NAME
-                    </div>
+                    <div class="key">COMPANY NAME</div>
                     <div class="value">
-                        <a-input
-                            v-model:value="usdForm.company_name"
-                            :placeholder="$t('def.input')"
-                            :maxlength="150"
-                        />
+                        <a-input v-model:value="usdForm.company_name" :placeholder="$t('def.input')" :maxlength="150" />
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">
-                        COMAPANY ADDRESS
-                    </div>
+                    <div class="key">COMAPANY ADDRESS</div>
                     <div class="value">
                         <a-input
                             v-model:value="usdForm.company_address"
@@ -112,25 +88,19 @@
                 </div>
                 <div class="form-item">
                     <div class="key">
-                        {{ $t(/*其他汇款信息*/'payment-management.other_remittance_info') }}
+                        {{ $t(/*其他汇款信息*/ 'payment-management.other_remittance_info') }}
                     </div>
                     <div class="value">
-                        <a-input
-                            v-model:value="usdForm.remark"
-                            :placeholder="$t('def.input')"
-                            :maxlength="500"
-                        />
+                        <a-input v-model:value="usdForm.remark" :placeholder="$t('def.input')" :maxlength="500" />
                     </div>
                 </div>
             </div>
             <div class="form-head">
-                {{ $t(/*欧元付款路径*/'payment-management.euro_pay_path') }}
+                {{ $t(/*欧元付款路径*/ 'payment-management.euro_pay_path') }}
             </div>
             <div class="form-content">
                 <div class="form-item">
-                    <div class="key">
-                        BENEFICIARY BANK
-                    </div>
+                    <div class="key">BENEFICIARY BANK</div>
                     <div class="value">
                         <a-input
                             v-model:value="eurForm.beneficiary_bank"
@@ -140,33 +110,19 @@
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">
-                        SWIFT CODE
-                    </div>
+                    <div class="key">SWIFT CODE</div>
                     <div class="value">
-                        <a-input
-                            v-model:value="eurForm.swift_code"
-                            :placeholder="$t('def.input')"
-                            :maxlength="150"
-                        />
+                        <a-input v-model:value="eurForm.swift_code" :placeholder="$t('def.input')" :maxlength="150" />
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">
-                        BANK ADDRESS
-                    </div>
+                    <div class="key">BANK ADDRESS</div>
                     <div class="value">
-                        <a-input
-                            v-model:value="eurForm.bank_address"
-                            :placeholder="$t('def.input')"
-                            :maxlength="150"
-                        />
+                        <a-input v-model:value="eurForm.bank_address" :placeholder="$t('def.input')" :maxlength="150" />
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">
-                        ACCOUNT NUMBER
-                    </div>
+                    <div class="key">ACCOUNT NUMBER</div>
                     <div class="value">
                         <a-input
                             v-model:value="eurForm.account_number"
@@ -176,21 +132,13 @@
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">
-                        COMPANY NAME
-                    </div>
+                    <div class="key">COMPANY NAME</div>
                     <div class="value">
-                        <a-input
-                            v-model:value="eurForm.company_name"
-                            :placeholder="$t('def.input')"
-                            :maxlength="150"
-                        />
+                        <a-input v-model:value="eurForm.company_name" :placeholder="$t('def.input')" :maxlength="150" />
                     </div>
                 </div>
                 <div class="form-item">
-                    <div class="key">
-                        COMAPANY ADDRESS
-                    </div>
+                    <div class="key">COMAPANY ADDRESS</div>
                     <div class="value">
                         <a-input
                             v-model:value="eurForm.company_address"
@@ -201,22 +149,18 @@
                 </div>
                 <div class="form-item">
                     <div class="key">
-                        {{ $t(/*其他汇款信息*/'payment-management.other_remittance_info') }}
+                        {{ $t(/*其他汇款信息*/ 'payment-management.other_remittance_info') }}
                     </div>
                     <div class="value">
-                        <a-input
-                            v-model:value="eurForm.remark"
-                            :placeholder="$t('def.input')"
-                            :maxlength="500"
-                        />
+                        <a-input v-model:value="eurForm.remark" :placeholder="$t('def.input')" :maxlength="500" />
                     </div>
                 </div>
             </div>
         </div>
         <div class="form-btns fixed-btns" ref="fixBox" :style="{ width: fixedWidth }">
-            <a-button @click="preview">{{ $t(/*预览*/'payment-management.preview') }}</a-button>
-            <a-button @click="routerChange('back')">{{ $t(/*取消*/'def.cancel') }}</a-button>
-            <a-button type="primary" @click="submit">{{ $t(/*确定*/'def.sure') }}</a-button>
+            <a-button @click="preview">{{ $t(/*预览*/ 'payment-management.preview') }}</a-button>
+            <a-button @click="routerChange('back')">{{ $t(/*取消*/ 'def.cancel') }}</a-button>
+            <a-button type="primary" @click="submit">{{ $t(/*确定*/ 'def.sure') }}</a-button>
             <div class="bottom-box"></div>
         </div>
         <div :style="{ height: fixedHeight }"></div>
@@ -229,7 +173,7 @@ import MyCountryCascader from '@/components/MyCountryCascader/index.vue';
 export default {
     name: 'AccountEdit',
     components: {
-        MyCountryCascader
+        MyCountryCascader,
     },
     props: {},
     data() {
@@ -246,24 +190,24 @@ export default {
             usdForm: {
                 id: 0,
                 currency: 'USD', // 货币类型
-                beneficiary_bank: "", // 收款行
-                swift_code: "", // 银行代码
-                bank_address: "", // 银行地址
-                account_number: "", // 账号
-                company_name: "", // 公司名称
-                company_address: "", // 公司地址
-                remark: "" // 其他付款方式
+                beneficiary_bank: '', // 收款行
+                swift_code: '', // 银行代码
+                bank_address: '', // 银行地址
+                account_number: '', // 账号
+                company_name: '', // 公司名称
+                company_address: '', // 公司地址
+                remark: '', // 其他付款方式
             },
             eurForm: {
                 id: 0,
                 currency: 'EUR', // 货币类型
-                beneficiary_bank: "", // 收款行
-                swift_code: "", // 银行代码
-                bank_address: "", // 银行地址
-                account_number: "", // 账号
-                company_name: "", // 公司名称
-                company_address: "", // 公司地址
-                remark: "" // 其他付款方式
+                beneficiary_bank: '', // 收款行
+                swift_code: '', // 银行代码
+                bank_address: '', // 银行地址
+                account_number: '', // 账号
+                company_name: '', // 公司名称
+                company_address: '', // 公司地址
+                remark: '', // 其他付款方式
             },
             areaList: [],
             defaultAreaList: [],
@@ -308,51 +252,59 @@ export default {
             this.loading = true;
             Core.Api.PayAccount.detail({
                 id: this.form.id,
-            }).then(res => {
-                console.log('getDetailService res', res);
-                let detail = res.detail
-                this.form = detail
-                if(detail.bank_list.find(item => item.currency === 'USD')) {
-                    this.usdForm = detail.bank_list.find(item => item.currency === 'USD')
-                }
-                if(detail.bank_list.find(item => item.currency === 'EUR')) {
-                    this.eurForm = detail.bank_list.find(item => item.currency === 'EUR')
-                }
-                this.areaList = this.reverseConvertAreaData(detail.country_list);
-                this.defaultAreaList = this.reverseConvertAreaData(detail.country_list);
-            }).catch(err => {
-                console.log('getDetailService err', err);
-            }).finally(() => {
-                this.loading = false;
-            });
+            })
+                .then(res => {
+                    console.log('getDetailService res', res);
+                    let detail = res.detail;
+                    this.form = detail;
+                    if (detail.bank_list.find(item => item.currency === 'USD')) {
+                        this.usdForm = detail.bank_list.find(item => item.currency === 'USD');
+                    }
+                    if (detail.bank_list.find(item => item.currency === 'EUR')) {
+                        this.eurForm = detail.bank_list.find(item => item.currency === 'EUR');
+                    }
+                    this.areaList = this.reverseConvertAreaData(detail.country_list);
+                    this.defaultAreaList = this.reverseConvertAreaData(detail.country_list);
+                })
+                .catch(err => {
+                    console.log('getDetailService err', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         // fetch
         handleSubmitService(params) {
-            this.loading = true
+            this.loading = true;
             Core.Api.PayAccount.save({
-                ...params
-            }).then((res) => {
-                console.log('handleSubmitService res', res);
-                this.$message.success(this.$t('pop_up.save_success'));
-                this.routerChange('back');
-            }).catch(err => {
-                console.log('handleSubmitService err:', err);
-            }).finally(() => {
-                this.loading = false
-            });
+                ...params,
+            })
+                .then(res => {
+                    console.log('handleSubmitService res', res);
+                    this.$message.success(this.$t('pop_up.save_success'));
+                    this.routerChange('back');
+                })
+                .catch(err => {
+                    console.log('handleSubmitService err:', err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         getCountryListService() {
             Core.Api.PayAccount.countryList({
-                status: 0   
-            }).then(res => {
-                console.log('getCountryListService res', res);
-                if(res.list.length) {
-                    this.disableList = this.reverseConvertAreaData(res.list)
-                }
-                this.$refs.countryCascaderRef.checkDisableList(this.disableList)
-            }).catch(err => {
-                console.log('getCountryListService err', err);
+                status: 0,
             })
+                .then(res => {
+                    console.log('getCountryListService res', res);
+                    if (res.list.length) {
+                        this.disableList = this.reverseConvertAreaData(res.list);
+                    }
+                    this.$refs.countryCascaderRef.checkDisableList(this.disableList);
+                })
+                .catch(err => {
+                    console.log('getCountryListService err', err);
+                });
         },
         // resize
         handleResize() {
@@ -371,7 +323,9 @@ export default {
         },
         checkFormInput(form) {
             if (!form.name) {
-                return this.$message.warning(`${this.$t('def.enter')}(${this.$t(/*账户信息*/'payment-management.acc_info')})`);
+                return this.$message.warning(
+                    `${this.$t('def.enter')}(${this.$t(/*账户信息*/ 'payment-management.acc_info')})`,
+                );
             }
             if (!this.areaList.length && !this.area.country) {
                 return this.$message.warning(this.$t('def.select') + this.$t('n.area'));
@@ -379,23 +333,23 @@ export default {
             return 0;
         },
         submit() {
-            this.form.bank_list.push(this.usdForm)
-            this.form.bank_list.push(this.eurForm)
+            this.form.bank_list.push(this.usdForm);
+            this.form.bank_list.push(this.eurForm);
             let form = Core.Util.deepCopy(this.form);
-            if(this.checkFormInput(form)) return
+            if (this.checkFormInput(form)) return;
             console.log('form', this.form);
-            this.handleSubmitService(this.form)
+            this.handleSubmitService(this.form);
         },
         preview() {
-            this.form.bank_list.push(this.usdForm)
-            this.form.bank_list.push(this.eurForm)
+            this.form.bank_list.push(this.usdForm);
+            this.form.bank_list.push(this.eurForm);
             let form = Core.Util.deepCopy(this.form);
-            if(this.checkFormInput(form)) return
+            if (this.checkFormInput(form)) return;
             console.log('form', this.form);
             let routeUrl = '';
             routeUrl = this.$router.resolve({
                 path: '/payment-info-management/pending-payment',
-                query: { form: this.form },
+                query: { form: JSON.stringify(this.form.bank_list[0]) },
             });
             window.open(routeUrl.href, '_blank');
         },
@@ -407,8 +361,8 @@ export default {
                 country_en: item.map(obj => obj.name_en).join(','),
                 country_code: item.map(obj => obj.code).join(','),
             };
-            let _area = Core.Util.deepCopy(this.area)
-            this.form.country_list = this.convertAreaData(_area)
+            let _area = Core.Util.deepCopy(this.area);
+            this.form.country_list = this.convertAreaData(_area);
         },
         convertAreaData(area) {
             const countryList = [];
@@ -419,7 +373,7 @@ export default {
                 const country = {
                     name: countryNames[i].trim(),
                     name_en: countryNamesEn[i].trim(),
-                    code: countryCodes[i].trim()
+                    code: countryCodes[i].trim(),
                 };
                 countryList.push(country);
             }
@@ -428,7 +382,7 @@ export default {
         reverseConvertAreaData(countryList) {
             const area = countryList.map(country => country.name);
             return area;
-        }
+        },
     },
 };
 </script>
@@ -438,7 +392,7 @@ export default {
     width: 100%;
     .form-head {
         font-size: 16px;
-        color: #1D2129;
+        color: #1d2129;
         font-weight: 500;
         margin-top: 4px;
         margin-bottom: 10px;

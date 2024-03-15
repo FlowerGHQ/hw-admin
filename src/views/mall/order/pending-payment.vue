@@ -31,7 +31,7 @@
                                     <!-- 支付尾款 && OA时存在 && 售前 -->
                                     <div
                                         class="select"
-                                        @click="isSelectEnd = !isSelectEnd"
+                                        @click="changeEnd"
                                         v-if="!isAfter && pay_type === Core.Const.DISTRIBUTOR.PAY_TIME.OA && !isPre"
                                     >
                                         <img
@@ -286,15 +286,25 @@ const after_price_credit = computed(() => {
 });
 // 需付余额
 const need_balance = computed(() => {
-    if (!isPre.value) return detail.freight; // 部分付款后支付运费
+    if (!isPre.value) return freight_price.value; // 部分付款后支付运费
     return parseFloat((sum_price.value - this_time_credit.value).toFixed(4));
 });
 const need_pay = computed(() => {
     if (isAfter.value) {
-        return isPre.value ? after_price.value : detail.freight;
+        return isPre.value ? after_price.value : freight_price.value;
     } else {
-        return isPre.value ? pre_price.value : isSelectEnd.value ? detail.freight + end_price.value : detail.freight;
+        return isPre.value
+            ? pre_price.value
+            : isSelectEnd.value
+              ? freight_price.value + end_price.value
+              : detail.freight_pay_status === 100
+                ? detail.freight
+                : 0;
     }
+});
+// 是否已支付运费-运费
+const freight_price = computed(() => {
+    return detail.freight_pay_status === 100 ? detail.freight : 0;
 });
 const getOrderSrc = (name, type = 'png') => {
     const path = `../../../assets/images/mall/order/${name}.${type}`;
@@ -311,6 +321,7 @@ const getDetail = () => {
             isAfter.value = detail.type !== Core.Const.PURCHASE.FLAG_ORDER_TYPE.PRE_SALES;
             unit.value = Core.Const.ITEM.MONETARY_TYPE_MAP[detail.currency];
             pay_type.value = detail.pay_type;
+            isSelectEnd.value = detail.freight_pay_status === 200;
             getWallet();
             // 假数据
 
@@ -390,7 +401,7 @@ const handlePayOrder = () => {
             // 售前
             if (isSelectEnd.value) {
                 // 选择支付尾款
-                subject = 60;
+                subject = detail.freight_pay_status === 100 ? 60 : 20;
             } else {
                 subject = 50;
             }
@@ -405,10 +416,15 @@ const handlePayOrder = () => {
     Core.Api.Purchase.pay(params)
         .then(res => {
             proxy.$message.success(proxy.$t('p.payment_success'));
+            routerChange('/purchase/purchase-order-self');
         })
         .catch(err => {
             console.log('handleCreateOrder err', err);
         });
+};
+const changeEnd = () => {
+    if (detail.freight_pay_status === 200) return; // 运费已付不能修改
+    isSelectEnd.value = !isSelectEnd.value;
 };
 // 路由跳转
 const routerChange = (routeUrl, item = {}, type = 1) => {

@@ -1419,7 +1419,7 @@ export default {
                 okText: _this.$t('def.sure'),
                 cancelText: _this.$t('def.cancel'),
                 onOk() {
-                    this.cancelFetch();
+                    _this.cancelFetch();
                 },
             });
         },
