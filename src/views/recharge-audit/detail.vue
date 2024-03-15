@@ -68,7 +68,7 @@
         </div>
         <!-- 只有是业务员且当前状态为一审 或者是财务且当前状态为二审 才能进行审核操作 -->
         <template v-if="(!isFinance && detail.status === CONST.AUDIT_STATUS_MAP.PENDING_SECOND) || (isFinance && detail.status === CONST.AUDIT_STATUS_MAP.PENDING_FIRST)">
-            <div class="detail-panel" v-if="pendingAudit">
+            <div class="detail-panel">
                 <div :class="detail.result === CONST.AUDIT_RESULT_MAP.REJECT ? 'info-line center required' : 'info-line center required mb'">
                     <div class="info-key">
                         {{ $t(/*审核结果*/'payment-management.audit_result') }}
@@ -114,7 +114,7 @@
                 </div>
             </div>
         </div>
-        <div class="btn-container" v-if="pendingAudit">
+        <div class="btn-container" v-if="(!isFinance && detail.status === CONST.AUDIT_STATUS_MAP.PENDING_SECOND) || (isFinance && detail.status === CONST.AUDIT_STATUS_MAP.PENDING_FIRST)">
             <a-button @click="routerChange('back')">{{ $t(/*取消*/'pop_up.no') }}</a-button>
             <a-button @click="handleSubmit" type="primary">{{ $t(/*确定*/'pop_up.yes') }}</a-button>
         </div>
