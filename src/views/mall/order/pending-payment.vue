@@ -268,7 +268,7 @@ const sum_price = computed(() => {
 });
 // 预付款(售前)
 const pre_price = computed(() => {
-    return Math.ceil((sum_price.value * detail.pay_pre_pay_ratio) / 100);
+    return Math.ceil(sum_price.value * detail.pay_pre_pay_ratio);
 });
 // 尾款(售前)
 const end_price = computed(() => {
