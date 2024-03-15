@@ -304,7 +304,7 @@ const need_pay = computed(() => {
 });
 // 是否已支付运费-运费
 const freight_price = computed(() => {
-    return detail.freight_pay_status === 100 ? detail.freight : 0;
+    return detail.freight_pay_status === 100 ? Number(detail.freight) : 0;
 });
 const getOrderSrc = (name, type = 'png') => {
     const path = `../../../assets/images/mall/order/${name}.${type}`;
