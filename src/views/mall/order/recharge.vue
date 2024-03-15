@@ -243,7 +243,7 @@ const prev = () => {
 const submit = () => {
     Object.assign(detail, {
         target_type: 100, //100 分销商充值审核
-        distributor_id: orgId, //分销商id
+        distributor_id: orgId.value, //分销商id
         content: {
             vehicle_balance: formState.vehicle_balance, //整车充值金额
             part_balance: formState.part_balance, // 零部件充值金额
@@ -320,7 +320,7 @@ const routerChange = (routeUrl, item = {}, type = 1) => {
     }
 };
 const findAccount = () => {
-    const params = { id: orgId };
+    const params = { id: orgId.value };
     Core.Api.Distributor.findAccount({ ...params })
         .then(res => {
             Object.assign(accoutMes, res.pay_in_account_bank);
