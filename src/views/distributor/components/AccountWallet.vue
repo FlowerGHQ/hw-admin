@@ -121,7 +121,7 @@
                                         {{ $t('distributor-detail.credit_balance') }}：
                                     </div>
                                     <div class="account-card-content-item-value">
-                                        {{ currency }} {{ dataObject.creditData.balance }}
+                                        {{ currency }} {{ creditBalance }}
                                     </div>
                                 </div>
                             </div></a-col
@@ -317,6 +317,8 @@ const dataObject = ref({
         balance: 0,
     }, // 授信账户
 });
+// 授信余额
+const creditBalance = ref(0);
 
 const formState = ref({
     //订单尾款占用额度
@@ -401,9 +403,9 @@ const handleRouteChange = (type, item) => {
 };
 // 调整额度
 const handleAdjustmentLimit = () => {
-    formState.value.orderBalance = dataObject.value.creditData.balance * 1;
-    formState.value.creditBalance = Core.Util.countFilter(props.detail.credit) * 1;
-    formState.value.availableBalance = formState.value.creditBalance + formState.value.orderBalance;
+    formState.value.orderBalance = dataObject.value.creditData.balance * 1; //占用
+    formState.value.creditBalance = Core.Util.countFilter(props.detail.credit) * 1; //授信总额
+    formState.value.availableBalance = formState.value.creditBalance * 1 + formState.value.orderBalance * 1; //可用余额
     visible.value = true;
 };
 // handleCancel
@@ -428,8 +430,7 @@ watch(
     () => props.detail,
     (newV, oldV) => {
         console.log('newV', newV);
-        dataObject.value.creditData.balance =
-            Core.Util.countFilter(newV.credit) * 1 + dataObject.value.creditData.balance * 1;
+        creditBalance.value = Core.Util.countFilter(newV.credit) * 1 + dataObject.value.creditData.balance * 1;
     },
 );
 
