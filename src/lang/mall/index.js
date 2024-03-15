@@ -106,6 +106,10 @@ export default {
         freight_amount: '运费金额',
         this_need: '本次需支付',
         can_use: '此订单的可用额度为',
+        recharged_successfully: '充值成功',
+        vehicle_available: '车辆可用余额账户',
+        parts_available: '配件可用余额账户',
+        the_amount_transferred: '这次要充值的金额',
     },
     en: {
         system: 'BOS',
@@ -214,5 +218,9 @@ export default {
         freight_amount: 'Freight Amount',
         this_need: 'This Payment Needs To Be Made',
         can_use: 'The available credit limit for this order is',
+        recharged_successfully: 'Recharged Successfully',
+        vehicle_available: 'Vehicle Available Balance Account',
+        parts_available: 'Parts Available Balance Account',
+        the_amount_transferred: 'The Amount To Be Transferred This Time',
     },
 };

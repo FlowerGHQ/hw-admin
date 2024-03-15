@@ -25,7 +25,7 @@
                     <span class="dis">
                         {{ $t('purchase.selected_items') }}
                     </span>
-                    <span class="price"> {{ currency }} {{ allPrice }} </span>
+                    <span class="price"> {{ currency }} {{ proxy.$Util.Number.numFormat(allPrice) }} </span>
                     <my-button
                         showRightIcon
                         type="primary"
@@ -575,7 +575,7 @@
                             <span class="dis">
                                 {{ $t('purchase.selected_items_total') }}
                             </span>
-                            <span class="price"> {{ currency }} {{ allPrice }} </span>
+                            <span class="price"> {{ currency }} {{ proxy.$Util.Number.numFormat(allPrice) }} </span>
                         </div>
                         <template v-if="org?.pay_type === 70">
                             <!-- 授信余额足 -->
@@ -590,7 +590,7 @@
                                     {{ $t('mall.credit_balance') }}: {{ currency }} {{ balance }} ({{
                                         $t('mall.insufficient_balance')
                                     }}
-                                    {{ allPrice }})
+                                    {{ proxy.$Util.Number.numFormat(allPrice) }})
                                 </p>
                             </template>
                         </template>
@@ -599,7 +599,7 @@
                         showRightIcon
                         type="primary"
                         padding="12px 32px"
-                        :disabled="!isSelected"
+                        :disabled="!isSelected || !isBalanceEnough"
                         font="14px"
                         @click.native="handleCreateOrder"
                     >
@@ -855,7 +855,7 @@ const allPrice = computed(() => {
             price += item.amount * item?.item[proxy.$Util.Number.getStepPriceIndexByNums(item.amount)];
         }
     });
-    return proxy.$Util.Number.numFormat(proxy.$Util.countFilter(price.toFixed(2)));
+    return proxy.$Util.countFilter(price.toFixed(2));
 });
 /* computed end */
 
@@ -1204,7 +1204,7 @@ const getWallet = () => {
     };
     Core.Api.Purchase.getWallet(params)
         .then(res => {
-            balance.value = res.balance || 0;
+            balance.value = Core.Util.countFilter(res.balance || 0 + Number(org.credit));
         })
         .catch(err => {
             console.log('handleCreateOrder err', err);
