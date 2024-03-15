@@ -27,14 +27,25 @@
                             v-if="item?.response?.data?.filename"
                             :src="item?.response?.data?.filename ? VITE_OSS_POINT + item?.response?.data?.filename : ''"
                             class="image-img"
+                            @click="
+                                previewImage(
+                                    index,
+                                    item?.response?.data?.filename ? item?.response?.data?.filename : '',
+                                )
+                            "
                         />
-                        <svg-icon icon-class="payment_close" class="image-close" @click.stop="handleDelete(item)" />
+                        <svg-icon
+                            icon-class="payment_close"
+                            v-show="isShowUpload"
+                            class="image-close"
+                            @click.stop="handleDelete(item)"
+                        />
                     </div>
                 </div>
             </div>
             <div class="file-upload">
                 <div class="file-list">
-                    <div class="file-item" v-for="item in fileList">
+                    <div class="file-item" v-for="item in fileList" @click.stop="preViewFile(item)">
                         <div class="file">
                             <template v-if="item.status === 'uploading'">
                                 <div class="file-loading">
@@ -47,6 +58,7 @@
                                 <span class="file-content-text" :title="item.name">{{ item.name }}</span>
                                 <svg-icon
                                     @click.stop="handleDelete(item)"
+                                    v-show="isShowUpload"
                                     icon-class="payment_close"
                                     class="file-close"
                                     :style="{ fontSize: '16px', color: '#fff' }"
@@ -84,6 +96,7 @@
             </div>
         </div>
     </div>
+    <Preview ref="previewRef" :list="previewList" :index="previewIndex" :isSave="false"></Preview>
 </template>
 <script setup>
 import { ref, reactive, watch, computed } from 'vue';
@@ -91,6 +104,7 @@ import Core from '@/core';
 import { message, Upload } from 'ant-design-vue';
 import { PlusOutlined } from '@ant-design/icons-vue';
 import { useI18n } from 'vue-i18n';
+import Preview from '@/components/common/Preview.vue';
 import _ from 'lodash';
 const $t = useI18n().t;
 const upload = ref({
@@ -137,6 +151,8 @@ const uploadId = _.uniqueId('upload_');
 const uploadComponent = ref(null);
 const $emit = defineEmits(['update:value']);
 const acceptList = ref(['image/jpg', 'image/jpeg', 'image/png', 'application/pdf']);
+const previewIndex = ref(0);
+const previewRef = ref(null);
 
 const imageList = computed(() => {
     if (upload.value.fileList.length === 0 && upload.value.fileList) {
@@ -151,6 +167,15 @@ const fileList = computed(() => {
     } else {
         return upload.value.fileList.filter(item => item.type.includes('pdf'));
     }
+});
+const previewList = computed(() => {
+    let arr = imageList.value.map(item => {
+        return {
+            url: item.response.data.filename,
+        };
+    });
+    console.log('previewList', arr);
+    return arr;
 });
 
 // 校验的图片和pdf队列
@@ -216,6 +241,16 @@ const handleDelete = item => {
     imageArr.value = imageArr.value.filter(i => i.uid !== item.uid);
     fileArr.value = fileArr.value.filter(i => i.uid !== item.uid);
     handleReturn();
+};
+
+const previewImage = (index, url) => {
+    previewIndex.value = index;
+    previewRef.value.open(index);
+};
+const preViewFile = item => {
+    let targetUrl = VITE_OSS_POINT + item.response.data.filename;
+    let url = 'http://view.officeapps.live.com/op/view.aspx?src=' + targetUrl;
+    window.open(url, '_blank');
 };
 
 // 处理返回数据
@@ -371,6 +406,7 @@ watch(
                     .image-img {
                         width: 100%;
                         height: 100%;
+                        cursor: pointer;
                     }
                     .image-close {
                         position: absolute;
@@ -395,6 +431,7 @@ watch(
                     border-radius: 4px;
                     margin-right: 10px;
                     margin-bottom: 10px;
+                    cursor: pointer;
                     position: relative;
                     .file {
                         width: 100%;

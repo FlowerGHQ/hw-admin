@@ -12,9 +12,17 @@ export default {
     },
     ifImageUrl(url, host = '') {
         if (url) {
-            return host + url
+            return host + url;
         } else {
-            return Modules[`../assets/images/defult_img.png`].default
+            return Modules[`../assets/images/defult_img.png`].default;
         }
+    },
+    downloadImage(downloadUrl, name = 'pic') {
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.setAttribute('download', name);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
     },
 };

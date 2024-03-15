@@ -162,7 +162,7 @@ export default {
         },
         downloadPic() {
             const src = Core.Const.NET.OSS_POINT + this.list[this.nowIndex].url;
-            Core.Util.image.downloadImage(src);
+            Core.Util.Image.downloadImage(src);
             if (this.isSave) {
                 this.savePreview(this.list[this.nowIndex].id);
             }
