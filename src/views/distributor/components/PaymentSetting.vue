@@ -168,6 +168,7 @@ const handleSave = () => {
     let params = {
         id: props.detail.id,
         spare_part_deduction_ratio: spare_part_deduction_ratio.value,
+        credit: props.detail.credit,
     };
     Core.Api.Distributor.updateCredit(params).then(res => {
         message.success($t('distributor-detail.operation_success'));

@@ -270,18 +270,20 @@ import ConfirmFreight from '../../purchase/components/ConfirmFreightModel.vue';
 const AUDIT_CANCEL_STATUS_MAP = Core.Const.DISTRIBUTOR.AUDIT_CANCEL_STATUS_MAP;
 const FREIGHT_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_STATUS_MAP;
 const FREIGHT_STATUS = Core.Const.DISTRIBUTOR.FREIGHT_STATUS;
-
+const SEARCH_TYPE = Core.Const.PURCHASE.SEARCH_TYPE;
 import { useRouter, useRoute } from 'vue-router';
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
 
-const searchForm = ref({    
+const searchForm = ref({
     freight_status: 0, // tab 运费状态
 });
 const search_all_ref = ref(null);
-const isDistributerAdmin = ref(false); // 根据路由判断其是用在分销商(false) 还是平台方(true)
+const isDistributerAdmin = ref(
+    Core.Util.Common.returnTypeBool(Core.Data.getLoginType(), [Core.Const.LOGIN.TYPE.ADMIN]),
+); // 根据路由判断其是用在分销商(false) 还是平台方(true)
 const freightVisible = ref(false); // 船期及运费model
 const confirmFreightVisible = ref(false); // 船期及运费确认model
 
@@ -301,7 +303,7 @@ const searchAdminList = ref([
         value: '',
         searchParmas: 'sn',
         key: 'p.order_number',
-    },  
+    },
 ]);
 const searchDistributorList = ref([
     {
@@ -387,6 +389,7 @@ const tableColumns = computed(() => {
 // 获取状态数据
 const getStatusFetch = (params = {}) => {
     const obj = {
+        search_type: isDistributerAdmin.value ? SEARCH_TYPE.ALL : SEARCH_TYPE.SELF,
         ...params,
     };
 
@@ -411,7 +414,9 @@ const getStatusFetch = (params = {}) => {
 const getInquirySheet = Core.Api.ShippingDateFreight.list;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request: getInquirySheet,
-
+    initParam: {
+        search_type: isDistributerAdmin.value ? SEARCH_TYPE.ALL : SEARCH_TYPE.SELF,
+    },
 });
 
 /* fetch end*/
@@ -419,9 +424,9 @@ const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPa
 /* methods start*/
 const initData = () => {
     searchForm.value = {
-        freight_status: 0
-    }
-}
+        freight_status: 0,
+    };
+};
 const routerChange = (type, record) => {
     let routeUrl = '';
     switch (type) {
@@ -435,17 +440,17 @@ const routerChange = (type, record) => {
             break;
     }
 };
-const onSearch = data => {    
+const onSearch = data => {
     searchParam.value = Core.Util.searchFilter({ ...searchForm.value, ...data });
     search();
 };
-const onReset = () => {    
-    refreshTable();    
-    initData()
+const onReset = () => {
+    refreshTable();
+    initData();
 };
 // tab事件
-const onTabChange = () => {        
-    search_all_ref.value.onResetData()  // 清除输入框数据
+const onTabChange = () => {
+    search_all_ref.value.onResetData(); // 清除输入框数据
     searchParam.value = Core.Util.searchFilter(searchForm.value);
     search();
 };
@@ -460,7 +465,7 @@ const onModify = record => {
         shipping_time_estimated: record?.audit_record_content?.shipping_time_estimated,
         freight: record?.audit_record_content?.freight,
     };
-    console.log("船期及运费", detailRecord.value);
+    console.log('船期及运费', detailRecord.value);
 };
 // 确认运费
 const onConfirmFreight = record => {
@@ -471,7 +476,7 @@ const onConfirmFreight = record => {
         freight: record?.audit_record_content?.freight,
         currency: record.currency,
     };
-    console.log("确认运费", detailRecord.value);
+    console.log('确认运费', detailRecord.value);
 };
 
 // 预计船期及运费 确认运费 返回
@@ -484,7 +489,6 @@ const onUpdateTable = () => {
 
 onMounted(() => {
     getStatusFetch();
-    isDistributerAdmin.value = Core.Util.Common.returnTypeBool(Core.Data.getLoginType(), [Core.Const.LOGIN.TYPE.ADMIN]);    
 });
 </script>
 

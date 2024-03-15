@@ -756,22 +756,26 @@ let Const = {
             SPLIT: 50, // 已拆单
             WAIT_AUDIT: 60, // 等待审核
             WAIT_PAY: 100, // 待支付
+            WAIT_PRODUCED: 150, // 待生产
+            IN_PRODUCTION: 160, // 生产中
             WAIT_DELIVER: 200, // 待发货
             ORDER_TRANSFERRED: 250, // 已转单
             WAIT_TAKE_DELIVER: 300, // 已发货
             TAKE_DELIVER: 330, // 部分收货
             ALL_TAKE_DELIVER: 360, // 全部收货
             DEAL_SUCCESS: 400, // 交易完成
-            REVISE: 600,
+            REVISE: 600, // 原始订单已修改
             REVISE_AUDIT: 630, // 待审核
             CANCEL: -100, // 交易关闭
-            RE_REVISE: -200,
+            RE_REVISE: -200, // 修改后的订单被重新修改,被修改订单永久关闭
         },
         STATUS_MAP: {
             0: { value: '0', key: 0, color: 'red', zh: '未知', en: 'Unknown' },
             50: { value: '0', key: 50, color: 'green', zh: '已拆单', en: 'Separate bill' },
             60: { value: '0', key: 60, color: 'green', zh: '等待审核', en: 'Waiting for audit' },
             100: { value: '0', key: 100, color: 'orange', zh: '待支付', en: 'Waiting for payment' },
+            150: { value: '0', key: 150, color: 'blue-2', zh: '待生产', en: 'To be produced' },
+            160: { value: '0', key: 160, color: 'green-2', zh: '生产中', en: 'In production' },
             200: { value: '0', key: 200, color: 'orange', zh: '待发货', en: 'Wait for delivery' },
             250: { value: '0', key: 400, color: 'blue', zh: '已转单', en: 'Order transferred' },
             300: { value: '0', key: 300, color: 'blue', zh: '已发货', en: 'Shipped' },
@@ -779,8 +783,6 @@ let Const = {
             360: { value: '0', key: 360, color: 'yellow', zh: '全部收货', en: 'Received' },
             400: { value: '0', key: 400, color: 'green', zh: '交易完成', en: 'Order completed' },
             630: { value: '0', key: 630, color: 'yellow', zh: '待审核', en: 'To audit' },
-            150: { value: '0', key: 150, color: 'blue-2', zh: '待生产', en: 'To be produced' },
-            160: { value: '0', key: 160, color: 'green-2', zh: '生产中', en: 'In production' },
             '-100': { value: '0', key: -100, color: 'gray', zh: '交易关闭', en: 'Canceled' },
         },
         // 支付方式

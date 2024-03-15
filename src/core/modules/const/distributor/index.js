@@ -98,12 +98,12 @@ const DISTRIBUTOR = {
         104: { title: 'distributor-detail.order_refund', value: 104, addOrSubtract: '-' },
         105: { title: 'distributor-detail.pay_final_payment', value: 105, addOrSubtract: '+' },
     },
-    // 取消的状态
+    // 取消状态
     AUDIT_CANCEL_STATUS: {
         // 1 审核中 2 审核通过  3 审核拒绝
-        WAITING_FOR_APPROVAL: 1,
-        APPROVED_AND_APPROVED: 2,
-        AUDIT_REJECTION: 3,
+        WAITING_FOR_APPROVAL: 1, // 审核中
+        APPROVED_AND_APPROVED: 2, // 审核通过
+        AUDIT_REJECTION: 3, // 审核拒绝
     },
     AUDIT_CANCEL_STATUS_MAP: {
         1: { key: 1, t: 'distributor-detail.under_review' },

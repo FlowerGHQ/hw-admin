@@ -417,6 +417,7 @@ const handleOk = () => {
     let params = {
         id: props.detail.id,
         credit: Core.Util.countFilter(formState.value.creditBalance, 100, 2, true, false),
+        spare_part_deduction_ratio: props.detail.spare_part_deduction_ratio,
     };
     Core.Api.Distributor.updateCredit(params).then(res => {
         console.log('res', res);

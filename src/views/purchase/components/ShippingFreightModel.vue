@@ -64,7 +64,7 @@ const saveFetch = (params = {}) => {
     const obj = {        
         target_id: props.detailRecord.id, // 订单id
         content: {
-            shipping_time_estimated: dayjs(search_params.value.shipping_time_estimated).unix(), // 预计船期
+            shipping_time_estimated: dayjs(search_params.value.shipping_time_estimated).startOf('day').unix(), // 预计船期
             freight: Core.Util.countFilter(search_params.value.freight, 100, 2, true), //运费（单位：分）
         }, //审核内容
         ...params,
@@ -81,17 +81,17 @@ const saveFetch = (params = {}) => {
     }
 
     console.log('obj', obj);
-    Core.Api.ShippingDateFreight.add(obj)
-        .then(res => {
-            console.log('确认和修改运费和船期 res', res);
-            proxy.$message.success('提交成功');
-            handleCancel();
-            emits('ok', search_params.value);
-        })
-        .catch(err => {
-            console.log('确认和修改运费和船期 err', err);
-            proxy.$message.error('提交失败');
-        });
+    // Core.Api.ShippingDateFreight.add(obj)
+    //     .then(res => {
+    //         console.log('确认和修改运费和船期 res', res);
+    //         proxy.$message.success('提交成功');
+    //         handleCancel();
+    //         emits('ok', search_params.value);
+    //     })
+    //     .catch(err => {
+    //         console.log('确认和修改运费和船期 err', err);
+    //         proxy.$message.error('提交失败');
+    //     });
 };
 /* fetch end*/
 

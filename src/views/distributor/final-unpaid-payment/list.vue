@@ -366,6 +366,7 @@ const getDistributorListAll = () => {
 // 获取状态数据
 const getStatusFetch = (params = {}) => {
     const obj = {
+        search_type: isDistributerAdmin.value ? SEARCH_TYPE.ALL : SEARCH_TYPE.SELF,
         ...params,
     };
 
@@ -409,7 +410,7 @@ const routerChange = (type, record) => {
         switch (type) {
             case 'pay': // 付款
                 routeUrl = router.resolve({
-                    path: '/mall/confirm-order',
+                    path: '/mall/pending-payment',
                     query: { id: record.id },
                 });
                 window.open(routeUrl.href, '_blank');
