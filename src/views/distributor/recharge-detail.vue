@@ -104,7 +104,7 @@
         <div class="gray-panel payment-voucher">
             <div class="title-content">
                 <div class="title">{{ /*充值信息 */ $t('distributor-detail.payment_voucher') }}</div>
-                <div class="button-area" v-if="details.mapStatus == 1 && $auth('DISTRIBUTOR')">
+                <div class="button-area" v-if="details.mapStatus !== 1 && $auth('DISTRIBUTOR')">
                     <!-- 修改凭证 -->
                     <a-button v-if="!isEdit" @click="handleEdit">{{
                         /*修改凭证 */ $t('distributor-detail.modify_voucher')
@@ -192,13 +192,13 @@ const labelMap = ref([
 ]);
 
 const defaultList = ref([]);
-const isShowUpload = ref(true);
+const isShowUpload = ref(false);
 const isEdit = ref(false);
 
 // 获取订单详情
 const getRechargeDetail = () => {
     let params = {
-        id: route.query.id,
+        id: route.query.order,
     };
     Core.Api.RechargeAudit.detail(params).then(res => {
         details.value = res.detail;
