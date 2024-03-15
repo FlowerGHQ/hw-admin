@@ -594,7 +594,8 @@
                                         proxy.$Util.Number.numFormat(
                                             parseFloat(
                                                 (
-                                                    allPrice.value - Math.ceil(allPrice.value * org.pay_pre_pay_ratio)
+                                                    allPrice.value -
+                                                    Math.ceil(allPrice.value * org.pay_pre_pay_ratio) / 100
                                                 ).toFixed(4),
                                             ),
                                         )
@@ -784,7 +785,7 @@ const amount = computed(() => {
     );
 });
 const isBalanceEnough = computed(() => {
-    const sum = parseFloat((allPrice.value - Math.ceil(allPrice.value * org.pay_pre_pay_ratio)).toFixed(4)); // 总尾款
+    const sum = parseFloat((allPrice.value - Math.ceil(allPrice.value * org.pay_pre_pay_ratio) / 100).toFixed(4)); // 总尾款
     return sum <= balance.value;
 });
 // 计算是否全选车辆

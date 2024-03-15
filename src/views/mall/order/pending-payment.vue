@@ -268,7 +268,7 @@ const sum_price = computed(() => {
 });
 // 预付款(售前)
 const pre_price = computed(() => {
-    return Math.ceil(sum_price.value * detail.pay_pre_pay_ratio);
+    return Math.ceil(sum_price.value * detail.pay_pre_pay_ratio) / 100;
 });
 // 尾款(售前)
 const end_price = computed(() => {
@@ -280,7 +280,7 @@ const after_price = computed(() => {
 });
 // 售后备件
 const after_price_credit = computed(() => {
-    return Math.ceil((balanceParts.value * detail.spare_part_deduction_ratio) / 100);
+    return Math.ceil(balanceParts.value * detail.spare_part_deduction_ratio) / 100;
 });
 // 需付余额
 const need_balance = computed(() => {
@@ -395,7 +395,7 @@ const handlePayOrder = () => {
     const params = {
         id: detail.id, //订单id
         subject: subject, //10.预付款；20.尾款；30.全款（不包含运费）；40.全款并使用备件钱包（不包含运费）；50.运费；60.尾款加运费
-        payment: need_pay.value, //支付金额
+        payment: need_pay.value * 100, //支付金额
         spare_part_credit_payment: this_time_credit.value, //备件信用支付金额
     };
     Core.Api.Purchase.pay(params)
