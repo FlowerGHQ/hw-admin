@@ -104,7 +104,7 @@
         <div class="gray-panel payment-voucher">
             <div class="title-content">
                 <div class="title">{{ /*充值信息 */ $t('distributor-detail.payment_voucher') }}</div>
-                <div class="button-area" v-if="details.mapStatus == 1">
+                <div class="button-area" v-if="details.mapStatus !== 1">
                     <!-- 修改凭证 -->
                     <a-button v-if="!isEdit" @click="handleEdit">{{
                         /*修改凭证 */ $t('distributor-detail.modify_voucher')
@@ -116,7 +116,8 @@
                 </div>
             </div>
             <div class="image-pdf-area">
-                <MyFileUpload @handleUpload="handleUpload" :isShowUpload="isShowUpload" />
+                <!-- :isShowUpload="isShowUpload" -->
+                <MyFileUpload returnType="Arr" v-model:value="defaultList" :isShowUpload="isShowUpload" />
             </div>
         </div>
     </div>
@@ -132,6 +133,7 @@ import Core from '../../core';
 import { useI18n } from 'vue-i18n';
 import { forEach, uniqueId, cloneDeep } from 'lodash';
 import MyFileUpload from './components/MyFileUpload.vue';
+import $ from 'lib/query';
 
 const $t = useI18n().t;
 const router = useRouter();
@@ -188,7 +190,6 @@ const labelMap = ref([
 ]);
 
 const defaultList = ref([]);
-const myUploadRef = ref(null);
 const isShowUpload = ref(false);
 const isEdit = ref(false);
 
@@ -199,7 +200,6 @@ const getRechargeDetail = () => {
     };
     Core.Api.RechargeAudit.detail(params).then(res => {
         details.value = res.detail;
-        console.log('details', details.value);
         //1.待审核(一审)；2.审核通过；3.审核不通过(一审) 4 等待二审 5 二审不通过
         switch (details.value.status) {
             case 1:
@@ -258,26 +258,20 @@ const handleEdit = () => {
 };
 
 const handleSaveModify = () => {
-    console.log('details', details.value);
-    let params = cloneDeep(details.value);
-    delete params.mapStatus;
-    delete params.id;
-    params.content_json.payment_information.img = defaultList.value;
-    params.content = JSON.stringify(params.content_json);
+    let params = {
+        target_type: 100,
+        distributor_id: '',
+        content: {},
+    };
+    params.content = details.value.content_json;
+    params.content.payment_information.img = defaultList.value;
+    params.distributor_id = details.value.id;
+
     Core.Api.RechargeAudit.save(params).then(res => {
-        message.success('Save Success');
+        message.success($t('distributor-detail.operation_success'));
         isShowUpload.value = false;
         isEdit.value = false;
     });
-};
-
-// 上传成功
-const handleUpload = fileList => {
-    console.log(fileList);
-    defaultList.value = fileList.map(item => {
-        return item.file;
-    });
-    console.log('defaultList', defaultList.value);
 };
 
 onMounted(() => {
@@ -368,7 +362,6 @@ onMounted(() => {
             }
         }
         .image-pdf-area {
-            margin-top: 28px;
             .image {
                 display: flex;
                 flex-wrap: wrap;

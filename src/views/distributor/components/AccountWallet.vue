@@ -154,6 +154,7 @@
                                     <!-- 充值按钮 -->
                                     <a-button
                                         v-if="$auth('DISTRIBUTOR') && payType !== 'OLD'"
+                                        @click="handleRouteChange(0, dataObject.partsData)"
                                         type="primary"
                                         size="small"
                                         >{{ $t('distributor-detail.recharge') }}</a-button
@@ -373,7 +374,10 @@ const handleRouteChange = (type, item) => {
     switch (type) {
         case 0:
             routeUrl = router.resolve({
-                path: '/mall/recharge ',
+                path: '/mall/recharge',
+                query: {
+                    id: props.detail.id,
+                },
             });
             console.log('routeUrl', routeUrl);
             window.open(routeUrl.href, '_blank');

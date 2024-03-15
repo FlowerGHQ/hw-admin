@@ -1,418 +1,457 @@
 <template>
-    <div id="upload">
-        <div class="upload-body">
-            <div class="image-rule">
-                <ul>
-                    <li>You can upload images in PNG, JPG, JPEG format, up to {{ maxImageNum }} images per file.</li>
-                    <li>For documents, only PDF format is supported, with a maximum of {{ maxFileNum }} files.</li>
-                </ul>
-            </div>
-            <a-upload
-                v-show="isShowUpload"
-                multiple
-                ref="uploader"
-                name="file"
-                list-type="picture"
-                :accept="acceptList.toString()"
-                :defaultFileList="defaultList"
-                :file-List="fileList"
-                :show-upload-list="false"
-                :action="upload.action"
-                :headers="upload.headers"
-                :data="upload.data"
-                :before-upload="beforeUpload"
-                @change="handleChange"
-            >
-                <div class="upload">
-                    <svg-icon icon-class="payment_upload" class="svg-icon" :style="{ fontSize: '16px' }" />
-                </div>
-            </a-upload>
+    <div class="image-uploader-wrap" :id="uploadId">
+        <!-- tips -->
+        <div class="tips">
+            <ul>
+                <li>You can upload images in PNG, JPG, JPEG format, up to {{ imageLimit }} images per file.</li>
+                <li>For documents, only PDF format is supported, with a maximum of {{ fileLimit }} files.</li>
+            </ul>
         </div>
-        <!-- 预览样式 -->
-        <div class="image-list">
-            <div v-for="(item, index) in imageData" :key="`image${index}`" class="image-item">
-                <template v-if="item.status === 'uploading'">
-                    <div class="image-loading">
-                        <p>{{ $t('mall.uploading') }}</p>
-                        <a-progress :percent="item.percent" :show-info="false" :strokeWidth="6" />
-                    </div>
-                </template>
-                <div v-show="item.status !== 'uploading'" class="image-content">
-                    <img
-                        v-if="item.file"
-                        :src="VITE_OSS_POINT + item.file"
-                        class="image-img"
-                        @click="previewImage(index, item.file)"
-                    />
-                    <svg-icon
-                        icon-class="payment_close"
-                        class="image-close"
-                        :style="{ fontSize: '16px', color: '#fff' }"
-                        @click="deleteImage(index, item.uid)"
-                    />
-                </div>
-            </div>
-        </div>
-        <div class="file-list">
-            <div v-for="(item, index) in fileData" :key="`file${index}`" class="file-item">
-                <div class="file">
+        <div
+            :class="{
+                'upload-area-content': true,
+                'upload-flex-d': fileList.length > 0,
+                'upload-flex-s': fileList.length === 0,
+            }"
+        >
+            <div class="image-list">
+                <div class="image-item" v-for="item in imageList">
                     <template v-if="item.status === 'uploading'">
-                        <div class="file-loading">
+                        <div class="image-loading">
                             <p>{{ $t('mall.uploading') }}</p>
                             <a-progress :percent="item.percent" :show-info="false" :strokeWidth="6" />
                         </div>
                     </template>
-                    <div
-                        v-show="item.status !== 'uploading'"
-                        class="file-content"
-                        @click="previewFile(index, item.file)"
-                    >
-                        <img src="@/assets/images/mall/order/pdf.png" class="file-img" />
-                        <span class="file-content-text">{{ item.name }}</span>
-                        <svg-icon
-                            icon-class="payment_close"
-                            class="file-close"
-                            :style="{ fontSize: '16px', color: '#fff' }"
-                            @click.stop="deleteFile(index, item.uid)"
+                    <div v-show="item.status !== 'uploading'" class="image-content">
+                        <img
+                            v-if="item?.response?.data?.filename"
+                            :src="item?.response?.data?.filename ? VITE_OSS_POINT + item?.response?.data?.filename : ''"
+                            class="image-img"
                         />
+                        <svg-icon icon-class="payment_close" class="image-close" @click.stop="handleDelete(item)" />
                     </div>
                 </div>
             </div>
+            <div class="file-upload">
+                <div class="file-list">
+                    <div class="file-item" v-for="item in fileList">
+                        <div class="file">
+                            <template v-if="item.status === 'uploading'">
+                                <div class="file-loading">
+                                    <p>{{ $t('mall.uploading') }}</p>
+                                    <a-progress :percent="item.percent" :show-info="false" :strokeWidth="6" />
+                                </div>
+                            </template>
+                            <div v-show="item.status !== 'uploading'" class="file-content">
+                                <img src="@/assets/images/mall/order/pdf.png" class="file-img" />
+                                <span class="file-content-text" :title="item.name">{{ item.name }}</span>
+                                <svg-icon
+                                    @click.stop="handleDelete(item)"
+                                    icon-class="payment_close"
+                                    class="file-close"
+                                    :style="{ fontSize: '16px', color: '#fff' }"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="upload-wrap">
+                    <a-upload
+                        name="file"
+                        class="item-image-uploader"
+                        list-type="picture"
+                        :accept="accept"
+                        :show-upload-list="false"
+                        v-model:file-list="upload.fileList"
+                        :action="upload.action"
+                        :headers="upload.headers"
+                        :data="upload.data"
+                        :multiple="true"
+                        :beforeUpload="handleFileCheck"
+                        @change="handleDetailChange"
+                        @preview="handlePreview"
+                        @remove="handleRemove"
+                        ref="uploadComponent"
+                    >
+                        <div class="icon-text" v-if="upload.fileList.length < imageLimit + fileLimit && isShowUpload">
+                            <plus-outlined />
+                            <div class="text">
+                                {{ $t('distributor-detail.upload') }}
+                            </div>
+                        </div>
+                    </a-upload>
+                </div>
+            </div>
         </div>
-        <!-- <Preview ref="Preview" :list="previewList" :index="previewIndex" :isSave="false"></Preview> -->
     </div>
 </template>
-
-<script>
-import SvgIcon from '@/components/SvgIcon/index.vue';
-import Preview from '@/components/common/Preview.vue';
+<script setup>
+import { ref, reactive, watch, computed } from 'vue';
 import Core from '@/core';
-import { Upload } from 'ant-design-vue';
-function uuid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        var r = (Math.random() * 16) | 0,
-            v = c == 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-    });
-}
-export default {
-    components: {
-        SvgIcon,
-        Preview,
+import { message, Upload } from 'ant-design-vue';
+import { PlusOutlined } from '@ant-design/icons-vue';
+import { useI18n } from 'vue-i18n';
+import _ from 'lodash';
+const $t = useI18n().t;
+const upload = ref({
+    // 上传图片
+    action: Core.Const.NET.FILE_UPLOAD_END_POINT,
+    fileList: [],
+    fileSting: '',
+    headers: {
+        ContentType: false,
     },
-    props: {
-        type: {
-            type: String,
-            default: 'file',
-        },
-        defaultList: {
-            type: Array,
-            default() {
-                return [];
-            },
-        },
-        maxImageNum: {
-            type: Number,
-            default: 9,
-        },
-        maxFileNum: {
-            type: Number,
-            default: 3,
-        },
-        isShowUpload: {
-            type: Boolean,
-            default: true,
-        },
+    data: {
+        token: Core.Data.getToken(),
+        type: 'file',
     },
-    computed: {
-        previewList() {
-            let target = this.VITE_OSS_POINT;
-            const arr = ['image/jpg', 'image/jpeg', 'image/png'];
-            let index, list;
-            list = this.fileList.filter(item => {
-                index = arr.indexOf(item?.type);
-                return index !== -1;
+});
+const VITE_OSS_POINT = Core.Const.NET.OSS_POINT;
+
+const props = defineProps({
+    value: {
+        // 字符串类型或者数组类型
+        type: [String, Array],
+        default: '',
+    },
+    imageLimit: {
+        type: Number,
+        default: 9,
+    },
+    fileLimit: {
+        type: Number,
+        default: 3,
+    },
+    returnType: {
+        type: String,
+        default: 'Str', // Str, Arr
+    },
+    // isShowUpload
+    isShowUpload: {
+        type: Boolean,
+        default: true,
+    },
+});
+
+const uploadId = _.uniqueId('upload_');
+const uploadComponent = ref(null);
+const $emit = defineEmits(['update:value']);
+const acceptList = ref(['image/jpg', 'image/jpeg', 'image/png', 'application/pdf']);
+
+const imageList = computed(() => {
+    if (upload.value.fileList.length === 0 && upload.value.fileList) {
+        return [];
+    } else {
+        return upload.value.fileList.filter(item => item.type.includes('image'));
+    }
+});
+const fileList = computed(() => {
+    if (upload.value.fileList.length === 0 && upload.value.fileList) {
+        return [];
+    } else {
+        return upload.value.fileList.filter(item => item.type.includes('pdf'));
+    }
+});
+
+// 校验的图片和pdf队列
+const imageArr = ref([]);
+const fileArr = ref([]);
+
+// 什么时候提示上传数量限制
+const imageWaring = ref(false);
+const fileWaring = ref(false);
+// 上传文件类型的限制
+const typeWaring = ref(false);
+
+// 校验文件: 1.文件类型是否正确 2.文件限制数量：图片9张，文件3个
+const handleFileCheck = async (file, fileList) => {
+    const index = acceptList.value.indexOf(file.type); // -1表示不在接受的文件类型中
+    if (index === -1) {
+        typeWaring.value = true;
+
+        return Upload.LIST_IGNORE;
+    }
+    // 放入对应的队列
+    if (file.type.includes('image')) {
+        // 图片
+        if (imageArr.value.length >= props.imageLimit) {
+            imageWaring.value = true;
+            return Upload.LIST_IGNORE;
+        }
+        imageArr.value.push(file);
+    } else if (file.type.includes('pdf')) {
+        // 文件
+        if (fileArr.value.length >= props.fileLimit) {
+            fileWaring.value = true;
+            return Upload.LIST_IGNORE;
+        }
+        fileArr.value.push(file);
+    }
+    console.log('图片队列', imageArr.value);
+    console.log('文件队列', fileArr.value);
+};
+const handleDetailChange = ({ file, fileList }) => {
+    // 查看upload.fileList里面是否有相同的uid的file
+    let index = upload.value.fileList.findIndex(item => item.uid === file.uid);
+    if (index !== -1) {
+        upload.value.fileList[index] = file;
+    } else {
+        upload.value.fileList.push(file);
+    }
+    // 当所有的file都上传完成的时候，触发返回数据
+    let isAllDone = upload.value.fileList.every(item => item.status === 'done');
+    if (isAllDone) {
+        handleReturn();
+    }
+};
+const handleDelete = item => {
+    if (item.type.includes('image')) {
+        // 图片
+        imageArr.value = imageArr.value.filter(i => i.uid !== item.uid);
+    } else if (item.type.includes('pdf')) {
+        // 文件
+        fileArr.value = fileArr.value.filter(i => i.uid !== item.uid);
+    }
+    upload.value.fileList = upload.value.fileList.filter(i => i.uid !== item.uid);
+    imageArr.value = imageArr.value.filter(i => i.uid !== item.uid);
+    fileArr.value = fileArr.value.filter(i => i.uid !== item.uid);
+    handleReturn();
+};
+
+// 处理返回数据
+const handleReturn = () => {
+    console.log('upload.fileList', upload.value.fileList);
+    // 如果是字符串类型，返回字符串
+    if (props.returnType === 'Str') {
+        let arr = upload.value.fileList.map(item => item.response.data.filename);
+        upload.value.fileSting = arr.join(',');
+        $emit('update:value', upload.value.fileSting);
+    } else if (props.returnType === 'Arr') {
+        // 如果是数组类型，返回数组
+        let arr = upload.value.fileList.map(item => item.response.data.filename);
+        $emit('update:value', arr);
+    } else {
+        // 如果是对象类型，返回对象
+        $emit('update:value', upload.value.fileList);
+    }
+};
+
+watch(
+    () => imageWaring.value,
+    (newVal, oldVal) => {
+        if (newVal) {
+            // 图片数量超过限制
+            message.error(`You can only upload ${props.imageLimit} images!`);
+            imageWaring.value = false;
+        }
+    },
+);
+watch(
+    () => fileWaring.value,
+    (newVal, oldVal) => {
+        if (newVal) {
+            // 文件数量超过限制
+            message.error(`You can only upload ${props.fileLimit} files!`);
+            fileWaring.value = false;
+        }
+    },
+);
+
+watch(
+    () => typeWaring.value,
+    (newVal, oldVal) => {
+        if (newVal) {
+            // 文件类型不正确
+            let acceptName = ''; // 错误提示信息
+            acceptList.value.forEach(item => {
+                // 拼接提示信息
+                acceptName += item.split('/')[1] + ' ';
             });
-            return list.map(item => {
-                index = arr.indexOf(item?.type);
+            message.error(`You can only upload ${acceptName} file!`);
+            typeWaring.value = false;
+        }
+    },
+);
+// 回显value值
+watch(
+    () => props.value,
+    (newVal, oldVal) => {
+        if (newVal) {
+            // 初始化队列
+            imageArr.value = [];
+            fileArr.value = [];
+            // 提示关闭
+            imageWaring.value = false;
+            fileWaring.value = false;
+            typeWaring.value = false;
+            // 处理回显的数据
+
+            let arr = [];
+            if (props.returnType === 'Str') {
+                arr = newVal.split(',');
+            } else if (props.returnType === 'Arr') {
+                arr = newVal;
+            } else {
+                arr = newVal;
+            }
+            upload.value.fileList = arr.map(item => {
                 return {
-                    url: item?.file ? item?.file.replace(target, '') : '',
+                    uid: _.uniqueId('file_'),
+                    name: item.split('.')[0].split('/')[1] || item,
+                    status: 'done',
+                    type:
+                        item.split('.').pop() === 'pdf'
+                            ? 'application/pdf'
+                            : item.split('.').pop() === 'jpg' ||
+                                item.split('.').pop() === 'jpeg' ||
+                                item.split('.').pop() === 'png'
+                              ? 'image/' + item.split('.').pop()
+                              : '',
+                    response: {
+                        data: {
+                            filename: item,
+                            name: item.split('.')[0].split('/')[1] || item,
+                        },
+                    },
                 };
             });
-        },
-        imageData() {
-            const arr = ['image/jpg', 'image/jpeg', 'image/png'];
-            let index;
-            return this.fileList.filter(item => {
-                index = arr.indexOf(item?.type);
-                return index !== -1;
-            });
-        },
-        fileData() {
-            const arr = ['image/jpg', 'image/jpeg', 'image/png'];
-            let index;
-            return this.fileList.filter(item => {
-                index = arr.indexOf(item?.type);
-                return index === -1;
-            });
-        },
-    },
-    data() {
-        return {
-            visible: false,
-            visiblePdf: false,
-            upload: {
-                action: Core.Const.NET.FILE_UPLOAD_END_POINT,
-                headers: {
-                    ContentType: false,
-                },
-                data: {
-                    token: Core.Data.getToken(),
-                    type: 'file',
-                },
-            },
-            fileList: [],
-            VITE_OSS_POINT: Core.Const.NET.OSS_POINT,
-            acceptList: [],
-            previewImageSrc: '',
-            previewFileSrc: '',
-            previewIndex: 0,
-            isMobile: false,
-        };
-    },
-    created() {
-        if (this.type === 'image') {
-            this.acceptList = ['image/jpg', 'image/jpeg', 'image/png'];
-        } else if (this.type === 'file') {
-            this.acceptList = ['image/jpg', 'image/jpeg', 'image/png', 'application/pdf'];
-        }
-        console.log(this.acceptList, 'acceptList');
-    },
-    methods: {
-        handleChange({ file, fileList }) {
-            // 上传成功后，将返回的文件地址保存到fileList中
-            if (file.status === 'done' && file.response.code === 0) {
-                let index = this.fileList.findIndex(item => item.uid === file.uid);
-                if (index !== -1) {
-                    this.fileList[index] = file;
-                } else {
-                    this.fileList.push(file);
-                }
-            }
-            this.fileList.map(item => {
-                item.file = item.response?.data?.filename;
-            });
-            this.$emit('handleUpload', this.fileList);
-        },
-        // 上传前做文件类型限制
-        beforeUpload(file, fileList) {
-            const isJPG = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg';
-            const isPDF = file.type === 'application/pdf';
-            let ImageNum = 0;
-            let FileNum = 0;
-            // 如果既不是图片也不是pdf格式
-            if (!isJPG && !isPDF) {
-                let acceptName = '';
-                this.acceptList.forEach(item => {
-                    acceptName += item.split('/')[1] + ' ';
-                });
-                this.$message.error(`You can only upload ${acceptName} file!`);
-                return Upload.LIST_IGNORE;
-            }
-            this.fileList = fileList;
-            return true;
-        },
 
-        deleteImage(index, uid) {
-            this.fileList = this.fileList.filter(item => item.uid !== uid);
-            this.$emit('handleUpload', this.fileList);
-        },
-        deleteFile(index, uid) {
-            this.fileList = this.fileList.filter(item => item.uid !== uid);
-            this.$emit('handleUpload', this.fileList);
-        },
+            // 添加到对应的队列
+            upload.value.fileList.forEach(item => {
+                if (item.type.includes('image')) {
+                    imageArr.value.push(item);
+                } else if (item.type.includes('pdf')) {
+                    fileArr.value.push(item);
+                }
+            });
+
+            console.log('图片队列', imageArr.value);
+            console.log('文件队列', fileArr.value);
+            console.log('upload.fileList', upload.value.fileList);
+        }
     },
-};
+    {
+        immediate: true,
+        deep: true,
+    },
+);
 </script>
 
 <style lang="less" scoped>
-.upload-body {
-    margin-bottom: 10px;
-    .upload {
-        width: 64px;
-        height: 64px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #f9f9f9;
-    }
-    .image-rule {
+.image-uploader-wrap {
+    .tips {
         margin-left: 20px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        > p {
-            margin-bottom: 4px;
-            position: relative;
-            padding-left: 6px;
-            color: #666;
-            font-family: Montserrat;
-            font-size: 14px;
-            &::before {
-                content: '';
-                display: inline-block;
-                position: absolute;
-                top: 8px;
-                left: 0;
-                width: 3px;
-                height: 3px;
-                border-radius: 1.5px;
-                background-color: #666;
+        font-size: 14px;
+        color: #666666;
+        line-height: 22px;
+        li {
+            margin-bottom: 10px;
+            &:last-child {
+                margin-bottom: 0;
             }
         }
     }
-}
-
-.image-content {
-    height: 100%;
-    width: 100%;
-}
-.image-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    vertical-align: middle;
-    cursor: pointer;
-}
-.image-loading {
-    padding: 20px 10px;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #f1f1f1;
-    font-size: 12px;
-    cursor: pointer;
-    > p {
-        margin: 0;
+    .upload-area-content {
+        .image-list {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            .image-item {
+                width: 78px;
+                height: 78px;
+                background: #f7f8fa;
+                border: 1px dashed #eaecf1;
+                border-radius: 4px;
+                margin-right: 10px;
+                margin-bottom: 10px;
+                position: relative;
+                .image-content {
+                    width: 100%;
+                    height: 100%;
+                    .image-img {
+                        width: 100%;
+                        height: 100%;
+                    }
+                    .image-close {
+                        position: absolute;
+                        top: 4px;
+                        right: 4px;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+        .file-upload {
+            margin-top: 20px;
+            display: flex;
+            .file-list {
+                display: flex;
+                flex-wrap: wrap;
+                .file-item {
+                    width: 78px;
+                    height: 78px;
+                    background: #f7f8fa;
+                    border: 1px dashed #eaecf1;
+                    border-radius: 4px;
+                    margin-right: 10px;
+                    margin-bottom: 10px;
+                    position: relative;
+                    .file {
+                        width: 100%;
+                        height: 100%;
+                        .file-content {
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            .file-img {
+                                width: 40px;
+                                height: 40px;
+                            }
+                            .file-content-text {
+                                width: 100%;
+                                text-align: center;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                white-space: nowrap;
+                                font-size: 12px;
+                                padding: 0 6px;
+                            }
+                            .file-close {
+                                position: absolute;
+                                top: 4px;
+                                right: 4px;
+                                cursor: pointer;
+                            }
+                        }
+                    }
+                }
+            }
+            .upload-wrap {
+                width: 78px;
+                height: 78px;
+                .icon-text {
+                    width: 78px;
+                    height: 78px;
+                    background: #f7f8fa;
+                    border: 1px dashed #eaecf1;
+                    border-radius: 4px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                }
+            }
+        }
     }
-}
-.image-close {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    cursor: pointer;
-}
-.image-list {
-    display: flex;
-    flex-wrap: wrap;
-    .image-item {
-        position: relative;
-        display: inline-block;
-        width: 64px;
-        height: 64px;
-        margin-right: 10px;
-        margin-bottom: 10px;
-    }
-}
-.file-list {
-    display: flex;
-    flex-wrap: wrap;
-    .file-item {
-        margin-right: 10px;
-        margin-bottom: 10px;
-    }
-}
-.file {
-    position: relative;
-    display: inline-block;
-    height: 55px;
-    background-color: #f9f9f9;
-    &-content {
-        height: 100%;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        padding: 10px;
-        cursor: pointer;
-    }
-    &-img {
-        width: 35px;
-        height: 35px;
-        object-fit: cover;
-        vertical-align: middle;
-        margin-right: 4px;
-    }
-    &-loading {
-        width: 64px;
-        height: 64px;
-        padding: 20px 10px;
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
+    .upload-flex-d {
         display: flex;
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background-color: #f1f1f1;
-        font-size: 12px;
-        cursor: pointer;
-        > p {
-            margin: 0;
-        }
     }
-    .file-content-text {
-        display: inline-block;
-        flex: 1;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        word-break: break-all;
-    }
-    .file-close {
-        cursor: pointer;
-    }
-}
-.preview-file {
-    padding-top: 20px;
-    min-height: 500px;
-}
-.preview {
-    padding-top: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.preview-img {
-    height: auto;
-    min-width: 300px;
-}
-
-.mt {
-    :deep(.ant-upload) {
-        width: 100%;
-    }
-    .image-item {
-        width: calc((100% - 20px) / 3);
-        height: auto;
-        &:nth-child(3n) {
-            margin-right: 0;
-        }
-        .image-content .image-img {
-            aspect-ratio: 1;
-            height: auto;
-        }
-        .image-loading {
-            width: 100%;
-            aspect-ratio: 1;
-        }
+    .upload-flex-s {
+        display: flex;
     }
 }
 </style>
