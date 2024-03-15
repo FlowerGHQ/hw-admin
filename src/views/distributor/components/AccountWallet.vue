@@ -434,6 +434,7 @@ const handleOk = () => {
         visible.value = false;
         message.success($t('distributor-detail.operation_success'));
         emit('handleUpdateDetails');
+        getWalletList();
     });
 };
 
