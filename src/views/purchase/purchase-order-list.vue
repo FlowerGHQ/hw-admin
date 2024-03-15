@@ -38,7 +38,7 @@
                                 option-filter-prop="label"
                                 :filter-option="onFilterOption"
                                 @change="handleSearch"
-                            >                              
+                            >
                             </a-select>
                         </div>
                     </a-col>
@@ -362,7 +362,11 @@
                     <div class="shop">
                         {{ $i18n.locale === 'zh' ? item.item.name : item.item.name_en }}
                         <!-- 修改按钮 -->
-                        <ItemSelect
+                        <a-button @click="routerChange('editBom', item)">
+                            {{ $t('def.edit') }}
+                        </a-button>
+
+                        <!-- <ItemSelect
                             btnType="default"
                             :disabled-checked="item?.accessory_list?.map(el => el.target_id)"
                             @select="
@@ -371,7 +375,7 @@
                             "
                         >
                             {{ $t('def.edit') }}
-                        </ItemSelect>
+                        </ItemSelect> -->
                     </div>
                     <div class="bom">
                         <div
@@ -386,9 +390,9 @@
                             <div class="bom-item-num">
                                 <span class="m-r-30">x{{ item.amount }}</span>
 
-                                <a-button type="link" @click="handleDelete(item.id)">
+                                <!-- <a-button type="link" @click="handleDelete(item.id)">
                                     <i class="icon i_delete" />{{ $t('def.delete') }}
-                                </a-button>
+                                </a-button> -->
                             </div>
                         </div>
                         <a-empty v-else />
@@ -710,6 +714,16 @@ export default {
                     });
                     window.open(routeUrl.href, '_self');
                     break;
+                case 'editBom': // 销售BOM
+                    routeUrl = this.$router.resolve({
+                        path: '/item/item-detail',
+                        query: {
+                            id: item.item_id,
+                            tab: 3,
+                        },
+                    });
+                    window.open(routeUrl.href, '_self');
+                    break;
             }
         },
         pageChange(curr) {
@@ -722,7 +736,7 @@ export default {
             this.pageSize = size;
             this.getTableData();
         },
-        handleSearch() {            
+        handleSearch() {
             // 搜索
             this.pageChange(1);
         },
@@ -758,7 +772,7 @@ export default {
                 search_type: this.search_type,
                 page: this.currPage,
                 page_size: this.pageSize,
-            }
+            };
 
             Core.Api.Purchase.list(obj)
                 .then(res => {
@@ -996,7 +1010,7 @@ export default {
         // 分销商的search选项
         onFilterOption(input, option) {
             return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
-        }
+        },
     },
 };
 </script>

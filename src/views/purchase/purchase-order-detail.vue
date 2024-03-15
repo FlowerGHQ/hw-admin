@@ -199,7 +199,7 @@
                             $auth('purchase-order.collection')
                         "
                         type="primary"
-                        @click="handleModalShow('payment')"
+                        @click="routerChange('payment')"
                     >
                         <i class="icon i_received" />{{ $t('p.payment') }}
                     </a-button>
@@ -724,95 +724,6 @@
         </div>
 
         <template class="modal-container">
-            <!-- 确认收款 -->
-            <a-modal v-model:visible="paymentShow" :title="$t('p.confirm_payment')" @ok="handlePayment">
-                <div class="modal-content">
-                    <!-- 国外暂无支付宝微信银行卡支付方式，先隐藏 -->
-                    <!-- 支付方式 -->
-                    <div class="form-item required">
-                        <div class="key">{{ $t('p.payment_method') }}</div>
-                        <div class="value">
-                            <a-select
-                                v-model:value="form.pay_method"
-                                :placeholder="$t('p.please_select_payment_method')"
-                            >
-                                <a-select-option v-for="pay of payMethodList" :key="pay.value" :value="pay.value">{{
-                                    pay[$i18n.locale]
-                                }}</a-select-option>
-                            </a-select>
-                        </div>
-                    </div>
-                    <!-- 分销商 账户余额 -->
-                    <div class="form-item">
-                        <div class="key">{{ $t('d.account_balance') }}:</div>
-                        <div class="value">
-                            <a-input-number
-                                v-model:value="form.accountBalance"
-                                style="width: 120px"
-                                min="0"
-                                :max="accountMoney"
-                                :precision="2"
-                                :prefix="`${$Util.priceUnitFilter(detail.currency)}`"
-                            />
-                        </div>
-                    </div>
-                    <!-- 金额 -->
-                    <div class="form-item required">
-                        <div class="key">{{ $t('ac.money') }}：</div>
-                        <div class="value">
-                            <a-input-number
-                                v-model:value="form.payment"
-                                style="width: 120px"
-                                :min="0"
-                                :max="
-                                    (
-                                        ((detail.freight || 0) + detail.price - detail.payment) / 100 -
-                                        form.accountBalance
-                                    ).toFixed(2)
-                                "
-                                :precision="2"
-                                :prefix="`${$Util.priceUnitFilter(detail.currency)}`"
-                                placeholder="0.00"
-                            />
-                        </div>
-                    </div>
-                    <div class="form-item img-upload required">
-                        <div class="key">{{ $t('p.upload_payment_voucher') }}</div>
-                        <div class="value">
-                            <a-upload
-                                name="file"
-                                class="file-uploader"
-                                :file-list="upload.fileList"
-                                :action="upload.action"
-                                :headers="upload.headers"
-                                :data="upload.data"
-                                :before-upload="handleFileCheck"
-                                @remove="handleremove"
-                                @change="handleFileChange"
-                            >
-                                <a-button
-                                    type="primary"
-                                    ghost
-                                    class="file-upload-btn"
-                                    v-if="upload.fileList.length < 1"
-                                >
-                                    <i class="icon i_upload" /> {{ $t('f.choose') }}
-                                </a-button>
-                            </a-upload>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="key">{{ $t('p.remark') }}：</div>
-                        <div class="value">
-                            <a-input v-model:value="form.remark" :placeholder="$t('def.input')" />
-                        </div>
-                    </div>
-                </div>
-                <template #footer>
-                    <a-button @click="handlePayment" type="primary">{{ $t('def.sure') }}</a-button>
-                    <a-button @click="paymentShow = false">{{ $t('def.cancel') }}</a-button>
-                </template>
-            </a-modal>
             <!-- 确认发货 -->
             <a-modal v-model:visible="outStockShow" :title="$t('p.shipping_confirmation')" @ok="handleOutStock">
                 <div class="modal-content">
@@ -1058,7 +969,6 @@ export default {
             },
             waybill: {},
             waybillInfo: {},
-            paymentShow: false,
             payMethodList: PURCHASE.PAY_METHOD_LIST,
             paymentTimeList: DISTRIBUTOR.PAY_TIME_LIST,
             outStockShow: false, // 确认发货 model 显隐
@@ -1071,7 +981,6 @@ export default {
                 port: '', // 发货港口
                 receive_type: undefined, // 收货方式
                 freight: '', // 运费
-                pay_method: undefined, // 收款方式
                 // pay_clause: undefined, // 支付条款
                 remark: '', // 备注
                 company_uid: undefined,
@@ -1079,10 +988,7 @@ export default {
                 warehouse_id: '',
                 audit_result: '',
                 target_type: Core.Const.STOCK_RECORD.COMMODITY_TYPE.ITEM,
-                payment: '', // 收款金额
-                accountBalance: '', // 账户余额
             },
-            accountMoney: 0, // 账户的余额用来约束
             editForm: {
                 distributor_id: undefined,
             },
@@ -1335,20 +1241,6 @@ export default {
             this.getPurchaseInfo(); // 获取订单信息
         },
 
-        // 经销商钱包详情
-        getWalletDetail() {
-            Core.Api.Distributor.detail({
-                id: Core.Data.getOrgId(),
-            })
-                .then(res => {
-                    this.accountMoney = this.$Util.countFilter(res.detail.wallet_list.balance.balance);
-                    this.form['accountBalance'] = this.$Util.countFilter(res.detail.wallet_list.balance.balance);
-                })
-                .catch(err => {
-                    console.log('getTableData err', err);
-                });
-        },
-
         // 获取 采购单 商品列表
         getPurchaseItemList() {
             Core.Api.Purchase.itemList({
@@ -1538,15 +1430,7 @@ export default {
 
         // 弹出弹框
         handleModalShow(val) {
-            if (val != 'payment') {
-                Object.assign(this.form, this.$options.data().form);
-            }
             switch (val) {
-                case 'payment':
-                    // 付款
-                    this.paymentShow = true;
-                    this.getWalletDetail(); // 钱包详情接口
-                    break;
                 case 'out_stock':
                     // 出库
                     this.outStockShow = true;
@@ -1637,51 +1521,6 @@ export default {
                     this.loading = false;
                 });
         },
-        // 确认收款
-        handlePayment() {
-            this.loading = true;
-            let form = Core.Util.deepCopy(this.form);
-            if (!form.path) {
-                return this.$message.warning(this.$t('p.pay_file_upload'));
-            }
-            if (!form.pay_method) {
-                return this.$message.warning(this.$t('p.please_select_payment_method'));
-            }
-            if (!form.payment) {
-                return this.$message.warning(this.$t('p.enter_payment'));
-            }
-            if (!form.accountBalance) {
-                return this.$message.warning(this.$t('p.enter_payment'));
-            }
-
-            // if (this.loading !== true){
-
-            Core.Api.Purchase.payment({
-                id: this.id,
-                pay_method: form.pay_method,
-                payment: Core.Util.countFilter(form.payment, 100, 0, true),
-                imgs: form.path,
-                img_type: form.type,
-                remark: form.remark,
-                wallet_price: Core.Util.countFilter(form.accountBalance, 100, 0, true),
-            })
-                .then(res => {
-                    this.$message.success(this.$t('p.payment_success'));
-                    this.getList();
-                    this.getPurchaseInfo();
-                    this.paymentShow = false;
-                })
-                .catch(err => {
-                    console.log('getPurchaseInfo err', err);
-                })
-                .finally(() => {
-                    this.timer = setTimeout(() => {
-                        //设置延迟执行
-                        this.loading = false;
-                    }, 300);
-                });
-            // }
-        },
         // 订单审核
         handleCreateAudit() {
             let formObj = {
@@ -1715,41 +1554,6 @@ export default {
 
         // 上传前检查文件
         /*== 确认收款model start ==*/
-
-        // 上传文件前检查
-        handleFileCheck(file) {
-            // console.log('handleFileCheck file.type', file.type)
-            if (file.type.includes('image/')) {
-                this.upload.data.type = 'img';
-            } else if (file.type.includes('video/')) {
-                this.upload.data.type = 'video';
-            } else if (file.type.includes('audio/')) {
-                this.upload.data.type = 'audio';
-            } else {
-                this.upload.data.type = 'file';
-            }
-            return true;
-        },
-        //删除文件
-        handleremove() {
-            this.form.path = '';
-        },
-        // 上传文件
-        handleFileChange({ file, fileList }) {
-            if (file.status == 'done') {
-                if (file.response && file.response.code > 0) {
-                    return this.$message.error(file.response.message);
-                }
-                this.form.path = file.response.data.filename;
-                this.form.type = this.form.path.split('.').pop();
-                if (this.form.path) {
-                    this.submitDisabled = false;
-                }
-            }
-            this.upload.fileList = fileList;
-        },
-
-        /*== 确认收款model end ==*/
 
         authOrg(orgId, orgType) {
             if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
@@ -1788,6 +1592,16 @@ export default {
                         query: {
                             order_id: this.id,
                             order_sn: this.detail.sn,
+                        },
+                    });
+                    window.open(routeUrl.href, '_self');
+                    break;
+                case 'payment':
+                    // 付款                    
+                    routeUrl = this.$router.resolve({
+                        path: '/mall/pending-payment',
+                        query: {
+                            id: this.id,
                         },
                     });
                     window.open(routeUrl.href, '_self');
