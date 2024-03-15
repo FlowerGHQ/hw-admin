@@ -155,8 +155,9 @@ const routerChange = (type, record) => {
     routeUrl = router.resolve({
         path: '/distributor/distributor-recharge-detail',
         query: {
-            id: record.id,
+            id: route.query.org_id,
             currency: route.query.currency,
+            order: record.id,
         },
     });
     window.open(routeUrl.href, '_self');

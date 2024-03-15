@@ -192,13 +192,13 @@ const labelMap = ref([
 ]);
 
 const defaultList = ref([]);
-const isShowUpload = ref(true);
+const isShowUpload = ref(false);
 const isEdit = ref(false);
 
 // 获取订单详情
 const getRechargeDetail = () => {
     let params = {
-        id: route.query.id,
+        id: route.query.order,
     };
     Core.Api.RechargeAudit.detail(params).then(res => {
         details.value = res.detail;
