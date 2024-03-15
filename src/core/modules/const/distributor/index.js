@@ -119,6 +119,13 @@ const DISTRIBUTOR = {
         to_be_paid: 100,
         paid: 200,
     },
+    // 支付账户
+    TYPE_WALLET: {
+        310: { key: 310, t: 'distributor-detail.vehicle_account' },
+        320: { key: 320, t: 'distributor-detail.parts_account' },
+        330: { key: 330, t: 'distributor-detail.after_sales_spare_parts_credit_account' },
+        340: { key: 340, t: 'distributor-detail.credit_account' },
+    }
 };
 
 export default DISTRIBUTOR;

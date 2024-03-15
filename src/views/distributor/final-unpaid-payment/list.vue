@@ -146,6 +146,11 @@
                             </div>
                         </template>
 
+                        <!-- 应付尾款时间 -->
+                        <template v-if="column.key === 'final_pay_due_time'">
+                            {{ $Util.timeFilter(text, 3) }}
+                        </template>
+
                         <template v-if="column.key === 'operations'">
                             <a-button type="link" @click="routerChange('pay', record)">
                                 <!-- <MySvgIcon icon-class="common-view" /> -->
@@ -322,7 +327,7 @@ const tableColumns = computed(() => {
             dataIndex: 'freight_pay_status',
             key: 'freight_pay_status',
         }, // 运费支付状态
-        { title: proxy.$t('p.payable_time'), dataIndex: 'final_pay_due_time', key: 'time' }, // 应付尾款时间
+        { title: proxy.$t('p.payable_time'), dataIndex: 'final_pay_due_time', key: 'final_pay_due_time' }, // 应付尾款时间
         { title: proxy.$t('p.order_time'), dataIndex: 'create_time', key: 'time' }, // 下单时间
         { title: proxy.$t('p.time_payment'), dataIndex: 'pay_time', key: 'time' }, // 支付时间
         { title: proxy.$t('p.order_status'), dataIndex: 'status', key: 'order_status' }, // 订单状态

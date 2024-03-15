@@ -3000,7 +3000,7 @@ const routes = [
     {
         path: '/test',
         name: 'test',
-        component: () => import('../views/z-test/test1.vue'),
+        component: () => import('../views/z-test/test.vue'),
         meta: {
             title: '测试1',
             not_sub_menu: true,

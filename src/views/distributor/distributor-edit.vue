@@ -54,7 +54,12 @@
                 <div v-if="Number(form.pay_type) === PAY_METHODS.OA" class="form-item required">
                     <div class="key">{{ $t('d.OA') /*OA*/ }}:</div>
                     <div class="value d-f-a">
-                        <a-input v-model:value="form.pay_oa_day" :placeholder="$t('n.enter') + $t('d.OA')" />
+                        <a-input-number
+                            class="w-100"
+                            v-model:value="form.pay_oa_day"
+                            :placeholder="$t('n.enter') + $t('d.OA')"
+                            :min="0"
+                        />
                         <span class="m-l-8">{{ $t('common.day') }}</span>
                     </div>
                 </div>
@@ -272,14 +277,38 @@ export default {
             const requireList = [
                 { key: 'code', msg: this.$t('def.enter') + '(' + this.$t('d.code') + ')', isVerification: true }, // 编码
                 { key: 'name', msg: this.$t('def.enter') + '(' + this.$t('d.name') + ')', isVerification: true }, // 分销商名称
-                { key: 'short_name', msg: this.$t('def.enter') + '(' + this.$t('d.short_name') + ')', isVerification: true }, // 简称
-                { key: 'pay_type', msg: this.$t('def.enter') + '(' + this.$t('d.pay_type') + ')', isVerification: true }, // 付款方式
-                { key: 'pay_pre_pay_ratio', msg: this.$t('def.enter') + '(' + this.$t('d.advance_payment') + ')', isVerification: true }, // 预付款
-                { key: 'pay_oa_day', msg: this.$t('def.enter') + '(' + this.$t('d.OA') + ')', isVerification: Number(form.pay_type) === PAY_METHODS.OA }, // OA
-                { key: 'currency', msg: this.$t('def.enter') + '(' + this.$t('p.currency') + ')', isVerification: true }, // 货币
+                {
+                    key: 'short_name',
+                    msg: this.$t('def.enter') + '(' + this.$t('d.short_name') + ')',
+                    isVerification: true,
+                }, // 简称
+                {
+                    key: 'pay_type',
+                    msg: this.$t('def.enter') + '(' + this.$t('d.pay_type') + ')',
+                    isVerification: true,
+                }, // 付款方式
+                {
+                    key: 'pay_pre_pay_ratio',
+                    msg: this.$t('def.enter') + '(' + this.$t('d.advance_payment') + ')',
+                    isVerification: true,
+                }, // 预付款
+                {
+                    key: 'pay_oa_day',
+                    msg: this.$t('def.enter') + '(' + this.$t('d.OA') + ')',
+                    isVerification: Number(form.pay_type) === PAY_METHODS.OA,
+                }, // OA
+                {
+                    key: 'currency',
+                    msg: this.$t('def.enter') + '(' + this.$t('p.currency') + ')',
+                    isVerification: true,
+                }, // 货币
                 { key: 'type', msg: this.$t('def.enter') + '(' + this.$t('n.type') + ')', isVerification: true }, // 类型
                 // { key: 'email', msg: this.$t('def.enter') + '(' + this.$t('n.email') + ')', isVerification: true }, // 邮箱
-                { key: 'sales_area_ids', msg: this.$t('def.enter') + '(' + this.$t('d.sales_area') + ')', isVerification: true }, // 销售区域
+                {
+                    key: 'sales_area_ids',
+                    msg: this.$t('def.enter') + '(' + this.$t('d.sales_area') + ')',
+                    isVerification: true,
+                }, // 销售区域
             ];
             for (let index in requireList) {
                 if (requireList[index]?.isVerification) {
@@ -303,7 +332,7 @@ export default {
                 this.$message.warning(this.$t('def.enter') + '(' + this.$t('n.country') + ')');
             }
 
-            form.sales_area_ids = form.sales_area_ids.join(',');            
+            form.sales_area_ids = form.sales_area_ids.join(',');
             Core.Api.Distributor.save({
                 ...form,
                 ...area,
