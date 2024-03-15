@@ -137,7 +137,7 @@
                         </div>
                         <!-- 余额 -->
                         <p class="settlement-balance">
-                            {{ $t('ac.balance') }}: {{ unit }} {{ this.$Util.Number.numFormat(balance) }}
+                            {{ $t('mall.credit_balance') }}: {{ unit }} {{ this.$Util.Number.numFormat(balance) }}
                         </p>
                     </div>
                     <my-button
@@ -486,7 +486,7 @@ export default {
             };
             Core.Api.Purchase.getWallet(params)
                 .then(res => {
-                    this.balance = Core.Util.countFilter(res.balance || 0 + Number(this.org.credit));
+                    this.balance = Core.Util.countFilter((res.detail.balance || 0) + Number(this.org.credit));
                 })
                 .catch(err => {
                     console.log('handleCreateOrder err', err);
