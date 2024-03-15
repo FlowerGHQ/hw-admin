@@ -1,12 +1,12 @@
 <template>
     <div class="recharge-detail-container">
-        <div class="title">{{ $t(/*充值审核详情*/'payment-management.recharge_audit_details') }}</div>
+        <div class="title">{{ $t(/*充值审核详情*/ 'payment-management.recharge_audit_details') }}</div>
         <div class="detail-panel head">
             <div class="panel-flex-wrap">
                 <div class="info-wrap">
                     <div class="info-line center">
                         <div class="info-key">
-                            {{ $t(/*分销商名称*/'payment-management.dis_name') }}
+                            {{ $t(/*分销商名称*/ 'payment-management.dis_name') }}
                         </div>
                         <div class="info-value">
                             {{ detail.distributor_name || '-' }}
@@ -15,63 +15,99 @@
                     <div class="info-line">
                         <div class="info-block">
                             <div class="info-key">
-                                {{ $t(/*本次充值总金额*/'payment-management.total_amount') }}
+                                {{ $t(/*本次充值总金额*/ 'payment-management.total_amount') }}
                             </div>
                             <div class="info-value flex">
                                 {{ currencyValue }}{{ $Util.countFilter(detail?.content?.total_amount) || '-' }}
-                            </div>    
+                            </div>
                         </div>
                         <div class="info-block">
                             <div class="info-key">
-                                {{ $t(/*整车余额充值金额*/'payment-management.vehicle_amount') }}
+                                {{ $t(/*整车余额充值金额*/ 'payment-management.vehicle_amount') }}
                             </div>
                             <div class="info-value flex">
-                                {{ currencyValue }}{{ $Util.countFilter(detail?.content?.vehicle_balance) || '-' }} 
-                            </div>    
+                                {{ currencyValue }}{{ $Util.countFilter(detail?.content?.vehicle_balance) || '-' }}
+                            </div>
                         </div>
                         <div class="info-block">
                             <div class="info-key">
-                                {{ $t(/*配件余额充值金额*/'payment-management.module_amount') }}
+                                {{ $t(/*配件余额充值金额*/ 'payment-management.module_amount') }}
                             </div>
                             <div class="info-value flex">
-                                {{ currencyValue }}{{ $Util.countFilter(detail?.content?.part_balance) || '-' }} 
-                            </div>    
+                                {{ currencyValue }}{{ $Util.countFilter(detail?.content?.part_balance) || '-' }}
+                            </div>
                         </div>
                     </div>
                     <div class="info-line start">
                         <div class="info-key">
-                            {{ $t(/*收款账户信息*/'payment-management.collection_acc_info') }}
+                            {{ $t(/*收款账户信息*/ 'payment-management.collection_acc_info') }}
                         </div>
                         <div class="info-value w725">
-                            <div v-for="(item, index) in fields" :key="index">{{ item.label }}: {{ detail?.content?.payment_information[item.key] || '-' }}</div>
+                            <div v-for="(item, index) in fields" :key="index">
+                                {{ item.label }}: {{ detail?.content?.payment_information[item.key] || '-' }}
+                            </div>
                         </div>
                     </div>
                     <div class="info-line start">
                         <div class="info-key">
-                            {{ $t(/*支付凭证*/'payment-management.payment_document') }}
+                            {{ $t(/*支付凭证*/ 'payment-management.payment_document') }}
                         </div>
-                        <div v-if="detail?.content?.payment_information ? detail?.content?.payment_information.img.length : false" class="info-value w725 img">
-                            <img class="img-value" v-for="item in detail?.content?.payment_information.img" :src="$Util.imageFilter(item)" >
+                        <div
+                            v-if="
+                                detail?.content?.payment_information
+                                    ? detail?.content?.payment_information.img.length
+                                    : false
+                            "
+                            class="info-value w725 img"
+                        >
+                            <img
+                                class="img-value"
+                                v-for="item in detail?.content?.payment_information.img"
+                                :src="$Util.imageFilter(item)"
+                            />
                         </div>
                         <div class="info-value" v-else>-</div>
                     </div>
                 </div>
                 <div class="info-status">
                     <div class="info-status-box" :class="$Util.auditStatusFilter(detail.status, 'color')">
-                        <img v-if="detail.status === CONST.AUDIT_STATUS_MAP.PENDING_FIRST || detail.status === CONST.AUDIT_STATUS_MAP.PENDING_SECOND" :src="pendingImg" >
-                        <img v-else-if="detail.status === CONST.AUDIT_STATUS_MAP.APPROVAL_SECOND" :src="approveImg" >
-                        <img v-else-if="detail.status === CONST.AUDIT_STATUS_MAP.REJECT_FIRST || detail.status === CONST.AUDIT_STATUS_MAP.REJECT_SECOND" :src="rejectImg" >
+                        <img
+                            v-if="
+                                detail.status === CONST.AUDIT_STATUS_MAP.PENDING_FIRST ||
+                                detail.status === CONST.AUDIT_STATUS_MAP.PENDING_SECOND
+                            "
+                            :src="pendingImg"
+                        />
+                        <img v-else-if="detail.status === CONST.AUDIT_STATUS_MAP.APPROVAL_SECOND" :src="approveImg" />
+                        <img
+                            v-else-if="
+                                detail.status === CONST.AUDIT_STATUS_MAP.REJECT_FIRST ||
+                                detail.status === CONST.AUDIT_STATUS_MAP.REJECT_SECOND
+                            "
+                            :src="rejectImg"
+                        />
                         {{ $Util.auditStatusFilter(detail.status, 'text', $i18n.locale) }}
                     </div>
                 </div>
             </div>
         </div>
         <!-- 只有是业务员且当前状态为一审 或者是财务且当前状态为二审 才能进行审核操作 -->
-        <template v-if="(!isFinance && detail.status === CONST.AUDIT_STATUS_MAP.PENDING_SECOND) || (isFinance && detail.status === CONST.AUDIT_STATUS_MAP.PENDING_FIRST)">
+        <template
+            v-if="
+                (!isFinance && detail.status === CONST.AUDIT_STATUS_MAP.PENDING_SECOND) ||
+                (isFinance && detail.status === CONST.AUDIT_STATUS_MAP.PENDING_FIRST)
+            "
+        >
             <div class="detail-panel">
-                <div :class="detail.result === CONST.AUDIT_RESULT_MAP.REJECT ? 'info-line center required' : 'info-line center required mb'">
+                <div
+                    :class="
+                        detail.result === CONST.AUDIT_RESULT_MAP.REJECT
+                            ? 'info-line center required'
+                            : 'info-line center required mb'
+                    "
+                >
                     <div class="info-key">
-                        {{ $t(/*审核结果*/'payment-management.audit_result') }}
+                        {{ $t(/*审核结果*/ 'payment-management.audit_result') }}
                     </div>
                     <div class="info-value">
                         <a-radio-group @change="radioGroupChange" v-model:value="form.result">
@@ -83,12 +119,12 @@
                 </div>
                 <div v-if="form.result === CONST.AUDIT_RESULT_MAP.REJECT" class="info-line start required mb">
                     <div class="info-key">
-                        {{ $t(/*不通过原因填写*/'payment-management.caus_key') }}
+                        {{ $t(/*不通过原因填写*/ 'payment-management.caus_key') }}
                     </div>
                     <div class="info-value">
                         <a-textarea
                             v-model:value="form.remark"
-                            :placeholder="$t(/*请输入不通过原因*/'payment-management.textarea')"
+                            :placeholder="$t(/*请输入不通过原因*/ 'payment-management.textarea')"
                             :auto-size="{ minRows: 6, maxRows: 6 }"
                         />
                     </div>
@@ -99,7 +135,7 @@
         <div class="detail-panel" v-if="rejectAudit">
             <div :class="detail.result === CONST.AUDIT_RESULT_MAP.REJECT ? 'info-line center' : 'info-line center mb'">
                 <div class="info-key">
-                    {{ $t(/*审核结果*/'payment-management.audit_result') }}
+                    {{ $t(/*审核结果*/ 'payment-management.audit_result') }}
                 </div>
                 <div class="info-value">
                     {{ $Util.auditStatusFilter(detail.status, 'text', $i18n.locale) }}
@@ -107,21 +143,25 @@
             </div>
             <div v-if="form.result === CONST.AUDIT_RESULT_MAP.REJECT" class="info-line start">
                 <div class="info-key">
-                    {{ $t(/*不通过原因*/'payment-management.caus_result') }}
+                    {{ $t(/*不通过原因*/ 'payment-management.caus_result') }}
                 </div>
                 <div class="info-value">
                     {{ detail?.content?.payment_information?.remark }}
                 </div>
             </div>
         </div>
-        <div class="btn-container" v-if="(!isFinance && detail.status === CONST.AUDIT_STATUS_MAP.PENDING_SECOND) || (isFinance && detail.status === CONST.AUDIT_STATUS_MAP.PENDING_FIRST)">
-            <a-button @click="routerChange('back')">{{ $t(/*取消*/'pop_up.no') }}</a-button>
-            <a-button @click="handleSubmit" type="primary">{{ $t(/*确定*/'pop_up.yes') }}</a-button>
+        <div
+            class="btn-container"
+            v-if="
+                (!isFinance && detail.status === CONST.AUDIT_STATUS_MAP.PENDING_SECOND) ||
+                (isFinance && detail.status === CONST.AUDIT_STATUS_MAP.PENDING_FIRST)
+            "
+        >
+            <a-button @click="routerChange('back')">{{ $t(/*取消*/ 'pop_up.no') }}</a-button>
+            <a-button @click="handleSubmit" type="primary">{{ $t(/*确定*/ 'pop_up.yes') }}</a-button>
         </div>
-        <CheckModal :visible="modalShow" :bodyText="modalText" :title='modalTitle'>
-            <a-button @click="modalShow = false">{{
-                $t(/*返回修改*/ 'payment-management.return_modify')
-            }}</a-button>
+        <CheckModal :visible="modalShow" :bodyText="modalText" :title="modalTitle">
+            <a-button @click="modalShow = false">{{ $t(/*返回修改*/ 'payment-management.return_modify') }}</a-button>
             <a-button type="primary" @click="handleModalSubmit">{{ submitText }}</a-button>
         </CheckModal>
     </div>
@@ -143,7 +183,8 @@ const detail = ref({
     total_amount: 150,
     vehicle_amount: 150,
     module_amount: 150,
-    account_info: 'BENEFICIARY BANK: J.P. MORGAN BANK LUXEMBOURG S.A., DUBLIN BRANCH SWIFT CODE: CHASIE4L BANK ADDRESS: 200 Capital Dock 79 Sir John Rogersons Quay Dublin 2 D02 RK57 ACCOUNT NUMBER: IE79CHAS93090301193329 COMPANY NAME: HORWIN NETHERLANDS B.V. COMAPANY ADDRESS: Flight Forum 40 5657 DB Eindhoven The Netherlands',
+    account_info:
+        'BENEFICIARY BANK: J.P. MORGAN BANK LUXEMBOURG S.A., DUBLIN BRANCH SWIFT CODE: CHASIE4L BANK ADDRESS: 200 Capital Dock 79 Sir John Rogersons Quay Dublin 2 D02 RK57 ACCOUNT NUMBER: IE79CHAS93090301193329 COMPANY NAME: HORWIN NETHERLANDS B.V. COMAPANY ADDRESS: Flight Forum 40 5657 DB Eindhoven The Netherlands',
     img_list: [
         'https://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/2cf34279db262a4563d82e3033c7f4c18ed183efd6b45063f72582005349987d.png',
         'https://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/2cf34279db262a4563d82e3033c7f4c18ed183efd6b45063f72582005349987d.png',
@@ -152,44 +193,50 @@ const detail = ref({
         'https://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/2cf34279db262a4563d82e3033c7f4c18ed183efd6b45063f72582005349987d.png',
         'https://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/2cf34279db262a4563d82e3033c7f4c18ed183efd6b45063f72582005349987d.png',
         'https://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/2cf34279db262a4563d82e3033c7f4c18ed183efd6b45063f72582005349987d.png',
-    ]
-})
+    ],
+});
 const form = ref({
     id: 0,
     result: 3,
-    remark: undefined,   
-})
-const CONST = Core.Const.AUDIT_MANAGEMENT
+    remark: undefined,
+});
+const CONST = Core.Const.AUDIT_MANAGEMENT;
 // 当前货币类型
 const currencyValue = computed(() => {
-    if(detail.value.currency === 'EUR') {
-        return '€';        
+    if (detail.value.currency === 'EUR') {
+        return '€';
     } else {
-        return '$';           
+        return '$';
     }
 });
 // 是否是财务权限
 const isFinance = computed(() => {
-    if(Core.Data.getAuthority()['recharge-review.first_instance']) {
-        return true;        
+    if (Core.Data.getAuthority()['recharge-review.first_instance']) {
+        return true;
     } else {
-        return false;           
+        return false;
     }
 });
 // 是否是待审核状态
 const pendingAudit = computed(() => {
-    if(detail.value.status === CONST.AUDIT_STATUS_MAP.PENDING_FIRST || detail.value.status === CONST.AUDIT_STATUS_MAP.PENDING_SECOND) {
-        return true;        
+    if (
+        detail.value.status === CONST.AUDIT_STATUS_MAP.PENDING_FIRST ||
+        detail.value.status === CONST.AUDIT_STATUS_MAP.PENDING_SECOND
+    ) {
+        return true;
     } else {
-        return false;           
+        return false;
     }
 });
 // 是否是审核不通过状态
 const rejectAudit = computed(() => {
-    if(detail.value.status === CONST.AUDIT_STATUS_MAP.REJECT_FIRST || detail.value.status === CONST.AUDIT_STATUS_MAP.REJECT_SECOND) {
-        return true;        
+    if (
+        detail.value.status === CONST.AUDIT_STATUS_MAP.REJECT_FIRST ||
+        detail.value.status === CONST.AUDIT_STATUS_MAP.REJECT_SECOND
+    ) {
+        return true;
     } else {
-        return false;           
+        return false;
     }
 });
 const fields = ref([
@@ -199,91 +246,100 @@ const fields = ref([
     { key: 'account_number', label: 'ACCOUNT NUMBER' },
     { key: 'company_name', label: 'COMPANY NAME' },
     { key: 'company_address', label: 'COMPANY ADDRESS' },
-    { key: 'remark', label: $t(/*其他汇款信息*/'payment-management.other_remittance_info') }
-])
-const OSS_URL = 'https://horwin-app.oss-cn-hangzhou.aliyuncs.com'
-const approveImg = `${OSS_URL}/png/323d149575aa263510339aeb319f6739b85a35e03788ca30a6ea119b004e7d46.png`
-const pendingImg = `${OSS_URL}/png/c82cb239af7563f5062ffbb4bd199d0512b15c062a97323a34113a198b447853.png`
-const rejectImg = `${OSS_URL}/png/92c9d1c2acbce09186c357d0e7cc7f16304ee584eeb69b7b639aa15c793b9104.png`
-const modalShow = ref(false)
-const modalTitle = ref('payment-management.sure_fail')
-const modalText = ref($t('payment-management.sure_tip'))
-const submitText = ref($t('payment-management.confirm_reject'))
+    { key: 'remark', label: $t(/*其他汇款信息*/ 'payment-management.other_remittance_info') },
+]);
+const OSS_URL = 'https://horwin-app.oss-cn-hangzhou.aliyuncs.com';
+const approveImg = `${OSS_URL}/png/323d149575aa263510339aeb319f6739b85a35e03788ca30a6ea119b004e7d46.png`;
+const pendingImg = `${OSS_URL}/png/c82cb239af7563f5062ffbb4bd199d0512b15c062a97323a34113a198b447853.png`;
+const rejectImg = `${OSS_URL}/png/92c9d1c2acbce09186c357d0e7cc7f16304ee584eeb69b7b639aa15c793b9104.png`;
+const modalShow = ref(false);
+const modalTitle = ref('payment-management.sure_fail');
+const modalText = ref($t('payment-management.sure_tip'));
+const submitText = ref($t('payment-management.confirm_reject'));
 onMounted(() => {
     form.value.id = Number(route.query.id) || 0;
     detail.value.id = Number(route.query.id) || 0;
-    if(form.value.id) {
+    if (form.value.id) {
         getDetailService(form.value.id);
     }
 });
 /* Fetch start*/
-const handleAuditService = (params) => {
+const handleAuditService = params => {
     Core.Api.RechargeAudit.audit({
-        ...params
-    }).then(res => {
-        console.log('handleAuditService res', res);
-        proxy.$message.success(proxy.$t(/*审核成功*/'payment-management.successful_audit'));
-        modalShow.value = false
-        getDetailService(detail.value.id)
-    }).catch(err => {
-        console.log('handleAuditService err', err);
+        ...params,
     })
-}
-const getDetailService = (id) => {
+        .then(res => {
+            console.log('handleAuditService res', res);
+            proxy.$message.success(proxy.$t(/*审核成功*/ 'payment-management.successful_audit'));
+            modalShow.value = false;
+            getDetailService(detail.value.id);
+        })
+        .catch(err => {
+            console.log('handleAuditService err', err);
+        });
+};
+const getDetailService = id => {
     Core.Api.RechargeAudit.detail({
-        id: id   
-    }).then(res => {
-        console.log('getDetailService res', res);
-        detail.value = res.detail
-        if(detail.value.content) {
-            detail.value.content = JSON.parse(detail.value.content)
-        }
-        console.log('detail?.content?.payment_information.img', detail.value.content.payment_information.img);
-    }).catch(err => {
-        console.log('getDetailService err', err);
+        id: id,
     })
-}
+        .then(res => {
+            console.log('getDetailService res', res);
+            detail.value = res.detail;
+            if (detail.value.content) {
+                detail.value.content = JSON.parse(detail.value.content);
+            }
+            console.log('detail?.content?.payment_information.img', detail.value.content.payment_information.img);
+        })
+        .catch(err => {
+            console.log('getDetailService err', err);
+        });
+};
 /* Fetch end*/
 
 /* methods start*/
-const checkForm = (form) => {
-    if(form.result === CONST.AUDIT_RESULT_MAP.REJECT) {
-        if(!form.remark) {
-            return proxy.$message.warning(proxy.$t(/*请填写不通过原因*/'payment-management.unvalid_tip'));
-        } 
+const checkForm = form => {
+    if (form.result === CONST.AUDIT_RESULT_MAP.REJECT) {
+        if (!form.remark) {
+            return proxy.$message.warning(proxy.$t(/*请填写不通过原因*/ 'payment-management.unvalid_tip'));
+        }
     }
-    return false   
-}
+    return false;
+};
 const handleSubmit = () => {
     let _form = Core.Util.deepCopy(form.value);
     if (checkForm(_form)) return;
-    modalShow.value = true
-}
-const routerChange = (type) => {
+    console.log(_form.result);
+    if (_form.result === 3) {
+        modalShow.value = true;
+    } else {
+        handleModalSubmit();
+    }
+};
+const routerChange = type => {
     switch (type) {
         case 'back': // 编辑
             router.go(-1);
             break;
     }
-}
-const radioGroupChange = (e) => {
-    if(e.target.value === 1) {
-        modalTitle.value = 'payment-management.sure_success'
-        modalText.value = proxy.$t('payment-management.sure_approve_tip')
-        submitText.value = proxy.$t('payment-management.confirm_through')
+};
+const radioGroupChange = e => {
+    if (e.target.value === 1) {
+        modalTitle.value = 'payment-management.sure_success';
+        modalText.value = proxy.$t('payment-management.sure_approve_tip');
+        submitText.value = proxy.$t('payment-management.confirm_through');
     } else {
-        modalTitle.value = 'payment-management.sure_fail'
-        modalText.value = proxy.$t('payment-management.sure_tip')
-        submitText.value = proxy.$t('payment-management.confirm_reject')
+        modalTitle.value = 'payment-management.sure_fail';
+        modalText.value = proxy.$t('payment-management.sure_tip');
+        submitText.value = proxy.$t('payment-management.confirm_reject');
     }
-}
+};
 const handleModalSubmit = () => {
     handleAuditService({
         id: form.value.id,
         status: form.value.result,
-        remark: form.value.remark,  
-    })
-}
+        remark: form.value.remark,
+    });
+};
 /* methods end*/
 </script>
 
@@ -295,14 +351,14 @@ const handleModalSubmit = () => {
     .title {
         width: 100%;
         font-size: 18px;
-        color: #1D2129;
+        color: #1d2129;
         font-weight: 600;
         padding: 15px 20px;
         box-sizing: border-box;
     }
     .detail-panel {
         width: 100%;
-        background: #FFFFFF;
+        background: #ffffff;
         padding: 20px;
         box-sizing: border-box;
         border-radius: 6px 6px 0 0;
@@ -314,7 +370,6 @@ const handleModalSubmit = () => {
             width: 100%;
             display: flex;
             justify-content: space-between;
-
         }
         .info-line {
             display: flex;
@@ -353,13 +408,13 @@ const handleModalSubmit = () => {
                 text-align: right;
                 margin-right: 16px;
                 font-size: 14px;
-                color: #1D2129;
+                color: #1d2129;
                 font-weight: 400;
                 line-height: 22px;
             }
             .info-value {
                 font-size: 16px;
-                color: #4E5969;
+                color: #4e5969;
                 font-weight: 400;
                 line-height: 22px;
                 &.w725 {
@@ -387,21 +442,21 @@ const handleModalSubmit = () => {
                 box-sizing: border-box;
                 font-size: 20px;
                 font-weight: 400;
-                >img {
+                > img {
                     width: 18px;
                     height: 18px;
                     margin-right: 4px;
                 }
                 &.yellow {
-                    background: #FEF7E7;
-                    color: #FAAD14;
+                    background: #fef7e7;
+                    color: #faad14;
                 }
                 &.green {
                     background: rgba(38, 171, 84, 0.05);
-                    color: #26AB54;
+                    color: #26ab54;
                 }
                 &.red {
-                    color: #FF3D40;
+                    color: #ff3d40;
                     background: rgba(255, 61, 64, 0.05);
                 }
                 &.grey {
@@ -412,8 +467,8 @@ const handleModalSubmit = () => {
         }
     }
     .btn-container {
-        background: #FFFFFF;
-        border-top: 1px solid #F2F3F5;
+        background: #ffffff;
+        border-top: 1px solid #f2f3f5;
         padding: 18px 0;
         box-sizing: border-box;
         width: 100%;
@@ -428,7 +483,7 @@ const handleModalSubmit = () => {
 textarea.ant-input {
     width: 725px;
     font-size: 14px;
-    color: #4E5969;
+    color: #4e5969;
 }
 .ant-btn {
     font-size: 14px;

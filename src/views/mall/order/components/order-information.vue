@@ -90,7 +90,7 @@
                                             }}
                                         </template>
                                     </template>
-                                    <template v-else> {{ unit }}0<span class="original-price">12123</span> </template>
+                                    <template v-else> {{ unit }}<span class="original-price">0</span> </template>
                                 </span>
                                 <template v-if="item.item?.isGift">
                                     <span class="row-text excluding">{{ $t('mall.excluding') }}</span>

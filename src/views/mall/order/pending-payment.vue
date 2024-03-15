@@ -5,7 +5,7 @@
             <div class="order-mes box">
                 <p class="box-title">{{ $t('mall.pending_payment_order') }}</p>
                 <div class="box-content" style="padding: 0">
-                    <OrderInformation :list="detail.item_list" :unit="currency" :isConfirmPrice="true" />
+                    <OrderInformation :list="detail.item_list" :unit="unit" :isConfirmPrice="true" />
                 </div>
             </div>
             <div class="payment-balance">
@@ -25,7 +25,7 @@
                                     <div class="deposit-payment-row-left">
                                         {{ mes.pay_pre_pay_ratio }}% {{ $t('mall.advance_payment') }}:
                                     </div>
-                                    <div class="deposit-payment-row-right">{{ currency }} {{ pre_price }}</div>
+                                    <div class="deposit-payment-row-right">{{ unit }} {{ pre_price }}</div>
                                 </div>
                                 <div class="deposit-payment-row">
                                     <!-- 支付尾款 && OA时存在 -->
@@ -42,7 +42,7 @@
                                     <div class="deposit-payment-row-left">
                                         {{ mes.pay_final_pay_ratio }}% {{ $t('mall.final_payment') }}:
                                     </div>
-                                    <div class="deposit-payment-row-right">{{ currency }} {{ end_price }}</div>
+                                    <div class="deposit-payment-row-right">{{ unit }} {{ end_price }}</div>
                                 </div>
                                 <div class="deposit-payment-row">
                                     <div class="deposit-payment-row-left">{{ $t('mall.freight_amount') }}:</div>
@@ -50,7 +50,7 @@
                                 </div>
                                 <div class="deposit-payment-row">
                                     <div class="deposit-payment-row-left">{{ $t('mall.this_need') }}:</div>
-                                    <div class="deposit-payment-row-right price">{{ currency }} {{ need_pay }}</div>
+                                    <div class="deposit-payment-row-right price">{{ unit }} {{ need_pay }}</div>
                                 </div>
                             </div>
                         </div>
@@ -66,18 +66,22 @@
                                 <div class="recharge">
                                     <span class="recharge-balance"
                                         >{{ $t('mall.balance_parts') }}：<span class="price"
-                                            >{{ currency }} {{ balance }}</span
+                                            >{{ unit }} {{ balance }}</span
                                         ></span
                                     >
                                     <div class="btn">
-                                        <MyButton padding="12px 32px" @clickFn="routerChange('/mall/recharge')">
+                                        <MyButton
+                                            v-if="disabled"
+                                            padding="12px 32px"
+                                            @clickFn="routerChange('/mall/recharge')"
+                                        >
                                             <img class="account-balance" src="@images/mall/order/account-balance.png" />
                                             {{ $t('mall.top_up') }}
                                         </MyButton>
                                     </div>
                                 </div>
                                 <p class="dis warn" v-if="disabled">
-                                    {{ $t('mall.insufficient_balance') }} {{ currency }}
+                                    {{ $t('mall.insufficient_balance') }} {{ unit }}
                                     {{ need_balance }}
                                     {{ $t('mall.required') }}
                                 </p>
@@ -86,7 +90,7 @@
                                     <a-input-number
                                         :disabled="true"
                                         v-model:value="need_balance"
-                                        :suffix="currency"
+                                        :suffix="unit"
                                         style="width: 268px"
                                         :max="need_balance"
                                     />
@@ -96,19 +100,19 @@
                                 <div class="recharge">
                                     <span class="recharge-balance"
                                         >{{ $t('mall.parts_vehicle') }}：<span class="price"
-                                            >{{ currency }} {{ balanceParts }}</span
+                                            >{{ unit }} {{ balanceParts }}</span
                                         ></span
                                     >
                                 </div>
                                 <p class="dis">
-                                    {{ $t('mall.can_use') }} {{ currency }}
+                                    {{ $t('mall.can_use') }} {{ unit }}
                                     {{ after_price_credit }}
                                 </p>
                                 <div class="input">
                                     <span class="key">{{ $t('mall.this_time_use') }}：</span>
                                     <a-input-number
                                         v-model:value="this_time_credit"
-                                        :suffix="currency"
+                                        :suffix="unit"
                                         style="width: 268px"
                                         :max="after_price_credit"
                                     />
@@ -122,35 +126,37 @@
                                 <div class="recharge">
                                     <span class="recharge-balance"
                                         >{{ $t('mall.balance_vehicle') }}：<span class="price"
-                                            >{{ currency }} {{ balance }}</span
+                                            >{{ unit }} {{ balance }}</span
                                         ></span
                                     >
                                     <div class="btn">
-                                        <MyButton padding="12px 32px" @clickFn="routerChange('/mall/recharge')">
+                                        <MyButton
+                                            v-if="disabled"
+                                            padding="12px 32px"
+                                            @clickFn="routerChange('/mall/recharge')"
+                                        >
                                             <img class="account-balance" src="@images/mall/order/account-balance.png" />
                                             {{ $t('mall.top_up') }}
                                         </MyButton>
                                     </div>
                                 </div>
                                 <p class="dis warn" v-if="disabled">
-                                    {{ $t('mall.insufficient_balance') }} {{ currency }}
+                                    {{ $t('mall.insufficient_balance') }} {{ unit }}
                                     {{ need_pay }}
                                     {{ $t('mall.required') }}
                                 </p>
-                                <p class="dis" v-else>
-                                    {{ $t('mall.required_balance') }} {{ currency }} {{ need_pay }}
-                                </p>
+                                <p class="dis" v-else>{{ $t('mall.required_balance') }} {{ unit }} {{ need_pay }}</p>
                             </div>
                             <!-- OA -->
                             <div class="balance-item" v-if="pay_type === 60 && isPre">
                                 <div class="recharge">
                                     <span class="recharge-balance"
                                         >{{ $t('mall.credit_balance') }}：<span class="price"
-                                            >{{ currency }} {{ balanceCredit }}</span
+                                            >{{ unit }} {{ balanceCredit }}</span
                                         ></span
                                     >
                                 </div>
-                                <p class="dis">{{ $t('mall.occupies') }} {{ currency }} {{ end_price }}</p>
+                                <p class="dis">{{ $t('mall.occupies') }} {{ unit }} {{ end_price }}</p>
                             </div>
                         </template>
                     </div>
@@ -164,7 +170,7 @@
                     <div class="settlement-mes">
                         <div class="settlement-price">
                             <span class="dis"> {{ $t('mall.payable_amount') }}: </span>
-                            <span class="price"> {{ currency }} {{ need_pay }} </span>
+                            <span class="price"> {{ unit }} {{ need_pay }} </span>
                         </div>
                         <p class="settlement-balance warn" v-if="disabled">
                             {{ $t('mall.top_up_first') }}
@@ -199,10 +205,10 @@ const route = useRoute();
 const router = useRouter();
 
 const id = ref(route.query?.id || '');
-const currency = ref('€');
 const orgId = Core.Data.getOrgId();
 const orgType = Core.Data.getOrgType();
 const org = Core.Data.getOrgObj();
+const unit = ref('€');
 const pay_type = ref(org?.pay_type); // 60:OA 70:TT
 const isSelectEnd = ref(true); // 是否选中支付尾款
 const isAfter = ref(''); // 售前
@@ -262,7 +268,7 @@ const sum_price = computed(() => {
 });
 // 预付款(售前)
 const pre_price = computed(() => {
-    return Math.ceil((sum_price.value * detail.pay_pre_pay_ratio) / 100);
+    return Math.ceil(sum_price.value * detail.pay_pre_pay_ratio) / 100;
 });
 // 尾款(售前)
 const end_price = computed(() => {
@@ -274,7 +280,7 @@ const after_price = computed(() => {
 });
 // 售后备件
 const after_price_credit = computed(() => {
-    return Math.ceil((balanceParts.value * detail.spare_part_deduction_ratio) / 100);
+    return Math.ceil(balanceParts.value * detail.spare_part_deduction_ratio) / 100;
 });
 // 需付余额
 const need_balance = computed(() => {
@@ -300,6 +306,8 @@ const getDetail = () => {
         .then(res => {
             Object.assign(detail, res.detail);
             isAfter.value = detail.type !== Core.Const.PURCHASE.FLAG_ORDER_TYPE.PRE_SALES;
+            unit.value = Core.Const.ITEM.MONETARY_TYPE_MAP[detail.currency];
+            getWallet();
             // 假数据
 
             //售前
@@ -334,6 +342,26 @@ const getDetail = () => {
             console.log('handleCreateOrder err', err);
         });
 };
+const getWallet = async () => {
+    const params = {
+        org_id: orgId, //组织id
+        org_type: orgType, //组织类型
+        type: 30, //钱包类型：10.售前余额；20.售后余额；30.售后备件账户；40.授信账户
+        currency_type: Core.Const.WALLET.TYPE[detail.currency], //货币类型：1.人民币；2.欧元；3.美元；4.英镑
+    };
+    balance.value = Core.Util.countFilter(
+        (await Core.Api.Purchase.getWallet({ ...params, type: 10 }))?.detail?.balance || 0,
+    );
+    balanceAfter.value = Core.Util.countFilter(
+        (await Core.Api.Purchase.getWallet({ ...params, type: 20 }))?.detail?.balance || 0,
+    );
+    balanceParts.value = Core.Util.countFilter(
+        (await Core.Api.Purchase.getWallet({ ...params, type: 30 }))?.detail?.balance || 0,
+    );
+    balanceCredit.value = Core.Util.countFilter(
+        ((await Core.Api.Purchase.getWallet({ ...params, type: 40 }))?.detail?.balance || 0) + Number(org.credit),
+    );
+};
 const handlePayOrder = () => {
     let subject;
     if (isPre.value) {
@@ -367,7 +395,7 @@ const handlePayOrder = () => {
     const params = {
         id: detail.id, //订单id
         subject: subject, //10.预付款；20.尾款；30.全款（不包含运费）；40.全款并使用备件钱包（不包含运费）；50.运费；60.尾款加运费
-        payment: need_pay.value, //支付金额
+        payment: need_pay.value * 100, //支付金额
         spare_part_credit_payment: this_time_credit.value, //备件信用支付金额
     };
     Core.Api.Purchase.pay(params)
@@ -400,30 +428,7 @@ const routerChange = (routeUrl, item = {}, type = 1) => {
 };
 
 onMounted(async () => {
-    if (Core.Data.getCurrency() === 'EUR') {
-        currency.value = '€';
-    } else {
-        currency.value = '$';
-    }
     getDetail();
-    const params = {
-        org_id: orgId, //组织id
-        org_type: orgType, //组织类型
-        type: 30, //钱包类型：10.售前余额；20.售后余额；30.售后备件账户；40.授信账户
-        currency_type: Core.Const.WALLET.TYPE[currency.value], //货币类型：1.人民币；2.欧元；3.美元；4.英镑
-    };
-    balance.value = Core.Util.countFilter(
-        (await Core.Api.Purchase.getWallet({ ...params, type: 10 }))?.detail?.balance || 0,
-    );
-    balanceAfter.value = Core.Util.countFilter(
-        (await Core.Api.Purchase.getWallet({ ...params, type: 20 }))?.detail?.balance || 0,
-    );
-    balanceParts.value = Core.Util.countFilter(
-        (await Core.Api.Purchase.getWallet({ ...params, type: 30 }))?.detail?.balance || 0,
-    );
-    balanceCredit.value = Core.Util.countFilter(
-        ((await Core.Api.Purchase.getWallet({ ...params, type: 40 }))?.detail?.balance || 0) + Number(org.credit),
-    );
 });
 </script>
 <style lang="less" scoped src="../css/layout.css"></style>

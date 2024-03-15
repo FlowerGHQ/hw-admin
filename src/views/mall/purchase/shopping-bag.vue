@@ -595,7 +595,7 @@
                                             parseFloat(
                                                 (
                                                     allPrice.value -
-                                                    Math.ceil((allPrice.value * org.pay_pre_pay_ratio) / 100)
+                                                    Math.ceil(allPrice.value * org.pay_pre_pay_ratio) / 100
                                                 ).toFixed(4),
                                             ),
                                         )
@@ -608,7 +608,7 @@
                         showRightIcon
                         type="primary"
                         padding="12px 32px"
-                        :disabled="!isSelected || !isBalanceEnough"
+                        :disabled="!isSelected"
                         font="14px"
                         @click.native="handleCreateOrder"
                     >
@@ -785,7 +785,7 @@ const amount = computed(() => {
     );
 });
 const isBalanceEnough = computed(() => {
-    const sum = parseFloat((allPrice.value - Math.ceil((allPrice.value * org.pay_pre_pay_ratio) / 100)).toFixed(4)); // 总尾款
+    const sum = parseFloat((allPrice.value - Math.ceil(allPrice.value * org.pay_pre_pay_ratio) / 100).toFixed(4)); // 总尾款
     return sum <= balance.value;
 });
 // 计算是否全选车辆
@@ -1209,7 +1209,7 @@ const getWallet = () => {
         org_id: orgId, //组织id
         org_type: orgType, //组织类型
         type: 40, //钱包类型：10.售前余额；20.售后余额；30.售后备件账户；40.授信账户
-        currency_type: Core.Const.WALLET.TYPE[currency.value], //货币类型：1.人民币；2.欧元；3.美元；4.英镑
+        currency_type: Core.Const.WALLET.TYPE[org.currency], //货币类型：1.人民币；2.欧元；3.美元；4.英镑
     };
     Core.Api.Purchase.getWallet(params)
         .then(res => {

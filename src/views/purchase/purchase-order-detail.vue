@@ -3,69 +3,91 @@
         <!-- 采购订单详情 -->
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area" style="font-weight: 600">{{ $t('p.details') }}</div>
+                <div class="title-area" style="font-weight: 600">{{ $t('p.details') }}{{ detail.status }}</div>
+                <!--
+                    (订单状态和订单类型) => 售前订单,售后订单 有按钮 & 
+                    订单状态(等待审核 待支付 待生产 生产中)
+                    ||
+                    订单取消状态(待审核)
+                    需要按钮
+
+                    兼顾老数据 老数据不需要按钮  只有 TT和OA显示
+                -->
                 <div
                     class="btns-area"
                     v-if="
-                        detail.status != STATUS.INIT &&
-                        detail.status != STATUS.SPLIT &&
-                        detail.status != STATUS.WAIT_AUDIT &&
-                        // detail.status != STATUS.ORDER_TRANSFERRED &&
-                        !$auth('purchase-order.supply-detail')
+                        ($Util.Common.returnTypeBool(detail.type, [
+                            FLAG_ORDER_TYPE.PRE_SALES,
+                            FLAG_ORDER_TYPE.AFTER_SALES,
+                        ]) &&
+                            $Util.Common.returnTypeBool(detail.status, [
+                                STATUS.WAIT_AUDIT,
+                                STATUS.WAIT_PAY,
+                                STATUS.WAIT_PRODUCED,
+                                STATUS.IN_PRODUCTION,
+                            ]) &&
+                            $Util.Common.returnTypeBool(detail.pay_type, [PAY_TIME.TT, PAY_TIME.OA])) ||
+                        $Util.Common.returnTypeBool(detail.cancel_status, [AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL])
                     "
                 >
-                    <a-dropdown placement="bottomRight">
-                        <template #overlay>
-                            <a-menu>
-                                <template v-if="$auth('ADMIN') && $auth('purchase-order.export')">
-                                    <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
-                                    <a-menu-item key="0">
-                                        <!-- 导出PI -->
-                                        <div @click="handleExportIn">
-                                            {{ $t('p.export_purchase') }}
-                                        </div>
-                                    </a-menu-item>
-                                    <!-- 修改PI -->
-                                    <!-- <a-button @click="handleUpdatePI"><i class="icon i_edit" />{{ $t('p.update_PI') }}</a-button> -->
-                                    <!-- <a-menu-item key="1">
-                                        <div @click="handleUpdatePI">
-                                            {{ $t('p.update_PI') }}
-                                        </div>
-                                    </a-menu-item> -->
-                                </template>
-                                
-                                <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
-                                <!-- 导出商品信息 -->
-                                <!-- <template v-if="!$auth('ADMIN') && $auth('purchase-order.export')">
-                                    <a-menu-item key="3">
-                                        <div @click="handleExportInfo">
-                                            {{ $t('p.export_product_information') }}
-                                        </div>
-                                    </a-menu-item>
-                                </template> -->
-                                <!-- <a-button @click="handleExportInfo">{{ $t('p.export_product_information') }}</a-button> -->
+                    <!-- 
+                        平台方 => 订单状态(待支付,待生产,生产中) --- 订单取消状态(待审核)
+                        分销商 => 订单状态(待生产,生产中) --- 订单取消状态(待审核) 
+                    -->
+                    <template v-if="MoreActions()">
+                        <a-dropdown placement="bottomRight">
+                            <template #overlay>
+                                <a-menu>
+                                    <template v-if="$auth('purchase-order.export')">
+                                        <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
+                                        <a-menu-item key="0">
+                                            <!-- 导出PI -->
+                                            <div @click="handleExportIn">
+                                                {{ $t('p.export_purchase') }}
+                                            </div>
+                                        </a-menu-item>
+                                        <!-- 修改PI -->
+                                        <!-- <a-button @click="handleUpdatePI"><i class="icon i_edit" />{{ $t('p.update_PI') }}</a-button> -->
+                                        <!-- <a-menu-item key="1">
+                                            <div @click="handleUpdatePI">
+                                                {{ $t('p.update_PI') }}
+                                            </div>
+                                        </a-menu-item> -->
+                                    </template>
 
-                                <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
-                                <!-- 以供应商报表方式导出 -->
-                                <!-- <template
-                                    v-if="
-                                        authOrg(detail.supply_org_id, detail.supply_org_type) &&
-                                        detail.status !== STATUS.REVISE_AUDIT
-                                    "
-                                >
-                                    <a-menu-item key="3">
-                                        <div v-if="$auth('ADMIN')" @click="handleExport">
-                                            {{ $t('def.export_as_supplier_report') }}
-                                        </div>
-                                    </a-menu-item>
-                                </template> -->
-                            </a-menu>
-                        </template>
-                        <a-button>
-                            {{ $t('def.more_operations') }}
-                            <DownOutlined />
-                        </a-button>
-                    </a-dropdown>
+                                    <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
+                                    <!-- 导出商品信息 -->
+                                    <!-- <template v-if="$auth('purchase-order.export')">
+                                        <a-menu-item key="3">
+                                            <div @click="handleExportInfo">
+                                                {{ $t('p.export_product_information') }}
+                                            </div>
+                                        </a-menu-item>
+                                    </template> -->
+                                    <!-- <a-button @click="handleExportInfo">{{ $t('p.export_product_information') }}</a-button> -->
+
+                                    <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
+                                    <!-- 以供应商报表方式导出 -->
+                                    <!-- <template
+                                        v-if="
+                                            authOrg(detail.supply_org_id, detail.supply_org_type) &&
+                                            detail.status !== STATUS.REVISE_AUDIT
+                                        "
+                                    >
+                                        <a-menu-item key="3">
+                                            <div v-if="$auth('ADMIN')" @click="handleExport">
+                                                {{ $t('def.export_as_supplier_report') }}
+                                            </div>
+                                        </a-menu-item>
+                                    </template> -->
+                                </a-menu>
+                            </template>
+                            <a-button>
+                                {{ $t('def.more_operations') }}
+                                <DownOutlined />
+                            </a-button>
+                        </a-dropdown>
+                    </template>
 
                     <template
                         v-if="
@@ -88,30 +110,30 @@
                                 <i class="icon i_deliver" />{{ $t('p.out_stock') }}
                             </a-button>
                         </template>
-                        <!-- 赠送订单 订单的类型不为赠品单，不为混合订单 并且 赠送订单按钮消失 并且有权限查看 -->
-                        <a-button
-                            type="primary"
-                            ghost
-                            v-if="
-                                detail.type !== TYPE.GIVEAWAY &&
-                                detail.type !== TYPE.MIX &&
-                                !giveOrderShow &&
-                                $auth('purchase-order.give')
-                            "
-                            @click="handleGiveOrder"
-                        >
-                            {{ $t('p.give_order') }}
-                        </a-button>
                     </template>
-                    <!-- 更换商品 平台方(待审核)可看 | 分销(任何状态)不可见 | 售前订单,售后订单显示  -->
+
+                    <!-- 赠送订单 => 平台方 & (等待审核 待支付 待生产)可见 & 权限控制 -->
+                    <a-button
+                        v-if="
+                            $Util.Common.returnTypeBool(loginType, [USER_TYPE.ADMIN]) &
+                                $Util.Common.returnTypeBool(detail.status, [
+                                    STATUS.WAIT_AUDIT,
+                                    STATUS.WAIT_PAY,
+                                    STATUS.WAIT_PRODUCED,
+                                ]) && $auth('purchase-order.give')
+                        "
+                        type="primary"
+                        ghost
+                        @click="handleGiveOrder"
+                    >
+                        {{ $t('p.give_order') }}
+                    </a-button>
+
+                    <!-- 更换商品 平台方(等待审核)可见 && 分销不可见 -->
                     <a-button
                         v-if="
                             $Util.Common.returnTypeBool(loginType, [USER_TYPE.ADMIN]) &&
-                            $Util.Common.returnTypeBool(detail.type, [
-                                FLAG_ORDER_TYPE.PRE_SALES,
-                                FLAG_ORDER_TYPE.AFTER_SALES,
-                            ]) &&
-                            $Util.Common.returnTypeBool(detail.status, [STATUS.REVISE_AUDIT])
+                            $Util.Common.returnTypeBool(detail.status, [STATUS.WAIT_AUDIT])
                         "
                         type="primary"
                         ghost
@@ -119,14 +141,17 @@
                     >
                         {{ $t('p.change_item') }}
                     </a-button>
-                    <!-- 取消 仅分销商(可见) | 混合订单、赠品单无取消按钮 | 订单状态(待审核 二次确认框 非审核状态 填写原因弹窗) | 取消订单(审核中弹出记录) | 交易关闭不显示 -->
+
+                    <!-- 取消 仅分销商(可见) | 订单状态(等待审核 二次确认框 非审核状态 填写原因弹窗) -->
                     <a-button
                         v-if="
                             $Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) &&
-                            !$Util.Common.returnTypeBool(detail.type, [
-                                FLAG_ORDER_TYPE.Mix_SALES,
-                                FLAG_ORDER_TYPE.Gift_SALES,
-                            ]) && $Util.Common.returnTypeBool(detail.status, [STATUS.REVISE_AUDIT])
+                            $Util.Common.returnTypeBool(detail.status, [
+                                STATUS.WAIT_AUDIT,
+                                STATUS.WAIT_PAY,
+                                STATUS.WAIT_PRODUCED,
+                                STATUS.IN_PRODUCTION,
+                            ])
                         "
                         :disabled="
                             $Util.Common.returnTypeBool(detail.cancel_status, [
@@ -135,7 +160,7 @@
                         "
                         type="primary"
                         @click="
-                            $Util.Common.returnTypeBool(detail.status, [STATUS.REVISE_AUDIT])
+                            $Util.Common.returnTypeBool(detail.status, [STATUS.WAIT_AUDIT])
                                 ? handleCancel()
                                 : onCancelReason()
                         "
@@ -151,74 +176,54 @@
                             >({{ $t('distributor-detail.under_review') }})</span
                         >
                     </a-button>
-                    <!-- 取消记录 按钮 仅分销商(可见) | 取消记录是否有数据 | 交易关闭不显示 -->
+
+                    <!-- 取消记录 按钮 => 仅分销商(可见) & 待支付 待生产 生产中 显示 & 取消记录是否有数据 -->
                     <a-button
-                        v-if="$Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) && isCancelRecord && $Util.Common.returnTypeBool(detail.status, [STATUS.REVISE_AUDIT])"
+                        v-if="
+                            $Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) &&
+                            $Util.Common.returnTypeBool(detail.status, [
+                                STATUS.WAIT_PAY,
+                                STATUS.WAIT_PRODUCED,
+                                STATUS.IN_PRODUCTION,
+                            ]) &&
+                            isCancelRecord
+                        "
                         type="primary"
                         @click="onCancelRecord"
                     >
-                        {{ $t('distributor-detail.cancel_record') }}{{ detail.status }}
+                        {{ $t('distributor-detail.cancel_record') }}
                     </a-button>
-                    <template v-if="authOrg(detail.org_id, detail.org_type) && detail.status !== STATUS.REVISE_AUDIT">
-                        <!-- 付款 -->
-                        <a-button
-                            v-if="
-                                detail.status !== STATUS.WAIT_AUDIT &&
-                                detail.status !== STATUS.CANCEL &&
-                                detail.status !== STATUS.DEAL_SUCCESS &&
-                                detail.status !== STATUS.SPLIT &&
-                                detail.status !== STATUS.REVISE &&
-                                detail.status !== STATUS.REVISE_AUDIT &&
-                                detail.payment_status !== PAYMENT_STATUS.PAY_ALL &&
-                                $auth('purchase-order.collection')
-                            "
-                            type="primary"
-                            @click="handleModalShow('payment')"
-                        >
-                            <i class="icon i_received" />{{ $t('p.payment') }}
-                        </a-button>
-                        <!-- 申请售后 -->
-                        <a-button
-                            v-if="detail.status === STATUS.DEAL_SUCCESS"
-                            type="primary"
-                            @click="routerChange('aftersales')"
-                            ghost
-                        >
-                            <i class="icon i_edit" />{{ $t('p.apply_for_after_sales') }}
-                        </a-button>
-                    </template>
-                    <!-- 待审核中的审核 -->
-                    <template
+
+                    <!-- 付款 分销商可见 & (待支付 待生产 ) & 权限-->
+                    <a-button
                         v-if="
-                            authOrg(detail.supply_org_id, detail.supply_org_type) &&
-                            detail.status === STATUS.REVISE_AUDIT &&
-                            detail.type !== TYPE.MIX &&
-                            $auth('purchase-order.audit')
+                            $Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) &&
+                            $Util.Common.returnTypeBool(detail.status, [STATUS.WAIT_PAY, STATUS.WAIT_PRODUCED]) &&
+                            $auth('purchase-order.collection')
                         "
+                        type="primary"
+                        @click="routerChange('payment')"
                     >
-                        <AuditHandle
-                            btnType="primary"
-                            :api-list="['Purchase', 'reviseAudit']"
-                            :id="detail.id"
-                            :s-pass="FLAG.YES"
-                            :s-refuse="FLAG.NO"
-                            no-refuse
-                            :item_list="itemList"
-                            @submit="getList"
-                        >
-                            <i class="icon i_audit" />{{ $t('n.audit') }}
-                        </AuditHandle>
-                    </template>
-                    <!-- 订单审核 -->
+                        <i class="icon i_received" />{{ $t('p.payment') }}
+                    </a-button>
+
+                    <!-- 审核按钮 => 平台方可见 & 等待审核状态可见 & 权限控制 -->
                     <template
                         v-if="
-                            authOrg(detail.supply_org_id, detail.supply_org_type) &&
-                            detail.status === STATUS.WAIT_AUDIT &&
+                            $Util.Common.returnTypeBool(loginType, [USER_TYPE.ADMIN]) &&
+                            $Util.Common.returnTypeBool(detail.status, [STATUS.WAIT_AUDIT]) &&
                             $auth('purchase-order.audit')
                         "
                     >
                         <a-button type="primary" @click="handleModalShow('createAuditShow')">
                             <i class="icon i_audit" />{{ $t('p.create_audit') }}
+                        </a-button>
+                    </template>
+
+                    <!-- 申请售后 目前不需要显示 -->
+                    <template v-if="false">
+                        <a-button type="primary" @click="routerChange('aftersales')" ghost>
+                            <i class="icon i_edit" />{{ $t('p.apply_for_after_sales') }}
                         </a-button>
                     </template>
                 </div>
@@ -563,8 +568,16 @@
             <div class="title-container d-f-j">
                 <div class="title-area" style="font-weight: 600">{{ $t('distributor.shipping_freight') }}</div>
                 <div class="btn-area d-f-a">
-                    <div class="m-r-10 status" :class="$Util.Common.returenValue(FREIGHT_STATUS_MAP, detail.freight_status, 'color')">{{ detail.freight_audit_record?.remark }}</div>
-                    <div class="status status-bg freight-status-style" :class="$Util.Common.returenValue(FREIGHT_STATUS_MAP, detail.freight_status, 'color')">
+                    <div
+                        class="m-r-10 status"
+                        :class="$Util.Common.returenValue(FREIGHT_STATUS_MAP, detail.freight_status, 'color')"
+                    >
+                        {{ detail.freight_audit_record?.remark }}
+                    </div>
+                    <div
+                        class="status status-bg freight-status-style"
+                        :class="$Util.Common.returenValue(FREIGHT_STATUS_MAP, detail.freight_status, 'color')"
+                    >
                         {{ $t($Util.Common.returnTranslation(detail.freight_status, FREIGHT_STATUS_MAP)) }}
                     </div>
                 </div>
@@ -588,10 +601,14 @@
                                 type="link"
                                 @click="onModify"
                             >
-                                {{ $Util.timeFilter(detail?.freight_audit_record?.content?.shipping_time_estimated, 3) }}
+                                {{
+                                    $Util.timeFilter(detail?.freight_audit_record?.content?.shipping_time_estimated, 3)
+                                }}
                             </a-button>
                             <span v-else>
-                                {{ $Util.timeFilter(detail?.freight_audit_record?.content?.shipping_time_estimated, 3) }}
+                                {{
+                                    $Util.timeFilter(detail?.freight_audit_record?.content?.shipping_time_estimated, 3)
+                                }}
                             </span>
                         </div>
                     </div>
@@ -710,95 +727,6 @@
         </div>
 
         <template class="modal-container">
-            <!-- 确认收款 -->
-            <a-modal v-model:visible="paymentShow" :title="$t('p.confirm_payment')" @ok="handlePayment">
-                <div class="modal-content">
-                    <!-- 国外暂无支付宝微信银行卡支付方式，先隐藏 -->
-                    <!-- 支付方式 -->
-                    <div class="form-item required">
-                        <div class="key">{{ $t('p.payment_method') }}</div>
-                        <div class="value">
-                            <a-select
-                                v-model:value="form.pay_method"
-                                :placeholder="$t('p.please_select_payment_method')"
-                            >
-                                <a-select-option v-for="pay of payMethodList" :key="pay.value" :value="pay.value">{{
-                                    pay[$i18n.locale]
-                                }}</a-select-option>
-                            </a-select>
-                        </div>
-                    </div>
-                    <!-- 分销商 账户余额 -->
-                    <div class="form-item">
-                        <div class="key">{{ $t('d.account_balance') }}:</div>
-                        <div class="value">
-                            <a-input-number
-                                v-model:value="form.accountBalance"
-                                style="width: 120px"
-                                min="0"
-                                :max="accountMoney"
-                                :precision="2"
-                                :prefix="`${$Util.priceUnitFilter(detail.currency)}`"
-                            />
-                        </div>
-                    </div>
-                    <!-- 金额 -->
-                    <div class="form-item required">
-                        <div class="key">{{ $t('ac.money') }}：</div>
-                        <div class="value">
-                            <a-input-number
-                                v-model:value="form.payment"
-                                style="width: 120px"
-                                :min="0"
-                                :max="
-                                    (
-                                        ((detail.freight || 0) + detail.price - detail.payment) / 100 -
-                                        form.accountBalance
-                                    ).toFixed(2)
-                                "
-                                :precision="2"
-                                :prefix="`${$Util.priceUnitFilter(detail.currency)}`"
-                                placeholder="0.00"
-                            />
-                        </div>
-                    </div>
-                    <div class="form-item img-upload required">
-                        <div class="key">{{ $t('p.upload_payment_voucher') }}</div>
-                        <div class="value">
-                            <a-upload
-                                name="file"
-                                class="file-uploader"
-                                :file-list="upload.fileList"
-                                :action="upload.action"
-                                :headers="upload.headers"
-                                :data="upload.data"
-                                :before-upload="handleFileCheck"
-                                @remove="handleremove"
-                                @change="handleFileChange"
-                            >
-                                <a-button
-                                    type="primary"
-                                    ghost
-                                    class="file-upload-btn"
-                                    v-if="upload.fileList.length < 1"
-                                >
-                                    <i class="icon i_upload" /> {{ $t('f.choose') }}
-                                </a-button>
-                            </a-upload>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="key">{{ $t('p.remark') }}：</div>
-                        <div class="value">
-                            <a-input v-model:value="form.remark" :placeholder="$t('def.input')" />
-                        </div>
-                    </div>
-                </div>
-                <template #footer>
-                    <a-button @click="handlePayment" type="primary">{{ $t('def.sure') }}</a-button>
-                    <a-button @click="paymentShow = false">{{ $t('def.cancel') }}</a-button>
-                </template>
-            </a-modal>
             <!-- 确认发货 -->
             <a-modal v-model:visible="outStockShow" :title="$t('p.shipping_confirmation')" @ok="handleOutStock">
                 <div class="modal-content">
@@ -816,14 +744,6 @@
                             </a-select>
                         </div>
                     </div>
-                    <!--                <div class="form-item required">-->
-                    <!--                    <div class="key">{{ $t('in.category') }}：</div>-->
-                    <!--                    <div class="value">-->
-                    <!--                        <a-radio-group v-model:value="form.target_type">-->
-                    <!--                            <a-radio v-for="item in COMMODITY_MAP" :key='item.key' :value='item.key'>{{ item[$i18n.locale] }}</a-radio>-->
-                    <!--                        </a-radio-group>-->
-                    <!--                    </div>-->
-                    <!--                </div>-->
                     <div class="form-item">
                         <div class="key">{{ $t('p.remark') }}:</div>
                         <div class="value">
@@ -896,7 +816,7 @@
         </ShippingFreight>
 
         <!-- 确认运费弹窗 -->
-        <ConfirmFreight            
+        <ConfirmFreight
             :detailRecord="detailRecord"
             v-model:visible="confirmFreightVisible"
             :title="$t('distributor.shipping_freight')"
@@ -904,8 +824,8 @@
         ></ConfirmFreight>
 
         <!-- 取消操作记录查看 -->
-        <CancelOperation   
-            v-if="operationVisible"         
+        <CancelOperation
+            v-if="operationVisible"
             v-model:visible="operationVisible"
             :title="$t('distributor-detail.cancel_record')"
             :id="id"
@@ -942,7 +862,6 @@ import ActionLog from './components/ActionLog.vue';
 import paymentList from './components/paymentList.vue';
 import receivingDetails from './components/receivingDetails.vue';
 import WaybillShow from '@/components/popup-btn/WaybillShow.vue';
-import AuditHandle from '@/components/popup-btn/AuditHandle.vue';
 import eosTabs from '@/components/common/eos-tabs.vue';
 import EditItem from './components/EditItem.vue';
 import { DownOutlined } from '@ant-design/icons-vue';
@@ -951,7 +870,6 @@ import ShippingFreight from './components/ShippingFreightModel.vue';
 import ConfirmFreight from './components/ConfirmFreightModel.vue';
 import CancelOperation from './components/CancelOperation.vue';
 import CheckModal from '@/components/horwin/based-on-ant/CheckModal.vue';
-
 
 const PURCHASE = Core.Const.PURCHASE;
 const DISTRIBUTOR = Core.Const.DISTRIBUTOR;
@@ -979,7 +897,6 @@ export default {
         DeliveryLogs,
         WaybillShow,
         MySteps,
-        AuditHandle,
         ActionLog,
         eosTabs,
         paymentList,
@@ -1055,7 +972,6 @@ export default {
             },
             waybill: {},
             waybillInfo: {},
-            paymentShow: false,
             payMethodList: PURCHASE.PAY_METHOD_LIST,
             paymentTimeList: DISTRIBUTOR.PAY_TIME_LIST,
             outStockShow: false, // 确认发货 model 显隐
@@ -1068,7 +984,6 @@ export default {
                 port: '', // 发货港口
                 receive_type: undefined, // 收货方式
                 freight: '', // 运费
-                pay_method: undefined, // 收款方式
                 // pay_clause: undefined, // 支付条款
                 remark: '', // 备注
                 company_uid: undefined,
@@ -1076,10 +991,7 @@ export default {
                 warehouse_id: '',
                 audit_result: '',
                 target_type: Core.Const.STOCK_RECORD.COMMODITY_TYPE.ITEM,
-                payment: '', // 收款金额
-                accountBalance: '', // 账户余额
             },
-            accountMoney: 0, // 账户的余额用来约束
             editForm: {
                 distributor_id: undefined,
             },
@@ -1250,7 +1162,7 @@ export default {
         this.getList(); // 获取列表
         this.getWarehouseList(); // 获取仓库列表
         this.getGiveawayList(); // 获取赠品列表
-        this.getCancelRecordFetch() // 取消记录接口(用来判断 取消记录显影)
+        this.getCancelRecordFetch(); // 取消记录接口(用来判断 取消记录显影)
     },
     created() {
         this.id = Number(this.$route.query.id) || 0;
@@ -1330,20 +1242,6 @@ export default {
             // this.giveOrderShow = false
             this.getPurchaseItemList(); // 获取商品列表
             this.getPurchaseInfo(); // 获取订单信息
-        },
-
-        // 经销商钱包详情
-        getWalletDetail() {
-            Core.Api.Distributor.detail({
-                id: Core.Data.getOrgId(),
-            })
-                .then(res => {
-                    this.accountMoney = this.$Util.countFilter(res.detail.wallet_list.balance.balance);
-                    this.form['accountBalance'] = this.$Util.countFilter(res.detail.wallet_list.balance.balance);
-                })
-                .catch(err => {
-                    console.log('getTableData err', err);
-                });
         },
 
         // 获取 采购单 商品列表
@@ -1455,11 +1353,11 @@ export default {
             };
             Core.Api.CancelOrderList.list(obj)
                 .then(res => {
-                    console.log("取消记录接口", res);
-                    this.isCancelRecord = res.list.length ? true : false
+                    console.log('取消记录接口', res);
+                    this.isCancelRecord = res.list.length ? true : false;
                 })
                 .catch(err => {
-                    console.log('handleCancel err', err);                    
+                    console.log('handleCancel err', err);
                 });
         },
 
@@ -1535,15 +1433,7 @@ export default {
 
         // 弹出弹框
         handleModalShow(val) {
-            if (val != 'payment') {
-                Object.assign(this.form, this.$options.data().form);
-            }
             switch (val) {
-                case 'payment':
-                    // 付款
-                    this.paymentShow = true;
-                    this.getWalletDetail(); // 钱包详情接口
-                    break;
                 case 'out_stock':
                     // 出库
                     this.outStockShow = true;
@@ -1634,51 +1524,6 @@ export default {
                     this.loading = false;
                 });
         },
-        // 确认收款
-        handlePayment() {
-            this.loading = true;
-            let form = Core.Util.deepCopy(this.form);
-            if (!form.path) {
-                return this.$message.warning(this.$t('p.pay_file_upload'));
-            }
-            if (!form.pay_method) {
-                return this.$message.warning(this.$t('p.please_select_payment_method'));
-            }
-            if (!form.payment) {
-                return this.$message.warning(this.$t('p.enter_payment'));
-            }
-            if (!form.accountBalance) {
-                return this.$message.warning(this.$t('p.enter_payment'));
-            }
-
-            // if (this.loading !== true){
-
-            Core.Api.Purchase.payment({
-                id: this.id,
-                pay_method: form.pay_method,
-                payment: Core.Util.countFilter(form.payment, 100, 0, true),
-                imgs: form.path,
-                img_type: form.type,
-                remark: form.remark,
-                wallet_price: Core.Util.countFilter(form.accountBalance, 100, 0, true),
-            })
-                .then(res => {
-                    this.$message.success(this.$t('p.payment_success'));
-                    this.getList();
-                    this.getPurchaseInfo();
-                    this.paymentShow = false;
-                })
-                .catch(err => {
-                    console.log('getPurchaseInfo err', err);
-                })
-                .finally(() => {
-                    this.timer = setTimeout(() => {
-                        //设置延迟执行
-                        this.loading = false;
-                    }, 300);
-                });
-            // }
-        },
         // 订单审核
         handleCreateAudit() {
             let formObj = {
@@ -1712,41 +1557,6 @@ export default {
 
         // 上传前检查文件
         /*== 确认收款model start ==*/
-
-        // 上传文件前检查
-        handleFileCheck(file) {
-            // console.log('handleFileCheck file.type', file.type)
-            if (file.type.includes('image/')) {
-                this.upload.data.type = 'img';
-            } else if (file.type.includes('video/')) {
-                this.upload.data.type = 'video';
-            } else if (file.type.includes('audio/')) {
-                this.upload.data.type = 'audio';
-            } else {
-                this.upload.data.type = 'file';
-            }
-            return true;
-        },
-        //删除文件
-        handleremove() {
-            this.form.path = '';
-        },
-        // 上传文件
-        handleFileChange({ file, fileList }) {
-            if (file.status == 'done') {
-                if (file.response && file.response.code > 0) {
-                    return this.$message.error(file.response.message);
-                }
-                this.form.path = file.response.data.filename;
-                this.form.type = this.form.path.split('.').pop();
-                if (this.form.path) {
-                    this.submitDisabled = false;
-                }
-            }
-            this.upload.fileList = fileList;
-        },
-
-        /*== 确认收款model end ==*/
 
         authOrg(orgId, orgType) {
             if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
@@ -1785,6 +1595,16 @@ export default {
                         query: {
                             order_id: this.id,
                             order_sn: this.detail.sn,
+                        },
+                    });
+                    window.open(routeUrl.href, '_self');
+                    break;
+                case 'payment':
+                    // 付款
+                    routeUrl = this.$router.resolve({
+                        path: '/mall/pending-payment',
+                        query: {
+                            id: this.id,
                         },
                     });
                     window.open(routeUrl.href, '_self');
@@ -1914,6 +1734,31 @@ export default {
         // 预计船期及运费 确认运费 返回
         onUpdateTable() {
             this.getPurchaseInfo();
+        },
+
+        // 更多操作权限
+        MoreActions() {
+            // 平台方 => 订单状态(待支付,待生产,生产中) || 订单取消状态(待审核)
+            // 分销商 => 订单状态(待生产,生产中) || 订单取消状态(待审核)
+            if (this.$Util.Common.returnTypeBool(this.loginType, [USER_TYPE.ADMIN])) {
+                return (
+                    this.$Util.Common.returnTypeBool(this.detail.status, [
+                        STATUS.WAIT_PAY,
+                        STATUS.WAIT_PRODUCED,
+                        STATUS.IN_PRODUCTION,
+                    ]) ||
+                    this.$Util.Common.returnTypeBool(this.detail.cancel_status, [
+                        AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL,
+                    ])
+                );
+            } else if (this.$Util.Common.returnTypeBool(this.loginType, [USER_TYPE.DISTRIBUTOR])) {
+                return (
+                    this.$Util.Common.returnTypeBool(this.detail.status, [STATUS.IN_PRODUCTION]) ||
+                    this.$Util.Common.returnTypeBool(this.detail.cancel_status, [
+                        AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL,
+                    ])
+                );
+            }
         },
     },
 };
@@ -2072,6 +1917,6 @@ export default {
 
 .freight-status-style {
     padding: 5px 12px;
-    box-sizing: border-box;       
+    box-sizing: border-box;
 }
 </style>
