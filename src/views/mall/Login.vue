@@ -174,7 +174,7 @@
             <!-- 飞书二维码 -->
             <template v-else>
                 <!-- 飞书扫码成功页 -->
-                <template v-if="$route.path === '/login/fs'">
+                <template v-if="$route.path === '/login/feishu'">
                     <div class="form-title">
                         <img
                             src="@images/mall/login/back-arrow.png"
@@ -394,7 +394,7 @@ export default {
             let code;
             if (/code=/.test(href)) {
                 this.fsLoginShow = true;
-                this.$router.push('/login/fs');
+                this.$router.push('/login/feishu');
                 code = getUrlParams('code');
                 Core.Api.ThirdParty.fsAuthorize({ code })
                     .then(res => {

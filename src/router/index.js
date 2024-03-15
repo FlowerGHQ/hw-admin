@@ -22,7 +22,7 @@ const router = createRouter({
 
 // 设置路由白名单(其实网上很多做法用meta的requiresAuth就是跟白名单一样的)
 function inWhiteList(toPath) {
-    const whiteList = ['/', '/login', '/loginMall', '/login-redirect', '/fs-login', '/login/fs'];
+    const whiteList = ['/', '/login', '/loginMall', '/login-redirect', '/feishu-login', '/login/feishu'];
     const bool = whiteList.some(el => el == toPath); // 有一个正确就正确
     return bool;
 }
