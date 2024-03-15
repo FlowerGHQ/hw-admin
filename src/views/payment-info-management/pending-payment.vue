@@ -13,7 +13,7 @@ import PaymentInformation from '../../components/common/payment-information.vue'
 
 const route = useRoute();
 
-const mes = route?.mes;
+const mes = JSON.parse(route.query?.form || '');
 </script>
 <style lang="less" scoped>
 #pending-payment {
