@@ -17,7 +17,9 @@
                             <div class="deposit-payment" id="deposit-payment">
                                 <div class="deposit-payment-row">
                                     <div class="deposit-payment-row-left">{{ $t('mall.payment_method') }}:</div>
-                                    <div class="deposit-payment-row-right">{{ mes.pay_type }}</div>
+                                    <div class="deposit-payment-row-right">
+                                        {{ Core.Const.DISTRIBUTOR.PAY_TIME_MAP[mes.pay_type] }}
+                                    </div>
                                 </div>
                                 <div class="deposit-payment-row">
                                     <div class="deposit-payment-row-left">
@@ -242,7 +244,7 @@ const isPre = computed(() => {
 });
 const mes = computed(() => {
     return {
-        pay_type: detail.pay_type,
+        pay_type: pay_type.value,
         pay_pre_pay_ratio: detail.pay_pre_pay_ratio,
         pay_final_pay_ratio: 100 - detail.pay_pre_pay_ratio,
         freight_pay_status: '-',
