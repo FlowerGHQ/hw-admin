@@ -159,6 +159,9 @@ export default {
         audit_rejection: '审核拒绝',
         // 上传
         upload: '上传',
+        serial_number: '序号',
+        // 可抵扣金额
+        deduction_amount: '可抵扣金额',
     },
     en: {
         vehicle_account: 'Vehicle Account',
@@ -262,5 +265,8 @@ export default {
         audit_rejection: 'audit rejection',
         // 上传
         upload: 'Upload',
+        serial_number: 'Serial Number',
+        // 可抵扣金额
+        deduction_amount: 'Deduction Amount',
     },
 };

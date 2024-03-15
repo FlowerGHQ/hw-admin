@@ -1090,7 +1090,7 @@ const apiList = {
         // audit-record/save
         save: ['PostJson', 'audit-record/save'], // 新增
         //修改备用件抵扣比率
-        updateDeductionRate: ['PostJson', 'distributor/deduction—rate-update'],
+        updateDeductionRate: ['PostJson', 'distributor/deduction-rate-update'],
     },
     PayAccount: {
         detail: ['PostJson', 'pay-in-account/detail'], // 详情
