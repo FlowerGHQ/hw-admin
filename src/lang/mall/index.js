@@ -111,6 +111,7 @@ export default {
         parts_available: '配件可用余额账户',
         the_amount_transferred: '这次要充值的金额',
         please_input_number: '请输入数字',
+        undetermined: '未确定',
     },
     en: {
         system: 'BOS',
@@ -224,5 +225,6 @@ export default {
         parts_available: 'Parts Available Balance Account',
         the_amount_transferred: 'The Amount To Be Transferred This Time',
         please_input_number: 'Please Input Number',
+        undetermined: 'Undetermined',
     },
 };

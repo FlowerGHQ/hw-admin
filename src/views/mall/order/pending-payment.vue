@@ -28,11 +28,11 @@
                                     <div class="deposit-payment-row-right">{{ unit }} {{ pre_price }}</div>
                                 </div>
                                 <div class="deposit-payment-row">
-                                    <!-- 支付尾款 && OA时存在 -->
+                                    <!-- 支付尾款 && OA时存在 && 售前 -->
                                     <div
                                         class="select"
                                         @click="isSelectEnd = !isSelectEnd"
-                                        v-if="pay_type === Core.Const.DISTRIBUTOR.PAY_TIME.OA && !isPre"
+                                        v-if="!isAfter && pay_type === Core.Const.DISTRIBUTOR.PAY_TIME.OA && !isPre"
                                     >
                                         <img
                                             :src="isSelectEnd ? getOrderSrc('selected') : getOrderSrc('select')"
@@ -46,7 +46,9 @@
                                 </div>
                                 <div class="deposit-payment-row">
                                     <div class="deposit-payment-row-left">{{ $t('mall.freight_amount') }}:</div>
-                                    <div class="deposit-payment-row-right">{{ detail.freight || '-' }}</div>
+                                    <div class="deposit-payment-row-right">
+                                        {{ detail.freight || $t('mall.undetermined') }}
+                                    </div>
                                 </div>
                                 <div class="deposit-payment-row">
                                     <div class="deposit-payment-row-left">{{ $t('mall.this_need') }}:</div>
