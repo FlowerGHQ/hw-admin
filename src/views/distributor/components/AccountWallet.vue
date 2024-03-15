@@ -266,17 +266,13 @@ const props = defineProps({
 });
 const emit = defineEmits(['handleUpdateDetails']);
 const payType = computed(() => {
-    return PAY_TIME[props.detail.pay_type] !== 'OA' || PAY_TIME[props.detail.pay_type] !== 'TT'
-        ? 'OLD'
-        : PAY_TIME[props.detail.pay_type];
+    return PAY_TIME[props.detail.pay_type] === 'TT' || PAY_TIME[props.detail.pay_type] === 'OA'
+        ? PAY_TIME[props.detail.pay_type]
+        : 'OLD';
 });
 // 是否显示授信账户
 const isShowCreditAccount = computed(() => {
-    let PAY_TYPE =
-        PAY_TIME[props.detail.pay_type] !== 'OA' || PAY_TIME[props.detail.pay_type] !== 'TT'
-            ? 'OLD'
-            : PAY_TIME[props.detail.pay_type];
-    let type = PAY_TYPE === 'OA' ? true : PAY_TYPE === 'OLD' ? true : false;
+    let type = payType.value === 'OA' || payType.value === 'OLD' ? true : false;
     return type;
 });
 // 货币
