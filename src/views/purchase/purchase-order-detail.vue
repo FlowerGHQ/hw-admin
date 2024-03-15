@@ -198,7 +198,7 @@
                     <a-button
                         v-if="
                             $Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) &&
-                            $Util.Common.returnTypeBool(detail.status, [STATUS.WAIT_PAY, STATUS.WAIT_PRODUCED]) &&
+                            $Util.Common.returnTypeBool(detail.status, [STATUS.WAIT_PAY]) &&
                             $auth('purchase-order.collection')
                         "
                         type="primary"
