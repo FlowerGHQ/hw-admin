@@ -104,7 +104,7 @@
         <div class="gray-panel payment-voucher">
             <div class="title-content">
                 <div class="title">{{ /*充值信息 */ $t('distributor-detail.payment_voucher') }}</div>
-                <div class="button-area" v-if="details.mapStatus !== 1 && $auth('DISTRIBUTOR')">
+                <div class="button-area" v-if="details.mapStatus == 1 && $auth('DISTRIBUTOR')">
                     <!-- 修改凭证 -->
                     <a-button v-if="!isEdit" @click="handleEdit">{{
                         /*修改凭证 */ $t('distributor-detail.modify_voucher')
