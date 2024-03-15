@@ -215,6 +215,7 @@ export default {
             value2: '',
             plainOptions: ['Apple', 'Pear', 'Orange'],
             balance: 0,
+            org: Core.Data.getOrgObj(),
         };
     },
     watch: {},
@@ -485,7 +486,7 @@ export default {
             };
             Core.Api.Purchase.getWallet(params)
                 .then(res => {
-                    this.balance = res.balance;
+                    this.balance = Core.Util.countFilter(res.balance || 0 + Number(this.org.credit));
                 })
                 .catch(err => {
                     console.log('handleCreateOrder err', err);

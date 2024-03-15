@@ -412,10 +412,18 @@ onMounted(async () => {
         type: 30, //钱包类型：10.售前余额；20.售后余额；30.售后备件账户；40.授信账户
         currency_type: Core.Const.WALLET.TYPE[currency.value], //货币类型：1.人民币；2.欧元；3.美元；4.英镑
     };
-    balance.value = (await Core.Api.Purchase.getWallet({ ...params, type: 10 }))?.detail?.balance || 0;
-    balanceAfter.value = (await Core.Api.Purchase.getWallet({ ...params, type: 20 }))?.detail?.balance || 0;
-    balanceParts.value = (await Core.Api.Purchase.getWallet({ ...params, type: 30 }))?.detail?.balance || 0;
-    balanceCredit.value = (await Core.Api.Purchase.getWallet({ ...params, type: 40 }))?.detail?.balance || 0;
+    balance.value = Core.Util.countFilter(
+        (await Core.Api.Purchase.getWallet({ ...params, type: 10 }))?.detail?.balance || 0,
+    );
+    balanceAfter.value = Core.Util.countFilter(
+        (await Core.Api.Purchase.getWallet({ ...params, type: 20 }))?.detail?.balance || 0,
+    );
+    balanceParts.value = Core.Util.countFilter(
+        (await Core.Api.Purchase.getWallet({ ...params, type: 30 }))?.detail?.balance || 0,
+    );
+    balanceCredit.value = Core.Util.countFilter(
+        ((await Core.Api.Purchase.getWallet({ ...params, type: 40 }))?.detail?.balance || 0) + Number(org.credit),
+    );
 });
 </script>
 <style lang="less" scoped src="../css/layout.css"></style>

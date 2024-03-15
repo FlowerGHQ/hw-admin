@@ -195,7 +195,6 @@ export default {
     },
     methods: {
         handleChange(info) {
-            console.log(info);
             // 没进入上传操作和已删除的文件不记录在内
             if (!info.file.status || info.file.status === 'removed') return;
             const flog = this.fileList.findIndex(item => item.uid === info.file.uid);
@@ -258,6 +257,7 @@ export default {
                 });
                 this.$message.error(`You can only upload ${acceptName} file!`);
             }
+            this.upload.data.type = file.type.split('/')[0] === 'application' ? 'file' : 'img';
             return isTypeRight;
         },
         deleteImage(index, uid) {
