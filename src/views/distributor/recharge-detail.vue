@@ -104,7 +104,7 @@
         <div class="gray-panel payment-voucher">
             <div class="title-content">
                 <div class="title">{{ /*充值信息 */ $t('distributor-detail.payment_voucher') }}</div>
-                <div class="button-area" v-if="details.mapStatus !== 1 && $auth('DISTRIBUTOR')">
+                <div class="button-area" v-if="details.mapStatus == 1 && $auth('DISTRIBUTOR')">
                     <!-- 修改凭证 -->
                     <a-button v-if="!isEdit" @click="handleEdit">{{
                         /*修改凭证 */ $t('distributor-detail.modify_voucher')
@@ -192,7 +192,7 @@ const labelMap = ref([
 ]);
 
 const defaultList = ref([]);
-const isShowUpload = ref(false);
+const isShowUpload = ref(true);
 const isEdit = ref(false);
 
 // 获取订单详情
@@ -226,6 +226,7 @@ const getRechargeDetail = () => {
 
         let paymenyInfo = res?.detail?.content_json?.payment_information || {};
         defaultList.value = res?.detail?.content_json?.payment_information?.img || [];
+        console.log('defaultList.value', defaultList.value);
         // 判断payment_information是否为空
         if (Object.keys(paymenyInfo).length) {
             // 遍历对象

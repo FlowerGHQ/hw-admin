@@ -27,12 +27,6 @@
                             v-if="item?.response?.data?.filename"
                             :src="item?.response?.data?.filename ? VITE_OSS_POINT + item?.response?.data?.filename : ''"
                             class="image-img"
-                            @click="
-                                previewImage(
-                                    index,
-                                    item?.response?.data?.filename ? item?.response?.data?.filename : '',
-                                )
-                            "
                         />
                         <svg-icon
                             icon-class="payment_close"
@@ -96,7 +90,6 @@
             </div>
         </div>
     </div>
-    <Preview ref="previewRef" :list="previewList" :index="previewIndex" :isSave="false"></Preview>
 </template>
 <script setup>
 import { ref, reactive, watch, computed } from 'vue';
@@ -152,7 +145,6 @@ const uploadComponent = ref(null);
 const $emit = defineEmits(['update:value']);
 const acceptList = ref(['image/jpg', 'image/jpeg', 'image/png', 'application/pdf']);
 const previewIndex = ref(0);
-const previewRef = ref(null);
 
 const imageList = computed(() => {
     if (upload.value.fileList.length === 0 && upload.value.fileList) {
@@ -167,15 +159,6 @@ const fileList = computed(() => {
     } else {
         return upload.value.fileList.filter(item => item.type.includes('pdf'));
     }
-});
-const previewList = computed(() => {
-    let arr = imageList.value.map(item => {
-        return {
-            url: item.response.data.filename,
-        };
-    });
-    console.log('previewList', arr);
-    return arr;
 });
 
 // 校验的图片和pdf队列
@@ -243,10 +226,6 @@ const handleDelete = item => {
     handleReturn();
 };
 
-const previewImage = (index, url) => {
-    previewIndex.value = index;
-    previewRef.value.open(index);
-};
 const preViewFile = item => {
     let targetUrl = VITE_OSS_POINT + item.response.data.filename;
     let url = 'http://view.officeapps.live.com/op/view.aspx?src=' + targetUrl;

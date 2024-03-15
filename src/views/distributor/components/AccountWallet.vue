@@ -331,6 +331,14 @@ const getWalletList = () => {
             30: 'afterSaleData',
             40: 'creditData',
         };
+        const currencyMap = {
+            EUR: 2,
+            USD: 3,
+        };
+        let typeNumber = currencyMap[props.detail.currency];
+        // 过虑数据
+        res.list = res.list.filter(item => item.currency_type === typeNumber);
+        console.log('res.list', res.list);
         for (let i = 0; i < res.list.length; i++) {
             let item = res.list[i];
             let key = typeMap[item.type];
