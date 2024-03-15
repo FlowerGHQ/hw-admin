@@ -307,7 +307,7 @@ const getDetail = () => {
     Core.Api.Purchase.detail(params)
         .then(res => {
             Object.assign(detail, res.detail);
-            detail.freight = $Util.countFilter(item.freight);
+            detail.freight = $Util.countFilter(detail.freight);
             isAfter.value = detail.type !== Core.Const.PURCHASE.FLAG_ORDER_TYPE.PRE_SALES;
             unit.value = Core.Const.ITEM.MONETARY_TYPE_MAP[detail.currency];
             getWallet();
