@@ -43,7 +43,7 @@
                                         >
                                             <a-input
                                                 v-model:value="formState.vehicle_balance"
-                                                :suffix="currency"
+                                                :suffix="unit"
                                                 :placeholder="$t('w.enter_money')"
                                             />
                                         </a-form-item>
@@ -63,7 +63,7 @@
                                             <a-input
                                                 :placeholder="$t('w.enter_money')"
                                                 v-model:value="formState.part_balance"
-                                                :suffix="currency"
+                                                :suffix="unit"
                                             />
                                         </a-form-item>
                                     </a-col>
@@ -71,7 +71,7 @@
                             </a-form>
                             <div class="amount">
                                 <span class="amount-text">{{ $t('mall.the_amount_transferred') }}:</span>
-                                <span class="amount-price">€ {{ amount_price }}</span>
+                                <span class="amount-price">{{ unit }} {{ amount_price }}</span>
                             </div>
                         </div>
                         <p class="title">{{ $t('p.Payment_information') }}</p>
@@ -87,7 +87,7 @@
                                     routerChange('/distributor/distributor-recharge-record', {
                                         org_id: orgId,
                                         org_type: orgType,
-                                        currency: org.currency,
+                                        currency: accoutMes.currency,
                                     })
                                 "
                             >
@@ -114,7 +114,10 @@
                     {{ $t('mall.recharge_progress_pre') }}
                     <a
                         @click="
-                            routerChange('/distributor/distributor-recharge-detail', { id: id, currency: org.currency })
+                            routerChange('/distributor/distributor-recharge-detail', {
+                                id: id,
+                                currency: accoutMes.currency,
+                            })
                         "
                         >{{ $t('mall.recharge_progress') }}</a
                     >
@@ -162,6 +165,7 @@ const router = useRouter();
 const id = ref('');
 const orgId = ref(route.query?.id || Core.Data.getOrgId()); // 分销商id
 const orgType = Core.Data.getOrgType();
+const unit = ref('€');
 const steps = [
     {
         title: 'mall.step_one_title',
@@ -205,13 +209,13 @@ const detail = reactive({
     },
 });
 const accoutMes = reactive({
-    beneficiary_bank: '-',
-    swift_code: '-',
-    bank_address: '-',
-    account_number: '-',
-    company_name: '-',
-    company_address: '-',
-    remark: '-',
+    beneficiary_bank: '',
+    swift_code: '',
+    bank_address: '',
+    account_number: '',
+    company_name: '',
+    company_address: '',
+    remark: '',
 });
 const can_next = computed(() => {
     if (formState.vehicle_balance || formState.part_balance) {
@@ -223,8 +227,6 @@ const can_next = computed(() => {
 const amount_price = computed(() => {
     return Number(formState.vehicle_balance || 0) + Number(formState.part_balance || 0);
 });
-const currency = ref('€');
-const org = Core.Data.getOrgObj();
 const current = ref(0);
 const isSubmit = ref(false);
 const uploadClass = ref('normal');
@@ -324,15 +326,11 @@ const findAccount = () => {
     Core.Api.Distributor.findAccount({ ...params })
         .then(res => {
             Object.assign(accoutMes, res.pay_in_account_bank);
+            unit.value = Core.Const.ITEM.MONETARY_TYPE_MAP[accoutMes.currency];
         })
         .catch(err => {});
 };
 onMounted(() => {
-    if (Core.Data.getCurrency() === 'EUR') {
-        currency.value = '€';
-    } else {
-        currency.value = '$';
-    }
     findAccount();
 });
 </script>

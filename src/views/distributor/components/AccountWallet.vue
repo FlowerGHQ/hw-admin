@@ -255,6 +255,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import Core from '@/core';
 import { message } from 'ant-design-vue';
+const PAY_TIME = Core.Const.DISTRIBUTOR.PAY_TIME_MAP;
 const $t = useI18n().t;
 const router = useRouter();
 const props = defineProps({
@@ -265,26 +266,14 @@ const props = defineProps({
 });
 const emit = defineEmits(['handleUpdateDetails']);
 const payType = computed(() => {
-    console.log('payType', props.detail.pay_type);
-    switch (props.detail.pay_type) {
-        case 60:
-            return 'OA'; // 60:OA 70:TT OLD:老系统
-        case 70:
-            return 'TT';
-        default:
-            return 'OLD';
-    }
+    return PAY_TIME[props.detail.pay_type] === 'TT' || PAY_TIME[props.detail.pay_type] === 'OA'
+        ? PAY_TIME[props.detail.pay_type]
+        : 'OLD';
 });
 // 是否显示授信账户
 const isShowCreditAccount = computed(() => {
-    switch (props.detail.payType) {
-        case 60:
-            return true;
-        case 70:
-            return false;
-        default:
-            return true;
-    }
+    let type = payType.value === 'OA' || payType.value === 'OLD' ? true : false;
+    return type;
 });
 // 货币
 const currency = computed(() => {
