@@ -157,6 +157,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 const { proxy } = getCurrentInstance();
 
+const route = useRoute();
 const router = useRouter();
 const id = ref('');
 const orgId = ref(route.query?.id || Core.Data.getOrgId()); // 分销商id
