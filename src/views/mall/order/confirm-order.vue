@@ -61,26 +61,6 @@
             <p class="title">{{ $t('mall.transportation_information') }}</p>
             <div class="box transport">
                 <div class="key-value">
-                    <div class="key">{{ $t('mall.transportation_method') }}:</div>
-                    <div class="value">
-                        <a-radio-group v-model:value="form.transportation_method">
-                            <a-radio v-for="item in TRANSFER_METHODS" :value="item.value">
-                                {{ $t(item.nameLang) }}
-                            </a-radio>
-                        </a-radio-group>
-                    </div>
-                </div>
-                <div class="key-value">
-                    <div class="key">{{ $t('mall.destination_port') }}:</div>
-                    <div class="value">
-                        <a-radio-group v-model:value="form.destination_port">
-                            <a-radio v-for="item in DESTINATION_PORT" :value="item.value">
-                                {{ $t(item.nameLang) }}
-                            </a-radio>
-                        </a-radio-group>
-                    </div>
-                </div>
-                <div class="key-value">
                     <div class="key">{{ $t('mall.allowed_batch') }}:</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.flag_part_shipment">
@@ -100,7 +80,7 @@
                         </a-radio-group>
                     </div>
                 </div>
-                <div class="key-value">
+                <!-- <div class="key-value">
                     <div class="key">{{ $t('mall.insured') }}:</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.insured">
@@ -109,11 +89,11 @@
                             </a-radio>
                         </a-radio-group>
                     </div>
-                </div>
+                </div> -->
                 <div class="key-value">
-                    <div class="key">{{ $t('mall.palletize') }}:</div>
+                    <div class="key">{{ $t('mall.flag_pallet') }}:</div>
                     <div class="value">
-                        <a-radio-group v-model:value="form.palletize">
+                        <a-radio-group v-model:value="form.flag_pallet">
                             <a-radio v-for="item in PALLETIZE" :value="item.value">
                                 {{ $t(item.nameLang) }}
                             </a-radio>
@@ -128,7 +108,10 @@
                         </a-tooltip>
                     </div>
                     <div class="value">
-                        <a-date-picker v-model:value="form.time" :placeholder="$t('mall.select_date')" />
+                        <a-date-picker
+                            v-model:value="form.deliver_time_expected"
+                            :placeholder="$t('mall.select_date')"
+                        />
                     </div>
                 </div>
             </div>
@@ -139,21 +122,23 @@
                 <div class="sub-price">
                     <p class="sub-price-item">
                         <span>{{ $t('mall.whole_vehicle_orders') }}：</span>
-                        <span>{{ unit }} {{ sum_price }}</span>
+                        <span>{{ unit }} {{ $Util.Number.numFormat(car_price) }}</span>
                     </p>
                     <p class="sub-price-item">
                         <span>{{ $t('mall.accessory_order') }}：</span>
-                        <span>{{ unit }} {{ sum_price }}</span>
+                        <span>{{ unit }} {{ $Util.Number.numFormat(parts_price) }}</span>
                     </p>
                 </div>
                 <div class="settlement">
                     <div class="settlement-mes">
                         <div class="settlement-price">
                             <span class="dis"> {{ $t('mall.payable_amount') }}: </span>
-                            <span class="price"> {{ unit }} {{ sum_price }} </span>
+                            <span class="price"> {{ unit }} {{ $Util.Number.numFormat(sum_price) }} </span>
                         </div>
                         <!-- 余额 -->
-                        <p class="settlement-balance">{{ $t('ac.balance') }}: {{ unit }} 30,000</p>
+                        <p class="settlement-balance">
+                            {{ $t('ac.balance') }}: {{ unit }} {{ this.$Util.Number.numFormat(balance) }}
+                        </p>
                     </div>
                     <my-button
                         showRightIcon
@@ -208,13 +193,11 @@ export default {
                 address: '',
                 email: '',
                 flag_order_type: undefined,
-                transportation_method: undefined, // 运输方式选项列表
-                destination_port: undefined, // 目的港
                 flag_part_shipment: undefined, // 分批发货
                 flag_transfer: undefined, // 转运
-                insured: undefined, // 是否参保
-                palletize: undefined, // 是否打托
-                time: undefined, // 期望交付时间
+                // insured: undefined, // 是否参保
+                flag_pallet: undefined, // 是否打托
+                deliver_time_expected: undefined, // 期望交付时间
             },
             defAddr: [],
 
@@ -231,10 +214,29 @@ export default {
             value1: 'Apple',
             value2: '',
             plainOptions: ['Apple', 'Pear', 'Orange'],
+            balance: 0,
         };
     },
     watch: {},
     computed: {
+        car_price() {
+            let sum = 0;
+            for (const item of this.shopCartList) {
+                if (item.item?.isGift) continue;
+                if (item.item?.type !== 2) continue;
+                sum += item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)] * item.amount;
+            }
+            return Core.Util.countFilter(sum);
+        },
+        parts_price() {
+            let sum = 0;
+            for (const item of this.shopCartList) {
+                if (item.item?.isGift) continue;
+                if (item.item?.type === 2) continue;
+                sum += item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)] * item.amount;
+            }
+            return Core.Util.countFilter(sum);
+        },
         sum_price() {
             let sum = 0;
             for (const item of this.shopCartList) {
@@ -260,6 +262,7 @@ export default {
         }
         this.getReceiveList();
         this.getShopCartList();
+        this.getWallet();
     },
     methods: {
         routerChange(type, item) {
@@ -295,7 +298,7 @@ export default {
                         element.attr_str_en = str_en;
                     }
                 });
-                res.list = this.getVehicleListHasGift(res.list);
+                // res.list = this.getVehicleListHasGift(res.list);// 获取赠品
                 this.shopCartList = res.list.filter(item => this.selectedId.indexOf(item.id) !== -1);
                 console.log(this.shopCartList);
             });
@@ -383,25 +386,19 @@ export default {
             if (!this.selectIndex) {
                 return this.$message.warning(this.$t('def.enter'));
             }
-            if (this.$auth('DISTRIBUTOR') && !this.form.transportation_method) {
-                return this.$message.warning(this.$t('def.enter'));
-            }
-            if (this.$auth('DISTRIBUTOR') && !this.form.destination_port) {
-                return this.$message.warning(this.$t('def.enter'));
-            }
             if (this.$auth('DISTRIBUTOR') && !this.form.flag_part_shipment) {
                 return this.$message.warning(this.$t('def.enter'));
             }
             if (this.$auth('DISTRIBUTOR') && !this.form.flag_transfer) {
                 return this.$message.warning(this.$t('def.enter'));
             }
-            if (this.$auth('DISTRIBUTOR') && !this.form.insured) {
+            // if (this.$auth('DISTRIBUTOR') && !this.form.insured) {
+            //     return this.$message.warning(this.$t('def.enter'));
+            // }
+            if (this.$auth('DISTRIBUTOR') && !this.form.flag_pallet) {
                 return this.$message.warning(this.$t('def.enter'));
             }
-            if (this.$auth('DISTRIBUTOR') && !this.form.palletize) {
-                return this.$message.warning(this.$t('def.enter'));
-            }
-            if (this.$auth('DISTRIBUTOR') && !this.form.time) {
+            if (this.$auth('DISTRIBUTOR') && !this.form.deliver_time_expected) {
                 return this.$message.warning(this.$t('def.enter'));
             }
             return false;
@@ -434,13 +431,11 @@ export default {
                 item_list: item_list.filter(item => item),
             };
             if (this.$auth('DISTRIBUTOR')) {
-                parms['transportation_method'] = this.form.transportation_method;
-                parms['destination_port'] = this.form.destination_port;
                 parms['flag_part_shipment'] = this.form.flag_part_shipment;
                 parms['flag_transfer'] = this.form.flag_transfer;
-                parms['insured'] = this.form.insured;
-                parms['palletize'] = this.form.palletize;
-                parms['time'] = Date.parse(this.form.time) / 1000;
+                // parms['insured'] = this.form.insured;
+                parms['flag_pallet'] = this.form.flag_pallet;
+                parms['deliver_time_expected'] = Date.parse(this.form.deliver_time_expected) / 1000;
             }
             if (this.loading) return;
             this.loading = true;
@@ -480,6 +475,21 @@ export default {
                 }
             });
             return list;
+        },
+        getWallet() {
+            const params = {
+                org_id: this.orgId, //组织id
+                org_type: this.orgType, //组织类型
+                type: 40, //钱包类型：10.售前余额；20.售后余额；30.售后备件账户；40.授信账户
+                currency_type: Core.Const.WALLET.TYPE[this.currency], //货币类型：1.人民币；2.欧元；3.美元；4.英镑
+            };
+            Core.Api.Purchase.getWallet(params)
+                .then(res => {
+                    this.balance = res.balance;
+                })
+                .catch(err => {
+                    console.log('handleCreateOrder err', err);
+                });
         },
     },
 };

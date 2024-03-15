@@ -3,18 +3,18 @@
         <a-modal v-model:visible="visible" :title="title" @cancel="handleCancel">
             <div class="audit">
                 <div class="tip-text">
-                    请确认该订单的船期和运费。确认后，请按时缴纳运费。运费缴纳完成，将按预计船期发货。若拒绝，请说明原因。
+                    {{ $t('distributor.confirm_freight_tips') }}
                 </div>
                 <div class="content level-search-row">
                     <div class="estimated-shipping-data search-col">
                         <div class="key">{{ $t('distributor.shipping_date') }}：</div>
-                        <div class="value flex-1">{{ $Util.timeFilter(detailRecord.shipping_time_estimated) }}</div>
+                        <div class="value flex-1">{{ $Util.timeFilter(detailRecord.shipping_time_estimated, 3) }}</div>
                     </div>
                     <div class="freight search-col">
                         <div class="key">{{ $t('p.freight') }}：</div>
                         <div class="value flex-1">
-                            <span>{{ $Util.countFilter(detailRecord.freight) }}</span>
                             <span>{{ $Util.priceUnitFilter(detailRecord.currency) }}</span>
+                            <span>{{ $Util.countFilter(detailRecord.freight) }}</span>
                         </div>
                     </div>
                 </div>
@@ -36,6 +36,7 @@
                         <div class="key w-80 t-a-r">{{ $t('common.reason') }}：</div>
                         <div class="value flex-1">
                             <a-textarea
+                                class="w-100"
                                 v-model:value="search_params.remark"
                                 :placeholder="$t('common.please_enter') + $t('common.reason')"
                                 show-count
@@ -176,6 +177,9 @@ onMounted(() => {});
     .d-a-s {
         align-items: flex-start;
     }
+}
+.w-100 {
+    width: 100%;
 }
 
 .footer {

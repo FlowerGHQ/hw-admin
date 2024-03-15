@@ -33,11 +33,12 @@
                             <a-select
                                 v-model:value="searchForm.distributor_id"
                                 :placeholder="$t('def.select')"
+                                show-search
+                                :options="distributorList"
+                                option-filter-prop="label"
+                                :filter-option="onFilterOption"
                                 @change="handleSearch"
-                            >
-                                <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{
-                                    item.name
-                                }}</a-select-option>
+                            >                              
                             </a-select>
                         </div>
                     </a-col>
@@ -399,7 +400,7 @@
 </template>
 
 <script>
-import Core from '../../core';
+import Core from '@/core';
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE;
 const SEARCH_TYPE = Core.Const.PURCHASE.SEARCH_TYPE;
 const PAYMENT_STATUS_MAP = Core.Const.PURCHASE.PAYMENT_STATUS_MAP;
@@ -413,6 +414,7 @@ const AUDIT_CANCEL_STATUS_MAP = Core.Const.DISTRIBUTOR.AUDIT_CANCEL_STATUS_MAP;
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 import { message } from 'ant-design-vue';
 import TimeSearch from '@/components/common/TimeSearch.vue';
+import { debounce } from 'lodash';
 
 export default {
     name: 'PurchaseList',
@@ -720,7 +722,7 @@ export default {
             this.pageSize = size;
             this.getTableData();
         },
-        handleSearch() {
+        handleSearch() {            
             // 搜索
             this.pageChange(1);
         },
@@ -751,12 +753,14 @@ export default {
         getTableData(type = false) {
             // 获取 表格 数据
             this.loading = true;
-            Core.Api.Purchase.list({
+            let obj = {
                 ...this.searchForm,
                 search_type: this.search_type,
                 page: this.currPage,
                 page_size: this.pageSize,
-            })
+            }
+
+            Core.Api.Purchase.list(obj)
                 .then(res => {
                     this.total = res.count;
                     this.tableData = res.list;
@@ -788,9 +792,17 @@ export default {
                     console.log('getStatusStat err:', err);
                 });
         },
-        getDistributorListAll() {
-            Core.Api.Distributor.listAll().then(res => {
-                this.distributorList = res.list;
+        getDistributorListAll(params) {
+            let obj = {
+                ...params,
+            };
+            Core.Api.Distributor.listAll(obj).then(res => {
+                this.distributorList = res.list.map(el => {
+                    return {
+                        value: el.id,
+                        label: el.name,
+                    };
+                });
             });
         },
         getAgentListAll() {
@@ -980,6 +992,11 @@ export default {
                 },
             });
         },
+
+        // 分销商的search选项
+        onFilterOption(input, option) {
+            return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+        }
     },
 };
 </script>

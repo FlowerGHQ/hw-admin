@@ -66,33 +66,37 @@
                 </div>
             </div>
         </div>
-        <div class="detail-panel" v-if="detail.status === CONST.AUDIT_STATUS_MAP.PENDING_FIRST || detail.status === CONST.AUDIT_STATUS_MAP.PENDING_SECOND">
-            <div :class="detail.result === CONST.AUDIT_RESULT_MAP.REJECT ? 'info-line center required' : 'info-line center required mb'">
-                <div class="info-key">
-                    {{ $t(/*审核结果*/'payment-management.audit_result') }}
+        <!-- 只有是业务员且当前状态为一审 或者是财务且当前状态为二审 才能进行审核操作 -->
+        <template v-if="(!isFinance && detail.status === CONST.AUDIT_STATUS_MAP.PENDING_SECOND) || (isFinance && detail.status === CONST.AUDIT_STATUS_MAP.PENDING_FIRST)">
+            <div class="detail-panel">
+                <div :class="detail.result === CONST.AUDIT_RESULT_MAP.REJECT ? 'info-line center required' : 'info-line center required mb'">
+                    <div class="info-key">
+                        {{ $t(/*审核结果*/'payment-management.audit_result') }}
+                    </div>
+                    <div class="info-value">
+                        <a-radio-group @change="radioGroupChange" v-model:value="form.result">
+                            <a-radio v-for="item in CONST.AUDIT_RESULT" :value="item.value">
+                                {{ item[$i18n.locale] }}
+                            </a-radio>
+                        </a-radio-group>
+                    </div>
                 </div>
-                <div class="info-value">
-                    <a-radio-group @change="radioGroupChange" v-model:value="form.result">
-                        <a-radio v-for="item in CONST.AUDIT_RESULT" :value="item.value">
-                            {{ item[$i18n.locale] }}
-                        </a-radio>
-                    </a-radio-group>
+                <div v-if="form.result === CONST.AUDIT_RESULT_MAP.REJECT" class="info-line start required mb">
+                    <div class="info-key">
+                        {{ $t(/*不通过原因填写*/'payment-management.caus_key') }}
+                    </div>
+                    <div class="info-value">
+                        <a-textarea
+                            v-model:value="form.remark"
+                            :placeholder="$t(/*请输入不通过原因*/'payment-management.textarea')"
+                            :auto-size="{ minRows: 6, maxRows: 6 }"
+                        />
+                    </div>
                 </div>
             </div>
-            <div v-if="form.result === CONST.AUDIT_RESULT_MAP.REJECT" class="info-line start required mb">
-                <div class="info-key">
-                    {{ $t(/*不通过原因填写*/'payment-management.caus_key') }}
-                </div>
-                <div class="info-value">
-                    <a-textarea
-                        v-model:value="form.remark"
-                        :placeholder="$t(/*请输入不通过原因*/'payment-management.textarea')"
-                        :auto-size="{ minRows: 6, maxRows: 6 }"
-                    />
-                </div>
-            </div>
-        </div>
-        <div class="detail-panel" v-if="detail.status === CONST.AUDIT_STATUS_MAP.REJECT_FIRST || detail.status === CONST.AUDIT_STATUS_MAP.REJECT_SECOND">
+        </template>
+        <!-- 审核不通过可以查看结果和审核原因 -->
+        <div class="detail-panel" v-if="rejectAudit">
             <div :class="detail.result === CONST.AUDIT_RESULT_MAP.REJECT ? 'info-line center' : 'info-line center mb'">
                 <div class="info-key">
                     {{ $t(/*审核结果*/'payment-management.audit_result') }}
@@ -110,7 +114,7 @@
                 </div>
             </div>
         </div>
-        <div class="btn-container" v-if="detail.status === CONST.AUDIT_STATUS_MAP.PENDING_FIRST || detail.status === CONST.AUDIT_STATUS_MAP.PENDING_SECOND">
+        <div class="btn-container" v-if="(!isFinance && detail.status === CONST.AUDIT_STATUS_MAP.PENDING_SECOND) || (isFinance && detail.status === CONST.AUDIT_STATUS_MAP.PENDING_FIRST)">
             <a-button @click="routerChange('back')">{{ $t(/*取消*/'pop_up.no') }}</a-button>
             <a-button @click="handleSubmit" type="primary">{{ $t(/*确定*/'pop_up.yes') }}</a-button>
         </div>
@@ -155,11 +159,37 @@ const form = ref({
     result: 3,
     remark: undefined,   
 })
+const CONST = Core.Const.AUDIT_MANAGEMENT
+// 当前货币类型
 const currencyValue = computed(() => {
     if(detail.value.currency === 'EUR') {
         return '€';        
     } else {
         return '$';           
+    }
+});
+// 是否是财务权限
+const isFinance = computed(() => {
+    if(Core.Data.getAuthority()['recharge-review.first_instance']) {
+        return true;        
+    } else {
+        return false;           
+    }
+});
+// 是否是待审核状态
+const pendingAudit = computed(() => {
+    if(detail.value.status === CONST.AUDIT_STATUS_MAP.PENDING_FIRST || detail.value.status === CONST.AUDIT_STATUS_MAP.PENDING_SECOND) {
+        return true;        
+    } else {
+        return false;           
+    }
+});
+// 是否是审核不通过状态
+const rejectAudit = computed(() => {
+    if(detail.value.status === CONST.AUDIT_STATUS_MAP.REJECT_FIRST || detail.value.status === CONST.AUDIT_STATUS_MAP.REJECT_SECOND) {
+        return true;        
+    } else {
+        return false;           
     }
 });
 const fields = ref([
@@ -171,7 +201,6 @@ const fields = ref([
     { key: 'company_address', label: 'COMPANY ADDRESS' },
     { key: 'remark', label: $t(/*其他汇款信息*/'payment-management.other_remittance_info') }
 ])
-const CONST = Core.Const.AUDIT_MANAGEMENT
 const OSS_URL = 'https://horwin-app.oss-cn-hangzhou.aliyuncs.com'
 const approveImg = `${OSS_URL}/png/323d149575aa263510339aeb319f6739b85a35e03788ca30a6ea119b004e7d46.png`
 const pendingImg = `${OSS_URL}/png/c82cb239af7563f5062ffbb4bd199d0512b15c062a97323a34113a198b447853.png`

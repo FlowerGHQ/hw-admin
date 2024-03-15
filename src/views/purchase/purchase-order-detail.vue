@@ -562,7 +562,8 @@
         <div class="list-container3">
             <div class="title-container d-f-j">
                 <div class="title-area" style="font-weight: 600">{{ $t('distributor.shipping_freight') }}</div>
-                <div class="btn-area">
+                <div class="btn-area d-f-a">
+                    <div class="m-r-10 status" :class="$Util.Common.returenValue(FREIGHT_STATUS_MAP, detail.freight_status, 'color')">{{ detail.freight_audit_record?.remark }}</div>
                     <div class="status status-bg freight-status-style" :class="$Util.Common.returenValue(FREIGHT_STATUS_MAP, detail.freight_status, 'color')">
                         {{ $t($Util.Common.returnTranslation(detail.freight_status, FREIGHT_STATUS_MAP)) }}
                     </div>
@@ -587,10 +588,10 @@
                                 type="link"
                                 @click="onModify"
                             >
-                                {{ $Util.timeFilter(detail?.freight_audit_record?.content?.shipping_time_estimated) }}
+                                {{ $Util.timeFilter(detail?.freight_audit_record?.content?.shipping_time_estimated, 3) }}
                             </a-button>
                             <span v-else>
-                                {{ $Util.timeFilter(detail?.freight_audit_record?.content?.shipping_time_estimated) }}
+                                {{ $Util.timeFilter(detail?.freight_audit_record?.content?.shipping_time_estimated, 3) }}
                             </span>
                         </div>
                     </div>
@@ -950,6 +951,7 @@ import ShippingFreight from './components/ShippingFreightModel.vue';
 import ConfirmFreight from './components/ConfirmFreightModel.vue';
 import CancelOperation from './components/CancelOperation.vue';
 import CheckModal from '@/components/horwin/based-on-ant/CheckModal.vue';
+
 
 const PURCHASE = Core.Const.PURCHASE;
 const DISTRIBUTOR = Core.Const.DISTRIBUTOR;
