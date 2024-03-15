@@ -209,13 +209,13 @@ const detail = reactive({
     },
 });
 const accoutMes = reactive({
-    beneficiary_bank: '-',
-    swift_code: '-',
-    bank_address: '-',
-    account_number: '-',
-    company_name: '-',
-    company_address: '-',
-    remark: '-',
+    beneficiary_bank: '',
+    swift_code: '',
+    bank_address: '',
+    account_number: '',
+    company_name: '',
+    company_address: '',
+    remark: '',
 });
 const can_next = computed(() => {
     if (formState.vehicle_balance || formState.part_balance) {
