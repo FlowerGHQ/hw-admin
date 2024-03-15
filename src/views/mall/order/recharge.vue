@@ -159,7 +159,7 @@ const { proxy } = getCurrentInstance();
 
 const router = useRouter();
 const id = ref('');
-const orgId = Core.Data.getOrgId();
+const orgId = ref(route.query?.id || Core.Data.getOrgId()); // 分销商id
 const orgType = Core.Data.getOrgType();
 const steps = [
     {
