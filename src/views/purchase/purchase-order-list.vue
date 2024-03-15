@@ -399,7 +399,7 @@
 </template>
 
 <script>
-import Core from '../../core';
+import Core from '@/core';
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE;
 const SEARCH_TYPE = Core.Const.PURCHASE.SEARCH_TYPE;
 const PAYMENT_STATUS_MAP = Core.Const.PURCHASE.PAYMENT_STATUS_MAP;

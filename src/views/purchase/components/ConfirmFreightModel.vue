@@ -3,7 +3,7 @@
         <a-modal v-model:visible="visible" :title="title" @cancel="handleCancel">
             <div class="audit">
                 <div class="tip-text">
-                    请确认该订单的船期和运费。确认后，请按时缴纳运费。运费缴纳完成，将按预计船期发货。若拒绝，请说明原因。
+                    {{ $t('distributor.confirm_freight_tips') }}
                 </div>
                 <div class="content level-search-row">
                     <div class="estimated-shipping-data search-col">

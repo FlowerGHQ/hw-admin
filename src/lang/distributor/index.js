@@ -27,6 +27,7 @@ export default {
         audit: '审核',
         audit_success: '审核成功',
         audit_error: '审核失败',
+        confirm_freight_tips: "请确认该订单的船期和运费。确认后，请按时缴纳运费。运费缴纳完成，将按预计船期发货。若拒绝，请说明原因。",
     },
     en: {
         to_be_determined: 'To Be Determined',
@@ -56,5 +57,6 @@ export default {
         audit: 'Audit',
         audit_success: 'Audit Success',
         audit_error: 'Audit Error',
+        confirm_freight_tips: "Please confirm the shipping date and freight of the order. After confirmation, please pay the freight on time. The freight payment is completed and the goods will be delivered on the expected shipping date. If you refuse, please state the reason.",
     },
 };

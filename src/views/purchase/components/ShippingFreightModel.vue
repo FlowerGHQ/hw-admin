@@ -10,9 +10,11 @@
             <div class="freight m-t-20">
                 <div class="key">{{ $t('p.freight') }}:</div>
                 <div class="value">
-                    <a-input
+                    <a-input-number
+                        class="w-100"
                         v-model:value="search_params.freight"
                         :placeholder="$t('common.please_enter') + $t('distributor.actual_freight_cost')"
+                        :min="0"
                     />
                 </div>
             </div>
