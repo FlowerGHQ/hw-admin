@@ -81,17 +81,17 @@ const saveFetch = (params = {}) => {
     }
 
     console.log('obj', obj);
-    // Core.Api.ShippingDateFreight.add(obj)
-    //     .then(res => {
-    //         console.log('确认和修改运费和船期 res', res);
-    //         proxy.$message.success('提交成功');
-    //         handleCancel();
-    //         emits('ok', search_params.value);
-    //     })
-    //     .catch(err => {
-    //         console.log('确认和修改运费和船期 err', err);
-    //         proxy.$message.error('提交失败');
-    //     });
+    Core.Api.ShippingDateFreight.add(obj)
+        .then(res => {
+            console.log('确认和修改运费和船期 res', res);
+            proxy.$message.success('提交成功');
+            handleCancel();
+            emits('ok', search_params.value);
+        })
+        .catch(err => {
+            console.log('确认和修改运费和船期 err', err);
+            proxy.$message.error('提交失败');
+        });
 };
 /* fetch end*/
 
