@@ -1,100 +1,135 @@
 <template>
     <div id="recharge">
-        <div class="content">
-            <!-- 未提交 -->
-            <template v-if="!isSubmit">
-                <div class="steps">
-                    <div class="step-body">
-                        <div
-                            class="step-item"
-                            :class="[index === current ? 'active' : '']"
-                            v-for="(item, index) in steps"
-                            :key="item.title"
-                        >
-                            <span class="step-text">
-                                {{ `${index + 1}、${$t(item.title)}` }}
-                            </span>
+        <!-- 未提交 -->
+        <div class="content" v-if="!isSubmit">
+            <div class="steps">
+                <div class="step-body">
+                    <div
+                        class="step-item"
+                        :class="[index === current ? 'active' : '']"
+                        v-for="(item, index) in steps"
+                        :key="item.title"
+                    >
+                        <span class="step-text">
+                            {{ `${index + 1}、${$t(item.title)}` }}
+                        </span>
+                    </div>
+                </div>
+                <div class="steps-content">
+                    <!-- 第一步 -->
+                    <template v-if="current === 0">
+                        <p class="title">{{ $t('mall.recharge_amount') }}</p>
+                        <div class="form-body">
+                            <a-form
+                                ref="formRef"
+                                layout="vertical"
+                                :model="formState"
+                                name="dynamic_rule"
+                                v-bind="formItemLayout"
+                                labelAlign="left"
+                            >
+                                <a-row :gutter="72">
+                                    <a-col :span="12">
+                                        <a-form-item
+                                            :label="$t('mall.vehicle_available')"
+                                            name="vehicle_balance"
+                                            :rules="[
+                                                {
+                                                    required: false,
+                                                    message: 'Please input number!',
+                                                    validator: checkPrice,
+                                                },
+                                            ]"
+                                        >
+                                            <a-input
+                                                v-model:value="formState.vehicle_balance"
+                                                :suffix="currency"
+                                                :placeholder="$t('w.enter_money')"
+                                            />
+                                        </a-form-item>
+                                    </a-col>
+                                    <a-col :span="12">
+                                        <a-form-item
+                                            :label="$t('mall.parts_available')"
+                                            name="part_balance"
+                                            :rules="[
+                                                {
+                                                    required: false,
+                                                    message: 'Please input number!',
+                                                    validator: checkPrice,
+                                                },
+                                            ]"
+                                        >
+                                            <a-input
+                                                :placeholder="$t('w.enter_money')"
+                                                v-model:value="formState.part_balance"
+                                                :suffix="currency"
+                                            />
+                                        </a-form-item>
+                                    </a-col>
+                                </a-row>
+                            </a-form>
+                            <div class="amount">
+                                <span class="amount-text">{{ $t('mall.the_amount_transferred') }}:</span>
+                                <span class="amount-price">€ {{ amount_price }}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="steps-content">
-                        <!-- 第一步 -->
-                        <template v-if="current === 0">
-                            <p class="title">{{ $t('mall.recharge_amount') }}</p>
-                            <div class="form-body">
-                                <a-form
-                                    ref="formRef"
-                                    layout="vertical"
-                                    :model="formState"
-                                    name="dynamic_rule"
-                                    v-bind="formItemLayout"
-                                    labelAlign="left"
-                                >
-                                    <a-row :gutter="72">
-                                        <a-col :span="12">
-                                            <a-form-item
-                                                label="Vehicle available balance account"
-                                                name="price"
-                                                :rules="[{ required: false, message: 'Please input your price!' }]"
-                                            >
-                                                <a-input
-                                                    v-model:value="formState.price"
-                                                    :suffix="currency"
-                                                    placeholder="123"
-                                                />
-                                            </a-form-item>
-                                        </a-col>
-                                        <a-col :span="12">
-                                            <a-form-item
-                                                label="Parts Available Balance Account"
-                                                name="price2"
-                                                :rules="[{ required: false, message: 'Please input your price2!' }]"
-                                            >
-                                                <a-input v-model:value="formState.price2" :suffix="currency" />
-                                            </a-form-item>
-                                        </a-col>
-                                    </a-row>
-                                </a-form>
-                                <div class="amount">
-                                    <span class="amount-text">The amount to be transferred this time:</span>
-                                    <span class="amount-price">€999,012</span>
-                                </div>
+                        <p class="title">{{ $t('p.Payment_information') }}</p>
+                        <PaymentInformation :mes="accoutMes" />
+                    </template>
+                    <!-- 第二步 -->
+                    <template v-if="current === 1">
+                        <p class="title">{{ $t('mall.recharge_amount') }}</p>
+                        <div class="upload-body">
+                            <div
+                                class="record"
+                                @click="
+                                    routerChange('/distributor/distributor-recharge-record', {
+                                        org_id: orgId,
+                                        org_type: orgType,
+                                        currency: org.currency,
+                                    })
+                                "
+                            >
+                                {{ $t('mall.recharge_record') }}
                             </div>
-                            <p class="title">{{ $t('p.Payment_information') }}</p>
-                            <PaymentInformation />
-                        </template>
-                        <!-- 第二步 -->
-                        <template v-if="current === 1">
-                            <p class="title">{{ $t('mall.recharge_amount') }}</p>
-                            <div class="upload-body">
-                                <div class="record">{{ $t('mall.recharge_record') }}</div>
-                                <MyUpload
-                                    ref="myUpload"
-                                    :isWrite="isWrite"
-                                    :defaultList="detail.file"
-                                    :type="isMobile ? 'image' : 'file'"
-                                    @handleUpload="handleUpload"
-                                />
-                            </div>
-                        </template>
-                    </div>
+                            <MyUpload
+                                ref="myUpload"
+                                :isWrite="isWrite"
+                                :defaultList="detail.content.payment_information.img"
+                                :type="isMobile ? 'image' : 'file'"
+                                @handleUpload="handleUpload"
+                            />
+                        </div>
+                    </template>
                 </div>
-            </template>
-            <!-- 已提交 -->
-            <template v-else>
-                <div>
-                    <p>{{ $t('mall.submit_success') }}</p>
-                    <p>
-                        {{ $t('mall.recharge_progress_pre') }}<a href="">{{ $t('mall.recharge_progress') }}</a
-                        >{{ $t('mall.recharge_progress_next') }}
-                    </p>
-                </div>
-            </template>
+            </div>
         </div>
+        <!-- 已提交 -->
+        <template v-if="isSubmit">
+            <div class="submit-success">
+                <img src="@images/mall/order/submit-success.png" />
+                <p class="success-title">{{ $t('mall.submit_success') }}</p>
+                <p class="success-text">
+                    {{ $t('mall.recharge_progress_pre') }}
+                    <a
+                        @click="
+                            routerChange('/distributor/distributor-recharge-detail', { id: id, currency: org.currency })
+                        "
+                        >{{ $t('mall.recharge_progress') }}</a
+                    >
+                    {{ $t('mall.recharge_progress_next') }}
+                </p>
+                <MyButton type="line" @clickFn="back" padding="6px 16px">
+                    {{ $t('supply-chain.back') }}
+                </MyButton>
+            </div>
+        </template>
         <!-- 底部支付栏 -->
         <template v-if="!isSubmit">
             <div class="settlement-fixed">
                 <div class="settlement-fixed-body">
-                    <MyButton v-if="current < steps.length - 1" type="primary" @clickFn="next">
+                    <MyButton v-if="current < steps.length - 1" type="primary" @clickFn="next" :disabled="!can_next">
                         {{ $t('mall.next_step') }}
                     </MyButton>
                     <MyButton v-if="current > 0" type="line" @clickFn="prev">{{ $t('mall.previous_step') }}</MyButton>
@@ -114,12 +149,19 @@
 
 <script setup>
 import Core from '@/core';
-import { ref, reactive, getCurrentInstance, onMounted } from 'vue';
+import { ref, reactive, getCurrentInstance, onMounted, computed } from 'vue';
 import MyUpload from './components/upload.vue';
 import MyButton from '../../../components/common/MyButton.vue';
 import PaymentInformation from '../../../components/common/payment-information.vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const { proxy } = getCurrentInstance();
+
+const route = useRoute();
+const router = useRouter();
+const id = ref('');
+const orgId = ref(route.query?.id || Core.Data.getOrgId()); // 分销商id
+const orgType = Core.Data.getOrgType();
 const steps = [
     {
         title: 'mall.step_one_title',
@@ -132,8 +174,8 @@ const steps = [
 ];
 const formRef = ref();
 const formState = reactive({
-    price: '',
-    price2: '',
+    vehicle_balance: '',
+    part_balance: '',
 });
 const formItemLayout = {
     labelCol: { span: 24 },
@@ -143,28 +185,46 @@ const isMobile = ref(false);
 const isWrite = ref(true);
 const myUpload = ref(null);
 const detail = reactive({
-    // 车辆类型（1.SENMENTI 0；2.SENMENTI X；3.SENMENTI 11）
-    car_type: '',
-    price: 128000,
-    amount: 10,
-    // 订单编号
-    sn: '',
-    create_time: Date.now(),
-    // 状态：待付款：100；待审核：110；审核不通过：120
-    status: 100,
-    // 订单类型：0.个人预定，1.企业预定
-    type: 0,
-    file: [],
+    target_type: 100, //100 分销商充值审核
+    distributor_id: '', //分销商id
+    content: {
+        vehicle_balance: '', //整车充值金额
+        part_balance: '', // 零部件充值金额
+        total_amount: '', //总充值金额
+        recharge_uid: '',
+        payment_information: {
+            beneficiary_bank: '', //收款行
+            swift_code: '', //银行代码
+            bank_address: '', //银行地址
+            account_number: '', //账号
+            company_name: '', //公司名称
+            company_address: '', //公司地址
+            remark: '', //备注
+            img: [], //图片
+        },
+    },
 });
-const accout = reactive({
-    accountHolder: 'HORWIN EUROPE B.V.',
-    accountNickname: 'EUR Receive Account',
-    IBAN: 'IE40CHAS93090301193061',
-    SWIFTBIC: 'CHASIE4L',
-    bankName: 'J.P. MORGAN BANK LUXEMBOURG S.A., DUBLIN BRANCH',
-    bankAddress: '200 Capital Dock 79 Sir John Rogersons Quay Dublin 2 D02 RK57',
+const accoutMes = reactive({
+    beneficiary_bank: '-',
+    swift_code: '-',
+    bank_address: '-',
+    account_number: '-',
+    company_name: '-',
+    company_address: '-',
+    remark: '-',
+});
+const can_next = computed(() => {
+    if (formState.vehicle_balance || formState.part_balance) {
+        return true;
+    } else {
+        return false;
+    }
+});
+const amount_price = computed(() => {
+    return Number(formState.vehicle_balance || 0) + Number(formState.part_balance || 0);
 });
 const currency = ref('€');
+const org = Core.Data.getOrgObj();
 const current = ref(0);
 const isSubmit = ref(false);
 const uploadClass = ref('normal');
@@ -181,17 +241,47 @@ const prev = () => {
     current.value--;
 };
 const submit = () => {
-    isSubmit.value = true;
+    Object.assign(detail, {
+        target_type: 100, //100 分销商充值审核
+        distributor_id: orgId.value, //分销商id
+        content: {
+            vehicle_balance: formState.vehicle_balance, //整车充值金额
+            part_balance: formState.part_balance, // 零部件充值金额
+            total_amount: amount_price.value, //总充值金额
+            recharge_uid: '',
+            payment_information: {
+                beneficiary_bank: accoutMes.beneficiary_bank, //收款行
+                swift_code: accoutMes.swift_code, //银行代码
+                bank_address: accoutMes.bank_address, //银行地址
+                account_number: accoutMes.account_number, //账号
+                company_name: accoutMes.company_name, //公司名称
+                company_address: accoutMes.company_address, //公司地址
+                remark: accoutMes.remark, //备注
+                img: detail.content.payment_information.img.map(item => item.file),
+            },
+        },
+    });
+    Core.Api.RechargeAudit.save({ ...detail })
+        .then(res => {
+            proxy.$message.success(proxy.$t('mall.recharged_successfully'));
+            id.value = res.id;
+            isSubmit.value = true;
+        })
+        .catch(err => {});
 };
 const handleUpload = fileList => {
-    detail.file = fileList;
-    console.log(detail.file);
-    myUpload.value.updateFile(detail.file);
+    myUpload.value.updateFile(detail.content.payment_information.img);
     if (fileList.length === 0) {
         uploadClass.value = 'error';
     } else {
         uploadClass.value = 'normal';
     }
+};
+const checkPrice = (_, value) => {
+    if (!value || Number(value) > 0) {
+        return Promise.resolve();
+    }
+    return Promise.reject(new Error('Price must be greater than zero!'));
 };
 const TestCopyBox = id => {
     const divElement = document.getElementById(id);
@@ -206,12 +296,44 @@ const TestCopyBox = id => {
         proxy.$message.success('Copy Success');
     }
 };
+const back = () => {
+    location.reload();
+};
+// 路由跳转
+const routerChange = (routeUrl, item = {}, type = 1) => {
+    switch (type) {
+        case 1:
+            router.push({
+                path: routeUrl,
+                query: item,
+            });
+            break;
+        case 2:
+            const path = router.resolve({
+                path: routeUrl,
+                query: item,
+            });
+            window.open(path.href, '_blank');
+            break;
+        default:
+            break;
+    }
+};
+const findAccount = () => {
+    const params = { id: orgId.value };
+    Core.Api.Distributor.findAccount({ ...params })
+        .then(res => {
+            Object.assign(accoutMes, res.pay_in_account_bank);
+        })
+        .catch(err => {});
+};
 onMounted(() => {
     if (Core.Data.getCurrency() === 'EUR') {
         currency.value = '€';
     } else {
         currency.value = '$';
     }
+    findAccount();
 });
 </script>
 
@@ -221,6 +343,27 @@ onMounted(() => {
     min-height: calc(100vh - var(--header-h-pc-mall));
     .content {
         padding-top: 48px;
+    }
+    .submit-success {
+        min-height: calc(100vh - var(--header-h-pc-mall));
+        .flex(center, center);
+        .success-title {
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 22px;
+            color: #26ab54;
+            margin-bottom: 5px;
+        }
+        .success-text {
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 22px;
+            color: #666666;
+            margin-bottom: 16px;
+            > a {
+                color: #26ab54;
+            }
+        }
     }
     .steps {
         .step-body {
@@ -240,11 +383,26 @@ onMounted(() => {
                     line-height: 22px;
                     text-align: center;
                 }
-                &.active {
+                &:nth-child(1) {
+                    background-image: url('../../../assets/images/mall/order/step-bg.png');
                     .step-text {
-                        color: #ffffff;
+                        color: rgba(255, 255, 255, 0.5);
                     }
-                    background-image: url('../../../assets/images/mall/order/step-bg-active.png');
+                    &.active {
+                        .step-text {
+                            color: #ffffff;
+                        }
+                        background-image: url('../../../assets/images/mall/order/step-bg.png');
+                    }
+                }
+                &:nth-child(2) {
+                    background-image: url('../../../assets/images/mall/order/step-bg2.png');
+                    &.active {
+                        .step-text {
+                            color: #ffffff;
+                        }
+                        background-image: url('../../../assets/images/mall/order/step-bg-active2.png');
+                    }
                 }
             }
         }
@@ -285,10 +443,15 @@ onMounted(() => {
                                 line-height: 24px;
                             }
                         }
+                        input:-internal-autofill-previewed,
+                        input:-internal-autofill-selected {
+                            -webkit-text-fill-color: #8f00ff;
+                            transition: background-color 5000s ease-out 0.5s;
+                        }
                         .ant-input-suffix {
                             font-size: 35px;
                             line-height: 36px !important;
-                            color: #999999;
+                            color: #999999 !important;
                         }
                     }
                 }

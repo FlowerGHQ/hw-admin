@@ -25,7 +25,7 @@
                     <span class="dis">
                         {{ $t('purchase.selected_items') }}
                     </span>
-                    <span class="price"> {{ currency }} {{ allPrice }} </span>
+                    <span class="price"> {{ currency }} {{ proxy.$Util.Number.numFormat(allPrice) }} </span>
                     <my-button
                         showRightIcon
                         type="primary"
@@ -575,7 +575,7 @@
                             <span class="dis">
                                 {{ $t('purchase.selected_items_total') }}
                             </span>
-                            <span class="price"> {{ currency }} {{ allPrice }} </span>
+                            <span class="price"> {{ currency }} {{ proxy.$Util.Number.numFormat(allPrice) }} </span>
                         </div>
                         <template v-if="org?.pay_type === 70">
                             <!-- 授信余额足 -->
@@ -585,12 +585,21 @@
                                 </p>
                             </template>
                             <!-- 授信余额不足 -->
-                            <template v-else>
+                            <template>
                                 <p class="settlement-balance warn">
                                     {{ $t('mall.credit_balance') }}: {{ currency }} {{ balance }} ({{
                                         $t('mall.insufficient_balance')
                                     }}
-                                    {{ allPrice }})
+                                    {{
+                                        proxy.$Util.Number.numFormat(
+                                            parseFloat(
+                                                (
+                                                    allPrice.value -
+                                                    Math.ceil((allPrice.value * org.pay_pre_pay_ratio) / 100)
+                                                ).toFixed(4),
+                                            ),
+                                        )
+                                    }})
                                 </p>
                             </template>
                         </template>
@@ -599,7 +608,7 @@
                         showRightIcon
                         type="primary"
                         padding="12px 32px"
-                        :disabled="!isSelected"
+                        :disabled="!isSelected || !isBalanceEnough"
                         font="14px"
                         @click.native="handleCreateOrder"
                     >
@@ -776,7 +785,7 @@ const amount = computed(() => {
     );
 });
 const isBalanceEnough = computed(() => {
-    const sum = parseFloat((allPrice.value - Math.floor((allPrice.value * org.pay_pre_pay_ratio) / 100)).toFixed(4)); // 总尾款
+    const sum = parseFloat((allPrice.value - Math.ceil((allPrice.value * org.pay_pre_pay_ratio) / 100)).toFixed(4)); // 总尾款
     return sum <= balance.value;
 });
 // 计算是否全选车辆
@@ -855,7 +864,7 @@ const allPrice = computed(() => {
             price += item.amount * item?.item[proxy.$Util.Number.getStepPriceIndexByNums(item.amount)];
         }
     });
-    return proxy.$Util.Number.numFormat(proxy.$Util.countFilter(price.toFixed(2)));
+    return proxy.$Util.countFilter(price.toFixed(2));
 });
 /* computed end */
 
@@ -1204,7 +1213,7 @@ const getWallet = () => {
     };
     Core.Api.Purchase.getWallet(params)
         .then(res => {
-            balance.value = res.balance || 0;
+            balance.value = Core.Util.countFilter(res.balance || 0 + Number(org.credit));
         })
         .catch(err => {
             console.log('handleCreateOrder err', err);

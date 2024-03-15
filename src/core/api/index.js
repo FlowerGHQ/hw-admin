@@ -490,6 +490,7 @@ const apiList = {
         rechargeList: ['PostJson', 'audit-record/list-distributor-recharge'],
         // 修改授信总额和备用件抵扣比率
         updateCredit: ['PostJson', 'distributor/update-credit-spare-part'],
+        findAccount: ['PostJson', 'distributor/find-pay-in-account-bank'],// 拿到充值对应银行详情
     },
     Fault: {
         // 产品故障管理

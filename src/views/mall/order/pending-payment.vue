@@ -262,7 +262,7 @@ const sum_price = computed(() => {
 });
 // 预付款(售前)
 const pre_price = computed(() => {
-    return Math.floor((sum_price.value * detail.pay_pre_pay_ratio) / 100);
+    return Math.ceil((sum_price.value * detail.pay_pre_pay_ratio) / 100);
 });
 // 尾款(售前)
 const end_price = computed(() => {
@@ -274,7 +274,7 @@ const after_price = computed(() => {
 });
 // 售后备件
 const after_price_credit = computed(() => {
-    return Math.floor((balanceParts.value * detail.spare_part_deduction_ratio) / 100);
+    return Math.ceil((balanceParts.value * detail.spare_part_deduction_ratio) / 100);
 });
 // 需付余额
 const need_balance = computed(() => {
@@ -412,10 +412,18 @@ onMounted(async () => {
         type: 30, //钱包类型：10.售前余额；20.售后余额；30.售后备件账户；40.授信账户
         currency_type: Core.Const.WALLET.TYPE[currency.value], //货币类型：1.人民币；2.欧元；3.美元；4.英镑
     };
-    balance.value = (await Core.Api.Purchase.getWallet({ ...params, type: 10 }))?.detail?.balance || 0;
-    balanceAfter.value = (await Core.Api.Purchase.getWallet({ ...params, type: 20 }))?.detail?.balance || 0;
-    balanceParts.value = (await Core.Api.Purchase.getWallet({ ...params, type: 30 }))?.detail?.balance || 0;
-    balanceCredit.value = (await Core.Api.Purchase.getWallet({ ...params, type: 40 }))?.detail?.balance || 0;
+    balance.value = Core.Util.countFilter(
+        (await Core.Api.Purchase.getWallet({ ...params, type: 10 }))?.detail?.balance || 0,
+    );
+    balanceAfter.value = Core.Util.countFilter(
+        (await Core.Api.Purchase.getWallet({ ...params, type: 20 }))?.detail?.balance || 0,
+    );
+    balanceParts.value = Core.Util.countFilter(
+        (await Core.Api.Purchase.getWallet({ ...params, type: 30 }))?.detail?.balance || 0,
+    );
+    balanceCredit.value = Core.Util.countFilter(
+        ((await Core.Api.Purchase.getWallet({ ...params, type: 40 }))?.detail?.balance || 0) + Number(org.credit),
+    );
 });
 </script>
 <style lang="less" scoped src="../css/layout.css"></style>
