@@ -250,7 +250,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import Core from '@/core';
@@ -328,13 +328,12 @@ const formState = ref({
 });
 
 const getWalletList = () => {
-    console.log('查询钱包明细');
     let params = {
         org_id: props.detail.id,
         org_type: 15,
     };
     Core.Api.Wallet.list(params).then(res => {
-        console.log('res', res.list);
+        emit('handleUpdateDetails');
         const typeMap = {
             10: 'vehicleData',
             20: 'partsData',
@@ -344,21 +343,9 @@ const getWalletList = () => {
         for (let i = 0; i < res.list.length; i++) {
             let item = res.list[i];
             let key = typeMap[item.type];
-            console.log('key', key);
-            item.balance = Core.Util.countFilter(item.balance);
+            item.balance = Core.Util.countFilter(item?.balance || 0) * 1;
             dataObject.value[key] = item;
         }
-        for (let key in dataObject.value) {
-            console.log('key', key);
-            if (!dataObject.value[key].balance) {
-                dataObject.value[key].balance = 0;
-            }
-            if (key === 'creditData') {
-                dataObject.value[key].balance =
-                    Core.Util.countFilter(props.detail.credit) * 1 + dataObject.value[key].balance * 1;
-            }
-        }
-
         console.log('dataObject', dataObject.value);
     });
 };
@@ -433,10 +420,18 @@ const handleOk = () => {
         console.log('res', res);
         visible.value = false;
         message.success($t('distributor-detail.operation_success'));
-        emit('handleUpdateDetails');
         getWalletList();
     });
 };
+
+watch(
+    () => props.detail,
+    (newV, oldV) => {
+        console.log('newV', newV);
+        dataObject.value.creditData.balance =
+            Core.Util.countFilter(newV.credit) * 1 + dataObject.value.creditData.balance * 1;
+    },
+);
 
 onMounted(() => {
     getWalletList();
