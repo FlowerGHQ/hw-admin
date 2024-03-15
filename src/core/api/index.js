@@ -403,6 +403,8 @@ const apiList = {
         updatePI: ['PostJson', 'purchase-order/update-pi'], // 修改pi
         // 平台方增加功能请求-手动同步u8--同步erp
         erpPush: ['PostJson', 'erp/purchase-order/push'], // 同步erp  待生产-》生产中
+        getWallet: ['PostJson', 'wallet/get'], // 获取钱包余额
+        pay: ['PostJson', 'purchase-order/pay'], // 支付
     },
     Aftersales: {
         // 售后单

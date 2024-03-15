@@ -177,6 +177,7 @@ export default {
                         return;
                     }
 
+                    Core.Data.setOrgObj(res.user.org);
                     Core.Data.setOrgId(res.user.org_id); // 组织的id
                     Core.Data.setOrgType(res.user.org_type); // 组织的类型
                     Core.Data.setCurrency(res.user.currency); // 账号的单位
