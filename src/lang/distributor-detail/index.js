@@ -152,6 +152,24 @@ export default {
         serial_number: '序号',
         // 可抵扣金额
         deduction_amount: '可抵扣金额',
+        // 预计到账需要3-5天，请耐心等待
+        arrival_progress_tips: '预计到账需要3-5天，请耐心等待',
+        // 充值结果将通过邮箱发送给您，请注意查收邮箱。也可进入充值进度页面查看进度。
+        recharge_result_tips: '充值结果将通过邮箱发送给您，请注意查收邮箱。也可进入充值进度页面查看进度。',
+        // 账户存在异常，请仔细查看充值帐户是否正常
+        recharge_account_tips: '账户存在异常，请仔细查看充值帐户是否正常',
+        // 资金已打入对应帐户
+        fund_has_been_transferred: '资金已打入对应帐户',
+        // 整车余额账户
+        vehicle_available_balance: '整车余额账户',
+        // 零部件余额账户
+        parts_available_balance: '零部件余额账户',
+        // 充值中
+        rechargeing: '充值中',
+        //到账失败
+        arrival_failed: '到账失败',
+        // 到账成功
+        arrival_success: '到账成功',
     },
     en: {
         vehicle_account: 'Vehicle Account',
@@ -257,5 +275,21 @@ export default {
         serial_number: 'Serial Number',
         // 可抵扣金额
         deduction_amount: 'Deduction Amount',
+        // 预计到账需要3-5天，请耐心等待
+        arrival_progress_tips: 'It takes 3-5 days to arrive, please be patient',
+        // 充值结果将通过邮箱发送给您，请注意查收邮箱。也可进入充值进度页面查看进度。
+        recharge_result_tips:
+            'The recharge result will be sent to you by email, please pay attention to check the email. You can also enter the recharge progress page to view the progress.',
+        // 账户存在异常，请仔细查看充值帐户是否正常
+        recharge_account_tips: 'The account has an exception, please check the recharge account carefully',
+        // 资金已打入对应帐户
+        fund_has_been_transferred: 'The funds have been transferred to the corresponding account',
+        // 整车余额账户
+        vehicle_available_balance: 'Vehicle Available Balance',
+        // 零部件余额账户
+        parts_available_balance: 'Parts Available Balance',
+        rechargeing: 'Rechargeing',
+        arrival_failed: 'Arrival failed',
+        arrival_success: 'Arrival success',
     },
 };
