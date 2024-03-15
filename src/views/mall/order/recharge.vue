@@ -36,7 +36,7 @@
                                             :rules="[
                                                 {
                                                     required: false,
-                                                    message: 'Please input number!',
+                                                    message: `${$t('mall.please_input_number')}!`,
                                                     validator: checkPrice,
                                                 },
                                             ]"
@@ -55,7 +55,7 @@
                                             :rules="[
                                                 {
                                                     required: false,
-                                                    message: 'Please input number!',
+                                                    message: `${$t('mall.please_input_number')}!`,
                                                     validator: checkPrice,
                                                 },
                                             ]"
@@ -278,7 +278,7 @@ const handleUpload = fileList => {
     }
 };
 const checkPrice = (_, value) => {
-    if (!value || Number(value) > 0) {
+    if (!value || Number(value) >= 0) {
         return Promise.resolve();
     }
     return Promise.reject(new Error('Price must be greater than zero!'));
