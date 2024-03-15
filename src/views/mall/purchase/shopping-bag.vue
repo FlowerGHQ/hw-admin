@@ -608,7 +608,7 @@
                         showRightIcon
                         type="primary"
                         padding="12px 32px"
-                        :disabled="org?.pay_type === 70 && (!isSelected || !isBalanceEnough)"
+                        :disabled="!isSelected"
                         font="14px"
                         @click.native="handleCreateOrder"
                     >

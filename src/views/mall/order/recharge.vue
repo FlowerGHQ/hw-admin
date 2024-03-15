@@ -245,9 +245,9 @@ const submit = () => {
         target_type: 100, //100 分销商充值审核
         distributor_id: orgId.value, //分销商id
         content: {
-            vehicle_balance: formState.vehicle_balance, //整车充值金额
-            part_balance: formState.part_balance, // 零部件充值金额
-            total_amount: amount_price.value, //总充值金额
+            vehicle_balance: formState.vehicle_balance * 100, //整车充值金额
+            part_balance: formState.part_balance * 100, // 零部件充值金额
+            total_amount: amount_price.value * 100, //总充值金额
             recharge_uid: '',
             payment_information: {
                 beneficiary_bank: accoutMes.beneficiary_bank, //收款行
