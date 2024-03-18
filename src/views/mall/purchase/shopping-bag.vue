@@ -1213,7 +1213,7 @@ const getWallet = () => {
     };
     Core.Api.Purchase.getWallet(params)
         .then(res => {
-            balance.value = Core.Util.countFilter(res.balance || 0 + Number(org.credit));
+            balance.value = Core.Util.countFilter((res.detail.balance || 0) + Number(org.credit));
         })
         .catch(err => {
             console.log('handleCreateOrder err', err);
