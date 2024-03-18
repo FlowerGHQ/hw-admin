@@ -47,11 +47,7 @@
                                 {{ route.query.currency }}
                             </span>
                             <span class="balance"
-                                >余额：{{
-                                    record.credit_amount
-                                        ? record.credit_amount
-                                        : Core.Util.countFilter(record.balance, 100, 2, false, true) || 0
-                                }}
+                                >余额：{{ Core.Util.countFilter(record.balance, 100, 2, false, true) || 0 }}
                                 {{ route.query.currency }}</span
                             >
                         </template>
@@ -114,24 +110,9 @@ const initParam = ref({
     org_type: 15,
 });
 
-const dataCallBack = res => {
-    if (res && res.list && res.list.length > 0) {
-        res.list.forEach(item => {
-            if (item.type == 40) {
-                item.credit_amount =
-                    Core.Util.countFilter(route.query.credit, 100, 2, false, true) * 1 +
-                    Core.Util.countFilter(item.balance, 100, 2, false, true) * 1;
-            }
-        });
-    }
-    console.log('res', res.list);
-    return res.list;
-};
-
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request,
     initParam: initParam.value,
-    dataCallBack,
 });
 
 // 收入支出类型
