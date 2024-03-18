@@ -19,7 +19,7 @@
                             <div class="account-card-content-item">
                                 <div class="account-card-content-item-top">
                                     <div class="account-card-content-item-title">
-                                        {{ $t('distributor-detail.available_amount') }}：
+                                        {{ $t('distributor-detail.available_balance') }}：
                                     </div>
                                     <div class="account-card-content-item-value">
                                         {{ currency }} {{ dataObject.vehicleData.balance }}
@@ -146,7 +146,7 @@
                             <div class="account-card-content-item">
                                 <div class="account-card-content-item-top">
                                     <div class="account-card-content-item-title">
-                                        {{ $t('distributor-detail.available_amount') }}：
+                                        {{ $t('distributor-detail.available_balance') }}：
                                     </div>
                                     <div class="account-card-content-item-value">
                                         {{ currency }} {{ dataObject.partsData.balance }}
@@ -356,7 +356,6 @@ const handleRouteChange = (type, item) => {
         org_id: props.detail.id,
         org_type: 15, //分销商类型
         wallet_type: item.type, //钱包类型
-        subject: 101, //操作分类 (类型有点多 用到了call我)
         currency: currency.value,
     };
 
@@ -373,6 +372,7 @@ const handleRouteChange = (type, item) => {
             window.open(routeUrl.href, '_blank');
             break;
         case 1:
+            query.credit = props.detail.credit;
             routeUrl = router.resolve({
                 path: '/distributor/distributor-fund-change-detail',
                 query,
