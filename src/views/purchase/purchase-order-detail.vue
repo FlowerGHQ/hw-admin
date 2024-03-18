@@ -1118,9 +1118,10 @@ export default {
             }).then(res => {
                 this.$message.success(this.$t('pop_up.audited'));
                 this.createAuditShow = false;
-                this.getList();
-                this.getPurchaseInfo();
-            });
+                this.getList();                
+            }).catch(err => {
+                console.log("订单审核fetch", err);
+            })
         },
 
         // 取消接口

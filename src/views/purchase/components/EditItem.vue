@@ -402,7 +402,7 @@ export default {
                         charge: item.charge,
                         amount: item.amount,
                         type: item.type,
-                    }));
+                    }));                    
                     
                     this.saveReviseFetch({ item_list });
                     break;
