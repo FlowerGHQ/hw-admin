@@ -146,7 +146,7 @@
                     {{ $t(/*不通过原因*/ 'payment-management.caus_result') }}
                 </div>
                 <div class="info-value">
-                    {{ detail?.content?.payment_information?.remark }}
+                    {{ detail?.remark }}
                 </div>
             </div>
         </div>
