@@ -169,6 +169,7 @@ const { proxy } = getCurrentInstance();
 const route = useRoute();
 const router = useRouter();
 const id = ref('');
+const orderId = ref(route.query?.order_id || '');
 const orgId = ref(route.query?.id || Core.Data.getOrgId()); // 分销商id
 const orgType = Core.Data.getOrgType();
 const unit = ref('€');
@@ -337,13 +338,13 @@ const findAccount = () => {
         .catch(err => {});
 };
 const rechargeDetailFetch = () => {
-    const params = { id: orgId.value };
+    const params = { id: orderId.value };
     Core.Api.RechargeAudit.detail({ ...params })
         .then(res => {
             Object.assign(accoutMes, res.detail.content_json.payment_information);
             Object.assign(formState, {
-                vehicle_balance: res.detail.content_json.part_balance,
-                part_balance: res.detail.content_json.vehicle_balance,
+                vehicle_balance: Core.Util.countFilter(res.detail.content_json.part_balance),
+                part_balance: Core.Util.countFilter(res.detail.content_json.vehicle_balance),
             });
             detail.content.payment_information.img = res.detail.content_json.payment_information.img;
         })
@@ -351,7 +352,7 @@ const rechargeDetailFetch = () => {
 };
 onMounted(() => {
     if (route.query?.id) {
-        unit.value = route.query?.currency || '€';
+        unit.value = Core.Const.ITEM.MONETARY_TYPE_MAP[route.query?.currency] || '€';
         rechargeDetailFetch();
     } else {
         findAccount();
