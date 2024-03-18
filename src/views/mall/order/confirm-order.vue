@@ -136,7 +136,7 @@
                             <span class="price"> {{ unit }} {{ $Util.Number.numFormat(sum_price) }} </span>
                         </div>
                         <!-- 余额 -->
-                        <p class="settlement-balance">
+                        <p class="settlement-balance" v-if="org?.pay_type === Core.Const.DISTRIBUTOR.PAY_TIME.OA">
                             {{ $t('mall.credit_balance') }}: {{ unit }} {{ this.$Util.Number.numFormat(balance) }}
                         </p>
                     </div>

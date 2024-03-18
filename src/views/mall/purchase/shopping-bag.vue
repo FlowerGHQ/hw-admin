@@ -577,7 +577,7 @@
                             </span>
                             <span class="price"> {{ currency }} {{ proxy.$Util.Number.numFormat(allPrice) }} </span>
                         </div>
-                        <template v-if="org?.pay_type === 70">
+                        <template v-if="org?.pay_type === Core.Const.DISTRIBUTOR.PAY_TIME.OA">
                             <!-- 授信余额足 -->
                             <template v-if="isBalanceEnough">
                                 <p class="settlement-balance">
@@ -1178,7 +1178,7 @@ const changeItem = () => {
 };
 // 创建订单
 const handleCreateOrder = () => {
-    if (org?.pay_type === 70 && !isBalanceEnough.value) {
+    if (org?.pay_type === Core.Const.DISTRIBUTOR.PAY_TIME.OA && !isBalanceEnough.value) {
         reminderVisible.value = true;
         return;
     }
