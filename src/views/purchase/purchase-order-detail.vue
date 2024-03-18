@@ -194,11 +194,15 @@
                         {{ $t('distributor-detail.cancel_record') }}
                     </a-button>
 
-                    <!-- 付款 分销商可见 & (待支付 待生产 ) & 权限-->
+                    <!-- 付款 分销商可见 & 订单状态(等待审核不显示) & 支付状态(待支付, 部分支付) & 权限-->
                     <a-button
                         v-if="
                             $Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) &&
-                            $Util.Common.returnTypeBool(detail.status, [STATUS.WAIT_PAY]) &&
+                            !$Util.Common.returnTypeBool(detail.status, [STATUS.WAIT_AUDIT]) &&
+                            $Util.Common.returnTypeBool(detail.payment_status, [
+                                PAYMENT_STATUS.WAIT_PAY,
+                                PAYMENT_STATUS.PAYING,
+                            ]) &&
                             $auth('purchase-order.collection')
                         "
                         type="primary"
@@ -242,183 +246,11 @@
             </div>
             <!-- 商品信息 -->
             <div class="list-container">
-                <template v-if="!itemEditShow">
-                    <div class="title-container">
-                        <div class="title-area2">{{ $t('i.product_information') }}</div>
-                        <div class="btns-area"></div>
-                    </div>
-                    <div style="margin: 0 20px">
-                        <a-table
-                            :columns="itemColumns"
-                            :data-source="itemList"
-                            :scroll="{ x: true }"
-                            :row-key="record => record.id"
-                            :loading="loading"
-                            :pagination="false"
-                            :row-selection="rowSelection"
-                        >
-                            <template #bodyCell="{ column, text, record }">
-                                <template v-if="column.dataIndex === 'item'">
-                                    <div class="table-img">
-                                        <a-image
-                                            :width="30"
-                                            :height="30"
-                                            :src="$Util.imageFilter(text ? text.logo : '', 2)"
-                                        />
-                                        <a-tooltip
-                                            placement="top"
-                                            :title="text ? (lang == 'zh' ? text.name : text.name_en) : '-'"
-                                        >
-                                            <a-button
-                                                v-if="lang == 'zh'"
-                                                type="link"
-                                                @click="routerChange('detail', text)"
-                                                style="margin-left: 6px"
-                                            >
-                                                {{ text ? (lang == 'zh' ? text.name : text.name_en) : '-' }}
-                                            </a-button>
-                                            <a-button
-                                                v-else
-                                                type="link"
-                                                @click="routerChange('detail', text)"
-                                                style="margin-left: 6px"
-                                            >
-                                                {{
-                                                    text?.material?.name_en
-                                                        ? text?.material?.name_en
-                                                        : text.name_en
-                                                          ? text.name_en
-                                                          : '-'
-                                                }}
-                                            </a-button>
-                                        </a-tooltip>
-                                    </div>
-                                </template>
-                                <!-- 总数量 -->
-                                <template v-if="column.dataIndex === 'amount'">
-                                    <span
-                                        v-if="
-                                            user_type &&
-                                            (detail.status === STATUS.WAIT_AUDIT ||
-                                                detail.status === STATUS.REVISE_AUDIT)
-                                        "
-                                    >
-                                        <a-input-number
-                                            v-model:value="record.amount"
-                                            style="width: 120px"
-                                            :min="0"
-                                            :precision="0"
-                                            @change="inputChange(record, 'amount')"
-                                        />
-                                    </span>
-                                    <span v-else>
-                                        {{ text || '-' }}
-                                    </span>
-                                </template>
-                                <!-- 发货数量 -->
-                                <template v-if="column.dataIndex === 'deliver_amount'">
-                                    <span
-                                        v-if="
-                                            user_type &&
-                                            (detail.status === STATUS.WAIT_DELIVER ||
-                                                detail.status === STATUS.WAIT_TAKE_DELIVER)
-                                        "
-                                    >
-                                        <a-input-number
-                                            v-model:value="record.deliver_amount"
-                                            style="width: 120px"
-                                            :min="0"
-                                            :precision="0"
-                                        />
-                                    </span>
-                                    <span v-else>
-                                        {{ record.deliver_amount }}
-                                    </span>
-                                </template>
-                                <!-- 备注 -->
-                                <template v-if="column.key === 'remark'">
-                                    <span>{{ record.remark || '-' }}</span>
-                                </template>
-                                <!-- 单价 -->
-                                <template v-if="column.key === 'unit_price'">
-                                    <span v-if="text >= 0">{{ $Util.priceUnitFilter(detail.currency) }}</span>
-                                    <span>{{ text }}</span>
-                                </template>
-                                <!-- 总价 -->
-                                <template v-if="column.key === 'price'">
-                                    <span
-                                        v-if="
-                                            user_type &&
-                                            (detail.status === STATUS.WAIT_AUDIT ||
-                                                detail.status === STATUS.REVISE_AUDIT)
-                                        "
-                                    >
-                                        <a-input-number
-                                            v-model:value="record.price"
-                                            style="width: 120px"
-                                            :min="0"
-                                            :precision="2"
-                                            @change="inputChange(record, 'price')"
-                                        />
-                                    </span>
-                                    <span v-else>
-                                        <span v-if="text >= 0">{{ $Util.priceUnitFilter(detail.currency) }}</span>
-                                        <span>{{ text }}</span>
-                                    </span>
-                                </template>
-
-                                <template v-if="column.key === 'spec'">
-                                    {{ $Util.itemSpecFilter(text, $i18n.locale) }}
-                                </template>
-                            </template>
-                            <template #summary v-if="!$auth('purchase-order.supply-detail')">
-                                <a-table-summary>
-                                    <a-table-summary-row>
-                                        <a-table-summary-cell :col-span="6"></a-table-summary-cell>
-                                        <a-table-summary-cell :index="1" :col-span="1"
-                                            ><span style="margin-right: 100px">{{ $t('p.total') }}</span>
-                                            {{ $t('p.freight') }}:{{ $Util.priceUnitFilter(detail.currency)
-                                            }}{{ $Util.countFilter(total.freight) || '0' }}</a-table-summary-cell
-                                        >
-                                        <a-table-summary-cell :index="1" :col-span="1">
-                                            {{ $t('i.total_quantity') }}:{{ total.amount }}
-                                        </a-table-summary-cell>
-                                        <!-- 订单总价 -->
-                                        <a-table-summary-cell :index="4" :col-span="1">
-                                            <!-- !user_type  不是平台方显示的 -->
-                                            <span
-                                                v-if="
-                                                    !user_type &&
-                                                    (detail.status === STATUS.WAIT_AUDIT ||
-                                                        detail.status === STATUS.REVISE_AUDIT)
-                                                "
-                                            >
-                                                {{ $t('p.quotation') }}: - ({{ $t('p.auditText') }})
-                                            </span>
-                                            <span v-else-if="!user_type && detail.type == FLAG_ORDER_TYPE.Mix_SALES">
-                                                <!-- 混合订单  price_flag 1 表示 拆分订单都审核通过 其他表示都显示 '-' -->
-                                                <span v-if="detail?.price_flag == 1">
-                                                    {{ $t('n.total_price') }}:
-                                                    {{ $Util.priceUnitFilter(detail.currency) }}
-                                                    {{ $Util.countFilter(total.price + (total.freight || 0)) }}
-                                                </span>
-                                                <span v-else>{{ $t('p.quotation') }}: - ({{ $t('p.auditText') }})</span>
-                                            </span>
-                                            <span v-else>
-                                                {{ $t('n.total_price') }}: {{ $Util.priceUnitFilter(detail.currency) }}
-                                                {{ $Util.countFilter(total.price + (total.freight || 0)) }}
-                                            </span>
-                                        </a-table-summary-cell>
-                                    </a-table-summary-row>
-                                </a-table-summary>
-                            </template>
-                        </a-table>
-                    </div>
-                </template>
                 <EditItem
-                    v-if="itemEditShow"
+                    ref="purchaseOrderRef"
                     :order-id="id"
                     :detail="detail"
+                    :isPurchaseOrderBtn="itemEditShow"
                     type="PURCHASE_ORDER"
                     @submit="getList"
                     @cancel="itemEditShow = false"
@@ -434,11 +266,11 @@
                 :order-id="id"
                 :is-first="firstEnter"
                 :detail="detail"
+                :btnText="$t('distributor.add_gift')"
                 type="GIVE_ORDER"
                 @submit="getList"
                 @cancel="giveOrderShow = true"
             >
-                >
             </EditItem>
         </div>
 
@@ -1239,47 +1071,7 @@ export default {
 
         getList() {
             this.itemEditShow = false;
-            // this.giveOrderShow = false
-            this.getPurchaseItemList(); // 获取商品列表
             this.getPurchaseInfo(); // 获取订单信息
-        },
-
-        // 获取 采购单 商品列表
-        getPurchaseItemList() {
-            Core.Api.Purchase.itemList({
-                order_id: this.id,
-                page: 0,
-            })
-                .then(res => {
-                    let total_amount = 0,
-                        total_charge = 0,
-                        total_price = 0;
-                    res.list.forEach(it => {
-                        it.disabled = true;
-                        it.unit_price = this.$Util.countFilter(it.unit_price); // 单价
-                        it.price = this.$Util.countFilter(it.price); // 总价
-                        // it.deliver_amount = 0
-                        total_amount += it.amount;
-                        total_charge += it.charge;
-                        total_price += it.price;
-                        let element = it.item || {};
-                        if (element.attr_list && element.attr_list.length) {
-                            let str = element.attr_list.map(i => i.value).join(' ');
-                            element.attr_str = str;
-                        }
-                    });
-                    this.itemList = res.list;
-                    this.total.amount = total_amount;
-                    this.total.charge = total_charge;
-                    this.total.price = this.$Util.countFilter(total_price, 100, 2, true);
-                    this.outStockBtnShow = this.itemList.every(item => item.residue_quantity === 0);
-                })
-                .catch(err => {
-                    console.log('getPurchaseInfo err', err);
-                })
-                .finally(() => {
-                    this.loading = false;
-                });
         },
 
         // 获取 物流单信息
@@ -1537,13 +1329,18 @@ export default {
             }
 
             let item_list = [];
-            // 选中的商品信息表格有数据的话进行
-            if (this.itemList.length) {
-                this.itemList.forEach(el => {
+            // 选中的商品信息表格有数据的话进行            
+            if (this.$refs.purchaseOrderRef.tableData.length) {
+                this.$refs.purchaseOrderRef.tableData.forEach(el => {
+                    console.log("测试实施", el);
                     item_list.push({
                         item_id: el.id,
                         amount: el.amount,
                         price: this.$Util.countFilter(el.price, 100, 2, true),
+                        item_code: el.item_code,
+                        unit_price: el.unit_price,
+                        charge: el.charge,
+                        amount: el.amount,
                     });
                 });
             }
@@ -1569,13 +1366,6 @@ export default {
         routerChange(type, item = {}) {
             let routeUrl = '';
             switch (type) {
-                case 'detail': // 详情
-                    routeUrl = this.$router.resolve({
-                        path: this.$auth('ADMIN') ? '/item/item-detail' : '/purchase/item-display',
-                        query: { id: item.id },
-                    });
-                    window.open(routeUrl.href, '_blank');
-                    break;
                 case 'list':
                     routeUrl = this.$router.resolve({
                         path: '/item/purchase-order-list',
@@ -1665,29 +1455,6 @@ export default {
             // 传参type为1时做该订单已取消的提示
             this.getPurchaseInfo(1);
             this.giveOrderShow = true;
-        },
-        // 等待状态下审核订单修改总数量和总价格时候改变
-        inputChange(record, type) {
-            const i = this.itemList.findIndex(el => {
-                return el.id == record.id;
-            });
-            // 修改的是总数量
-            if (type == 'amount') {
-                this.itemList[i].price = this.itemList[i].amount * this.itemList[i].unit_price;
-            }
-            // 修改的是总价
-            if (type == 'price') {
-                this.itemList[i].unit_price = this.itemList[i].price / this.itemList[i].amount;
-            }
-
-            let total_amount = 0,
-                total_price = 0;
-            this.itemList.forEach(el => {
-                total_amount += el.amount;
-                total_price += el.price;
-            });
-            this.total.amount = total_amount;
-            this.total.price = this.$Util.countFilter(total_price, 100, 2, true);
         },
 
         // 船期及运费(修改)
