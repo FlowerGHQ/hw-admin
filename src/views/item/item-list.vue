@@ -195,9 +195,12 @@
                             <template v-if="column.dataIndex === 'fob_eur'">
                                 <template v-if="record.type === 1">
                                     <span v-if="text >= 0">{{ column.unit }}</span>
-                                    {{ $Util.countFilter(record.min_fob_eur) }} ~
+                                    {{
+                                        $Util.countFilter(record.min_fob_eur ? record.min_fob_eur : record.fob_40qh_eur)
+                                    }}
+                                    ~
                                     <span v-if="text >= 0">{{ column.unit }}</span>
-                                    {{ $Util.countFilter(record.max_fob_eur) }}
+                                    {{ $Util.countFilter(record.max_fob_eur ? record.max_fob_eur : record.fob_eur) }}
                                 </template>
                                 <template v-else>
                                     <span v-if="text >= 0">{{ column.unit }}</span>
@@ -208,9 +211,12 @@
                             <template v-if="column.dataIndex === 'fob_usd'">
                                 <template v-if="record.type === 1">
                                     <span v-if="text >= 0">{{ column.unit }}</span>
-                                    {{ $Util.countFilter(record.min_fob_usd) }} ~
+                                    {{
+                                        $Util.countFilter(record.min_fob_usd ? record.min_fob_usd : record.fob_40qh_usd)
+                                    }}
+                                    ~
                                     <span v-if="text >= 0">{{ column.unit }}</span>
-                                    {{ $Util.countFilter(record.max_fob_usd) }}
+                                    {{ $Util.countFilter(record.max_fob_usd ? record.max_fob_usd : record.fob_usd) }}
                                 </template>
                                 <template v-else>
                                     <span v-if="text >= 0">{{ column.unit }}</span>
