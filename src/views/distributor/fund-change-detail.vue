@@ -109,7 +109,7 @@ const initParam = ref({
     org_id: route.query.org_id,
     org_type: 15,
 });
-
+``;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request,
     initParam: initParam.value,
