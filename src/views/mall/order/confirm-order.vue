@@ -167,6 +167,7 @@ export default {
     components: { ReceiverAddressEdit, MyButton, OrderInformation },
     data() {
         return {
+            Core,
             // 加载
             orgId: Core.Data.getOrgId(),
             orgType: Core.Data.getOrgType(),
@@ -224,7 +225,7 @@ export default {
             let sum = 0;
             for (const item of this.shopCartList) {
                 if (item.item?.isGift) continue;
-                if (item.item?.type !== 2) continue;
+                if (item.item?.type === 2) continue;
                 sum += item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)] * item.amount;
             }
             return Core.Util.countFilter(sum);
@@ -233,7 +234,7 @@ export default {
             let sum = 0;
             for (const item of this.shopCartList) {
                 if (item.item?.isGift) continue;
-                if (item.item?.type === 2) continue;
+                if (item.item?.type !== 2) continue;
                 sum += item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)] * item.amount;
             }
             return Core.Util.countFilter(sum);
