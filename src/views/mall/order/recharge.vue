@@ -351,7 +351,7 @@ const rechargeDetailFetch = () => {
         .catch(err => {});
 };
 onMounted(() => {
-    if (route.query?.id) {
+    if (route.query?.id && route.query?.order_id) {
         unit.value = Core.Const.ITEM.MONETARY_TYPE_MAP[route.query?.currency] || '€';
         rechargeDetailFetch();
     } else {
