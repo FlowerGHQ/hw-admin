@@ -109,6 +109,7 @@ const initParam = ref({
     org_id: route.query.org_id,
     org_type: 15,
 });
+
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request,
     initParam: initParam.value,
@@ -182,23 +183,23 @@ const searchList = ref([
                 value: '',
             },
             {
-                zh: '整车账户(售前账户)',
-                en: 'Vehicle account (pre-sale account)',
+                zh: '整车可用余额',
+                en: 'Vehicle account',
                 value: 10,
             },
             {
-                zh: '零部件账户(售后账户)',
-                en: 'Parts account (after-sales account)',
+                zh: '配件可用余额',
+                en: 'Parts account',
                 value: 20,
             },
             {
-                zh: '售后备件信用账户',
-                en: 'After-sales spare parts credit account',
+                zh: '售后备件信用余额',
+                en: 'After-sales spare parts credit balance',
                 value: 30,
             },
             {
-                zh: '授信账户',
-                en: 'Credit account',
+                zh: '授信余额',
+                en: 'Credit balance',
                 value: 40,
             },
         ],
