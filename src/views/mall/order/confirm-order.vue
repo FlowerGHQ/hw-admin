@@ -167,6 +167,7 @@ export default {
     components: { ReceiverAddressEdit, MyButton, OrderInformation },
     data() {
         return {
+            Core,
             // 加载
             orgId: Core.Data.getOrgId(),
             orgType: Core.Data.getOrgType(),
