@@ -588,16 +588,7 @@
                             <template v-else>
                                 <p class="settlement-balance warn">
                                     {{ $t('mall.credit_balance') }}: {{ currency }} {{ balance }} ({{
-                                        $t('mall.insufficient_balance')
-                                    }}
-                                    {{
-                                        proxy.$Util.Number.numFormat(
-                                            parseFloat(
-                                                (allPrice - Math.ceil(allPrice * org.pay_pre_pay_ratio) / 100).toFixed(
-                                                    4,
-                                                ),
-                                            ),
-                                        )
+                                        $t('mall.insufficient')
                                     }})
                                 </p>
                             </template>
