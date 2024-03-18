@@ -228,9 +228,7 @@ export default {
                     this.tableData = res.list.map(i => {
                         let item = i.item || {};
                         item.amount = i.amount;
-                        item.unit_price = this.$Util.countFilter(
-                            item[this.$Util.Number.getStepPriceIndexByNums(i.amount, this.detail.currency)],
-                        ); // 单价有阶梯
+                        item.unit_price = this.$Util.countFilter(i.unit_price)
                         item.price = this.$Util.countFilter(i.price);
                         item.charge = i.charge;
 
@@ -428,6 +426,8 @@ export default {
                 // 重新获取数据
                 this.getGiveawayListFetch();
                 return;
+            } else {
+                this.getPurchaseItemListFetch();
             }
             this.$emit('cancel');
         },
