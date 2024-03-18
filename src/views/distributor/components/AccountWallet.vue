@@ -356,7 +356,6 @@ const handleRouteChange = (type, item) => {
         org_id: props.detail.id,
         org_type: 15, //分销商类型
         wallet_type: item.type, //钱包类型
-        subject: 101, //操作分类 (类型有点多 用到了call我)
         currency: currency.value,
     };
 
