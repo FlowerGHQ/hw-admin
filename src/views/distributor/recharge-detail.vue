@@ -264,6 +264,7 @@ const handleEdit = () => {
         query: {
             id: route.query.id,
             order_id: route.query.order,
+            currency: route.query.currency,
         },
     });
 };

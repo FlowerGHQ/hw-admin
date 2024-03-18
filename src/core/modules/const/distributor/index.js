@@ -84,12 +84,33 @@ const DISTRIBUTOR = {
         WITHIN_WEEK: 1, // 一周内
         DELAY: 2, // 延期
     },
+    // {
+    //     zh: '整车可用余额',
+    //     en: 'Vehicle account',
+    //     value: 10,
+    // },
+    // {
+    //     zh: '配件可用余额',
+    //     en: 'Parts account',
+    //     value: 20,
+    // },
+    // {
+    //     zh: '售后备件信用余额',
+    //     en: 'After-sales spare parts credit balance',
+    //     value: 30,
+    // },
+    // {
+    //     zh: '授信余额',
+    //     en: 'Credit balance',
+    //     value: 40,
+    // },
+
     // 钱包类型
     WALLET_TYPE: {
-        10: { title: 'distributor-detail.vehicle_account', value: 10 },
-        20: { title: 'distributor-detail.parts_account', value: 20 },
-        30: { title: 'distributor-detail.after_sales_spare_parts_credit_account', value: 30 },
-        40: { title: 'distributor-detail.credit_account', value: 40 },
+        10: { title: 'distributor-detail.vehicle_available_balance', value: 10 },
+        20: { title: 'distributor-detail.parts_available_balance_re', value: 20 },
+        30: { title: 'distributor-detail.credit_balance_re', value: 30 },
+        40: { title: 'distributor-detail.credit_balance', value: 40 },
     },
     EXPENDITURE_TYPE: {
         // 调整余额
