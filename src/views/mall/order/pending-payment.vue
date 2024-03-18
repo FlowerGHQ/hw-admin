@@ -3,7 +3,15 @@
         <div class="content">
             <!-- 订单信息 -->
             <div class="order-mes box">
-                <p class="box-title">{{ $t('mall.pending_payment_order') }}</p>
+                <p class="box-title flex-between">
+                    {{ $t('mall.pending_payment_order') }}
+                    <span class="total-price">
+                        <span class="dis">
+                            {{ $t('p.total') }}
+                        </span>
+                        <span class="price"> {{ currency }} {{ proxy.$Util.Number.numFormat(sum_price) }} </span>
+                    </span>
+                </p>
                 <div class="box-content" style="padding: 0">
                     <OrderInformation :list="detail.item_list" :unit="unit" :isConfirmPrice="true" />
                 </div>
@@ -469,6 +477,25 @@ onMounted(async () => {
             background-color: #fff;
             padding: 20px;
         }
+    }
+    .total-price {
+        .fcc();
+        .dis {
+            color: #000;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 24px;
+            margin-right: 6px;
+        }
+        .price {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 29px;
+            color: #8f00ff;
+        }
+    }
+    .flex-between {
+        .flex(space-between, center, row);
     }
     .payment-balance {
         .flex(initial,initial,row);

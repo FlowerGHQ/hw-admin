@@ -585,7 +585,7 @@
                                 </p>
                             </template>
                             <!-- 授信余额不足 -->
-                            <template>
+                            <template v-else>
                                 <p class="settlement-balance warn">
                                     {{ $t('mall.credit_balance') }}: {{ currency }} {{ balance }} ({{
                                         $t('mall.insufficient_balance')
