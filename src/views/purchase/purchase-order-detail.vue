@@ -850,6 +850,7 @@ export default {
             operationVisible: false, // 船期及运费确认model
             detailRecord: {}, // 给 ShippingFreight | ConfirmFreight 数据
             isCancelRecord: false, // 是否显示取消记录按钮
+            isShippingConfirmVisible: false,
         };
     },
     computed: {
@@ -998,6 +999,7 @@ export default {
     },
     created() {
         this.id = Number(this.$route.query.id) || 0;
+        this.isShippingConfirmVisible = this.$route.query.type || false
     },
     methods: {
         tableChange(val) {
@@ -1037,6 +1039,9 @@ export default {
                         // 交易取消了提示信息(极端情况)
                         this.giveOrderShow = false;
                         this.$message.warning(this.$t('p.cancel_msg'));
+                    }
+                    if(this.isShippingConfirmVisible) {
+                        this.onConfirmFreight();
                     }
                 })
                 .catch(err => {

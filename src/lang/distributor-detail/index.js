@@ -16,12 +16,11 @@ export default {
         pending_verification_marketing_balance: '待核销营销费用余额',
         // tips ： 可用于整车、周边、广宣品相关订单，可以充值
         vehicle_tips: '可用于整车、周边、广宣品相关订单，可以充值。',
-        // warningtips ： 该功能将于近期开发
-        vehicle_warning_tips: '该功能将于近期开发',
+        vehicle_warning_tips: '该功能将于近期开放',
         // 零部件——tips ： 用于零部件相关订单，可以充值。
         parts_tips: '用于零部件相关订单，可以充值。',
         // 零部件——warningtips ： 该功能将于近期开发
-        parts_warning_tips: '用于支付零配件订单，最多可支付订单金额的 50% ；工单赔付金额会放入信用余额中。',
+        parts_warning_tips: '用于支付零配件订单；工单赔付金额会放入信用余额中。',
         // 售后备件信用余额
         credit_balance_re: '售后备件信用余额',
         // 时间
@@ -51,7 +50,6 @@ export default {
         // 支付设置
         payment_settings: '支付设置',
         // 授信账户
-        credit_account: '授信账户',
         // 授信金额
         credit_amount: '授信总额',
         // 授信tips
@@ -122,14 +120,7 @@ export default {
         under_review: '审核中',
         cancel_record: '取消记录',
         application_time: '申请时间',
-        //vehicle_account
-        // parts_account
-        // after_sales_spare_parts_credit_account
-        // credit_account
-
-        vehicle_account: '整车账户(售前账户)',
-        parts_account: '零部件账户(售后账户)',
-        after_sales_spare_parts_credit_account: '售后备件信用账户',
+        after_sales_spare_parts_credit_account: '售后备件信用余额',
         credit_account: '授信账户',
 
         old_data_transfer_out: '老数据转出',
@@ -170,6 +161,10 @@ export default {
         arrival_failed: '到账失败',
         // 到账成功
         arrival_success: '到账成功',
+        // 整车可用余额
+        vehicle_available_balance: '整车可用余额',
+        // 配件可用余额
+        parts_available_balance_re: '配件可用余额',
     },
     en: {
         vehicle_account: 'Vehicle Account',
@@ -180,10 +175,10 @@ export default {
         recharge_record: 'Recharge Record',
         pending_verification_marketing_balance: 'Pending Verification Marketing Balance',
         vehicle_tips: 'Available for vehicle, peripheral, and advertising-related orders, can be recharged.',
-        vehicle_warning_tips: 'This feature will be developed soon',
+        vehicle_warning_tips: 'This function will be opened soon',
         parts_tips: 'Used for parts-related orders, can be recharged.',
         parts_warning_tips:
-            'Used to pay for spare parts orders, up to 50% of the order amount; the compensation amount for work orders will be placed in the credit balance.',
+            'Used to pay for spare parts orders; the compensation amount for work orders will be placed in the credit balance.',
         credit_balance_re: 'After-sales spare parts credit balance',
         time: 'Time',
         type: 'Type',
@@ -253,10 +248,8 @@ export default {
         under_review: 'Under Review',
         cancel_record: 'Cancel Record',
         application_time: 'Application Time',
-        vehicle_account: 'Vehicle Account (Pre-sale Account)',
-        parts_account: 'Parts Account (After-sale Account)',
+        // 售后备件信用余额
         after_sales_spare_parts_credit_account: 'After-sales spare parts credit account',
-        credit_account: 'Credit Account',
         old_data_transfer_out: 'Old data transfer out',
         old_data_transfer_in: 'Old data transfer in',
         work_order_compensation: 'Work order compensation',
@@ -291,5 +284,7 @@ export default {
         rechargeing: 'Rechargeing',
         arrival_failed: 'Arrival failed',
         arrival_success: 'Arrival success',
+        vehicle_available_balance: 'Vehicle Available Balance',
+        parts_available_balance_re: 'Parts Available Balance',
     },
 };

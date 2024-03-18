@@ -93,12 +93,17 @@
                             >
                                 {{ $t('mall.recharge_record') }}
                             </div>
-                            <MyUpload
+                            <!-- <MyUpload
                                 ref="myUpload"
                                 :isWrite="isWrite"
                                 :defaultList="detail.content.payment_information.img"
                                 :type="isMobile ? 'image' : 'file'"
                                 @handleUpload="handleUpload"
+                            /> -->
+                            <MyFileUpload
+                                returnType="Arr"
+                                v-model:value="detail.content.payment_information.img"
+                                :isShowUpload="true"
                             />
                         </div>
                     </template>
@@ -154,6 +159,7 @@
 import Core from '@/core';
 import { ref, reactive, getCurrentInstance, onMounted, computed } from 'vue';
 import MyUpload from './components/upload.vue';
+import MyFileUpload from './components/MyFileUpload.vue';
 import MyButton from '../../../components/common/MyButton.vue';
 import PaymentInformation from '../../../components/common/payment-information.vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -163,6 +169,7 @@ const { proxy } = getCurrentInstance();
 const route = useRoute();
 const router = useRouter();
 const id = ref('');
+const orderId = ref(route.query?.order_id || '');
 const orgId = ref(route.query?.id || Core.Data.getOrgId()); // 分销商id
 const orgType = Core.Data.getOrgType();
 const unit = ref('€');
@@ -259,7 +266,7 @@ const submit = () => {
                 company_name: accoutMes.company_name, //公司名称
                 company_address: accoutMes.company_address, //公司地址
                 remark: accoutMes.remark, //备注
-                img: detail.content.payment_information.img.map(item => item.file),
+                img: detail.content.payment_information.img,
             },
         },
     });
@@ -330,8 +337,26 @@ const findAccount = () => {
         })
         .catch(err => {});
 };
+const rechargeDetailFetch = () => {
+    const params = { id: orderId.value };
+    Core.Api.RechargeAudit.detail({ ...params })
+        .then(res => {
+            Object.assign(accoutMes, res.detail.content_json.payment_information);
+            Object.assign(formState, {
+                vehicle_balance: Core.Util.countFilter(res.detail.content_json.part_balance),
+                part_balance: Core.Util.countFilter(res.detail.content_json.vehicle_balance),
+            });
+            detail.content.payment_information.img = res.detail.content_json.payment_information.img;
+        })
+        .catch(err => {});
+};
 onMounted(() => {
-    findAccount();
+    if (route.query?.id && route.query?.order_id) {
+        unit.value = Core.Const.ITEM.MONETARY_TYPE_MAP[route.query?.currency] || '€';
+        rechargeDetailFetch();
+    } else {
+        findAccount();
+    }
 });
 </script>
 

@@ -1,15 +1,26 @@
 <template>
     <div class="recharge-detail">
         <div class="title-container">
-            <left-outlined
-                @click="() => router.go(-1)"
-                :style="{
-                    fontSize: '14px',
-                    color: '#7f8e9f',
-                    cursor: 'pointer',
-                }"
-            />
-            <div class="title-area">{{ /*充值详情 */ $t('distributor-detail.recharge_detail') }}</div>
+            <div class="left">
+                <left-outlined
+                    @click="() => router.go(-1)"
+                    :style="{
+                        fontSize: '14px',
+                        color: '#7f8e9f',
+                        cursor: 'pointer',
+                    }"
+                />
+                <div class="title-area">{{ /*充值详情 */ $t('distributor-detail.recharge_detail') }}</div>
+            </div>
+
+            <div class="button-area" v-if="details.mapStatus == 1 && $auth('DISTRIBUTOR')">
+                <!-- 修改凭证 -->
+                <a-button @click="handleEdit">{{ /*修改凭证 */ $t('n.amend') }}</a-button>
+                <!-- 保存修改 -->
+                <!-- <a-button type="primary" v-else @click="handleSaveModify">{{
+                        /*保存修改 */ $t('distributor-detail.save_modify')
+                    }}</a-button> -->
+            </div>
         </div>
         <div class="recharge-info gray-panel">
             <div class="title-content">
@@ -25,7 +36,7 @@
                         </div>
                         <!-- 到账失败 -->
                         <div class="recharg-fail" v-else-if="details.mapStatus === 1">
-                            <div class="tips-area">{{ $t('distributor-detail.recharge_account_tips') }}</div>
+                            <div class="tips-area">{{ details?.remark || '' }}</div>
                         </div>
                         <!-- 到账成功 -->
                         <div class="recharg-success" v-else-if="details.mapStatus === 2">
@@ -104,16 +115,6 @@
         <div class="gray-panel payment-voucher">
             <div class="title-content">
                 <div class="title">{{ /*充值信息 */ $t('distributor-detail.payment_voucher') }}</div>
-                <div class="button-area" v-if="details.mapStatus == 1 && $auth('DISTRIBUTOR')">
-                    <!-- 修改凭证 -->
-                    <a-button v-if="!isEdit" @click="handleEdit">{{
-                        /*修改凭证 */ $t('distributor-detail.modify_voucher')
-                    }}</a-button>
-                    <!-- 保存修改 -->
-                    <a-button type="primary" v-else @click="handleSaveModify">{{
-                        /*保存修改 */ $t('distributor-detail.save_modify')
-                    }}</a-button>
-                </div>
             </div>
             <div class="image-pdf-area">
                 <!-- :isShowUpload="isShowUpload" -->
@@ -258,24 +259,13 @@ const handleCopy = id => {
 };
 
 const handleEdit = () => {
-    isShowUpload.value = true;
-    isEdit.value = true;
-};
-
-const handleSaveModify = () => {
-    let params = {
-        target_type: 100,
-        distributor_id: '',
-        content: {},
-    };
-    params.content = details.value.content_json;
-    params.content.payment_information.img = defaultList.value;
-    params.distributor_id = details.value.id;
-
-    Core.Api.RechargeAudit.save(params).then(res => {
-        message.success($t('distributor-detail.operation_success'));
-        isShowUpload.value = false;
-        isEdit.value = false;
+    router.push({
+        path: '/mall/recharge',
+        query: {
+            id: route.query.id,
+            order_id: route.query.order,
+            currency: route.query.currency,
+        },
     });
 };
 
@@ -287,7 +277,11 @@ onMounted(() => {
 <style lang="less" scoped>
 .recharge-detail {
     .title-container {
-        justify-content: start !important;
+        align-items: center;
+        .left {
+            display: flex;
+            align-items: center;
+        }
         .title-area {
             margin-left: 11.5px;
         }

@@ -7,7 +7,7 @@
                 <OrderInformation :list="shopCartList" :unit="unit" />
             </div>
             <!-- 收货地址 -->
-            <p class="title">
+            <p class="title required">
                 {{ $t('mall.receiving_address') }}
                 <MyButton type="line" padding="8px">
                     <ReceiverAddressEdit
@@ -61,7 +61,7 @@
             <p class="title">{{ $t('mall.transportation_information') }}</p>
             <div class="box transport">
                 <div class="key-value">
-                    <div class="key">{{ $t('mall.allowed_batch') }}:</div>
+                    <div class="key required">{{ $t('mall.allowed_batch') }}:</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.flag_part_shipment">
                             <a-radio v-for="item in flagPartShipmentList" :value="item.value">
@@ -71,7 +71,7 @@
                     </div>
                 </div>
                 <div class="key-value">
-                    <div class="key">{{ $t('mall.forwarding_allowed') }}:</div>
+                    <div class="key required">{{ $t('mall.forwarding_allowed') }}:</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.flag_transfer">
                             <a-radio v-for="item in flagTransferList" :value="item.value">
@@ -91,7 +91,7 @@
                     </div>
                 </div> -->
                 <div class="key-value">
-                    <div class="key">{{ $t('mall.flag_pallet') }}:</div>
+                    <div class="key required">{{ $t('mall.flag_pallet') }}:</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.flag_pallet">
                             <a-radio v-for="item in PALLETIZE" :value="item.value">
@@ -101,7 +101,7 @@
                     </div>
                 </div>
                 <div class="key-value">
-                    <div class="key">
+                    <div class="key required">
                         {{ $t('mall.expected_delivery') }}:<a-tooltip>
                             <template #title>{{ $t('mall.calculation') }}</template>
                             <img class="tips" src="@images/mall/order/tips.png" />
@@ -136,7 +136,7 @@
                             <span class="price"> {{ unit }} {{ $Util.Number.numFormat(sum_price) }} </span>
                         </div>
                         <!-- 余额 -->
-                        <p class="settlement-balance">
+                        <p class="settlement-balance" v-if="org?.pay_type === Core.Const.DISTRIBUTOR.PAY_TIME.OA">
                             {{ $t('mall.credit_balance') }}: {{ unit }} {{ this.$Util.Number.numFormat(balance) }}
                         </p>
                     </div>
@@ -167,6 +167,7 @@ export default {
     components: { ReceiverAddressEdit, MyButton, OrderInformation },
     data() {
         return {
+            Core,
             // 加载
             orgId: Core.Data.getOrgId(),
             orgType: Core.Data.getOrgType(),
@@ -224,7 +225,7 @@ export default {
             let sum = 0;
             for (const item of this.shopCartList) {
                 if (item.item?.isGift) continue;
-                if (item.item?.type !== 2) continue;
+                if (item.item?.type === 2) continue;
                 sum += item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)] * item.amount;
             }
             return Core.Util.countFilter(sum);
@@ -233,7 +234,7 @@ export default {
             let sum = 0;
             for (const item of this.shopCartList) {
                 if (item.item?.isGift) continue;
-                if (item.item?.type === 2) continue;
+                if (item.item?.type !== 2) continue;
                 sum += item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)] * item.amount;
             }
             return Core.Util.countFilter(sum);
@@ -505,6 +506,19 @@ export default {
     position: relative;
     .content {
         padding-top: 48px;
+    }
+    .required {
+        position: relative;
+        &::after {
+            content: '*';
+            display: inline-block;
+            color: #ff3636;
+            position: absolute;
+            top: 50%;
+            left: -12px;
+            transform: translateY(-30%);
+            line-height: 1;
+        }
     }
     .title {
         .flex(space-between, center, row);

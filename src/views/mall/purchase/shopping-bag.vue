@@ -577,7 +577,7 @@
                             </span>
                             <span class="price"> {{ currency }} {{ proxy.$Util.Number.numFormat(allPrice) }} </span>
                         </div>
-                        <template v-if="org?.pay_type === 70">
+                        <template v-if="org?.pay_type === Core.Const.DISTRIBUTOR.PAY_TIME.OA">
                             <!-- 授信余额足 -->
                             <template v-if="isBalanceEnough">
                                 <p class="settlement-balance">
@@ -585,20 +585,10 @@
                                 </p>
                             </template>
                             <!-- 授信余额不足 -->
-                            <template>
+                            <template v-else>
                                 <p class="settlement-balance warn">
                                     {{ $t('mall.credit_balance') }}: {{ currency }} {{ balance }} ({{
-                                        $t('mall.insufficient_balance')
-                                    }}
-                                    {{
-                                        proxy.$Util.Number.numFormat(
-                                            parseFloat(
-                                                (
-                                                    allPrice.value -
-                                                    Math.ceil(allPrice.value * org.pay_pre_pay_ratio) / 100
-                                                ).toFixed(4),
-                                            ),
-                                        )
+                                        $t('mall.insufficient')
                                     }})
                                 </p>
                             </template>
@@ -1178,7 +1168,7 @@ const changeItem = () => {
 };
 // 创建订单
 const handleCreateOrder = () => {
-    if (org?.pay_type === 70 && !isBalanceEnough.value) {
+    if (org?.pay_type === Core.Const.DISTRIBUTOR.PAY_TIME.OA && !isBalanceEnough.value) {
         reminderVisible.value = true;
         return;
     }
