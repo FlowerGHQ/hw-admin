@@ -25,7 +25,7 @@
                         </div>
                         <!-- 到账失败 -->
                         <div class="recharg-fail" v-else-if="details.mapStatus === 1">
-                            <div class="tips-area">{{ $t('distributor-detail.recharge_account_tips') }}</div>
+                            <div class="tips-area">{{ details?.content_json?.payment_information?.remark || '' }}</div>
                         </div>
                         <!-- 到账成功 -->
                         <div class="recharg-success" v-else-if="details.mapStatus === 2">

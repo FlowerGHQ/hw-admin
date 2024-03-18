@@ -40,7 +40,9 @@
                     <!-- arrival_progress -->
                     <template v-if="column.key === 'arrival_progress'">{{ statusMap[record.status] || '-' }}</template>
                     <!-- 备注 -->
-                    <template v-if="column.key === 'remark'">{{ record.remark || '-' }}</template>
+                    <template v-if="column.key === 'remark'">{{
+                        record?.content_json?.payment_information?.remark || '-'
+                    }}</template>
                     <!-- 操作 -->
                     <template v-if="column.key === 'operation'">
                         <a-button type="link" @click="routerChange('detail', record)">
