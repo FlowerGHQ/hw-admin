@@ -593,10 +593,9 @@
                                     {{
                                         proxy.$Util.Number.numFormat(
                                             parseFloat(
-                                                (
-                                                    allPrice.value -
-                                                    Math.ceil(allPrice.value * org.pay_pre_pay_ratio) / 100
-                                                ).toFixed(4),
+                                                (allPrice - Math.ceil(allPrice * org.pay_pre_pay_ratio) / 100).toFixed(
+                                                    4,
+                                                ),
                                             ),
                                         )
                                     }})
