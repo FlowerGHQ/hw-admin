@@ -482,7 +482,7 @@ export default {
             auditForm: {
                 audit_result: '',
                 audit_message: '',
-                compensation_method: 1, // 处理方式 1是赔付配件  2赔付至账户
+                compensation_method: 2, // 处理方式 1是赔付配件  2赔付至账户
                 // compensation_type: '1', // 抵扣方式 1是百分比 2金额
                 // compensation_money:'',//抵扣价格
                 // compensation_price:'0'//赔付金额

@@ -86,8 +86,8 @@ const routes = [
         },
         children: [
             {
-                path: 'fs',
-                name: 'LoginFs',
+                path: 'feishu',
+                name: 'LoginFeishu',
                 component: () => import('@/views/mall/Login-fs.vue'),
                 meta: {
                     hidden: true,

@@ -32,7 +32,7 @@ const errorHandle = (status, message = i18n.global.t('error_code.unknown')) => {
         return showMessage(i18n.global.t('error_code.system'));
     }
     if (status === 1108 || status === 1109 || status === 2103) {
-        return window.location.href = window.location.href.split('#')[0] + `#/fs-login?code=${status}&message=${message}`;
+        return window.location.href = window.location.href.split('#')[0] + `#/feishu-login?code=${status}&message=${message}`;
     }
     if (status >= 1000) {
         try {
