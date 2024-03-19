@@ -132,7 +132,7 @@
                 <div class="settlement">
                     <div class="settlement-mes">
                         <div class="settlement-price">
-                            <span class="dis"> {{ $t('mall.payable_amount') }}: </span>
+                            <span class="dis"> {{ $t('purchase.selected_items_total') }} </span>
                             <span class="price"> {{ unit }} {{ $Util.Number.numFormat(sum_price) }} </span>
                         </div>
                         <!-- 余额 -->
