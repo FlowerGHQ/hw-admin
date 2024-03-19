@@ -200,7 +200,7 @@ export default {
         whole_vehicle_orders: 'Payment For Whole Vehicle Orders',
         accessory_order: 'The Accessory Order Should Pay',
         pay_now:'Pay Now',
-        pending_payment_order: 'pending_payment_order',
+        pending_payment_order: 'Pending Payment Order',
         balance_information :'Balance Information',
         balance_vehicle: 'Available Balance Of Vehicle',
         balance_parts: '配件可用余额',

@@ -417,9 +417,20 @@ export default {
                         type: item.item.type,
                         amount: item.amount,
                         item_id: item.item_id,
-                        charge: item.amount * item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)],
-                        price: item.amount * item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)],
-                        unit_price: item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)],
+                        charge:
+                            item.amount *
+                            item?.item[
+                                this.$Util.Number.getStepPriceIndexByNums(item.item?.type === 2 ? 1 : item.amount)
+                            ],
+                        price:
+                            item.amount *
+                            item?.item[
+                                this.$Util.Number.getStepPriceIndexByNums(item.item?.type === 2 ? 1 : item.amount)
+                            ],
+                        unit_price:
+                            item?.item[
+                                this.$Util.Number.getStepPriceIndexByNums(item.item?.type === 2 ? 1 : item.amount)
+                            ],
                         remark: item.remark,
                     };
                 }
