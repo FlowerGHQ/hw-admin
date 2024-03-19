@@ -57,7 +57,11 @@
                                     {{
                                         $Util.Number.numFormat(
                                             $Util.countFilter(
-                                                item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)],
+                                                item?.item[
+                                                    $Util.Number.getStepPriceIndexByNums(
+                                                        item.item?.type === 2 ? 1 : item.amount,
+                                                    )
+                                                ],
                                             ),
                                         )
                                     }}
@@ -83,7 +87,9 @@
                                                     $Util.countFilter(
                                                         item.amount *
                                                             item?.item[
-                                                                $Util.Number.getStepPriceIndexByNums(item.amount)
+                                                                $Util.Number.getStepPriceIndexByNums(
+                                                                    item.item?.type === 2 ? 1 : item.amount,
+                                                                )
                                                             ],
                                                     ),
                                                 )

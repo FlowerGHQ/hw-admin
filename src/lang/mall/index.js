@@ -110,7 +110,7 @@ export default {
         vehicle_available: '车辆可用余额账户',
         parts_available: '配件可用余额账户',
         the_amount_transferred: '这次要充值的金额',
-        please_input_number: '请输入数字',
+        please_input_number: '请输入正数金额',
         undetermined: '未确定',
     },
     en: {
@@ -224,7 +224,7 @@ export default {
         vehicle_available: 'Vehicle Available Balance Account',
         parts_available: 'Parts Available Balance Account',
         the_amount_transferred: 'The Amount To Be Transferred This Time',
-        please_input_number: 'Please Input Number',
+        please_input_number: 'Please Enter A Positive Amount',
         undetermined: 'Undetermined',
     },
 };

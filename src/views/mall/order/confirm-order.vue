@@ -132,7 +132,7 @@
                 <div class="settlement">
                     <div class="settlement-mes">
                         <div class="settlement-price">
-                            <span class="dis"> {{ $t('mall.payable_amount') }}: </span>
+                            <span class="dis"> {{ $t('purchase.selected_items_total') }} </span>
                             <span class="price"> {{ unit }} {{ $Util.Number.numFormat(sum_price) }} </span>
                         </div>
                         <!-- 余额 -->
@@ -235,7 +235,7 @@ export default {
             for (const item of this.shopCartList) {
                 if (item.item?.isGift) continue;
                 if (item.item?.type !== 2) continue;
-                sum += item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)] * item.amount;
+                sum += item?.item[this.$Util.Number.getStepPriceIndexByNums(1)] * item.amount;
             }
             return Core.Util.countFilter(sum);
         },
@@ -243,7 +243,9 @@ export default {
             let sum = 0;
             for (const item of this.shopCartList) {
                 if (item.item?.isGift) continue;
-                sum += item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)] * item.amount;
+                sum +=
+                    item?.item[this.$Util.Number.getStepPriceIndexByNums(item.item?.type === 2 ? 1 : item.amount)] *
+                    item.amount;
             }
             return Core.Util.countFilter(sum);
         },

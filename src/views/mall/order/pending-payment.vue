@@ -124,6 +124,7 @@
                                         v-model:value="this_time_credit"
                                         :suffix="unit"
                                         style="width: 268px"
+                                        :min="0"
                                         :max="after_price_credit"
                                     />
                                 </div>
@@ -290,7 +291,7 @@ const after_price = computed(() => {
 });
 // 售后备件
 const after_price_credit = computed(() => {
-    if (need_pay.value * detail.spare_part_deduction_ratio < balanceParts.value) {
+    if (Math.ceil(need_pay.value * detail.spare_part_deduction_ratio) / 100 < balanceParts.value) {
         return Math.ceil(need_pay.value * detail.spare_part_deduction_ratio) / 100;
     } else {
         return balanceParts.value;
@@ -299,11 +300,11 @@ const after_price_credit = computed(() => {
 // 需付余额
 const need_balance = computed(() => {
     if (!isPre.value) return freight_price.value; // 部分付款后支付运费
-    return parseFloat((sum_price.value + freight_price.value - this_time_credit.value).toFixed(4));
+    return parseFloat((sum_price.value - this_time_credit.value).toFixed(4));
 });
 const need_pay = computed(() => {
     if (isAfter.value) {
-        return isPre.value ? after_price.value + freight_price.value : freight_price.value;
+        return isPre.value ? after_price.value : freight_price.value;
     } else {
         return isPre.value
             ? pre_price.value
