@@ -41,6 +41,16 @@
                             />
                         </div>
                     </div>
+                    <template v-if="upload.fileList.length < imageLimit + fileLimit && isShowUpload">
+                        <div class="image-item upload-wrap" v-if="fileList.length === 0" @click="handleUpload">
+                            <div class="icon-text">
+                                <plus-outlined />
+                                <div class="text">
+                                    {{ $t('distributor-detail.upload') }}
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </template>
             <div class="file-upload">
@@ -65,8 +75,22 @@
                             </div>
                         </div>
                     </div>
+                    <template v-if="upload.fileList.length < imageLimit + fileLimit && isShowUpload">
+                        <div
+                            class="file-item upload-wrap"
+                            v-if="fileList.length !== 0 || imageList.length === 0"
+                            @click="handleUpload"
+                        >
+                            <div class="icon-text">
+                                <plus-outlined />
+                                <div class="text">
+                                    {{ $t('distributor-detail.upload') }}
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </div>
-                <div class="upload-wrap">
+                <div class="upload-wrap-none">
                     <a-upload
                         name="file"
                         class="item-image-uploader"
@@ -83,6 +107,7 @@
                         @preview="handlePreview"
                         @remove="handleRemove"
                         ref="uploadComponent"
+                        id="uploadComponent"
                     >
                         <div class="icon-text" v-if="upload.fileList.length < imageLimit + fileLimit && isShowUpload">
                             <plus-outlined />
@@ -253,6 +278,9 @@ const handleReturn = () => {
         // 如果是对象类型，返回对象
         $emit('update:value', upload.value.fileList);
     }
+};
+const handleUpload = () => {
+    console.log(document.getElementById('uploadComponent').click());
 };
 
 watch(
@@ -470,22 +498,25 @@ watch(
                     }
                 }
             }
-            .upload-wrap {
-                width: 130px;
-                height: 130px;
-                .icon-text {
-                    width: 130px;
-                    height: 130px;
-                    background: #f7f8fa;
-                    border: 1px dashed #eaecf1;
-                    border-radius: 4px;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                }
-            }
         }
+    }
+    .upload-wrap {
+        width: 130px;
+        height: 130px;
+        .icon-text {
+            width: 130px;
+            height: 130px;
+            background: #f7f8fa;
+            border: 1px dashed #eaecf1;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+    .upload-wrap-none {
+        display: none;
     }
     .upload-flex-d {
         display: flex;
