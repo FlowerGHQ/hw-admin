@@ -350,7 +350,7 @@ export default {
             currency = currency === 'cny' ? '' : '_' + currency;
             items = items.map(item => {
                 item.amount = 1;
-                item.unit_price = item['fob' + currency];
+                item.unit_price = this.$Util.countFilter(item['fob' + currency]);
                 item.price = item.unit_price;
                 return item;
             });

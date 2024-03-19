@@ -247,6 +247,10 @@ import { debounce } from 'lodash';
 const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
+const imageRegx = /image\/(png|jpg|jpeg|heic)/  // 照片的正则
+const videoRegx = /^video\/+/  // 视频的正则
+const pdfRegx = /application\/(pdf)/  // pdf的正则
+const fileRegx = /^application\/+/  // 文件的正则
 
 const isDistributerAdmin = ref(false); // 根据路由判断其是用在分销商(false) 还是平台方(true)
 
@@ -667,21 +671,21 @@ const handleDetailChange = ({ file, fileList }) => {
 const handlePreview = ({ file, fileList }) => {
     console.log('预览', file, fileList);
 
-    if (/^video\/+/.test(file.type)) {
+    if (videoRegx.test(file.type)) {
         console.log('video/*(视频预览)');
 
         uploadOptions.value.previewImageVideo = [];
         uploadOptions.value.previewType = 'video';
         uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(file.response?.data?.filename, 4));
         isClose.value = true;
-    } else if (/(image\/|png|jpg|jpeg)/.test(file.type)) {
+    } else if (imageRegx.test(file.type)) {
         console.log('image/*(照片预览)');
 
         uploadOptions.value.previewType = 'image';
         uploadOptions.value.previewImageVideo = [];
         fileList.forEach(el => {
             if (el.response) {
-                if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
+                if (imageRegx.test(el.type)) {
                     if (file.uid === el.uid) {
                         // 让预览的哪张图片在第一张
                         uploadOptions.value.previewImageVideo.unshift(
@@ -697,10 +701,10 @@ const handlePreview = ({ file, fileList }) => {
         });
         console.log('结果', uploadOptions.value.previewImageVideo);
         isClose.value = true;
-    } else if (/application\/pdf/.test(file.type)) {
+    } else if (pdfRegx.test(file.type)) {
         console.log('application/pdf(pdf预览)', Core.Util.imageFilter(file.response?.data?.filename, 4));
         window.open(Core.Util.imageFilter(file.response?.data?.filename, 4), '_blank');
-    } else if (/^application\/+/.test(file.type)) {
+    } else if (fileRegx.test(file.type)) {
         console.log('文件', Core.Util.imageFilter(file.response?.data?.filename, 4));
         // office online (PDF 支持预览)
         let url =
