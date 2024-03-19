@@ -31,11 +31,11 @@ export default {
     /**
      * @description 根据数量获取阶梯价格参数名
      */
-    getStepPriceIndexByNums(nums = 1) {
+    getStepPriceIndexByNums(nums = 1, currency = null) {
         let unit = '';
         let type = 'normal';
         nums = Number(nums);
-        if (Data.getCurrency() === 'EUR') {
+        if (currency === 'EUR' || Data.getCurrency() === 'EUR') {
             unit = 'eur';
         } else {
             unit = 'usd';

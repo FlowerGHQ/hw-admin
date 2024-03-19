@@ -1,23 +1,19 @@
 <template>
     <div class="shipping-freight">
         <a-modal v-model:visible="visible" :title="title" @cancel="handleCancel">
-            <div class="shipping">
-                <div class="key">{{ $t('p.estimated_shipping_data') }}:</div>
-                <div class="value">
+            <a-form ref="formRef" name="custom-validation" :rules="rules" :model="search_params">
+                <a-form-item :label="$t('p.estimated_shipping_data')" name="shipping_time_estimated">
                     <a-date-picker class="w-100" v-model:value="search_params.shipping_time_estimated" />
-                </div>
-            </div>
-            <div class="freight m-t-20">
-                <div class="key">{{ $t('p.freight') }}:</div>
-                <div class="value">
+                </a-form-item>
+                <a-form-item :label="$t('p.freight')" name="freight">
                     <a-input-number
                         class="w-100"
                         v-model:value="search_params.freight"
                         :placeholder="$t('common.please_enter') + $t('distributor.actual_freight_cost')"
                         :min="0"
                     />
-                </div>
-            </div>
+                </a-form-item>
+            </a-form>
 
             <template #footer>
                 <div class="footer">
@@ -50,18 +46,22 @@ const props = defineProps({
         default: () => {},
     },
 });
+const emits = defineEmits(['update:visible', 'ok', 'cancel']);
+const formRef = ref(null);
 
 const search_params = ref({
     shipping_time_estimated: '',
     freight: '',
 });
-
-const emits = defineEmits(['update:visible', 'ok', 'cancel']);
+const rules = ref({
+    shipping_time_estimated: [{ required: true, trigger: 'change', message: '' }],
+    freight: [{ required: true, trigger: 'change', message: '' }],
+});
 
 /* fetch start*/
 // 确认和修改运费和船期
 const saveFetch = (params = {}) => {
-    const obj = {        
+    const obj = {
         target_id: props.detailRecord.id, // 订单id
         content: {
             shipping_time_estimated: dayjs(search_params.value.shipping_time_estimated).startOf('day').unix(), // 预计船期
@@ -77,7 +77,7 @@ const saveFetch = (params = {}) => {
             FREIGHT_STATUS.REJECTED,
         ])
     ) {
-        obj.id = props.detailRecord.freight_audit_record_id // 审核记录id（audit_record_id）
+        obj.id = props.detailRecord.freight_audit_record_id; // 审核记录id（audit_record_id）
     }
 
     console.log('obj', obj);
@@ -99,9 +99,26 @@ const saveFetch = (params = {}) => {
 const init = () => {
     search_params.value = {};
 };
-const handleOk = () => {
+const handleOk = async () => {
     console.log('search_params.value', search_params.value);
-    saveFetch();
+    try {
+        const values = await formRef.value.validateFields();
+        console.log('Success:', values);
+        saveFetch();
+    } catch (errorInfo) {
+        console.log('Failed:', errorInfo);
+        onCheck(errorInfo.values);
+    }
+};
+
+const onCheck = errorInfo => {    
+    if (!errorInfo['shipping_time_estimated']) {
+        return proxy.$message.success(proxy.$t('p.estimated_shipping_data'));
+    }
+
+    if (Number(errorInfo['freight']) !== 0 && !errorInfo['freight']) {
+        return proxy.$message.success(proxy.$t('p.freight'));
+    }
 };
 
 const handleCancel = () => {
@@ -122,18 +139,8 @@ onMounted(() => {
 .shipping-freight {
 }
 
-.shipping,
-.freight {
-    display: flex;
-    align-items: center;
-    .key {
-        margin-right: 10px;
-        width: 100px;
-        text-align: right;
-    }
-    .value {
-        flex: 1;
-    }
+:deep(.ant-col) {
+    width: 80px;
 }
 .w-100 {
     width: 100%;

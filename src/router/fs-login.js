@@ -2,9 +2,9 @@ import Layout from '../views/fs-login/index.vue';
 
 // 飞书登录相关页面
 const fsLogin = {
-    path: '/fs-login',
+    path: '/feishu-login',
     component: Layout,
-    name: 'FsLogin',
+    name: 'FeishuLogin',
     meta: {
         title: '飞书扫码登录',
         title_en: 'Feishu Scan Code Login',
