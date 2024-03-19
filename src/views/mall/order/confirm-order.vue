@@ -235,7 +235,7 @@ export default {
             for (const item of this.shopCartList) {
                 if (item.item?.isGift) continue;
                 if (item.item?.type !== 2) continue;
-                sum += item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)] * item.amount;
+                sum += item?.item[this.$Util.Number.getStepPriceIndexByNums(1)] * item.amount;
             }
             return Core.Util.countFilter(sum);
         },
@@ -243,7 +243,9 @@ export default {
             let sum = 0;
             for (const item of this.shopCartList) {
                 if (item.item?.isGift) continue;
-                sum += item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)] * item.amount;
+                sum +=
+                    item?.item[this.$Util.Number.getStepPriceIndexByNums(item.item?.type === 2 ? 1 : item.amount)] *
+                    item.amount;
             }
             return Core.Util.countFilter(sum);
         },
