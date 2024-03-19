@@ -290,7 +290,7 @@ const after_price = computed(() => {
 });
 // 售后备件
 const after_price_credit = computed(() => {
-    if (need_pay.value * detail.spare_part_deduction_ratio < balanceParts.value) {
+    if (Math.ceil(need_pay.value * detail.spare_part_deduction_ratio) / 100 < balanceParts.value) {
         return Math.ceil(need_pay.value * detail.spare_part_deduction_ratio) / 100;
     } else {
         return balanceParts.value;
