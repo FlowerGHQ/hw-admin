@@ -20,7 +20,7 @@
                         <template v-if="column.key === 'audit_status'">
                             {{ AUDIT_CANCEL_STATUS_MAP[text]?.t ? $t(`${AUDIT_CANCEL_STATUS_MAP[text]?.t}`) : '-' }}
                         </template>
-                        <!-- 原因 -->
+                        <!-- 原因 等待审核[分销商的取消原因] 同意和拒绝取的是[平台方的审核原因]-->
                         <template v-if="column.key === 'audit_remark'">
                             <a-tooltip>
                                 <template #title>{{ text }}</template>
@@ -28,7 +28,7 @@
                                     class="one-spils cursor"
                                     :style="{ width: text?.length > 15 ? 15 * 12 + 'px' : '' }"
                                 >
-                                    {{ text }}
+                                    {{ $Util.Common.returnTypeBool(record.audit_status, [AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL]) ? record.cancel_remark : text }}
                                 </div>
                             </a-tooltip>
                         </template>
@@ -65,6 +65,7 @@ import { useTable } from '@/hooks/useTable';
 import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';
 import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
 const AUDIT_CANCEL_STATUS_MAP = Core.Const.DISTRIBUTOR.AUDIT_CANCEL_STATUS_MAP;
+const AUDIT_CANCEL_STATUS = Core.Const.DISTRIBUTOR.AUDIT_CANCEL_STATUS;
 
 const { proxy } = getCurrentInstance();
 const props = defineProps({
