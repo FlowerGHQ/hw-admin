@@ -165,6 +165,8 @@ export default {
         vehicle_available_balance: '整车可用余额',
         // 配件可用余额
         parts_available_balance_re: '配件可用余额',
+        // 余额
+        available_balance_re: '余额',
     },
     en: {
         vehicle_account: 'Vehicle Account',
@@ -286,5 +288,7 @@ export default {
         arrival_success: 'Arrival success',
         vehicle_available_balance: 'Vehicle Available Balance',
         parts_available_balance_re: 'Parts Available Balance',
+        // 余额
+        available_balance_re: 'Available Balance',
     },
 };
