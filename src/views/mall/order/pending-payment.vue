@@ -76,7 +76,7 @@
                                 <div class="recharge">
                                     <span class="recharge-balance"
                                         >{{ $t('mall.balance_parts') }}：<span class="price"
-                                            >{{ unit }} {{ balance }}</span
+                                            >{{ unit }} {{ balanceAfter }}</span
                                         ></span
                                     >
                                     <div class="btn">
