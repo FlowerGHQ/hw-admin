@@ -11,7 +11,7 @@
                     订单取消状态(待审核)
                     需要按钮
 
-                    兼顾老数据 老数据不需要按钮  只有 TT和OA显示
+                    兼顾老数据 老数据不需要按钮  只有 TT和OA 全款支付 显示
                 -->
                 <div
                     class="btns-area"
@@ -26,7 +26,7 @@
                                 STATUS.WAIT_PRODUCED,
                                 STATUS.IN_PRODUCTION,
                             ]) &&
-                            $Util.Common.returnTypeBool(detail.pay_type, [PAY_TIME.TT, PAY_TIME.OA])) ||
+                            $Util.Common.returnTypeBool(detail.pay_type, [PAY_TIME.TT, PAY_TIME.OA, PAY_TIME.PAYMENT_TYPE_ALL_PAYMENT])) ||
                         $Util.Common.returnTypeBool(detail.cancel_status, [AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL])
                     "
                 >
