@@ -274,7 +274,9 @@
                                         }}{{
                                             $Util.Number.numFormat(
                                                 $Util.countFilter(
-                                                    item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)],
+                                                    item?.item[
+                                                        $Util.Number.getStepPriceIndexByNums(1) /*配件默认正常单价*/
+                                                    ],
                                                 ),
                                             )
                                         }}</span
@@ -300,7 +302,9 @@
                                                     $Util.countFilter(
                                                         item.amount *
                                                             item?.item[
-                                                                $Util.Number.getStepPriceIndexByNums(item.amount)
+                                                                $Util.Number.getStepPriceIndexByNums(
+                                                                    1,
+                                                                ) /*配件默认正常单价*/
                                                             ],
                                                     ),
                                                 )
@@ -775,7 +779,7 @@ const amount = computed(() => {
     );
 });
 const isBalanceEnough = computed(() => {
-    const sum = parseFloat((allPrice.value - Math.ceil(allPrice.value * org.pay_pre_pay_ratio) / 100).toFixed(4)); // 总尾款
+    const sum = parseFloat((preAllPrice.value - Math.ceil(preAllPrice.value * org.pay_pre_pay_ratio) / 100).toFixed(4)); // 总尾款
     return sum <= balance.value;
 });
 // 计算是否全选车辆
@@ -840,6 +844,26 @@ const allPrice = computed(() => {
         }
     });
     accessoriesList.value.find(item => {
+        if (item.selected) {
+            price += item.amount * item?.item[proxy.$Util.Number.getStepPriceIndexByNums(item.amount)];
+        }
+    });
+    peripheralList.value.find(item => {
+        if (item.selected) {
+            price += item.amount * item?.item[proxy.$Util.Number.getStepPriceIndexByNums(item.amount)];
+        }
+    });
+    promotionalList.value.find(item => {
+        if (item.selected) {
+            price += item.amount * item?.item[proxy.$Util.Number.getStepPriceIndexByNums(item.amount)];
+        }
+    });
+    return proxy.$Util.countFilter(price.toFixed(2));
+});
+// 售前产品总价（不包括配件）
+const preAllPrice = computed(() => {
+    let price = 0;
+    vehicleList.value.find(item => {
         if (item.selected) {
             price += item.amount * item?.item[proxy.$Util.Number.getStepPriceIndexByNums(item.amount)];
         }
