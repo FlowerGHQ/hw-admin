@@ -17,7 +17,7 @@
                     </template>
                     <template #bodyCell="{ column, text, record }">
                         <!-- 审核结果 -->
-                        <template v-if="column.key === 'cancel_status'">
+                        <template v-if="column.key === 'audit_status'">
                             {{ AUDIT_CANCEL_STATUS_MAP[text]?.t ? $t(`${AUDIT_CANCEL_STATUS_MAP[text]?.t}`) : '-' }}
                         </template>
                         <!-- 原因 -->
@@ -86,7 +86,7 @@ const tableColumns = computed(() => {
     let columns = [];
     columns = [
         { title: proxy.$t('distributor-detail.application_time'), dataIndex: 'audit_create_time', key: 'time' }, // 申请时间
-        { title: proxy.$t('distributor.audit_result'), dataIndex: 'cancel_status', key: 'cancel_status' }, // 审核结果
+        { title: proxy.$t('distributor.audit_result'), dataIndex: 'audit_status', key: 'audit_status' }, // 审核结果
         { title: proxy.$t('common.reason'), dataIndex: 'audit_remark', key: 'audit_remark' }, // 原因
     ];
     return columns;
