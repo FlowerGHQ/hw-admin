@@ -290,24 +290,26 @@ const after_price = computed(() => {
 });
 // 售后备件
 const after_price_credit = computed(() => {
-    return Math.ceil(balanceParts.value * detail.spare_part_deduction_ratio) / 100;
+    if (need_pay.value * detail.spare_part_deduction_ratio < balanceParts.value) {
+        return Math.ceil(need_pay.value * detail.spare_part_deduction_ratio) / 100;
+    } else {
+        return balanceParts.value;
+    }
 });
 // 需付余额
 const need_balance = computed(() => {
     if (!isPre.value) return freight_price.value; // 部分付款后支付运费
-    return parseFloat((sum_price.value - this_time_credit.value).toFixed(4));
+    return parseFloat((sum_price.value + freight_price.value - this_time_credit.value).toFixed(4));
 });
 const need_pay = computed(() => {
     if (isAfter.value) {
-        return isPre.value ? after_price.value : freight_price.value;
+        return isPre.value ? after_price.value + freight_price.value : freight_price.value;
     } else {
         return isPre.value
             ? pre_price.value
             : isSelectEnd.value
               ? freight_price.value + end_price.value
-              : detail.freight_pay_status === 100
-                ? detail.freight
-                : 0;
+              : freight_price.value;
     }
 });
 // 是否已支付运费-运费
@@ -419,7 +421,7 @@ const handlePayOrder = () => {
         id: detail.id, //订单id
         subject: subject, //10.预付款；20.尾款；30.全款（不包含运费）；40.全款并使用备件钱包（不包含运费）；50.运费；60.尾款加运费
         payment: need_pay.value * 100, //支付金额
-        spare_part_credit_payment: this_time_credit.value, //备件信用支付金额
+        spare_part_credit_payment: this_time_credit.value * 100, //备件信用支付金额
     };
     Core.Api.Purchase.pay(params)
         .then(res => {
