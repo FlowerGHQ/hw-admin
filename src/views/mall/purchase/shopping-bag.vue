@@ -845,7 +845,7 @@ const allPrice = computed(() => {
     });
     accessoriesList.value.find(item => {
         if (item.selected) {
-            price += item.amount * item?.item[proxy.$Util.Number.getStepPriceIndexByNums(item.amount)];
+            price += item.amount * item?.item[proxy.$Util.Number.getStepPriceIndexByNums(1)];
         }
     });
     peripheralList.value.find(item => {
