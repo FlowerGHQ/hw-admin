@@ -124,6 +124,7 @@
                                         v-model:value="this_time_credit"
                                         :suffix="unit"
                                         style="width: 268px"
+                                        :min="0"
                                         :max="after_price_credit"
                                     />
                                 </div>
