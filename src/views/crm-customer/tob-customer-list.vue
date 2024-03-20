@@ -28,7 +28,7 @@
                     <template v-if="column.key === 'item'">
                         <a-tooltip placement="topLeft">
                             <template #title>{{ text || '-' }}</template>
-                            <div class="ell">
+                            <div class="ell mw160">
                                 {{ text || '-' }}
                             </div>
                         </a-tooltip>
@@ -126,5 +126,10 @@ const onReset = () => {
             font-weight: 600;
         }
     }
+}
+.ell {
+    &.mw160 {
+        max-width: 160px;
+    } 
 }
 </style>
