@@ -91,7 +91,7 @@
                                     style="width: 120px"
                                     :min="0"
                                     :precision="0"
-                                    @blur="inputChange('amount', record)"
+                                    @blur="inputChange('purchase_amount', record)"
                                 />
                                 <!-- 平台方 && 赠送订单 -->
                                 <a-input-number
@@ -100,7 +100,7 @@
                                     style="width: 120px"
                                     :min="0"
                                     :precision="0"
-                                    @blur="handleUpdateFetch(record)"
+                                    @blur="inputChange('give_amount', record)"
                                 />
                             </template>
 
@@ -182,6 +182,7 @@ export default {
         return {
             loading: false,
             tableData: [],
+            giveList: [], // 赠品单数据
         };
     },
     computed: {
@@ -270,6 +271,7 @@ export default {
                 order_id: this.orderId,
             })
                 .then(res => {
+                    this.giveList = res.list;
                     this.tableData = res.list.map(i => {
                         let item = i.item || {};
                         item.amount = i.amount;
@@ -288,17 +290,11 @@ export default {
                 });
         },
         // 更新赠品单
-        handleUpdateFetch(record) {
-            console.log(record);
-            Core.Api.Purchase.updateGiveaway({
-                item_list: [
-                    {
-                        item_id: record.item_id,
-                        order_id: record.order_id,
-                        amount: record.amount,
-                    },
-                ],
-            })
+        handleUpdateFetch(params = {}) {
+            let obj = {
+                ...params,
+            };
+            Core.Api.Purchase.updateGiveaway(obj)
                 .then(() => {
                     this.getGiveawayListFetch();
                 })
@@ -421,8 +417,17 @@ export default {
                         price: this.$Util.countFilter(parseInt(item.unit_price * item.amount), 100, 2, true),
                         type: item.type,
                     }));
-                    
-                    this.saveCreateGiveawayFetch({ item_list });
+
+                    console.log('GIVE_ORDER', item_list);
+                    if (this.giveList.length) {
+                        this.handleUpdateFetch({
+                            id: this.giveList[0].order_id,
+                            item_list,
+                        });
+                    } else {
+                        this.saveCreateGiveawayFetch({ item_list });
+                    }
+
                     break;
             }
         },
@@ -442,12 +447,24 @@ export default {
         // 数量单价改变
         inputChange(type, record) {
             switch (type) {
-                case 'amount':
+                case 'purchase_amount':
                     console.log('record', record);
                     record.unit_price = this.$Util.countFilter(
                         record[this.$Util.Number.getStepPriceIndexByNums(record.amount, this.detail.currency)],
                     );
                     record.price = record.amount * record.unit_price;
+                    break;
+                case 'give_amount':
+                    this.handleUpdateFetch({
+                        id: this.giveList[0].order_id,
+                        item_list: [
+                            {
+                                item_id: record.item_id,
+                                order_id: record.order_id,
+                                amount: record.amount,
+                            },
+                        ],
+                    });
                     break;
                 case 'unit_price':
                     record.price = record.amount * record.unit_price;
