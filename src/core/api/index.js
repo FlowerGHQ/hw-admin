@@ -1079,6 +1079,9 @@ const apiList = {
         save: ['PostJson', 'announcement/save'], // 新增
         updateStatus: ['PostJson', 'announcement/update-status'], // 修改排序和状态
     },
+    ToBCustomer: {
+        list: ['PostJson', 'comment/list'], // crm tob客户列表   
+    }
 };
 
 export default new Api(baseUrl, apiList);
