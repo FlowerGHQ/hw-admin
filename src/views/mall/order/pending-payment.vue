@@ -180,6 +180,9 @@
                 <div class="settlement">
                     <div class="settlement-mes">
                         <div class="settlement-price">
+                            <span class="warn" v-if="!isPre && !detail.freight">
+                                （{{ $t('mall.determined_to_pay') }}）
+                            </span>
                             <span class="dis"> {{ $t('mall.payable_amount') }}: </span>
                             <span class="price"> {{ unit }} {{ need_pay }} </span>
                         </div>
@@ -414,12 +417,7 @@ const handlePayOrder = () => {
                 // 选择支付尾款
                 subject = detail.freight_pay_status === 100 ? 60 : 20;
             } else {
-                subject =
-                    pay_type.value === Core.Const.DISTRIBUTOR.PAY_TIME.TT
-                        ? detail.freight_pay_status === 100
-                            ? 60
-                            : 20
-                        : 50; // TT 必需付尾款
+                subject = pay_type.value === Core.Const.DISTRIBUTOR.PAY_TIME.TT ? 60 : 50; // TT 必需付尾款
             }
         }
     }
@@ -671,6 +669,9 @@ onMounted(async () => {
                     margin-right: 24px;
                     .settlement-price {
                         .flex(initial, center, row);
+                    }
+                    .warn {
+                        color: #ff3636;
                     }
                 }
                 .settlement-balance {
