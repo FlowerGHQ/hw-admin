@@ -340,7 +340,7 @@ const getDetail = () => {
             Object.assign(detail, res.detail);
             detail.item_list = detail.item_list.map(item => {
                 Object.assign(item.item, {
-                    logo: set_id > 0 ? item.item?.imgs : item.item?.logo,
+                    logo: item.item?.set_id > 0 ? item.item?.imgs : item.item?.logo,
                 });
                 return item;
             });
