@@ -907,7 +907,7 @@ const filterData = (list, type) => {
         const index = selectedId.value[type].indexOf(item.id);
         item.selected = index === -1 ? false : true;
         if (item.item.set_id) {
-            item.item.logo = item.item.imgs;
+            // item.item.logo = item.item.imgs;
         }
         return item;
     });

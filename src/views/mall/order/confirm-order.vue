@@ -61,7 +61,9 @@
             <p class="title">{{ $t('mall.transportation_information') }}</p>
             <div class="box transport">
                 <div class="key-value">
-                    <div class="key required">{{ $t('mall.allowed_batch') }}:</div>
+                    <div class="key required" :class="[form.flag_part_shipment ? '' : 'red']">
+                        {{ $t('mall.allowed_batch') }}:
+                    </div>
                     <div class="value">
                         <a-radio-group v-model:value="form.flag_part_shipment">
                             <a-radio v-for="item in flagPartShipmentList" :value="item.value">
@@ -71,7 +73,9 @@
                     </div>
                 </div>
                 <div class="key-value">
-                    <div class="key required">{{ $t('mall.forwarding_allowed') }}:</div>
+                    <div class="key required" :class="[form.flag_transfer ? '' : 'red']">
+                        {{ $t('mall.forwarding_allowed') }}:
+                    </div>
                     <div class="value">
                         <a-radio-group v-model:value="form.flag_transfer">
                             <a-radio v-for="item in flagTransferList" :value="item.value">
@@ -91,7 +95,9 @@
                     </div>
                 </div> -->
                 <div class="key-value">
-                    <div class="key required">{{ $t('mall.flag_pallet') }}:</div>
+                    <div class="key required" :class="[form.flag_pallet ? '' : 'red']">
+                        {{ $t('mall.flag_pallet') }}:
+                    </div>
                     <div class="value">
                         <a-radio-group v-model:value="form.flag_pallet">
                             <a-radio v-for="item in PALLETIZE" :value="item.value">
@@ -101,7 +107,7 @@
                     </div>
                 </div>
                 <div class="key-value">
-                    <div class="key required">
+                    <div class="key required" :class="[form.deliver_time_expected ? '' : 'red']">
                         {{ $t('mall.expected_delivery') }}:<a-tooltip>
                             <template #title>{{ $t('mall.calculation') }}</template>
                             <img class="tips" src="@images/mall/order/tips.png" />
@@ -158,6 +164,7 @@
 <script>
 import Core from '@/core';
 
+import dayjs, { Dayjs } from 'dayjs';
 import ReceiverAddressEdit from '@/components/popup-btn/ReceiverAddressEdit.vue';
 import MyButton from '../../../components/common/MyButton.vue';
 import OrderInformation from './components/order-information.vue';
@@ -194,11 +201,11 @@ export default {
                 address: '',
                 email: '',
                 flag_order_type: undefined,
-                flag_part_shipment: undefined, // 分批发货
-                flag_transfer: undefined, // 转运
+                flag_part_shipment: -1, // 分批发货
+                flag_transfer: -1, // 转运
                 // insured: undefined, // 是否参保
-                flag_pallet: undefined, // 是否打托
-                deliver_time_expected: undefined, // 期望交付时间
+                flag_pallet: -1, // 是否打托
+                deliver_time_expected: dayjs(new Date()), // 期望交付时间
             },
             defAddr: [],
 
@@ -287,6 +294,9 @@ export default {
         getReceiveList() {
             Core.Api.Receive.list().then(res => {
                 this.receiveList = res.list;
+                if (this.receiveList.length > 0) {
+                    this.selectIndex = this.receiveList[0]?.id;
+                }
                 // this.editMode = res.list.length ? false : true
             });
         },
@@ -387,23 +397,34 @@ export default {
             this.selectIndex = item.id;
         },
         checkForm() {
+            let allEntered = true;
             if (!this.selectIndex) {
-                return this.$message.warning(this.$t('def.enter'));
+                allEntered = false;
             }
-            if (this.$auth('DISTRIBUTOR') && !this.form.flag_part_shipment) {
-                return this.$message.warning(this.$t('def.enter'));
+            if (this.$auth('DISTRIBUTOR') && (!this.form.flag_part_shipment || this.form.flag_part_shipment === -1)) {
+                this.form.flag_part_shipment = undefined;
+                allEntered = false;
             }
-            if (this.$auth('DISTRIBUTOR') && !this.form.flag_transfer) {
-                return this.$message.warning(this.$t('def.enter'));
+            if (this.$auth('DISTRIBUTOR') && (!this.form.flag_transfer || this.form.flag_transfer === -1)) {
+                this.form.flag_transfer = undefined;
+                allEntered = false;
             }
             // if (this.$auth('DISTRIBUTOR') && !this.form.insured) {
-            //     return this.$message.warning(this.$t('def.enter'));
+            //     allEntered = false;
             // }
-            if (this.$auth('DISTRIBUTOR') && !this.form.flag_pallet) {
-                return this.$message.warning(this.$t('def.enter'));
+            if (this.$auth('DISTRIBUTOR') && (!this.form.flag_pallet || this.form.flag_pallet === -1)) {
+                this.form.flag_pallet = undefined;
+                allEntered = false;
             }
-            if (this.$auth('DISTRIBUTOR') && !this.form.deliver_time_expected) {
-                return this.$message.warning(this.$t('def.enter'));
+            if (
+                this.$auth('DISTRIBUTOR') &&
+                (!this.form.deliver_time_expected || this.form.deliver_time_expected === -1)
+            ) {
+                this.form.deliver_time_expected = undefined;
+                allEntered = false;
+            }
+            if (!allEntered) {
+                allEntered = false;
             }
             return false;
         },
@@ -532,6 +553,9 @@ export default {
             transform: translateY(-30%);
             line-height: 1;
         }
+    }
+    .red {
+        color: #ff3636;
     }
     .title {
         .flex(space-between, center, row);

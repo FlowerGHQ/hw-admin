@@ -414,7 +414,12 @@ const handlePayOrder = () => {
                 // 选择支付尾款
                 subject = detail.freight_pay_status === 100 ? 60 : 20;
             } else {
-                subject = 50;
+                subject =
+                    pay_type.value === Core.Const.DISTRIBUTOR.PAY_TIME.TT
+                        ? detail.freight_pay_status === 100
+                            ? 60
+                            : 20
+                        : 50; // TT 必需付尾款
             }
         }
     }
