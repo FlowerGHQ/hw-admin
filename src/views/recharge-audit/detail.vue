@@ -168,13 +168,14 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed, getCurrentInstance } from 'vue';
+import { onMounted, ref, computed, getCurrentInstance, watch } from 'vue';
 import Core from '@/core';
 import { useI18n } from 'vue-i18n';
 import { useRouter, useRoute } from 'vue-router';
 import CheckModal from '@/components/horwin/based-on-ant/CheckModal.vue';
 const router = useRouter();
 const route = useRoute();
+// const $i18n = useI18n();
 const $t = useI18n().t;
 const { proxy } = getCurrentInstance();
 const detail = ref({
@@ -256,6 +257,21 @@ const modalShow = ref(false);
 const modalTitle = ref('payment-management.sure_fail');
 const modalText = ref($t('payment-management.sure_tip'));
 const submitText = ref($t('payment-management.confirm_reject'));
+// watch(
+//     () => $i18n.locale.value,
+//     val => {
+//         console.log('lang: ', $i18n.locale.value);
+//         if (form.value.result === 1) {
+//             modalTitle.value = 'payment-management.sure_success';
+//             modalText.value = proxy.$t('payment-management.sure_approve_tip');
+//             submitText.value = proxy.$t('payment-management.confirm_through');
+//         } else {
+//             modalTitle.value = 'payment-management.sure_fail';
+//             modalText.value = proxy.$t('payment-management.sure_tip');
+//             submitText.value = proxy.$t('payment-management.confirm_reject');
+//         }
+//     },
+// );
 onMounted(() => {
     form.value.id = Number(route.query.id) || 0;
     detail.value.id = Number(route.query.id) || 0;

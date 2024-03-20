@@ -20,7 +20,9 @@
                                 <div class="deposit-payment-row border-bottom">
                                     <div class="deposit-payment-row-left">{{ $t('mall.payment_method') }}:</div>
                                     <div class="deposit-payment-row-right">
-                                        {{ Core.Const.DISTRIBUTOR.PAY_TIME_MAP[mes.pay_type] }}
+                                        {{
+                                            mes.pay_type ? Core.Const.DISTRIBUTOR.PAY_TIME_LIST[mes.pay_type][lang] : ''
+                                        }}
                                     </div>
                                 </div>
                                 <div class="deposit-payment-row">
@@ -211,7 +213,9 @@ import { ref, onMounted, reactive, computed, getCurrentInstance } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import MyButton from '@/components/common/MyButton.vue';
 import OrderInformation from './components/order-information.vue';
+import { useStore } from 'vuex';
 
+const store = useStore();
 const { proxy } = getCurrentInstance();
 const orderModules = import.meta.globEager('@/assets/images/mall/order/*');
 
@@ -232,6 +236,9 @@ const balanceAfter = ref(0); // 售后余额
 const balanceParts = ref(0); // 备件余额
 const balanceCredit = ref(0); // 授信账户
 const this_time_credit = ref(null);
+const lang = computed(() => {
+    return store.state.lang;
+});
 const disabled = computed(() => {
     if (JSON.stringify(detail) == '{}') return true;
     if (isAfter.value) {
@@ -588,6 +595,7 @@ onMounted(async () => {
                     }
                     .recharge {
                         .flex(space-between, center, row);
+                        margin-bottom: 16px;
                         .recharge-balance {
                             color: #666;
                             font-size: 14px;
