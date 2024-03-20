@@ -112,6 +112,7 @@ export default {
         the_amount_transferred: '这次要充值的金额',
         please_input_number: '请输入正数金额',
         undetermined: '未确定',
+        determined_to_pay: '运费未确定，等运费确定后再支付',
     },
     en: {
         system: 'BOS',
@@ -203,7 +204,7 @@ export default {
         pending_payment_order: 'Pending Payment Order',
         balance_information :'Balance Information',
         balance_vehicle: 'Available Balance Of Vehicle',
-        balance_parts: '配件可用余额',
+        balance_parts: 'Available Balance Of Accessories',
         parts_vehicle: 'After-sales Spare Parts Credit Account',
         insufficient_balance: 'Insufficient balance, please top up first, at least',
         occupies: 'This order occupies a credit limit of',
@@ -226,5 +227,6 @@ export default {
         the_amount_transferred: 'The Amount To Be Transferred This Time',
         please_input_number: 'Please Enter A Positive Amount',
         undetermined: 'Undetermined',
+        determined_to_pay: 'The freight undetermined, payment after the freight is confirmed',
     },
 };
