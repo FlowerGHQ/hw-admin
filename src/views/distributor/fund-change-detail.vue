@@ -20,7 +20,7 @@
                     :row-key="record => record.id"
                     :pagination="false"
                 >
-                    <template #bodyCell="{ column, text, record }">
+                    <template #bodyCell="{ column, record }">
                         <!-- 创建时间 -->
                         <template v-if="column.key === 'create_time'">
                             {{ Core.Util.timeFormat(record.create_time) }}
@@ -111,7 +111,6 @@ const initParam = ref({
     org_id: route.query.org_id,
     org_type: 15,
 });
-``;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request,
     initParam: initParam.value,
@@ -143,7 +142,6 @@ const subjectMap = ref([]);
 for (let key in subject) {
     subjectMap.value.push(subject[key]);
 }
-console.log('subjectMap', subjectMap.value);
 
 const searchList = ref([
     {
@@ -175,7 +173,7 @@ const searchList = ref([
         type: 'select',
         value: '',
         searchParmas: 'wallet_type',
-        key: 'distributor-detail.recharge_account',
+        key: 'distributor-detail.account',
         // 是否需要展示全部
         isShowAll: true,
         selectMap: [
