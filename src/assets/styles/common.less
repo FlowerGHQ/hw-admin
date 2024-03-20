@@ -624,3 +624,30 @@
         }
     }
 }
+
+// 时间输入框样式
+#mall-layout .mall-date-picker {
+    box-shadow: none;
+    &:hover {
+        border-color: #8f00ff;
+    }
+}
+.mall-date-picker {
+    .ant-picker-header-view button:hover {
+        color: #8f00ff;
+    }
+    .ant-picker-today-btn {
+        color: #8f00ff;
+        &:hover {
+            color: #8f00ff;;
+        }
+    }
+    .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+        border-color: #8f00ff;
+    }
+    .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner,
+    .ant-picker-cell-in-view.ant-picker-cell-range-start .ant-picker-cell-inner,
+    .ant-picker-cell-in-view.ant-picker-cell-range-end .ant-picker-cell-inner {
+        background: #8f00ff;
+    }
+}
