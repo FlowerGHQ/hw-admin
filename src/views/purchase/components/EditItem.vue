@@ -7,8 +7,19 @@
                 </div>
                 <div class="btns-area">
                     <div class="collapse-title-right">
-                        <!-- 赠送商品 平台方能看 -->
-                        <div v-if="type === 'GIVE_ORDER' && this.$auth('ADMIN')" class="give-order">
+                        <!-- 赠送商品 && 平台方能看 && 订单状态(等待审核 待支付 待生产)可见 -->
+                        <div
+                            v-if="
+                                type === 'GIVE_ORDER' &&
+                                this.$auth('ADMIN') &&
+                                $Util.Common.returnTypeBool(detail.status, [
+                                    STATUS.WAIT_AUDIT,
+                                    STATUS.WAIT_PAY,
+                                    STATUS.WAIT_PRODUCED,
+                                ])
+                            "
+                            class="give-order"
+                        >
                             <ItemSelect
                                 :isShowBtn="isGiftOrderBtn"
                                 @select="handleAddItem"
@@ -146,9 +157,9 @@
 
 <script>
 import Core from '@/core';
-const USER_TYPE = Core.Const.USER.TYPE;
 const PURCHASE_TYPE = Core.Const.PURCHASE.TYPE;
-const WALLET_TYPE_MAP = Core.Const.WALLET.TYPE_MAP;
+const STATUS = Core.Const.PURCHASE.STATUS;
+
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 export default {
     name: 'EditPurchaseItem',
@@ -177,9 +188,11 @@ export default {
             type: Boolean,
             default: false,
         },
+        //
     },
     data() {
         return {
+            STATUS,
             loading: false,
             tableData: [],
             giveList: [], // 赠品单数据
@@ -371,7 +384,7 @@ export default {
                     okText: this.$t('def.sure'),
                     cancelText: this.$t('def.cancel'),
                     onOk: () => {
-                        console.log("record", record);
+                        console.log('record', record);
                         if (record.order_id) {
                             Core.Api.Purchase.deleteGiveaway({
                                 item_id: record.item_id,
@@ -385,7 +398,7 @@ export default {
                                     console.log('handleRemoveItem err:', err);
                                 });
                         } else {
-                            this.tableData = this.tableData.filter(el => el.id !== record.id)
+                            this.tableData = this.tableData.filter(el => el.id !== record.id);
                         }
                     },
                     onCancel: () => {
