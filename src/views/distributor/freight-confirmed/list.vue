@@ -441,7 +441,7 @@ const routerChange = (type, record) => {
     }
 };
 const onSearch = data => {
-    searchParam.value = Core.Util.searchFilter({ ...searchForm.value, ...data });
+    searchParam.value = Core.Util.searchFilter({ ...searchForm.value, ...Core.Util.searchFilter(data) });
     search();
 };
 const onReset = () => {

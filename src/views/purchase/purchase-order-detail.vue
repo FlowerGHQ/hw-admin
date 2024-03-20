@@ -26,7 +26,11 @@
                                 STATUS.WAIT_PRODUCED,
                                 STATUS.IN_PRODUCTION,
                             ]) &&
-                            $Util.Common.returnTypeBool(detail.pay_type, [PAY_TIME.TT, PAY_TIME.OA, PAY_TIME.PAYMENT_TYPE_ALL_PAYMENT])) ||
+                            $Util.Common.returnTypeBool(detail.pay_type, [
+                                PAY_TIME.TT,
+                                PAY_TIME.OA,
+                                PAY_TIME.PAYMENT_TYPE_ALL_PAYMENT,
+                            ])) ||
                         $Util.Common.returnTypeBool(detail.cancel_status, [AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL])
                     "
                 >
@@ -112,7 +116,7 @@
                         </template>
                     </template>
 
-                    <!-- 赠送订单 => 平台方 & (等待审核 待支付 待生产)可见 & 权限控制 -->
+                    <!-- 赠送订单 => 平台方 & (等待审核 待支付 待生产)可见 & 查看赠送订单是否有数据有数据不显示 & 权限控制 -->
                     <a-button
                         v-if="
                             $Util.Common.returnTypeBool(loginType, [USER_TYPE.ADMIN]) &
@@ -120,7 +124,9 @@
                                     STATUS.WAIT_AUDIT,
                                     STATUS.WAIT_PAY,
                                     STATUS.WAIT_PRODUCED,
-                                ]) && $auth('purchase-order.give')
+                                ]) &&
+                            !giveOrderShow &&
+                            $auth('purchase-order.give')
                         "
                         type="primary"
                         ghost
@@ -247,6 +253,7 @@
             <!-- 商品信息 -->
             <div class="list-container">
                 <EditItem
+                    key="purchase"
                     ref="purchaseOrderRef"
                     :order-id="id"
                     :detail="detail"
@@ -260,16 +267,16 @@
         </div>
 
         <!-- 赠送订单 -->
-        <div class="gift-order" style="margin-bottom: 20px">
+        <div v-if="giveOrderShow" class="gift-order" style="margin-bottom: 20px">
             <EditItem
-                v-if="giveOrderShow"
+                key="gift"
                 :order-id="id"
                 :is-first="firstEnter"
                 :detail="detail"
                 :btnText="$t('distributor.add_gift')"
                 type="GIVE_ORDER"
+                :isGiftOrderBtn="giveOrderShow"
                 @submit="getList"
-                @cancel="giveOrderShow = true"
             >
             </EditItem>
         </div>
@@ -301,7 +308,7 @@
                     <div class="info-item">
                         <div class="key">{{ $t('p.payment_terms') }}:</div>
                         <div class="value">
-                            {{ $Util.payTypeFilter(detail.pay_type) || '-' }}
+                            {{ $Util.payTypeFilter(detail.pay_type, $i18n.locale) || '-' }}
                         </div>
                     </div>
                     <!-- 是否分批发货 -->
@@ -400,7 +407,9 @@
             <div class="title-container d-f-j">
                 <div class="title-area" style="font-weight: 600">{{ $t('distributor.shipping_freight') }}</div>
                 <div class="btn-area d-f-a">
+                    <!-- 仅拒绝展示 -->
                     <div
+                        v-if="$Util.Common.returnTypeBool(detail.freight_status, [FREIGHT_STATUS.REJECTED])"
                         class="m-r-10 status"
                         :class="$Util.Common.returenValue(FREIGHT_STATUS_MAP, detail.freight_status, 'color')"
                     >
@@ -585,7 +594,12 @@
                 </div>
             </a-modal>
             <!-- 订单审核 -->
-            <a-modal v-model:visible="createAuditShow" :title="$t('p.create_audit')" @ok="handleCreateAudit">
+            <a-modal
+                v-model:visible="createAuditShow"
+                :title="$t('p.create_audit')"
+                @ok="handleCreateAudit"
+                @cancel="handleCancelAudit"
+            >
                 <div class="modal-content">
                     <div class="form-item required">
                         <div class="key">{{ $t('n.result_a') }}:</div>
@@ -834,7 +848,7 @@ export default {
             selectedRowItemsAll: [],
             selectedRowKeys: [],
             selectedRowItems: [],
-            itemEditShow: true, // 是否开启商品编辑
+            itemEditShow: false, // 是否开启商品编辑
             giveOrderShow: false, // 赠送订单按钮 显隐
             createAuditShow: false, // 订单审核 model 显隐
             PIShow: false, // 修改pi model 显隐
@@ -994,12 +1008,12 @@ export default {
     mounted() {
         this.getList(); // 获取列表
         this.getWarehouseList(); // 获取仓库列表
-        this.getGiveawayList(); // 获取赠品列表
+        this.getGiveawayListFetch(); // 获取赠品列表
         this.getCancelRecordFetch(); // 取消记录接口(用来判断 取消记录显影)
     },
     created() {
         this.id = Number(this.$route.query.id) || 0;
-        this.isShippingConfirmVisible = this.$route.query.type || false
+        this.isShippingConfirmVisible = this.$route.query.type || false;
     },
     methods: {
         tableChange(val) {
@@ -1016,7 +1030,7 @@ export default {
         /*== FETCH start==*/
 
         // 获取 采购单订单信息
-        getPurchaseInfo(type) {
+        getPurchaseInfo() {
             Core.Api.Purchase.detail({
                 id: this.id,
             })
@@ -1035,12 +1049,7 @@ export default {
                     }
                     this.total.freight = res.detail.freight || 0;
                     this.step();
-                    if (type === 1 && res.detail.status == STATUS.CANCEL) {
-                        // 交易取消了提示信息(极端情况)
-                        this.giveOrderShow = false;
-                        this.$message.warning(this.$t('p.cancel_msg'));
-                    }
-                    if(this.isShippingConfirmVisible) {
+                    if (this.isShippingConfirmVisible) {
                         this.onConfirmFreight();
                     }
                 })
@@ -1056,7 +1065,7 @@ export default {
         // 获取赠品信息列表
 
         // 获取 采购单 赠品列表 控制按钮的显示隐藏
-        getGiveawayList() {
+        getGiveawayListFetch() {
             this.loading = true;
             Core.Api.Purchase.giveawayList({
                 order_id: this.$route.query.id,
@@ -1064,6 +1073,8 @@ export default {
                 .then(res => {
                     if (res?.list && res.list.length > 0) {
                         this.giveOrderShow = true;
+                    } else {
+                        this.giveOrderShow = false;
                     }
                 })
                 .catch(err => {
@@ -1079,7 +1090,7 @@ export default {
             this.getPurchaseInfo(); // 获取订单信息
         },
 
-        // 获取 物流单信息
+        //
         getWaybillDetail() {
             Core.Api.Waybill.detailByTarget({
                 target_id: this.id,
@@ -1091,11 +1102,11 @@ export default {
                     this.getWaybillInfo(this.waybill.uid, this.waybill.company_uid);
                 })
                 .catch(err => {
-                    console.log('getPurchaseInfo err', err);
+                    console.log('getWaybillDetail err', err);
                 })
                 .finally(() => {});
         },
-        // 获取 物流单详情
+        //
         getWaybillInfo(uid, company_uid) {
             Core.Api.Waybill.queryLogistics({
                 uid: uid,
@@ -1105,7 +1116,7 @@ export default {
                     this.waybillInfo = JSON.parse(res.waybill).result;
                 })
                 .catch(err => {
-                    console.log('getPurchaseInfo err', err);
+                    console.log('getWaybillInfo err', err);
                 })
                 .finally(() => {});
         },
@@ -1115,13 +1126,15 @@ export default {
             Core.Api.Purchase.createAudit({
                 id: this.id,
                 ...params,
-            }).then(res => {
-                this.$message.success(this.$t('pop_up.audited'));
-                this.createAuditShow = false;
-                this.getList();                
-            }).catch(err => {
-                console.log("订单审核fetch", err);
             })
+                .then(res => {
+                    this.$message.success(this.$t('pop_up.audited'));
+                    this.getList();
+                    this.handleCancelAudit();
+                })
+                .catch(err => {
+                    console.log('订单审核fetch', err);
+                });
         },
 
         // 取消接口
@@ -1326,7 +1339,7 @@ export default {
         handleCreateAudit() {
             let formObj = {
                 audit_result: this.form.audit_result,
-                remark: this.remark,
+                remark: this.form.remark,
             };
             // 通过是否
             if (!formObj.audit_result) {
@@ -1335,10 +1348,10 @@ export default {
             }
 
             let item_list = [];
-            // 选中的商品信息表格有数据的话进行            
+            // 选中的商品信息表格有数据的话进行
             if (this.$refs.purchaseOrderRef.tableData.length) {
                 this.$refs.purchaseOrderRef.tableData.forEach(el => {
-                    console.log("测试实施", el);
+                    console.log('测试实施', el);
                     item_list.push({
                         item_id: el.id,
                         amount: el.amount,
@@ -1350,11 +1363,18 @@ export default {
                     });
                 });
             }
+            // console.log("formObj", formObj);
             // 不管怎么审核都提交
             this.createAuditFetch({
                 ...Core.Util.searchFilter(formObj),
                 item_list,
             });
+        },
+        // 订单取消
+        handleCancelAudit() {
+            this.createAuditShow = false;
+            this.form.audit_result = undefined;
+            this.form.remark = undefined;
         },
         /*== model 事件  end ==*/
 
@@ -1459,7 +1479,6 @@ export default {
         // 赠送订单事件
         handleGiveOrder() {
             // 传参type为1时做该订单已取消的提示
-            this.getPurchaseInfo(1);
             this.giveOrderShow = true;
         },
 

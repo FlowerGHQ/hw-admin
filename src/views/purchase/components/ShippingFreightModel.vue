@@ -111,13 +111,13 @@ const handleOk = async () => {
     }
 };
 
-const onCheck = errorInfo => {    
+const onCheck = errorInfo => {
     if (!errorInfo['shipping_time_estimated']) {
-        return proxy.$message.success(proxy.$t('p.estimated_shipping_data'));
+        return proxy.$message.success(proxy.$t('common.please_select') + proxy.$t('p.estimated_shipping_data'));
     }
 
-    if (Number(errorInfo['freight']) !== 0 && !errorInfo['freight']) {
-        return proxy.$message.success(proxy.$t('p.freight'));
+    if (!errorInfo['freight']) {
+        return proxy.$message.success(proxy.$t('common.please_enter') + proxy.$t('p.freight'));
     }
 };
 

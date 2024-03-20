@@ -2,23 +2,26 @@
     <div class="EditPurchaseItem">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area2">{{ title }}</div>
+                <div class="title-area2">
+                    {{ type === 'GIVE_ORDER' ? $t('p.give_order') : $t('i.product_information') }}
+                </div>
                 <div class="btns-area">
                     <div class="collapse-title-right">
                         <!-- 赠送商品 平台方能看 -->
                         <div v-if="type === 'GIVE_ORDER' && this.$auth('ADMIN')" class="give-order">
                             <ItemSelect
+                                :isShowBtn="isGiftOrderBtn"
                                 @select="handleAddItem"
                                 :disabledChecked="disabledChecked"
                                 :btn-text="$t('i.add')"
                             >
                                 {{ btnText || $t('i.add') }}
                             </ItemSelect>
-                            <template v-if="isShowBtn">
-                                <a-button type="primary" ghost @click.stop="handleCancel()">
+                            <template v-if="isGiftOrderBtn">
+                                <a-button type="primary" ghost @click="handleCancel()">
                                     {{ $t('def.cancel') }}
                                 </a-button>
-                                <a-button type="primary" ghost @click.stop="handleSave()">
+                                <a-button type="primary" ghost @click="handleSave()">
                                     {{ $t('def.sure') }}
                                 </a-button>
                             </template>
@@ -89,7 +92,7 @@
                                     :min="0"
                                     :precision="0"
                                     @blur="inputChange('amount', record)"
-                                />                           
+                                />
                                 <!-- 平台方 && 赠送订单 -->
                                 <a-input-number
                                     v-else-if="type === 'GIVE_ORDER' && $auth('ADMIN')"
@@ -114,7 +117,7 @@
                                 />
                                 <template v-else>
                                     {{ text }}
-                                </template>                                
+                                </template>
                             </template>
 
                             <!-- 规格 -->
@@ -169,14 +172,16 @@ export default {
             type: Boolean,
             default: false,
         },
+        // 赠送 按钮显示
+        isGiftOrderBtn: {
+            type: Boolean,
+            default: false,
+        },
     },
     data() {
         return {
-            title: '',
             loading: false,
             tableData: [],
-            isShowBtn: false,
-            addData: [],
         };
     },
     computed: {
@@ -191,13 +196,15 @@ export default {
                 { title: this.$t('i.total_price'), dataIndex: 'price', key: 'price' },
                 { title: this.$t('def.operate'), key: 'operate', fixed: 'right', width: 100 },
             ];
-            // 数据操作隔离 不是管理员并且是赠品单
-            if (!this.$auth('ADMIN') && this.type === 'GIVE_ORDER') {
+            // 商品单操作列
+            if (this.type === 'PURCHASE_ORDER' && !this.isPurchaseOrderBtn) {
                 columns = columns.filter(i => i.key !== 'operate');
             }
-            if (!this.isPurchaseOrderBtn) {
+            // 赠品单操作列
+            if (this.type === 'GIVE_ORDER' && !this.isGiftOrderBtn) {
                 columns = columns.filter(i => i.key !== 'operate');
             }
+
             return columns;
         },
         disabledChecked() {
@@ -208,10 +215,8 @@ export default {
         switch (this.type) {
             case 'PURCHASE_ORDER': // 商品详情
                 this.getPurchaseItemListFetch();
-                this.title = this.$t('i.product_information');
                 break;
             case 'GIVE_ORDER': // 增单详情
-                this.title = this.$t('p.give_order');
                 this.getGiveawayListFetch();
                 break;
         }
@@ -224,18 +229,16 @@ export default {
             Core.Api.Purchase.itemList({
                 order_id: this.orderId,
             })
-                .then(res => {                    
+                .then(res => {
                     this.tableData = res.list.map(i => {
                         let item = i.item || {};
                         item.amount = i.amount;
-                        item.unit_price = this.$Util.countFilter(i.unit_price)
+                        item.unit_price = this.$Util.countFilter(i.unit_price);
                         item.price = this.$Util.countFilter(i.price);
                         item.charge = i.charge;
 
                         return item;
                     });
-
-                    console.log("输出的结果", this.tableData);
                 })
                 .catch(err => {
                     console.log('getPurchaseInfo err', err);
@@ -276,9 +279,6 @@ export default {
                         item.order_id = i.order_id;
                         return item;
                     });
-                    if (this.tableData.length > 0) {
-                        this.isShowBtn = true;
-                    }
                 })
                 .catch(err => {
                     console.log('getGiveawayList err', err);
@@ -321,7 +321,6 @@ export default {
             Core.Api.Purchase.createGiveaway(obj)
                 .then(() => {
                     this.$message.success(this.$t('pop_up.save_success'));
-                    this.addData = [];
                     // 重新获取数据
                     this.getGiveawayListFetch();
                     this.$emit('submit');
@@ -354,9 +353,16 @@ export default {
                 item.price = item.unit_price;
                 return item;
             });
-            this.addData.push(...items);
-            this.tableData.push(...items);
-            this.isShowBtn = true;
+
+            items?.forEach(el => {
+                let findIndex = this.tableData.findIndex(tableEl => tableEl.id === el.id);
+
+                if (findIndex !== -1) {
+                    this.tableData.splice(findIndex, 1, el);
+                } else {
+                    this.tableData.push(el);
+                }
+            });
         },
         // 删除商品
         handleRemoveItem(record, index) {
@@ -402,12 +408,12 @@ export default {
                         charge: item.charge,
                         amount: item.amount,
                         type: item.type,
-                    }));                    
-                    
+                    }));
+
                     this.saveReviseFetch({ item_list });
                     break;
                 case 'GIVE_ORDER': // 详情
-                    item_list = this.addData.map(item => ({
+                    item_list = this.tableData.map(item => ({
                         amount: item.amount,
                         item_code: item.code,
                         item_id: item.id,
@@ -415,7 +421,7 @@ export default {
                         price: this.$Util.countFilter(parseInt(item.unit_price * item.amount), 100, 2, true),
                         type: item.type,
                     }));
-
+                    
                     this.saveCreateGiveawayFetch({ item_list });
                     break;
             }
@@ -426,9 +432,10 @@ export default {
                 // 重新获取数据
                 this.getGiveawayListFetch();
                 return;
-            } else {
+            } else if (this.type === 'PURCHASE_ORDER') {
                 this.getPurchaseItemListFetch();
             }
+
             this.$emit('cancel');
         },
 
