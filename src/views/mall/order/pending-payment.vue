@@ -3,14 +3,8 @@
         <div class="content">
             <!-- 订单信息 -->
             <div class="order-mes box">
-                <p class="box-title flex-between">
+                <p class="box-title">
                     {{ $t('mall.pending_payment_order') }}
-                    <span class="total-price">
-                        <span class="dis">
-                            {{ $t('p.total') }}
-                        </span>
-                        <span class="price"> {{ currency }} {{ proxy.$Util.Number.numFormat(sum_price) }} </span>
-                    </span>
                 </p>
                 <div class="box-content" style="padding: 0">
                     <OrderInformation :list="detail.item_list" :unit="unit" :isConfirmPrice="true" />
@@ -23,10 +17,16 @@
                     <div class="payment">
                         <div class="payment-content">
                             <div class="deposit-payment" id="deposit-payment">
-                                <div class="deposit-payment-row">
+                                <div class="deposit-payment-row border-bottom">
                                     <div class="deposit-payment-row-left">{{ $t('mall.payment_method') }}:</div>
                                     <div class="deposit-payment-row-right">
                                         {{ Core.Const.DISTRIBUTOR.PAY_TIME_MAP[mes.pay_type] }}
+                                    </div>
+                                </div>
+                                <div class="deposit-payment-row">
+                                    <div class="deposit-payment-row-left">{{ $t('p.total') }}:</div>
+                                    <div class="deposit-payment-row-right">
+                                        {{ unit }} {{ proxy.$Util.Number.numFormat(sum_price) }}
                                     </div>
                                 </div>
                                 <div class="deposit-payment-row">
@@ -308,7 +308,7 @@ const need_pay = computed(() => {
     } else {
         return isPre.value
             ? pre_price.value
-            : isSelectEnd.value
+            : isSelectEnd.value || pay_type.value === Core.Const.DISTRIBUTOR.PAY_TIME.TT
               ? freight_price.value + end_price.value
               : freight_price.value;
     }
@@ -522,7 +522,10 @@ onMounted(async () => {
                             position: relative;
                             .flex(initial, center, row);
                             &:nth-child(n + 2) {
-                                margin-top: 35px;
+                                margin-top: 24px;
+                            }
+                            &:nth-child(2) {
+                                margin-top: 15px;
                             }
                             .select {
                                 position: absolute;
@@ -548,6 +551,13 @@ onMounted(async () => {
                                 &.price {
                                     font-size: 18px;
                                     color: #8f00ff;
+                                }
+                            }
+                            &.border-bottom {
+                                padding-bottom: 8px;
+                                border-bottom: 1px solid #efefef;
+                                .deposit-payment-row-left {
+                                    color: #000;
                                 }
                             }
                         }
