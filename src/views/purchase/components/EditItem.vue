@@ -371,17 +371,22 @@ export default {
                     okText: this.$t('def.sure'),
                     cancelText: this.$t('def.cancel'),
                     onOk: () => {
-                        Core.Api.Purchase.deleteGiveaway({
-                            item_id: record.item_id,
-                            order_id: record.order_id,
-                        })
-                            .then(() => {
-                                this.$message.success(this.$t('pop_up.delete_success'));
-                                this.getGiveawayListFetch();
+                        console.log("record", record);
+                        if (record.order_id) {
+                            Core.Api.Purchase.deleteGiveaway({
+                                item_id: record.item_id,
+                                order_id: record.order_id,
                             })
-                            .catch(err => {
-                                console.log('handleRemoveItem err:', err);
-                            });
+                                .then(() => {
+                                    this.$message.success(this.$t('pop_up.delete_success'));
+                                    this.getGiveawayListFetch();
+                                })
+                                .catch(err => {
+                                    console.log('handleRemoveItem err:', err);
+                                });
+                        } else {
+                            this.tableData = this.tableData.filter(el => el.id !== record.id)
+                        }
                     },
                     onCancel: () => {
                         console.log('Cancel');
