@@ -129,8 +129,8 @@ const DISTRIBUTOR = {
         // 支付全款(不含运费)207
         207: {
             value: 207,
-            zh: '支付全款',
-            en: 'Pay the full payment',
+            zh: '支付全款（不含运费）',
+            en: 'Pay the full payment（excluding freight）',
             addOrSubtract: '-',
         },
         // 支付运维208
@@ -178,8 +178,8 @@ const DISTRIBUTOR = {
         // 取消订单退还全款(不含运费)
         2230: {
             value: 2230,
-            zh: '取消订单退还全款',
-            en: 'Cancel the order refund full payment',
+            zh: '取消订单退还全款(不含运费)',
+            en: 'Cancel the order refund full payment（excluding freight）',
             addOrSubtract: '+',
         },
         // 取消订单退还授信
