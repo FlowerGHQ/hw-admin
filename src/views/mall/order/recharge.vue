@@ -401,9 +401,9 @@ onMounted(() => {
                 background-size: 100% 100%;
                 .step-text {
                     color: rgba(143, 0, 255, 0.5);
-                    font-size: 16px;
+                    font-size: 14px;
                     font-weight: 500;
-                    line-height: 22px;
+                    line-height: 20px;
                     text-align: center;
                 }
                 &:nth-child(1) {
@@ -447,7 +447,7 @@ onMounted(() => {
                     padding-bottom: 21px;
                     > label {
                         color: #000;
-                        font-size: 24px;
+                        font-size: 18px;
                         line-height: 24px;
                     }
                 }
@@ -486,7 +486,7 @@ onMounted(() => {
                 margin-top: 24px;
                 background: #f8f8f8;
                 .amount-text {
-                    font-size: 24px;
+                    font-size: 18px;
                     line-height: 24px;
                     color: #666;
                     margin-right: 24px;

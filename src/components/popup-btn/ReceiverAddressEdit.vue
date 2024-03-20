@@ -36,8 +36,14 @@
             </div>
         </div>
         <template #footer>
-            <a-button @click="handleAddressClose">{{ $t('def.cancel') }}</a-button>
-            <a-button @click="handleConfirm" type="primary">{{ $t('def.sure') }}</a-button>
+            <div class="btns">
+                <MyButton padding="5px 28px" font="12px" @clickFn="handleAddressClose">
+                    {{ $t('def.cancel') }}
+                </MyButton>
+                <MyButton type="primary" padding="6px 28px" font="12px" @clickFn="handleConfirm">
+                    {{ $t('def.sure') }}
+                </MyButton>
+            </div>
         </template>
     </a-modal>
 </template>
@@ -47,9 +53,10 @@ import Core from '@/core';
 
 import CountryCascader from '../common/CountryCascader.vue';
 import AddressCascader from '../common/AddressCascader.vue';
+import MyButton from '../common/MyButton.vue';
 
 export default {
-    components: { AddressCascader, CountryCascader },
+    components: { AddressCascader, CountryCascader, MyButton },
     emits: ['submit'],
     props: {
         btnText: {
@@ -177,6 +184,14 @@ export default {
     cursor: pointer;
     .icon {
         font-size: 12px;
+    }
+}
+.btns {
+    .flex(flex-end, center, row);
+    #my-button {
+        &:nth-child(n + 2) {
+            margin-left: 8px;
+        }
     }
 }
 </style>

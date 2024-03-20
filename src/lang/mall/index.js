@@ -204,7 +204,7 @@ export default {
         pending_payment_order: 'Pending Payment Order',
         balance_information :'Balance Information',
         balance_vehicle: 'Available Balance Of Vehicle',
-        balance_parts: '配件可用余额',
+        balance_parts: 'Available Balance Of Accessories',
         parts_vehicle: 'After-sales Spare Parts Credit Account',
         insufficient_balance: 'Insufficient balance, please top up first, at least',
         occupies: 'This order occupies a credit limit of',

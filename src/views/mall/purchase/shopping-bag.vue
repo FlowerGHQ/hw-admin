@@ -90,10 +90,10 @@
                             <td
                                 v-for="columnsItem in columns"
                                 class="row-item"
-                                :class="
-                                    (!item.flag_item_valid ? 'invalid' : '',
-                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '')
-                                "
+                                :class="[
+                                    !item.flag_item_valid ? 'invalid' : '',
+                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '',
+                                ]"
                             >
                                 <template v-if="columnsItem.dataIndex === 'check' && !item.isGift">
                                     <span class="check-box" @click="changeSelect(item, 'vehicleList')">
@@ -226,10 +226,10 @@
                             <td
                                 v-for="columnsItem in columns"
                                 class="row-item"
-                                :class="
-                                    (!item.flag_item_valid ? 'invalid' : '',
-                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '')
-                                "
+                                :class="[
+                                    !item.flag_item_valid ? 'invalid' : '',
+                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '',
+                                ]"
                             >
                                 <template v-if="columnsItem.dataIndex === 'check'">
                                     <span class="check-box" @click="changeSelect(item, 'accessoriesList')">
@@ -347,10 +347,10 @@
                             <td
                                 v-for="columnsItem in columns"
                                 class="row-item"
-                                :class="
-                                    (!item.flag_item_valid ? 'invalid' : '',
-                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '')
-                                "
+                                :class="[
+                                    !item.flag_item_valid ? 'invalid' : '',
+                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '',
+                                ]"
                             >
                                 <template v-if="columnsItem.dataIndex === 'check'">
                                     <span class="check-box" @click="changeSelect(item, 'peripheralList')">
@@ -464,10 +464,10 @@
                             <td
                                 v-for="columnsItem in columns"
                                 class="row-item"
-                                :class="
-                                    (!item.flag_item_valid ? 'invalid' : '',
-                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '')
-                                "
+                                :class="[
+                                    !item.flag_item_valid ? 'invalid' : '',
+                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '',
+                                ]"
                             >
                                 <template v-if="columnsItem.dataIndex === 'check'">
                                     <span class="check-box" @click="changeSelect(item, 'promotionalList')">
