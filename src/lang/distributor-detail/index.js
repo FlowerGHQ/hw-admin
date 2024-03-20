@@ -27,8 +27,6 @@ export default {
         time: '时间',
         // 类型
         type: '类型',
-        // recharge_account
-        recharge_account: '充值账户',
         // 账户
         account: '账户',
         // 工单编号
@@ -184,7 +182,6 @@ export default {
         credit_balance_re: 'After-sales spare parts credit balance',
         time: 'Time',
         type: 'Type',
-        recharge_account: 'Recharge Account',
         account: 'Account',
         work_order_number: 'Work Order Number',
         fund_change: 'Fund Change',
