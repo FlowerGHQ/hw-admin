@@ -162,7 +162,7 @@
                         <template v-if="column.key === 'operations'">
                             <a-button
                                 v-if="
-                                    $Util.Common.returnTypeBool(record.audit_status, [
+                                    $Util.Common.isMember(record.audit_status, [
                                         AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL,
                                     ])
                                 "
@@ -209,7 +209,7 @@
                 </a-radio-group>
                 <!-- 不通过 出现 -->
                 <a-textarea
-                    v-if="$Util.Common.returnTypeBool(auditParams.status, [IS_PASS_OPTIONS.NOT_PASSED])"
+                    v-if="$Util.Common.isMember(auditParams.status, [IS_PASS_OPTIONS.NOT_PASSED])"
                     class="w-100 m-t-20"
                     v-model:value="auditParams.remark"
                     :placeholder="$t('common.please_enter') + $t('common.reason')"
@@ -268,7 +268,7 @@ const auditParams = ref({
     status: IS_PASS_OPTIONS.ADOPT,
     remark: undefined,
 }); // 审核弹出的参数
-const isDistributerAdmin = ref(Core.Util.Common.returnTypeBool(Core.Data.getLoginType(), [Core.Const.LOGIN.TYPE.ADMIN])); // 根据路由判断其是用在分销商(false) 还是平台方(true)
+const isDistributerAdmin = ref(Core.Util.Common.isMember(Core.Data.getLoginType(), [Core.Const.LOGIN.TYPE.ADMIN])); // 根据路由判断其是用在分销商(false) 还是平台方(true)
 
 const statusData = ref({
     total: 2, // 全部

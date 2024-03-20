@@ -352,7 +352,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [
+                                        isMember(formState.type, [
                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                         ])
@@ -375,7 +375,7 @@
                                 </a-col>
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [
+                                        isMember(formState.type, [
                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                         ])
@@ -400,7 +400,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        !returnTypeBool(formState.type, [
+                                        !isMember(formState.type, [
                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                                         ])
@@ -420,7 +420,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [
+                                        isMember(formState.type, [
                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                         ])
@@ -438,7 +438,7 @@
                                 </a-col>
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [
+                                        isMember(formState.type, [
                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                         ])
@@ -460,7 +460,7 @@
 
                     <!-- 代理信息 -->
                     <a-row
-                        v-if="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
+                        v-if="isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
                         :gutter="24"
                         class="m-t-40"
                     >
@@ -591,7 +591,7 @@
                     </a-row>
                     <!-- 人力资源 -->
                     <a-row
-                        v-if="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
+                        v-if="!isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
                         :gutter="24"
                         class="m-t-40"
                     >
@@ -712,7 +712,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        !returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])
+                                        !isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])
                                             ? 12
                                             : 0
                                     "
@@ -729,7 +729,7 @@
                                 </a-col>
                                 <a-col
                                     :span="
-                                        !returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])
+                                        !isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])
                                             ? 12
                                             : 0
                                     "
@@ -843,7 +843,7 @@
                                         <template #label>
                                             <span
                                                 :class="{
-                                                    'require-icon': returnTypeBool(formState.type, [
+                                                    'require-icon': isMember(formState.type, [
                                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                     ]),
                                                 }"
@@ -855,7 +855,7 @@
                                         <a-input
                                             :class="{
                                                 'require-change-red':
-                                                    returnTypeBool(formState.type, [
+                                                    isMember(formState.type, [
                                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                     ]) &&
                                                     isFormStateRequired &&
@@ -868,7 +868,7 @@
 
                                         <template
                                             v-if="
-                                                returnTypeBool(formState.type, [
+                                                isMember(formState.type, [
                                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                 ]) &&
                                                 isFormStateRequired &&
@@ -903,7 +903,7 @@
                                         <template #label>
                                             <span
                                                 :class="{
-                                                    'require-icon': !returnTypeBool(formState.type, [
+                                                    'require-icon': !isMember(formState.type, [
                                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
                                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                                                     ]),
@@ -916,7 +916,7 @@
                                             <a-input-number
                                                 :class="{
                                                     'require-change-red':
-                                                        !returnTypeBool(formState.type, [
+                                                        !isMember(formState.type, [
                                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
                                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                                                         ]) &&
@@ -937,7 +937,7 @@
 
                                         <template
                                             v-if="
-                                                !returnTypeBool(formState.type, [
+                                                !isMember(formState.type, [
                                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
                                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                                                 ]) &&
@@ -956,7 +956,7 @@
                             </a-row>
                             <template
                                 v-if="
-                                    !returnTypeBool(formState.type, [
+                                    !isMember(formState.type, [
                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                     ])
                                 "
@@ -968,7 +968,7 @@
                                             <template #label>
                                                 <span
                                                     :class="{
-                                                        'require-icon': returnTypeBool(formState.type, [
+                                                        'require-icon': isMember(formState.type, [
                                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                         ]),
                                                     }"
@@ -980,7 +980,7 @@
                                             <a-input-number
                                                 :class="{
                                                     'require-change-red':
-                                                        returnTypeBool(formState.type, [
+                                                        isMember(formState.type, [
                                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                         ]) &&
                                                         isFormStateRequired &&
@@ -1000,7 +1000,7 @@
 
                                             <template
                                                 v-if="
-                                                    returnTypeBool(formState.type, [
+                                                    isMember(formState.type, [
                                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                     ]) &&
                                                     isFormStateRequired &&
@@ -1023,7 +1023,7 @@
                                             <template #label>
                                                 <span
                                                     :class="{
-                                                        'require-icon': returnTypeBool(formState.type, [
+                                                        'require-icon': isMember(formState.type, [
                                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                         ]),
                                                     }"
@@ -1035,7 +1035,7 @@
                                             <a-input-number
                                                 :class="{
                                                     'require-change-red':
-                                                        returnTypeBool(formState.type, [
+                                                        isMember(formState.type, [
                                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                         ]) &&
                                                         isFormStateRequired &&
@@ -1053,7 +1053,7 @@
 
                                             <template
                                                 v-if="
-                                                    returnTypeBool(formState.type, [
+                                                    isMember(formState.type, [
                                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                     ]) &&
                                                     isFormStateRequired &&
@@ -1076,7 +1076,7 @@
                                             <template #label>
                                                 <span
                                                     :class="{
-                                                        'require-icon': returnTypeBool(formState.type, [
+                                                        'require-icon': isMember(formState.type, [
                                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                         ]),
                                                     }"
@@ -1088,7 +1088,7 @@
                                             <a-input-number
                                                 :class="{
                                                     'require-change-red':
-                                                        returnTypeBool(formState.type, [
+                                                        isMember(formState.type, [
                                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                         ]) &&
                                                         isFormStateRequired &&
@@ -1108,7 +1108,7 @@
 
                                             <template
                                                 v-if="
-                                                    returnTypeBool(formState.type, [
+                                                    isMember(formState.type, [
                                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                     ]) &&
                                                     isFormStateRequired &&
@@ -1131,7 +1131,7 @@
                                             <template #label>
                                                 <span
                                                     :class="{
-                                                        'require-icon': returnTypeBool(formState.type, [
+                                                        'require-icon': isMember(formState.type, [
                                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                         ]),
                                                     }"
@@ -1143,7 +1143,7 @@
                                             <a-input-number
                                                 :class="{
                                                     'require-change-red':
-                                                        returnTypeBool(formState.type, [
+                                                        isMember(formState.type, [
                                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                         ]) &&
                                                         isFormStateRequired &&
@@ -1161,7 +1161,7 @@
 
                                             <template
                                                 v-if="
-                                                    returnTypeBool(formState.type, [
+                                                    isMember(formState.type, [
                                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                     ]) &&
                                                     isFormStateRequired &&
@@ -1183,7 +1183,7 @@
 
                     <!-- 竞争对手 -->
                     <a-row
-                        v-if="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])"
+                        v-if="isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])"
                         :gutter="24"
                         class="m-t-40"
                     >
@@ -1299,7 +1299,7 @@
                                             <div class="information-customer-name m-l-4">
                                                 <span
                                                     v-if="
-                                                        returnTypeBool(formState.type, [
+                                                        isMember(formState.type, [
                                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                                         ])
@@ -1316,7 +1316,7 @@
                                                 <a-input
                                                     :class="{
                                                         'require-change-red':
-                                                            returnTypeBool(formState.type, [
+                                                            isMember(formState.type, [
                                                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                                             ]) &&
@@ -1334,7 +1334,7 @@
                                                 <a-input-number
                                                     :class="{
                                                         'require-change-red':
-                                                            returnTypeBool(formState.type, [
+                                                            isMember(formState.type, [
                                                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                                             ]) &&
@@ -1359,7 +1359,7 @@
                                                     <a-date-picker
                                                         :class="{
                                                             'require-change-red':
-                                                                returnTypeBool(formState.type, [
+                                                                isMember(formState.type, [
                                                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                                                 ]) &&
@@ -1416,7 +1416,7 @@
                     <!-- 技术信息 -->
                     <a-row
                         v-if="
-                            !returnTypeBool(formState.type, [
+                            !isMember(formState.type, [
                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                             ])
@@ -1442,7 +1442,7 @@
                                 </a-col>
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])
                                             ? 12
                                             : 0
                                     "
@@ -1459,7 +1459,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])
                                             ? 24
                                             : 0
                                     "
@@ -1476,7 +1476,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [
+                                        isMember(formState.type, [
                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
                                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                                         ])
@@ -1499,7 +1499,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])
                                             ? 24
                                             : 0
                                     "
@@ -1538,7 +1538,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
                                             ? 24
                                             : 0
                                     "
@@ -1558,7 +1558,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
                                             ? 24
                                             : 0
                                     "
@@ -1578,7 +1578,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
                                             ? 24
                                             : 0
                                     "
@@ -1598,7 +1598,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
                                             ? 24
                                             : 0
                                     "
@@ -1618,7 +1618,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
                                             ? 24
                                             : 0
                                     "
@@ -1638,7 +1638,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
                                             ? 24
                                             : 0
                                     "
@@ -1689,7 +1689,7 @@
                     <!-- 质量信息 -->
                     <a-row
                         v-if="
-                            !returnTypeBool(formState.type, [
+                            !isMember(formState.type, [
                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                             ])
@@ -1783,7 +1783,7 @@
                     <!-- 产能产线 -->
                     <a-row
                         v-if="
-                            returnTypeBool(formState.type, [
+                            isMember(formState.type, [
                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                             ])
@@ -1804,7 +1804,7 @@
                                         <template #label>
                                             <span
                                                 :class="{
-                                                    'require-icon': returnTypeBool(formState.type, [
+                                                    'require-icon': isMember(formState.type, [
                                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                                     ]),
                                                 }"
@@ -1816,7 +1816,7 @@
                                         <a-textarea
                                             :class="{
                                                 'require-change-red':
-                                                    returnTypeBool(formState.type, [
+                                                    isMember(formState.type, [
                                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                                     ]) &&
                                                     isFormStateRequired &&
@@ -1832,7 +1832,7 @@
 
                                         <template
                                             v-if="
-                                                returnTypeBool(formState.type, [
+                                                isMember(formState.type, [
                                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                                 ]) &&
                                                 isFormStateRequired &&
@@ -1855,7 +1855,7 @@
                                         <template #label>
                                             <span
                                                 :class="{
-                                                    'require-icon': returnTypeBool(formState.type, [
+                                                    'require-icon': isMember(formState.type, [
                                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                                     ]),
                                                 }"
@@ -1867,7 +1867,7 @@
                                         <a-textarea
                                             :class="{
                                                 'require-change-red':
-                                                    returnTypeBool(formState.type, [
+                                                    isMember(formState.type, [
                                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                                     ]) &&
                                                     isFormStateRequired &&
@@ -1883,7 +1883,7 @@
 
                                         <template
                                             v-if="
-                                                returnTypeBool(formState.type, [
+                                                isMember(formState.type, [
                                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                                 ]) &&
                                                 isFormStateRequired &&
@@ -1906,7 +1906,7 @@
                                         <template #label>
                                             <span
                                                 :class="{
-                                                    'require-icon': returnTypeBool(formState.type, [
+                                                    'require-icon': isMember(formState.type, [
                                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                                     ]),
                                                 }"
@@ -1918,7 +1918,7 @@
                                         <a-textarea
                                             :class="{
                                                 'require-change-red':
-                                                    returnTypeBool(formState.type, [
+                                                    isMember(formState.type, [
                                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                                     ]) &&
                                                     isFormStateRequired &&
@@ -1934,7 +1934,7 @@
 
                                         <template
                                             v-if="
-                                                returnTypeBool(formState.type, [
+                                                isMember(formState.type, [
                                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                                 ]) &&
                                                 isFormStateRequired &&
@@ -1956,7 +1956,7 @@
                     <!-- 外购管理 -->
                     <a-row
                         v-if="
-                            returnTypeBool(formState.type, [
+                            isMember(formState.type, [
                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                             ])
@@ -2032,7 +2032,7 @@
 
                     <!-- 指定信息 -->
                     <a-row
-                        v-if="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers])"
+                        v-if="isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers])"
                         :gutter="24"
                         class="m-t-40"
                     >
@@ -2173,7 +2173,7 @@
 
                     <!-- 服务信息 -->
                     <a-row
-                        v-if="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
+                        v-if="isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
                         :gutter="24"
                         class="m-t-40"
                     >
@@ -2234,7 +2234,7 @@
         <!-- 设备信息 -->
         <div
             class="base-info content-area margin-t-20"
-            v-if="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
+            v-if="!isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
         >
             <div class="title" id="production_equipment">
                 {{ $t('supply-chain.device_information') }}
@@ -2247,7 +2247,7 @@
                             <div
                                 class="title-two"
                                 :class="{
-                                    'require-icon': returnTypeBool(formState.type, [
+                                    'require-icon': isMember(formState.type, [
                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                                     ]),
@@ -2275,7 +2275,7 @@
                                                 <a-input
                                                     :class="{
                                                         'require-change-red':
-                                                            returnTypeBool(formState.type, [
+                                                            isMember(formState.type, [
                                                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                                                             ]) &&
@@ -2293,7 +2293,7 @@
                                                 <a-input-number
                                                     :class="{
                                                         'require-change-red':
-                                                            returnTypeBool(formState.type, [
+                                                            isMember(formState.type, [
                                                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                                                             ]) &&
@@ -2317,7 +2317,7 @@
                                                     <a-date-picker
                                                         :class="{
                                                             'require-change-red':
-                                                                returnTypeBool(formState.type, [
+                                                                isMember(formState.type, [
                                                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                                                                 ]) &&
@@ -2364,7 +2364,7 @@
                             <div
                                 class="title-two"
                                 :class="{
-                                    'require-icon': returnTypeBool(formState.type, [
+                                    'require-icon': isMember(formState.type, [
                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                                     ]),
                                 }"
@@ -2391,7 +2391,7 @@
                                                 <a-input
                                                     :class="{
                                                         'require-change-red':
-                                                            returnTypeBool(formState.type, [
+                                                            isMember(formState.type, [
                                                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                                                             ]) &&
                                                             isFormStateRequired &&
@@ -2408,7 +2408,7 @@
                                                 <a-input-number
                                                     :class="{
                                                         'require-change-red':
-                                                            returnTypeBool(formState.type, [
+                                                            isMember(formState.type, [
                                                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                                                             ]) &&
                                                             isFormStateRequired &&
@@ -2431,7 +2431,7 @@
                                                     <a-date-picker
                                                         :class="{
                                                             'require-change-red':
-                                                                returnTypeBool(formState.type, [
+                                                                isMember(formState.type, [
                                                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                                                                 ]) &&
                                                                 isFormStateRequired &&
@@ -3033,7 +3033,7 @@ const draftDataReview = () => {
     });
 };
 // 判断哪些类型显示哪些模块
-const returnTypeBool = (type, typeIncludes) => {
+const isMember = (type, typeIncludes) => {
     let result = typeIncludes.includes(Number(type));
     return result;
 };

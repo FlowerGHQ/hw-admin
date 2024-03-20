@@ -12,7 +12,7 @@
                             v-if="
                                 type === 'GIVE_ORDER' &&
                                 this.$auth('ADMIN') &&
-                                $Util.Common.returnTypeBool(detail.status, [
+                                $Util.Common.isMember(detail.status, [
                                     STATUS.WAIT_AUDIT,
                                     STATUS.WAIT_PAY,
                                     STATUS.WAIT_PRODUCED,
