@@ -9,8 +9,9 @@
             <!-- 收货地址 -->
             <p class="title required">
                 {{ $t('mall.receiving_address') }}
-                <MyButton type="line" padding="8px">
+                <MyButton type="line" padding="8px" @clickFn="handleAdd">
                     <ReceiverAddressEdit
+                        ref="ReceiverAddressEdit"
                         :orgId="orgId"
                         :orgType="orgType"
                         btnClass="add-btn"
@@ -107,7 +108,10 @@
                     </div>
                 </div>
                 <div class="key-value">
-                    <div class="key required" :class="[form.deliver_time_expected ? '' : 'red']">
+                    <div
+                        class="key required"
+                        :class="[form.deliver_time_expected || deliver_time_expected_first ? '' : 'red']"
+                    >
                         {{ $t('mall.expected_delivery') }}:<a-tooltip>
                             <template #title>{{ $t('mall.calculation') }}</template>
                             <img class="tips" src="@images/mall/order/tips.png" />
@@ -117,6 +121,7 @@
                         <a-date-picker
                             v-model:value="form.deliver_time_expected"
                             :placeholder="$t('mall.select_date')"
+                            @change="changeDate"
                         />
                     </div>
                 </div>
@@ -205,8 +210,9 @@ export default {
                 flag_transfer: -1, // 转运
                 // insured: undefined, // 是否参保
                 flag_pallet: -1, // 是否打托
-                deliver_time_expected: dayjs(new Date()), // 期望交付时间
+                deliver_time_expected: undefined, // 期望交付时间
             },
+            deliver_time_expected_first: true,
             defAddr: [],
 
             shopCartList: [],
@@ -314,7 +320,17 @@ export default {
                 });
                 // res.list = this.getVehicleListHasGift(res.list);// 获取赠品
                 this.shopCartList = res.list.filter(item => this.selectedId.indexOf(item.id) !== -1);
-                console.log(this.shopCartList);
+                this.filterData(this.shopCartList);
+            });
+        },
+        // 处理接口数据
+        filterData(list) {
+            if (!list || list.length === 0) return;
+            list = list.map(item => {
+                if (item.item.set_id > 0 && item.item.flag_default === 0) {
+                    item.item.logo = item.item.imgs; // 多规格用 imgs 详情图
+                }
+                return item;
             });
         },
 
@@ -322,6 +338,10 @@ export default {
             let item = this.unitMap[val];
             this.priceKey = (this.$auth('DISTRIBUTOR') ? 'fob' : 'purchase_price') + item.key;
             this.currency = item.currency;
+        },
+
+        handleAdd() {
+            this.$refs.ReceiverAddressEdit.handleAddressShow();
         },
 
         handleAddressSelect(address = []) {
@@ -420,11 +440,12 @@ export default {
                 this.$auth('DISTRIBUTOR') &&
                 (!this.form.deliver_time_expected || this.form.deliver_time_expected === -1)
             ) {
-                this.form.deliver_time_expected = undefined;
+                this.deliver_time_expected_first = false;
                 allEntered = false;
             }
             if (!allEntered) {
                 allEntered = false;
+                return this.$message.warning(this.$t('def.enter'));
             }
             return false;
         },
@@ -526,6 +547,11 @@ export default {
                 .catch(err => {
                     console.log('handleCreateOrder err', err);
                 });
+        },
+        changeDate(date) {
+            if (!date) {
+                this.deliver_time_expected_first = false;
+            }
         },
     },
 };

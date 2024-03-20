@@ -34,6 +34,12 @@
                     <a-input v-model:value="form.address" :placeholder="$t('def.input')" />
                 </div>
             </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('n.email') }}:</div>
+                <div class="value">
+                    <a-input v-model:value="form.email" :placeholder="$t('def.input')" />
+                </div>
+            </div>
         </div>
         <template #footer>
             <div class="btns">
@@ -87,6 +93,7 @@ export default {
                 name: '',
                 phone: '',
                 address: '',
+                email: '',
             },
 
             areaMap: {},
@@ -151,6 +158,9 @@ export default {
                 return this.$message.warning(this.$t('def.enter'));
             }
             if (!form.address) {
+                return this.$message.warning(this.$t('def.enter'));
+            }
+            if (!form.email) {
                 return this.$message.warning(this.$t('def.enter'));
             }
             Core.Api.ReceiveAddress.save({

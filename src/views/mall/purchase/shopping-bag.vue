@@ -906,8 +906,8 @@ const filterData = (list, type) => {
     list = list.map(item => {
         const index = selectedId.value[type].indexOf(item.id);
         item.selected = index === -1 ? false : true;
-        if (item.item.set_id) {
-            // item.item.logo = item.item.imgs;
+        if (item.item.set_id > 0 && item.item.flag_default === 0) {
+            item.item.logo = item.item.imgs;
         }
         return item;
     });
