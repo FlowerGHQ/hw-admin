@@ -129,7 +129,7 @@ const DISTRIBUTOR = {
         // 支付全款(不含运费)207
         207: {
             value: 207,
-            zh: '支付全款',
+            zh: '支付全款（不含运费）',
             en: 'Pay the full payment',
             addOrSubtract: '-',
         },
