@@ -411,15 +411,16 @@
                     <div
                         v-if="$Util.Common.returnTypeBool(detail.freight_status, [FREIGHT_STATUS.REJECTED])"
                         class="m-r-10 status"
-                        :class="$Util.Common.returenValue(FREIGHT_STATUS_MAP, detail.freight_status, 'color')"
+                        :class="$Util.Common.returenValue(FREIGHT_STATUS_MAP_FILTER, detail.freight_status, 'color')"
                     >
                         {{ detail.freight_audit_record?.remark }}
-                    </div>
+                    </div>                    
+                    <!-- 分销商(待填写)不展示 -->
                     <div
                         class="status status-bg freight-status-style"
-                        :class="$Util.Common.returenValue(FREIGHT_STATUS_MAP, detail.freight_status, 'color')"
+                        :class="$Util.Common.returenValue(FREIGHT_STATUS_MAP_FILTER, detail.freight_status, 'color')"
                     >
-                        {{ $t($Util.Common.returnTranslation(detail.freight_status, FREIGHT_STATUS_MAP)) }}
+                        {{ $t($Util.Common.returnTranslation(detail.freight_status, FREIGHT_STATUS_MAP_FILTER)) }}
                     </div>
                 </div>
             </div>
@@ -760,7 +761,7 @@ export default {
             FLAG,
             TYPE,
             AUDIT_CANCEL_STATUS,
-            FREIGHT_STATUS_MAP,
+            FREIGHT_STATUS_MAP_FILTER: {},
             FREIGHT_STATUS,
             PARENT_TYPE,
             FLAG_ORDER_TYPE,
@@ -1010,6 +1011,19 @@ export default {
         this.getWarehouseList(); // 获取仓库列表
         this.getGiveawayListFetch(); // 获取赠品列表
         this.getCancelRecordFetch(); // 取消记录接口(用来判断 取消记录显影)
+
+        if (this.$Util.Common.returnTypeBool(this.loginType, [USER_TYPE.DISTRIBUTOR])) {
+            // 分销商
+            for (const key in FREIGHT_STATUS_MAP) {
+                if (FREIGHT_STATUS_MAP[key].key !== FREIGHT_STATUS.TO_BE_FILLED_IN) {
+                    this.FREIGHT_STATUS_MAP_FILTER[key] = FREIGHT_STATUS_MAP[key]
+                }
+            }            
+        } else if (this.$Util.Common.returnTypeBool(this.loginType, [USER_TYPE.ADMIN])) {
+            // 平台方
+            this.FREIGHT_STATUS_MAP_FILTER = FREIGHT_STATUS_MAP
+        }
+        console.log("输出的啊", this.FREIGHT_STATUS_MAP_FILTER, this.detail.freight_status);
     },
     created() {
         this.id = Number(this.$route.query.id) || 0;
