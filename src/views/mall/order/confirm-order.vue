@@ -119,6 +119,8 @@
                     </div>
                     <div class="value">
                         <a-date-picker
+                            class="mall-date-picker"
+                            dropdownClassName="mall-date-picker"
                             v-model:value="form.deliver_time_expected"
                             :placeholder="$t('mall.select_date')"
                             @change="changeDate"

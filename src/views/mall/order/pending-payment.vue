@@ -338,6 +338,12 @@ const getDetail = () => {
     Core.Api.Purchase.detail(params)
         .then(res => {
             Object.assign(detail, res.detail);
+            detail.item_list = detail.item_list.map(item => {
+                Object.assign(item.item, {
+                    logo: set_id > 0 ? item.item?.imgs : item.item?.logo,
+                });
+                return item;
+            });
             detail.freight = Core.Util.countFilter(detail.freight);
             isAfter.value = detail.type !== Core.Const.PURCHASE.FLAG_ORDER_TYPE.PRE_SALES;
             unit.value = Core.Const.ITEM.MONETARY_TYPE_MAP[detail.currency];
