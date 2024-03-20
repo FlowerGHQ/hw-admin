@@ -400,9 +400,11 @@ const handleRouteChange = (type, item) => {
 };
 // 调整额度
 const handleAdjustmentLimit = () => {
-    formState.value.orderBalance = dataObject.value.creditData.balance * 1; //占用
+    console.log('props.detail', dataObject.value);
+    formState.value.orderBalance = Math.abs(dataObject.value.creditData.balance * 1);
+    //绝对值
     formState.value.creditBalance = Core.Util.countFilter(props.detail.credit) * 1; //授信总额
-    formState.value.availableBalance = formState.value.creditBalance * 1 + formState.value.orderBalance * 1; //可用余额
+    formState.value.availableBalance = formState.value.creditBalance * 1 + dataObject.value.creditData.balance * 1; //可用余额
     visible.value = true;
 };
 // handleCancel

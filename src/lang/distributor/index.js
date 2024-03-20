@@ -8,6 +8,7 @@ export default {
         actual_freight_cost: '实际运费',
         confirm_freight: '确认运费',
         audit_result: '审核结果',
+        audit_reason: '审核原因',
         unpaid_payment: '尾款未支付订单表',
         institution: '创建单位',
         freight_confirmation_status: '运费确认状态',
@@ -28,6 +29,7 @@ export default {
         audit_success: '审核成功',
         audit_error: '审核失败',
         confirm_freight_tips: "请确认该订单的船期和运费。确认后，请按时缴纳运费。运费缴纳完成，将按预计船期发货。若拒绝，请说明原因。",
+        add_gift: "添加赠品",
     },
     en: {
         to_be_determined: 'To Be Determined',
@@ -38,6 +40,7 @@ export default {
         actual_freight_cost: 'Actual Freight Cost',
         confirm_freight: 'Confirm FFreight',
         audit_result: 'Audit Result',
+        audit_reason: 'Audit Reson',
         unpaid_payment: 'Unpaid Payment',
         institution: 'Creat A Unit',
         freight_confirmation_status: 'Freight Confirmation Status',
@@ -58,5 +61,6 @@ export default {
         audit_success: 'Audit Success',
         audit_error: 'Audit Error',
         confirm_freight_tips: "Please confirm the shipping date and freight of the order. After confirmation, please pay the freight on time. The freight payment is completed and the goods will be delivered on the expected shipping date. If you refuse, please state the reason.",
+        add_gift: "Add Gift",
     },
 };

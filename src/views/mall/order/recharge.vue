@@ -169,6 +169,7 @@ const { proxy } = getCurrentInstance();
 const route = useRoute();
 const router = useRouter();
 const id = ref('');
+const orderId = ref(route.query?.order_id || '');
 const orgId = ref(route.query?.id || Core.Data.getOrgId()); // 分销商id
 const orgType = Core.Data.getOrgType();
 const unit = ref('€');
@@ -337,21 +338,21 @@ const findAccount = () => {
         .catch(err => {});
 };
 const rechargeDetailFetch = () => {
-    const params = { id: orgId.value };
+    const params = { id: orderId.value };
     Core.Api.RechargeAudit.detail({ ...params })
         .then(res => {
             Object.assign(accoutMes, res.detail.content_json.payment_information);
             Object.assign(formState, {
-                vehicle_balance: res.detail.content_json.part_balance,
-                part_balance: res.detail.content_json.vehicle_balance,
+                vehicle_balance: Core.Util.countFilter(res.detail.content_json.part_balance),
+                part_balance: Core.Util.countFilter(res.detail.content_json.vehicle_balance),
             });
             detail.content.payment_information.img = res.detail.content_json.payment_information.img;
         })
         .catch(err => {});
 };
 onMounted(() => {
-    if (route.query?.id) {
-        unit.value = route.query?.currency || '€';
+    if (route.query?.id && route.query?.order_id) {
+        unit.value = Core.Const.ITEM.MONETARY_TYPE_MAP[route.query?.currency] || '€';
         rechargeDetailFetch();
     } else {
         findAccount();
@@ -400,9 +401,9 @@ onMounted(() => {
                 background-size: 100% 100%;
                 .step-text {
                     color: rgba(143, 0, 255, 0.5);
-                    font-size: 16px;
+                    font-size: 14px;
                     font-weight: 500;
-                    line-height: 22px;
+                    line-height: 20px;
                     text-align: center;
                 }
                 &:nth-child(1) {
@@ -446,7 +447,7 @@ onMounted(() => {
                     padding-bottom: 21px;
                     > label {
                         color: #000;
-                        font-size: 24px;
+                        font-size: 18px;
                         line-height: 24px;
                     }
                 }
@@ -485,7 +486,7 @@ onMounted(() => {
                 margin-top: 24px;
                 background: #f8f8f8;
                 .amount-text {
-                    font-size: 24px;
+                    font-size: 18px;
                     line-height: 24px;
                     color: #666;
                     margin-right: 24px;

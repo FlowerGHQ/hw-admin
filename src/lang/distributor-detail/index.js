@@ -20,7 +20,7 @@ export default {
         // 零部件——tips ： 用于零部件相关订单，可以充值。
         parts_tips: '用于零部件相关订单，可以充值。',
         // 零部件——warningtips ： 该功能将于近期开发
-        parts_warning_tips: '用于支付零配件订单，最多可支付订单金额的 50% ；工单赔付金额会放入信用余额中。',
+        parts_warning_tips: '用于支付零配件订单；工单赔付金额会放入信用余额中。',
         // 售后备件信用余额
         credit_balance_re: '售后备件信用余额',
         // 时间
@@ -165,6 +165,8 @@ export default {
         vehicle_available_balance: '整车可用余额',
         // 配件可用余额
         parts_available_balance_re: '配件可用余额',
+        // 余额
+        available_balance_re: '余额',
     },
     en: {
         vehicle_account: 'Vehicle Account',
@@ -178,7 +180,7 @@ export default {
         vehicle_warning_tips: 'This function will be opened soon',
         parts_tips: 'Used for parts-related orders, can be recharged.',
         parts_warning_tips:
-            'Used to pay for spare parts orders, up to 50% of the order amount; the compensation amount for work orders will be placed in the credit balance.',
+            'Used to pay for spare parts orders; the compensation amount for work orders will be placed in the credit balance.',
         credit_balance_re: 'After-sales spare parts credit balance',
         time: 'Time',
         type: 'Type',
@@ -286,5 +288,7 @@ export default {
         arrival_success: 'Arrival success',
         vehicle_available_balance: 'Vehicle Available Balance',
         parts_available_balance_re: 'Parts Available Balance',
+        // 余额
+        available_balance_re: 'Available Balance',
     },
 };

@@ -90,10 +90,10 @@
                             <td
                                 v-for="columnsItem in columns"
                                 class="row-item"
-                                :class="
-                                    (!item.flag_item_valid ? 'invalid' : '',
-                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '')
-                                "
+                                :class="[
+                                    !item.flag_item_valid ? 'invalid' : '',
+                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '',
+                                ]"
                             >
                                 <template v-if="columnsItem.dataIndex === 'check' && !item.isGift">
                                     <span class="check-box" @click="changeSelect(item, 'vehicleList')">
@@ -226,10 +226,10 @@
                             <td
                                 v-for="columnsItem in columns"
                                 class="row-item"
-                                :class="
-                                    (!item.flag_item_valid ? 'invalid' : '',
-                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '')
-                                "
+                                :class="[
+                                    !item.flag_item_valid ? 'invalid' : '',
+                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '',
+                                ]"
                             >
                                 <template v-if="columnsItem.dataIndex === 'check'">
                                     <span class="check-box" @click="changeSelect(item, 'accessoriesList')">
@@ -274,7 +274,9 @@
                                         }}{{
                                             $Util.Number.numFormat(
                                                 $Util.countFilter(
-                                                    item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)],
+                                                    item?.item[
+                                                        $Util.Number.getStepPriceIndexByNums(1) /*配件默认正常单价*/
+                                                    ],
                                                 ),
                                             )
                                         }}</span
@@ -300,7 +302,9 @@
                                                     $Util.countFilter(
                                                         item.amount *
                                                             item?.item[
-                                                                $Util.Number.getStepPriceIndexByNums(item.amount)
+                                                                $Util.Number.getStepPriceIndexByNums(
+                                                                    1,
+                                                                ) /*配件默认正常单价*/
                                                             ],
                                                     ),
                                                 )
@@ -343,10 +347,10 @@
                             <td
                                 v-for="columnsItem in columns"
                                 class="row-item"
-                                :class="
-                                    (!item.flag_item_valid ? 'invalid' : '',
-                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '')
-                                "
+                                :class="[
+                                    !item.flag_item_valid ? 'invalid' : '',
+                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '',
+                                ]"
                             >
                                 <template v-if="columnsItem.dataIndex === 'check'">
                                     <span class="check-box" @click="changeSelect(item, 'peripheralList')">
@@ -460,10 +464,10 @@
                             <td
                                 v-for="columnsItem in columns"
                                 class="row-item"
-                                :class="
-                                    (!item.flag_item_valid ? 'invalid' : '',
-                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '')
-                                "
+                                :class="[
+                                    !item.flag_item_valid ? 'invalid' : '',
+                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '',
+                                ]"
                             >
                                 <template v-if="columnsItem.dataIndex === 'check'">
                                     <span class="check-box" @click="changeSelect(item, 'promotionalList')">
@@ -577,7 +581,7 @@
                             </span>
                             <span class="price"> {{ currency }} {{ proxy.$Util.Number.numFormat(allPrice) }} </span>
                         </div>
-                        <template v-if="org?.pay_type === 70">
+                        <template v-if="org?.pay_type === Core.Const.DISTRIBUTOR.PAY_TIME.OA">
                             <!-- 授信余额足 -->
                             <template v-if="isBalanceEnough">
                                 <p class="settlement-balance">
@@ -588,17 +592,7 @@
                             <template v-else>
                                 <p class="settlement-balance warn">
                                     {{ $t('mall.credit_balance') }}: {{ currency }} {{ balance }} ({{
-                                        $t('mall.insufficient_balance')
-                                    }}
-                                    {{
-                                        proxy.$Util.Number.numFormat(
-                                            parseFloat(
-                                                (
-                                                    allPrice.value -
-                                                    Math.ceil(allPrice.value * org.pay_pre_pay_ratio) / 100
-                                                ).toFixed(4),
-                                            ),
-                                        )
+                                        $t('mall.insufficient')
                                     }})
                                 </p>
                             </template>
@@ -785,7 +779,7 @@ const amount = computed(() => {
     );
 });
 const isBalanceEnough = computed(() => {
-    const sum = parseFloat((allPrice.value - Math.ceil(allPrice.value * org.pay_pre_pay_ratio) / 100).toFixed(4)); // 总尾款
+    const sum = parseFloat((preAllPrice.value - Math.ceil(preAllPrice.value * org.pay_pre_pay_ratio) / 100).toFixed(4)); // 总尾款
     return sum <= balance.value;
 });
 // 计算是否全选车辆
@@ -851,6 +845,26 @@ const allPrice = computed(() => {
     });
     accessoriesList.value.find(item => {
         if (item.selected) {
+            price += item.amount * item?.item[proxy.$Util.Number.getStepPriceIndexByNums(1)];
+        }
+    });
+    peripheralList.value.find(item => {
+        if (item.selected) {
+            price += item.amount * item?.item[proxy.$Util.Number.getStepPriceIndexByNums(item.amount)];
+        }
+    });
+    promotionalList.value.find(item => {
+        if (item.selected) {
+            price += item.amount * item?.item[proxy.$Util.Number.getStepPriceIndexByNums(item.amount)];
+        }
+    });
+    return proxy.$Util.countFilter(price.toFixed(2));
+});
+// 售前产品总价（不包括配件）
+const preAllPrice = computed(() => {
+    let price = 0;
+    vehicleList.value.find(item => {
+        if (item.selected) {
             price += item.amount * item?.item[proxy.$Util.Number.getStepPriceIndexByNums(item.amount)];
         }
     });
@@ -892,7 +906,7 @@ const filterData = (list, type) => {
     list = list.map(item => {
         const index = selectedId.value[type].indexOf(item.id);
         item.selected = index === -1 ? false : true;
-        if (item.item.set_id) {
+        if (item.item.set_id > 0 && item.item.flag_default === 0) {
             item.item.logo = item.item.imgs;
         }
         return item;
@@ -1178,7 +1192,7 @@ const changeItem = () => {
 };
 // 创建订单
 const handleCreateOrder = () => {
-    if (org?.pay_type === 70 && !isBalanceEnough.value) {
+    if (org?.pay_type === Core.Const.DISTRIBUTOR.PAY_TIME.OA && !isBalanceEnough.value) {
         reminderVisible.value = true;
         return;
     }

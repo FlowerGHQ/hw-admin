@@ -53,7 +53,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'https://eos-api-release.horwincloud.com'; // 预发环境
         // URL_POINT = 'http://10.0.0.170:8889'
         // URL_POINT = 'http://10.10.12.194:8889'
-        // URL_POINT = 'http://10.10.12.194:8889'
+        // URL_POINT = 'http://10.10.12.75:8889'
         break;
 }
 
@@ -799,7 +799,7 @@ let Const = {
         ],
         PAYMENT_STATUS: {
             WAIT_PAY: 100, //待支付
-            WAIT_AUDIT: 200, //部分付款
+            WAIT_AUDIT: 200, // 待审核
             PAYING: 300, //部分付款
             PAY_ALL: 400, //全部付款
             FAIL_PAY: 500, // 审核未通过

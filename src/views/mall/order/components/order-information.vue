@@ -24,7 +24,7 @@
                         <template v-if="columnsItem.dataIndex === 'product'">
                             <div class="product">
                                 <div class="product-img">
-                                    <a-image :src="$Util.imageFilter(item?.item?.imgs, 5)" />
+                                    <a-image :src="$Util.imageFilter(item?.item?.logo, 5)" />
                                 </div>
                                 <div class="product-mes">
                                     <p class="name">
@@ -57,7 +57,11 @@
                                     {{
                                         $Util.Number.numFormat(
                                             $Util.countFilter(
-                                                item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)],
+                                                item?.item[
+                                                    $Util.Number.getStepPriceIndexByNums(
+                                                        item.item?.type === 2 ? 1 : item.amount,
+                                                    )
+                                                ],
                                             ),
                                         )
                                     }}
@@ -83,7 +87,9 @@
                                                     $Util.countFilter(
                                                         item.amount *
                                                             item?.item[
-                                                                $Util.Number.getStepPriceIndexByNums(item.amount)
+                                                                $Util.Number.getStepPriceIndexByNums(
+                                                                    item.item?.type === 2 ? 1 : item.amount,
+                                                                )
                                                             ],
                                                     ),
                                                 )

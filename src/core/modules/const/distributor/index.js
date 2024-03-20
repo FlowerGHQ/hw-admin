@@ -113,130 +113,108 @@ const DISTRIBUTOR = {
         40: { title: 'distributor-detail.credit_balance', value: 40 },
     },
     EXPENDITURE_TYPE: {
-        // 调整余额
-        1: {
-            value: 1,
-            zh: '调整余额',
-            en: 'Adjust balance',
-            addOrSubtract: '',
-        },
-        // 采购单支付
-        201: {
-            value: 201,
-            zh: '采购单支付',
-            en: 'Purchase order payment',
-            addOrSubtract: '-',
-        },
-        // 采购单补偿
-        202: {
-            value: 202,
-            zh: '采购单补偿',
-            en: 'Purchase order compensation',
-            addOrSubtract: '+',
-        },
-        // 采购单取消退还
-        203: {
-            value: 203,
-            zh: '采购单取消退还',
-            en: 'Purchase order cancellation refund',
-            addOrSubtract: '+',
-        },
-        // 采购单取消运费退还
-        204: {
-            value: 204,
-            zh: '采购单取消运费退还',
-            en: 'Purchase order cancellation freight refund',
-            addOrSubtract: '+',
-        },
-        // 采购订单支付预付款
         205: {
             value: 205,
-            zh: '采购订单支付预付款',
-            en: 'Purchase order payment advance payment',
+            zh: '支付预付款',
+            en: 'Pay the advance payment',
             addOrSubtract: '-',
         },
-        // 采购订单支付尾款
+        // 支付尾款206
         206: {
             value: 206,
-            zh: '采购订单支付尾款',
-            en: 'Purchase order payment final payment',
+            zh: '支付尾款',
+            en: 'Pay the final payment',
             addOrSubtract: '-',
         },
-        // 采购订单支付全款（不包含运费）
+        // 支付全款(不含运费)207
         207: {
             value: 207,
-            zh: '采购订单支付全款（不包含运费）',
-            en: 'Purchase order payment full payment',
+            zh: '支付全款（不含运费）',
+            en: 'Pay the full payment（excluding freight）',
             addOrSubtract: '-',
         },
-        // 采购订单支付运费
+        // 支付运维208
         208: {
             value: 208,
-            zh: '采购订单支付运费',
-            en: 'Purchase order payment freight',
+            zh: '支付运费',
+            en: 'Pay the freight',
             addOrSubtract: '-',
         },
-        // 采购订单支付信用额度
+        // 209 支付信用额度
         209: {
             value: 209,
-            zh: '采购订单支付信用额度',
-            en: 'Purchase order payment credit line',
+            zh: '支付信用额度',
+            en: 'Pay the credit limit',
             addOrSubtract: '-',
         },
-        // 维修单扣款
-        501: {
-            value: 501,
-            zh: '维修单扣款',
-            en: 'Maintenance order deduction',
-            addOrSubtract: '-',
-        },
-        // 维修单补偿
-        502: {
-            value: 502,
-            zh: '维修单补偿',
-            en: 'Maintenance order compensation',
+        // 203 取消订单退还
+        203: {
+            value: 203,
+            zh: '取消订单退还',
+            en: 'Cancel the order refund',
             addOrSubtract: '+',
         },
-        // 老数据转出
-        100: {
-            value: 100,
-            zh: '老数据转出',
-            en: 'Old data transfer out',
-            addOrSubtract: '-',
-        },
-        // 老数据转入
-        101: {
-            value: 101,
-            zh: '老数据转入',
-            en: 'Old data transfer in',
+        // 取消订单退还运维
+        204: {
+            value: 204,
+            zh: '取消订单退还运费',
+            en: 'Cancel the order refund freight',
             addOrSubtract: '+',
         },
-        // 工单赔付
-        102: {
-            value: 102,
-            zh: '工单赔付',
-            en: 'Work order compensation',
+        // 取消订单退还预付款
+        2210: {
+            value: 2210,
+            zh: '取消订单退还预付款',
+            en: 'Cancel the order refund advance payment',
             addOrSubtract: '+',
         },
-        // 账户充值
+        // 取消订单退还尾款
+        2220: {
+            value: 2220,
+            zh: '取消订单退还尾款',
+            en: 'Cancel the order refund final payment',
+            addOrSubtract: '+',
+        },
+        // 取消订单退还全款(不含运费)
+        2230: {
+            value: 2230,
+            zh: '取消订单退还全款(不含运费)',
+            en: 'Cancel the order refund full payment（excluding freight）',
+            addOrSubtract: '+',
+        },
+        // 取消订单退还授信
+        2240: {
+            value: 2240,
+            zh: '取消订单退还授信',
+            en: 'Cancel the order refund credit',
+            addOrSubtract: '+',
+        },
+        // 支付尾款退还授信
+        2250: {
+            value: 2250,
+            zh: '支付尾款退还授信',
+            en: 'Pay the final payment refund credit',
+            addOrSubtract: '+',
+        },
+        // 103 账户充值
         103: {
             value: 103,
             zh: '账户充值',
             en: 'Account recharge',
             addOrSubtract: '+',
         },
-        // 订单充值
-        104: {
-            value: 104,
-            zh: '订单充值',
-            en: 'Order recharge',
+        // 101 老数据转入
+        101: {
+            value: 101,
+            zh: '老数据转入',
+            en: 'Old data transfer',
             addOrSubtract: '+',
         },
-        // 支付尾款
-        105: {
-            value: 105,
-            zh: '支付尾款',
-            en: 'Pay final payment',
+        // 工单赔付
+        102: {
+            value: 301,
+            zh: '工单赔付',
+            en: 'Work order compensation',
             addOrSubtract: '-',
         },
     },

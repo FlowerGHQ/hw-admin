@@ -459,10 +459,10 @@ const onTabChange = type => {
         case FINAL_UNPAID_ORDER_TAB.WITHIN_WEEK:
             // 一周
             searchForm.value.final_pay_due_begin_time = dayjs().unix();
-            searchForm.value.final_pay_due_end_time = dayjs().subtract(7, 'day').unix();
+            searchForm.value.final_pay_due_end_time = dayjs().add(7, 'day').unix();
             break;
-        case FINAL_UNPAID_ORDER_TAB.DELAY:
-            searchForm.value.final_pay_due_begin_time = dayjs().unix();
+        case FINAL_UNPAID_ORDER_TAB.DELAY:            
+            searchForm.value.final_pay_due_end_time = dayjs().unix();
             break;
     }
     searchParam.value = Core.Util.searchFilter(searchForm.value);

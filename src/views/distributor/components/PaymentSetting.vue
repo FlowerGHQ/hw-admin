@@ -94,7 +94,7 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import Core from '../../../core';
 import { message } from 'ant-design-vue';
 import { useTable } from '@/hooks/useTable';
@@ -150,6 +150,10 @@ const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPa
     request,
     initParam: initParam.value,
     INITIAL_PAGE_PARAMS: INITIAL_PAGE_PARAMS.value,
+    dataCallBack: res => {
+        spare_part_deduction_ratio.value = (res.list[0]?.content || 0) * 1;
+        return res.list;
+    },
 });
 
 const handleCancel = () => {

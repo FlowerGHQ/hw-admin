@@ -3,14 +3,8 @@
         <div class="content">
             <!-- 订单信息 -->
             <div class="order-mes box">
-                <p class="box-title flex-between">
+                <p class="box-title">
                     {{ $t('mall.pending_payment_order') }}
-                    <span class="total-price">
-                        <span class="dis">
-                            {{ $t('p.total') }}
-                        </span>
-                        <span class="price"> {{ currency }} {{ proxy.$Util.Number.numFormat(sum_price) }} </span>
-                    </span>
                 </p>
                 <div class="box-content" style="padding: 0">
                     <OrderInformation :list="detail.item_list" :unit="unit" :isConfirmPrice="true" />
@@ -23,10 +17,18 @@
                     <div class="payment">
                         <div class="payment-content">
                             <div class="deposit-payment" id="deposit-payment">
-                                <div class="deposit-payment-row">
+                                <div class="deposit-payment-row border-bottom">
                                     <div class="deposit-payment-row-left">{{ $t('mall.payment_method') }}:</div>
                                     <div class="deposit-payment-row-right">
-                                        {{ Core.Const.DISTRIBUTOR.PAY_TIME_MAP[mes.pay_type] }}
+                                        {{
+                                            mes.pay_type ? Core.Const.DISTRIBUTOR.PAY_TIME_LIST[mes.pay_type][lang] : ''
+                                        }}
+                                    </div>
+                                </div>
+                                <div class="deposit-payment-row">
+                                    <div class="deposit-payment-row-left">{{ $t('p.total') }}:</div>
+                                    <div class="deposit-payment-row-right">
+                                        {{ unit }} {{ proxy.$Util.Number.numFormat(sum_price) }}
                                     </div>
                                 </div>
                                 <div class="deposit-payment-row">
@@ -76,7 +78,7 @@
                                 <div class="recharge">
                                     <span class="recharge-balance"
                                         >{{ $t('mall.balance_parts') }}：<span class="price"
-                                            >{{ unit }} {{ balance }}</span
+                                            >{{ unit }} {{ balanceAfter }}</span
                                         ></span
                                     >
                                     <div class="btn">
@@ -124,6 +126,7 @@
                                         v-model:value="this_time_credit"
                                         :suffix="unit"
                                         style="width: 268px"
+                                        :min="0"
                                         :max="after_price_credit"
                                     />
                                 </div>
@@ -179,6 +182,9 @@
                 <div class="settlement">
                     <div class="settlement-mes">
                         <div class="settlement-price">
+                            <span class="warn" v-if="!isPre && !detail.freight">
+                                （{{ $t('mall.determined_to_pay') }}）
+                            </span>
                             <span class="dis"> {{ $t('mall.payable_amount') }}: </span>
                             <span class="price"> {{ unit }} {{ need_pay }} </span>
                         </div>
@@ -207,7 +213,9 @@ import { ref, onMounted, reactive, computed, getCurrentInstance } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import MyButton from '@/components/common/MyButton.vue';
 import OrderInformation from './components/order-information.vue';
+import { useStore } from 'vuex';
 
+const store = useStore();
 const { proxy } = getCurrentInstance();
 const orderModules = import.meta.globEager('@/assets/images/mall/order/*');
 
@@ -228,6 +236,9 @@ const balanceAfter = ref(0); // 售后余额
 const balanceParts = ref(0); // 备件余额
 const balanceCredit = ref(0); // 授信账户
 const this_time_credit = ref(null);
+const lang = computed(() => {
+    return store.state.lang;
+});
 const disabled = computed(() => {
     if (JSON.stringify(detail) == '{}') return true;
     if (isAfter.value) {
@@ -290,7 +301,11 @@ const after_price = computed(() => {
 });
 // 售后备件
 const after_price_credit = computed(() => {
-    return Math.ceil(balanceParts.value * detail.spare_part_deduction_ratio) / 100;
+    if (Math.ceil(need_pay.value * detail.spare_part_deduction_ratio) / 100 < balanceParts.value) {
+        return Math.ceil(need_pay.value * detail.spare_part_deduction_ratio) / 100;
+    } else {
+        return balanceParts.value;
+    }
 });
 // 需付余额
 const need_balance = computed(() => {
@@ -303,11 +318,9 @@ const need_pay = computed(() => {
     } else {
         return isPre.value
             ? pre_price.value
-            : isSelectEnd.value
+            : isSelectEnd.value || pay_type.value === Core.Const.DISTRIBUTOR.PAY_TIME.TT
               ? freight_price.value + end_price.value
-              : detail.freight_pay_status === 100
-                ? detail.freight
-                : 0;
+              : freight_price.value;
     }
 });
 // 是否已支付运费-运费
@@ -411,7 +424,7 @@ const handlePayOrder = () => {
                 // 选择支付尾款
                 subject = detail.freight_pay_status === 100 ? 60 : 20;
             } else {
-                subject = 50;
+                subject = pay_type.value === Core.Const.DISTRIBUTOR.PAY_TIME.TT ? 60 : 50; // TT 必需付尾款
             }
         }
     }
@@ -419,7 +432,7 @@ const handlePayOrder = () => {
         id: detail.id, //订单id
         subject: subject, //10.预付款；20.尾款；30.全款（不包含运费）；40.全款并使用备件钱包（不包含运费）；50.运费；60.尾款加运费
         payment: need_pay.value * 100, //支付金额
-        spare_part_credit_payment: this_time_credit.value, //备件信用支付金额
+        spare_part_credit_payment: this_time_credit.value * 100, //备件信用支付金额
     };
     Core.Api.Purchase.pay(params)
         .then(res => {
@@ -519,7 +532,10 @@ onMounted(async () => {
                             position: relative;
                             .flex(initial, center, row);
                             &:nth-child(n + 2) {
-                                margin-top: 35px;
+                                margin-top: 24px;
+                            }
+                            &:nth-child(2) {
+                                margin-top: 15px;
                             }
                             .select {
                                 position: absolute;
@@ -547,6 +563,13 @@ onMounted(async () => {
                                     color: #8f00ff;
                                 }
                             }
+                            &.border-bottom {
+                                padding-bottom: 8px;
+                                border-bottom: 1px solid #efefef;
+                                .deposit-payment-row-left {
+                                    color: #000;
+                                }
+                            }
                         }
                     }
                 }
@@ -572,6 +595,7 @@ onMounted(async () => {
                     }
                     .recharge {
                         .flex(space-between, center, row);
+                        margin-bottom: 16px;
                         .recharge-balance {
                             color: #666;
                             font-size: 14px;
@@ -653,6 +677,9 @@ onMounted(async () => {
                     margin-right: 24px;
                     .settlement-price {
                         .flex(initial, center, row);
+                    }
+                    .warn {
+                        color: #ff3636;
                     }
                 }
                 .settlement-balance {

@@ -46,8 +46,10 @@
                                 {{ Core.Util.countFilter(record.money, 100, 2, false, true) || 0 }}
                                 {{ route.query.currency }}
                             </span>
-                            <span class="balance"
-                                >余额：{{ Core.Util.countFilter(record.balance, 100, 2, false, true) || 0 }}
+                            <span class="balance">
+                                {{ $t('distributor-detail.available_balance_re') }}：{{
+                                    Core.Util.countFilter(record.balance, 100, 2, false, true) || 0
+                                }}
                                 {{ route.query.currency }}</span
                             >
                         </template>
@@ -109,14 +111,14 @@ const initParam = ref({
     org_id: route.query.org_id,
     org_type: 15,
 });
-
+``;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request,
     initParam: initParam.value,
 });
 
 // 收入支出类型
-const typeMap = ref([
+const typeMap = computed(() => [
     {
         id: 0,
         title: $t('distributor-detail.all'),
