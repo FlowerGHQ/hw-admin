@@ -2157,16 +2157,16 @@ const routes = [
                     auth: ['crm-customer.detail'],
                 },
             },
-            {
-                path: 'tob-customer-list',
-                name: 'ToBCustomerList',
-                component: () => import('@/views/crm-customer/tob-customer-list.vue'),
-                meta: {
-                    title: 'TOB客户',
-                    title_en: 'TOB Customers',
-                    auth: ['crm-customer.list'],
-                },
-            },
+            // {
+            //     path: 'tob-customer-list',
+            //     name: 'ToBCustomerList',
+            //     component: () => import('@/views/crm-customer/tob-customer-list.vue'),
+            //     meta: {
+            //         title: 'TOB客户',
+            //         title_en: 'TOB Customers',
+            //         auth: ['crm-customer.list'],
+            //     },
+            // },
             // {
             // 	path: 'customer-list',
             // 	name: 'CustomerList',

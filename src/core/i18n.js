@@ -1559,6 +1559,7 @@ const messages = {
             information: '基本信息',
             address: '地址',
             tob_customer: 'TOB客户',
+            leave_message: '留言',
         },
         crm_t: {
             track_record: '跟进记录',
@@ -4422,6 +4423,7 @@ const messages = {
             be_added: 'To be added',
             address: 'Address',
             tob_customer: 'TOB Customers',
+            leave_message: 'Leave Messages',
         },
         crm_t: {
             track_record: 'Track Record',

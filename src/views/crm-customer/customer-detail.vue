@@ -177,7 +177,17 @@
                                 </span>
                             </span>
                         </a-col>
-
+                        <a-col :xs="24" :sm="24" :lg="24" class="detail-item flex-align-start">
+                            <span class="key">{{ $t('crm_c.leave_message') }}：</span>
+                            <div v-if="detail.consult">
+                                <div v-for="(item, index) in detail.consult" :key="index">
+                                    {{ item.content || '-' }}
+                                </div>
+                            </div>
+                            <div v-else>
+                                -
+                            </div>
+                        </a-col>
                         <a-col :xs="24" :sm="24" :lg="24" class="detail-item">
                             <!-- <a-button type="primary" @click="routerChange('test-drive')" v-if="$auth('crm-customer.save')">{{ $t('crm_d.save') }}</a-button>
                             <template v-if="detail.status === STATUS.POOL">
@@ -1850,6 +1860,9 @@ export default {
                     span {
                         height: auto !important;
                         min-height: 22px !important;
+                    }
+                    &.flex-align-start {
+                        align-items: flex-start;
                     }
                 }
             }
