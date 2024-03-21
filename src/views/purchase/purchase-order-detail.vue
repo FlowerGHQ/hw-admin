@@ -1518,6 +1518,7 @@ export default {
                 shipping_time_estimated: this.detail?.freight_audit_record?.content?.shipping_time_estimated,
                 freight: this.detail?.freight_audit_record?.content?.freight,
             };
+            this.isShippingConfirmVisible = false
         },
 
         // 取消二次弹窗填写原因
