@@ -89,14 +89,14 @@
                     </template>
                     <template v-if="column.key === 'log'">
                         <div v-if="record.action_log.user_name || record.action_log.create_time || record.action_log.content || record.action_log.remark">
-                            #{{ record.action_log.user_name || '-' }}#, 
-                            #{{ $Util.timeFormat(record.action_log.create_time) || '-' }}#, 
-                            #{{ record.action_log.content || '-' }}#
+                            {{ record.action_log.user_name || '-' }}, 
+                            {{ $Util.timeFormat(record.action_log.create_time) || '-' }}, 
+                            {{ record.action_log.content || '-' }}
                             <span 
                                 v-if="record.status === Core.Const.AUDIT_MANAGEMENT.AUDIT_STATUS_MAP.REJECT_FIRST || 
                                     record.status === Core.Const.AUDIT_MANAGEMENT.AUDIT_STATUS_MAP.REJECT_SECOND"
                             >
-                                #{{ $t(/*原因*/'n.reason') }}:{{ record.action_log.remark || '-' }}#
+                                {{ $t(/*原因*/'n.reason') }}:{{ record.action_log.remark || '-' }}
                             </span>
                         </div>
                         <div v-else>
