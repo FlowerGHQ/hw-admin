@@ -35,7 +35,7 @@
                                     <!-- 资金变动明细 -->
                                     <div
                                         class="line-item"
-                                        @click="handleRouteChange(1, dataObject.vehicleData)"
+                                        @click="handleRouteChange(1, dataObject.vehicleData, 10)"
                                         v-if="payType !== 'OLD'"
                                     >
                                         {{ $t('distributor-detail.fund_change_detail') }}
@@ -163,7 +163,7 @@
                                     <div
                                         class="line-item"
                                         v-if="payType !== 'OLD'"
-                                        @click="handleRouteChange(1, dataObject.partsData)"
+                                        @click="handleRouteChange(1, dataObject.partsData, 20)"
                                     >
                                         {{ $t('distributor-detail.fund_change_detail') }}
                                     </div>
@@ -193,7 +193,7 @@
                                     <div
                                         class="line-item"
                                         v-if="payType !== 'OLD'"
-                                        @click="handleRouteChange(1, dataObject.afterSaleData)"
+                                        @click="handleRouteChange(1, dataObject.afterSaleData, 30)"
                                     >
                                         {{ $t('distributor-detail.fund_change_detail') }}
                                     </div>
@@ -256,6 +256,8 @@ import { useRoute, useRouter } from 'vue-router';
 import Core from '@/core';
 import { message } from 'ant-design-vue';
 const PAY_TIME = Core.Const.DISTRIBUTOR.PAY_TIME_MAP;
+const walletType = Core.Const.DISTRIBUTOR.WALLET_TYPE;
+
 const $t = useI18n().t;
 const router = useRouter();
 const props = defineProps({
@@ -343,19 +345,17 @@ const getWalletList = () => {
             let item = res.list[i];
             let key = typeMap[item.type];
             item.balance = Core.Util.countFilter(item?.balance || 0, 100, 2, false, true) * 1;
+            item.type = item.type;
             dataObject.value[key] = item;
         }
         console.log('dataObject', dataObject.value);
     });
 };
 // methods
-const handleRouteChange = (type, item) => {
-    console.log('type', type);
-    console.log('item', item);
+const handleRouteChange = (type, item, walletTypeValue) => {
     const query = {
         org_id: props.detail.id,
         org_type: 15, //分销商类型
-        wallet_type: item.type, //钱包类型
         currency: currency.value,
     };
 
@@ -372,12 +372,11 @@ const handleRouteChange = (type, item) => {
             window.open(routeUrl.href, '_blank');
             break;
         case 1:
-            query.credit = props.detail.credit;
+            query.walletType = walletType[walletTypeValue].value;
             routeUrl = router.resolve({
                 path: '/distributor/distributor-fund-change-detail',
                 query,
             });
-            console.log('routeUrl', routeUrl);
             window.open(routeUrl.href, '_blank');
             break;
         case 2:

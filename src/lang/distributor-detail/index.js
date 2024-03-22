@@ -51,7 +51,7 @@ export default {
         // 授信金额
         credit_amount: '授信总额',
         // 授信tips
-        credit_tips: '支付预付款时，可以用户于抵扣尾款。授信余额不足时，不能提交订单。',
+        credit_tips: '用于货款账期内赊账',
         // 授信余额
         credit_balance: '授信余额',
         // 调整额度
@@ -165,6 +165,7 @@ export default {
         parts_available_balance_re: '配件可用余额',
         // 余额
         available_balance_re: '余额',
+        order_number: '订单编号',
     },
     en: {
         vehicle_account: 'Vehicle Account',
@@ -195,8 +196,7 @@ export default {
         credit_account: 'Credit Account',
         // 授信总额
         credit_amount: 'Credit Amount',
-        credit_tips:
-            'When paying the advance payment, it can be used to offset the final payment. When the credit balance is insufficient, the order cannot be submitted.',
+        credit_tips: 'Used for credit within the payment period',
         credit_balance: 'Credit Balance',
         adjust_amount: 'Adjust Amount',
         payment_settings: 'Payment Settings',
@@ -287,5 +287,6 @@ export default {
         parts_available_balance_re: 'Parts Available Balance',
         // 余额
         available_balance_re: 'Available Balance',
+        order_number: 'Order Number',
     },
 };

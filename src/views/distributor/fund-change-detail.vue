@@ -76,7 +76,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import Core from '@/core';
@@ -97,6 +97,15 @@ const tableColumns = computed(() => {
                 return record.uid || '-';
             },
         },
+        // 订单编号
+        {
+            title: $t('distributor-detail.order_number'),
+            dataIndex: 'source_uid',
+            key: 'source_uid',
+            customRender: record => {
+                return record.source_uid || '-';
+            },
+        },
         {
             title: $t('distributor-detail.fund_change'),
             dataIndex: 'fund_change',
@@ -114,6 +123,7 @@ const initParam = ref({
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request,
     initParam: initParam.value,
+    immediate: false,
 });
 
 // 收入支出类型
@@ -171,7 +181,7 @@ const searchList = ref([
     // 充值账户
     {
         type: 'select',
-        value: '',
+        value: Number(route.query.walletType) || '',
         searchParmas: 'wallet_type',
         key: 'distributor-detail.account',
         // 是否需要展示全部
@@ -223,6 +233,11 @@ const onReset = () => {
     activeTypeValue.value = '';
     refreshTable();
 };
+onMounted(() => {
+    searchParam.value.wallet_type = route.query.walletType;
+    searchParam.value.type = route.query.type;
+    search();
+});
 </script>
 
 <style lang="less" scoped>
