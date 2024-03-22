@@ -94,7 +94,7 @@ const tableColumns = computed(() => {
             dataIndex: 'uid',
             key: 'uid',
             customRender: record => {
-                return record.uid || '-';
+                return record.text || '-';
             },
         },
         // 订单编号
@@ -103,7 +103,8 @@ const tableColumns = computed(() => {
             dataIndex: 'source_uid',
             key: 'source_uid',
             customRender: record => {
-                return record.source_uid || '-';
+                console.log('record', record);
+                return record.text || '-';
             },
         },
         {
