@@ -61,10 +61,12 @@
 import dayjs from 'dayjs';
 import { ref, onMounted, getCurrentInstance } from 'vue';
 import Core from '@/core';
+import { useRouter, useRoute } from 'vue-router';
 const AUDIT_RESULT_MAP_ARR = Core.Const.DISTRIBUTOR.AUDIT_RESULT_MAP_ARR;
 const AUDIT_RESULT = Core.Const.DISTRIBUTOR.AUDIT_RESULT;
 
 const { proxy } = getCurrentInstance();
+const router = useRouter();
 const props = defineProps({
     visible: {
         type: Boolean,
@@ -104,6 +106,13 @@ const saveFreightFetch = (params = {}) => {
             proxy.$message.success('提交成功');
             handleCancel();
             emits('ok', search_params.value);
+
+            let routeUrl = router.resolve({
+                path: '/mall/pending-payment',
+                query: { id: props.detailRecord.id },
+            });
+
+            window.open(routeUrl.href, '_block');
         })
         .catch(err => {
             console.log('确认和修改运费和船期 err', err);
@@ -134,7 +143,7 @@ const handleOk = () => {
         }
     }
 
-    saveFreightFetch()    
+    saveFreightFetch()
 };
 
 const handleCancel = () => {

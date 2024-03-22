@@ -471,6 +471,7 @@ const onModify = record => {
 const onConfirmFreight = record => {
     confirmFreightVisible.value = true;
     detailRecord.value = {
+        id: record.id,
         freight_audit_record_id: record.freight_audit_record_id,
         shipping_time_estimated: record?.audit_record_content?.shipping_time_estimated,
         freight: record?.audit_record_content?.freight,

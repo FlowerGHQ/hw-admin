@@ -345,7 +345,7 @@ export default {
             switch (type) {
                 case 'detail': // 详情
                     routeUrl = this.$router.resolve({
-                        path: this.$auth('ADMIN') ? '/item/item-detail' : '/purchase/item-display',
+                        path: this.$auth('ADMIN') ? '/item/item-detail' : '/mall/vehicle-list/detail',
                         query: { id: item.id },
                     });
                     window.open(routeUrl.href, '_blank');
