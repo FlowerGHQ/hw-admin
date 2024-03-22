@@ -72,7 +72,7 @@ const saveFetch = (params = {}) => {
 
     // 判断 待填写和以拒绝不需要填写审核记录id
     if (
-        !Core.Util.Common.returnTypeBool(props.detailRecord.freight_status, [
+        !Core.Util.Common.isMember(props.detailRecord.freight_status, [
             FREIGHT_STATUS.TO_BE_FILLED_IN,
             FREIGHT_STATUS.REJECTED,
         ])

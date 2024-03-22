@@ -6,8 +6,14 @@ export default {
      * @param(type) 文件名称 file
      * @param(typeIncludes) 数组
      */
-    returnTypeBool(type, typeIncludes) {
-        let result = typeIncludes.includes(Number(type));
+    isMember(type, typeIncludes) {
+        let baseType = typeof type;
+        let result = typeIncludes.includes(type);
+
+        if (baseType === 'number') {
+            result = typeIncludes.includes(Number(type));
+        }
+
         return result;
     },
     /**
@@ -68,9 +74,9 @@ export default {
         });
     },
     /**
-    * 传dom id
-    * @param {String | Number} id
-    */
+     * 传dom id
+     * @param {String | Number} id
+     */
     copyText(id) {
         const divElement = document.getElementById(id);
         if (window.getSelection) {
@@ -79,10 +85,10 @@ export default {
             range.selectNodeContents(divElement);
             selection.removeAllRanges();
             selection.addRange(range);
-            document.execCommand("copy");
+            document.execCommand('copy');
             selection.removeAllRanges();
         } else {
-            throw Error('No window.getSelection!')
+            throw Error('No window.getSelection!');
         }
     },
     /**
@@ -92,7 +98,7 @@ export default {
      * @param(to) 查询对象中的key
      * @return 返回 key下的value
      */
-    returenValue(MAP, val, to = 'text') {                
+    returenValue(MAP, val, to = 'text') {
         let item = MAP[val] || {};
         return item[to] || '';
     },

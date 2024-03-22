@@ -84,27 +84,6 @@ const DISTRIBUTOR = {
         WITHIN_WEEK: 1, // 一周内
         DELAY: 2, // 延期
     },
-    // {
-    //     zh: '整车可用余额',
-    //     en: 'Vehicle account',
-    //     value: 10,
-    // },
-    // {
-    //     zh: '配件可用余额',
-    //     en: 'Parts account',
-    //     value: 20,
-    // },
-    // {
-    //     zh: '售后备件信用余额',
-    //     en: 'After-sales spare parts credit balance',
-    //     value: 30,
-    // },
-    // {
-    //     zh: '授信余额',
-    //     en: 'Credit balance',
-    //     value: 40,
-    // },
-
     // 钱包类型
     WALLET_TYPE: {
         10: { title: 'distributor-detail.vehicle_available_balance', value: 10 },

@@ -95,7 +95,7 @@
                             <template
                                 v-if="
                                     isDistributerAdmin &&
-                                    $Util.Common.returnTypeBool(record.freight_status, [
+                                    $Util.Common.isMember(record.freight_status, [
                                         FREIGHT_STATUS.TO_BE_FILLED_IN,
                                         FREIGHT_STATUS.TO_BE_CONFIRMED,
                                         FREIGHT_STATUS.REJECTED,
@@ -126,7 +126,7 @@
                             <template
                                 v-if="
                                     isDistributerAdmin &&
-                                    $Util.Common.returnTypeBool(record.freight_status, [
+                                    $Util.Common.isMember(record.freight_status, [
                                         FREIGHT_STATUS.TO_BE_FILLED_IN,
                                         FREIGHT_STATUS.TO_BE_CONFIRMED,
                                         FREIGHT_STATUS.REJECTED,
@@ -199,10 +199,10 @@
                             <!-- 分销商 | 待确认显示 -->
                             <a-button
                                 v-if="
-                                    $Util.Common.returnTypeBool(Core.Data.getLoginType(), [
+                                    $Util.Common.isMember(Core.Data.getLoginType(), [
                                         Core.Const.LOGIN.TYPE.DISTRIBUTOR,
                                     ]) &&
-                                    $Util.Common.returnTypeBool(record.freight_status, [FREIGHT_STATUS.TO_BE_CONFIRMED])
+                                    $Util.Common.isMember(record.freight_status, [FREIGHT_STATUS.TO_BE_CONFIRMED])
                                 "
                                 type="link"
                                 @click="onConfirmFreight(record)"
@@ -282,7 +282,7 @@ const searchForm = ref({
 });
 const search_all_ref = ref(null);
 const isDistributerAdmin = ref(
-    Core.Util.Common.returnTypeBool(Core.Data.getLoginType(), [Core.Const.LOGIN.TYPE.ADMIN]),
+    Core.Util.Common.isMember(Core.Data.getLoginType(), [Core.Const.LOGIN.TYPE.ADMIN]),
 ); // 根据路由判断其是用在分销商(false) 还是平台方(true)
 const freightVisible = ref(false); // 船期及运费model
 const confirmFreightVisible = ref(false); // 船期及运费确认model
@@ -471,6 +471,7 @@ const onModify = record => {
 const onConfirmFreight = record => {
     confirmFreightVisible.value = true;
     detailRecord.value = {
+        id: record.id,
         freight_audit_record_id: record.freight_audit_record_id,
         shipping_time_estimated: record?.audit_record_content?.shipping_time_estimated,
         freight: record?.audit_record_content?.freight,

@@ -28,7 +28,7 @@
                                     class="one-spils cursor"
                                     :style="{ width: text?.length > 15 ? 15 * 12 + 'px' : '' }"
                                 >
-                                    {{ $Util.Common.returnTypeBool(record.audit_status, [AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL]) ? record.cancel_remark : text }}
+                                    {{ $Util.Common.isMember(record.audit_status, [AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL]) ? record.cancel_remark : text }}
                                 </div>
                             </a-tooltip>
                         </template>

@@ -16,22 +16,22 @@
                 <div
                     class="btns-area"
                     v-if="
-                        ($Util.Common.returnTypeBool(detail.type, [
+                        ($Util.Common.isMember(detail.type, [
                             FLAG_ORDER_TYPE.PRE_SALES,
                             FLAG_ORDER_TYPE.AFTER_SALES,
                         ]) &&
-                            $Util.Common.returnTypeBool(detail.status, [
+                            $Util.Common.isMember(detail.status, [
                                 STATUS.WAIT_AUDIT,
                                 STATUS.WAIT_PAY,
                                 STATUS.WAIT_PRODUCED,
                                 STATUS.IN_PRODUCTION,
                             ]) &&
-                            $Util.Common.returnTypeBool(detail.pay_type, [
+                            $Util.Common.isMember(detail.pay_type, [
                                 PAY_TIME.TT,
                                 PAY_TIME.OA,
                                 PAY_TIME.PAYMENT_TYPE_ALL_PAYMENT,
                             ])) ||
-                        $Util.Common.returnTypeBool(detail.cancel_status, [AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL])
+                        $Util.Common.isMember(detail.cancel_status, [AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL])
                     "
                 >
                     <!-- 
@@ -119,8 +119,8 @@
                     <!-- 赠送订单 => 平台方 & (等待审核 待支付 待生产)可见 & 查看赠送订单是否有数据有数据不显示 & 权限控制 -->
                     <a-button
                         v-if="
-                            $Util.Common.returnTypeBool(loginType, [USER_TYPE.ADMIN]) &
-                                $Util.Common.returnTypeBool(detail.status, [
+                            $Util.Common.isMember(loginType, [USER_TYPE.ADMIN]) &
+                                $Util.Common.isMember(detail.status, [
                                     STATUS.WAIT_AUDIT,
                                     STATUS.WAIT_PAY,
                                     STATUS.WAIT_PRODUCED,
@@ -138,8 +138,8 @@
                     <!-- 更换商品 平台方(等待审核)可见 && 分销不可见 -->
                     <a-button
                         v-if="
-                            $Util.Common.returnTypeBool(loginType, [USER_TYPE.ADMIN]) &&
-                            $Util.Common.returnTypeBool(detail.status, [STATUS.WAIT_AUDIT])
+                            $Util.Common.isMember(loginType, [USER_TYPE.ADMIN]) &&
+                            $Util.Common.isMember(detail.status, [STATUS.WAIT_AUDIT])
                         "
                         type="primary"
                         ghost
@@ -151,8 +151,8 @@
                     <!-- 取消 仅分销商(可见) | 订单状态(等待审核 二次确认框 非审核状态 填写原因弹窗) -->
                     <a-button
                         v-if="
-                            $Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) &&
-                            $Util.Common.returnTypeBool(detail.status, [
+                            $Util.Common.isMember(loginType, [USER_TYPE.DISTRIBUTOR]) &&
+                            $Util.Common.isMember(detail.status, [
                                 STATUS.WAIT_AUDIT,
                                 STATUS.WAIT_PAY,
                                 STATUS.WAIT_PRODUCED,
@@ -160,13 +160,13 @@
                             ])
                         "
                         :disabled="
-                            $Util.Common.returnTypeBool(detail.cancel_status, [
+                            $Util.Common.isMember(detail.cancel_status, [
                                 AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL,
                             ])
                         "
                         type="primary"
                         @click="
-                            $Util.Common.returnTypeBool(detail.status, [STATUS.WAIT_AUDIT])
+                            $Util.Common.isMember(detail.status, [STATUS.WAIT_AUDIT])
                                 ? handleCancel()
                                 : onCancelReason()
                         "
@@ -175,7 +175,7 @@
                         <!-- 目前仅展示待审核 -->
                         <span
                             v-if="
-                                $Util.Common.returnTypeBool(detail.cancel_status, [
+                                $Util.Common.isMember(detail.cancel_status, [
                                     AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL,
                                 ])
                             "
@@ -186,8 +186,8 @@
                     <!-- 取消记录 按钮 => 仅分销商(可见) & 待支付 待生产 生产中 显示 & 取消记录是否有数据 -->
                     <a-button
                         v-if="
-                            $Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) &&
-                            $Util.Common.returnTypeBool(detail.status, [
+                            $Util.Common.isMember(loginType, [USER_TYPE.DISTRIBUTOR]) &&
+                            $Util.Common.isMember(detail.status, [
                                 STATUS.WAIT_PAY,
                                 STATUS.WAIT_PRODUCED,
                                 STATUS.IN_PRODUCTION,
@@ -203,9 +203,9 @@
                     <!-- 付款 分销商可见 & 订单状态(等待审核不显示) & 支付状态(待支付, 部分支付) & 权限-->
                     <a-button
                         v-if="
-                            $Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) &&
-                            !$Util.Common.returnTypeBool(detail.status, [STATUS.WAIT_AUDIT]) &&
-                            $Util.Common.returnTypeBool(detail.payment_status, [
+                            $Util.Common.isMember(loginType, [USER_TYPE.DISTRIBUTOR]) &&
+                            !$Util.Common.isMember(detail.status, [STATUS.WAIT_AUDIT]) &&
+                            $Util.Common.isMember(detail.payment_status, [
                                 PAYMENT_STATUS.WAIT_PAY,
                                 PAYMENT_STATUS.PAYING,
                             ]) &&
@@ -220,8 +220,8 @@
                     <!-- 审核按钮 => 平台方可见 & 等待审核状态可见 & 权限控制 -->
                     <template
                         v-if="
-                            $Util.Common.returnTypeBool(loginType, [USER_TYPE.ADMIN]) &&
-                            $Util.Common.returnTypeBool(detail.status, [STATUS.WAIT_AUDIT]) &&
+                            $Util.Common.isMember(loginType, [USER_TYPE.ADMIN]) &&
+                            $Util.Common.isMember(detail.status, [STATUS.WAIT_AUDIT]) &&
                             $auth('purchase-order.audit')
                         "
                     >
@@ -414,17 +414,18 @@
                 <div class="btn-area d-f-a">
                     <!-- 仅拒绝展示 -->
                     <div
-                        v-if="$Util.Common.returnTypeBool(detail.freight_status, [FREIGHT_STATUS.REJECTED])"
+                        v-if="$Util.Common.isMember(detail.freight_status, [FREIGHT_STATUS.REJECTED])"
                         class="m-r-10 status"
-                        :class="$Util.Common.returenValue(FREIGHT_STATUS_MAP, detail.freight_status, 'color')"
+                        :class="$Util.Common.returenValue(FREIGHT_STATUS_MAP_FILTER, detail.freight_status, 'color')"
                     >
                         {{ detail.freight_audit_record?.remark }}
-                    </div>
+                    </div>                    
+                    <!-- 分销商(待填写)不展示 -->
                     <div
                         class="status status-bg freight-status-style"
-                        :class="$Util.Common.returenValue(FREIGHT_STATUS_MAP, detail.freight_status, 'color')"
+                        :class="$Util.Common.returenValue(FREIGHT_STATUS_MAP_FILTER, detail.freight_status, 'color')"
                     >
-                        {{ $t($Util.Common.returnTranslation(detail.freight_status, FREIGHT_STATUS_MAP)) }}
+                        {{ $t($Util.Common.returnTranslation(detail.freight_status, FREIGHT_STATUS_MAP_FILTER)) }}
                     </div>
                 </div>
             </div>
@@ -437,7 +438,7 @@
                             <a-button
                                 v-if="
                                     user_type &&
-                                    $Util.Common.returnTypeBool(detail.freight_status, [
+                                    $Util.Common.isMember(detail.freight_status, [
                                         FREIGHT_STATUS.TO_BE_FILLED_IN,
                                         FREIGHT_STATUS.TO_BE_CONFIRMED,
                                         FREIGHT_STATUS.REJECTED,
@@ -467,7 +468,7 @@
                             <a-button
                                 v-if="
                                     user_type &&
-                                    $Util.Common.returnTypeBool(detail.freight_status, [
+                                    $Util.Common.isMember(detail.freight_status, [
                                         FREIGHT_STATUS.TO_BE_FILLED_IN,
                                         FREIGHT_STATUS.TO_BE_CONFIRMED,
                                         FREIGHT_STATUS.REJECTED,
@@ -491,8 +492,8 @@
             <!-- 分销商显示 分销商 & 待确定 可见-->
             <div
                 v-if="
-                    $Util.Common.returnTypeBool(loginType, [USER_TYPE.DISTRIBUTOR]) &&
-                    $Util.Common.returnTypeBool(detail.freight_status, [FREIGHT_STATUS.TO_BE_CONFIRMED])
+                    $Util.Common.isMember(loginType, [USER_TYPE.DISTRIBUTOR]) &&
+                    $Util.Common.isMember(detail.freight_status, [FREIGHT_STATUS.TO_BE_CONFIRMED])
                 "
                 class="all-btn"
             >
@@ -765,7 +766,7 @@ export default {
             FLAG,
             TYPE,
             AUDIT_CANCEL_STATUS,
-            FREIGHT_STATUS_MAP,
+            FREIGHT_STATUS_MAP_FILTER: {},
             FREIGHT_STATUS,
             PARENT_TYPE,
             FLAG_ORDER_TYPE,
@@ -1015,6 +1016,19 @@ export default {
         this.getWarehouseList(); // 获取仓库列表
         this.getGiveawayListFetch(); // 获取赠品列表
         this.getCancelRecordFetch(); // 取消记录接口(用来判断 取消记录显影)
+
+        if (this.$Util.Common.isMember(this.loginType, [USER_TYPE.DISTRIBUTOR])) {
+            // 分销商
+            for (const key in FREIGHT_STATUS_MAP) {
+                if (FREIGHT_STATUS_MAP[key].key !== FREIGHT_STATUS.TO_BE_FILLED_IN) {
+                    this.FREIGHT_STATUS_MAP_FILTER[key] = FREIGHT_STATUS_MAP[key]
+                }
+            }            
+        } else if (this.$Util.Common.isMember(this.loginType, [USER_TYPE.ADMIN])) {
+            // 平台方
+            this.FREIGHT_STATUS_MAP_FILTER = FREIGHT_STATUS_MAP
+        }
+        console.log("输出的啊", this.FREIGHT_STATUS_MAP_FILTER, this.detail.freight_status);
     },
     created() {
         this.id = Number(this.$route.query.id) || 0;
@@ -1509,6 +1523,7 @@ export default {
                 shipping_time_estimated: this.detail?.freight_audit_record?.content?.shipping_time_estimated,
                 freight: this.detail?.freight_audit_record?.content?.freight,
             };
+            this.isShippingConfirmVisible = false
         },
 
         // 取消二次弹窗填写原因
@@ -1537,21 +1552,21 @@ export default {
         MoreActions() {
             // 平台方 => 订单状态(待支付,待生产,生产中) || 订单取消状态(待审核)
             // 分销商 => 订单状态(待生产,生产中) || 订单取消状态(待审核)
-            if (this.$Util.Common.returnTypeBool(this.loginType, [USER_TYPE.ADMIN])) {
+            if (this.$Util.Common.isMember(this.loginType, [USER_TYPE.ADMIN])) {
                 return (
-                    this.$Util.Common.returnTypeBool(this.detail.status, [
+                    this.$Util.Common.isMember(this.detail.status, [
                         STATUS.WAIT_PAY,
                         STATUS.WAIT_PRODUCED,
                         STATUS.IN_PRODUCTION,
                     ]) ||
-                    this.$Util.Common.returnTypeBool(this.detail.cancel_status, [
+                    this.$Util.Common.isMember(this.detail.cancel_status, [
                         AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL,
                     ])
                 );
-            } else if (this.$Util.Common.returnTypeBool(this.loginType, [USER_TYPE.DISTRIBUTOR])) {
+            } else if (this.$Util.Common.isMember(this.loginType, [USER_TYPE.DISTRIBUTOR])) {
                 return (
-                    this.$Util.Common.returnTypeBool(this.detail.status, [STATUS.IN_PRODUCTION]) ||
-                    this.$Util.Common.returnTypeBool(this.detail.cancel_status, [
+                    this.$Util.Common.isMember(this.detail.status, [STATUS.IN_PRODUCTION]) ||
+                    this.$Util.Common.isMember(this.detail.cancel_status, [
                         AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL,
                     ])
                 );
