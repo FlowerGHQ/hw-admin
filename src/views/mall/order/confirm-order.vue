@@ -62,6 +62,30 @@
             <p class="title">{{ $t('mall.transportation_information') }}</p>
             <div class="box transport">
                 <div class="key-value">
+                    <div class="key required" :class="[form.shipping_type ? '' : 'red']">
+                        {{ $t('mall.transportation_method') }}:
+                    </div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.shipping_type">
+                            <a-radio v-for="item in TRANSFER_METHODS" :value="item.value">
+                                {{ $t(item.nameLang) }}
+                            </a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="key-value">
+                    <div class="key required" :class="[form.destination_port ? '' : 'red']">
+                        {{ $t('mall.destination_port') }}:
+                    </div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.destination_port">
+                            <a-radio v-for="item in DESTINATION_PORT" :value="item.value">
+                                {{ $t(item.nameLang) }}
+                            </a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="key-value">
                     <div class="key required" :class="[form.flag_part_shipment ? '' : 'red']">
                         {{ $t('mall.allowed_batch') }}:
                     </div>
@@ -209,6 +233,8 @@ export default {
                 address: '',
                 email: '',
                 flag_order_type: undefined,
+                shipping_type: -1,
+                destination_port: -1,
                 flag_part_shipment: -1, // 分批发货
                 flag_transfer: -1, // 转运
                 // insured: undefined, // 是否参保
@@ -420,6 +446,14 @@ export default {
             this.selectIndex = item.id;
         },
         checkForm() {
+            if (this.$auth('DISTRIBUTOR') && (!this.form.shipping_type || this.form.shipping_type === -1)) {
+                this.form.shipping_type = undefined;
+                return this.$message.warning(this.$t('common.please_select') + this.$t('mall.transportation_method'));
+            }
+            if (this.$auth('DISTRIBUTOR') && (!this.form.destination_port || this.form.destination_port === -1)) {
+                this.form.destination_port = undefined;
+                return this.$message.warning(this.$t('common.please_select') + this.$t('mall.destination_port'));
+            }
             if (this.$auth('DISTRIBUTOR') && (!this.form.flag_part_shipment || this.form.flag_part_shipment === -1)) {
                 this.form.flag_part_shipment = undefined;
                 return this.$message.warning(this.$t('common.please_select') + this.$t('mall.allowed_batch'));
@@ -483,6 +517,10 @@ export default {
                 item_list: item_list.filter(item => item),
             };
             if (this.$auth('DISTRIBUTOR')) {
+                parms['shipping_type'] = this.form.shipping_type;
+                parms['destination_port'] = this.$t(
+                    this.DESTINATION_PORT.filter(i => i.value === this.form.destination_port)[0].nameLang || '',
+                );
                 parms['flag_part_shipment'] = this.form.flag_part_shipment;
                 parms['flag_transfer'] = this.form.flag_transfer;
                 // parms['insured'] = this.form.insured;
