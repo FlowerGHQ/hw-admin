@@ -105,7 +105,7 @@
                         <template v-if="column.key === 'fault_type'">
                             <template
                                 v-if="
-                                    $Util.Common.returnTypeBool(record.type, [
+                                    $Util.Common.isMember(record.type, [
                                         Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY /*电池*/,
                                     ])
                                 "
@@ -249,7 +249,7 @@
                             </a-button>
                             <template
                                 v-if="
-                                    !$Util.Common.returnTypeBool(record.status, [
+                                    !$Util.Common.isMember(record.status, [
                                         Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED,
                                     ])
                                 "
@@ -523,7 +523,7 @@ const tableColumns = computed(() => {
         ];
     } else if (isDistributerAdmin.value) {
         columns = [
-            { title: proxy.$t('customer-care.Construction_site_number'), dataIndex: 'uid', key: 'uid' }, // 工单编号
+            { title: proxy.$t('customer-care.construction_site_number'), dataIndex: 'uid', key: 'uid' }, // 问询单编号
             { title: proxy.$t('customer-care.classify'), dataIndex: 'purpose', key: 'purpose' }, // 归类
             { title: proxy.$t('common.type'), dataIndex: 'type', key: 'type' }, // 类型
             { title: proxy.$t('customer-care.submitter'), dataIndex: 'submit_user_name', key: 'submit_user_name' }, // 提交人

@@ -199,7 +199,7 @@ const FREIGHT_PAY_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_PAY_STATUS_MAP;
 const AUDIT_CANCEL_STATUS_MAP = Core.Const.DISTRIBUTOR.AUDIT_CANCEL_STATUS_MAP;
 const SEARCH_TYPE = Core.Const.PURCHASE.SEARCH_TYPE;
 
-const isDistributerAdmin = ref(Core.Util.Common.returnTypeBool(Core.Data.getLoginType(), [Core.Const.LOGIN.TYPE.ADMIN])); // 根据路由判断其是用在分销商(false) 还是平台方(true)
+const isDistributerAdmin = ref(Core.Util.Common.isMember(Core.Data.getLoginType(), [Core.Const.LOGIN.TYPE.ADMIN])); // 根据路由判断其是用在分销商(false) 还是平台方(true)
 const searchForm = ref({
     final_pay_due_begin_time: undefined, // 应付尾款开始时间
     final_pay_due_end_time: undefined, // 应付尾款结束时间

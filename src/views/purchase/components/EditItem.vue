@@ -7,8 +7,19 @@
                 </div>
                 <div class="btns-area">
                     <div class="collapse-title-right">
-                        <!-- 赠送商品 平台方能看 -->
-                        <div v-if="type === 'GIVE_ORDER' && this.$auth('ADMIN')" class="give-order">
+                        <!-- 赠送商品 && 平台方能看 && 订单状态(等待审核 待支付 待生产)可见 -->
+                        <div
+                            v-if="
+                                type === 'GIVE_ORDER' &&
+                                this.$auth('ADMIN') &&
+                                $Util.Common.isMember(detail.status, [
+                                    STATUS.WAIT_AUDIT,
+                                    STATUS.WAIT_PAY,
+                                    STATUS.WAIT_PRODUCED,
+                                ])
+                            "
+                            class="give-order"
+                        >
                             <ItemSelect
                                 :isShowBtn="isGiftOrderBtn"
                                 @select="handleAddItem"
@@ -91,7 +102,7 @@
                                     style="width: 120px"
                                     :min="0"
                                     :precision="0"
-                                    @blur="inputChange('amount', record)"
+                                    @blur="inputChange('purchase_amount', record)"
                                 />
                                 <!-- 平台方 && 赠送订单 -->
                                 <a-input-number
@@ -100,7 +111,7 @@
                                     style="width: 120px"
                                     :min="0"
                                     :precision="0"
-                                    @blur="handleUpdateFetch(record)"
+                                    @blur="inputChange('give_amount', record)"
                                 />
                             </template>
 
@@ -146,9 +157,9 @@
 
 <script>
 import Core from '@/core';
-const USER_TYPE = Core.Const.USER.TYPE;
 const PURCHASE_TYPE = Core.Const.PURCHASE.TYPE;
-const WALLET_TYPE_MAP = Core.Const.WALLET.TYPE_MAP;
+const STATUS = Core.Const.PURCHASE.STATUS;
+
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 export default {
     name: 'EditPurchaseItem',
@@ -177,11 +188,14 @@ export default {
             type: Boolean,
             default: false,
         },
+        //
     },
     data() {
         return {
+            STATUS,
             loading: false,
             tableData: [],
+            giveList: [], // 赠品单数据
         };
     },
     computed: {
@@ -270,6 +284,7 @@ export default {
                 order_id: this.orderId,
             })
                 .then(res => {
+                    this.giveList = res.list;
                     this.tableData = res.list.map(i => {
                         let item = i.item || {};
                         item.amount = i.amount;
@@ -288,17 +303,11 @@ export default {
                 });
         },
         // 更新赠品单
-        handleUpdateFetch(record) {
-            console.log(record);
-            Core.Api.Purchase.updateGiveaway({
-                item_list: [
-                    {
-                        item_id: record.item_id,
-                        order_id: record.order_id,
-                        amount: record.amount,
-                    },
-                ],
-            })
+        handleUpdateFetch(params = {}) {
+            let obj = {
+                ...params,
+            };
+            Core.Api.Purchase.updateGiveaway(obj)
                 .then(() => {
                     this.getGiveawayListFetch();
                 })
@@ -375,17 +384,22 @@ export default {
                     okText: this.$t('def.sure'),
                     cancelText: this.$t('def.cancel'),
                     onOk: () => {
-                        Core.Api.Purchase.deleteGiveaway({
-                            item_id: record.item_id,
-                            order_id: record.order_id,
-                        })
-                            .then(() => {
-                                this.$message.success(this.$t('pop_up.delete_success'));
-                                this.getGiveawayListFetch();
+                        console.log('record', record);
+                        if (record.order_id) {
+                            Core.Api.Purchase.deleteGiveaway({
+                                item_id: record.item_id,
+                                order_id: record.order_id,
                             })
-                            .catch(err => {
-                                console.log('handleRemoveItem err:', err);
-                            });
+                                .then(() => {
+                                    this.$message.success(this.$t('pop_up.delete_success'));
+                                    this.getGiveawayListFetch();
+                                })
+                                .catch(err => {
+                                    console.log('handleRemoveItem err:', err);
+                                });
+                        } else {
+                            this.tableData = this.tableData.filter(el => el.id !== record.id);
+                        }
                     },
                     onCancel: () => {
                         console.log('Cancel');
@@ -421,8 +435,17 @@ export default {
                         price: this.$Util.countFilter(parseInt(item.unit_price * item.amount), 100, 2, true),
                         type: item.type,
                     }));
-                    
-                    this.saveCreateGiveawayFetch({ item_list });
+
+                    console.log('GIVE_ORDER', item_list);
+                    if (this.giveList.length) {
+                        this.handleUpdateFetch({
+                            id: this.giveList[0].order_id,
+                            item_list,
+                        });
+                    } else {
+                        this.saveCreateGiveawayFetch({ item_list });
+                    }
+
                     break;
             }
         },
@@ -442,12 +465,24 @@ export default {
         // 数量单价改变
         inputChange(type, record) {
             switch (type) {
-                case 'amount':
+                case 'purchase_amount':
                     console.log('record', record);
                     record.unit_price = this.$Util.countFilter(
                         record[this.$Util.Number.getStepPriceIndexByNums(record.amount, this.detail.currency)],
                     );
                     record.price = record.amount * record.unit_price;
+                    break;
+                case 'give_amount':
+                    this.handleUpdateFetch({
+                        id: this.giveList[0].order_id,
+                        item_list: [
+                            {
+                                item_id: record.item_id,
+                                order_id: record.order_id,
+                                amount: record.amount,
+                            },
+                        ],
+                    });
                     break;
                 case 'unit_price':
                     record.price = record.amount * record.unit_price;

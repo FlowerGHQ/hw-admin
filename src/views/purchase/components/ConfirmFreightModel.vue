@@ -31,7 +31,7 @@
                     </div>
                     <div
                         class="reason search-col d-a-s"
-                        :class="{ required: $Util.Common.returnTypeBool(search_params.result, [AUDIT_RESULT.REFUSE]) }"
+                        :class="{ required: $Util.Common.isMember(search_params.result, [AUDIT_RESULT.REFUSE]) }"
                     >
                         <div class="key w-80 t-a-r">{{ $t('common.reason') }}：</div>
                         <div class="value flex-1">
@@ -121,7 +121,7 @@ const handleOk = () => {
         { 
             key: 'remark', 
             msg: proxy.$t('def.enter') + '(' + proxy.$t('common.reason') + ')', 
-            isVerification: proxy.$Util.Common.returnTypeBool(search_params.value.result, [AUDIT_RESULT.REFUSE]) 
+            isVerification: proxy.$Util.Common.isMember(search_params.value.result, [AUDIT_RESULT.REFUSE]) 
         },
     ];
 
