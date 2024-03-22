@@ -1108,7 +1108,7 @@ const getVehicleList = () => {
             filterData(accessoriesList.value, 'accessoriesList');
             filterData(peripheralList.value, 'peripheralList');
             filterData(promotionalList.value, 'promotionalList');
-            back2Top();
+            // back2Top();
         })
         .finally(() => {
             spinning.value = false;
@@ -1137,7 +1137,7 @@ const handleAddCart = item => {
     };
     Core.Api.ShopCart.save({ ...params })
         .then(() => {
-            getVehicleList(); // 更新
+            // getVehicleList(); // 更新
         })
         .finally(() => {
             editCount.value = '';

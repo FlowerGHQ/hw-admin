@@ -112,10 +112,11 @@
                         class="key required"
                         :class="[form.deliver_time_expected || deliver_time_expected_first ? '' : 'red']"
                     >
-                        {{ $t('mall.expected_delivery') }}:<a-tooltip>
+                        {{ $t('mall.expected_delivery') }}:
+                        <!-- <a-tooltip>
                             <template #title>{{ $t('mall.calculation') }}</template>
                             <img class="tips" src="@images/mall/order/tips.png" />
-                        </a-tooltip>
+                        </a-tooltip> -->
                     </div>
                     <div class="value">
                         <a-date-picker
@@ -419,35 +420,27 @@ export default {
             this.selectIndex = item.id;
         },
         checkForm() {
-            let allEntered = true;
-            if (!this.selectIndex) {
-                allEntered = false;
-            }
             if (this.$auth('DISTRIBUTOR') && (!this.form.flag_part_shipment || this.form.flag_part_shipment === -1)) {
                 this.form.flag_part_shipment = undefined;
-                allEntered = false;
+                return this.$message.warning(this.$t('common.please_select') + this.$t('mall.allowed_batch'));
             }
             if (this.$auth('DISTRIBUTOR') && (!this.form.flag_transfer || this.form.flag_transfer === -1)) {
                 this.form.flag_transfer = undefined;
-                allEntered = false;
+                return this.$message.warning(this.$t('common.please_select') + this.$t('mall.forwarding_allowed'));
             }
             // if (this.$auth('DISTRIBUTOR') && !this.form.insured) {
             //     allEntered = false;
             // }
             if (this.$auth('DISTRIBUTOR') && (!this.form.flag_pallet || this.form.flag_pallet === -1)) {
                 this.form.flag_pallet = undefined;
-                allEntered = false;
+                return this.$message.warning(this.$t('common.please_select') + this.$t('mall.flag_pallet'));
             }
             if (
                 this.$auth('DISTRIBUTOR') &&
                 (!this.form.deliver_time_expected || this.form.deliver_time_expected === -1)
             ) {
                 this.deliver_time_expected_first = false;
-                allEntered = false;
-            }
-            if (!allEntered) {
-                allEntered = false;
-                return this.$message.warning(this.$t('def.enter'));
+                return this.$message.warning(this.$t('common.please_select') + this.$t('mall.expected_delivery'));
             }
             return false;
         },

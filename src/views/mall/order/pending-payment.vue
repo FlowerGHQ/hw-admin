@@ -23,6 +23,11 @@
                                         {{
                                             mes.pay_type ? Core.Const.DISTRIBUTOR.PAY_TIME_LIST[mes.pay_type][lang] : ''
                                         }}
+                                        <span v-if="pay_type === Core.Const.DISTRIBUTOR.PAY_TIME.OA">
+                                            {{
+                                                `(${$t('mall.balance_payment')}${mes.pay_final_pay_ratio}%，${$t('mall.account_period')}${detail.pay_oa_day}${$t('mall.days')})`
+                                            }}
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="deposit-payment-row">
@@ -57,7 +62,11 @@
                                 <div class="deposit-payment-row">
                                     <div class="deposit-payment-row-left">{{ $t('mall.freight_amount') }}:</div>
                                     <div class="deposit-payment-row-right">
-                                        {{ unit }} {{ detail.freight || $t('mall.undetermined') }}
+                                        {{
+                                            detail.freight_status === Core.Const.DISTRIBUTOR.FREIGHT_STATUS.CONFIRMED
+                                                ? `${unit} ${detail.freight}`
+                                                : $t('mall.undetermined')
+                                        }}
                                     </div>
                                 </div>
                                 <div class="deposit-payment-row">
@@ -165,7 +174,8 @@
                                 <div class="recharge">
                                     <span class="recharge-balance"
                                         >{{ $t('mall.credit_balance') }}：<span class="price"
-                                            >{{ unit }} {{ balanceCredit }}</span
+                                            >{{ unit }}
+                                            {{ balanceCredit + end_price /* 授信额度展示原额度 + 已占有额度 */ }}</span
                                         ></span
                                     >
                                 </div>
@@ -182,10 +192,13 @@
                 <div class="settlement">
                     <div class="settlement-mes">
                         <div class="settlement-price">
-                            <span class="warn" v-if="!isPre && !detail.freight">
+                            <span class="warn" v-if="!isFreightConfirmed">
                                 （{{ $t('mall.determined_to_pay') }}）
                             </span>
                             <span class="dis"> {{ $t('mall.payable_amount') }}: </span>
+                            <span class="dis" v-if="!isPre && detail.freight_pay_status === 100 && detail.freight">
+                                {{ $t('mall.include_freight') }}:
+                            </span>
                             <span class="price"> {{ unit }} {{ need_pay }} </span>
                         </div>
                         <p class="settlement-balance warn" v-if="disabled">
@@ -197,7 +210,7 @@
                         type="primary"
                         padding="12px 32px"
                         font="14px"
-                        :disabled="disabled"
+                        :disabled="disabled || !isFreightConfirmed"
                         @click.native="handlePayOrder"
                     >
                         {{ $t('mall.pay_now') }}
@@ -227,7 +240,7 @@ const orgId = Core.Data.getOrgId();
 const orgType = Core.Data.getOrgType();
 const org = Core.Data.getOrgObj();
 const unit = ref('€');
-const pay_type = ref(''); // 60:OA 70:TT
+const pay_type = ref(''); // 60:TT 70:OA
 const isSelectEnd = ref(true); // 是否选中支付尾款
 const isAfter = ref(''); // 售前
 const detail = reactive({});
@@ -245,16 +258,19 @@ const disabled = computed(() => {
         // 售后
         return balance.value < pre_price.value;
     } else {
-        if (pay_type.value === 60) {
-            //OA
-            return balance.value < need_pay.value;
-        } else if (pay_type.value === 70) {
-            //TT
+        if (
+            pay_type.value === Core.Const.DISTRIBUTOR.PAY_TIME.TT ||
+            pay_type.value === Core.Const.DISTRIBUTOR.PAY_TIME.OA
+        ) {
             return balance.value < need_pay.value;
         } else {
             return true;
         }
     }
+});
+const isFreightConfirmed = computed(() => {
+    if (isPre.value) return true; // 预付款不做判断
+    return detail.freight_status === Core.Const.DISTRIBUTOR.FREIGHT_STATUS.CONFIRMED;
 });
 const isPre = computed(() => {
     if (

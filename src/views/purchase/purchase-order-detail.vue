@@ -309,6 +309,11 @@
                         <div class="key">{{ $t('p.payment_terms') }}:</div>
                         <div class="value">
                             {{ $Util.payTypeFilter(detail.pay_type, $i18n.locale) || '-' }}
+                            <span v-if="detail.pay_type === Core.Const.DISTRIBUTOR.PAY_TIME.OA">
+                                {{
+                                    `(${$t('mall.balance_payment')}${parseFloat((100 - detail.pay_pre_pay_ratio).toFixed(2))}%，${$t('mall.account_period')}${detail.pay_oa_day}${$t('mall.days')})`
+                                }}
+                            </span>
                         </div>
                     </div>
                     <!-- 是否分批发货 -->
@@ -1673,7 +1678,7 @@ export default {
 
             .value {
                 margin-left: 10px;
-                width: 140px;
+                width: 160px;
                 font-size: 14px;
                 line-height: 22px;
             }

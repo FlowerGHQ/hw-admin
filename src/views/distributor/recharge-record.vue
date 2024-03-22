@@ -107,16 +107,14 @@ const tableColumns = computed(() => {
     ];
     return columns;
 });
-const statusMap = computed(() => {
-    return {
-        //  //1.待审核(一审)；2.审核通过；3.审核不通过(一审) 4 等待二审 5 二审不通过
-        1: $t('distributor-detail.rechargeing'),
-        2: $t('distributor-detail.arrival_success'),
-        3: $t('distributor-detail.arrival_failed'),
-        4: $t('distributor-detail.rechargeing'),
-        5: $t('distributor-detail.arrival_failed'),
-    };
-});
+const statusMap = {
+    //  //1.待审核(一审)；2.审核通过；3.审核不通过(一审) 4 等待二审 5 二审不通过
+    1: $t('distributor-detail.rechargeing'),
+    2: $t('distributor-detail.arrival_success'),
+    3: $t('distributor-detail.arrival_failed'),
+    4: $t('distributor-detail.rechargeing'),
+    5: $t('distributor-detail.arrival_failed'),
+};
 
 // 模拟request
 const request = Core.Api.Distributor.rechargeList;

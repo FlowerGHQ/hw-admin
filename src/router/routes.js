@@ -109,6 +109,17 @@ const routes = [
     mallRouters,
     dealsPreview,
     {
+        path: '/mall/index',
+        component: () => import('@/views/mall/purchase/index.vue'),
+        meta: {
+            title: '采购',
+            title_en: 'Purchase',
+            icon: 'i_s_item',
+            roles: [LOGIN_TYPE.DISTRIBUTOR],
+            not_sub_menu: true,
+        },
+    },
+    {
         // 看板
         path: '/dashboard',
         component: Layout,
