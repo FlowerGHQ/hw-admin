@@ -16,10 +16,7 @@
                 <div
                     class="btns-area"
                     v-if="
-                        ($Util.Common.isMember(detail.type, [
-                            FLAG_ORDER_TYPE.PRE_SALES,
-                            FLAG_ORDER_TYPE.AFTER_SALES,
-                        ]) &&
+                        ($Util.Common.isMember(detail.type, [FLAG_ORDER_TYPE.PRE_SALES, FLAG_ORDER_TYPE.AFTER_SALES]) &&
                             $Util.Common.isMember(detail.status, [
                                 STATUS.WAIT_AUDIT,
                                 STATUS.WAIT_PAY,
@@ -160,9 +157,7 @@
                             ])
                         "
                         :disabled="
-                            $Util.Common.isMember(detail.cancel_status, [
-                                AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL,
-                            ])
+                            $Util.Common.isMember(detail.cancel_status, [AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL])
                         "
                         type="primary"
                         @click="
@@ -175,9 +170,7 @@
                         <!-- 目前仅展示待审核 -->
                         <span
                             v-if="
-                                $Util.Common.isMember(detail.cancel_status, [
-                                    AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL,
-                                ])
+                                $Util.Common.isMember(detail.cancel_status, [AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL])
                             "
                             >({{ $t('distributor-detail.under_review') }})</span
                         >
@@ -330,6 +323,20 @@
                             {{ $Util.purchaseTransferFilter(detail.flag_transfer, $i18n.locale) }}
                         </div>
                     </div>
+                    <!-- 是否转运 -->
+                    <div class="info-item">
+                        <div class="key">{{ $t('mall.transportation_method') }}:</div>
+                        <div class="value">
+                            {{ $t($Util.purchaseTransportMethodFilter(detail.shipping_type)) }}
+                        </div>
+                    </div>
+                    <!-- 是否转运 -->
+                    <div class="info-item">
+                        <div class="key">{{ $t('mall.destination_port') }}:</div>
+                        <div class="value">
+                            {{ detail.destination_port }}
+                        </div>
+                    </div>
                     <!-- 备注信息 -->
                     <div class="info-item">
                         <div class="key">{{ $t('p.remark') }}:</div>
@@ -419,7 +426,7 @@
                         :class="$Util.Common.returenValue(FREIGHT_STATUS_MAP_FILTER, detail.freight_status, 'color')"
                     >
                         {{ detail.freight_audit_record?.remark }}
-                    </div>                    
+                    </div>
                     <!-- 分销商(待填写)不展示 -->
                     <div
                         class="status status-bg freight-status-style"
@@ -1021,14 +1028,14 @@ export default {
             // 分销商
             for (const key in FREIGHT_STATUS_MAP) {
                 if (FREIGHT_STATUS_MAP[key].key !== FREIGHT_STATUS.TO_BE_FILLED_IN) {
-                    this.FREIGHT_STATUS_MAP_FILTER[key] = FREIGHT_STATUS_MAP[key]
+                    this.FREIGHT_STATUS_MAP_FILTER[key] = FREIGHT_STATUS_MAP[key];
                 }
-            }            
+            }
         } else if (this.$Util.Common.isMember(this.loginType, [USER_TYPE.ADMIN])) {
             // 平台方
-            this.FREIGHT_STATUS_MAP_FILTER = FREIGHT_STATUS_MAP
+            this.FREIGHT_STATUS_MAP_FILTER = FREIGHT_STATUS_MAP;
         }
-        console.log("输出的啊", this.FREIGHT_STATUS_MAP_FILTER, this.detail.freight_status);
+        console.log('输出的啊', this.FREIGHT_STATUS_MAP_FILTER, this.detail.freight_status);
     },
     created() {
         this.id = Number(this.$route.query.id) || 0;
@@ -1523,7 +1530,7 @@ export default {
                 shipping_time_estimated: this.detail?.freight_audit_record?.content?.shipping_time_estimated,
                 freight: this.detail?.freight_audit_record?.content?.freight,
             };
-            this.isShippingConfirmVisible = false
+            this.isShippingConfirmVisible = false;
         },
 
         // 取消二次弹窗填写原因
@@ -1559,16 +1566,12 @@ export default {
                         STATUS.WAIT_PRODUCED,
                         STATUS.IN_PRODUCTION,
                     ]) ||
-                    this.$Util.Common.isMember(this.detail.cancel_status, [
-                        AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL,
-                    ])
+                    this.$Util.Common.isMember(this.detail.cancel_status, [AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL])
                 );
             } else if (this.$Util.Common.isMember(this.loginType, [USER_TYPE.DISTRIBUTOR])) {
                 return (
                     this.$Util.Common.isMember(this.detail.status, [STATUS.IN_PRODUCTION]) ||
-                    this.$Util.Common.isMember(this.detail.cancel_status, [
-                        AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL,
-                    ])
+                    this.$Util.Common.isMember(this.detail.cancel_status, [AUDIT_CANCEL_STATUS.WAITING_FOR_APPROVAL])
                 );
             }
         },

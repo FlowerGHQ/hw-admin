@@ -922,6 +922,11 @@ let Const = {
             { nameLang: 'mall.by_air', value: 2 },
             { nameLang: 'mall.by_water_transportation', value: 3 },
         ],
+        TRANSFER_METHODS_MAP: {
+            1: 'mall.by_truck',
+            2: 'mall.by_air',
+            3: 'mall.by_water_transportation',
+        },
         // 目的港
         DESTINATION_PORT: [
             { nameLang: 'mall.victoria_harbour', value: 1 },

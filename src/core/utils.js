@@ -671,6 +671,10 @@ const Util = {
         let item = MAP[val + ''] || {};
         return item[to] || '';
     },
+    purchaseTransportMethodFilter(val) {
+        const MAP = Const.PURCHASE.TRANSFER_METHODS_MAP;
+        return MAP[val] || '-';
+    },
     purchaseExpressFilter(val, to = 'zh') {
         if (val === 0) {
             return '-';
