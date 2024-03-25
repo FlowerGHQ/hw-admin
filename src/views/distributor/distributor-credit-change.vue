@@ -62,7 +62,7 @@ const request = Core.Api.ActionLog.list;
 const initParam = ref({
     org_id: route.query.org_id,
     org_type: 15,
-    type: 701,
+    type: 1001,
 });
 
 const tableColumns = computed(() => {

@@ -136,7 +136,7 @@ const request = Core.Api.ActionLog.list;
 const initParam = ref({
     org_id: props.detail.id,
     org_type: 15,
-    type: 801,
+    type: 1002,
 });
 const INITIAL_PAGE_PARAMS = ref({
     // 当前页数
