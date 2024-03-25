@@ -31,7 +31,7 @@
                 v-model:visible="visible"
                 centered
                 :getContainer="() => modalRefs"
-                :title="$t('distributor-detail.credit_balance')"
+                :title="$t('distributor-detail.operation_record')"
                 @ok="handleOk"
                 @cancel="handleCancel"
                 :footer="null"
