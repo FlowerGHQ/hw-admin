@@ -84,7 +84,7 @@ const supplyMaterialManagement =  {
     children: [
         {
             path: 'material-list',
-            name: 'MaterialList',
+            name: 'SupplyMaterialList',
             component: () => import('@/views/item/item-list.vue'),
             meta: {
                 title: '物料列表',
@@ -94,7 +94,7 @@ const supplyMaterialManagement =  {
         },
         {
             path: 'material-edit',
-            name: 'MaterialEdit',
+            name: 'SupplyMaterialEdit',
             component: () => import('@/views/item/item-edit.vue'),
             meta: {
                 hidden: true,
@@ -104,7 +104,7 @@ const supplyMaterialManagement =  {
         },
         {
             path: 'material-detail',
-            name: 'MaterialDetail',
+            name: 'SupplyMaterialDetail',
             component: () => import('@/views/item/item-detail.vue'),
             meta: {
                 hidden: true,
@@ -114,7 +114,7 @@ const supplyMaterialManagement =  {
         },
         {
             path: 'material-explored-edit',
-            name: 'MaterialExploredEdit',
+            name: 'SupplyMaterialExploredEdit',
             component: () => import('@/views/item/item-explored-edit.vue'),
             meta: {
                 hidden: true,
@@ -124,7 +124,7 @@ const supplyMaterialManagement =  {
         },
         {
             path: 'material-category',
-            name: 'MaterialCategory',
+            name: 'SupplyMaterialCategory',
             component: () => import('@/views/item/item-category.vue'),
             meta: {
                 title: '物料分类',
@@ -134,7 +134,7 @@ const supplyMaterialManagement =  {
         },
         {
             path: 'material-category-config',
-            name: 'MaterialCategoryConfig',
+            name: 'SupplyMaterialCategoryConfig',
             component: () => import('@/views/item/item-category-config.vue'),
             meta: {
                 hidden: true,
@@ -143,7 +143,7 @@ const supplyMaterialManagement =  {
         },
         {
             path: 'material-category-explored',
-            name: 'MaterialCategoryExplored',
+            name: 'SupplyMaterialCategoryExplored',
             component: () => import('@/views/item/Item-category-explored.vue'),
             meta: {
                 hidden: true,
@@ -152,7 +152,7 @@ const supplyMaterialManagement =  {
         },
         {
             path: 'material-bom',
-            name: 'MaterialBom',
+            name: 'SupplyMaterialBom',
             component: () => import('@/views/item/item-bom.vue'),
             meta: {
                 title: 'BOM管理',
