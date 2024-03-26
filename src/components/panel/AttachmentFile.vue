@@ -127,7 +127,7 @@ export default {
                 data: {},
                 handleCustomRequest(options) {
                     const formData = new FormData();
-                    formData.append('type', 'file');
+                    formData.append('type', 'img');
                     formData.append('file', options.file);
 
                     axios
