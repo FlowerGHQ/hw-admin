@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import Core from '../../core';
+import Core from '@/core';
 import axios from 'axios';
 
 export default {
@@ -131,7 +131,7 @@ export default {
                     formData.append('file', options.file);
 
                     axios
-                        .post('http://eos-dev-api.horwincloud.com/core/1/file/file-upload', formData)
+                        .post(Core.Const.NET.FILE_UPLOAD_END_POINT, formData)
                         .then(response => {
                             // 请求成功时调用 onSuccess 回调函数，传递响应数据
                             options.onSuccess(response.data);
