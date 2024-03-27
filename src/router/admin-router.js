@@ -160,4 +160,40 @@ const adminEmpty = {
         },
     ],
 };
-export { inquiryManagement, operationManagement, adminEmpty };
+
+// 仓储管理(Warehousing management)
+const warehousingManagement = {
+    path: '/warehousing-management',
+    component: Layout,
+    redirect: '/warehousing-management/report-list',
+    name: 'WarehousingManagement',
+    type: [ROUTER_TYPE.PRODUCTION],
+    meta: {
+        title: '仓储管理',
+        title_en: 'Warehousing Management',
+        icon: 'i_order',
+        roles: [LOGIN_TYPE.ADMIN],        
+    },
+    children: [
+        {
+            path: 'procurement',
+            name: 'WarehousingManagementProcurement',
+            component: () => import('@/views/admin/warehousing-management/procurement.vue'),
+            meta: {
+                title: '采购入库单列表',
+                title_en: 'List Of Purchase Orders',                
+            },
+        },  
+        {
+            path: 'production',
+            name: 'WarehousingManagementProduction',
+            component: () => import('@/views/admin/warehousing-management/production.vue'),
+            meta: {
+                title: '生产订单列表',
+                title_en: 'Production Order List',                
+            },
+        },  
+    ],
+};
+
+export { inquiryManagement, operationManagement, adminEmpty, warehousingManagement };

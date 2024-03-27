@@ -11,7 +11,7 @@ import { mallRouters, dealsPreview } from './mall';
 // 分销商路由
 import { customerCare } from './distributor-router';
 // 平台方路由
-import { inquiryManagement, adminEmpty, operationManagement } from './admin-router';
+import { inquiryManagement, adminEmpty, operationManagement, warehousingManagement } from './admin-router';
 // 平台方路由
 import { fsLogin } from './fs-login';
 
@@ -1573,6 +1573,7 @@ const routes = [
             },
         ],
     },
+    warehousingManagement,
     {
         // 账户管理
         path: '/wallet',
