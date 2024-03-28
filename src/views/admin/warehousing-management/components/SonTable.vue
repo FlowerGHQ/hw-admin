@@ -1,10 +1,6 @@
 <template>
     <div id="customer-care">
-        <div class="list-container">
-            <!-- 头部 -->
-            <div class="title-container">
-                <div class="title-area">{{ $t('warehousing-management.title') }}</div>
-            </div>
+        <div>
             <div class="search">
                 <SearchAll
                     ref="search_all"
@@ -86,7 +82,7 @@ const searchList = ref([
         // 入库单号
         type: 'input',
         value: undefined,
-        searchParmas: 'uid',
+        searchParmas: 'code',
         key: 'warehousing-management.uid',
     },
     {
@@ -102,15 +98,14 @@ const tableColumns = ref();
 /* 生命周期*/
 onMounted(() => {
     tableColumns.value = [
-        { title: proxy.$t('warehousing-management.uid'), dataIndex: 'uid', key: 'uid' }, // 入库单号
-        { title: proxy.$t('warehousing-management.serial'), dataIndex: 'serial', key: 'serial' }, // 批次单号
-        { title: proxy.$t('warehousing-management.supplier_name'), dataIndex: 'supplier_name', key: 'supplier_name' }, // 供应商
-        { title: proxy.$t('warehousing-management.sn'), dataIndex: 'sn', key: 'sn' }, // 订单号
-        { title: proxy.$t('warehousing-management.sync_id'), dataIndex: 'sync_id', key: 'sync_id' }, // 存货编码
-        // { title: proxy.$t('warehousing-management.create_time'), dataIndex: '', key: '' }, // 存货名称
-        // { title: proxy.$t('warehousing-management.create_time'), dataIndex: '', key: '' }, // 规格型号
-        { title: proxy.$t('warehousing-management.amount'), dataIndex: 'amount', key: 'amount' }, // 总数量
-        { title: proxy.$t('warehousing-management.create_remarktime'), dataIndex: 'remark', key: 'remark' }, // 备注
+        { title: proxy.$t('warehousing-management.product_item_code'), dataIndex: 'code', key: 'code' }, // 子件编码
+        { title: proxy.$t('warehousing-management.product_item_'), dataIndex: 'name', key: 'name' }, // 子件名称
+        { title: proxy.$t('warehousing-management.product_item_'), dataIndex: 'supplier_name', key: 'supplier_name' }, // 子件规格
+        { title: proxy.$t('warehousing-management.product_item_'), dataIndex: 'sn', key: 'sn' }, // 基本用量
+        { title: proxy.$t('warehousing-management.product_item_amount'), dataIndex: 'amount', key: 'amount' }, // 应领数量
+        { title: proxy.$t('warehousing-management.product_item_'), dataIndex: '', key: '' }, // 已领数量
+        { title: proxy.$t('warehousing-management.product_item_'), dataIndex: '', key: '' }, // 未完成数量
+        { title: proxy.$t('warehousing-management.product_item_'), dataIndex: 'amount', key: 'amount' }, // 物料管理员
     ];
 });
 /* 生命周期*/

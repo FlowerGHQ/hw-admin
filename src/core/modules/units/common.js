@@ -84,5 +84,5 @@ export default {
         } else {
             throw Error('No window.getSelection!')
         }
-    }
+    },
 };
