@@ -1079,6 +1079,12 @@ const apiList = {
         save: ['PostJson', 'announcement/save'], // 新增
         updateStatus: ['PostJson', 'announcement/update-status'], // 修改排序和状态
     },
+    WarehousingManagement: {
+        MaterialPurchaseOrderList: ['PostJson', 'invoice-item/material-purchase-order-list'], // 采购入库单列表
+        ProductionOrderList: ['PostJson', 'production-order-item-bind/production-order-list'], // 生产单列表
+        ProductionOrderDetail: ['PostJson', 'production-order-item-bind/detail'], // 生产单子件列表
+        ProductionOrderItemlist: ['PostJson', 'production-order-item/list'], // 生产单子件列表
+    }
 };
 
 export default new Api(baseUrl, apiList);

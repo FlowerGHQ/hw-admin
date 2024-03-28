@@ -193,6 +193,16 @@ const warehousingManagement = {
                 title_en: 'Production Order List',                
             },
         },  
+        {
+            path: 'son-production',
+            name: 'WarehousingManagementSonProduction',
+            component: () => import('@/views/admin/warehousing-management/son-production.vue'),
+            meta: {
+                hidden: true,
+                title: '生产订单列表',
+                title_en: 'Production Order List',                
+            },
+        },  
     ],
 };
 
