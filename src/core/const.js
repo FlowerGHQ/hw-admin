@@ -48,9 +48,9 @@ switch (window.location.hostname) {
         URL_POINT = 'https://eos-api-release.horwincloud.com'; // 预发环境
         break;
     default:
-        // URL_POINT = 'https://eos-dev-api.horwincloud.com'; // 测试服
+        URL_POINT = 'https://eos-dev-api.horwincloud.com'; // 测试服
         // URL_POINT = 'https://eos-api.horwincloud.com'; // 新正式服
-        URL_POINT = 'https://eos-api-release.horwincloud.com'; // 预发环境
+        // URL_POINT = 'https://eos-api-release.horwincloud.com'; // 预发环境
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.10.12.194:8889' // zwq
         // URL_POINT = 'http://10.10.12.75:8889'  // zy
@@ -1083,6 +1083,7 @@ let Const = {
                 2: { key: 2, zh: '整车', en: 'vehicle' },
                 3: { key: 3, zh: '唛头整车', en: 'Mark Vehicle' },
                 4: { key: 4, zh: '唛头配件', en: 'Mark Accessories' },
+                5: { key: 5, zh: '物料打托', en: 'Material Batching' },
             },
         },
         FILE: {
