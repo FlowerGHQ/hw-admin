@@ -26,15 +26,9 @@
                         <span class="table-title">{{ title }}</span>
                     </template>
                     <template #bodyCell="{ column, text, record }">
-                        <!-- 备注 -->
-                        <template v-if="column.key === 'remark'">
-                            <a-tooltip>
-                                <template #title>{{ text }}</template>
-                                <div class="one-spils cursor" :style="{ width: text?.length > 6 ? 7 * 12 + 'px' : '' }">
-                                    {{ text }}
-                                </div>
-                            </a-tooltip>
-                        </template>
+                        <template v-if="column.type === 'line'">
+                            {{ text || '-' }}
+                        </template>      
                     </template>
                 </a-table>
             </div>
@@ -64,33 +58,24 @@ import { useTable } from '@/hooks/useTable';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';
 import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
-import { useRouter, useRoute } from 'vue-router';
-import { message } from 'ant-design-vue';
-import { result } from 'lodash';
-const router = useRouter();
-const route = useRoute();
-const { proxy } = getCurrentInstance();
 
-// 常量
-const STATUS = Core.Const.FEEDBACK.STATUS;
-const LOGIN_TYPE = Core.Const.LOGIN.TYPE;
-const USER_TYPE = Core.Const.USER.TYPE;
+const { proxy } = getCurrentInstance();
 
 // 响应式常量
 const searchList = ref([
     {
-        // 入库单号
+        // 子件编码
         type: 'input',
         value: undefined,
         searchParmas: 'code',
-        key: 'warehousing-management.uid',
+        key: 'warehousing-management.product_item_component_code',
     },
     {
-        // 存货编码
+        // 物料管理员
         type: 'input',
         value: undefined,
-        searchParmas: 'sync_id',
-        key: 'warehousing-management.sync_id',
+        searchParmas: '',
+        key: 'warehousing-management.product_item_material_administrator',
     },
 ]);
 const tableColumns = ref();
@@ -98,23 +83,24 @@ const tableColumns = ref();
 /* 生命周期*/
 onMounted(() => {
     tableColumns.value = [
-        { title: proxy.$t('warehousing-management.product_item_code'), dataIndex: 'code', key: 'code' }, // 子件编码
-        { title: proxy.$t('warehousing-management.product_item_'), dataIndex: 'name', key: 'name' }, // 子件名称
-        { title: proxy.$t('warehousing-management.product_item_'), dataIndex: 'supplier_name', key: 'supplier_name' }, // 子件规格
-        { title: proxy.$t('warehousing-management.product_item_'), dataIndex: 'sn', key: 'sn' }, // 基本用量
-        { title: proxy.$t('warehousing-management.product_item_amount'), dataIndex: 'amount', key: 'amount' }, // 应领数量
-        { title: proxy.$t('warehousing-management.product_item_'), dataIndex: '', key: '' }, // 已领数量
-        { title: proxy.$t('warehousing-management.product_item_'), dataIndex: '', key: '' }, // 未完成数量
-        { title: proxy.$t('warehousing-management.product_item_'), dataIndex: 'amount', key: 'amount' }, // 物料管理员
+        { title: proxy.$t('warehousing-management.product_item_component_code'), dataIndex: 'code', key: 'code', type: 'line', }, // 子件编码
+        { title: proxy.$t('warehousing-management.product_item_component_name'), dataIndex: 'name', key: 'name', type: 'line', }, // 子件名称
+        { title: proxy.$t('warehousing-management.product_item_component_specifications'), dataIndex: '', key: '', type: '', }, // 子件规格
+        { title: proxy.$t('warehousing-management.product_item_basic_dosage'), dataIndex: '', key: '', type: '', }, // 基本用量
+        { title: proxy.$t('warehousing-management.product_item_quantity_claimed'), dataIndex: 'amount', key: 'amount', type: 'line', }, // 应领数量
+        { title: proxy.$t('warehousing-management.product_item_received_quantity'), dataIndex: '', key: '', type: '', }, // 已领数量
+        { title: proxy.$t('warehousing-management.product_item_unfinished_quantity'), dataIndex: '', key: '', type: '', }, // 未完成数量
+        { title: proxy.$t('warehousing-management.product_item_material_administrator'), dataIndex: '', key: '' }, // 物料管理员
     ];
 });
 /* 生命周期*/
 
 /* fetch start*/
+
 // 采购入库单列表
-const getInquirySheet = Core.Api.inquiry_sheet.list;
+const getTableFetch = Core.Api.WarehousingManagement.ProductionOrderItemlist;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
-    request: getInquirySheet,
+    request: getTableFetch,
     // dataCallBack(res) {
     // }
 });

@@ -1082,7 +1082,8 @@ const apiList = {
     WarehousingManagement: {
         MaterialPurchaseOrderList: ['PostJson', 'invoice-item/material-purchase-order-list'], // 采购入库单列表
         ProductionOrderList: ['PostJson', 'production-order-item-bind/production-order-list'], // 生产单列表
-        ProductionOrderItem: ['PostJson', 'production-order-item/list'], // 生产单子件列表
+        ProductionOrderDetail: ['PostJson', 'production-order-item-bind/detail'], // 生产单子件列表
+        ProductionOrderItemlist: ['PostJson', 'production-order-item/list'], // 生产单子件列表
     }
 };
 

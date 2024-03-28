@@ -30,6 +30,9 @@
                         <span class="table-title">{{ title }}</span>
                     </template>
                     <template #bodyCell="{ column, text, record }">
+                        <template v-if="column.type === 'line'">
+                            {{ text || '-' }}
+                        </template>
                         <!-- 备注 -->
                         <template v-if="column.key === 'remark'">
                             <a-tooltip>
@@ -38,7 +41,7 @@
                                     {{ text }}
                                 </div>
                             </a-tooltip>
-                        </template>
+                        </template>                        
                     </template>
                 </a-table>
             </div>
@@ -68,17 +71,8 @@ import { useTable } from '@/hooks/useTable';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';
 import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
-import { useRouter, useRoute } from 'vue-router';
-import { message } from 'ant-design-vue';
-import { result } from 'lodash';
-const router = useRouter();
-const route = useRoute();
 const { proxy } = getCurrentInstance();
 
-// 常量
-const STATUS = Core.Const.FEEDBACK.STATUS;
-const LOGIN_TYPE = Core.Const.LOGIN.TYPE;
-const USER_TYPE = Core.Const.USER.TYPE;
 
 // 响应式常量
 const searchList = ref([
@@ -102,14 +96,14 @@ const tableColumns = ref();
 /* 生命周期*/
 onMounted(() => {
     tableColumns.value = [
-        { title: proxy.$t('warehousing-management.uid'), dataIndex: 'uid', key: 'uid' }, // 入库单号
-        { title: proxy.$t('warehousing-management.serial'), dataIndex: 'serial', key: 'serial' }, // 批次单号
-        { title: proxy.$t('warehousing-management.supplier_name'), dataIndex: 'supplier_name', key: 'supplier_name' }, // 供应商
-        { title: proxy.$t('warehousing-management.sn'), dataIndex: 'sn', key: 'sn' }, // 订单号
-        { title: proxy.$t('warehousing-management.sync_id'), dataIndex: 'sync_id', key: 'sync_id' }, // 存货编码
-        // { title: proxy.$t('warehousing-management.create_time'), dataIndex: '', key: '' }, // 存货名称
-        // { title: proxy.$t('warehousing-management.create_time'), dataIndex: '', key: '' }, // 规格型号
-        { title: proxy.$t('warehousing-management.amount'), dataIndex: 'amount', key: 'amount' }, // 总数量
+        { title: proxy.$t('warehousing-management.uid'), dataIndex: 'uid', key: 'uid', type: 'line' }, // 入库单号
+        { title: proxy.$t('warehousing-management.serial'), dataIndex: 'serial', key: 'serial', type: 'line' }, // 批次单号
+        { title: proxy.$t('warehousing-management.supplier_name'), dataIndex: 'supplier_name', key: 'supplier_name', type: 'line' }, // 供应商
+        { title: proxy.$t('warehousing-management.sn'), dataIndex: 'sn', key: 'sn', type: 'line' }, // 订单号
+        { title: proxy.$t('warehousing-management.sync_id'), dataIndex: 'sync_id', key: 'sync_id', type: 'line' }, // 存货编码
+        { title: proxy.$t('warehousing-management.inventory_name'), dataIndex: '', key: '', type: '' }, // 存货名称(无字段)
+        { title: proxy.$t('warehousing-management.specification_model'), dataIndex: '', key: '', type: '' }, // 规格型号(无字段)
+        { title: proxy.$t('warehousing-management.amount'), dataIndex: 'amount', key: 'amount', type: 'line' }, // 总数量
         { title: proxy.$t('warehousing-management.create_remarktime'), dataIndex: 'remark', key: 'remark' }, // 备注
     ];
 });
@@ -117,9 +111,9 @@ onMounted(() => {
 
 /* fetch start*/
 // 采购入库单列表
-const getInquirySheet = Core.Api.inquiry_sheet.list;
+const getTableFetch = Core.Api.WarehousingManagement.MaterialPurchaseOrderList;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
-    request: getInquirySheet,
+    request: getTableFetch,
     // dataCallBack(res) {
     // }
 });

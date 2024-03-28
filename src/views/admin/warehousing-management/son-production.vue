@@ -35,12 +35,40 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import Core from '@/core'
+import { ref, onMounted } from 'vue';
+import Core from '@/core';
 import sonTable from './components/SonTable.vue';
+import { useRouter, useRoute } from 'vue-router';
+const router = useRouter();
+const route = useRoute();
+
 const STATUS = Core.Const.WAREHOUSING_MANAGEMENT.STATUS;
 
+// 响应常量
 const detailMsg = ref({});
+
+onMounted(() => {
+    getDetailFetch()
+})
+
+/* fetch start */
+// 获取订单详情
+const getDetailFetch = (params = {}) => {
+    const obj = {
+        id: route.query?.id,
+        ...params,
+    };
+
+    Core.Api.WarehousingManagement.ProductionOrderDetail(obj)
+        .then(res => {
+            console.log('获取订单详情 res', res);
+            detailMsg.value = res.detail
+        })
+        .catch(err => {
+            console.log('获取订单详情 err', err);
+        });
+};
+/* fetch end */
 </script>
 
 <style lang="less" scoped>

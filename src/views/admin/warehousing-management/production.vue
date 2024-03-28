@@ -29,24 +29,31 @@
                     <template #headerCell="{ title }">
                         <span class="table-title">{{ title }}</span>
                     </template>
-                    <template #bodyCell="{ column, text, record }">
-                        <!-- 状态 -->
+                    <template #bodyCell="{ column, text, record }">  
+                        <template v-if="column.type === 'line'">
+                            {{ text || '-' }}
+                        </template>                      
+                        <!-- 生产订单号 -->
                         <template v-if="column.key === 'sync_id'">
-                            <a-button type="link" @click="handleRouter('detail')">{{ text }}</a-button>
+                            <a-button type="link" @click="handleRouter('detail', record)">{{ text }}</a-button>
+                        </template>
+                        <!-- 开工日期 -->
+                        <template v-if="column.key === 'start_date'">
+                            {{ $Util.timeFilter(text) }}
                         </template>
                         <!-- 状态 -->
-                        <template v-if="column.key === 'status'">
+                        <template v-else-if="column.key === 'status'">
                             {{ $t($Util.Common.returnTranslation(text, STATUS)) }}
                         </template>
                         <!-- 备注 -->
-                        <template v-if="column.key === 'remark'">
+                        <template v-else-if="column.key === 'remark'">
                             <a-tooltip>
                                 <template #title>{{ text }}</template>
                                 <div class="one-spils cursor" :style="{ width: text?.length > 6 ? 7 * 12 + 'px' : '' }">
                                     {{ text }}
                                 </div>
                             </a-tooltip>
-                        </template>
+                        </template>                      
                     </template>
                 </a-table>
             </div>
@@ -77,8 +84,6 @@ import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';
 import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
 import { useRouter, useRoute } from 'vue-router';
-import { message } from 'ant-design-vue';
-import { result } from 'lodash';
 const router = useRouter();
 const route = useRoute();
 const { proxy } = getCurrentInstance();
@@ -109,20 +114,30 @@ const tableColumns = ref();
 /* 生命周期*/
 onMounted(() => {
     tableColumns.value = [
-        { title: proxy.$t('warehousing-management.product_sync_id'), dataIndex: 'sync_id', key: 'sync_id' }, // 生产订单号
-        { title: proxy.$t('warehousing-management.product_code'), dataIndex: 'code', key: 'code' }, // 整车编码
-        { title: proxy.$t('warehousing-management.product_name'), dataIndex: 'name', key: 'name' }, // 整车名称
-        { title: proxy.$t('warehousing-management.product_start_date'), dataIndex: 'start_date', key: 'start_date' }, // 开工日期
-        { title: proxy.$t('warehousing-management.product_amount'), dataIndex: 'amount', key: 'amount' }, // 生产数量
+        {
+            title: proxy.$t('warehousing-management.product_sync_id'),
+            dataIndex: 'sync_id',
+            key: 'sync_id',
+        }, // 生产订单号
+        { title: proxy.$t('warehousing-management.product_code'), dataIndex: 'code', key: 'code', type: 'line' }, // 整车编码
+        { title: proxy.$t('warehousing-management.product_name'), dataIndex: 'name', key: 'name', type: 'line' }, // 整车名称
+        {
+            title: proxy.$t('warehousing-management.product_start_date'),
+            dataIndex: 'start_date',
+            key: 'start_date',            
+        }, // 开工日期
+        { title: proxy.$t('warehousing-management.product_amount'), dataIndex: 'amount', key: 'amount', type: 'line' }, // 生产数量
         {
             title: proxy.$t('warehousing-management.product_incomplete_amount'),
             dataIndex: 'incomplete_amount',
             key: 'incomplete_amount',
+            type: 'line',
         }, // 未完成数量
         {
             title: proxy.$t('warehousing-management.product_qualified_amount'),
             dataIndex: 'qualified_amount',
             key: 'qualified_amount',
+            type: 'line',
         }, // 已完成数量
         { title: proxy.$t('warehousing-management.product_status'), dataIndex: 'status', key: 'status' }, // 状态
         { title: proxy.$t('warehousing-management.product_remark'), dataIndex: 'remark', key: 'remark' }, // 备注
@@ -131,24 +146,27 @@ onMounted(() => {
 /* 生命周期*/
 
 /* fetch start */
-// 获取生产订单列表
-const getInquirySheet = Core.Api.inquiry_sheet.list;
+// 获取生产订单列表 
+const getTableFetch = Core.Api.WarehousingManagement.ProductionOrderList;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
-    request: getInquirySheet,
-    dataCallBack(res) {
-        return [{ sync_id: 1111, status: 1, remark: '你是谁书塞法和发静安寺附近按时交付撒酒疯撒娇' }];
-    },
+    request: getTableFetch,
+    // dataCallBack(res) {
+    //     return [{ sync_id: 1111, status: 1, remark: '你是谁书塞法和发静安寺附近按时交付撒酒疯撒娇' }];
+    // },
 });
 
 /* fetch end*/
 
 /* methods start*/
-const handleRouter = type => {
+const handleRouter = (type, record) => {
     let routeUrl = '';
     switch (type) {
         case 'detail': // 详情
             routeUrl = router.resolve({
                 path: '/warehousing-management/son-production',
+                query: {
+                    id: record.id,
+                },
             });
             window.open(routeUrl.href, '_self');
             break;
