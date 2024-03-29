@@ -114,6 +114,7 @@ onMounted(() => {
 const getTableFetch = Core.Api.WarehousingManagement.MaterialPurchaseOrderList;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request: getTableFetch,
+    initParam: { source_type: Core.Const.STOCK_RECORD.SOURCE_TYPE.MATERIAL_PURCHASE }, // 物料采购单
     // dataCallBack(res) {
     // }
 });
