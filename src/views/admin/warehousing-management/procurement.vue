@@ -31,14 +31,14 @@
                     </template>
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="column.type === 'line'">
-                            {{ text || '-' }}
+                            {{ text || text === 0 ? text : '-' }}
                         </template>
                         <!-- 备注 -->
                         <template v-if="column.key === 'remark'">
                             <a-tooltip>
                                 <template #title>{{ text }}</template>
                                 <div class="one-spils cursor" :style="{ width: text?.length > 6 ? 7 * 12 + 'px' : '' }">
-                                    {{ text }}
+                                    {{ text || '-' }}
                                 </div>
                             </a-tooltip>
                         </template>                        

@@ -232,8 +232,9 @@ let Const = {
             AFTER: 2, // 售后
             PRODUCTION: 3, // 生产
             CRM: 4, // CRM
-            SUPPLIER: 5, // 供应商
+            SUPPLIER: 5, // 供应链
             SYSTEM: 6, // 系统管理
+            WAREHOUSING: 8, // 仓储
         },
     },
     LOGINMALL: {

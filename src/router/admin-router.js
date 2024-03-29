@@ -167,7 +167,7 @@ const warehousingManagement = {
     component: Layout,
     redirect: '/warehousing-management/report-list',
     name: 'WarehousingManagement',
-    type: [ROUTER_TYPE.PRODUCTION],
+    type: [ROUTER_TYPE.WAREHOUSING],
     meta: {
         title: '仓储管理',
         title_en: 'Warehousing Management',

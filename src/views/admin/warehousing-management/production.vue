@@ -31,7 +31,7 @@
                     </template>
                     <template #bodyCell="{ column, text, record }">  
                         <template v-if="column.type === 'line'">
-                            {{ text || '-' }}
+                            {{ text || text === 0 ? text : '-' }}
                         </template>                      
                         <!-- 生产订单号 -->
                         <template v-if="column.key === 'sync_id'">
@@ -50,7 +50,7 @@
                             <a-tooltip>
                                 <template #title>{{ text }}</template>
                                 <div class="one-spils cursor" :style="{ width: text?.length > 6 ? 7 * 12 + 'px' : '' }">
-                                    {{ text }}
+                                    {{ text || '-' }}
                                 </div>
                             </a-tooltip>
                         </template>                      
