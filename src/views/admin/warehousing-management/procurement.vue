@@ -72,7 +72,7 @@ import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';
 import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
 const { proxy } = getCurrentInstance();
-
+const SOURCE_TYPE  = Core.Const.STOCK_RECORD.SOURCE_TYPE
 // 响应式常量
 const searchList = ref([
     {
@@ -118,9 +118,7 @@ onMounted(() => {
 const getTableFetch = Core.Api.WarehousingManagement.MaterialPurchaseOrderList;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request: getTableFetch,
-    initParam: {
-        source_type: 60, //60 物料采购单
-    },
+    initParam: { source_type: SOURCE_TYPE.MATERIAL_PURCHASE }, // 物料采购单
     // dataCallBack(res) {
     // }
 });
