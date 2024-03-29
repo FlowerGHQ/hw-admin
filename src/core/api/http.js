@@ -14,7 +14,7 @@ const showMessage = msg => {
 };
 
 const errorHandle = (status, message = i18n.global.t('error_code.unknown')) => {
-    console.log(status)
+    console.log(status);
     if (message.includes('登录状态已过期，请重新登录')) {
         if (Number(Data.getLoginType()) === Const.USER.TYPE.SUPPLIER) {
             window.location.href = window.location.href.split('#')[0] + `#/login?user_type=${Data.getLoginType()}`;
@@ -32,7 +32,9 @@ const errorHandle = (status, message = i18n.global.t('error_code.unknown')) => {
         return showMessage(i18n.global.t('error_code.system'));
     }
     if (status === 1108 || status === 1109 || status === 2103) {
-        return window.location.href = window.location.href.split('#')[0] + `#/feishu-login?code=${status}&message=${message}`;
+        return window.location.replace(
+            window.location.href.split('#')[0] + `#/feishu-login?code=${status}&message=${message}`,
+        );
     }
     if (status >= 1000) {
         try {
