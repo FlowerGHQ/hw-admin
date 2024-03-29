@@ -394,7 +394,7 @@ export default {
             let code;
             if (/code=/.test(href)) {
                 this.fsLoginShow = true;
-                this.$router.push('/login/feishu');
+                this.$router.replace('/login/feishu');
                 code = getUrlParams('code');
                 Core.Api.ThirdParty.fsAuthorize({ code })
                     .then(res => {
