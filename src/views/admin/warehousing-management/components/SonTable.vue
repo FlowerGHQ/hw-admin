@@ -58,7 +58,9 @@ import { useTable } from '@/hooks/useTable';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';
 import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
+import { useRouter, useRoute } from 'vue-router';
 
+const route = useRoute();
 const { proxy } = getCurrentInstance();
 
 // 响应式常量
@@ -70,13 +72,13 @@ const searchList = ref([
         searchParmas: 'code',
         key: 'warehousing-management.product_item_component_code',
     },
-    {
-        // 物料管理员
-        type: 'input',
-        value: undefined,
-        searchParmas: '',
-        key: 'warehousing-management.product_item_material_administrator',
-    },
+    // {
+    //     // 物料管理员
+    //     type: 'input',
+    //     value: undefined,
+    //     searchParmas: '',
+    //     key: 'warehousing-management.product_item_material_administrator',
+    // },
 ]);
 const tableColumns = ref();
 
@@ -101,6 +103,9 @@ onMounted(() => {
 const getTableFetch = Core.Api.WarehousingManagement.ProductionOrderItemlist;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request: getTableFetch,
+    initParam: {
+        entity_id: route.query?.id,
+    }
     // dataCallBack(res) {
     // }
 });

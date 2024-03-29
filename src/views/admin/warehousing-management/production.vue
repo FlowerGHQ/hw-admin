@@ -119,8 +119,8 @@ onMounted(() => {
             dataIndex: 'sync_id',
             key: 'sync_id',
         }, // 生产订单号
-        { title: proxy.$t('warehousing-management.product_code'), dataIndex: 'code', key: 'code', type: 'line' }, // 整车编码
-        { title: proxy.$t('warehousing-management.product_name'), dataIndex: 'name', key: 'name', type: 'line' }, // 整车名称
+        { title: proxy.$t('warehousing-management.product_code'), dataIndex: 'item_code', key: 'item_code', type: 'line' }, // 整车编码
+        { title: proxy.$t('warehousing-management.product_name'), dataIndex: 'item_name', key: 'item_name', type: 'line' }, // 整车名称
         {
             title: proxy.$t('warehousing-management.product_start_date'),
             dataIndex: 'start_date',

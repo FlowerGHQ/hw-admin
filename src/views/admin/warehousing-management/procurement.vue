@@ -41,7 +41,7 @@
                                     {{ text || '-' }}
                                 </div>
                             </a-tooltip>
-                        </template>                        
+                        </template>
                     </template>
                 </a-table>
             </div>
@@ -73,7 +73,6 @@ import localeEn from 'ant-design-vue/es/date-picker/locale/en_US';
 import localeZh from 'ant-design-vue/es/date-picker/locale/zh_CN';
 const { proxy } = getCurrentInstance();
 
-
 // 响应式常量
 const searchList = ref([
     {
@@ -96,12 +95,17 @@ const tableColumns = ref();
 /* 生命周期*/
 onMounted(() => {
     tableColumns.value = [
-        { title: proxy.$t('warehousing-management.uid'), dataIndex: 'uid', key: 'uid', type: 'line' }, // 入库单号
+        { title: proxy.$t('warehousing-management.uid'), dataIndex: 'erp_bill_no', key: 'erp_bill_no', type: 'line' }, // 入库单号
         { title: proxy.$t('warehousing-management.serial'), dataIndex: 'serial', key: 'serial', type: 'line' }, // 批次单号
-        { title: proxy.$t('warehousing-management.supplier_name'), dataIndex: 'supplier_name', key: 'supplier_name', type: 'line' }, // 供应商
+        {
+            title: proxy.$t('warehousing-management.supplier_name'),
+            dataIndex: 'supplier_name',
+            key: 'supplier_name',
+            type: 'line',
+        }, // 供应商
         { title: proxy.$t('warehousing-management.sn'), dataIndex: 'sn', key: 'sn', type: 'line' }, // 订单号
         { title: proxy.$t('warehousing-management.sync_id'), dataIndex: 'sync_id', key: 'sync_id', type: 'line' }, // 存货编码
-        { title: proxy.$t('warehousing-management.inventory_name'), dataIndex: '', key: '', type: '' }, // 存货名称(无字段)
+        { title: proxy.$t('warehousing-management.inventory_name'), dataIndex: 'item_name', key: 'item_name', type: 'line' }, // 存货名称
         { title: proxy.$t('warehousing-management.specification_model'), dataIndex: '', key: '', type: '' }, // 规格型号(无字段)
         { title: proxy.$t('warehousing-management.amount'), dataIndex: 'amount', key: 'amount', type: 'line' }, // 总数量
         { title: proxy.$t('warehousing-management.create_remarktime'), dataIndex: 'remark', key: 'remark' }, // 备注
@@ -114,6 +118,9 @@ onMounted(() => {
 const getTableFetch = Core.Api.WarehousingManagement.MaterialPurchaseOrderList;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request: getTableFetch,
+    initParam: {
+        source_type: 60, //60 物料采购单
+    },
     // dataCallBack(res) {
     // }
 });

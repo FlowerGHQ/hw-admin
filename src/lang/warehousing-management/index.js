@@ -13,8 +13,8 @@ export default {
 
         product_title: '生产订单列表',
         product_sync_id: '生产订单号',
-        product_code: '整车编码',
-        product_name: '整车名称',
+        product_code: '空车编码',
+        product_name: '空车名称',
         product_start_date: '开工日期',
         product_amount: '生产数量',
         product_incomplete_amount: '未完成数量',

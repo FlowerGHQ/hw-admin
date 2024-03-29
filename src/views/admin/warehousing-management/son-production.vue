@@ -11,21 +11,25 @@
                 </a-col>
                 <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                     <span class="key">{{ $t('warehousing-management.product_code') }}：</span>
-                    <span class="value">{{ detailMsg.code || '-' }}</span>
+                    <span class="value">{{ detailMsg.item_code || '-' }}</span>
                 </a-col>
                 <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                     <span class="key">{{ $t('warehousing-management.product_name') }}：</span>
-                    <span class="value">{{ detailMsg.name || '-' }}</span>
+                    <span class="value">{{ detailMsg.item_name || '-' }}</span>
                 </a-col>
                 <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                     <span class="key">{{ $t('warehousing-management.product_amount') }}：</span>
                     <span class="value">{{ detailMsg.amount || '-' }}</span>
-                </a-col>
+                </a-col>                
                 <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                     <span class="key">{{ $t('warehousing-management.product_status') }}：</span>
                     <span class="value">
                         {{ $t($Util.Common.returnTranslation(detailMsg.status, STATUS)) }}
                     </span>
+                </a-col>
+                <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                    <span class="key">{{ $t('warehousing-management.product_start_date') }}：</span>
+                    <span class="value">{{ $Util.timeFilter(detailMsg.start_date) }}</span>
                 </a-col>
             </a-row>
         </div>
