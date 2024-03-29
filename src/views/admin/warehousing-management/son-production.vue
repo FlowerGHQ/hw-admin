@@ -29,7 +29,7 @@
                 </a-col>
                 <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                     <span class="key">{{ $t('warehousing-management.product_start_date') }}：</span>
-                    <span class="value">{{ $Util.timeFilter(detailMsg.start_date) }}</span>
+                    <span class="value">{{ $Util.timeFilter(detailMsg.start_date, 3) }}</span>
                 </a-col>
             </a-row>
         </div>

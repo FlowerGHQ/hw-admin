@@ -39,7 +39,7 @@
                         </template>
                         <!-- 开工日期 -->
                         <template v-if="column.key === 'start_date'">
-                            {{ $Util.timeFilter(text) }}
+                            {{ $Util.timeFilter(text, 3) }}
                         </template>
                         <!-- 状态 -->
                         <template v-else-if="column.key === 'status'">
