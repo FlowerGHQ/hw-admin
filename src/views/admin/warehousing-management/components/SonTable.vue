@@ -72,13 +72,13 @@ const searchList = ref([
         searchParmas: 'code',
         key: 'warehousing-management.product_item_component_code',
     },
-    // {
-    //     // 物料管理员
-    //     type: 'input',
-    //     value: undefined,
-    //     searchParmas: '',
-    //     key: 'warehousing-management.product_item_material_administrator',
-    // },
+    {
+        // 物料管理员
+        type: 'input',
+        value: undefined,
+        searchParmas: 'admin_name',
+        key: 'warehousing-management.product_item_material_administrator',
+    },
 ]);
 const tableColumns = ref();
 
@@ -87,12 +87,12 @@ onMounted(() => {
     tableColumns.value = [
         { title: proxy.$t('warehousing-management.product_item_component_code'), dataIndex: 'code', key: 'code', type: 'line', }, // 子件编码
         { title: proxy.$t('warehousing-management.product_item_component_name'), dataIndex: 'name', key: 'name', type: 'line', }, // 子件名称
-        { title: proxy.$t('warehousing-management.product_item_component_specifications'), dataIndex: '', key: '', type: '', }, // 子件规格
+        { title: proxy.$t('warehousing-management.product_item_component_specifications'), dataIndex: 'spec', key: 'spec', type: 'line', }, // 子件规格
         { title: proxy.$t('warehousing-management.product_item_basic_dosage'), dataIndex: 'base_amount', key: 'base_amount', type: 'line', }, // 基本用量
         { title: proxy.$t('warehousing-management.product_item_quantity_claimed'), dataIndex: 'amount', key: 'amount', type: 'line', }, // 应领数量
         { title: proxy.$t('warehousing-management.product_item_received_quantity'), dataIndex: 'received_amount', key: 'received_amount', type: 'line', }, // 已领数量
         { title: proxy.$t('warehousing-management.product_item_unfinished_quantity'), dataIndex: 'incomplete_amount', key: 'incomplete_amount', type: 'line', }, // 未完成数量
-        { title: proxy.$t('warehousing-management.product_item_material_administrator'), dataIndex: '', key: '' }, // 物料管理员
+        { title: proxy.$t('warehousing-management.product_item_material_administrator'), dataIndex: 'admin_name', key: 'admin_name', type: 'line' }, // 物料管理员
     ];
 });
 /* 生命周期*/

@@ -106,7 +106,7 @@ onMounted(() => {
         { title: proxy.$t('warehousing-management.sn'), dataIndex: 'sn', key: 'sn', type: 'line' }, // 订单号
         { title: proxy.$t('warehousing-management.sync_id'), dataIndex: 'sync_id', key: 'sync_id', type: 'line' }, // 存货编码
         { title: proxy.$t('warehousing-management.inventory_name'), dataIndex: 'item_name', key: 'item_name', type: 'line' }, // 存货名称
-        { title: proxy.$t('warehousing-management.specification_model'), dataIndex: '', key: '', type: '' }, // 规格型号(无字段)
+        { title: proxy.$t('warehousing-management.specification_model'), dataIndex: 'spec', key: 'spec', type: 'line' }, // 规格型号(无字段)
         { title: proxy.$t('warehousing-management.amount'), dataIndex: 'amount', key: 'amount', type: 'line' }, // 总数量
         { title: proxy.$t('warehousing-management.create_remarktime'), dataIndex: 'remark', key: 'remark' }, // 备注
     ];
