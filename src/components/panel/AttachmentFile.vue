@@ -68,9 +68,9 @@
                             class="file-uploader"
                             :multiple="true"
                             :file-list="upload.fileList"
-                            :action="upload.action"
                             :headers="upload.headers"
                             :data="upload.data"
+                            :customRequest="upload.handleCustomRequest"
                             :before-upload="handleFileCheck"
                             @change="handleFileChange"
                         >
@@ -92,7 +92,8 @@
 </template>
 
 <script>
-import Core from '../../core';
+import Core from '@/core';
+import axios from 'axios';
 
 export default {
     name: 'AttachmentFile',
@@ -122,12 +123,23 @@ export default {
             upload: {
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
                 fileList: [],
-                headers: {
-                    ContentType: false,
-                },
-                data: {
-                    token: Core.Data.getToken(),
-                    type: 'img',
+                headers: {},
+                data: {},
+                handleCustomRequest(options) {
+                    const formData = new FormData();
+                    formData.append('type', 'img');
+                    formData.append('file', options.file);
+
+                    axios
+                        .post(Core.Const.NET.FILE_UPLOAD_END_POINT, formData)
+                        .then(response => {
+                            // 请求成功时调用 onSuccess 回调函数，传递响应数据
+                            options.onSuccess(response.data);
+                        })
+                        .catch(error => {
+                            // 请求失败时调用 onError 回调函数，传递错误信息
+                            options.onError(error);
+                        });
                 },
             },
             attachmentEmpty: true,
