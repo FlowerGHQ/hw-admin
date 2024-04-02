@@ -53,7 +53,7 @@
                 <!-- 故障日期 -->
                 <div
                     v-if="
-                        !$Util.Common.returnTypeBool(formParams.type, [
+                        !$Util.Common.isMember(formParams.type, [
                             Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION,
                         ])
                     "
@@ -90,7 +90,7 @@
                 <!-- 车架号 -->
                 <div
                     v-if="
-                        $Util.Common.returnTypeBool(formParams.type, [
+                        $Util.Common.isMember(formParams.type, [
                             Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION,
                         ])
                     "
@@ -152,7 +152,7 @@
                 <!-- 公里数 -->
                 <div
                     v-if="
-                        $Util.Common.returnTypeBool(formParams.type, [
+                        $Util.Common.isMember(formParams.type, [
                             Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION,
                         ])
                     "
@@ -194,7 +194,7 @@
                 <div
                     class="form-item d-f-s"
                     :class="{
-                        required: $Util.Common.returnTypeBool(formParams.type, [
+                        required: $Util.Common.isMember(formParams.type, [
                             Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY,
                         ]),
                     }"

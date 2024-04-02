@@ -105,7 +105,7 @@
                         <template v-if="column.key === 'fault_type'">
                             <template
                                 v-if="
-                                    $Util.Common.returnTypeBool(record.type, [
+                                    $Util.Common.isMember(record.type, [
                                         Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY /*电池*/,
                                     ])
                                 "
@@ -249,7 +249,7 @@
                             </a-button>
                             <template
                                 v-if="
-                                    !$Util.Common.returnTypeBool(record.status, [
+                                    !$Util.Common.isMember(record.status, [
                                         Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED,
                                     ])
                                 "
