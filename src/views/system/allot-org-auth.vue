@@ -42,13 +42,15 @@
                                         v-for="(threeItem, index) of subItem.list"
                                         :key="index"
                                     >
-                                        {{ $t('authority.' + item.key + '.' + subItem.key + '.' + threeItem.key) }}
-                                        <span v-for="(fourItem, index) in threeItem.list" :key="fourItem.id">
-                                            {{
-                                                $t('authority.' + item.key + '.' + subItem.key + '.' + threeItem.key) +
-                                                $t('authority.' + item.key + '.' + subItem.key + '.' + fourItem.key)
-                                            }}
-                                        </span>
+                                        <template v-if="">
+                                            {{ $t('authority.' + item.key + '.' + subItem.key + '.' + threeItem.key) }}
+                                            <span v-for="(fourItem, index) in threeItem.list" :key="fourItem.id">
+                                                {{
+                                                    $t('authority.' + item.key + '.' + subItem.key + '.' + threeItem.key) +
+                                                    $t('authority.' + item.key + '.' + subItem.key + '.' + fourItem.key)
+                                                }}
+                                            </span>
+                                        </template>
                                     </span>
                                 </div>
                             </div>
@@ -326,7 +328,7 @@ export default {
 
             console.log('this.authItems', this.authItems);
         },
-        
+
         // 对获取 某类型组织 已分配的 权限项过滤
         handleOrgAuthFilter(list) {
             let selected = [];

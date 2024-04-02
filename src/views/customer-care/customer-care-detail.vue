@@ -107,7 +107,7 @@
                         <div
                             class="col"
                             v-if="
-                                !$Util.Common.returnTypeBool(customerCareDetail.type, [
+                                !$Util.Common.isMember(customerCareDetail.type, [
                                     Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION,
                                 ])
                             "
@@ -130,7 +130,7 @@
                         <div
                             class="col"
                             v-if="
-                                $Util.Common.returnTypeBool(customerCareDetail.type, [
+                                $Util.Common.isMember(customerCareDetail.type, [
                                     Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION,
                                 ])
                             "
@@ -143,7 +143,7 @@
                     <!-- 车架号与公里数 -->
                     <div
                         v-if="
-                            $Util.Common.returnTypeBool(customerCareDetail.type, [
+                            $Util.Common.isMember(customerCareDetail.type, [
                                 Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION,
                             ])
                         "
@@ -218,14 +218,14 @@
                     <div
                         class="inquiry-classification-value"
                         :class="{
-                            'm-t-4': $Util.Common.returnTypeBool(customerCareDetail.status, [
+                            'm-t-4': $Util.Common.isMember(customerCareDetail.status, [
                                 Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
                             ]),
                         }"
                     >
                         <template
                             v-if="
-                                !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                !$Util.Common.isMember(customerCareDetail.status, [
                                     Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
                                 ])
                             "
@@ -261,7 +261,7 @@
                         >
                             <a-radio-group
                                 v-if="
-                                    !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                    !$Util.Common.isMember(customerCareDetail.status, [
                                         Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
                                     ])
                                 "
@@ -291,7 +291,7 @@
                                 <div class="good-faith-claims-time">
                                     <template
                                         v-if="
-                                            !$Util.Common.returnTypeBool(customerCareDetail.claim_type, [
+                                            !$Util.Common.isMember(customerCareDetail.claim_type, [
                                                 Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP
                                                     .UNPACKINGDAMAGE /*开箱损*/,
                                             ])
@@ -300,7 +300,7 @@
                                         <span class="time-name m-r-8">{{ $t('customer-care.delivery_date') }}</span>
                                         <template
                                             v-if="
-                                                !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                                !$Util.Common.isMember(customerCareDetail.status, [
                                                     Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP
                                                         .RESOLVED /*订单状态(已解决)*/,
                                                 ])
@@ -338,7 +338,7 @@
                                     </template>
                                     <template
                                         v-else-if="
-                                            $Util.Common.returnTypeBool(customerCareDetail.claim_type, [
+                                            $Util.Common.isMember(customerCareDetail.claim_type, [
                                                 Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP
                                                     .UNPACKINGDAMAGE /*开箱损*/,
                                             ])
@@ -347,7 +347,7 @@
                                         <span class="time-name m-r-8">{{ $t('customer-care.order_number') }}</span>
                                         <template
                                             v-if="
-                                                !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                                !$Util.Common.isMember(customerCareDetail.status, [
                                                     Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP
                                                         .RESOLVED /*订单状态(已解决)*/,
                                                 ])
@@ -375,7 +375,7 @@
                         >
                             <a-radio-group
                                 v-if="
-                                    !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                    !$Util.Common.isMember(customerCareDetail.status, [
                                         Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
                                     ])
                                 "
@@ -400,7 +400,7 @@
                     <div class="inquiry-classification-value">
                         <ItemSelect
                             v-if="
-                                !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                !$Util.Common.isMember(customerCareDetail.status, [
                                     Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED,
                                 ]) /*订单状态(已解决)*/
                             "
@@ -431,7 +431,7 @@
                                 <template v-if="column.key === 'amount'">
                                     <template
                                         v-if="
-                                            !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                            !$Util.Common.isMember(customerCareDetail.status, [
                                                 Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
                                             ])
                                         "
@@ -453,7 +453,7 @@
                 <!-- 故障分类 -->
                 <div
                     v-if="
-                        !$Util.Common.returnTypeBool(customerCareDetail.type, [
+                        !$Util.Common.isMember(customerCareDetail.type, [
                             Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION /*咨询*/,
                         ])
                     "
@@ -462,7 +462,7 @@
                     <div
                         class="inquiry-classification-key"
                         :class="{
-                            'm-t-4': $Util.Common.returnTypeBool(customerCareDetail.type, [
+                            'm-t-4': $Util.Common.isMember(customerCareDetail.type, [
                                 Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY /*电池*/,
                             ]),
                             required: requiredType === 2,
@@ -473,7 +473,7 @@
                     <div class="inquiry-classification-value">
                         <template
                             v-if="
-                                $Util.Common.returnTypeBool(customerCareDetail.type, [
+                                $Util.Common.isMember(customerCareDetail.type, [
                                     Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION /*故障*/,
                                 ])
                             "
@@ -490,7 +490,7 @@
                                     <template v-if="column.key === 'fault_type'">
                                         <template
                                             v-if="
-                                                !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                                !$Util.Common.isMember(customerCareDetail.status, [
                                                     Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED,
                                                 ]) /*订单状态(已解决)*/
                                             "
@@ -522,14 +522,14 @@
                         </template>
                         <template
                             v-else-if="
-                                $Util.Common.returnTypeBool(customerCareDetail.type, [
+                                $Util.Common.isMember(customerCareDetail.type, [
                                     Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY /*电池*/,
                                 ])
                             "
                         >
                             <template
                                 v-if="
-                                    !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                    !$Util.Common.isMember(customerCareDetail.status, [
                                         Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED,
                                     ]) /*订单状态(已解决)*/
                                 "
@@ -660,7 +660,7 @@
 
                         <template
                             v-if="
-                                !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                !$Util.Common.isMember(customerCareDetail.status, [
                                     Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
                                 ])
                             "
@@ -713,7 +713,7 @@
 
             <div
                 v-if="
-                    !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                    !$Util.Common.isMember(customerCareDetail.status, [
                         Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
                     ])
                 "
@@ -1457,7 +1457,7 @@ const validateForm = () => {
             return message.warn(proxy.$t('common.please_select') + proxy.$t('customer-care.parts'));
         }
         if (
-            proxy.$Util.Common.returnTypeBool(customerCareDetail.value.type, [
+            proxy.$Util.Common.isMember(customerCareDetail.value.type, [
                 Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION /*故障*/,
             ])
         ) {
