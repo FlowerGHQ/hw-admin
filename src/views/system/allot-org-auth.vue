@@ -9,51 +9,89 @@
                 <a-collapse-panel
                     v-for="(org, key) of orgType"
                     :key="key"
-                    :header="$t('n.' + org.name)"
+                    :header="$t(org.name)"
                     class="gray-collapse-panel"
                 >
                     <template #extra>
                         <a-button
+                            v-if="!org.edit && $auth('authority.save')"
                             @click.stop="handleEditShow(key)"
                             type="link"
-                            v-if="!org.edit && $auth('authority.save')"
-                            ><i class="icon i_edit" />{{ $t('def.set') }}</a-button
                         >
-                        <template v-else>
-                            <a-button @click.stop="handleEditSubmit(key)" type="link" v-if="$auth('authority.save')"
-                                ><i class="icon i_confirm" />{{ $t('def.save') }}</a-button
-                            >
-                            <a-button
-                                @click.stop="handleEditClose(key)"
-                                type="link"
-                                class="cancel"
-                                v-if="$auth('authority.save')"
-                                ><i class="icon i_close_c" />{{ $t('def.cancel') }}</a-button
-                            >
+                            <i class="icon i_edit" />{{ $t('def.set') }}
+                        </a-button>
+                        <template v-else-if="$auth('authority.save')">
+                            <a-button @click.stop="handleEditSubmit(key)" type="link">
+                                <i class="icon i_confirm" />
+                                {{ $t('def.save') }}
+                            </a-button>
+                            <a-button @click.stop="handleEditClose(key)" type="link" class="cancel">
+                                <i class="icon i_close_c" />{{ $t('def.cancel') }}
+                            </a-button>
                         </template>
                     </template>
-                    <div class="panel-content" v-if="!org.edit">
+                    <!-- 用户底下的 -->
+                    <div v-if="!org.edit" class="panel-content">
                         <SimpleImageEmpty v-if="$Util.isEmptyObj(org.selected)" :desc="$t('n.no_org_auth')" />
                         <template v-for="item of org.options" :key="item.key">
-                            <div class="form-item afs" v-if="item.select.length">
-                                <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
+                            <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
+                                <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
                                 <div class="value">
-                                    <span class="authority-item" v-for="i of item.select" :key="i">{{
-                                        $t('authority.' + org.selected[i])
-                                    }}</span>
+                                    <span
+                                        class="authority-item"
+                                        v-for="(threeItem, index) of subItem.list"
+                                        :key="index"
+                                    >
+                                        {{ $t('authority.' + item.key + '.' + subItem.key + '.' + threeItem.key) }}
+                                        <span v-for="(fourItem, index) in threeItem.list" :key="fourItem.id">
+                                            {{
+                                                $t('authority.' + item.key + '.' + subItem.key + '.' + threeItem.key) +
+                                                $t('authority.' + item.key + '.' + subItem.key + '.' + fourItem.key)
+                                            }}
+                                        </span>
+                                    </span>
                                 </div>
                             </div>
                         </template>
                     </div>
-                    <div class="panel-content" v-else>
+                    <!-- 全部的 -->
+                    <div v-else class="panel-content">
                         <template v-for="item of org.options" :key="item.key">
-                            <div class="form-item afs" v-if="item.list.length">
-                                <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
+                            <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
+                                <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
                                 <div class="value">
                                     <a-checkbox-group v-model:value="item.select">
-                                        <a-checkbox v-for="it in item.list" :value="it.value">{{
-                                            $t('authority.' + it.label)
-                                        }}</a-checkbox>
+                                        <template v-for="(threeItem, index) in subItem.list">
+                                            <a-checkbox :value="threeItem.id">
+                                                {{
+                                                    $t(
+                                                        'authority.' +
+                                                            item.key +
+                                                            '.' +
+                                                            subItem.key +
+                                                            '.' +
+                                                            threeItem.key,
+                                                    )
+                                                }}
+                                            </a-checkbox>
+                                            <a-checkbox
+                                                v-for="(fourItem, index) in threeItem.list"
+                                                :key="index"
+                                                :value="fourItem.id"
+                                            >
+                                                {{
+                                                    $t(
+                                                        'authority.' +
+                                                            item.key +
+                                                            '.' +
+                                                            subItem.key +
+                                                            '.' +
+                                                            threeItem.key,
+                                                    ) +
+                                                    $t('authority.' + item.key + '.' + subItem.key + '.' + fourItem.key)
+                                                }}
+                                            </a-checkbox>
+                                        </template>
                                     </a-checkbox-group>
                                 </div>
                             </div>
@@ -66,10 +104,10 @@
 </template>
 
 <script>
-import Core from '../../core';
+import Core from '@/core';
 import SimpleImageEmpty from '../../components/common/SimpleImageEmpty.vue';
 
-const AUTH_LIST_TEMP = Core.Const.AUTH_LIST_TEMP;
+const AUTH_LIST_TEMP = Core.Const.SYSTEM_AUTH.AUTH_LIST_TEMP;
 const USER_TYPE = Core.Const.USER.TYPE;
 
 export default {
@@ -84,25 +122,25 @@ export default {
             authItems: Core.Util.deepCopy(AUTH_LIST_TEMP), // 所有权限
 
             distributor: {
-                name: 'distributor_auth',
-                type: USER_TYPE.DISTRIBUTOR,
+                name: 'n.distributor_auth',
+                type: USER_TYPE.DISTRIBUTOR, // 分销商
                 edit: false,
                 options: [],
-                selected: {},
+                selected: [],
             },
             agent: {
-                name: 'agent_auth',
-                type: USER_TYPE.AGENT,
+                name: 'n.agent_auth',
+                type: USER_TYPE.AGENT, // 零售商
                 edit: false,
                 options: [],
-                selected: {},
+                selected: [],
             },
             store: {
-                name: 'store_auth',
-                type: USER_TYPE.STORE,
+                name: 'n.store_auth',
+                type: USER_TYPE.STORE, // 门店
                 edit: false,
                 options: [],
-                selected: {},
+                selected: [], // 用户底下的权限
             },
         };
     },
@@ -117,65 +155,127 @@ export default {
         },
     },
     created() {
-        this.getAllAuthItem();
+        this.getAllAuthItemFetch();
     },
     mounted() {
         this.activeKey = ['distributor', 'agent', 'store'];
     },
     methods: {
-        getAllAuthItem() {
+        /* fetch start */
+        getAllAuthItemFetch() {
             // 获取所权限项
             Core.Api.Authority.allOptions()
                 .then(res => {
-                    console.log('getAllAuthItem res:', res);
-                    let list = res.list;
-                    list.forEach(auth => {
-                        let key = auth.key.split('.')[0];
-                        let item = this.authItems.find(i => key === i.key);
-                        if (item) {
-                            item.list.push({ value: auth.id, label: auth.key });
+                    /* 
+                        { 
+                            id: 1,                             
+                            key: "warehouse.list", 
+                            name: "查看仓库列表", 
+                            path: "", 
+                            scope_type: 10,
                         }
-                    });
+                    */
+                    console.log('getAllAuthItem res:', res);
+
+                    let list =
+                        [
+                            {
+                                id: 1,
+                                key: 'test.oneMange1',
+                                name: '管理1',
+                                path: '',
+                                scope_type: 10,
+                            },
+                            {
+                                id: 2,
+                                key: 'test.oneMange1.bookList',
+                                name: 'book列表1',
+                                path: '',
+                                scope_type: 10,
+                            },
+                            {
+                                id: 3,
+                                key: 'test.oneMange1.bookList.edit',
+                                name: '编辑',
+                                path: '',
+                                scope_type: 10,
+                            },
+                            {
+                                id: 4,
+                                key: 'test.oneMange1.bookList1',
+                                name: 'book列表2',
+                                path: '',
+                                scope_type: 10,
+                            },
+                            // {
+                            //     id: 3,
+                            //     key: 'test.oneMange2',
+                            //     name: '管理2',
+                            //     path: '',
+                            //     scope_type: 10,
+                            // },
+                            // {
+                            //     id: 4,
+                            //     key: 'test.oneMange2.bookList',
+                            //     name: 'book列表2',
+                            //     path: '',
+                            //     scope_type: 10,
+                            // },
+                        ] || res.list;
+
+                    this.handleAuthGrouping(list);
                     console.log('getAllAuthItem authItems', this.authItems);
-                    this.getOrgAuth('distributor');
-                    this.getOrgAuth('agent');
-                    this.getOrgAuth('store');
+                    // this.getOrgAuthFetch('distributor');
+                    // this.getOrgAuthFetch('agent');
+                    this.getOrgAuthFetch('store');
                 })
                 .catch(err => {
                     console.log('getAllAuthItem err:', err);
                 });
         },
-        getOrgAuth(user_type) {
-            // 获取 某类型组织 已分配的 权限项
+        // 获取 某类型组织 已分配的 权限项
+        getOrgAuthFetch(user_type) {
             this[user_type].options = Core.Util.deepCopy(this.authItems);
+
             Core.Api.Authority.authOptions({
                 org_type: this[user_type].type,
             })
                 .then(res => {
-                    console.log('getOrgAuth', user_type, 'res:', res);
-                    let selected = {};
-                    res.list.forEach(auth => {
-                        selected[auth.id] = auth.key;
-                        let key = auth.key.split('.')[0];
-                        let item = this[user_type].options.find(i => key === i.key);
-                        if (item) {
-                            item.select.push(auth.id);
-                        }
-                    });
-                    this[user_type].selected = selected;
-                    console.log('getOrgAuth', user_type, this[user_type]);
+                    // console.log('getOrgAuth:', res);
+                    let list =
+                        [
+                            {
+                                id: 1,
+                                key: 'test.oneMange1',
+                                name: '管理1',
+                                path: '',
+                                scope_type: 10,
+                            },
+                            {
+                                id: 2,
+                                key: 'test.oneMange1.bookList',
+                                name: 'book列表1',
+                                path: '',
+                                scope_type: 10,
+                            },
+                        ] || res.list;
+
+                    this[user_type].selected = this.handleOrgAuthFilter(list);
+                    this.handleAuthContrast(this[user_type].options, this[user_type].selected);
+                    console.log('getOrgAuth: ', this[user_type]);
                 })
                 .catch(err => {
                     console.log('getOrgAuth', user_type, 'err:', err);
                 });
         },
+        /* fetch end */
 
+        // 进入编辑模式
         handleEditShow(type) {
-            // 进入编辑模式
             this[type].edit = true;
         },
+        // 保存编辑
         handleEditSubmit(type) {
-            // 保存编辑
             let list = [];
             for (const item of this[type].options) {
                 list.push(...item.select);
@@ -188,10 +288,66 @@ export default {
                 this.handleEditClose(type);
             });
         },
+        // 取消编辑
         handleEditClose(type) {
-            // 取消编辑
             this[type].edit = false;
-            this.getOrgAuth(type);
+            this.getOrgAuthFetch(type);
+        },
+
+        // 对权限进行分组
+        handleAuthGrouping(data) {
+            data.forEach(auth => {
+                let splitKey = auth.key.split('.');
+                let lg = splitKey.length - 1;
+                let item = this.authItems.find(i => splitKey[0] === i.key);
+
+                if (item) {
+                    switch (lg) {
+                        case 1:
+                            item.list[splitKey[1]] = {
+                                key: splitKey[1],
+                                list: [],
+                            };
+                            break;
+                        case 2:
+                            const $2 = item.list[splitKey[1]];
+                            $2.list.push({ id: auth.id, key: splitKey[2], list: [] });
+                            console.log('$2', $2);
+                            break;
+                        case 3:
+                            const $2Item = item.list[splitKey[1]].list;
+                            const $3 = $2Item.find(el => el.key === splitKey[2]);
+                            $3.list.push({ id: auth.id, key: splitKey[3] });
+                            console.log('$3', $3);
+                            break;
+                    }
+                }
+            });
+
+            console.log('this.authItems', this.authItems);
+        },
+        
+        // 对获取 某类型组织 已分配的 权限项过滤
+        handleOrgAuthFilter(list) {
+            let selected = [];
+            list.forEach(auth => {
+                let splitKey = auth.key.split('.');
+                let lg = splitKey.length - 1;
+
+                switch (lg) {
+                    case 2:
+                        selected.push(auth.id);
+                        break;
+                    case 3:
+                        selected.push(auth.id);
+                        break;
+
+                    default:
+                        break;
+                }
+            });
+            console.log('selected', selected);
+            return selected;
         },
     },
 };

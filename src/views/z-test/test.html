@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <script>
+            const data = [
+                {
+                    id: 1,
+                    key: 'test.oneMange1',
+                    name: '管理1',
+                    path: '',
+                    scope_type: 10,
+                },
+                {
+                    id: 2,
+                    key: 'test.oneMange1.bookList',
+                    name: 'book列表1',
+                    path: '',
+                    scope_type: 10,
+                },
+                {
+                    id: 3,
+                    key: 'test.oneMange1.bookList.edit',
+                    name: '编辑',
+                    path: '',
+                    scope_type: 10,
+                },
+                // {
+                //     id: 4,
+                //     key: 'test.oneMange2',
+                //     name: '管理1',
+                //     path: '',
+                //     scope_type: 10,
+                // },
+                // {
+                //     id: 5,
+                //     key: 'test.oneMange2.bookList',
+                //     name: 'book列表1',
+                //     path: '',
+                //     scope_type: 10,
+                // },
+                // {
+                //     id: 6,
+                //     key: 'test.oneMange2.bookList.edit',
+                //     name: '编辑',
+                //     path: '',
+                //     scope_type: 10,
+                // },
+            ];
+
+            const result = [
+                {
+                    list: {
+                        oneMange1: {},
+                    },
+                    key: 'test',
+                    name: '测试模块',
+                },
+            ];
+
+            const destructureData = data => {
+                data.forEach(auth => {
+                    let splitKey = auth.key.split('.');
+                    let lg = splitKey.length - 1;
+                    let item = result.find(i => splitKey[0] === i.key);
+
+                    if (item) {
+                        console.log('item', item);
+                        switch (lg) {
+                            case 1:
+                                item.list[splitKey[1]] = {
+                                    key: splitKey[1],
+                                    list: [],
+                                };
+                                break;
+                            case 2:
+                                const $2 = item.list[splitKey[1]];
+                                $2.list.push({ id: auth.id, key: splitKey[2], list: [] });
+                                console.log('$2', $2);
+                                break;
+                            case 3:
+                                const $2Item = item.list[splitKey[1]].list;
+                                // console.log('$2Item', $2Item);
+                                const $3 = $2Item.find(el => el.key === splitKey[2]);
+                                $3.list.push({ id: auth.id, key: splitKey[3] });
+                                console.log('$3', $3);
+                                break;
+                        }
+                    }
+                });
+
+                console.log('result', result);
+            };
+
+            const charactersData = (list) => {
+                let list = [
+                    {
+                        id: 1,
+                        key: 'test.oneMange1',
+                        name: '管理1',
+                        path: '',
+                        scope_type: 10,
+                    },
+                    {
+                        id: 2,
+                        key: 'test.oneMange1.bookList',
+                        name: 'book列表1',
+                        path: '',
+                        scope_type: 10,
+                    },
+                    {
+                        id: 3,
+                        key: 'test.oneMange2',
+                        name: '管理2',
+                        path: '',
+                        scope_type: 10,
+                    },
+                    {
+                        id: 4,
+                        key: 'test.oneMange1.bookList',
+                        name: 'book列表2',
+                        path: '',
+                        scope_type: 10,
+                    },
+                ];
+
+                let selected = [];
+                list.forEach(auth => {
+                    let splitKey = auth.key.split('.');
+                    let lg = splitKey.length - 1;
+
+                    switch (lg) {
+                        case 2:
+                            selected.push(auth.id);
+                            break;
+                        case 3:
+                            selected.push(auth.id);
+                            break;
+
+                        default:
+                            break;
+                    }
+                });
+                console.log('selected', selected);
+                return selected;
+            };
+
+            const twoFilter = item => {};
+            const threeFilter = item => {};
+
+            const destructuredData = destructureData(data);
+            charactersData();
+        </script>
+    </body>
+</html>
