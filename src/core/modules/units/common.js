@@ -91,15 +91,4 @@ export default {
             throw Error('No window.getSelection!');
         }
     },
-    /**
-     * @description 返回你想返回的 key下的value值
-     * @param(MAP) 对象 { 0: { value: '0', key: 0, color: 'red', zh: '未知', en: 'Unknown' }, ... } 元数据
-     * @param(val) 查找MAP对象的值 例如 0
-     * @param(to) 查询对象中的key
-     * @return 返回 key下的value
-     */
-    returenValue(MAP, val, to = 'text') {
-        let item = MAP[val] || {};
-        return item[to] || '';
-    },
 };

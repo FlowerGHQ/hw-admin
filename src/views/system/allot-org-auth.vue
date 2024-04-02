@@ -32,8 +32,8 @@
                     </template>
                     <!-- 用户底下的 -->
                     <div v-if="!org.edit" class="panel-content">
-                        <SimpleImageEmpty v-if="$Util.isEmptyObj(org.selected)" :desc="$t('n.no_org_auth')" />
-                        <template v-for="item of org.options" :key="item.key">
+                        <SimpleImageEmpty v-if="org.selected.length === 0" :desc="$t('n.no_org_auth')" />
+                        <template v-else v-for="item of org.options" :key="item.key">
                             <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
                                 <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
                                 <div class="value">
@@ -42,13 +42,40 @@
                                         v-for="(threeItem, index) of subItem.list"
                                         :key="index"
                                     >
-                                        <template v-if="">
-                                            {{ $t('authority.' + item.key + '.' + subItem.key + '.' + threeItem.key) }}
-                                            <span v-for="(fourItem, index) in threeItem.list" :key="fourItem.id">
+                                        <template v-if="$Util.Common.isMember(threeItem.id, org.selected)">
+                                            <span>
                                                 {{
-                                                    $t('authority.' + item.key + '.' + subItem.key + '.' + threeItem.key) +
-                                                    $t('authority.' + item.key + '.' + subItem.key + '.' + fourItem.key)
+                                                    $t(
+                                                        'authority.' +
+                                                            item.key +
+                                                            '.' +
+                                                            subItem.key +
+                                                            '.' +
+                                                            threeItem.key,
+                                                    )
                                                 }}
+                                            </span>
+                                            <span v-for="(fourItem, index) in threeItem.list" :key="fourItem.id">
+                                                <template v-if="$Util.Common.isMember(fourItem.id, org.selected)">
+                                                    {{
+                                                        $t(
+                                                            'authority.' +
+                                                                item.key +
+                                                                '.' +
+                                                                subItem.key +
+                                                                '.' +
+                                                                threeItem.key,
+                                                        ) +
+                                                        $t(
+                                                            'authority.' +
+                                                                item.key +
+                                                                '.' +
+                                                                subItem.key +
+                                                                '.' +
+                                                                fourItem.key,
+                                                        )
+                                                    }}
+                                                </template>
                                             </span>
                                         </template>
                                     </span>
@@ -62,39 +89,27 @@
                             <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
                                 <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
                                 <div class="value">
-                                    <a-checkbox-group v-model:value="item.select">
-                                        <template v-for="(threeItem, index) in subItem.list">
-                                            <a-checkbox :value="threeItem.id">
-                                                {{
-                                                    $t(
-                                                        'authority.' +
-                                                            item.key +
-                                                            '.' +
-                                                            subItem.key +
-                                                            '.' +
-                                                            threeItem.key,
-                                                    )
-                                                }}
-                                            </a-checkbox>
-                                            <a-checkbox
-                                                v-for="(fourItem, index) in threeItem.list"
-                                                :key="index"
-                                                :value="fourItem.id"
-                                            >
-                                                {{
-                                                    $t(
-                                                        'authority.' +
-                                                            item.key +
-                                                            '.' +
-                                                            subItem.key +
-                                                            '.' +
-                                                            threeItem.key,
-                                                    ) +
-                                                    $t('authority.' + item.key + '.' + subItem.key + '.' + fourItem.key)
-                                                }}
-                                            </a-checkbox>
-                                        </template>
-                                    </a-checkbox-group>
+                                    <template v-for="(threeItem, index) in subItem.list">
+                                        <a-checkbox
+                                            :checked="$Util.Common.isMember(threeItem.id, item.select)"
+                                            :value="threeItem.id"
+                                            @click="e => handleCheckboxChange(e, item.select)"
+                                        >
+                                            {{ $t('authority.' + item.key + '.' + subItem.key + '.' + threeItem.key) }}
+                                        </a-checkbox>
+                                        <a-checkbox
+                                            v-for="(fourItem, index) in threeItem.list"
+                                            :key="index"
+                                            :checked="$Util.Common.isMember(fourItem.id, item.select)"
+                                            :value="fourItem.id"
+                                            @click="e => handleCheckboxChange(e, item.select)"
+                                        >
+                                            {{
+                                                $t('authority.' + item.key + '.' + subItem.key + '.' + threeItem.key) +
+                                                $t('authority.' + item.key + '.' + subItem.key + '.' + fourItem.key)
+                                            }}
+                                        </a-checkbox>
+                                    </template>
                                 </div>
                             </div>
                         </template>
@@ -209,20 +224,20 @@ export default {
                                 path: '',
                                 scope_type: 10,
                             },
-                            // {
-                            //     id: 3,
-                            //     key: 'test.oneMange2',
-                            //     name: '管理2',
-                            //     path: '',
-                            //     scope_type: 10,
-                            // },
-                            // {
-                            //     id: 4,
-                            //     key: 'test.oneMange2.bookList',
-                            //     name: 'book列表2',
-                            //     path: '',
-                            //     scope_type: 10,
-                            // },
+                            {
+                                id: 5,
+                                key: 'test.oneMange2',
+                                name: '管理2',
+                                path: '',
+                                scope_type: 10,
+                            },
+                            {
+                                id: 6,
+                                key: 'test.oneMange2.bookList',
+                                name: 'book列表2',
+                                path: '',
+                                scope_type: 10,
+                            },
                         ] || res.list;
 
                     this.handleAuthGrouping(list);
@@ -243,7 +258,6 @@ export default {
                 org_type: this[user_type].type,
             })
                 .then(res => {
-                    // console.log('getOrgAuth:', res);
                     let list =
                         [
                             {
@@ -260,10 +274,23 @@ export default {
                                 path: '',
                                 scope_type: 10,
                             },
+                            {
+                                id: 5,
+                                key: 'test.oneMange2',
+                                name: '管理2',
+                                path: '',
+                                scope_type: 10,
+                            },
+                            {
+                                id: 6,
+                                key: 'test.oneMange2.bookList',
+                                name: 'book列表2',
+                                path: '',
+                                scope_type: 10,
+                            },
                         ] || res.list;
 
                     this[user_type].selected = this.handleOrgAuthFilter(list);
-                    this.handleAuthContrast(this[user_type].options, this[user_type].selected);
                     console.log('getOrgAuth: ', this[user_type]);
                 })
                 .catch(err => {
@@ -309,6 +336,7 @@ export default {
                             item.list[splitKey[1]] = {
                                 key: splitKey[1],
                                 list: [],
+                                select: [],
                             };
                             break;
                         case 2:
@@ -350,6 +378,22 @@ export default {
             });
             console.log('selected', selected);
             return selected;
+        },
+
+        handleCheckboxChange(e, select) {
+            let checked = e.target.checked;
+            let value = Number(e.target.value);
+
+            if (checked) {
+                select.push(value);
+            } else {
+                const findIndex = select.findIndex(el => el === value);
+                if (findIndex !== -1) {
+                    select.splice(findIndex, 1);
+                }
+            }
+
+            console.log('最后于', select);
         },
     },
 };
