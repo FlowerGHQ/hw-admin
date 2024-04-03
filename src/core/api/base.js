@@ -61,6 +61,7 @@ class ApiBase {
         }
         let fullUrl = `${this.baseUrl}/${mark}/${config[1]}`;
         if (moduleName == 'Export' || config[1] === 'file/download-import-template') {
+            console.log(fullUrl + '?' + ApiBase.stringify({ token, ...args }));
             return fullUrl + '?' + ApiBase.stringify({ token, ...args });
         }
         switch (config[0]) {

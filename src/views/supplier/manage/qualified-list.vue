@@ -57,6 +57,20 @@
                         </template>
                         <template v-if="!text">-</template>
                     </template>
+                    <!-- 备注 -->
+                    <template v-if="column.key === 'remark'">
+                        <div class="remark">
+                            <a-tooltip>
+                                <template #title>{{ text }}</template>
+                                <span class="remark-text">{{ text ? text : '-' }}</span>
+                            </a-tooltip>
+                            <MySvgIcon
+                                icon-class="supply-edit"
+                                class-name="supply-edit"
+                                @click.native="handleRemark(record)"
+                            />
+                        </div>
+                    </template>
                 </template>
             </a-table>
         </div>
@@ -93,6 +107,33 @@
                 </div>
             </template>
         </a-modal>
+        <!-- 修改备注 -->
+        <a-modal
+            v-model:visible="changeRemarkVisible"
+            :title="$t('supply-chain.remark')"
+            :width="540"
+            centered
+            class="import-modal"
+        >
+            <div class="modal-content">
+                <a-form ref="formRef" :model="formState" layout="vertical" name="form_in_modal">
+                    <a-form-item name="description" label="">
+                        <a-textarea
+                            v-model:value="formState.remark"
+                            show-count
+                            :maxlength="50"
+                            :autoSize="{ minRows: 3, maxRows: 6 }"
+                        />
+                    </a-form-item>
+                </a-form>
+            </div>
+            <template #footer>
+                <div class="btns">
+                    <a-button @click="handleRemarkClose">{{ $t('def.cancel') }}</a-button>
+                    <a-button type="primary" @click="updateRemarkFetch">{{ $t('def.sure') }}</a-button>
+                </div>
+            </template>
+        </a-modal>
     </div>
 </template>
 
@@ -123,10 +164,15 @@ const upload = reactive({
     },
 });
 const importVisible = ref(false);
+const changeRemarkVisible = ref(false);
 const importResultData = reactive({
     totalCode: 0,
     successCode: 0,
     errorCode: 0,
+});
+const editId = ref(null);
+const formState = reactive({
+    remark: '',
 });
 const tableColumns = computed(() => {
     let columns = [
@@ -141,7 +187,7 @@ const tableColumns = computed(() => {
         { title: $t('supply-chain.other_items'), dataIndex: 'supply_other', key: 'item' },
         { title: $t('supply-chain.introduction_date'), dataIndex: 'register_time', key: 'time' },
         { title: $t('supply-chain.change_class'), dataIndex: 'register_type', key: 'register_type' },
-        { title: $t('supply-chain.remark'), dataIndex: 'remark', key: 'item' },
+        { title: $t('supply-chain.remark'), dataIndex: 'remark', key: 'remark' },
         { title: $t('supply-chain.province'), dataIndex: 'province', key: 'item' },
         { title: $t('supply-chain.city'), dataIndex: 'city', key: 'item' },
         { title: $t('supply-chain.detailed_address'), dataIndex: 'address', key: 'item' },
@@ -156,17 +202,48 @@ const searchList = ref([
         searchParmas: 'name',
         key: 'supply-chain.supplier_full_name',
     },
+    {
+        type: 'input',
+        value: '',
+        searchParmas: 'supply_main',
+        key: 'supply-chain.main_supply',
+    },
+    {
+        type: 'input',
+        value: '',
+        searchParmas: 'purchase_category',
+        key: 'supply-chain.procurement_category',
+    },
+    {
+        type: 'select',
+        value: undefined,
+        searchParmas: 'register_type',
+        key: 'supply-chain.change_class',
+        selectMap: Core.Const.SUPPLAY.CHANGE_CLASS_LIST,
+    },
 ]);
 
 onMounted(() => {});
 /* Fetch start*/
 const request = Core.Api.Supplier.list;
+const updateRemark = Core.Api.Supplier.updateRemark;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request,
     initParam: {
         status: 10,
     },
 });
+const updateRemarkFetch = () => {
+    const params = {
+        id: editId.value,
+        remark: formState.remark,
+    };
+    updateRemark({ ...params }).then(res => {
+        proxy.$message.success(proxy.$t('pop_up.modify'));
+        onSearch();
+        handleRemarkClose();
+    });
+};
 /* Fetch end*/
 
 /* methods start*/
@@ -207,10 +284,30 @@ const handleImportClose = () => {
 const handleImportConfirm = () => {
     importVisible.value = false;
 };
+const handleRemark = record => {
+    editId.value = record.id;
+    formState.remark = record.remark;
+    changeRemarkVisible.value = true;
+};
+const handleRemarkClose = () => {
+    changeRemarkVisible.value = false;
+};
 /* methods end*/
 </script>
 
 <style lang="less" scoped>
+.remark {
+    .fcc();
+    .remark-text {
+        display: inline-block;
+        max-width: 300px;
+        .ell();
+    }
+    .supply-edit {
+        margin-left: 6px;
+        cursor: pointer;
+    }
+}
 .title-container {
     .btns-area {
         .file-upload-btn {

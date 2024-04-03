@@ -296,7 +296,7 @@ export default {
         please_upload_business_license_photos: '请上传营业执照照片',
         qualified_supplier: '合格供应商名录',
         no: '品编',
-        supplier_code : '供方代码',
+        supplier_code: '供方代码',
         supplier_full_name: '供方全称',
         supplier_abbreviation: '供方简称',
         procurement_category: '采购品类',
@@ -326,6 +326,8 @@ export default {
         province: '省份',
         city: '城市',
         detailed_address: '详细地址',
+        model_selection: '车型选择',
+        version_selection: '版本选择',
     },
     en: {
         // 年
@@ -612,8 +614,8 @@ export default {
         please_upload_business_license_photos: 'Please upload business license photos',
         qualified_supplier: 'Qualified Supplier List',
         no: 'Pin Bian',
-        supplier_code : 'Supplier Code',
-        supplier_full_name: "Supplier Full Name",
+        supplier_code: 'Supplier Code',
+        supplier_full_name: 'Supplier Full Name',
         supplier_abbreviation: 'Supplier Abbreviation',
         procurement_category: 'Procurement Category',
         main_supply: 'Main Supply',
@@ -642,5 +644,7 @@ export default {
         province: 'Province',
         city: 'City',
         detailed_address: 'Detailed Address',
+        model_selection: 'Model Selection',
+        version_selection: 'Version Selection',
     },
 };

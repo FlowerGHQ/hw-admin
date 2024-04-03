@@ -28,19 +28,19 @@ const apiList = {
         downloadImportQualifiedListTemplate: ['GetJson', 'file/download-import-template'], // 下载导入合格供应商名录模板
     },
     ThirdParty: {
-        fsAuthorize:['Get', 'feishu/web/authorize'], // 飞书登录验证
+        fsAuthorize: ['Get', 'feishu/web/authorize'], // 飞书登录验证
     },
     Export: {
         // 导出
         purchaseExport: ['PostJson', 'purchase-order/export'],
         purchaseTemplateExport: ['PostJson', 'purchase-order/export-template'], // 采购单模版导出
-	    purchaseOrderExport: ['PostJson', 'purchase-order/export-order'], // 采购单模版导出
+        purchaseOrderExport: ['PostJson', 'purchase-order/export-order'], // 采购单模版导出
         repairExport: ['PostJson', 'repair/export-repair-order-record'],
-        invoiceOutExport: ['PostJson', 'invoice/export-out-invoice'],//导出
-        invoiceInExport: ['PostJson', 'invoice/export-in-invoice'],//导出
-        invoiceDetailExport: ['PostJson', 'invoice/export-detail'],//导出
-        materialPurchaseExport: ['PostJson', '/material-purchase-order/export'],//导出
-        ItemCollectExport: ['PostJson', '/shopping-cart/download-import-template'],//导出
+        invoiceOutExport: ['PostJson', 'invoice/export-out-invoice'], //导出
+        invoiceInExport: ['PostJson', 'invoice/export-in-invoice'], //导出
+        invoiceDetailExport: ['PostJson', 'invoice/export-detail'], //导出
+        materialPurchaseExport: ['PostJson', '/material-purchase-order/export'], //导出
+        ItemCollectExport: ['PostJson', '/shopping-cart/download-import-template'], //导出
         feedbackTemplateExport: ['PostJson', 'feedback/export-template'], // 采购单模版导出
 
         exportOrderPrice: ['GetJson', 'purchase-order/export-item-price'], // 采购数据导出
@@ -60,6 +60,7 @@ const apiList = {
         downloadTemplate: ['GetJson', 'aftermarket/bom/download-aftermarket-bom'], // 二级页面下载导入模板
         enquiryTickeTexport: ['GetJson', 'enquiry-ticket/export'], // 问询单导出接口
         downloadImportFobPriceTemplate: ['GetJson', 'item/download-import-fob-price-template'], // 下载导入商品价格模板
+        bomItemExport: ['GetJson', 'supplier/bom-item/export'], // 导出bom item
     },
     User: {
         // 用户
@@ -226,12 +227,12 @@ const apiList = {
     Repair: {
         // 维修单
         list: ['PostJson', 'repair/list'], // 列表
-	    create: ['PostJson', 'repair/save'], // 新建工单
-	    hand: ['PostJson', 'repair/hand'],
+        create: ['PostJson', 'repair/save'], // 新建工单
+        hand: ['PostJson', 'repair/hand'],
         detail: ['PostJson', 'repair/detail'], // 工单详情
-	    check: ['PostJson', 'repair/check'], // 确认
-	    audit: ['PostJson', 'repair/audit'], // 审批
-	    delete: ['PostJson', 'repair/delete'], // 审批
+        check: ['PostJson', 'repair/check'], // 确认
+        audit: ['PostJson', 'repair/audit'], // 审批
+        delete: ['PostJson', 'repair/delete'], // 审批
         statusList: ['PostJson', 'repair/status-list'], // 保存
         repair: ['PostJson', 'repair/repair'], // 维修结束
         secondDoor: ['PostJson', 'repair/second-door'], // 二次上门
@@ -598,12 +599,13 @@ const apiList = {
         detail: ['PostJson', 'supplier/detail'],
         delete: ['PostJson', 'supplier/delete'],
         listAll: ['PostJson', 'supplier/list-name'],
-        bomList: ['PostJson', 'supplier/bom/list'],// bom列表
-        updateName: ['PostJson', 'supplier/bom/update-name'],// 修改bom名称
-        listVersion: ['PostJson', 'supplier/bom/list-version'],// bom版本列表
-        bomItemList: ['PostJson', 'supplier/bom-item/list'],// BomItem列表
-        bomLogSave: ['PostJson', 'supplier/bom-log/save'],// 修改价格
-        bomLogList: ['PostJson', 'supplier/bom-log/list'],// 价格变化记录
+        bomList: ['PostJson', 'supplier/bom/list'], // bom列表
+        updateName: ['PostJson', 'supplier/bom/update-name'], // 修改bom名称
+        listVersion: ['PostJson', 'supplier/bom/list-version'], // bom版本列表
+        bomItemList: ['PostJson', 'supplier/bom-item/list'], // BomItem列表
+        bomLogSave: ['PostJson', 'supplier/bom-log/save'], // 修改价格
+        bomLogList: ['PostJson', 'supplier/bom-log/list'], // 价格变化记录
+        updateRemark: ['PostJson', 'supplier/update-remark'], // 更新备注
     },
     SupplierItem: {
         //供应商物料管理

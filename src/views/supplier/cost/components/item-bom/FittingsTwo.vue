@@ -237,7 +237,7 @@ defineExpose({
 
 <style lang="less" scoped>
 .fittings-two {
-    height: 100%;
+    // height: 100%;
     .title {
         margin-bottom: 10px;
         font-size: 20px;
