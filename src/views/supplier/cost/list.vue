@@ -86,7 +86,7 @@
                             mode="multiple"
                             :placeholder="`${$t('supply-chain.please_select')} ${$t('item-bom.version')}`"
                             :options="versionOptions"
-                            :field-names="{ label: 'name', value: 'id' }"
+                            :field-names="{ label: 'version', value: 'id' }"
                             :disabled="!formState.region"
                         ></a-select>
                     </a-form-item>
@@ -264,6 +264,7 @@ const handleSearchModel = val => {
     });
 };
 const handelSelectModel = val => {
+    formState.version = [];
     getVersionList(val);
 };
 const handleSearch = data => {
