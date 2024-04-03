@@ -52,8 +52,12 @@ class ApiBase {
         let mark = ApiBase.getMark(moduleName);
         const token = Data.getToken();
         const commonModule = ['Common'];
+        const ThirdPartyModule = ['ThirdParty'];
         if (commonModule.includes(moduleName)) {
             mark = 'core/1';
+        }
+        if (ThirdPartyModule.includes(moduleName)) {
+            mark = 'third-party/1';
         }
         let fullUrl = `${this.baseUrl}/${mark}/${config[1]}`;
         if (moduleName == 'Export' || config[1] === 'file/download-import-template') {

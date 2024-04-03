@@ -1,7 +1,7 @@
 <template>
     <div class="static-preview-list">
-        <template v-for="(item, index) in attachment_list" :key="index">
-            <template v-if="/(image\/|png|jpg|jpeg)/.test(item.type)">
+        <template v-for="(item, index) in attachment_list" :key="index">                       
+            <template v-if="imageRegx.test(item.type)">
                 <img
                     :class="{ 'm-l-16': index > 0 }"
                     class="attachment-img"
@@ -15,7 +15,7 @@
                     "
                 />
             </template>
-            <template v-else-if="/video\/+/.test(item.type)">
+            <template v-else-if="videoRegx.test(item.type)">
                 <!-- 视频 -->
                 <div
                     class="video-container"
@@ -32,7 +32,7 @@
                     <div class="bottom-mask">{{ item.name }}</div>
                 </div>
             </template>
-            <template v-else-if="/application\/pdf/.test(item.type)">
+            <template v-else-if="pdfRegx.test(item.type)">
                 <!-- pdf -->
                 <div
                     class="pdf-container"
@@ -82,6 +82,11 @@ const props = defineProps({
         type: String,
     },
 });
+
+const imageRegx = /image\/(png|jpg|jpeg|heic)/  // 照片的正则
+const videoRegx = /^video\/+/  // 视频的正则
+const pdfRegx = /application\/(pdf)/  // pdf的正则
+const fileRegx = /^application\/+/  // 文件的正则
 
 const emits = defineEmits(['view']);
 

@@ -451,7 +451,7 @@
                 <!-- 代理信息 -->
                 <div
                     class="information-container-form m-t-40"
-                    v-if="returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
+                    v-if="isMember(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
                 >
                     <div class="sub-title">{{ $t('supply-chain.agent_information') }}</div>
                     <div class="information-form">
@@ -599,7 +599,7 @@
                 <!-- 人力资源 -->
                 <div
                     class="information-container-form m-t-40"
-                    v-if="!returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
+                    v-if="!isMember(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
                 >
                     <div class="sub-title">{{ $t('supply-chain.human_resources') }}</div>
                     <div class="information-form">
@@ -935,7 +935,7 @@
                                         <div
                                             class="search-col"
                                             :class="{
-                                                required: !returnTypeBool(parameters.type, [
+                                                required: !isMember(parameters.type, [
                                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
                                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                                                 ]),
@@ -969,7 +969,7 @@
                                     </div>
                                     <template
                                         v-if="
-                                            !returnTypeBool(parameters.type, [
+                                            !isMember(parameters.type, [
                                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                             ])
                                         "
@@ -979,7 +979,7 @@
                                             <div
                                                 class="search-col"
                                                 :class="{
-                                                    required: returnTypeBool(parameters.type, [
+                                                    required: isMember(parameters.type, [
                                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                     ]),
                                                 }"
@@ -1015,7 +1015,7 @@
                                             <div
                                                 class="search-col"
                                                 :class="{
-                                                    required: returnTypeBool(parameters.type, [
+                                                    required: isMember(parameters.type, [
                                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                     ]),
                                                 }"
@@ -1049,7 +1049,7 @@
                                             <div
                                                 class="search-col"
                                                 :class="{
-                                                    required: returnTypeBool(parameters.type, [
+                                                    required: isMember(parameters.type, [
                                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                     ]),
                                                 }"
@@ -1083,7 +1083,7 @@
                                             <div
                                                 class="search-col"
                                                 :class="{
-                                                    required: returnTypeBool(parameters.type, [
+                                                    required: isMember(parameters.type, [
                                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                     ]),
                                                 }"
@@ -1121,7 +1121,7 @@
                 <!-- 竞争对手 -->
                 <div
                     class="information-container-form m-t-40"
-                    v-if="returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])"
+                    v-if="isMember(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])"
                 >
                     <div class="sub-title">{{ $t('supply-chain.competitor') }}</div>
                     <div class="information-form">
@@ -1227,7 +1227,7 @@
                                                 <div class="information-customer-name m-l-4">
                                                     <span
                                                         v-if="
-                                                            returnTypeBool(parameters.type, [
+                                                            isMember(parameters.type, [
                                                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                                                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                                             ])
@@ -1320,7 +1320,7 @@
                 <!-- 服务信息 -->
                 <div
                     class="information-container-form m-t-40"
-                    v-if="returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
+                    v-if="isMember(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
                 >
                     <div class="sub-title">{{ $t('supply-chain.service_information') }}</div>
                     <div class="information-form">
@@ -1382,7 +1382,7 @@
                 <div
                     class="information-container-form m-t-40"
                     v-if="
-                        !returnTypeBool(parameters.type, [
+                        !isMember(parameters.type, [
                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                         ])
@@ -1395,7 +1395,7 @@
                             <div
                                 class="search-col m-t-0 w-50-percentage"
                                 v-if="
-                                    !returnTypeBool(parameters.type, [
+                                    !isMember(parameters.type, [
                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                                     ])
@@ -1421,7 +1421,7 @@
                             <div
                                 class="search-col"
                                 :class="{
-                                    'm-t-0': returnTypeBool(parameters.type, [
+                                    'm-t-0': isMember(parameters.type, [
                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                                     ]),
@@ -1443,7 +1443,7 @@
                         <div
                             class="level-search-row"
                             v-if="
-                                !returnTypeBool(parameters.type, [
+                                !isMember(parameters.type, [
                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                                 ])
@@ -1467,7 +1467,7 @@
                         <div
                             class="level-search-row"
                             v-if="
-                                !returnTypeBool(parameters.type, [
+                                !isMember(parameters.type, [
                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                                 ])
@@ -1509,7 +1509,7 @@
                         </div>
                         <div
                             class="level-search-row"
-                            v-if="!returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])"
+                            v-if="!isMember(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])"
                         >
                             <!-- 过程设计 -->
                             <div class="search-col">
@@ -1547,7 +1547,7 @@
                         </div>
                         <div
                             class="level-search-row"
-                            v-if="!returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])"
+                            v-if="!isMember(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])"
                         >
                             <!-- 过程验证 -->
                             <div class="search-col">
@@ -1585,7 +1585,7 @@
                                 </div>
                             </div>
                         </div>
-                        <template v-if="returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])">
+                        <template v-if="isMember(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])">
                             <!-- 设计规范 -->
                             <div class="level-search-row">
                                 <div class="search-col">
@@ -1746,7 +1746,7 @@
                 <div
                     class="information-container-form m-t-40"
                     v-if="
-                        !returnTypeBool(parameters.type, [
+                        !isMember(parameters.type, [
                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                         ])
@@ -1877,7 +1877,7 @@
                 <!-- 指定信息 -->
                 <div
                     class="information-container-form m-t-40"
-                    v-if="returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers])"
+                    v-if="isMember(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers])"
                 >
                     <div class="sub-title">{{ $t('supply-chain.specify_information') }}</div>
                     <div class="information-form">
@@ -1951,7 +1951,7 @@
                 <div
                     class="information-container-form m-t-40"
                     v-if="
-                        returnTypeBool(parameters.type, [
+                        isMember(parameters.type, [
                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                         ])
@@ -1964,7 +1964,7 @@
                             <div
                                 class="search-col m-t-0 align-flex-start"
                                 :class="{
-                                    required: returnTypeBool(parameters.type, [
+                                    required: isMember(parameters.type, [
                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                     ]),
                                 }"
@@ -1987,7 +1987,7 @@
                             <div
                                 class="search-col align-flex-start"
                                 :class="{
-                                    required: returnTypeBool(parameters.type, [
+                                    required: isMember(parameters.type, [
                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                     ]),
                                 }"
@@ -2012,7 +2012,7 @@
                             <div
                                 class="search-col align-flex-start"
                                 :class="{
-                                    required: returnTypeBool(parameters.type, [
+                                    required: isMember(parameters.type, [
                                         Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                     ]),
                                 }"
@@ -2038,7 +2038,7 @@
                 <div
                     class="information-container-form m-t-40"
                     v-if="
-                        returnTypeBool(parameters.type, [
+                        isMember(parameters.type, [
                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                         ])
@@ -2124,7 +2124,7 @@
             <!-- 设备信息 -->
             <div
                 class="equipment-information bg-color m-t-16"
-                v-if="!returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
+                v-if="!isMember(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
             >
                 <div class="title">{{ $t('supply-chain.device_information') }}</div>
                 <!-- 关键生产设备 -->
@@ -2132,7 +2132,7 @@
                     <div
                         class="sub-title"
                         :class="{
-                            'sub-title-required': returnTypeBool(parameters.type, [
+                            'sub-title-required': isMember(parameters.type, [
                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                             ]),
@@ -2243,7 +2243,7 @@
                     <div
                         class="sub-title"
                         :class="{
-                            'sub-title-required': returnTypeBool(parameters.type, [
+                            'sub-title-required': isMember(parameters.type, [
                                 Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                             ]),
                         }"
@@ -2641,7 +2641,7 @@
                         </div>
                         <div
                             class="level-search-row"
-                            v-if="returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
+                            v-if="isMember(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
                         >
                             <!-- 代理证书 -->
                             <div class="search-col align-flex-start">
@@ -3256,7 +3256,7 @@ const saveDetail = (params = {}) => {
 
 /* methods start*/
 // 判断哪些类型显示哪些模块
-const returnTypeBool = (type, typeIncludes) => {
+const isMember = (type, typeIncludes) => {
     let result = typeIncludes.includes(Number(type));
     return result;
 };

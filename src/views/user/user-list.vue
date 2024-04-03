@@ -4,9 +4,14 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('u.list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('user.save', 'MANAGER')"
-                        ><i class="icon i_add" />{{ $t('u.save') }}</a-button
-                    >
+                    <a-button @click="routerChange('edit')" v-if="$auth('user.save', 'MANAGER')">
+                        <!-- <i class="icon i_add" /> -->
+                        {{ $t('u.manually_add') }}
+                    </a-button>
+                    <a-button @click="routerChange('edit-fs')" v-if="$auth('user.save', 'MANAGER')">
+                        <img src="@images/mall/login/fs-login.png" class="fs-icon" />
+                        {{ $t('u.fs_add') }}
+                    </a-button>
                 </div>
             </div>
             <div class="search-container">
@@ -96,6 +101,11 @@
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
+                        <template v-if="column.key === 'authority'">
+                            <span class="allocated" v-if="text">{{ $t('u.allocated') }}</span>
+                            <span class="unallocated" v-else>{{ $t('u.unallocated') }}</span>
+                        </template>
+
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="routerChange('detail', record)"
                                 ><i class="icon i_detail" />{{ $t('def.detail') }}</a-button
@@ -204,7 +214,9 @@ export default {
                 { title: 'u.account', dataIndex: ['account', 'username'], key: 'item' },
                 { title: 'n.phone', dataIndex: ['account', 'phone'], key: 'item' },
                 { title: 'n.email', dataIndex: ['account', 'email'], key: 'item' },
+                { title: 'u.employee_no', dataIndex: 'employee_no', key: 'item' },
                 { title: 'u.role', dataIndex: 'role_name', key: 'item' },
+                { title: 'u.authority_abbreviation', dataIndex: 'flag_authority', key: 'authority' },
                 { title: 'e.administrator', dataIndex: 'flag_admin', align: 'center' },
                 { title: 'u.login', dataIndex: ['account', 'last_login_time'], key: 'time' },
                 { title: 'd.create_time', dataIndex: 'create_time', key: 'time' },
@@ -237,6 +249,17 @@ export default {
                 case 'edit': // 编辑
                     routeUrl = this.$router.resolve({
                         path: '/system/user-edit',
+                        query: {
+                            id: item.id,
+                            org_id: Core.Data.getOrgId(),
+                            org_type: this.orgType,
+                        },
+                    });
+                    window.open(routeUrl.href, '_self');
+                    break;
+                case 'edit-fs': // 编辑
+                    routeUrl = this.$router.resolve({
+                        path: '/system/user-edit-fs',
                         query: {
                             id: item.id,
                             org_id: Core.Data.getOrgId(),
@@ -388,4 +411,32 @@ export default {
 
 <style lang="less" scoped>
 // #UserList {}
+.btns-area {
+    .fcc();
+}
+.fs-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+}
+</style>
+<style lang="less">
+#UserList {
+    .allocated,
+    .unallocated {
+        padding: 5px 14px;
+        border-radius: 4px;
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 400;
+    }
+    .allocated {
+        color: #00b42a;
+        background: rgba(0, 180, 42, 0.1);
+    }
+    .unallocated {
+        color: #ff7d00;
+        background: rgba(255, 125, 0, 0.1);
+    }
+}
 </style>

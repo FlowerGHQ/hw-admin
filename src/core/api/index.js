@@ -27,6 +27,9 @@ const apiList = {
         migrate: ['Post', 'migrate/order'], // 获取当前登录账号的账户信息
         downloadImportQualifiedListTemplate: ['GetJson', 'file/download-import-template'], // 下载导入合格供应商名录模板
     },
+    ThirdParty: {
+        fsAuthorize:['Get', 'feishu/web/authorize'], // 飞书登录验证
+    },
     Export: {
         // 导出
         purchaseExport: ['PostJson', 'purchase-order/export'],

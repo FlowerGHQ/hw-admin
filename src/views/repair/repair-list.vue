@@ -192,7 +192,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'audit'">
-                            <a-button
+                            <!-- <a-button
                                 type="link"
                                 @click="handleModalShow(record.id, 'audit')"
                                 v-if="
@@ -203,7 +203,8 @@
                                     $auth('repair-order.audit')
                                 "
                                 ><i class="icon i_audit" />{{ $t('n.audit') }}</a-button
-                            >
+                            > -->
+                            -
                         </template>
                         <template v-if="column.key === 'redit'">
                             <a-button
@@ -214,12 +215,13 @@
                             >
                         </template>
                         <template v-if="column.key === 'invoice'">
-                            <a-button
+                            <!-- <a-button
                                 type="link"
                                 @click="handleModalShow(record.id, 'audit')"
                                 v-if="record.status == STATUS.DISTRIBUTOR_WAREHOUSE && $auth('repair-order.audit')"
                                 ><i class="icon i_audit" />{{ $t('n.audit') }}</a-button
-                            >
+                            > -->
+                            -
                         </template>
                         <template v-if="column.key === 'fault'">
                             <a-button

@@ -12,6 +12,8 @@ import { mallRouters, dealsPreview } from './mall';
 import { customerCare } from './distributor-router';
 // 平台方路由
 import { inquiryManagement, adminEmpty, operationManagement } from './admin-router';
+// 平台方路由
+import { fsLogin } from './fs-login';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE;
@@ -74,6 +76,18 @@ const routes = [
             title: '登录',
             title_en: 'Login',
         },
+        children: [
+            {
+                path: 'feishu',
+                name: 'LoginFeishu',
+                component: () => import('@/views/mall/Login-fs.vue'),
+                meta: {
+                    hidden: true,
+                    title: '登录',
+                    title_en: 'Login',
+                },
+            }
+        ]
     },
     // { // 分销商登录
     //     path: '/loginMall',
@@ -2660,7 +2674,7 @@ const routes = [
         component: Layout,
         redirect: '/system/system-file-list',
         name: 'SystemManagement',
-        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION, ROUTER_TYPE.CRM],
+        type: [ROUTER_TYPE.SYSTEM],
         meta: {
             title: '系统管理',
             title_en: 'System Management',
@@ -2685,6 +2699,16 @@ const routes = [
                     hidden: true,
                     title: '用户编辑',
                     parent: '/user/user-list',
+                },
+            },
+            {
+                path: 'user-edit-fs',
+                name: 'UserEditFs',
+                component: () => import('@/views/user/user-edit-fs.vue'),
+                meta: {
+                    hidden: true,
+                    title: '飞书添加用户',
+                    parent: '/user/user-list-fs',
                 },
             },
             {
@@ -2840,7 +2864,8 @@ const routes = [
     },
     ...supplyRouters,
     supplyMaterialManagement,
-    costManagement
+    costManagement,
+    fsLogin
 ];
 
 export default routes;

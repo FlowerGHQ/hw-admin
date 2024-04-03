@@ -107,7 +107,7 @@
                         <div
                             class="col"
                             v-if="
-                                !$Util.Common.returnTypeBool(customerCareDetail.type, [
+                                !$Util.Common.isMember(customerCareDetail.type, [
                                     Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION,
                                 ])
                             "
@@ -130,7 +130,7 @@
                         <div
                             class="col"
                             v-if="
-                                $Util.Common.returnTypeBool(customerCareDetail.type, [
+                                $Util.Common.isMember(customerCareDetail.type, [
                                     Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION,
                                 ])
                             "
@@ -143,7 +143,7 @@
                     <!-- 车架号与公里数 -->
                     <div
                         v-if="
-                            $Util.Common.returnTypeBool(customerCareDetail.type, [
+                            $Util.Common.isMember(customerCareDetail.type, [
                                 Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION,
                             ])
                         "
@@ -218,14 +218,14 @@
                     <div
                         class="inquiry-classification-value"
                         :class="{
-                            'm-t-4': $Util.Common.returnTypeBool(customerCareDetail.status, [
+                            'm-t-4': $Util.Common.isMember(customerCareDetail.status, [
                                 Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
                             ]),
                         }"
                     >
                         <template
                             v-if="
-                                !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                !$Util.Common.isMember(customerCareDetail.status, [
                                     Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
                                 ])
                             "
@@ -261,7 +261,7 @@
                         >
                             <a-radio-group
                                 v-if="
-                                    !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                    !$Util.Common.isMember(customerCareDetail.status, [
                                         Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
                                     ])
                                 "
@@ -291,7 +291,7 @@
                                 <div class="good-faith-claims-time">
                                     <template
                                         v-if="
-                                            !$Util.Common.returnTypeBool(customerCareDetail.claim_type, [
+                                            !$Util.Common.isMember(customerCareDetail.claim_type, [
                                                 Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP
                                                     .UNPACKINGDAMAGE /*开箱损*/,
                                             ])
@@ -300,7 +300,7 @@
                                         <span class="time-name m-r-8">{{ $t('customer-care.delivery_date') }}</span>
                                         <template
                                             v-if="
-                                                !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                                !$Util.Common.isMember(customerCareDetail.status, [
                                                     Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP
                                                         .RESOLVED /*订单状态(已解决)*/,
                                                 ])
@@ -338,7 +338,7 @@
                                     </template>
                                     <template
                                         v-else-if="
-                                            $Util.Common.returnTypeBool(customerCareDetail.claim_type, [
+                                            $Util.Common.isMember(customerCareDetail.claim_type, [
                                                 Core.Const.CUSTOMER_CARE.SORTING_TYPE_TWO_MAP
                                                     .UNPACKINGDAMAGE /*开箱损*/,
                                             ])
@@ -347,7 +347,7 @@
                                         <span class="time-name m-r-8">{{ $t('customer-care.order_number') }}</span>
                                         <template
                                             v-if="
-                                                !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                                !$Util.Common.isMember(customerCareDetail.status, [
                                                     Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP
                                                         .RESOLVED /*订单状态(已解决)*/,
                                                 ])
@@ -375,7 +375,7 @@
                         >
                             <a-radio-group
                                 v-if="
-                                    !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                    !$Util.Common.isMember(customerCareDetail.status, [
                                         Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
                                     ])
                                 "
@@ -400,7 +400,7 @@
                     <div class="inquiry-classification-value">
                         <ItemSelect
                             v-if="
-                                !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                !$Util.Common.isMember(customerCareDetail.status, [
                                     Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED,
                                 ]) /*订单状态(已解决)*/
                             "
@@ -431,7 +431,7 @@
                                 <template v-if="column.key === 'amount'">
                                     <template
                                         v-if="
-                                            !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                            !$Util.Common.isMember(customerCareDetail.status, [
                                                 Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
                                             ])
                                         "
@@ -453,7 +453,7 @@
                 <!-- 故障分类 -->
                 <div
                     v-if="
-                        !$Util.Common.returnTypeBool(customerCareDetail.type, [
+                        !$Util.Common.isMember(customerCareDetail.type, [
                             Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION /*咨询*/,
                         ])
                     "
@@ -462,7 +462,7 @@
                     <div
                         class="inquiry-classification-key"
                         :class="{
-                            'm-t-4': $Util.Common.returnTypeBool(customerCareDetail.type, [
+                            'm-t-4': $Util.Common.isMember(customerCareDetail.type, [
                                 Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY /*电池*/,
                             ]),
                             required: requiredType === 2,
@@ -473,7 +473,7 @@
                     <div class="inquiry-classification-value">
                         <template
                             v-if="
-                                $Util.Common.returnTypeBool(customerCareDetail.type, [
+                                $Util.Common.isMember(customerCareDetail.type, [
                                     Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION /*故障*/,
                                 ])
                             "
@@ -490,7 +490,7 @@
                                     <template v-if="column.key === 'fault_type'">
                                         <template
                                             v-if="
-                                                !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                                !$Util.Common.isMember(customerCareDetail.status, [
                                                     Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED,
                                                 ]) /*订单状态(已解决)*/
                                             "
@@ -522,14 +522,14 @@
                         </template>
                         <template
                             v-else-if="
-                                $Util.Common.returnTypeBool(customerCareDetail.type, [
+                                $Util.Common.isMember(customerCareDetail.type, [
                                     Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY /*电池*/,
                                 ])
                             "
                         >
                             <template
                                 v-if="
-                                    !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                    !$Util.Common.isMember(customerCareDetail.status, [
                                         Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED,
                                     ]) /*订单状态(已解决)*/
                                 "
@@ -660,7 +660,7 @@
 
                         <template
                             v-if="
-                                !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                                !$Util.Common.isMember(customerCareDetail.status, [
                                     Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
                                 ])
                             "
@@ -713,7 +713,7 @@
 
             <div
                 v-if="
-                    !$Util.Common.returnTypeBool(customerCareDetail.status, [
+                    !$Util.Common.isMember(customerCareDetail.status, [
                         Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*订单状态(已解决)*/,
                     ])
                 "
@@ -863,6 +863,10 @@ const uploadOptions = ref({
 
 const msgVisible = ref(false); // 基本信息弹窗
 const partDisabledChecked = ref([]); // 部件不可选择的
+const imageRegx = /image\/(png|jpg|jpeg|heic)/  // 照片的正则
+const videoRegx = /^video\/+/  // 视频的正则
+const pdfRegx = /application\/(pdf)/  // pdf的正则
+const fileRegx = /^application\/+/  // 文件的正则
 
 /* computed start */
 const partsColumns = computed(() => {
@@ -1104,7 +1108,7 @@ const onViewImage = item => {
     console.log('item', item);
     uploadOptions.value.previewImageVideo = [];
 
-    if (/video\/+/.test(item.type)) {
+    if (videoRegx.test(item.type)) {
         // 视频都是单个的
         console.log('video/*(视频预览)');
 
@@ -1112,13 +1116,13 @@ const onViewImage = item => {
         uploadOptions.value.previewType = 'video';
         uploadOptions.value.previewImageVideo = [item.path];
         isClose.value = true;
-    } else if (/(image\/|png|jpg|jpeg)/.test(item.type)) {
-        console.log('image/*(照片预览)');
+    } else if (imageRegx.test(item.type)) {
+        console.log('image/*(照片预览)', item.type, imageRegx.test(item.type));
         uploadOptions.value.previewType = 'image';
         if (item.file?.length > 0) {
             // 留言下的附件
             item.file.forEach(el => {
-                if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
+                if (imageRegx.test(el.type)) {
                     if (el.name === item.name) {
                         // 让预览的那张图片在第一张
                         uploadOptions.value.previewImageVideo.unshift(el.path);
@@ -1130,7 +1134,7 @@ const onViewImage = item => {
         } else {
             // 这个是详情信息的查看(照片需要判断其点击的哪个先展示哪个)[照片是多个的]
             customerCareDetail.value.attachment_list.forEach(el => {
-                if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
+                if (imageRegx.test(el.type)) {
                     if (Number(el.id) === Number(item.id)) {
                         // 让预览的那张图片在第一张
                         uploadOptions.value.previewImageVideo.unshift(el.path);
@@ -1142,10 +1146,10 @@ const onViewImage = item => {
         }
 
         isClose.value = true;
-    } else if (/application\/pdf/.test(item.type)) {
+    } else if (pdfRegx.test(item.type)) {
         console.log('application/pdf(pdf预览)', item.path);
         window.open(item.path, '_blank');
-    } else if (/^application\/+/.test(item.type)) {
+    } else if (fileRegx.test(item.type)) {
         console.log('文件', item.path);
 
         // office online (PDF 支持预览)
@@ -1307,19 +1311,19 @@ const handleDetailChange = ({ file, fileList }) => {
 const handlePreview = ({ file, fileList }) => {
     console.log('预览', file, fileList);
 
-    if (/^video\/+/.test(file.type)) {
+    if (videoRegx.test(file.type)) {
         uploadOptions.value.previewImageVideo = [];
         uploadOptions.value.previewType = 'video';
         uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(file.response?.data?.filename, 4));
         isClose.value = true;
-    } else if (/(image\/|png|jpg|jpeg)/.test(file.type)) {
+    } else if (imageRegx.test(file.type)) {
         console.log('image/*(照片预览)');
         uploadOptions.value.previewType = 'image';
         uploadOptions.value.previewImageVideo = [];
         fileList.forEach(el => {
             // console.log("输出的东西", el.response);
             if (el.response) {
-                if (/(image\/|png|jpg|jpeg)/.test(el.type)) {
+                if (imageRegx.test(el.type)) {
                     if (file.uid === el.uid) {
                         // 让预览的哪张图片在第一张
                         uploadOptions.value.previewImageVideo.unshift(
@@ -1335,10 +1339,10 @@ const handlePreview = ({ file, fileList }) => {
         });
         console.log('结果', uploadOptions.value.previewImageVideo);
         isClose.value = true;
-    } else if (/application\/pdf/.test(file.type)) {
+    } else if (pdfRegx.test(file.type)) {
         console.log('application/pdf(pdf预览)', Core.Util.imageFilter(file.response?.data?.filename, 4));
         window.open(Core.Util.imageFilter(file.response?.data?.filename, 4), '_blank');
-    } else if (/^application\/+/.test(file.type)) {
+    } else if (fileRegx.test(file.type)) {
         console.log('文件', Core.Util.imageFilter(file.response?.data?.filename, 4));
         // office online (PDF 支持预览)
         let url =
@@ -1355,7 +1359,7 @@ const getVideoTime = data => {
     // console.log("获取视频的时长", data);
     return new Promise((resolve, reject) => {
         const arrs = data.map(el => {
-            if (/^video\/+/.test(el.type)) {
+            if (videoRegx.test(el.type)) {
                 return videoItemPromise(Core.Const.NET.OSS_POINT + el.path)
                     .then(res => {
                         el.duration = res;
@@ -1453,7 +1457,7 @@ const validateForm = () => {
             return message.warn(proxy.$t('common.please_select') + proxy.$t('customer-care.parts'));
         }
         if (
-            proxy.$Util.Common.returnTypeBool(customerCareDetail.value.type, [
+            proxy.$Util.Common.isMember(customerCareDetail.value.type, [
                 Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION /*故障*/,
             ])
         ) {
