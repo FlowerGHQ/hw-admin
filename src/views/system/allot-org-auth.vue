@@ -243,7 +243,7 @@ export default {
                             // },
                         ] || res.list;
 
-                    this.authClass.handleAuthGrouping(list);
+                    this.authClass.processAuthList(list);
                     console.log('getAllAuthItem authItems', this.authItems);
                     // this.getOrgAuthFetch('distributor');
                     // this.getOrgAuthFetch('agent');
@@ -335,13 +335,8 @@ export default {
 
                 switch (lg) {
                     case 2:
-                        selected.push(auth.id);
-                        break;
                     case 3:
                         selected.push(auth.id);
-                        break;
-
-                    default:
                         break;
                 }
             });

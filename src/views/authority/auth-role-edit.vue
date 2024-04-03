@@ -40,7 +40,7 @@
                         <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
                         <div class="value">
                             <!-- 全选 -->
-                            <div class="m-b-10">                                
+                            <div class="m-b-10">
                                 <a-checkbox
                                     :checked="$Util.Common.arraysAreEqual(subItem.itemSelect, subItem.itemCheckAll)"
                                     @change="e => handleCheckAllChange(e, subItem)"
@@ -83,6 +83,7 @@
 <script>
 import Core from '@/core';
 import auth from '@/core/modules/units/auth';
+import { set } from 'lodash';
 const AUTH_LIST_TEMP = Core.Const.SYSTEM_AUTH.AUTH_LIST_TEMP;
 
 export default {
@@ -174,8 +175,8 @@ export default {
                             scope_type: 10,
                         },
                     ];
-                    this.authClass.handleAuthGrouping(list);
-                    
+                    this.authClass.processAuthList(list);
+
                     if (this.form.id) {
                         this.getRoleSelectedAuthFetch();
                     }
@@ -191,14 +192,26 @@ export default {
             })
                 .then(res => {
                     console.log('某个角色 已选的权限', res);
-                    // res.list.forEach(auth => {
-                    //     let key = auth.key.split('.')[0];
-                    //     let item = this.authItems.find(i => key === i.key);
-                    //     if (item) {
-                    //         item.select.push(auth.id);
-                    //     }
-                    // });
-                    console.log("cc", this.authItems);
+
+                    let list =
+                        [
+                            {
+                                id: 1,
+                                key: 'test.oneMange1',
+                                name: '管理1',
+                                path: '',
+                                scope_type: 10,
+                            },
+                            {
+                                id: 2,
+                                key: 'test.oneMange1.bookList',
+                                name: 'book列表1',
+                                path: '',
+                                scope_type: 10,
+                            },
+                        ] || res.list;
+
+                    this.authClass.echoAuth(list)
                 })
                 .catch(err => {
                     console.log('getRoleSelectedAuth err:', err);
@@ -235,7 +248,7 @@ export default {
                     console.log('handleSubmit err:', err);
                 });
         },
-        
+
         // 全选操作
         handleCheckAllChange(e, subItem) {
             let checked = e.target.checked;
