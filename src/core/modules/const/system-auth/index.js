@@ -77,6 +77,8 @@ const SYSTEM_AUTH = {
             list: {
                 // oneMange1: {
                 //     key: "oneMange1",
+                //     itemSelect: [], // checkout 选中的
+                //     itemCheckAll: [], // list底下所有选中项id
                 //     list: [
                 //         {
                 //             id: 2,

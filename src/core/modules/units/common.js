@@ -91,4 +91,26 @@ export default {
             throw Error('No window.getSelection!');
         }
     },
+    /**
+     * 
+     * @param { Array } arr1 
+     * @param { Array } arr2 
+     * @returns Boolean
+     */
+    arraysAreEqual(arr1, arr2) {
+        // 检查数组长度是否相等
+        if (arr1.length !== arr2.length) {
+            return false;
+        }
+
+        // 逐个比较数组元素
+        for (let i = 0; i < arr1.length; i++) {
+            if (arr1[i] !== arr2[i]) {
+                return false;
+            }
+        }
+
+        // 所有元素都相等
+        return true;
+    },
 };

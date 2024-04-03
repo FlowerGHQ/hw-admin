@@ -123,7 +123,7 @@
 <script>
 import Core from '@/core';
 import SimpleImageEmpty from '../../components/common/SimpleImageEmpty.vue';
-import auth from '../../core/modules/units/auth';
+import auth from '@/core/modules/units/auth';
 
 const AUTH_LIST_TEMP = Core.Const.SYSTEM_AUTH.AUTH_LIST_TEMP;
 const USER_TYPE = Core.Const.USER.TYPE;

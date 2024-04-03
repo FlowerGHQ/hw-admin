@@ -54,7 +54,7 @@
 <script>
 import Core from '../../core';
 
-const AUTH_LIST_TEMP = Core.Const.AUTH_LIST_TEMP;
+const AUTH_LIST_TEMP = Core.Const.SYSTEM_AUTH.AUTH_LIST_TEMP;
 const RESOURCE_TYPE = Core.Const.NOTICE.RESOURCE_TYPE;
 export default {
     name: 'AuthRoleEdit',

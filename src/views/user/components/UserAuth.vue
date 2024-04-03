@@ -99,7 +99,7 @@ import Core from '../../../core';
 import SimpleImageEmpty from '../../../components/common/SimpleImageEmpty.vue';
 import UserScope from './UserScope.vue';
 
-const AUTH_LIST_TEMP = Core.Const.AUTH_LIST_TEMP;
+const AUTH_LIST_TEMP = Core.Const.SYSTEM_AUTH.AUTH_LIST_TEMP;
 const USER_TYPE = Core.Const.USER.TYPE;
 
 export default {
