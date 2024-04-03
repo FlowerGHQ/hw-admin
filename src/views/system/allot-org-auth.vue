@@ -86,9 +86,9 @@
                     <!-- 全部的 -->
                     <div v-else class="panel-content">
                         <template v-for="item of org.options" :key="item.key">
-                            <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
+                            <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs d-f-a">
                                 <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
-                                <div class="value">
+                                <div class="value d-f">
                                     <template v-for="(threeItem, index) in subItem.list">
                                         <a-checkbox
                                             :checked="$Util.Common.isMember(threeItem.id, item.select)"
@@ -123,6 +123,7 @@
 <script>
 import Core from '@/core';
 import SimpleImageEmpty from '../../components/common/SimpleImageEmpty.vue';
+import auth from '../../core/modules/units/auth';
 
 const AUTH_LIST_TEMP = Core.Const.SYSTEM_AUTH.AUTH_LIST_TEMP;
 const USER_TYPE = Core.Const.USER.TYPE;
@@ -159,6 +160,7 @@ export default {
                 options: [],
                 selected: [], // 用户底下的权限
             },
+            authClass: null,
         };
     },
     watch: {},
@@ -176,6 +178,7 @@ export default {
     },
     mounted() {
         this.activeKey = ['distributor', 'agent', 'store'];
+        this.authClass = new auth(this.authItems);
     },
     methods: {
         /* fetch start */
@@ -197,9 +200,9 @@ export default {
                     let list =
                         [
                             {
-                                id: 1,
-                                key: 'test.oneMange1',
-                                name: '管理1',
+                                id: 3,
+                                key: 'test.oneMange1.bookList.edit',
+                                name: '编辑',
                                 path: '',
                                 scope_type: 10,
                             },
@@ -211,36 +214,36 @@ export default {
                                 scope_type: 10,
                             },
                             {
-                                id: 3,
-                                key: 'test.oneMange1.bookList.edit',
-                                name: '编辑',
+                                id: 1,
+                                key: 'test.oneMange1',
+                                name: '管理1',
                                 path: '',
                                 scope_type: 10,
                             },
-                            {
-                                id: 4,
-                                key: 'test.oneMange1.bookList1',
-                                name: 'book列表2',
-                                path: '',
-                                scope_type: 10,
-                            },
-                            {
-                                id: 5,
-                                key: 'test.oneMange2',
-                                name: '管理2',
-                                path: '',
-                                scope_type: 10,
-                            },
-                            {
-                                id: 6,
-                                key: 'test.oneMange2.bookList',
-                                name: 'book列表2',
-                                path: '',
-                                scope_type: 10,
-                            },
+                            // {
+                            //     id: 4,
+                            //     key: 'test.oneMange1.bookList1',
+                            //     name: 'book列表2',
+                            //     path: '',
+                            //     scope_type: 10,
+                            // },
+                            // {
+                            //     id: 5,
+                            //     key: 'test.oneMange2',
+                            //     name: '管理2',
+                            //     path: '',
+                            //     scope_type: 10,
+                            // },
+                            // {
+                            //     id: 6,
+                            //     key: 'test.oneMange2.bookList',
+                            //     name: 'book列表2',
+                            //     path: '',
+                            //     scope_type: 10,
+                            // },
                         ] || res.list;
 
-                    this.handleAuthGrouping(list);
+                    this.authClass.handleAuthGrouping(list);
                     console.log('getAllAuthItem authItems', this.authItems);
                     // this.getOrgAuthFetch('distributor');
                     // this.getOrgAuthFetch('agent');
@@ -323,40 +326,6 @@ export default {
             this.getOrgAuthFetch(type);
         },
 
-        // 对权限进行分组
-        handleAuthGrouping(data) {
-            data.forEach(auth => {
-                let splitKey = auth.key.split('.');
-                let lg = splitKey.length - 1;
-                let item = this.authItems.find(i => splitKey[0] === i.key);
-
-                if (item) {
-                    switch (lg) {
-                        case 1:
-                            item.list[splitKey[1]] = {
-                                key: splitKey[1],
-                                list: [],
-                                select: [],
-                            };
-                            break;
-                        case 2:
-                            const $2 = item.list[splitKey[1]];
-                            $2.list.push({ id: auth.id, key: splitKey[2], list: [] });
-                            console.log('$2', $2);
-                            break;
-                        case 3:
-                            const $2Item = item.list[splitKey[1]].list;
-                            const $3 = $2Item.find(el => el.key === splitKey[2]);
-                            $3.list.push({ id: auth.id, key: splitKey[3] });
-                            console.log('$3', $3);
-                            break;
-                    }
-                }
-            });
-
-            console.log('this.authItems', this.authItems);
-        },
-
         // 对获取 某类型组织 已分配的 权限项过滤
         handleOrgAuthFilter(list) {
             let selected = [];
@@ -393,7 +362,7 @@ export default {
                 }
             }
 
-            console.log('最后于', select);
+            console.log('结果', select);
         },
     },
 };
@@ -455,5 +424,13 @@ export default {
             margin-bottom: 4px;
         }
     }
+}
+
+.d-f {
+    display: flex;
+}
+.d-f-a {
+    display: flex;
+    align-items: center !important;
 }
 </style>

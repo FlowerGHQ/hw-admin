@@ -74,7 +74,23 @@ const SYSTEM_AUTH = {
         // { list: [], select: [], key: 'email', name: '邮件管理' },
 
         {
-            list: {},
+            list: {
+                // oneMange1: {
+                //     key: "oneMange1",
+                //     list: [
+                //         {
+                //             id: 2,
+                //             key: "bookList",
+                //             list: [
+                //                 {
+                //                     id: 1,
+                //                     key: "edit",
+                //                 }
+                //             ]
+                //         }
+                //     ]
+                // }
+            },
             select: [],
             key: 'test',
             name: '测试模块',
