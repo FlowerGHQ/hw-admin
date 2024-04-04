@@ -1,15 +1,27 @@
 // 分解
 function getNextLevelNodeNameList(authList, prefix = undefined) {
+    // console.log('prefix', prefix);
     let items = {};
     authList.forEach((node, i) => {
         let nodeKey = node.key;
 
-        if (nodeKey.indexOf(prefix) < 0) {
-            return;
+        // 阻止不属于 prefix 和 其子级
+        if (prefix) {
+            if (!nodeKey === prefix || !nodeKey.startsWith(prefix + '.')) {
+               return
+            }
         }
 
-        let subKey = nodeKey.substring(prefix.length);
-        let parts = subKey.split('.').filter(s => s !== '');
+        let parts = nodeKey.split('.')
+        let prefixParts = prefix.split('.')
+        prefixParts.forEach(el => {
+            let i = parts.indexOf(el)
+            if (i !== -1) {
+                parts.splice(i, 1)
+            }
+        })
+
+        // console.log("parts", parts);
         if (parts.length == 0) {
             return;
         }
@@ -24,7 +36,7 @@ function getNextLevelNodeNameList(authList, prefix = undefined) {
 function travelAuth(authList, node, parentRoute) {
     let list = [];
     let currentLevelNodeNameList = getNextLevelNodeNameList(authList, parentRoute);
-    // console.log('currentLevelNodeNameList', currentLevelNodeNameList);
+    console.log('currentLevelNodeNameList', currentLevelNodeNameList);
 
     if (currentLevelNodeNameList.length === 0) {
         return;
@@ -107,14 +119,14 @@ class Auth {
 
         this.authItems.find(item => {
             item.list.forEach(subItem => {
-                let result = []
-                subItem.itemCheckAll.forEach(i => {
-                    let bool = item.select.includes(i)
+                let result = [];
+                subItem.itemCheckAll?.forEach(i => {
+                    let bool = item.select.includes(i);
                     if (bool) {
-                        result.push(i)
+                        result.push(i);
                     }
-                })
-                subItem.itemSelect = result
+                });
+                subItem.itemSelect = result;
             });
         });
     }

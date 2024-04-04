@@ -197,51 +197,7 @@ export default {
                     */
                     console.log('getAllAuthItem res:', res);
 
-                    let list =
-                        [
-                            {
-                                id: 3,
-                                key: 'test.oneMange1.bookList.edit',
-                                name: '编辑',
-                                path: '',
-                                scope_type: 10,
-                            },
-                            {
-                                id: 2,
-                                key: 'test.oneMange1.bookList',
-                                name: 'book列表1',
-                                path: '',
-                                scope_type: 10,
-                            },
-                            {
-                                id: 1,
-                                key: 'test.oneMange1',
-                                name: '管理1',
-                                path: '',
-                                scope_type: 10,
-                            },
-                            // {
-                            //     id: 4,
-                            //     key: 'test.oneMange1.bookList1',
-                            //     name: 'book列表2',
-                            //     path: '',
-                            //     scope_type: 10,
-                            // },
-                            // {
-                            //     id: 5,
-                            //     key: 'test.oneMange2',
-                            //     name: '管理2',
-                            //     path: '',
-                            //     scope_type: 10,
-                            // },
-                            // {
-                            //     id: 6,
-                            //     key: 'test.oneMange2.bookList',
-                            //     name: 'book列表2',
-                            //     path: '',
-                            //     scope_type: 10,
-                            // },
-                        ] || res.list;
+                    let list = Core.Const.SYSTEM_AUTH.allAuthData || res.list;
 
                     this.authClass.processAuthList(list);
                     console.log('getAllAuthItem authItems', this.authItems);
@@ -261,37 +217,7 @@ export default {
                 org_type: this[user_type].type,
             })
                 .then(res => {
-                    let list =
-                        [
-                            {
-                                id: 1,
-                                key: 'test.oneMange1',
-                                name: '管理1',
-                                path: '',
-                                scope_type: 10,
-                            },
-                            {
-                                id: 2,
-                                key: 'test.oneMange1.bookList',
-                                name: 'book列表1',
-                                path: '',
-                                scope_type: 10,
-                            },
-                            {
-                                id: 5,
-                                key: 'test.oneMange2',
-                                name: '管理2',
-                                path: '',
-                                scope_type: 10,
-                            },
-                            {
-                                id: 6,
-                                key: 'test.oneMange2.bookList',
-                                name: 'book列表2',
-                                path: '',
-                                scope_type: 10,
-                            },
-                        ] || res.list;
+                    let list = Core.Const.SYSTEM_AUTH.RoleData || res.list;
 
                     this[user_type].selected = this.handleOrgAuthFilter(list);
                     console.log('getOrgAuth: ', this[user_type]);

@@ -449,10 +449,14 @@ export default {
                 bookList: "book列表1",              
                 bookList1: "book列表2",
                 edit: "编辑",
+                delete: "删除",
             },
             oneMange2: {
                 title: '管理2',
-                bookList: "book列表1",
+                bookList: "book列表1",              
+                bookList1: "book列表2",
+                edit: "编辑",
+                delete: "删除",
             },
         }
     },

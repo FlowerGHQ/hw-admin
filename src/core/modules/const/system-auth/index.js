@@ -1,5 +1,4 @@
 const SYSTEM_AUTH = {
-    MODULE: [{ list: [], select: [], key: 'test', name: '测试模块' }],
     // 模块底下的权限
     AUTH_LIST_TEMP: [
         /**
@@ -74,8 +73,8 @@ const SYSTEM_AUTH = {
         // { list: [], select: [], key: 'email', name: '邮件管理' },
 
         {
-            list: {
-                // oneMange1: {
+            list: [
+                // {
                 //     key: "oneMange1",
                 //     itemSelect: [], // checkout 选中的
                 //     itemCheckAll: [], // list底下所有选中项id
@@ -92,11 +91,76 @@ const SYSTEM_AUTH = {
                 //         }
                 //     ]
                 // }
-            },
+            ],
             select: [],
             key: 'test',
             name: '测试模块',
         },
+    ],
+    allAuthData: [
+        {
+            id: 1,
+            key: 'test.oneMange1',
+        },
+        {
+            id: 2,
+            key: 'test.oneMange1.bookList',
+        },
+        {
+            id: 3,
+            key: 'test.oneMange1.bookList.edit',
+        },
+        {
+            id: 4,
+            key: 'test.oneMange1.bookList1',
+        },
+        {
+            id: 5,
+            key: 'test.oneMange1.bookList1.delete',
+        },
+        
+        {
+            id: 6,
+            key: 'test.oneMange2',
+        },
+        {
+            id: 7,
+            key: 'test.oneMange2.bookList',
+        },
+        {
+            id: 8,
+            key: 'test.oneMange2.bookList.edit',
+        },
+        {
+            id: 9,
+            key: 'test.oneMange2.bookList1',
+        },
+        {
+            id: 10,
+            key: 'test.oneMange2.bookList1.delete',
+        },
+    ],
+    RoleData: [
+        {
+            id: 1,
+            key: 'test.oneMange1',
+        },
+        {
+            id: 2,
+            key: 'test.oneMange1.bookList',
+        },
+        {
+            id: 3,
+            key: 'test.oneMange1.bookList.edit',
+        },
+        {
+            id: 4,
+            key: 'test.oneMange1.bookList1',
+        },
+        // {
+        //     id: 5,
+        //     key: 'test.oneMange1.bookList1.delete',
+        // },
     ],
 };
 

@@ -152,29 +152,7 @@ export default {
             })
                 .then(res => {
                     // console.log('获取 某个身份下 可选的权限项', res);
-                    let list = [
-                        {
-                            id: 3,
-                            key: 'test.oneMange1.bookList.edit',
-                            name: '编辑',
-                            path: '',
-                            scope_type: 10,
-                        },
-                        {
-                            id: 2,
-                            key: 'test.oneMange1.bookList',
-                            name: 'book列表1',
-                            path: '',
-                            scope_type: 10,
-                        },
-                        {
-                            id: 1,
-                            key: 'test.oneMange1',
-                            name: '管理1',
-                            path: '',
-                            scope_type: 10,
-                        },
-                    ];
+                    let list = Core.Const.SYSTEM_AUTH.allAuthData || res.list;
                     this.authClass.processAuthList(list);
 
                     if (this.form.id) {
@@ -193,23 +171,7 @@ export default {
                 .then(res => {
                     console.log('某个角色 已选的权限', res);
 
-                    let list =
-                        [
-                            {
-                                id: 1,
-                                key: 'test.oneMange1',
-                                name: '管理1',
-                                path: '',
-                                scope_type: 10,
-                            },
-                            {
-                                id: 2,
-                                key: 'test.oneMange1.bookList',
-                                name: 'book列表1',
-                                path: '',
-                                scope_type: 10,
-                            },
-                        ] || res.list;
+                    let list = Core.Const.SYSTEM_AUTH.RoleData || res.list;
 
                     this.authClass.echoAuth(list)
                 })
