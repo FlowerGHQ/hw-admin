@@ -32,18 +32,68 @@
                     </template>
                     <!-- 用户底下的 -->
                     <div v-if="!org.edit" class="panel-content">
-                        <SimpleImageEmpty v-if="org.selected.length === 0" :desc="$t('n.no_org_auth')" />
+                        <SimpleImageEmpty v-if="org.isEmpty" :desc="$t('n.no_org_auth')" />
                         <template v-else v-for="item of org.options" :key="item.key">
-                            <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
+                            <template v-for="(subItem, index) of item.list" :key="index">
+                                <div v-if="subItem.itemSelect.length"  class="form-item afs">
+                                    <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
+                                    <div class="value d-f">
+                                        <span
+                                            class="authority-item"
+                                            v-for="(threeItem, index) of subItem.list"
+                                            :key="index"
+                                        >
+                                            <template v-if="$Util.Common.isMember(threeItem.id, item.select)">
+                                                <span class="m-r-8">
+                                                    {{
+                                                        $t(
+                                                            'authority.' +
+                                                                item.key +
+                                                                '.' +
+                                                                subItem.key +
+                                                                '.' +
+                                                                threeItem.key,
+                                                        )
+                                                    }}
+                                                </span>
+                                                <span v-for="(fourItem, index) in threeItem.list" :key="fourItem.id" class="m-r-8">
+                                                    <template v-if="$Util.Common.isMember(fourItem.id, item.select)">
+                                                        {{
+                                                            $t(
+                                                                'authority.' +
+                                                                    item.key +
+                                                                    '.' +
+                                                                    subItem.key +
+                                                                    '.' +
+                                                                    threeItem.key,
+                                                            ) +
+                                                            $t(
+                                                                'authority.' +
+                                                                    item.key +
+                                                                    '.' +
+                                                                    subItem.key +
+                                                                    '.' +
+                                                                    fourItem.key,
+                                                            )
+                                                        }}
+                                                    </template>
+                                                </span>
+                                            </template>
+                                        </span>
+                                    </div>
+                                </div>
+                            </template>
+                        </template>
+                    </div>
+                    <!-- 全部的 -->
+                    <div v-else class="panel-content">
+                        <template v-for="item of org.options" :key="item.key">
+                            <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs d-f-a">
                                 <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
-                                <div class="value">
-                                    <span
-                                        class="authority-item"
-                                        v-for="(threeItem, index) of subItem.list"
-                                        :key="index"
-                                    >
-                                        <template v-if="$Util.Common.isMember(threeItem.id, org.selected)">
-                                            <span>
+                                <div class="value d-f">
+                                    <a-checkbox-group v-model:value="subItem.itemSelect">
+                                        <template v-for="(threeItem, index) in subItem.list">
+                                            <a-checkbox :value="threeItem.id">
                                                 {{
                                                     $t(
                                                         'authority.' +
@@ -54,62 +104,26 @@
                                                             threeItem.key,
                                                     )
                                                 }}
-                                            </span>
-                                            <span v-for="(fourItem, index) in threeItem.list" :key="fourItem.id">
-                                                <template v-if="$Util.Common.isMember(fourItem.id, org.selected)">
-                                                    {{
-                                                        $t(
-                                                            'authority.' +
-                                                                item.key +
-                                                                '.' +
-                                                                subItem.key +
-                                                                '.' +
-                                                                threeItem.key,
-                                                        ) +
-                                                        $t(
-                                                            'authority.' +
-                                                                item.key +
-                                                                '.' +
-                                                                subItem.key +
-                                                                '.' +
-                                                                fourItem.key,
-                                                        )
-                                                    }}
-                                                </template>
-                                            </span>
+                                            </a-checkbox>
+                                            <a-checkbox
+                                                v-for="(fourItem, index) in threeItem.list"
+                                                :key="index"
+                                                :value="fourItem.id"
+                                            >
+                                                {{
+                                                    $t(
+                                                        'authority.' +
+                                                            item.key +
+                                                            '.' +
+                                                            subItem.key +
+                                                            '.' +
+                                                            threeItem.key,
+                                                    ) +
+                                                    $t('authority.' + item.key + '.' + subItem.key + '.' + fourItem.key)
+                                                }}
+                                            </a-checkbox>
                                         </template>
-                                    </span>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                    <!-- 全部的 -->
-                    <div v-else class="panel-content">
-                        <template v-for="item of org.options" :key="item.key">
-                            <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs d-f-a">
-                                <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
-                                <div class="value d-f">
-                                    <template v-for="(threeItem, index) in subItem.list">
-                                        <a-checkbox
-                                            :checked="$Util.Common.isMember(threeItem.id, item.select)"
-                                            :value="threeItem.id"
-                                            @click="e => handleCheckboxChange(e, item.select)"
-                                        >
-                                            {{ $t('authority.' + item.key + '.' + subItem.key + '.' + threeItem.key) }}
-                                        </a-checkbox>
-                                        <a-checkbox
-                                            v-for="(fourItem, index) in threeItem.list"
-                                            :key="index"
-                                            :checked="$Util.Common.isMember(fourItem.id, item.select)"
-                                            :value="fourItem.id"
-                                            @click="e => handleCheckboxChange(e, item.select)"
-                                        >
-                                            {{
-                                                $t('authority.' + item.key + '.' + subItem.key + '.' + threeItem.key) +
-                                                $t('authority.' + item.key + '.' + subItem.key + '.' + fourItem.key)
-                                            }}
-                                        </a-checkbox>
-                                    </template>
+                                    </a-checkbox-group>
                                 </div>
                             </div>
                         </template>
@@ -144,21 +158,21 @@ export default {
                 type: USER_TYPE.DISTRIBUTOR, // 分销商
                 edit: false,
                 options: [],
-                selected: [],
+                isEmpty: true,  // 是否数据为空
             },
             agent: {
                 name: 'n.agent_auth',
                 type: USER_TYPE.AGENT, // 零售商
                 edit: false,
                 options: [],
-                selected: [],
+                isEmpty: true,
             },
             store: {
                 name: 'n.store_auth',
                 type: USER_TYPE.STORE, // 门店
                 edit: false,
                 options: [],
-                selected: [], // 用户底下的权限
+                isEmpty: true,
             },
             authClass: null,
         };
@@ -186,23 +200,13 @@ export default {
             // 获取所权限项
             Core.Api.Authority.allOptions()
                 .then(res => {
-                    /* 
-                        { 
-                            id: 1,                             
-                            key: "warehouse.list", 
-                            name: "查看仓库列表", 
-                            path: "", 
-                            scope_type: 10,
-                        }
-                    */
                     console.log('getAllAuthItem res:', res);
 
                     let list = Core.Const.SYSTEM_AUTH.allAuthData || res.list;
 
                     this.authClass.processAuthList(list);
-                    console.log('getAllAuthItem authItems', this.authItems);
-                    // this.getOrgAuthFetch('distributor');
-                    // this.getOrgAuthFetch('agent');
+                    this.getOrgAuthFetch('distributor');
+                    this.getOrgAuthFetch('agent');
                     this.getOrgAuthFetch('store');
                 })
                 .catch(err => {
@@ -211,19 +215,38 @@ export default {
         },
         // 获取 某类型组织 已分配的 权限项
         getOrgAuthFetch(user_type) {
-            this[user_type].options = Core.Util.deepCopy(this.authItems);
-
             Core.Api.Authority.authOptions({
                 org_type: this[user_type].type,
             })
                 .then(res => {
                     let list = Core.Const.SYSTEM_AUTH.RoleData || res.list;
 
-                    this[user_type].selected = this.handleOrgAuthFilter(list);
-                    console.log('getOrgAuth: ', this[user_type]);
+                    // 回显数据
+                    if (list.length === 0) {
+                        this[user_type].isEmpty = true;
+                        return
+                    }
+                    this.authClass.echoAuth(list);
+                    this[user_type].options = Core.Util.deepCopy(this.authItems);
+                    this[user_type].isEmpty = false;
+
+                    console.log("this[user_type]", this[user_type]);
                 })
                 .catch(err => {
                     console.log('getOrgAuth', user_type, 'err:', err);
+                });
+        },
+        saveAllotOrgAuthFetch(params = {}) {
+            let obj = {
+                ...params,
+            };
+            Core.Api.xxx(obj)
+                .then(res => {
+                    this.$message.success(this.$t('pop_up.save_success'));
+                    this.handleEditClose(type);
+                })
+                .catch(err => {
+                    console.log('saveAllotOrgAuthFetch err', err);
                 });
         },
         /* fetch end */
@@ -232,58 +255,23 @@ export default {
         handleEditShow(type) {
             this[type].edit = true;
         },
-        // 保存编辑
-        handleEditSubmit(type) {
-            let list = [];
-            for (const item of this[type].options) {
-                list.push(...item.select);
-            }
-            Core.Api.Authority.allotOrgAuth({
-                org_type: this[type].type,
-                authority_ids: list.join(','),
-            }).then(() => {
-                this.$message.success(this.$t('pop_up.save_success'));
-                this.handleEditClose(type);
-            });
-        },
         // 取消编辑
         handleEditClose(type) {
             this[type].edit = false;
             this.getOrgAuthFetch(type);
         },
+        // 保存编辑
+        handleEditSubmit(type) {
+            let list = [];
 
-        // 对获取 某类型组织 已分配的 权限项过滤
-        handleOrgAuthFilter(list) {
-            let selected = [];
-            list.forEach(auth => {
-                let splitKey = auth.key.split('.');
-                let lg = splitKey.length - 1;
-
-                switch (lg) {
-                    case 2:
-                    case 3:
-                        selected.push(auth.id);
-                        break;
-                }
-            });
-            console.log('selected', selected);
-            return selected;
-        },
-
-        handleCheckboxChange(e, select) {
-            let checked = e.target.checked;
-            let value = Number(e.target.value);
-
-            if (checked) {
-                select.push(value);
-            } else {
-                const findIndex = select.findIndex(el => el === value);
-                if (findIndex !== -1) {
-                    select.splice(findIndex, 1);
-                }
+            for (const item of this[type].options) {
+                list.push(...this.authClass.mergeItemSelect(item.list));
             }
-
-            console.log('结果', select);
+            
+            this.saveAllotOrgAuthFetch({
+                org_type: this[type].type,
+                authority_ids: list.join(','),
+            });
         },
     },
 };
@@ -301,7 +289,7 @@ export default {
             .authority-item {
                 font-size: 12px;
                 line-height: 32px;
-                margin-right: 12px;
+                // margin-right: 12px;
             }
         }
     }
@@ -316,7 +304,7 @@ export default {
                 .authority-item {
                     font-size: 12px;
                     line-height: 32px;
-                    margin-right: 12px;
+                    // margin-right: 12px;
                 }
             }
         }

@@ -173,10 +173,25 @@ export default {
 
                     let list = Core.Const.SYSTEM_AUTH.RoleData || res.list;
 
-                    this.authClass.echoAuth(list)
+                    // 回显数据
+                    this.authClass.echoAuth(list);
                 })
                 .catch(err => {
                     console.log('getRoleSelectedAuth err:', err);
+                });
+        },
+        // 保存权限数据
+        saveRoleDataFetch(params = {}) {
+            let obj = {
+                ...params,
+            };
+            Core.Api.roleEdit(obj)
+                .then(res => {
+                    this.$message.success(this.$t('pop_up.save_success'));
+                    this.routerChange('back');
+                })
+                .catch(err => {
+                    console.log('handleSubmit err:', err);
                 });
         },
         /* fetch end */
@@ -190,25 +205,16 @@ export default {
         },
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form);
-            console.log('handleSubmit form:', form);
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter'));
             }
             let list = [];
+
             for (const item of this.authItems) {
-                list.push(...item.select);
+                list.push(...this.authClass.mergeItemSelect(item.list));
             }
-            Core.Api.Authority.roleEdit({
-                ...form,
-                authority_ids: list.join(','),
-            })
-                .then(() => {
-                    this.$message.success(this.$t('pop_up.save_success'));
-                    this.routerChange('back');
-                })
-                .catch(err => {
-                    console.log('handleSubmit err:', err);
-                });
+
+            this.saveRoleDataFetch({ authority_ids: list.join(',') })
         },
 
         // 全选操作

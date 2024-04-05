@@ -36,7 +36,7 @@ function getNextLevelNodeNameList(authList, prefix = undefined) {
 function travelAuth(authList, node, parentRoute) {
     let list = [];
     let currentLevelNodeNameList = getNextLevelNodeNameList(authList, parentRoute);
-    console.log('currentLevelNodeNameList', currentLevelNodeNameList);
+    // console.log('currentLevelNodeNameList', currentLevelNodeNameList);
 
     if (currentLevelNodeNameList.length === 0) {
         return;
@@ -117,6 +117,7 @@ class Auth {
             }
         });
 
+        // 根据回显数据返回的 select  将对应的 itemSelect加上被选中的id
         this.authItems.find(item => {
             item.list.forEach(subItem => {
                 let result = [];
@@ -129,6 +130,21 @@ class Auth {
                 subItem.itemSelect = result;
             });
         });
+    }
+
+    // itemSelect 合并
+    mergeItemSelect(authList) {
+        let result = []
+        authList.forEach(el => {
+            if (el.itemSelect) {
+                result.push(...el.itemSelect)
+            }
+            if (el.list && el.list?.length !== 0) {
+                result.push(...this.mergeItemSelect(el.list))
+            }
+        })
+
+        return [...new Set(result)]
     }
 }
 
