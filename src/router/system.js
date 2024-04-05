@@ -7,7 +7,7 @@ const LOGIN_TYPE = Const.LOGIN.TYPE;
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE;
 
 // 系统
-const system = {
+const SYSTEM = {
     // 系统管理
     path: '/system',
     component: Layout,
@@ -70,33 +70,6 @@ const system = {
                 parent: '/user/user-list',
             },
         },
-        /* {
-            path: 'auth-user-list',
-            name: 'AuthUserList',
-            component: () => import('@/views/authority/auth-user-list.vue'),
-            meta: {
-                title: '用户权限',
-            }
-        },
-        {
-            path: 'auth-user-edit',
-            name: 'AuthUserEdit',
-            component: () => import('@/views/authority/auth-user-edit.vue'),
-            meta: {
-                hidden: true,
-                title: '用户权限编辑',
-                parent: '/authority/auth-user-list',
-            }
-        },*/
-        // {
-        //     path: 'dept-list',
-        //     name: 'DeptList',
-        //     component: () => import('@/views/system/dept-list.vue'),
-        //     meta: {
-        //         title: '部门管理',
-        //         title_en: 'Dept',
-        //     }
-        // },
         {
             path: 'auth-role-list',
             name: 'RoleList',
@@ -190,4 +163,4 @@ const system = {
     ],
 };
 
-export { system };
+export { SYSTEM };
