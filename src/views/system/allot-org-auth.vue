@@ -158,7 +158,7 @@ export default {
                 type: USER_TYPE.DISTRIBUTOR, // 分销商
                 edit: false,
                 options: [],
-                isEmpty: true,  // 是否数据为空
+                isEmpty: true,  // 是否回显数据为空
             },
             agent: {
                 name: 'n.agent_auth',

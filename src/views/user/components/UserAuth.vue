@@ -27,51 +27,139 @@
                             >
                         </template>
                     </template>
+
                     <div class="panel-content" v-if="!edit && showExtra">
-                        <SimpleImageEmpty v-if="$Util.isEmptyObj(selected)" desc="该用户尚未分配可管理权限" />
-                        <template v-for="item of options" :key="item.key">
-                            <div class="form-item afs" v-if="item.select.length">
-                                <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
-                                <div class="value">
-                                    <span class="authority-item" v-for="i of item.select" :key="i">
-                                        <a
-                                            @click="handleScopeTypeShow(selected[i].scope_type)"
-                                            v-if="selected[i].scope_type > 0"
+                        <SimpleImageEmpty v-if="false" desc="该用户尚未分配可管理权限" />
+                        <template v-else v-for="item of options" :key="item.key">
+                            <template v-for="(subItem, index) of item.list" :key="index">
+                                <!-- v-if="subItem.itemSelect.length" -->
+                                <div class="form-item afs">
+                                    <div class="key">
+                                        {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:
+                                    </div>
+                                    <div class="value">
+                                        <span
+                                            class="authority-item"
+                                            v-for="(threeItem, index) of subItem.list"
+                                            :key="index"
                                         >
-                                            <!--                                            {{selected[i].key}}-->
-                                            <!--                                            {{$t('authority.'+ selected[i].key)}}-->
-                                            <!--                                            {{$t("authority.\'distributor.save\'")}}-->
-                                            {{ $t('authority.' + selected[i].key) }}
-                                        </a>
-                                        <span v-else>
-                                            {{ $t('authority.' + selected[i].key) }}
+                                            <template v-if="$Util.Common.isMember(threeItem.id, item.select) || true">
+                                                <span
+                                                    class="m-r-8"
+                                                    :class="{ 'color-1890ff': threeItem.scope_type > 0 }"
+                                                    @click="handleScopeTypeShow(threeItem.scope_type)"
+                                                >
+                                                    {{
+                                                        $t(
+                                                            'authority.' +
+                                                                item.key +
+                                                                '.' +
+                                                                subItem.key +
+                                                                '.' +
+                                                                threeItem.key,
+                                                        )
+                                                    }}
+                                                </span>
+
+                                                <span
+                                                    v-for="(fourItem, index) in threeItem.list"
+                                                    :key="fourItem.id"
+                                                    class="m-r-8"
+                                                >
+                                                    <template
+                                                        v-if="$Util.Common.isMember(fourItem.id, item.select) || true"
+                                                    >
+                                                        <span
+                                                            :class="{ 'color-1890ff': fourItem.scope_type > 0 }"
+                                                            @click="handleScopeTypeShow(fourItem.scope_type)"
+                                                        >
+                                                            {{
+                                                                $t(
+                                                                    'authority.' +
+                                                                        item.key +
+                                                                        '.' +
+                                                                        subItem.key +
+                                                                        '.' +
+                                                                        threeItem.key,
+                                                                ) +
+                                                                $t(
+                                                                    'authority.' +
+                                                                        item.key +
+                                                                        '.' +
+                                                                        subItem.key +
+                                                                        '.' +
+                                                                        fourItem.key,
+                                                                )
+                                                            }}
+                                                        </span>
+                                                    </template>
+                                                </span>
+                                            </template>
                                         </span>
-                                    </span>
+                                    </div>
                                 </div>
-                            </div>
+                            </template>
                         </template>
                     </div>
                     <div class="panel-content" v-else>
                         <template v-for="item of options" :key="item.key">
-                            <div class="form-item afs" v-if="item.list.length">
-                                <!--                                <div class="key">{{item.name}}:</div>-->
-                                <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
+                            <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
+                                <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
                                 <div class="value">
-                                    <a-checkbox
-                                        v-model:checked="itemCheckAll[item.key]"
-                                        :indeterminate="indeterminate[item.key]"
-                                        @change="onCheckAllChange(itemCheckAll[item.key], item, key)"
-                                    >
-                                        {{ $t('u.select_all') }}
-                                    </a-checkbox>
-                                    <a-checkbox-group
-                                        v-model:value="item.select"
-                                        @change="onChange(item.select, item.key, item.list)"
-                                    >
-                                        <a-checkbox v-for="it in item.list" :value="it.value" :disabled="it.disabled">{{
-                                            $t('authority.' + it.label)
-                                        }}</a-checkbox>
-                                    </a-checkbox-group>
+                                    <!-- 全选 -->
+                                    <div class="m-b-10">
+                                        <a-checkbox
+                                            :checked="
+                                                $Util.Common.arraysAreEqual(subItem.itemSelect, subItem.itemCheckAll)
+                                            "
+                                            @change="e => handleCheckAllChange(e, subItem)"
+                                        >
+                                            {{ $t('u.select_all') }}
+                                        </a-checkbox>
+                                    </div>
+                                    <div class="d-f">
+                                        <a-checkbox-group v-model:value="subItem.itemSelect">
+                                            <template v-for="(threeItem, index) in subItem.list">
+                                                <a-checkbox :value="threeItem.id" :disabled="threeItem.disabled">
+                                                    {{
+                                                        $t(
+                                                            'authority.' +
+                                                                item.key +
+                                                                '.' +
+                                                                subItem.key +
+                                                                '.' +
+                                                                threeItem.key,
+                                                        )
+                                                    }}
+                                                </a-checkbox>
+                                                <a-checkbox
+                                                    v-for="(fourItem, index) in threeItem.list"
+                                                    :key="index"
+                                                    :value="fourItem.id"
+                                                    :disabled="fourItem.disabled"
+                                                >
+                                                    {{
+                                                        $t(
+                                                            'authority.' +
+                                                                item.key +
+                                                                '.' +
+                                                                subItem.key +
+                                                                '.' +
+                                                                threeItem.key,
+                                                        ) +
+                                                        $t(
+                                                            'authority.' +
+                                                                item.key +
+                                                                '.' +
+                                                                subItem.key +
+                                                                '.' +
+                                                                fourItem.key,
+                                                        )
+                                                    }}
+                                                </a-checkbox>
+                                            </template>
+                                        </a-checkbox-group>
+                                    </div>
                                 </div>
                             </div>
                         </template>
@@ -95,9 +183,10 @@
 </template>
 
 <script>
-import Core from '../../../core';
-import SimpleImageEmpty from '../../../components/common/SimpleImageEmpty.vue';
+import Core from '@/core';
+import SimpleImageEmpty from '@/components/common/SimpleImageEmpty.vue';
 import UserScope from './UserScope.vue';
+import auth from '@/core/modules/units/auth';
 
 const AUTH_LIST_TEMP = Core.Const.SYSTEM_AUTH.AUTH_LIST_TEMP;
 const USER_TYPE = Core.Const.USER.TYPE;
@@ -132,11 +221,9 @@ export default {
             scopeShow: false,
             scopeType: 0,
             options: [],
-            selected: {},
-            disabled: {},
-            itemCheckAll: {},
-            indeterminate: {},
+            disabledIds: [], // 禁用的ids
             ids_arr: [],
+            authClass: null,
         };
     },
 
@@ -149,13 +236,15 @@ export default {
         },
     },
     created() {
-        this.getAllAuthItem();
+        this.getAllAuthItemFetch();
     },
     mounted() {
         this.activeKey = ['distributor'];
+        this.authClass = new auth(this.authItems);
     },
     methods: {
-        getAllAuthItem() {
+        /* fetch start */
+        getAllAuthItemFetch() {
             // 获取所权限项
             let url = 'authOptions';
             switch (this.detail.org_type) {
@@ -163,25 +252,15 @@ export default {
                     url = 'allOptions';
                     break;
             }
-            console.log('url', url);
+
             Core.Api.Authority[url]({
                 org_type: this.detail.org_type,
             })
                 .then(res => {
                     console.log('getAllAuthItem res:', res);
-                    let list = res.list;
-                    list.map(auth => {
-                        let key = auth.key.split('.')[0];
-                        let item = this.authItems.find(i => key === i.key);
-                        if (item) {
-                            item.list.push({ value: auth.id, label: auth.key, scope_type: auth.scope_type });
-                            this.itemCheckAll[key] = false;
-                            this.indeterminate[key] = false;
-                        }
-                    });
-                    console.log('checkAll authItems', this.itemCheckAll);
-                    console.log('indeterminate authItems', this.indeterminate);
-                    console.log('getAllAuthItem authItems', this.authItems);
+                    let list = Core.Const.SYSTEM_AUTH.allAuthData || res.list;
+                    this.authClass.processAuthList(list);
+
                     this.ids_arr = [];
                     if (!this.showExtra) {
                         if (this.detail.authority_ids) {
@@ -191,91 +270,70 @@ export default {
                             });
                         }
                     }
+                    console.log('this.ids_arr', this.ids_arr);
 
-                    this.getUserRoleAuth();
+                    this.getUserRoleAuthFetch();
                 })
                 .catch(err => {
                     console.log('getAllAuthItem err:', err);
                 });
         },
-        getUserRoleAuth() {
-            // 获取 某类型组织 已分配的 权限项
+        // 获取该用户对应角色下的全部权限 [] 让其不能更改disabled
+        getUserRoleAuthFetch() {
             this.options = Core.Util.deepCopy(this.authItems);
             Core.Api.Authority.authRoleUser({
                 user_id: this.userId,
             })
                 .then(res => {
-                    let selected = {};
-                    res.list.forEach(auth => {
-                        let selectedInfo = {
-                            key: auth.key,
-                            scope_type: 0,
-                        };
-                        selected[auth.id] = selectedInfo;
-                        let key = auth.key.split('.')[0];
-                        let item = this.options.find(i => key === i.key);
-                        if (item) {
-                            item.select.push(auth.id);
-                            selected[auth.id].scope_type = auth.scope_type;
-                            item.list.forEach(it => {
-                                if (it.value == auth.id) {
-                                    it.disabled = true;
-                                }
-                            });
-                            console.log('item', item);
-                        }
-                    });
-                    this.selected = selected;
-                    this.getUserAuth();
+                    let list = Core.Const.SYSTEM_AUTH.disableData || res.list;
+                    // console.log('getUserRoleAuthFetch', list);
+                    this.disabledIds = list.map(el => el.id);
+                    this.authClass.addDisableItem(this.disabledIds);
+                    this.getUserAuthFetch();
                 })
-                .catch(err => {});
+                .catch(err => {
+                    console.log('err', err);
+                });
         },
-        getUserAuth() {
-            // 获取 某类型组织 已分配的 权限项
+        // 某个用户对应角色 已选的权限
+        getUserAuthFetch() {
             Core.Api.Authority.authUser({
                 user_id: this.userId,
                 user_type: this.detail.type,
             })
                 .then(res => {
-                    let selected = this.selected;
+                    let list = Core.Const.SYSTEM_AUTH.RoleData || res.list;
+                    console.log('getUserAuthFetch', list);
+
                     if (!this.showExtra) {
-                        res.list = [...res.list, ...this.ids_arr];
+                        list = [...res.list, ...this.ids_arr];
                     }
-                    res.list.forEach(auth => {
-                        let selectedInfo = {
-                            key: auth.key,
-                            scope_type: 0,
-                        };
-                        selected[auth.id] = selectedInfo;
-                        let key = auth.key.split('.')[0];
-                        let item = this.options.find(i => key === i.key);
-                        if (item) {
-                            if (item.select.indexOf(auth.id) == -1) {
-                                item.select.push(auth.id);
-                            }
-                            selected[auth.id].scope_type = auth.scope_type;
-                        }
-                    });
-                    this.selected = selected;
-                    this.options.forEach(it => {
-                        this.onChange(it.select, it.key, it.list);
-                    });
+
+                    // 回显数据
+                    this.authClass.echoAuth(list);
+                    this.options = Core.Util.deepCopy(this.authItems);
                 })
-                .catch(err => {});
+                .catch(err => {
+                    console.log('err', err);
+                });
         },
+        /* fetch edn */
 
         handleEditShow() {
             // 进入编辑模式
             this.edit = true;
         },
         handleEditSubmit() {
-            // 保存编辑
             let list = [];
+            // 只保存属于该用户的权限
             for (const item of this.options) {
-                //只保存属于该用户的权限
-                let add = item.select.filter(it => !item.list.some(ele => ele.value === it && ele.disabled == true));
-                list.push(...add);
+                list.push(...this.authClass.mergeItemSelect(item.list));
             }
+
+            list = list.filter(el => !this.disabledIds.includes(el))
+
+            console.log("handleEditSubmit:", list);
+
             if (!this.showExtra) {
                 return this.$emit('submit', list.join(','));
             }
@@ -292,48 +350,29 @@ export default {
             // 取消编辑
             this.edit = false;
 
-            this.getUserRoleAuth();
+            this.getUserRoleAuthFetch();
         },
         handleScopeTypeShow(scope_type) {
+            if (scope_type <= 0) {
+                return;
+            }
+            console.log('scope_type', scope_type);
             this.scopeType = scope_type;
             this.scopeShow = true;
-            // let routeUrl = this.$router.resolve({
-            //     path: "/system/user-scope",
-            //     query: {
-            //         user_id: this.userId,
-            //         user_type: this.detail.type,
-            //         resource_type: scope_type,
-            //     }
-            // })
-            // window.open(routeUrl.href, '_self')
         },
         handleScopeTypeClose() {
             // 取消编辑
             this.scopeShow = false;
         },
-        onChange(checkedList, key, plainOptions) {
-            this.indeterminate[key] = !!checkedList.length && checkedList.length < plainOptions.length;
-            this.itemCheckAll[key] = checkedList.length === plainOptions.length;
-        },
-        onCheckAllChange(e, item, key) {
-            console.log('e', e);
-            let select = [];
-            let selectDisabled = [];
-            item.list.forEach(it => {
-                if (it.disabled) {
-                    selectDisabled.push(it.value);
-                }
-                select.push(it.value);
-            });
-            console.log('list', select);
-            item.select = e ? select : selectDisabled;
-            this.indeterminate[key] = false;
-            this.itemCheckAll[key] = e;
-            // Object.assign(this, {
-            //     checkedList: e.checked ? item.list: [],
-            //     indeterminate: false,
-            //     checkAll: e.checked,
-            // });
+        // 全选操作
+        handleCheckAllChange(e, subItem) {
+            let checked = e.target.checked;
+
+            if (checked) {
+                subItem.itemSelect = subItem.itemCheckAll;
+            } else {
+                subItem.itemSelect = [];
+            }
         },
     },
 };
@@ -368,5 +407,9 @@ export default {
             }
         }
     }
+}
+.color-1890ff {
+    color: #1890ff;
+    cursor: pointer;
 }
 </style>

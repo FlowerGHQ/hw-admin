@@ -101,43 +101,53 @@ const SYSTEM_AUTH = {
         {
             id: 1,
             key: 'test.oneMange1',
+            scope_type: 0,
         },
         {
             id: 2,
             key: 'test.oneMange1.bookList',
+            scope_type: 3,
         },
         {
             id: 3,
             key: 'test.oneMange1.bookList.edit',
+            scope_type: 2,
         },
         {
             id: 4,
             key: 'test.oneMange1.bookList1',
+            scope_type: 1,
         },
         {
             id: 5,
             key: 'test.oneMange1.bookList1.delete',
+            scope_type: 1,
         },
         
         {
             id: 6,
             key: 'test.oneMange2',
+            scope_type: 0,
         },
         {
             id: 7,
             key: 'test.oneMange2.bookList',
+            scope_type: 0,
         },
         {
             id: 8,
             key: 'test.oneMange2.bookList.edit',
+            scope_type: 1,
         },
         {
             id: 9,
             key: 'test.oneMange2.bookList1',
+            scope_type: 1,
         },
         {
             id: 10,
             key: 'test.oneMange2.bookList1.delete',
+            scope_type: 0,
         },
     ],
     RoleData: [
@@ -162,6 +172,13 @@ const SYSTEM_AUTH = {
         //     key: 'test.oneMange1.bookList1.delete',
         // },
     ],
+    // 禁用的数据
+    disableData: [
+        {
+            id: 3,
+            key: 'test.oneMange1.bookList.edit',
+        }, 
+    ]
 };
 
 export default SYSTEM_AUTH;
