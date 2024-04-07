@@ -3,7 +3,7 @@
         <div class="title-container">
             <div class="title-area">采购订单列表</div>
             <div class="btns-area">
-                <a-button type="primary" @click="handleMaterialPurchase" v-if="$auth('material-purchase-order.save')"
+                <a-button type="primary" @click="handleMaterialPurchase"
                     ><i class="icon i_add" />新建采购单</a-button
                 >
             </div>
@@ -53,7 +53,7 @@
                 :loading="loading"
             >
                 <template #bodyCell="{ column, text, record }">
-                    <template v-if="column.key === 'detail' && $auth('material-purchase-order.detail')">
+                    <template v-if="column.key === 'detail'">
                         <a-tooltip placement="top" :title="text">
                             <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}</a-button>
                         </a-tooltip>
@@ -87,25 +87,25 @@
                     <template v-if="column.key === 'operation'">
                         <a-button
                             type="link"
-                            v-if="record.status !== STATUS.INIT && $auth('material-purchase-order.detail')"
+                            v-if="record.status !== STATUS.INIT"
                             @click="routerChange('detail', record)"
                             ><i class="icon i_detail" />详情
                         </a-button>
                         <a-button
                             type="link"
-                            v-if="record.status === STATUS.INIT && $auth('material-purchase-order.save')"
+                            v-if="record.status === STATUS.INIT"
                             @click="routerChange('detail', record)"
                             ><i class="icon i_edit" />编辑
                         </a-button>
                         <a-button
                             type="link"
-                            v-if="record.status === STATUS.INIT && $auth('material-purchase-order.delete')"
+                            v-if="record.status === STATUS.INIT"
                             @click="handleCancel(record.id)"
                             class="danger"
                             ><i class="icon i_close_c" />取消
                         </a-button>
                         <AuditHandle
-                            v-if="record.status === STATUS.SUBMIT && $auth('material-purchase-order.audit')"
+                            v-if="record.status === STATUS.SUBMIT"
                             btnType="link"
                             :api-list="['MaterialPurchase', 'audit']"
                             :id="record.id"

@@ -6,7 +6,7 @@
                     type="primary"
                     ghost
                     @click="handleAuthShow"
-                    v-if="$auth('account.save', 'MANAGER')"
+                    v-if="$auth('MANAGER')"
                     class="panel-btn"
                 >
                     <i class="icon i_add" />{{ $t('u.new_resource') }}

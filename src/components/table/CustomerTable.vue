@@ -71,13 +71,13 @@
                 <a-button
                     type="link"
                     @click="selectItem(record)"
-                    v-if="$auth('crm-customer.detail') && record.permissions && selectBtn"
+                    v-if="record.permissions && selectBtn"
                     ><i class="icon i_add" />{{ $t('n.select') }}</a-button
                 >
                 <a-button
                     type="link"
                     @click="routerChange('detail', record)"
-                    v-if="$auth('crm-customer.detail') && record.status === CRM_STATUS.POOL"
+                    v-if="record.status === CRM_STATUS.POOL"
                     ><i class="icon i_detail" />{{ $t('def.detail') }}</a-button
                 >
             </template>

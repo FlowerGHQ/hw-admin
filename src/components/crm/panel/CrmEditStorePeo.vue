@@ -2,7 +2,7 @@
     <div>
         <div class="form-item">
             <div class="value">
-                <a-button type="primary" v-if="$auth('customer.detail')" @click="addMan">
+                <a-button type="primary" @click="addMan">
                     <slot>{{ isMan ? $t('crm_st.add_man') : $t('crm_st.add_peo') }}</slot>
                 </a-button>
             </div>
@@ -42,9 +42,7 @@
                     </template>
 
                     <template v-if="column.key === 'operation'">
-                        <a-button type="link" @click="routerChange('detail', record)" v-if="$auth('customer.detail')">{{
-                            $t('def.see')
-                        }}</a-button>
+                        <a-button type="link" @click="routerChange('detail', record)">{{ $t('def.see') }}</a-button>
                         <a-button type="link" class="danger" @click="routerChange('delete', record)">{{
                             $t('def.remove')
                         }}</a-button>
@@ -97,10 +95,9 @@
 
                     <template v-if="column.key === 'operation'">
                         <a-button type="link" @click="routerChange('detail', record)">{{ $t('def.see') }}</a-button>
-                        <a-button type="link" class="danger" @click="handleDelete(record.user_id)">{{
-                            $t('def.remove')
-                        }}</a-button>
-                        <!--                        <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('customer.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>-->
+                        <a-button type="link" class="danger" @click="handleDelete(record.user_id)">
+                            {{ $t('def.remove') }}
+                        </a-button>
                     </template>
                 </template>
             </a-table>

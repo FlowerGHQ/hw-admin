@@ -192,8 +192,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- 按钮 v-if="editCommentAuth($auth('enquiry-ticket.edit'))" -->
+            </div>            
             <div
                 v-if="
                     editCommentAuth($auth('enquiry-ticket.edit')) /*先判断是否有权限*/ &&

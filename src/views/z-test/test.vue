@@ -245,7 +245,6 @@ export default {
                 this.searchForm.distributor_id = Core.Data.getOrgId();
                 this.getAgentListAll();
             } else if (this.$auth('AGENT')) {
-                // this.searchForm.agent_id = Core.Data.getOrgId()
                 this.getStoreListAll();
             } else if (this.$auth('STORE')) {
                 this.searchForm.store_id = Core.Data.getOrgId();

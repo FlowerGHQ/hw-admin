@@ -5,7 +5,7 @@
             <template v-if="authOrg(detail.org_id, detail.org_type)">
                 <div class="btn-area">
                     <template v-if="detail.status === STATUS.INIT">
-                        <div class="btns-area" v-if="$auth('invoice.save')">
+                        <div class="btns-area">
                             <a-upload
                                 name="file"
                                 class="file-uploader"
@@ -21,12 +21,11 @@
                                     <i class="icon i_add" /> {{ $t('i.import') }}
                                 </a-button>
                             </a-upload>
-                            <!--                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('invoice.save')"><i class="icon i_add"/>{{ $t('i.import') }}</a-button>-->
                         </div>
-                        <a-button type="primary" @click="handleSubmit()" v-if="$auth('invoice.save')"
+                        <a-button type="primary" @click="handleSubmit()"
                             ><i class="icon i_confirm" />{{ $t('def.submit') }}</a-button
                         >
-                        <a-button type="danger" ghost @click="handleCancel()" v-if="$auth('invoice.delete')">
+                        <a-button type="danger" ghost @click="handleCancel()">
                             <i class="icon i_close_c" />{{ $t('def.cancel') }}</a-button
                         >
                     </template>
@@ -34,8 +33,8 @@
                     <div
                         class="btns-area"
                         v-if="
-                            (detail.status === STATUS.AUDIT_PASS && detail.type === TYPE.IN && $auth('invoice.save')) ||
-                            (detail.type === TYPE.OUT && detail.status === STATUS.AUDIT_PASS && $auth('invoice.save'))
+                            (detail.status === STATUS.AUDIT_PASS && detail.type === TYPE.IN) ||
+                            (detail.type === TYPE.OUT && detail.status === STATUS.AUDIT_PASS))
                         "
                     >
                         <a-upload
@@ -53,7 +52,6 @@
                                 <i class="icon i_add" /> {{ $t('i.import_storage') }}
                             </a-button>
                         </a-upload>
-                        <!--                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('invoice.save')"><i class="icon i_add"/>{{ $t('i.import') }}</a-button>-->
                     </div>
 
                     <template
@@ -61,8 +59,7 @@
                             (detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) &&
                             detail.type === TYPE.IN &&
                             detail.target_type === 30 &&
-                            $auth('ADMIN') &&
-                            $auth('invoice.import-export')
+                            $auth('ADMIN')
                         "
                     >
                         <a-button type="primary" @click="handleExportIn"
@@ -72,9 +69,8 @@
 
                     <AuditHandle
                         v-if="
-                            (detail.status === STATUS.FINANCE_PASS ||
-                                (detail.status === STATUS.WAIT_AUDIT && detail.type === TYPE.IN)) &&
-                            $auth('invoice.warehouse-audit')
+                            detail.status === STATUS.FINANCE_PASS ||
+                            (detail.status === STATUS.WAIT_AUDIT && detail.type === TYPE.IN)
                         "
                         btnType="primary"
                         :ghost="false"
@@ -89,12 +85,12 @@
                     <a-button
                         type="primary"
                         @click="handleComplete()"
-                        v-if="detail.status === STATUS.AUDIT_PASS && detail.type === TYPE.IN && $auth('invoice.save')"
+                        v-if="detail.status === STATUS.AUDIT_PASS && detail.type === TYPE.IN"
                         ><i class="icon i_confirm" />{{ type_ch }}{{ $t('in.finish') }}</a-button
                     >
                     <template v-if="detail.type === TYPE.OUT">
                         <AuditHandle
-                            v-if="detail.status === STATUS.WAIT_AUDIT && $auth('invoice.finance-audit')"
+                            v-if="detail.status === STATUS.WAIT_AUDIT"
                             btnType="primary"
                             :ghost="false"
                             :api-list="['Invoice', 'audit']"
@@ -104,10 +100,7 @@
                             @submit="getInvoiceDetail"
                             ><i class="icon i_audit" />{{ $t('in.finance_audit') }}</AuditHandle
                         >
-                        <a-button
-                            type="primary"
-                            @click="handleComplete()"
-                            v-if="detail.status === STATUS.AUDIT_PASS && $auth('invoice.save')"
+                        <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.AUDIT_PASS"
                             ><i class="icon i_confirm" />{{ type_ch }}{{ $t('in.finish') }}</a-button
                         >
                         <a-button
@@ -116,8 +109,7 @@
                             v-if="
                                 (detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) &&
                                 detail.target_type === 30 &&
-                                $auth('ADMIN') &&
-                                $auth('invoice.import-export')
+                                $auth('ADMIN')
                             "
                             ><i class="icon i_download" />{{ $t('in.export') }}</a-button
                         >
@@ -129,8 +121,7 @@
                                 (detail.status === STATUS.CLOSE ||
                                     detail.status === STATUS.DELIVERY ||
                                     detail.status === STATUS.RECEIVED) &&
-                                $auth('ADMIN') &&
-                                $auth('invoice.import-export')
+                                $auth('ADMIN')
                             "
                             ><i class="icon i_download" />{{ $t('in.export_invoice') }}</a-button
                         >
@@ -142,8 +133,7 @@
             <div class="panel-title">
                 <div class="left">
                     <span>{{ type_ch }}{{ $t('in.number') }}:</span> {{ detail.uid }}
-                    <div v-show="detail.uid">
-                        <!--                    <vue3-barcode :value="detail.uid" :height="50" displayValue="false" /></div>-->
+                    <div v-show="detail.uid">                        
                         <img id="jsbarcodeImg" style="width: 200px" />
                     </div>
                 </div>

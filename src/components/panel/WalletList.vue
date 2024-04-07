@@ -9,7 +9,6 @@
                     type="primary"
                     ghost
                     @click="handleModalShow('addWalletShow')"
-                    v-if="$auth('account.save')"
                     class="panel-btn"
                     ><i class="icon i_add" />{{ $t('ac.new_account') }}
                 </a-button>
@@ -38,7 +37,6 @@
                             <a-button
                                 type="link"
                                 @click="handleModalShow('operate', record.id)"
-                                v-if="$auth('account.operate')"
                                 ><i class="icon i_settle" />{{ $t('ac.operation') }}
                             </a-button>
                             <a-button type="link" @click="routerChange('detail', record)"

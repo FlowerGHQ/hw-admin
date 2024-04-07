@@ -5,13 +5,7 @@
         </div>
         <div class="panel-content">
             <div class="table-container">
-                <a-button
-                    type="primary"
-                    ghost
-                    @click="routerChange('edit')"
-                    v-if="$auth('user.save')"
-                    class="panel-btn"
-                >
+                <a-button type="primary" ghost @click="routerChange('edit')" class="panel-btn">
                     <i class="icon i_add" />{{ $t('e.new_employee') }}
                 </a-button>
                 <a-table
@@ -25,7 +19,7 @@
                         <template v-if="column.dataIndex === 'type'">
                             {{ $Util.userTypeFilter(text, $i18n.locale) }}
                         </template>
-                        <template v-if="column.dataIndex === 'flag_admin' && $auth('user.set-admin')">
+                        <template v-if="column.dataIndex === 'flag_admin'">
                             <template v-if="loginType < type">
                                 <a-switch
                                     :checked="!!record.flag_admin"
@@ -48,22 +42,18 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleUserRole(record)" v-if="$auth('user.save')"
-                                ><i class="icon i_edit" />{{ $t('u.set_role') }}</a-button
-                            >
-                            <a-button type="link" @click="routerChange('edit', record)" v-if="$auth('user.save')"
-                                ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
-                            >
-                            <a-button type="link" @click="handleReset(record)" v-if="$UserAuth(loginUsername)"
-                                ><i class="icon i_lock" />{{ $t('u.reset') }}</a-button
-                            >
-                            <a-button
-                                type="link"
-                                class="danger"
-                                @click="handleDelete(record.id)"
-                                v-if="$auth('user.delete')"
-                                ><i class="icon i_delete" />{{ $t('def.delete') }}</a-button
-                            >
+                            <a-button type="link" @click="handleUserRole(record)">
+                                <i class="icon i_edit" />{{ $t('u.set_role') }}
+                            </a-button>
+                            <a-button type="link" @click="routerChange('edit', record)">
+                                <i class="icon i_edit" />{{ $t('def.edit') }}
+                            </a-button>
+                            <a-button type="link" @click="handleReset(record)" v-if="$UserAuth(loginUsername)">
+                                <i class="icon i_lock" />{{ $t('u.reset') }}
+                            </a-button>
+                            <a-button type="link" class="danger" @click="handleDelete(record.id)">
+                                <i class="icon i_delete" />{{ $t('def.delete') }}
+                            </a-button>
                         </template>
                     </template>
                 </a-table>
@@ -174,10 +164,10 @@ export default {
                 { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right' },
             ];
-            if (this.$auth('user.set-admin')) {
-                // 维修工不显示管理员
-                columns.splice(5, 0, { title: this.$t('e.administrator'), dataIndex: 'flag_admin' });
-            }
+            // if (this.$auth('user.set-admin')) {
+            //     // 维修工不显示管理员
+            //     columns.splice(5, 0, { title: this.$t('e.administrator'), dataIndex: 'flag_admin' });
+            // }
             return columns;
         },
     },

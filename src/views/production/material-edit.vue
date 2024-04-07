@@ -143,7 +143,7 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button type="primary" @click="handleSubmit" v-if="$auth('material.save')">{{ $t('def.sure') }}</a-button>
+            <a-button type="primary" @click="handleSubmit">{{ $t('def.sure') }}</a-button>
             <a-button type="primary" ghost @click="routerChange('back')">{{ $t('def.cancel') }}</a-button>
         </div>
     </div>

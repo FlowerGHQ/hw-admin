@@ -4,10 +4,10 @@
             <div class="title-area">{{ type_ch }}{{ $t('in.detail') }}</div>
             <div class="btn-area">
                 <template v-if="detail.status === STATUS.INIT">
-                    <a-button type="primary" @click="handleSubmit()" v-if="$auth('invoice.save')"
+                    <a-button type="primary" @click="handleSubmit()"
                         ><i class="icon i_confirm" />{{ $t('def.submit') }}</a-button
                     >
-                    <a-button type="danger" ghost @click="handleCancel()" v-if="$auth('invoice.delete')">
+                    <a-button type="danger" ghost @click="handleCancel()">
                         <i class="icon i_close_c" />{{ $t('def.cancel') }}</a-button
                     >
                 </template>
@@ -16,14 +16,13 @@
                         (detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) &&
                         detail.type === TYPE.IN &&
                         detail.target_type === 30 &&
-                        $auth('ADMIN') &&
-                        $auth('invoice.import-export')
+                        $auth('ADMIN')
                     "
                 >
                     <a-button type="primary" @click="handleExportIn"><i class="icon i_download" />导出</a-button>
                 </template>
                 <AuditMaterialPurchase
-                    v-if="detail.status === STATUS.WAIT_AUDIT && $auth('invoice.warehouse-audit')"
+                    v-if="detail.status === STATUS.WAIT_AUDIT"
                     btnType="primary"
                     :ghost="false"
                     :api-list="['Invoice', 'audit']"
@@ -35,12 +34,12 @@
                 <a-button
                     type="primary"
                     @click="handleComplete()"
-                    v-if="detail.status === STATUS.AUDIT_PASS && detail.type === TYPE.IN && $auth('invoice.save')"
+                    v-if="detail.status === STATUS.AUDIT_PASS && detail.type === TYPE.IN"
                     ><i class="icon i_confirm" />{{ type_ch }}完成</a-button
                 >
                 <template v-if="detail.type === TYPE.OUT">
                     <AuditMaterialPurchase
-                        v-if="detail.status === STATUS.AUDIT_PASS && $auth('invoice.finance-audit')"
+                        v-if="detail.status === STATUS.AUDIT_PASS"
                         btnType="primary"
                         :ghost="false"
                         :api-list="['Invoice', 'audit']"
@@ -156,7 +155,7 @@
                 v-if="detail.target_type === COMMODITY_TYPE.ITEM"
             >
                 <template #extra>
-                    <template v-if="detail.status === STATUS.INIT && !addMode && $auth('invoice.save')">
+                    <template v-if="detail.status === STATUS.INIT && !addMode">
                         <ItemSelect
                             btnType="link"
                             :btnText="$t('i.add')"
@@ -252,7 +251,7 @@
                                     </template>
                                     <template v-else>{{ text ? text + $t('in.item') : '-' }}</template>
                                 </template>
-                                <template v-if="column.key === 'operation' && $auth('invoice.save')">
+                                <template v-if="column.key === 'operation'">
                                     <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"
                                         ><i class="icon i_edit" />{{ $t('in.change') }}</a-button
                                     >
@@ -291,7 +290,7 @@
                 collapsible="disabled"
                 v-if="detail.target_type === COMMODITY_TYPE.ENTITY"
             >
-                <template #extra v-if="detail.type == TYPE.IN && $auth('invoice.save')">
+                <template #extra v-if="detail.type == TYPE.IN">
                     <!-- 有实例入库 选择商品并输入数量、实例号 -->
                     <template v-if="detail.status === STATUS.INIT && !addMode">
                         <ItemSelect
@@ -406,7 +405,6 @@
                                             {{ $Util.itemSpecFilter(text) }}
                                         </div>
                                     </a-tooltip>
-                                    <!--                                {{ $Util.itemSpecFilter(text) }}-->
                                 </template>
                                 <template v-if="column.key === 'item'">
                                     {{ text || '-' }}
@@ -414,10 +412,8 @@
                                 <template v-if="column.key === 'count'">
                                     {{ text ? text + '件' : '-' }}
                                 </template>
-                                <template v-if="column.key === 'operation' && $auth('invoice.save')">
+                                <template v-if="column.key === 'operation'">
                                     <template v-if="!this.addMode">
-                                        <!-- <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改实例号</a-button> -->
-                                        <!-- <a-button type="link" @click="handleRowSubmit(record, 'entity')" v-else><i class="icon i_confirm"/>确认更改</a-button> -->
                                         <a-button type="link" @click="handleRemoveRow(record)" class="danger"
                                             ><i class="icon i_delete" />{{ $t('def.remove') }}</a-button
                                         >

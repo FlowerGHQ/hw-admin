@@ -25,8 +25,7 @@
                 >
                 <a-button v-if="detail.status === STATUS.RECEIVED" type="primary" @click="handleReceive"
                     ><i class="icon i_s_warehouse" />入库</a-button
-                >
-                <!--                <a-button v-if="(detail.status === STATUS.PASS || detail.status === STATUS.N_WAREHOUSE) && $auth('material-purchase-order.export')" type="primary" @click="handleExport"><i class="icon i_download"/>导出</a-button>-->
+                >                
             </div>
         </div>
         <div class="gray-panel info">

@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('crm_oi.audit_list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('crm-order-income.save')"
+                    <a-button type="primary" @click="routerChange('edit')"
                         ><i class="icon i_add" />{{ $t('crm_oi.save') }}</a-button
                     >
                 </div>
@@ -156,12 +156,9 @@
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title="text">
-                                <a-button
-                                    type="link"
-                                    @click="routerChange('detail', record)"
-                                    v-if="$auth('crm-order-income.detail')"
-                                    >{{ text || '-' }}</a-button
-                                >
+                                <a-button type="link" @click="routerChange('detail', record)">{{
+                                    text || '-'
+                                }}</a-button>
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'item'">
@@ -177,10 +174,7 @@
                             {{ $Util[column.util](text, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button
-                                type="link"
-                                @click="routerChange('detail', record)"
-                                v-if="$auth('crm-order-income.detail')"
+                            <a-button type="link" @click="routerChange('detail', record)"
                                 ><i class="icon i_detail" />{{ $t('def.detail') }}</a-button
                             >
                         </template>

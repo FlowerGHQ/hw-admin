@@ -2,7 +2,7 @@
     <div class="ProductionItem gray-panel no-margin">
         <div class="panel-title">
             <div class="title">已生产产品列表</div>
-            <div class="btn-area" v-if="$auth('invoice.save')">
+            <div class="btn-area">
                 <a-button type="primary" @click="routerChange('put_in')" class="panel-btn"
                     ><i class="icon i_add" />产品入库</a-button
                 >
@@ -24,13 +24,7 @@
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
-                        <template v-if="column.key === 'operation'">
-                            <!-- <a-button type='link' @click="routerChange('detail', record)"><i class="icon i_detail"/>详情</a-button>
-                        <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button>
-                        <a-button type='link' @click="handleStatusChange(record)" :class="record.status ? 'danger' : ''">
-                            <template v-if="record.status"><i class="icon i_forbidden"/>禁用</template>
-                            <template v-else><i class="icon i_enable"/>启用</template>
-                        </a-button> -->
+                        <template v-if="column.key === 'operation'">                           
                         </template>
                     </template>
                 </a-table>

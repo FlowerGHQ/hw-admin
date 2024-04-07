@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('m.material_category') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleModalShow({})" v-if="$auth('material-category.save')"
+                    <a-button type="primary" @click="handleModalShow({})"
                         ><i class="icon i_add" />{{ $t('m.new_category') }}</a-button
                     >
                 </div>
@@ -36,23 +36,13 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button
-                                type="link"
-                                @click="handleModalShow(record, record)"
-                                v-if="$auth('material-category.save')"
+                            <a-button type="link" @click="handleModalShow(record, record)"
                                 ><i class="icon i_edit" />{{ $t('m.edit_name') }}</a-button
                             >
-                            <a-button
-                                type="link"
-                                @click="handleModalShow({ parent_id: record.id }, null, record)"
-                                v-if="$auth('material-category.save')"
+                            <a-button type="link" @click="handleModalShow({ parent_id: record.id }, null, record)"
                                 ><i class="icon i_add" />{{ $t('m.new_sub_category') }}</a-button
                             >
-                            <a-button
-                                type="link"
-                                @click="handleDelete(record)"
-                                class="danger"
-                                v-if="$auth('material-category.delete')"
+                            <a-button type="link" @click="handleDelete(record)" class="danger"
                                 ><i class="icon i_delete" />{{ $t('def.delete') }}</a-button
                             >
                         </template>

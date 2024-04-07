@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('pt.list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="modalShow = true" v-if="$auth('ADMIN') && $auth('file.save')"
+                    <a-button type="primary" @click="modalShow = true" v-if="$auth('ADMIN')"
                         ><i class="icon i_add" />{{ $t('pt.rule') }}</a-button
                     >
                 </div>
@@ -62,14 +62,13 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <template v-if="$auth('ADMIN')">
-                                <a-button type="link" @click="handleUpdate(record)" v-if="$auth('file.save')"
+                                <a-button type="link" @click="handleUpdate(record)"
                                     ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                                 >
                                 <a-button
                                     type="link"
                                     @click="handleDelete(record.id)"
                                     class="danger"
-                                    v-if="$auth('file.delete')"
                                     ><i class="icon i_delete" />{{ $t('def.delete') }}</a-button
                                 >
                             </template>

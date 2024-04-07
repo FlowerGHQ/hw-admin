@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('ar.list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('sales-area.save')"
+                    <a-button type="primary" @click="routerChange('edit')"
                         ><i class="icon i_add" />{{ $t('ar.save') }}</a-button
                     >
                 </div>
@@ -43,7 +43,7 @@
                     :pagination="false"
                 >
                     <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.dataIndex === 'name' && $auth('sales-area.detail')">
+                        <template v-if="column.dataIndex === 'name'">
                             <a-tooltip placement="top" :title="text">
                                 <a-button type="link" @click="routerChange('detail', record)">{{ text }}</a-button>
                             </a-tooltip>
@@ -57,14 +57,10 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('edit', record)" v-if="$auth('sales-area.save')"
+                            <a-button type="link" @click="routerChange('edit', record)"
                                 ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                             >
-                            <a-button
-                                type="link"
-                                @click="handleDelete(record.id)"
-                                class="danger"
-                                v-if="$auth('sales-area.delete')"
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger"
                                 ><i class="icon i_delete" />{{ $t('def.delete') }}</a-button
                             >
                         </template>

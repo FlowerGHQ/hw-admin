@@ -200,7 +200,7 @@
                             }}</a-select-option>
                         </a-select>
                         <div class="btn">
-                            <a-button type="link" v-if="$auth('crm-dict.save')" @click="handleSourceModalShow">{{
+                            <a-button type="link" @click="handleSourceModalShow">{{
                                 $t('crm_set.save')
                             }}</a-button>
                             <a-button type="link" @click="getSourceList()">{{ $t('crm_set.refresh') }}</a-button>
@@ -531,7 +531,7 @@
         </div>
 
         <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary" v-if="$auth('crm-customer.save')">{{
+            <a-button @click="handleSubmit" type="primary">{{
                 $t('def.sure')
             }}</a-button>
             <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>

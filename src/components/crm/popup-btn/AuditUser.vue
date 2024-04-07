@@ -6,8 +6,8 @@
             </template>
             <template #title>
                 {{ item.name }}
-                <a-button type="link" class="danger" @click="handleDeleteCustomer(index)" v-if="$auth('crm-bo.save')"
-                    ><i class="icon i_close_c" />
+                <a-button type="link" class="danger" @click="handleDeleteCustomer(index)">
+                    <i class="icon i_close_c" />
                 </a-button>
             </template>
         </a-step>
