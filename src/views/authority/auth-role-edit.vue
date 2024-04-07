@@ -37,6 +37,16 @@
             <div class="form-content long-key">
                 <auth-tab ref="authTabRef" class="m-b-20 m-l-140" @tab="onTab"></auth-tab>
                 <template v-for="item in authOptios" :key="item.key">
+                    <div class="form-item afs">
+                        <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
+                        <div class="value">
+                            <a-checkbox-group v-model:value="item.select">
+                                <a-checkbox :value="item.id">
+                                    {{ $t('authority.title.' + item.key) }}
+                                </a-checkbox>
+                            </a-checkbox-group>
+                        </div>
+                    </div>
                     <div v-for="(subItem, index) in item.list" :key="index" class="form-item afs">
                         <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
                         <div class="value">
@@ -215,10 +225,12 @@ export default {
                 return this.$message.warning(this.$t('def.enter'));
             }
             let list = [];
-
+            
             for (const item of this.authItems) {
+                list = list.concat(item.select)
                 list.push(...this.authClass.mergeItemSelect(item.list));
             }
+            list = [...new Set(list)]            
 
             this.saveRoledataFetch({ authority_ids: list.join(',') });
         },

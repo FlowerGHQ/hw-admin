@@ -14,19 +14,20 @@
                 >
                     <template #extra>
                         <a-button
-                            v-if="!org.edit && $auth('authority.save')"
+                            v-if="!org.edit"
                             @click.stop="handleEditShow(key)"
                             type="link"
                         >
                             <i class="icon i_edit" />{{ $t('def.set') }}
                         </a-button>
-                        <template v-else-if="$auth('authority.save')">
+                        <template v-else>
                             <a-button @click.stop="handleEditSubmit(key)" type="link">
                                 <i class="icon i_confirm" />
                                 {{ $t('def.save') }}
                             </a-button>
                             <a-button @click.stop="handleEditClose(key)" type="link" class="cancel">
-                                <i class="icon i_close_c" />{{ $t('def.cancel') }}
+                                <i class="icon i_close_c" />
+                                {{ $t('def.cancel') }}
                             </a-button>
                         </template>
                     </template>
@@ -241,8 +242,7 @@ export default {
                 });
         },
         // 获取 某类型组织 已分配的 权限项
-        getOrgAuthFetch(user_type) {
-            this.user_type = user_type;
+        getOrgAuthFetch(user_type) {            
             Core.Api.Authority.authOptions({
                 org_type: this[user_type].type,
             })
@@ -280,8 +280,9 @@ export default {
 
         // 进入编辑模式
         handleEditShow(type) {
+            this.user_type = type;
             this[type].edit = true;
-            this[this.user_type].authOptios = this.authClass.tabFilter(value);
+            this[type].authOptios = this.authClass.tabFilter();
         },
         // 取消编辑
         handleEditClose(type) {

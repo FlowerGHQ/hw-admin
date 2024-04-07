@@ -65,14 +65,14 @@ export default {
             'good-goods-order': '好物订单',
             email: '邮件管理',
             // 2042/4/7添加
-            sales: '销售',
-            aftermarket: '售后',
-            production: '生产',
-            crm: 'CRM',
-            supply: '供应链',
-            sys: '系统管理',
-            finance: '财务',
-            invoice: '仓储',
+            sales: '销售模块',
+            aftermarket: '售后模块',
+            production: '生产模块',
+            crm: 'CRM模块',
+            supply: '供应链模块',
+            sys: '系统管理模块',
+            finance: '财务模块',
+            invoice: '仓储模块',
         },
         distributor: {
             list: '查看分销商列表',
@@ -528,7 +528,7 @@ export default {
                 },
             },
             customer: {
-                title: '客户管理-客户列表',
+                title: '客户管理',
                 customer: {
                     title: '客户列表',
                 },
@@ -556,14 +556,14 @@ export default {
                 },
             },
             'sales-strategy': {
-                title: '销售策略管理-销售策略',
+                title: '销售策略管理',
                 'sales-strategy': {
                     title: '销售策略',
                     list: '销售策略列表',
                 },
             },
             account: {
-                title: '收款账号管理-付款信息管理',
+                title: '收款账号管理',
                 payment: {
                     title: '付款信息管理',
                     list: '付款信息列表',
@@ -644,10 +644,10 @@ export default {
                     title: '问询单列表',
                 },
                 'quiry-ticket-category': {
-                    title: '问询单-车型分类列表',
+                    title: '问询单车型分类列表',
                 },
                 'enquiry-ticket-customer': {
-                    title: '问询单-问询单分配列表',
+                    title: '问询单分配列表',
                 },
             },
             stock: {
@@ -1399,7 +1399,7 @@ export default {
                 },
             },
             customer: {
-                title: '客户管理-客户列表',
+                title: '客户管理',
                 customer: {
                     title: '客户列表',
                 },
@@ -1427,14 +1427,14 @@ export default {
                 },
             },
             'sales-strategy': {
-                title: '销售策略管理-销售策略',
+                title: '销售策略管理',
                 'sales-strategy': {
                     title: '销售策略',
                     list: '销售策略列表',
                 },
             },
             account: {
-                title: '收款账号管理-付款信息管理',
+                title: '收款账号管理',
                 payment: {
                     title: '付款信息管理',
                     list: '付款信息列表',
@@ -1515,10 +1515,10 @@ export default {
                     title: '问询单列表',
                 },
                 'quiry-ticket-category': {
-                    title: '问询单-车型分类列表',
+                    title: '问询单车型分类列表',
                 },
                 'enquiry-ticket-customer': {
-                    title: '问询单-问询单分配列表',
+                    title: '问询单分配列表',
                 },
             },
             stock: {

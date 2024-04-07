@@ -121,6 +121,11 @@ class Auth {
      */
     processAuthList(authList) {
         this.authItems.forEach(el => {
+            const find = authList.find(item => el.key === item.key);
+            if (find) {
+                el.id = find.id
+            }
+                        
             travelAuth(authList, el, el.key);
         });
         console.log('this.authItems', this.authItems);
@@ -162,6 +167,7 @@ class Auth {
                 subItem.itemSelect = result;
             });
         });
+        // console.log("echoAuth", this.authItems);
     }
 
     /**
