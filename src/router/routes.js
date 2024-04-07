@@ -549,7 +549,8 @@ const routes = [
                 component: () => import('@/views/item/item-bom.vue'),
                 meta: {
                     title: 'BOM管理',
-                    title_en: 'BOM Management',                    
+                    title_en: 'BOM Management',
+                    admin_module: [ROUTER_TYPE.AFTER],                 
                     auth: ['sales.item.bom', 'aftermarket.item.bom'],
                 },
             },

@@ -110,7 +110,7 @@
                             <div class="form-item afs">
                                 <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
                                 <div class="value">
-                                    <a-checkbox-group v-model:value="item.select">
+                                    <a-checkbox-group v-model:value="item.templateSelect">
                                         <a-checkbox :value="item.id">
                                             {{ $t('authority.title.' + item.key) }}
                                         </a-checkbox>
@@ -347,7 +347,7 @@ export default {
             let list = [];
             // 只保存属于该用户的权限
             for (const item of this.options) {
-                list = list.concat(item.select);
+                list = list.concat(item.templateSelect);
                 list.push(...this.authClass.mergeItemSelect(item.list));
             }
 

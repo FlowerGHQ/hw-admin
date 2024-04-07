@@ -105,7 +105,7 @@
                             <div class="form-item afs">
                                 <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
                                 <div class="value">
-                                    <a-checkbox-group v-model:value="item.select">
+                                    <a-checkbox-group v-model:value="item.templateSelect">
                                         <a-checkbox :value="item.id">
                                             {{ $t('authority.title.' + item.key) }}
                                         </a-checkbox>
@@ -306,7 +306,7 @@ export default {
             let list = [];
 
             for (const item of this[type].options) {
-                list = list.concat(item.select)
+                list = list.concat(item.templateSelect)
                 list.push(...this.authClass.mergeItemSelect(item.list));
             }
             list = [...new Set(list)]     
