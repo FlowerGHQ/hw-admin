@@ -7,7 +7,13 @@ export default {
      * @param(typeIncludes) 数组
      */
     isMember(type, typeIncludes) {
-        let result = typeIncludes.includes(Number(type));
+        let baseType = typeof type;
+        let result = typeIncludes.includes(type);
+
+        if (baseType === 'number') {
+            result = typeIncludes.includes(Number(type));
+        }
+
         return result;
     },
     /**
@@ -68,9 +74,9 @@ export default {
         });
     },
     /**
-    * 传dom id
-    * @param {String | Number} id
-    */
+     * 传dom id
+     * @param {String | Number} id
+     */
     copyText(id) {
         const divElement = document.getElementById(id);
         if (window.getSelection) {
@@ -79,10 +85,10 @@ export default {
             range.selectNodeContents(divElement);
             selection.removeAllRanges();
             selection.addRange(range);
-            document.execCommand("copy");
+            document.execCommand('copy');
             selection.removeAllRanges();
         } else {
-            throw Error('No window.getSelection!')
+            throw Error('No window.getSelection!');
         }
-    }
+    },
 };
