@@ -95,9 +95,38 @@ const SYSTEM_AUTH = {
             select: [],
             key: 'test',
             name: '测试模块',
+            tab: 1,
+        },
+        {
+            list: [
+                // {
+                //     key: "oneMange1",
+                //     itemSelect: [], // checkout 选中的
+                //     itemCheckAll: [], // list底下所有选中项id
+                //     list: [
+                //         {
+                //             id: 2,
+                //             key: "bookList",
+                //             list: [
+                //                 {
+                //                     id: 1,
+                //                     key: "edit",
+                //                 }
+                //             ]
+                //         }
+                //     ]
+                // }
+            ],
+            select: [],
+            key: 'test1',
+            name: '测试模块1',
+            tab: 2,
         },
     ],
-    allAuthData: [
+    AUTH_LIST_TEMP_MAP: [
+        { name: "" }
+    ],
+    ALLAUTHDATA: [
         {
             id: 1,
             key: 'test.oneMange1',
@@ -149,8 +178,33 @@ const SYSTEM_AUTH = {
             key: 'test.oneMange2.bookList1.delete',
             scope_type: 0,
         },
+        {
+            id: 11,
+            key: 'test1.oneMange2',
+            scope_type: 0,
+        },
+        {
+            id: 12,
+            key: 'test1.oneMange2.bookList',
+            scope_type: 0,
+        },
+        {
+            id: 13,
+            key: 'test1.oneMange2.bookList.edit',
+            scope_type: 1,
+        },
+        {
+            id: 14,
+            key: 'test1.oneMange2.bookList1',
+            scope_type: 1,
+        },
+        {
+            id: 15,
+            key: 'test1.oneMange2.bookList1.delete',
+            scope_type: 0,
+        },
     ],
-    RoleData: [
+    ROLEDATA: [
         {
             id: 1,
             key: 'test.oneMange1',
@@ -173,7 +227,7 @@ const SYSTEM_AUTH = {
         // },
     ],
     // 禁用的数据
-    disableData: [
+    DISABLEDATA: [
         {
             id: 3,
             key: 'test.oneMange1.bookList.edit',

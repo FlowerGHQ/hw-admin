@@ -445,14 +445,30 @@ export default {
         },
         test: {
             oneMange1: {
-                title: '管理1',
+                title: '模块一管理1',
                 bookList: "book列表1",              
                 bookList1: "book列表2",
                 edit: "编辑",
                 delete: "删除",
             },
             oneMange2: {
-                title: '管理2',
+                title: '模块一管理2',
+                bookList: "book列表1",              
+                bookList1: "book列表2",
+                edit: "编辑",
+                delete: "删除",
+            },
+        },
+        test1: {
+            oneMange1: {
+                title: '模块二管理1',
+                bookList: "book列表1",              
+                bookList1: "book列表2",
+                edit: "编辑",
+                delete: "删除",
+            },
+            oneMange2: {
+                title: '模块二管理2',
                 bookList: "book列表1",              
                 bookList1: "book列表2",
                 edit: "编辑",

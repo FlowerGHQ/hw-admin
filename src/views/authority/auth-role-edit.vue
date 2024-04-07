@@ -29,6 +29,7 @@
                 </div>
             </div>
         </div>
+        <auth-tab></auth-tab>
         <!-- 权限分配 -->
         <div class="form-block">
             <div class="form-title">
@@ -82,13 +83,15 @@
 
 <script>
 import Core from '@/core';
+import authTab  from './components/auth-tab.vue'
 import auth from '@/core/modules/units/auth';
-import { set } from 'lodash';
 const AUTH_LIST_TEMP = Core.Const.SYSTEM_AUTH.AUTH_LIST_TEMP;
 
 export default {
     name: 'AuthRoleEdit',
-    components: {},
+    components: {
+        authTab
+    },
     props: {},
     data() {
         return {
@@ -152,7 +155,7 @@ export default {
             })
                 .then(res => {
                     // console.log('获取 某个身份下 可选的权限项', res);
-                    let list = Core.Const.SYSTEM_AUTH.allAuthData || res.list;
+                    let list = Core.Const.SYSTEM_AUTH.ALLAUTHDATA || res.list;
                     this.authClass.processAuthList(list);
 
                     if (this.form.id) {
@@ -171,7 +174,7 @@ export default {
                 .then(res => {
                     console.log('某个角色 已选的权限', res);
 
-                    let list = Core.Const.SYSTEM_AUTH.RoleData || res.list;
+                    let list = Core.Const.SYSTEM_AUTH.ROLEDATA || res.list;
 
                     // 回显数据
                     this.authClass.echoAuth(list);
@@ -181,7 +184,7 @@ export default {
                 });
         },
         // 保存权限数据
-        saveRoleDataFetch(params = {}) {
+        saveROLEDATAFetch(params = {}) {
             let obj = {
                 ...params,
             };
@@ -214,7 +217,7 @@ export default {
                 list.push(...this.authClass.mergeItemSelect(item.list));
             }
 
-            this.saveRoleDataFetch({ authority_ids: list.join(',') })
+            this.saveROLEDATAFetch({ authority_ids: list.join(',') })
         },
 
         // 全选操作

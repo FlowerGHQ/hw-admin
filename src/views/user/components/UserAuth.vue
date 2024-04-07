@@ -258,7 +258,7 @@ export default {
             })
                 .then(res => {
                     console.log('getAllAuthItem res:', res);
-                    let list = Core.Const.SYSTEM_AUTH.allAuthData || res.list;
+                    let list = Core.Const.SYSTEM_AUTH.ALLAUTHDATA || res.list;
                     this.authClass.processAuthList(list);
 
                     this.ids_arr = [];
@@ -285,7 +285,7 @@ export default {
                 user_id: this.userId,
             })
                 .then(res => {
-                    let list = Core.Const.SYSTEM_AUTH.disableData || res.list;
+                    let list = Core.Const.SYSTEM_AUTH.DISABLEDATA || res.list;
                     // console.log('getUserRoleAuthFetch', list);
                     this.disabledIds = list.map(el => el.id);
                     this.authClass.addDisableItem(this.disabledIds);
@@ -302,7 +302,7 @@ export default {
                 user_type: this.detail.type,
             })
                 .then(res => {
-                    let list = Core.Const.SYSTEM_AUTH.RoleData || res.list;
+                    let list = Core.Const.SYSTEM_AUTH.ROLEDATA || res.list;
                     console.log('getUserAuthFetch', list);
 
                     if (!this.showExtra) {

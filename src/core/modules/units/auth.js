@@ -1,6 +1,6 @@
 // 分解
 function getNextLevelNodeNameList(authList, prefix = undefined) {
-    // console.log('prefix', prefix);
+    console.log('prefix', prefix);
     let items = {};
     authList.forEach((node, i) => {
         let nodeKey = node.key;

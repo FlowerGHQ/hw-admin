@@ -202,7 +202,7 @@ export default {
                 .then(res => {
                     console.log('getAllAuthItem res:', res);
 
-                    let list = Core.Const.SYSTEM_AUTH.allAuthData || res.list;
+                    let list = Core.Const.SYSTEM_AUTH.ALLAUTHDATA || res.list;
 
                     this.authClass.processAuthList(list);
                     this.getOrgAuthFetch('distributor');
@@ -219,7 +219,7 @@ export default {
                 org_type: this[user_type].type,
             })
                 .then(res => {
-                    let list = Core.Const.SYSTEM_AUTH.RoleData || res.list;
+                    let list = Core.Const.SYSTEM_AUTH.ROLEDATA || res.list;
 
                     // 回显数据
                     if (list.length === 0) {
