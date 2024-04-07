@@ -18,7 +18,7 @@ const supplyManage = {
         title_en: 'supplier management',
         icon: 'i_menu_fankuguanli',
         roles: [LOGIN_TYPE.ADMIN],
-        auth: ['supplier-application.list'],
+        auth: ['supply.supplier-manage'],
     },
     children: [
         {
@@ -28,6 +28,7 @@ const supplyManage = {
             meta: {
                 title: '供应商列表',
                 title_en: 'Supplier list',
+                auth: ['supply.supplier-manage.save-supplier'],
             },
         },
         {
@@ -67,7 +68,7 @@ const supplyRouters = [
 ];
 
 // 物料管理(代码其实就是商品管理的代码只是路由不一样)
-const supplyMaterialManagement =  {
+const supplyMaterialManagement = {
     // 物料管理
     path: '/material',
     component: Layout,
@@ -161,5 +162,5 @@ const supplyMaterialManagement =  {
             },
         },
     ],
-}
+};
 export { supplyManage, supplyRouters, supplyMaterialManagement };

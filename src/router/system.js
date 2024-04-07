@@ -18,7 +18,7 @@ const SYSTEM = {
         title: '系统管理',
         title_en: 'System Management',
         icon: 'i_menu_xitongguanli',
-        auth: ['MANAGER'], // 管理员
+        auth: ['sys.sys'],
     },
     children: [
         {
@@ -28,6 +28,7 @@ const SYSTEM = {
             meta: {
                 title: '用户列表',
                 title_en: 'User',
+                auth: ['sys.sys.user'],
             },
         },
         {
@@ -77,6 +78,7 @@ const SYSTEM = {
             meta: {
                 title: '角色管理',
                 title_en: 'Roles',
+                auth: ['sys.sys.role'],
             },
         },
         {
@@ -97,6 +99,7 @@ const SYSTEM = {
                 title: '权限管理',
                 title_en: 'Authority Management',
                 roles: [LOGIN_TYPE.ADMIN],
+                auth: ['sys.sys.authority'],
             },
         },
         {
@@ -117,6 +120,7 @@ const SYSTEM = {
             meta: {
                 title: '消息列表',
                 title_en: 'Messages ',
+                auth: ['sys.sys.message'],
             },
         },
         {
@@ -147,6 +151,7 @@ const SYSTEM = {
             meta: {
                 title: '文件管理',
                 title_en: 'Files ',
+                auth: ['sys.sys.file'],
             },
         },
         {
@@ -158,6 +163,7 @@ const SYSTEM = {
                 title: '标签规则',
                 roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                 title_en: 'Label rules ',
+                auth: ['sys.sys.label'],
             },
         },
     ],

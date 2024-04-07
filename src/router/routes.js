@@ -88,8 +88,8 @@ const routes = [
                     title: '登录',
                     title_en: 'Login',
                 },
-            }
-        ]
+            },
+        ],
     },
     // { // 分销商登录
     //     path: '/loginMall',
@@ -207,7 +207,7 @@ const routes = [
                     hidden: true,
                     title: '分销商编辑',
                     parent: '/distributor/distributor-list',
-                    roles: [LOGIN_TYPE.ADMIN],                    
+                    roles: [LOGIN_TYPE.ADMIN],
                 },
             },
             {
@@ -550,7 +550,7 @@ const routes = [
                 meta: {
                     title: 'BOM管理',
                     title_en: 'BOM Management',
-                    admin_module: [ROUTER_TYPE.AFTER],                 
+                    admin_module: [ROUTER_TYPE.AFTER],
                     auth: ['sales.item.bom', 'aftermarket.item.bom'],
                 },
             },
@@ -568,7 +568,7 @@ const routes = [
             title_en: 'Instance',
             icon: 'i_menu_shiliguanli',
             roles: [LOGIN_TYPE.ADMIN],
-            auth: ['sales.entity'],
+            auth: ['sales.entity', 'production.instance'],
         },
         children: [
             {
@@ -580,7 +580,7 @@ const routes = [
                     title_en: 'Vehicles list',
                     roles: [LOGIN_TYPE.ADMIN],
                     type: 'vehicle',
-                    auth: ['sales.entity.vehicle'],
+                    auth: ['sales.entity.vehicle', 'production.instance.vehicle'],
                 },
             },
             {
@@ -592,7 +592,7 @@ const routes = [
                     title_en: 'Parts',
                     roles: [LOGIN_TYPE.ADMIN],
                     type: 'part',
-                    auth: ['sales.entity.parts'],
+                    auth: ['sales.entity.parts', 'production.instance.parts'],
                 },
             },
             {
@@ -930,7 +930,7 @@ const routes = [
             title_en: 'Suppliers',
             icon: 'i_menu_gongyingguajli',
             roles: [LOGIN_TYPE.ADMIN],
-            auth: ['production-order.list', 'supplier.list', 'material-purchase-order.list', 'material.list'],
+            auth: ['production.supply'],
         },
         children: [
             {
@@ -941,7 +941,7 @@ const routes = [
                     title: '供应商列表',
                     title_en: 'Supplier list',
                     roles: [LOGIN_TYPE.ADMIN],
-                    auth: ['supplier.list'],
+                    auth: ['production.supply.supplier'],
                 },
             },
             {
@@ -953,7 +953,6 @@ const routes = [
                     title: '供应商编辑',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/production/supplier-list',
-                    auth: ['supplier.save'],
                 },
             },
             {
@@ -965,7 +964,6 @@ const routes = [
                     title: '供应商详情',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/production/supplier-list',
-                    auth: ['supplier.detail'],
                 },
             },
             {
@@ -977,7 +975,7 @@ const routes = [
                     title_en: 'Procurement list',
                     roles: [LOGIN_TYPE.ADMIN],
                     is_sub_menu: true,
-                    auth: ['material-purchase-order.list'],
+                    auth: ['production.supply.purchase-order'],
                 },
             },
             /*{
@@ -1000,7 +998,6 @@ const routes = [
                     title: '采购单详情',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/production/material-purchase-list',
-                    auth: ['material-purchase-order.list.detail'],
                 },
             },
 
@@ -1012,7 +1009,7 @@ const routes = [
                     title: '物料列表',
                     title_en: 'Material list',
                     roles: [LOGIN_TYPE.ADMIN],
-                    auth: ['material.list'],
+                    auth: ['production.supply.material'],
                 },
             },
             {
@@ -1024,7 +1021,6 @@ const routes = [
                     title: '物料编辑',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/production/material-list',
-                    auth: ['material.save'],
                 },
             },
             {
@@ -1036,7 +1032,6 @@ const routes = [
                     title: '物料详情',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/production/material-list',
-                    auth: ['material.detail'],
                 },
             },
 
@@ -1067,7 +1062,7 @@ const routes = [
                     title: '物料分类',
                     title_en: 'Material classification',
                     roles: [LOGIN_TYPE.ADMIN],
-                    auth: ['material-category.list'],
+                    auth: ['production.supply.material-category'],
                 },
             },
             {
@@ -1079,6 +1074,7 @@ const routes = [
                     title: '来料检验',
                     title_en: 'Incoming Inspection',
                     roles: [LOGIN_TYPE.ADMIN],
+                    auth: ['production.supply.material-checkout'],
                 },
             },
         ],
@@ -1095,7 +1091,7 @@ const routes = [
             title_en: 'Production',
             icon: 'i_menu_shegnchanguanli',
             roles: [LOGIN_TYPE.ADMIN],
-            auth: ['production-order.list', 'bom.list'],
+            auth: ['production.production'],
         },
         children: [
             {
@@ -1107,7 +1103,7 @@ const routes = [
                     title_en: 'Vehicles',
                     roles: [LOGIN_TYPE.ADMIN],
                     type: 'vehicle',
-                    // auth: ['entity.list'],
+                    auth: ['production.production.device'],
                 },
             },
             {
@@ -1118,6 +1114,7 @@ const routes = [
                     title: '测试报告',
                     title_en: 'Test Report List',
                     roles: [LOGIN_TYPE.ADMIN],
+                    auth: ['production.production.test'],
                 },
             },
             {
@@ -1128,7 +1125,7 @@ const routes = [
                     title: 'BOM列表',
                     title_en: 'BOM list',
                     roles: [LOGIN_TYPE.ADMIN],
-                    auth: ['bom.list'],
+                    auth: ['production.production.bom'],
                 },
             },
             {
@@ -1140,7 +1137,6 @@ const routes = [
                     title: 'BOM详情',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/manufacture/bom-list',
-                    auth: ['bom.detail'],
                 },
             },
             {
@@ -1151,7 +1147,7 @@ const routes = [
                     title: '生产单列表',
                     title_en: 'Manufacture order list',
                     roles: [LOGIN_TYPE.ADMIN],
-                    auth: ['production-order.list'],
+                    auth: ['production.production.production-order'],
                 },
             },
             {
@@ -1163,7 +1159,6 @@ const routes = [
                     title: '生产单编辑',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/manufacture/manufacture-order-list',
-                    auth: ['production-order.save'],
                 },
             },
             {
@@ -1175,7 +1170,6 @@ const routes = [
                     title: '生产单详情',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/item/item-list',
-                    auth: ['production-order.detail'],
                 },
             },
             {
@@ -1186,7 +1180,6 @@ const routes = [
                     hidden: true,
                     title: '成套计算',
                     roles: [LOGIN_TYPE.ADMIN],
-                    // auth: ['calculate-production.amount'],
                 },
             },
             {
@@ -1197,6 +1190,7 @@ const routes = [
                     title: '整车完检',
                     title_en: 'Complete vehicle inspection',
                     roles: [LOGIN_TYPE.ADMIN],
+                    auth: ['production.production.vehicle'],
                 },
             },
         ],
@@ -1214,7 +1208,7 @@ const routes = [
             title_en: 'Inventories',
             icon: 'i_menu_kucunguanli',
             roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-            auth: ['sales.stock', 'aftermarket.stock'],
+            auth: ['sales.stock', 'aftermarket.stock', 'production.inventory'],
         },
         children: [
             {
@@ -1224,7 +1218,7 @@ const routes = [
                 meta: {
                     title: '仓库管理',
                     title_en: 'Warehouses',
-                    auth: ['sales.stock.warehouse', 'aftermarket.stock.warehouse'],
+                    auth: ['sales.stock.warehouse', 'aftermarket.stock.warehouse', 'production.inventory.warehouse'],
                 },
             },
             {
@@ -1256,7 +1250,7 @@ const routes = [
                     title: '库存总览',
                     title_en: 'Inventory overview',
                     roles: [LOGIN_TYPE.ADMIN],
-                    auth: ['sales.stock.overview', 'aftermarket.stock.overview'],
+                    auth: ['sales.stock.overview', 'aftermarket.stock.overview', 'production.inventory.overview'],
                 },
             },
             {
@@ -1266,7 +1260,7 @@ const routes = [
                 meta: {
                     title: '出入库管理',
                     title_en: 'Inbound and outbound',
-                    auth: ['sales.stock.invoice', 'aftermarket.stock.invoice'],
+                    auth: ['sales.stock.invoice', 'aftermarket.stock.invoice', 'production.inventory.invoice'],
                 },
             },
             {
@@ -1297,7 +1291,7 @@ const routes = [
                     title: '调货单管理',
                     title_en: 'Transfer order',
                     roles: [LOGIN_TYPE.ADMIN],
-                    auth: ['sales.stock.transfer-note', 'aftermarket.stock.transfer-note'],
+                    auth: ['sales.stock.transfer-note', 'aftermarket.stock.transfer-note', 'production.inventory.transfer-note'],
                 },
             },
             {
@@ -1319,7 +1313,7 @@ const routes = [
                     roles: [LOGIN_TYPE.ADMIN],
                     title: '入库',
                     title_en: 'Inbound',
-                    auth: ['sales.stock.in-warehouse', 'aftermarket.stock.in-warehouse'],
+                    auth: ['sales.stock.in-warehouse', 'aftermarket.stock.in-warehouse', 'production.inventory.material-in'],
                 },
             },
             {
@@ -1330,7 +1324,7 @@ const routes = [
                     roles: [LOGIN_TYPE.ADMIN],
                     title: '出库',
                     title_en: 'Outbound',
-                    auth: ['sales.stock.out-warehouse', 'aftermarket.stock.out-warehouse'],
+                    auth: ['sales.stock.out-warehouse', 'aftermarket.stock.out-warehouse', 'production.inventory.material-out'],
                 },
             },
             /*  {
@@ -1578,7 +1572,7 @@ const routes = [
             title: '数据',
             title_en: 'Dashboard',
             icon: 'i_crm_data',
-            auth: ['crm-label.list'],
+            auth: ['crm.data'],
         },
         children: [
             {
@@ -1588,8 +1582,7 @@ const routes = [
                 meta: {
                     hidden: true,
                     title: '数据看板',
-                    title_en: 'Dashboard',
-                    auth: ['crm-label.list'],
+                    title_en: 'Dashboard',                    
                 },
             },
             {
@@ -1599,7 +1592,7 @@ const routes = [
                 meta: {
                     title: '投票看板',
                     title_en: 'Voting Board',
-                    auth: ['crm-label.list'],
+                    auth: ['crm.data.dashboard'],
                 },
             },
             {
@@ -1610,7 +1603,6 @@ const routes = [
                     hidden: true,
                     title: '投票详情',
                     title_en: 'Voting Board',
-                    auth: ['crm-label.list'],
                 },
             },
             // {
@@ -1965,7 +1957,7 @@ const routes = [
             title: '客户',
             title_en: 'Customers',
             icon: 'i_menu_kehu',
-            auth: ['crm-customer.list'],
+            auth: ['crm.crm-customer'],
         },
         children: [
             {
@@ -1976,7 +1968,7 @@ const routes = [
                     title: '区域客户',
                     title_en: 'Regional Customers',
                     type: 'region',
-                    auth: ['MANAGER_GROUP', 'MANAGER'],
+                    auth: ['crm.crm-customer.area', 'MANAGER_GROUP', 'MANAGER'],
                 },
             },
             {
@@ -1987,7 +1979,7 @@ const routes = [
                     title: '我的客户',
                     title_en: 'My Customers',
                     type: 'private',
-                    auth: ['crm-customer.list'],
+                    auth: ['crm.crm-customer.mine'],
                 },
             },
             {
@@ -1998,7 +1990,7 @@ const routes = [
                     title: '未分配客户',
                     title_en: 'Unassigned Customers',
                     type: 'high_seas',
-                    auth: ['crm-customer.list'],
+                    auth: ['crm.crm-customer.undistributed'],
                 },
             },
             {
@@ -2009,7 +2001,6 @@ const routes = [
                     hidden: true,
                     title: '新建客户',
                     parent: '/customer/customer-list',
-                    auth: ['crm-customer.save'],
                 },
             },
             {
@@ -2020,7 +2011,6 @@ const routes = [
                     hidden: true,
                     title: '客户详情',
                     parent: '/customer/customer-list',
-                    auth: ['crm-customer.detail'],
                 },
             },
             // {
@@ -2031,17 +2021,6 @@ const routes = [
             // 		title: '公海客户',
             // 		title_en: 'Customer list',
             // 		// auth: ["crm-customer.list"],
-            // 	}
-            // },
-            // {
-            // 	path: 'customer-edit',
-            // 	name: 'CustomerEdit',
-            // 	component: () => import('@/views/crm/customer/customer-edit.vue'),
-            // 	meta: {
-            // 		hidden: true,
-            // 		title: '新建客户',
-            // 		parent: '/customer/customer-list',
-            // 		// auth: ["crm-customer.save"],
             // 	}
             // },
         ],
@@ -2114,7 +2093,7 @@ const routes = [
             title: '商机',
             title_en: 'Business Opportunity',
             icon: 'i_menu_shangji',
-            auth: ['crm-bo.list'],
+            auth: ['crm.business'],
         },
         children: [
             {
@@ -2124,7 +2103,7 @@ const routes = [
                 meta: {
                     title: '商机列表',
                     title_en: 'Opportunities List',
-                    auth: ['crm-bo.list'],
+                    auth: ['crm.business.business'],
                 },
             },
             {
@@ -2135,7 +2114,6 @@ const routes = [
                     hidden: true,
                     title: '修改商机',
                     parent: '/bo/bo-list',
-                    auth: ['crm-bo.save'],
                 },
             },
             {
@@ -2146,13 +2124,12 @@ const routes = [
                     hidden: true,
                     title: '商机详情',
                     parent: '/bo/bo-list',
-                    auth: ['crm-bo.detail'],
                 },
             },
         ],
     },
     {
-        // 订单列表
+        // 订单管理
         path: '/crm-order',
         component: Layout,
         redirect: '/crm-order/order-list',
@@ -2162,7 +2139,7 @@ const routes = [
             title: '订单管理',
             title_en: 'Contract Order',
             icon: 'i_crm_order',
-            auth: ['crm-order.list'],
+            auth: ['crm.manage'],
         },
         children: [
             {
@@ -2172,7 +2149,7 @@ const routes = [
                 meta: {
                     title: '订单列表',
                     title_en: 'Contract Order list',
-                    auth: ['crm-order.list'],
+                    auth: ['crm.manage.order'],
                 },
             },
             {
@@ -2183,7 +2160,6 @@ const routes = [
                     hidden: true,
                     title: '待审列表',
                     title_en: 'Pending List',
-                    auth: ['crm-order.list'],
                 },
             },
             {
@@ -2194,7 +2170,6 @@ const routes = [
                     hidden: true,
                     title: '公海列表',
                     title_en: 'Pool List',
-                    auth: ['crm-order.list'],
                 },
             },
 
@@ -2206,7 +2181,6 @@ const routes = [
                     hidden: true,
                     title: '新建合同',
                     parent: '/crm-order/order-list',
-                    auth: ['crm-order.save'],
                 },
             },
             {
@@ -2218,7 +2192,6 @@ const routes = [
                     title: '订单详情',
                     title_en: 'Contract Details',
                     parent: '/crm-order/order-list',
-                    auth: ['crm-order.detail'],
                 },
             },
         ],
@@ -2236,7 +2209,7 @@ const routes = [
             title: '回款单',
             title_en: 'Payment Receipt',
             icon: 'i_crm_order_income',
-            auth: ['crm-order-income.list'],
+            auth: ['crm.payment'],
         },
         children: [
             {
@@ -2246,7 +2219,7 @@ const routes = [
                 meta: {
                     title: '回款单列表',
                     title_en: 'Payment Receipt List',
-                    auth: ['crm-order-income.list'],
+                    auth: ['crm.payment.payment'],
                 },
             },
             {
@@ -2256,7 +2229,7 @@ const routes = [
                 meta: {
                     title: '待审列表',
                     title_en: 'Pending List',
-                    auth: ['crm-order-income.list'],
+                    auth: ['crm.payment.wait-audit'],
                 },
             },
             {
@@ -2267,7 +2240,6 @@ const routes = [
                     hidden: true,
                     title: '新建回款单',
                     parent: '/crm-order-income/order-income-list',
-                    auth: ['crm-order-income.save'],
                 },
             },
             {
@@ -2279,7 +2251,6 @@ const routes = [
                     title: '回款单详情',
                     title_en: 'Payment Receipt Phase',
                     parent: '/crm-order-income/order-income-list',
-                    auth: ['crm-order-income.detail'],
                 },
             },
         ],
@@ -2295,7 +2266,7 @@ const routes = [
             title: '试驾单',
             title_en: 'Test Drive',
             icon: 'i_crm_test_drive',
-            auth: ['crm-order-income.list'],
+            auth: ['crm.test-drive'],
         },
         children: [
             {
@@ -2305,7 +2276,7 @@ const routes = [
                 meta: {
                     title: '试驾单列表',
                     title_en: 'Test Drive List',
-                    auth: ['crm-order-income.list'],
+                    auth: ['crm.test-drive.test-drive'],
                 },
             },
             {
@@ -2316,7 +2287,6 @@ const routes = [
                     hidden: true,
                     title: '新建试驾单',
                     parent: '/crm-test-drive-order/test-drive-list',
-                    auth: ['crm-test-drive-order.save'],
                 },
             },
             {
@@ -2327,7 +2297,6 @@ const routes = [
                     hidden: true,
                     title: '试驾订单',
                     parent: '/crm-test-drive-order/test-drive-list',
-                    auth: ['crm-test-drive-order.save'],
                 },
             },
         ],
@@ -2343,7 +2312,7 @@ const routes = [
             title: '智能标签',
             title_en: 'Smart Label',
             icon: 'i_menu_zhinengbiaoqian',
-            auth: ['crm-label.list'],
+            auth: ['crm.intelligent'],
         },
         children: [
             {
@@ -2353,7 +2322,7 @@ const routes = [
                 meta: {
                     title: '标签列表',
                     title_en: 'Label List',
-                    // auth: ["crm-label.list"],
+                    auth: ["crm.intelligent.label"],
                 },
             },
             {
@@ -2363,7 +2332,7 @@ const routes = [
                 meta: {
                     title: '标签管理',
                     title_en: 'Label Management',
-                    // auth: ["crm-label.list"],
+                    auth: ["crm.intelligent.label-manager"],
                 },
             },
         ],
@@ -2451,7 +2420,7 @@ const routes = [
             title: '系统设置',
             title_en: 'System Setting',
             icon: 'i_crm_setting',
-            auth: ['crm-bo-status.list', 'crm-dict.list', 'crm-group.list', 'crm-group.list'],
+            auth: ['crm.system'],
         },
         children: [
             {
@@ -2461,7 +2430,7 @@ const routes = [
                 meta: {
                     title: '商机阶段',
                     title_en: 'Opportunity Stage',
-                    auth: ['crm-bo-status.list'],
+                    auth: ['crm.system.business-stage'],
                 },
             },
             {
@@ -2471,7 +2440,7 @@ const routes = [
                 meta: {
                     title: '字典选项',
                     title_en: 'Dictionary',
-                    auth: ['crm-dict.list'],
+                    auth: ['crm.system.dictionary'],
                 },
             },
             {
@@ -2482,6 +2451,7 @@ const routes = [
                     title: '区域管理',
                     title_en: 'Region',
                     auth: ['crm-group.list'],
+                    auth: ['crm.system.area-manage'],
                 },
             },
             {
@@ -2491,7 +2461,7 @@ const routes = [
                 meta: {
                     title: '区域用户管理',
                     title_en: 'Region User',
-                    auth: ['crm-group.list'],
+                    auth: ['crm.system.area-user-manage'],
                 },
             },
         ],
@@ -2550,7 +2520,7 @@ const routes = [
     },
     ...supplyRouters,
     supplyMaterialManagement,
-    fsLogin
+    fsLogin,
 ];
 
 export default routes;
