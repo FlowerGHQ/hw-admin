@@ -196,10 +196,10 @@ class Auth {
         if (activeTab) {
             const findItem = authList.find(el => el.tab === activeTab);
             if (findItem) {                
+                console.log("[findItem]", [findItem]);
                 return [findItem];
             }
         }
-        
         return []
     }
 }

@@ -54,7 +54,8 @@
                                                                 '.' +
                                                                 subItem.key +
                                                                 '.' +
-                                                                threeItem.key,
+                                                                threeItem.key +
+                                                                '.title',
                                                         )
                                                     }}
                                                 </span>
@@ -71,13 +72,16 @@
                                                                     '.' +
                                                                     subItem.key +
                                                                     '.' +
-                                                                    threeItem.key,
+                                                                    threeItem.key +
+                                                                    '.title',
                                                             ) +
                                                             $t(
                                                                 'authority.' +
                                                                     item.key +
                                                                     '.' +
                                                                     subItem.key +
+                                                                    '.' +
+                                                                    threeItem.key +
                                                                     '.' +
                                                                     fourItem.key,
                                                             )
@@ -108,7 +112,8 @@
                                                             '.' +
                                                             subItem.key +
                                                             '.' +
-                                                            threeItem.key,
+                                                            threeItem.key +
+                                                            '.title',
                                                     )
                                                 }}
                                             </a-checkbox>
@@ -124,9 +129,19 @@
                                                             '.' +
                                                             subItem.key +
                                                             '.' +
-                                                            threeItem.key,
+                                                            threeItem.key +
+                                                            '.title',
                                                     ) +
-                                                    $t('authority.' + item.key + '.' + subItem.key + '.' + fourItem.key)
+                                                    $t(
+                                                        'authority.' +
+                                                            item.key +
+                                                            '.' +
+                                                            subItem.key +
+                                                            '.' +
+                                                            threeItem.key +
+                                                            '.' +
+                                                            fourItem.key,
+                                                    )
                                                 }}
                                             </a-checkbox>
                                         </template>
@@ -214,7 +229,7 @@ export default {
                 .then(res => {
                     console.log('getAllAuthItem res:', res);
 
-                    let list = Core.Const.SYSTEM_AUTH.ALLAUTHDATA || res.list;
+                    let list = res.list;
 
                     this.authClass.processAuthList(list);
                     this.getOrgAuthFetch('distributor');
@@ -232,7 +247,7 @@ export default {
                 org_type: this[user_type].type,
             })
                 .then(res => {
-                    let list = Core.Const.SYSTEM_AUTH.ROLEDATA || res.list;
+                    let list = res.list;
 
                     // 回显数据
                     if (list.length === 0) {

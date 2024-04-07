@@ -52,8 +52,8 @@
                             <div class="d-f">
                                 <a-checkbox-group v-model:value="subItem.itemSelect">
                                     <template v-for="(threeItem, index) in subItem.list">
-                                        <a-checkbox :value="threeItem.id">
-                                            {{ $t('authority.' + item.key + '.' + subItem.key + '.' + threeItem.key) }}
+                                        <a-checkbox :value="threeItem.id">                                            
+                                            {{ $t('authority.' + item.key + '.' + subItem.key + '.' + threeItem.key + '.title') }}
                                         </a-checkbox>
                                         <a-checkbox
                                             v-for="(fourItem, index) in threeItem.list"
@@ -61,8 +61,8 @@
                                             :value="fourItem.id"
                                         >
                                             {{
-                                                $t('authority.' + item.key + '.' + subItem.key + '.' + threeItem.key) +
-                                                $t('authority.' + item.key + '.' + subItem.key + '.' + fourItem.key)
+                                                $t('authority.' + item.key + '.' + subItem.key + '.' + threeItem.key + '.title') +
+                                                $t('authority.' + item.key + '.' + subItem.key + '.' + threeItem.key + '.' + fourItem.key)
                                             }}
                                         </a-checkbox>
                                     </template>
@@ -155,11 +155,13 @@ export default {
             })
                 .then(res => {
                     // console.log('获取 某个身份下 可选的权限项', res);
-                    let list = Core.Const.SYSTEM_AUTH.ALLAUTHDATA || res.list;
+                    let list = res.list;
                     this.authClass.processAuthList(list);
 
                     if (this.form.id) {
                         this.getRoleSelectedAuthFetch();
+                    } else {
+                        this.authOptios = this.authClass.tabFilter();
                     }
                 })
                 .catch(err => {
@@ -174,7 +176,7 @@ export default {
                 .then(res => {
                     console.log('某个角色 已选的权限', res);
 
-                    let list = Core.Const.SYSTEM_AUTH.ROLEDATA || res.list;
+                    let list = res.list;
 
                     // 回显数据
                     this.authClass.echoAuth(list);
@@ -185,11 +187,11 @@ export default {
                 });
         },
         // 保存权限数据
-        saveROLEDATAFetch(params = {}) {
+        saveRoledataFetch(params = {}) {
             let obj = {
                 ...params,
             };
-            Core.Api.roleEdit(obj)
+            Core.Api.Authority.roleEdit(obj)
                 .then(res => {
                     this.$message.success(this.$t('pop_up.save_success'));
                     this.routerChange('back');
@@ -218,7 +220,7 @@ export default {
                 list.push(...this.authClass.mergeItemSelect(item.list));
             }
 
-            this.saveROLEDATAFetch({ authority_ids: list.join(',') });
+            this.saveRoledataFetch({ authority_ids: list.join(',') });
         },
 
         // 全选操作
@@ -232,9 +234,9 @@ export default {
             }
         },
         // auth-tab组件
-        onTab(value) {            
+        onTab(value) {
             this.authOptios = this.authClass.tabFilter(value);
-        }
+        },
     },
 };
 </script>

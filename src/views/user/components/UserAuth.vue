@@ -56,7 +56,8 @@
                                                                 '.' +
                                                                 subItem.key +
                                                                 '.' +
-                                                                threeItem.key,
+                                                                threeItem.key +
+                                                                '.title',
                                                         )
                                                     }}
                                                 </span>
@@ -80,13 +81,16 @@
                                                                         '.' +
                                                                         subItem.key +
                                                                         '.' +
-                                                                        threeItem.key,
+                                                                        threeItem.key +
+                                                                        '.title',
                                                                 ) +
                                                                 $t(
                                                                     'authority.' +
                                                                         item.key +
                                                                         '.' +
                                                                         subItem.key +
+                                                                        '.' +
+                                                                        threeItem.key +
                                                                         '.' +
                                                                         fourItem.key,
                                                                 )
@@ -105,9 +109,7 @@
                         <auth-tab ref="authTabRef" class="m-b-20" @tab="onTab"></auth-tab>
                         <template v-for="item of authOptios" :key="item.key">
                             <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
-                                <div class="key">
-                                    {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:
-                                </div>
+                                <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
                                 <div class="value">
                                     <!-- 全选 -->
                                     <div class="m-b-10">
@@ -131,7 +133,8 @@
                                                                 '.' +
                                                                 subItem.key +
                                                                 '.' +
-                                                                threeItem.key,
+                                                                threeItem.key +
+                                                                '.title',
                                                         )
                                                     }}
                                                 </a-checkbox>
@@ -148,13 +151,16 @@
                                                                 '.' +
                                                                 subItem.key +
                                                                 '.' +
-                                                                threeItem.key,
+                                                                threeItem.key +
+                                                                '.title',
                                                         ) +
                                                         $t(
                                                             'authority.' +
                                                                 item.key +
                                                                 '.' +
                                                                 subItem.key +
+                                                                '.' +
+                                                                threeItem.key +
                                                                 '.' +
                                                                 fourItem.key,
                                                         )
@@ -262,7 +268,7 @@ export default {
             })
                 .then(res => {
                     console.log('getAllAuthItem res:', res);
-                    let list = Core.Const.SYSTEM_AUTH.ALLAUTHDATA || res.list;
+                    let list = res.list;
                     this.authClass.processAuthList(list);
 
                     this.ids_arr = [];
@@ -289,7 +295,7 @@ export default {
                 user_id: this.userId,
             })
                 .then(res => {
-                    let list = Core.Const.SYSTEM_AUTH.DISABLEDATA || res.list;
+                    let list = res.list;
                     // console.log('getUserRoleAuthFetch', list);
                     this.disabledIds = list.map(el => el.id);
                     this.authClass.addDisableItem(this.disabledIds);
@@ -306,7 +312,7 @@ export default {
                 user_type: this.detail.type,
             })
                 .then(res => {
-                    let list = Core.Const.SYSTEM_AUTH.ROLEDATA || res.list;
+                    let list = res.list;
                     console.log('getUserAuthFetch', list);
 
                     if (!this.showExtra) {
@@ -335,9 +341,9 @@ export default {
                 list.push(...this.authClass.mergeItemSelect(item.list));
             }
 
-            list = list.filter(el => !this.disabledIds.includes(el))
+            list = list.filter(el => !this.disabledIds.includes(el));
 
-            console.log("handleEditSubmit:", list);
+            console.log('handleEditSubmit:', list);
 
             if (!this.showExtra) {
                 return this.$emit('submit', list.join(','));
@@ -378,10 +384,10 @@ export default {
             } else {
                 subItem.itemSelect = [];
             }
-        }, 
+        },
         // auth-tab组件
         onTab(value) {
-            this.authOptios = this.authClass.tabFilter(value);            
+            this.authOptios = this.authClass.tabFilter(value);
         },
     },
 };

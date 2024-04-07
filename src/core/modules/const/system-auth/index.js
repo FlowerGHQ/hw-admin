@@ -93,38 +93,59 @@ const SYSTEM_AUTH = {
                 // }
             ],
             select: [],
-            key: 'test',
-            name: '测试模块',
+            key: 'sales', // 销售
+            name: '销售',
             tab: 1,
         },
         {
-            list: [
-                // {
-                //     key: "oneMange1",
-                //     itemSelect: [], // checkout 选中的
-                //     itemCheckAll: [], // list底下所有选中项id
-                //     list: [
-                //         {
-                //             id: 2,
-                //             key: "bookList",
-                //             list: [
-                //                 {
-                //                     id: 1,
-                //                     key: "edit",
-                //                 }
-                //             ]
-                //         }
-                //     ]
-                // }
-            ],
+            list: [],
             select: [],
-            key: 'test1',
-            name: '测试模块1',
+            key: 'aftermarket', // 售后
+            name: '售后',
             tab: 2,
         },
-    ],
-    AUTH_LIST_TEMP_MAP: [
-        { name: "" }
+        {
+            list: [],
+            select: [],
+            key: 'production', // 生产
+            name: '生产',
+            tab: 3,
+        },
+        {
+            list: [],
+            select: [], // CRM
+            key: 'crm',
+            name: 'CRM',
+            tab: 4,
+        },
+        {
+            list: [],
+            select: [],
+            key: 'supply',  // 供应链
+            name: '供应链',
+            tab: 5,
+        },
+        {
+            list: [],
+            select: [],
+            key: 'sys',  // 系统管理
+            name: '系统管理',
+            tab: 6,
+        },
+        {
+            list: [],
+            select: [],
+            key: 'finance', // 财务
+            name: '财务',
+            tab: 7,
+        },
+        {
+            list: [],
+            select: [],
+            key: 'invoice', // 仓储
+            name: '仓储',
+            tab: 8,
+        },
     ],
     ALLAUTHDATA: [
         {

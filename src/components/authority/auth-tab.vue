@@ -73,6 +73,8 @@ const handelTab = item => {
         font-size: 14px;
         color: #666;
         cursor: pointer;
+        min-width: 80px;
+        text-align: center;
     }
 
     &-item-change {
