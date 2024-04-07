@@ -6,7 +6,7 @@ export default {
      * @param(type) 文件名称 file
      * @param(typeIncludes) 数组
      */
-    returnTypeBool(type, typeIncludes) {
+    isMember(type, typeIncludes) {
         let result = typeIncludes.includes(Number(type));
         return result;
     },
