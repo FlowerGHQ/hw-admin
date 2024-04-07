@@ -93,6 +93,7 @@ const SYSTEM_AUTH = {
                 // }
             ],
             select: [],
+            templateSelect: [], // 当前模块是否被选中了
             key: 'sales', // 销售
             name: '销售',
             tab: 1,
@@ -100,6 +101,7 @@ const SYSTEM_AUTH = {
         {
             list: [],
             select: [],
+            templateSelect: [], // 当前模块是否被选中了
             key: 'aftermarket', // 售后
             name: '售后',
             tab: 2,
@@ -107,6 +109,7 @@ const SYSTEM_AUTH = {
         {
             list: [],
             select: [],
+            templateSelect: [], // 当前模块是否被选中了
             key: 'production', // 生产
             name: '生产',
             tab: 3,
@@ -114,6 +117,7 @@ const SYSTEM_AUTH = {
         {
             list: [],
             select: [], // CRM
+            templateSelect: [], // 当前模块是否被选中了
             key: 'crm',
             name: 'CRM',
             tab: 4,
@@ -121,6 +125,7 @@ const SYSTEM_AUTH = {
         {
             list: [],
             select: [],
+            templateSelect: [], // 当前模块是否被选中了
             key: 'supply',  // 供应链
             name: '供应链',
             tab: 5,
@@ -128,6 +133,7 @@ const SYSTEM_AUTH = {
         {
             list: [],
             select: [],
+            templateSelect: [], // 当前模块是否被选中了
             key: 'sys',  // 系统管理
             name: '系统管理',
             tab: 6,
@@ -135,6 +141,7 @@ const SYSTEM_AUTH = {
         {
             list: [],
             select: [],
+            templateSelect: [], // 当前模块是否被选中了
             key: 'finance', // 财务
             name: '财务',
             tab: 7,
@@ -142,6 +149,7 @@ const SYSTEM_AUTH = {
         {
             list: [],
             select: [],
+            templateSelect: [], // 当前模块是否被选中了
             key: 'invoice', // 仓储
             name: '仓储',
             tab: 8,

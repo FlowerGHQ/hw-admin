@@ -6,7 +6,7 @@ import Layout from '../views/layout/index.vue';
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE;
 
-// 客户关怀
+// 问询单管理
 const inquiryManagement = {
     path: '/inquiry-management',
     component: Layout,
@@ -18,7 +18,7 @@ const inquiryManagement = {
         title_en: 'Inquiry Management',
         icon: 'i_menu_fankuguanli',
         roles: [LOGIN_TYPE.ADMIN],
-        auth: ['enquiry-ticket.list', 'enquiry-ticket-category.list', 'enquiry-ticket-customer.list'],
+        auth: ['aftermarket.enquiry'],
     },
     children: [
         {
@@ -28,7 +28,7 @@ const inquiryManagement = {
             meta: {
                 title: '问询单列表',
                 title_en: 'Customer Service Inquiry',
-                auth: ['enquiry-ticket.list'],
+                auth: ['aftermarket.enquiry.enquiry-ticket'],
             },
         },
         {
@@ -59,7 +59,7 @@ const inquiryManagement = {
             meta: {
                 title: '车型分类管理',
                 title_en: 'Vehicle Model Management',
-                auth: ['enquiry-ticket-category.list'],
+                auth: ['aftermarket.enquiry.quiry-ticket-category'],
             },
         },
         // 账号管理及分配
@@ -70,7 +70,7 @@ const inquiryManagement = {
             meta: {
                 title: '问询单分配',
                 title_en: 'Inquiry Sheet Distribution',
-                auth: ['enquiry-ticket-customer.list'],
+                auth: ['aftermarket.enquiry.enquiry-ticket-customer'],
             },
         },
     ],
@@ -87,7 +87,7 @@ const operationManagement = {
         title_en: 'Operation Management',
         icon: 'i_order',
         roles: [LOGIN_TYPE.ADMIN],
-        auth: ['operate.announcement', 'operate.advertisement'],
+        auth: ['sales.operate'],
     },
     children: [
         {
@@ -97,7 +97,7 @@ const operationManagement = {
             meta: {
                 title: '通知公告',
                 title_en: 'Notice And Announcement',
-                auth: ['operate.announcement'],
+                auth: ['sales.operate.announcement'],
             },
         },
         {
@@ -118,7 +118,7 @@ const operationManagement = {
             meta: {
                 title: '广告位管理',
                 title_en: 'Advertising Space Management',
-                auth: ['operate.advertisement'],
+                auth: ['sales.operate.advertisement'],
             },
         },
         {

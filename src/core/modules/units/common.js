@@ -92,25 +92,26 @@ export default {
         }
     },
     /**
-     * 
+     * @description 判断两个数组是否相同
      * @param { Array } arr1 
      * @param { Array } arr2 
      * @returns Boolean
      */
-    arraysAreEqual(arr1, arr2) {
+    arraysAreEqual(arr1, arr2) {        
+        let result = false
         // 检查数组长度是否相等
         if (arr1.length !== arr2.length) {
-            return false;
+            result = false
+            return result;
         }
 
         // 逐个比较数组元素
-        for (let i = 0; i < arr1.length; i++) {
-            if (arr1[i] !== arr2[i]) {
-                return false;
-            }
-        }
+        result = arr1.every(el => {
+            return arr2.some(ele => ele === el)
+        })
+        console.log("arraysAreEqual", result);
 
         // 所有元素都相等
-        return true;
+        return result;
     },
 };

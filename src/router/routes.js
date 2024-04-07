@@ -138,30 +138,6 @@ const routes = [
             },
         ],
     },
-    // { // 看板
-    //     path: '/test-report',
-    //     component: Layout,
-    //     name: 'TestReport',
-    //     redirect: '/test-report/list',
-    //     meta: {
-    //         title: '测试报告',
-    //         title_en: 'Test Report',
-    //         icon: 'i_s_dashboard',
-    //     },
-    //     children: [
-    //         {
-    //             path: 'list',
-    //             name: 'TestReportList',
-    //             component: () => import('@/views/test-report/test-report-list.vue'),
-    //             meta: {
-    //                 title: '测试报告',
-    //                 title_en: 'Test Report List',
-    //                 roles: [LOGIN_TYPE.ADMIN],
-    //             }
-    //         },
-    //     ]
-    // },
-
     {
         // 维修单 结算下载
         path: '/repair/invoice-download',
@@ -185,7 +161,7 @@ const routes = [
             title: '分销管理',
             title_en: 'Distribution',
             icon: 'i_s_agent',
-            auth: ['distributor.list', 'agent.list', 'store.list', 'purchase-order.list', 'sales-area.list'],
+            auth: ['sales.distribution', 'aftermarket.distribution'],
         },
         children: [
             {
@@ -197,7 +173,7 @@ const routes = [
                     title_en: 'Order List',
                     search_type: PURCHASE_SEARCH_TYPE.ALL,
                     roles: [LOGIN_TYPE.ADMIN],
-                    auth: ['purchase-order.list'],
+                    auth: ['sales.distribution.order', 'aftermarket.distribution.order'],
                 },
             },
             {
@@ -209,7 +185,7 @@ const routes = [
                     title_en: 'Supply order',
                     search_type: PURCHASE_SEARCH_TYPE.CHILDREN,
                     roles: [LOGIN_TYPE.ADMIN],
-                    auth: ['purchase-order.list'],
+                    auth: ['sales.distribution.supply-material', 'aftermarket.distribution.supply-material'],
                 },
             },
             {
@@ -220,7 +196,7 @@ const routes = [
                     title: '分销商列表',
                     title_en: 'Distributors',
                     roles: [LOGIN_TYPE.ADMIN],
-                    auth: ['distributor.list'],
+                    auth: ['sales.distribution.distributor', 'aftermarket.distribution.distributor'],
                 },
             },
             {
@@ -231,8 +207,7 @@ const routes = [
                     hidden: true,
                     title: '分销商编辑',
                     parent: '/distributor/distributor-list',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    auth: ['distributor.save'],
+                    roles: [LOGIN_TYPE.ADMIN],                    
                 },
             },
             {
@@ -244,7 +219,6 @@ const routes = [
                     title: '分销商详情',
                     parent: '/distributor/distributor-list',
                     roles: [LOGIN_TYPE.ADMIN],
-                    auth: ['distributor.detail'],
                 },
             },
             {
@@ -255,7 +229,6 @@ const routes = [
                     title: '分销商详情',
                     title_en: 'Details',
                     roles: [LOGIN_TYPE.DISTRIBUTOR],
-                    auth: ['distributor.detail'],
                 },
             },
             {
@@ -266,7 +239,7 @@ const routes = [
                     title: '零售商列表',
                     title_en: 'List of retailers',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN],
-                    auth: ['agent.list'],
+                    auth: ['sales.distribution.agent', 'aftermarket.distribution.agent'],
                 },
             },
             {
@@ -278,7 +251,6 @@ const routes = [
                     title: '零售商编辑',
                     parent: '/distributor/agent-list',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN],
-                    auth: ['agent.save'],
                 },
             },
             {
@@ -290,7 +262,6 @@ const routes = [
                     title: '零售商详情',
                     parent: '/distributor/agent-list',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN],
-                    auth: ['agent.detail'],
                 },
             },
             {
@@ -301,7 +272,6 @@ const routes = [
                     title: '零售商详情',
                     title_en: 'Details',
                     roles: [LOGIN_TYPE.AGENT],
-                    auth: ['agent.detail'],
                 },
             },
             {
@@ -312,7 +282,7 @@ const routes = [
                     title: '门店列表',
                     title_en: 'Store list',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN, LOGIN_TYPE.AGENT],
-                    auth: ['store.list'],
+                    auth: ['sales.distribution.store', 'aftermarket.distribution.store'],
                 },
             },
             {
@@ -324,7 +294,6 @@ const routes = [
                     title: '门店编辑',
                     parent: '/distributor/store-list',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN, LOGIN_TYPE.AGENT],
-                    auth: ['store.save'],
                 },
             },
             {
@@ -336,7 +305,6 @@ const routes = [
                     title: '门店详情',
                     parent: '/distributor/store-list',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN, LOGIN_TYPE.AGENT],
-                    auth: ['store.detail'],
                 },
             },
             {
@@ -347,7 +315,6 @@ const routes = [
                     title: '门店详情',
                     title_en: 'Details',
                     roles: [LOGIN_TYPE.STORE],
-                    auth: ['store.detail'],
                 },
             },
             {
@@ -358,7 +325,7 @@ const routes = [
                     title: '销售区域',
                     title_en: 'Sales area',
                     roles: [LOGIN_TYPE.ADMIN],
-                    auth: ['sales-area.list'],
+                    auth: ['sales.distribution.sale-area', 'aftermarket.distribution.sale-area'],
                 },
             },
             {
@@ -369,8 +336,6 @@ const routes = [
                     hidden: true,
                     title: '销售区域详情',
                     parent: '/sales-area-list',
-                    auth: ['sales-area.detail'],
-                    // auth: ['warehouse.list'],
                 },
             },
             {
@@ -382,30 +347,10 @@ const routes = [
                     title: '区域编辑',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/item/sales-area-list',
-                    auth: ['sales-area.save'],
                 },
             },
         ],
     },
-    /* { // 分销商管理 - 分销商端
-        path: '/distributor/distributor-detail-sp',
-        component: Layout,
-        meta: {
-            title: '分销商管理',
-            icon: 'i_s_agent',
-            roles: [LOGIN_TYPE.DISTRIBUTOR],                        
-        },
-        children: [
-            {
-                path: '',
-                name: 'DistributorManagementSp',
-                component: () => import('@/views/distributor/distributor-detail.vue'),
-                meta: {
-                    title: '分销商详情',
-                }
-            },
-        ]
-    },*/
     {
         // 采购管理 - 经销商端 && 门店端 && 分销商端
         path: '/purchase',
@@ -516,7 +461,7 @@ const routes = [
         ],
     },
     {
-        //商品管理 - 平台端
+        // 商品管理 - 平台端
         path: '/item',
         component: Layout,
         redirect: '/item/item-list',
@@ -527,7 +472,7 @@ const routes = [
             title_en: 'Product',
             icon: 'i_menu_shangpingguanli',
             roles: [LOGIN_TYPE.ADMIN],
-            auth: ['item.list', 'item-category.list'],
+            auth: ['sales.item', 'aftermarket.item'],
         },
         children: [
             {
@@ -537,7 +482,7 @@ const routes = [
                 meta: {
                     title: '商品列表',
                     title_en: 'Product list',
-                    auth: ['item.list'],
+                    auth: ['sales.item.item', 'aftermarket.item.item'],
                 },
             },
             {
@@ -548,7 +493,6 @@ const routes = [
                     hidden: true,
                     title: '商品编辑',
                     parent: '/item/item-list',
-                    auth: ['item.save'],
                 },
             },
             {
@@ -559,7 +503,6 @@ const routes = [
                     hidden: true,
                     title: '商品详情',
                     parent: '/item/item-list',
-                    auth: ['item.detail'],
                 },
             },
             {
@@ -570,7 +513,6 @@ const routes = [
                     hidden: true,
                     title: '商品爆炸图详情',
                     parent: '/item/item-list',
-                    auth: ['item.save'],
                 },
             },
             {
@@ -580,7 +522,7 @@ const routes = [
                 meta: {
                     title: '商品分类',
                     title_en: 'Categories',
-                    auth: ['item-category.list'],
+                    auth: ['sales.item.item-category', 'aftermarket.item.item-category'],
                 },
             },
             {
@@ -607,9 +549,8 @@ const routes = [
                 component: () => import('@/views/item/item-bom.vue'),
                 meta: {
                     title: 'BOM管理',
-                    title_en: 'BOM Management',
-                    admin_module: [ROUTER_TYPE.AFTER],
-                    auth: ['aftermarket-bom.list'],
+                    title_en: 'BOM Management',                    
+                    auth: ['sales.item.bom', 'aftermarket.item.bom'],
                 },
             },
         ],
@@ -626,7 +567,7 @@ const routes = [
             title_en: 'Instance',
             icon: 'i_menu_shiliguanli',
             roles: [LOGIN_TYPE.ADMIN],
-            auth: ['entity.list'],
+            auth: ['sales.entity'],
         },
         children: [
             {
@@ -638,7 +579,7 @@ const routes = [
                     title_en: 'Vehicles list',
                     roles: [LOGIN_TYPE.ADMIN],
                     type: 'vehicle',
-                    auth: ['entity.list'],
+                    auth: ['sales.entity.vehicle'],
                 },
             },
             {
@@ -650,7 +591,7 @@ const routes = [
                     title_en: 'Parts',
                     roles: [LOGIN_TYPE.ADMIN],
                     type: 'part',
-                    auth: ['entity.list'],
+                    auth: ['sales.entity.parts'],
                 },
             },
             {
@@ -662,7 +603,6 @@ const routes = [
                     title: '车架详情',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/entity/entity-list',
-                    auth: ['entity.detail'],
                 },
             },
         ],
@@ -703,56 +643,6 @@ const routes = [
     //         },
     //     ]
     // },
-    // { // 售后管理 - 平台 && 分销
-    //     path: '/aftersales-supply',
-    //     component: Layout,
-    //     redirect: '/aftersales-supply/aftersales-supply-list',
-    //     name: 'AftersalesSupplyManagement',
-    //     meta: {
-    //         title: '售后管理',
-    //         title_en: 'After sales',
-    //         icon: 'i_s_temp',
-    //         hidden: false,
-    //         auth: ["after-sales-order.list", "refund.list"],
-    //     },
-    //     children: [
-    //         {
-    //             path: 'aftersales-supply-list',
-    //             name: 'AftersalesSupplyList',
-    //             component: () => import('@/views/aftersales/aftersales-list.vue'),
-    //             meta: {
-    //                 title: '售后响应',
-    //                 title_en: 'Response',
-    //                 roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-    //                 query_type: REFUND_QUERY_TYPE.SUPPLY,
-    //                 auth: ["after-sales-order.list"],
-    //             }
-    //         },
-    //         {
-    //             path: 'aftersales-apply-list',
-    //             redirect: '/aftersales/aftersales-list',
-    //             meta: {
-    //                 title: '售后申请',
-    //                 title_en: 'Application',
-    //                 roles: [LOGIN_TYPE.DISTRIBUTOR],
-    //                 query_type: REFUND_QUERY_TYPE.APPLY,
-    //                 auth: ["after-sales-order.save"],
-    //             }
-    //         },
-    //         {
-    //             path: 'refund-list',
-    //             name: 'RefundList',
-    //             component: () => import('@/views/aftersales/refund-list.vue'),
-    //             meta: {
-    //                 roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-    //                 // auth: ['aftersales.refund', 'asjncsaij'],
-    //                 title: '退款审核',
-    //                 title_en: 'Audit',
-    //                 auth: ["refund-list"],
-    //             }
-    //         },
-    //     ]
-    // },
     {
         // 售后管理 - 门店 && 零售
         path: '/aftersales',
@@ -776,7 +666,6 @@ const routes = [
                     title_en: 'Aftersales list',
                     query_type: REFUND_QUERY_TYPE.APPLY,
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
-                    auth: ['after-sales-order.list'],
                 },
             },
             {
@@ -788,7 +677,6 @@ const routes = [
                     title: '申请售后',
                     title_en: 'Apply',
                     parent: '/aftersales/aftersales-list',
-                    auth: ['after-sales-order.save'],
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
                 },
             },
@@ -800,7 +688,6 @@ const routes = [
                     hidden: true,
                     title: '售后单详情',
                     parent: '/aftersales/aftersales-list',
-                    auth: ['after-sales-order.detail'],
                 },
             },
             {
@@ -811,7 +698,6 @@ const routes = [
                     hidden: true,
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     title: '退款单详情',
-                    auth: ['refund.detail'],
                 },
             },
             {
@@ -823,30 +709,18 @@ const routes = [
                     title_en: 'Response',
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     query_type: REFUND_QUERY_TYPE.SUPPLY,
-                    auth: ['after-sales-order.list'],
+                    auth: ['aftermarket.aftermarket.response'],
                 },
             },
-            // {
-            //     path: 'aftersales-apply-list',
-            //     redirect: '/aftersales/aftersales-list',
-            //     meta: {
-            //         title: '售后申请',
-            //         title_en: 'Application',
-            //         roles: [LOGIN_TYPE.DISTRIBUTOR],
-            //         query_type: REFUND_QUERY_TYPE.APPLY,
-            //         auth: ["after-sales-order.save"],
-            //     }
-            // },
             {
                 path: 'refund-list',
                 name: 'RefundList',
                 component: () => import('@/views/aftersales/refund-list.vue'),
                 meta: {
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-                    // auth: ['aftersales.refund', 'asjncsaij'],
                     title: '退款审核',
                     title_en: 'Refund Audit',
-                    auth: ['refund.list'],
+                    auth: ['aftermarket.aftermarket.refund-review'],
                 },
             },
         ],
@@ -862,7 +736,7 @@ const routes = [
             title: '工单管理',
             title_en: 'Maintenance',
             icon: 'i_menu_gongdanguanli',
-            auth: ['repair-order.list'],
+            auth: ['aftermarket.repair'],
         },
         children: [
             {
@@ -872,7 +746,7 @@ const routes = [
                 meta: {
                     title: '工单列表',
                     title_en: 'Warranty Claim',
-                    auth: ['repair-order.list'],
+                    auth: ['aftermarket.repair.repair'],
                 },
             },
             {
@@ -884,7 +758,7 @@ const routes = [
                     title_en: 'Pending warranty claim',
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     type: 'audit',
-                    auth: ['repair-order.audit'],
+                    auth: ['aftermarket.repair.wait-examine'],
                 },
             },
             {
@@ -896,7 +770,6 @@ const routes = [
                     title_en: 'Pending warranty claim',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
                     type: 'redit',
-                    auth: ['repair-order.save'],
                 },
             },
             {
@@ -908,7 +781,7 @@ const routes = [
                     title_en: 'Pending defective parts',
                     roles: [LOGIN_TYPE.ADMIN],
                     type: 'invoice',
-                    auth: ['repair-order.list'],
+                    auth: ['aftermarket.repair.wait-examine-fault'],
                 },
             },
             {
@@ -920,7 +793,7 @@ const routes = [
                     title_en: 'Wait recall parts',
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     type: 'fault',
-                    auth: ['repair-order.save-to-invoice'],
+                    auth: ['aftermarket.repair.wait-warehouse-fault'],
                 },
             },
             {
@@ -932,7 +805,6 @@ const routes = [
                     title: '维修单编辑',
                     parent: '/repair/repair-list',
                     roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
-                    auth: ['repair-order.save'],
                 },
             },
             {
@@ -943,7 +815,6 @@ const routes = [
                     hidden: true,
                     title: '维修单详情',
                     parent: '/repair/repair-list',
-                    auth: ['repair-order.detail'],
                 },
             },
             {
@@ -954,7 +825,6 @@ const routes = [
                     hidden: true,
                     title: '维修单结算',
                     parent: '/repair/repair-list',
-                    auth: ['repair-order.settlement'],
                 },
             },
             {
@@ -965,7 +835,6 @@ const routes = [
                     title: '故障管理',
                     title_en: 'Fault management',
                     roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
-                    auth: ['fault.list'],
                 },
             },
         ],
@@ -1333,7 +1202,7 @@ const routes = [
     },
 
     {
-        // 仓库管理
+        // 库存管理
         path: '/warehouse',
         component: Layout,
         redirect: '/warehouse/warehouse-list',
@@ -1344,7 +1213,7 @@ const routes = [
             title_en: 'Inventories',
             icon: 'i_menu_kucunguanli',
             roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-            auth: ['warehouse.list', 'warehouse-transfer-order.list', 'invoice.list', 'stock.list'],
+            auth: ['sales.stock', 'aftermarket.stock'],
         },
         children: [
             {
@@ -1354,7 +1223,7 @@ const routes = [
                 meta: {
                     title: '仓库管理',
                     title_en: 'Warehouses',
-                    auth: ['warehouse.list'],
+                    auth: ['sales.stock.warehouse', 'aftermarket.stock.warehouse'],
                 },
             },
             {
@@ -1365,7 +1234,6 @@ const routes = [
                     hidden: true,
                     title: '仓库编辑',
                     parent: '/warehouse/warehouse-list',
-                    auth: ['warehouse.save'],
                 },
             },
             {
@@ -1377,7 +1245,6 @@ const routes = [
                     hidden: true,
                     title: '仓库详情',
                     parent: '/warehouse/warehouse-list',
-                    auth: ['warehouse.detail'],
                 },
             },
             {
@@ -1388,7 +1255,7 @@ const routes = [
                     title: '库存总览',
                     title_en: 'Inventory overview',
                     roles: [LOGIN_TYPE.ADMIN],
-                    auth: ['stock.list'],
+                    auth: ['sales.stock.overview', 'aftermarket.stock.overview'],
                 },
             },
             {
@@ -1398,7 +1265,7 @@ const routes = [
                 meta: {
                     title: '出入库管理',
                     title_en: 'Inbound and outbound',
-                    auth: ['invoice.list'],
+                    auth: ['sales.stock.invoice', 'aftermarket.stock.invoice'],
                 },
             },
             {
@@ -1409,7 +1276,6 @@ const routes = [
                     hidden: true,
                     title: '出入库编辑',
                     parent: '/invoice/invoice-list',
-                    auth: ['invoice.save'],
                 },
             },
             {
@@ -1420,7 +1286,6 @@ const routes = [
                     hidden: true,
                     title: '出入库详情',
                     parent: '/invoice/invoice-list',
-                    auth: ['invoice.detail'],
                 },
             },
             {
@@ -1431,7 +1296,7 @@ const routes = [
                     title: '调货单管理',
                     title_en: 'Transfer order',
                     roles: [LOGIN_TYPE.ADMIN],
-                    auth: ['warehouse-transfer-order.list'],
+                    auth: ['sales.stock.transfer-note', 'aftermarket.stock.transfer-note'],
                 },
             },
             {
@@ -1443,7 +1308,6 @@ const routes = [
                     title: '调货单详情',
                     parent: '/warehouse/warehouse-transfer-list',
                     roles: [LOGIN_TYPE.ADMIN],
-                    auth: ['warehouse-transfer-order.detail'],
                 },
             },
             {
@@ -1454,7 +1318,7 @@ const routes = [
                     roles: [LOGIN_TYPE.ADMIN],
                     title: '入库',
                     title_en: 'Inbound',
-                    auth: ['invoice.in'],
+                    auth: ['sales.stock.in-warehouse', 'aftermarket.stock.in-warehouse'],
                 },
             },
             {
@@ -1465,7 +1329,7 @@ const routes = [
                     roles: [LOGIN_TYPE.ADMIN],
                     title: '出库',
                     title_en: 'Outbound',
-                    auth: ['invoice.out'],
+                    auth: ['sales.stock.out-warehouse', 'aftermarket.stock.out-warehouse'],
                 },
             },
             /*  {
@@ -1625,7 +1489,7 @@ const routes = [
             title: '客户管理',
             title_en: 'Customers',
             icon: 'i_s_customer',
-            auth: ['customer.list'],
+            auth: ['sales.customer', 'aftermarket.customer'],
         },
         children: [
             {
@@ -1635,7 +1499,7 @@ const routes = [
                 meta: {
                     title: '客户列表',
                     title_en: 'Customer list',
-                    auth: ['customer.list'],
+                    auth: ['sales.customer.customer', 'aftermarket.customer.customer'],
                 },
             },
             {
@@ -1646,7 +1510,6 @@ const routes = [
                     hidden: true,
                     title: '新建客户',
                     parent: '/eos-customer/customer-list',
-                    auth: ['customer.save'],
                 },
             },
         ],
@@ -1662,7 +1525,7 @@ const routes = [
             title: 'COC证书管理',
             title_en: 'COC Certificate Management',
             icon: 'i_menu_COC',
-            auth: ['coc.template', 'coc.certificate'],
+            auth: ['sales.coc'],
         },
         children: [
             {
@@ -1673,7 +1536,7 @@ const routes = [
                     title: 'COC模板',
                     title_en: 'COC Template',
                     roles: [LOGIN_TYPE.ADMIN],
-                    auth: ['coc.template'],
+                    auth: ['sales.coc.template'],
                 },
             },
             {
@@ -1685,7 +1548,7 @@ const routes = [
                     title: 'COC证书',
                     title_en: 'COC Certificate',
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-                    auth: ['coc.certificate'],
+                    auth: ['sales.coc.certificate'],
                 },
             },
             {
@@ -2644,7 +2507,7 @@ const routes = [
             title_en: 'System Management',
             icon: 'i_a-iconmenu_xiaoshoucelue',
             roles: [LOGIN_TYPE.ADMIN],
-            auth: ['sales-strategy.list'],
+            auth: ['sales.sales-strategy'],
         },
         children: [
             // 销售策略列表
@@ -2655,6 +2518,7 @@ const routes = [
                 meta: {
                     title: '销售策略列表',
                     title_en: 'Sales Strategy List',
+                    auth: ['sales.sales-strategy.sales-strategy'],
                 },
             },
             // 编辑销售策略

@@ -36,11 +36,11 @@
             </div>
             <div class="form-content long-key">
                 <auth-tab ref="authTabRef" class="m-b-20 m-l-140" @tab="onTab"></auth-tab>
-                <template v-for="item in authOptios" :key="item.key">
+                <template v-for="item in authOptions" :key="item.key">
                     <div class="form-item afs">
                         <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
                         <div class="value">
-                            <a-checkbox-group v-model:value="item.select">
+                            <a-checkbox-group v-model:value="item.templateSelect">
                                 <a-checkbox :value="item.id">
                                     {{ $t('authority.title.' + item.key) }}
                                 </a-checkbox>
@@ -61,6 +61,9 @@
                             </div>
                             <div class="d-f">
                                 <a-checkbox-group v-model:value="subItem.itemSelect">
+                                    <a-checkbox :value="subItem.id">
+                                        {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}
+                                    </a-checkbox>
                                     <template v-for="(threeItem, index) in subItem.list">
                                         <a-checkbox :value="threeItem.id">
                                             {{
@@ -140,7 +143,7 @@ export default {
             detail: {},
 
             authItems: Core.Util.deepCopy(AUTH_LIST_TEMP),
-            authOptios: [], // 渲染权限的数据
+            authOptions: [], // 渲染权限的数据
             form: {
                 id: '',
                 name: '',
@@ -198,7 +201,7 @@ export default {
                     if (this.form.id) {
                         this.getRoleSelectedAuthFetch();
                     } else {
-                        this.authOptios = this.authClass.tabFilter();
+                        this.authOptions = this.authClass.tabFilter();
                     }
                 })
                 .catch(err => {
@@ -217,7 +220,7 @@ export default {
 
                     // 回显数据
                     this.authClass.echoAuth(list);
-                    this.authOptios = this.authClass.tabFilter();
+                    this.authOptions = this.authClass.tabFilter();
                 })
                 .catch(err => {
                     console.log('getRoleSelectedAuth err:', err);
@@ -246,19 +249,20 @@ export default {
                     break;
             }
         },
-        handleSubmit() {
+        handleSubmit() {    
             let form = Core.Util.deepCopy(this.form);
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter'));
             }
             let list = [];
 
-            for (const item of this.authItems) {
-                list = list.concat(item.select);
+            for (const item of this.authItems) {                
+                list = list.concat(item.templateSelect)
                 list.push(...this.authClass.mergeItemSelect(item.list));
             }
-            list = [...new Set(list)];
+            list = [...new Set(list)];            
 
+            console.log("list", list);
             this.saveRoledataFetch({ ...form, authority_ids: list.join(',') });
         },
 
@@ -271,10 +275,11 @@ export default {
             } else {
                 subItem.itemSelect = [];
             }
+            console.log("subItem", subItem);
         },
         // auth-tab组件
         onTab(value) {
-            this.authOptios = this.authClass.tabFilter(value);
+            this.authOptions = this.authClass.tabFilter(value);
         },
     },
 };

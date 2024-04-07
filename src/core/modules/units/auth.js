@@ -68,7 +68,7 @@ function travelAuth(authList, node, parentRoute) {
     */
     if (parentRoute.split('.').length === 2) {
         node.itemSelect = [];
-        node.itemCheckAll = itemCheckAllFilter(node.list);
+        node.itemCheckAll = [node.id].concat(itemCheckAllFilter(node.list));
     }
 }
 
@@ -123,9 +123,9 @@ class Auth {
         this.authItems.forEach(el => {
             const find = authList.find(item => el.key === item.key);
             if (find) {
-                el.id = find.id
+                el.id = find.id;
             }
-                        
+
             travelAuth(authList, el, el.key);
         });
         console.log('this.authItems', this.authItems);
@@ -140,7 +140,7 @@ class Auth {
     }
 
     /**
-     *
+     * @description 根据回显数据返回的 select  将对应的 itemSelect加上被选中的id
      * @param { Array } authList
      */
     echoAuth(authList) {
@@ -156,6 +156,10 @@ class Auth {
 
         // 根据回显数据返回的 select  将对应的 itemSelect加上被选中的id
         this.authItems.forEach(item => {
+            // 模块赋值
+            item.templateSelect = item.select.includes(item.id) ? [item.id] : []
+            
+            // 二级统计
             item.list.forEach(subItem => {
                 let result = [];
                 subItem.itemCheckAll?.forEach(i => {
@@ -191,7 +195,7 @@ class Auth {
     }
     /**
      *
-     * @param {Number, String} tabValue tab值     
+     * @param {Number, String} tabValue tab值
      * @param { Object } authItems 所有权限对象
      * @returns Array
      */
@@ -201,12 +205,12 @@ class Auth {
         // console.log("activeTab", activeTab);
         if (activeTab) {
             const findItem = authList.find(el => el.tab === activeTab);
-            if (findItem) {                
-                console.log("[findItem]", [findItem]);
+            if (findItem) {
+                console.log('[findItem]', [findItem]);
                 return [findItem];
             }
         }
-        return []
+        return [];
     }
 }
 
