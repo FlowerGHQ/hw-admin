@@ -8,21 +8,21 @@
                         <a-button
                             @click.stop="handleEditShow(key)"
                             type="link"
-                            v-if="!edit && $auth('authority.save', 'MANAGER')"
+                            v-if="!edit && $auth('MANAGER')"
                             ><i class="icon i_edit" />{{ $t('def.set') }}</a-button
                         >
                         <template v-else>
                             <a-button
                                 @click.stop="handleEditSubmit(key)"
                                 type="link"
-                                v-if="$auth('authority.save', 'MANAGER')"
+                                v-if="$auth('MANAGER')"
                                 ><i class="icon i_confirm" />{{ $t('def.save') }}</a-button
                             >
                             <a-button
                                 @click.stop="handleEditClose(key)"
                                 type="link"
                                 class="cancel"
-                                v-if="$auth('authority.save', 'MANAGER')"
+                                v-if="$auth('MANAGER')"
                                 ><i class="icon i_close_c" />{{ $t('def.cancel') }}</a-button
                             >
                         </template>
