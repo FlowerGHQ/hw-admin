@@ -5,17 +5,11 @@
                 <template #expandIcon></template>
                 <a-collapse-panel v-for="(org, key) of orgType" :key="key" :header="name" class="gray-collapse-panel">
                     <template #extra v-if="showExtra">
-                        <a-button
-                            @click.stop="handleEditShow(key)"
-                            type="link"
-                            v-if="!edit && $auth('MANAGER')"
+                        <a-button @click.stop="handleEditShow(key)" type="link" v-if="!edit && $auth('MANAGER')"
                             ><i class="icon i_edit" />{{ $t('def.set') }}</a-button
                         >
                         <template v-else>
-                            <a-button
-                                @click.stop="handleEditSubmit(key)"
-                                type="link"
-                                v-if="$auth('MANAGER')"
+                            <a-button @click.stop="handleEditSubmit(key)" type="link" v-if="$auth('MANAGER')"
                                 ><i class="icon i_confirm" />{{ $t('def.save') }}</a-button
                             >
                             <a-button
@@ -31,8 +25,13 @@
                     <div class="panel-content" v-if="!edit && showExtra">
                         <SimpleImageEmpty v-if="false" desc="该用户尚未分配可管理权限" />
                         <template v-else v-for="item of options" :key="item.key">
+                            <div class="form-item">
+                                <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
+                                <div class="value">
+                                    <span>{{ $t('authority.title.' + item.key) }}</span>
+                                </div>
+                            </div>
                             <template v-for="(subItem, index) of item.list" :key="index">
-                                <!-- v-if="subItem.itemSelect.length" -->
                                 <div class="form-item afs">
                                     <div class="key">
                                         {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:
@@ -108,6 +107,16 @@
                     <div v-else class="panel-content">
                         <auth-tab ref="authTabRef" class="m-b-20" @tab="onTab"></auth-tab>
                         <template v-for="item of authOptios" :key="item.key">
+                            <div class="form-item afs">
+                                <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
+                                <div class="value">
+                                    <a-checkbox-group v-model:value="item.select">
+                                        <a-checkbox :value="item.id">
+                                            {{ $t('authority.title.' + item.key) }}
+                                        </a-checkbox>
+                                    </a-checkbox-group>
+                                </div>
+                            </div>
                             <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
                                 <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
                                 <div class="value">
@@ -338,11 +347,13 @@ export default {
             let list = [];
             // 只保存属于该用户的权限
             for (const item of this.options) {
+                list = list.concat(item.select);
                 list.push(...this.authClass.mergeItemSelect(item.list));
             }
 
             list = list.filter(el => !this.disabledIds.includes(el));
 
+            list = [...new Set(list)];
             console.log('handleEditSubmit:', list);
 
             if (!this.showExtra) {

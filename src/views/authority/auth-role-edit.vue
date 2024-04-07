@@ -62,8 +62,18 @@
                             <div class="d-f">
                                 <a-checkbox-group v-model:value="subItem.itemSelect">
                                     <template v-for="(threeItem, index) in subItem.list">
-                                        <a-checkbox :value="threeItem.id">                                            
-                                            {{ $t('authority.' + item.key + '.' + subItem.key + '.' + threeItem.key + '.title') }}
+                                        <a-checkbox :value="threeItem.id">
+                                            {{
+                                                $t(
+                                                    'authority.' +
+                                                        item.key +
+                                                        '.' +
+                                                        subItem.key +
+                                                        '.' +
+                                                        threeItem.key +
+                                                        '.title',
+                                                )
+                                            }}
                                         </a-checkbox>
                                         <a-checkbox
                                             v-for="(fourItem, index) in threeItem.list"
@@ -71,8 +81,25 @@
                                             :value="fourItem.id"
                                         >
                                             {{
-                                                $t('authority.' + item.key + '.' + subItem.key + '.' + threeItem.key + '.title') +
-                                                $t('authority.' + item.key + '.' + subItem.key + '.' + threeItem.key + '.' + fourItem.key)
+                                                $t(
+                                                    'authority.' +
+                                                        item.key +
+                                                        '.' +
+                                                        subItem.key +
+                                                        '.' +
+                                                        threeItem.key +
+                                                        '.title',
+                                                ) +
+                                                $t(
+                                                    'authority.' +
+                                                        item.key +
+                                                        '.' +
+                                                        subItem.key +
+                                                        '.' +
+                                                        threeItem.key +
+                                                        '.' +
+                                                        fourItem.key,
+                                                )
                                             }}
                                         </a-checkbox>
                                     </template>
@@ -225,14 +252,14 @@ export default {
                 return this.$message.warning(this.$t('def.enter'));
             }
             let list = [];
-            
+
             for (const item of this.authItems) {
-                list = list.concat(item.select)
+                list = list.concat(item.select);
                 list.push(...this.authClass.mergeItemSelect(item.list));
             }
-            list = [...new Set(list)]            
+            list = [...new Set(list)];
 
-            this.saveRoledataFetch({ authority_ids: list.join(',') });
+            this.saveRoledataFetch({ ...form, authority_ids: list.join(',') });
         },
 
         // 全选操作

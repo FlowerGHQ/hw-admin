@@ -13,11 +13,7 @@
                     class="gray-collapse-panel"
                 >
                     <template #extra>
-                        <a-button
-                            v-if="!org.edit"
-                            @click.stop="handleEditShow(key)"
-                            type="link"
-                        >
+                        <a-button v-if="!org.edit" @click.stop="handleEditShow(key)" type="link">
                             <i class="icon i_edit" />{{ $t('def.set') }}
                         </a-button>
                         <template v-else>
@@ -35,6 +31,12 @@
                     <div v-if="!org.edit" class="panel-content">
                         <SimpleImageEmpty v-if="org.isEmpty" :desc="$t('n.no_org_auth')" />
                         <template v-else v-for="item of org.options" :key="item.key">
+                            <div class="form-item afs">
+                                <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
+                                <div class="value">
+                                    <span>{{ $t('authority.title.' + item.key) }}</span>
+                                </div>
+                            </div>
                             <template v-for="(subItem, index) of item.list" :key="index">
                                 <div v-if="subItem.itemSelect.length" class="form-item afs">
                                     <div class="key">
@@ -100,6 +102,16 @@
                     <div v-else class="panel-content">
                         <auth-tab ref="authTabRef" class="m-b-20" @tab="onTab"></auth-tab>
                         <template v-for="item of org.authOptios" :key="item.key">
+                            <div class="form-item afs">
+                                <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
+                                <div class="value">
+                                    <a-checkbox-group v-model:value="item.select">
+                                        <a-checkbox :value="item.id">
+                                            {{ $t('authority.title.' + item.key) }}
+                                        </a-checkbox>
+                                    </a-checkbox-group>
+                                </div>
+                            </div>
                             <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs d-f-a">
                                 <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
                                 <div class="value d-f">
@@ -242,7 +254,7 @@ export default {
                 });
         },
         // 获取 某类型组织 已分配的 权限项
-        getOrgAuthFetch(user_type) {            
+        getOrgAuthFetch(user_type) {
             Core.Api.Authority.authOptions({
                 org_type: this[user_type].type,
             })
@@ -294,8 +306,10 @@ export default {
             let list = [];
 
             for (const item of this[type].options) {
+                list = list.concat(item.select)
                 list.push(...this.authClass.mergeItemSelect(item.list));
             }
+            list = [...new Set(list)]     
 
             this.saveAllotOrgAuthFetch({
                 org_type: this[type].type,
