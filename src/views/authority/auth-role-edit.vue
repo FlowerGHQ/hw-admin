@@ -61,6 +61,7 @@
                             </div>
                             <div class="d-f">
                                 <a-checkbox-group v-model:value="subItem.itemSelect">
+                                    <!-- 二级模块渲染 -->
                                     <a-checkbox :value="subItem.id">
                                         {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}
                                     </a-checkbox>

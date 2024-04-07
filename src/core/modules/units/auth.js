@@ -144,6 +144,11 @@ class Auth {
      * @param { Array } authList
      */
     echoAuth(authList) {
+        // [{}. {}, {id: 1, key: "xxx.xxx"}]
+        // 每次调用这个方法把之前的清空
+        this.authItems.forEach(el => {
+            el.select = []
+        })
         authList.forEach(el => {
             let parts = el.key.split('.')[0];
             const find = this.authItems.find(el => el.key === parts);
@@ -158,7 +163,7 @@ class Auth {
         this.authItems.forEach(item => {
             // 模块赋值
             item.templateSelect = item.select.includes(item.id) ? [item.id] : []
-            
+
             // 二级统计
             item.list.forEach(subItem => {
                 let result = [];

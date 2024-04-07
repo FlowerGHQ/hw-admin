@@ -110,7 +110,7 @@
                             <div class="form-item afs">
                                 <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
                                 <div class="value">
-                                    <a-checkbox-group v-model:value="item.templateSelect">
+                                    <a-checkbox-group v-model:value="item.templateSelect" :disabled="item.disabled">
                                         <a-checkbox :value="item.id">
                                             {{ $t('authority.title.' + item.key) }}
                                         </a-checkbox>
@@ -126,6 +126,7 @@
                                             :checked="
                                                 $Util.Common.arraysAreEqual(subItem.itemSelect, subItem.itemCheckAll)
                                             "
+                                            :disabled="subItem.disabled"
                                             @change="e => handleCheckAllChange(e, subItem)"
                                         >
                                             {{ $t('u.select_all') }}
@@ -133,6 +134,10 @@
                                     </div>
                                     <div class="d-f">
                                         <a-checkbox-group v-model:value="subItem.itemSelect">
+                                            <!-- 二级模块渲染 -->
+                                            <a-checkbox :value="subItem.id" :disabled="subItem.disabled">
+                                                {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}
+                                            </a-checkbox>
                                             <template v-for="(threeItem, index) in subItem.list">
                                                 <a-checkbox :value="threeItem.id" :disabled="threeItem.disabled">
                                                     {{
@@ -300,48 +305,59 @@ export default {
         // 获取该用户对应角色下的全部权限 [] 让其不能更改disabled
         getUserRoleAuthFetch() {
             this.options = Core.Util.deepCopy(this.authItems);
-            Core.Api.Authority.authRoleUser({
-                user_id: this.userId,
-            })
-                .then(res => {
-                    let list = res.list;
-                    // console.log('getUserRoleAuthFetch', list);
-                    this.disabledIds = list.map(el => el.id);
-                    this.authClass.addDisableItem(this.disabledIds);
-                    this.getUserAuthFetch();
+            return new Promise( (resolve, reject) => {
+                Core.Api.Authority.authRoleUser({
+                    user_id: this.userId,
                 })
-                .catch(err => {
-                    console.log('err', err);
-                });
+                    .then(async(res) => {
+                        let list = res.list;
+                        console.log('getUserRoleAuthFetch', list);
+                        this.disabledIds = list.map(el => el.id);
+                        this.authClass.addDisableItem(this.disabledIds);
+                        this.authClass.echoAuth(list);
+                        this.options = Core.Util.deepCopy(this.authItems);
+                        await this.getUserAuthFetch();
+                        resolve()
+                    })
+                    .catch(err => {
+                        console.log('err', err);
+                        reject()
+                    });
+            })
         },
         // 某个用户对应角色 已选的权限
         getUserAuthFetch() {
-            Core.Api.Authority.authUser({
-                user_id: this.userId,
-                user_type: this.detail.type,
-            })
-                .then(res => {
-                    let list = res.list;
-                    console.log('getUserAuthFetch', list);
-
-                    if (!this.showExtra) {
-                        list = [...res.list, ...this.ids_arr];
-                    }
-
-                    // 回显数据
-                    this.authClass.echoAuth(list);
-                    this.options = Core.Util.deepCopy(this.authItems);
+            return new Promise((resolve, reject) => {
+                Core.Api.Authority.authUser({
+                    user_id: this.userId,
+                    user_type: this.detail.type,
                 })
-                .catch(err => {
-                    console.log('err', err);
-                });
+                    .then(res => {
+                        let list = res.list;
+                        console.log('getUserAuthFetch', list);
+
+                        if (!this.showExtra) {
+                            list = [...res.list, ...this.ids_arr];
+                        }
+
+                        // 回显数据
+                        this.authClass.echoAuth(list);
+                        this.options = Core.Util.deepCopy(this.authItems);
+                        resolve();
+                    })
+                    .catch(err => {
+                        console.log('err', err);
+                        reject();
+                    });
+            });
         },
         /* fetch edn */
 
-        handleEditShow() {
+        async handleEditShow() {
+            await this.getUserRoleAuthFetch();
             // 进入编辑模式
             this.edit = true;
-            this.authOptios = this.authClass.tabFilter();
+            this.authOptios = this.authClass.tabFilter(null, this.options);
         },
         handleEditSubmit() {
             let list = [];
@@ -351,10 +367,10 @@ export default {
                 list.push(...this.authClass.mergeItemSelect(item.list));
             }
 
+            // 过滤掉禁用的数据
             list = list.filter(el => !this.disabledIds.includes(el));
 
             list = [...new Set(list)];
-            console.log('handleEditSubmit:', list);
 
             if (!this.showExtra) {
                 return this.$emit('submit', list.join(','));
@@ -398,7 +414,7 @@ export default {
         },
         // auth-tab组件
         onTab(value) {
-            this.authOptios = this.authClass.tabFilter(value);
+            this.authOptios = this.authClass.tabFilter(value, this.options);
         },
     },
 };

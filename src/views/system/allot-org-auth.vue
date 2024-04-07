@@ -116,6 +116,10 @@
                                 <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
                                 <div class="value d-f">
                                     <a-checkbox-group v-model:value="subItem.itemSelect">
+                                        <!-- 二级模块渲染 -->
+                                        <a-checkbox :value="subItem.id">
+                                            {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}
+                                        </a-checkbox>
                                         <template v-for="(threeItem, index) in subItem.list">
                                             <a-checkbox :value="threeItem.id">
                                                 {{
@@ -306,10 +310,10 @@ export default {
             let list = [];
 
             for (const item of this[type].options) {
-                list = list.concat(item.templateSelect)
+                list = list.concat(item.templateSelect);
                 list.push(...this.authClass.mergeItemSelect(item.list));
             }
-            list = [...new Set(list)]     
+            list = [...new Set(list)];
 
             this.saveAllotOrgAuthFetch({
                 org_type: this[type].type,
