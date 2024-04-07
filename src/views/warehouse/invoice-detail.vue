@@ -48,21 +48,13 @@
                         @submit="getInvoiceDetail"
                         ><i class="icon i_audit" />财务审核</AuditMaterialPurchase
                     >
-                    <a-button
-                        type="primary"
-                        @click="handleComplete()"
-                        v-if="detail.status === STATUS.FINANCE_PASS && $auth('invoice.save')"
+                    <a-button type="primary" @click="handleComplete()" v-if="detail.status === STATUS.FINANCE_PASS"
                         ><i class="icon i_confirm" />{{ type_ch }}完成</a-button
                     >
                     <a-button
                         type="primary"
                         @click="handleExportOut"
-                        v-if="
-                            detail.status === STATUS.CLOSE &&
-                            detail.target_type === 30 &&
-                            $auth('ADMIN') &&
-                            $auth('invoice.import-export')
-                        "
+                        v-if="detail.status === STATUS.CLOSE && detail.target_type === 30 && $auth('ADMIN')"
                         ><i class="icon i_download" />导出</a-button
                     >
                 </template>
@@ -548,7 +540,7 @@
                                     <template v-else>{{ text ? text + '件' : '-' }}</template>
                                 </template>
 
-                                <template v-if="column.key === 'operation' && $auth('invoice.save')">
+                                <template v-if="column.key === 'operation'">
                                     <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"
                                         ><i class="icon i_edit" />更改数量</a-button
                                     >

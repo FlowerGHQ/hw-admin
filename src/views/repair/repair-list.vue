@@ -7,7 +7,7 @@
                     <a-button
                         type="primary"
                         @click="routerChange('edit')"
-                        v-if="!$auth('ADMIN') && $auth('repair-order.save')"
+                        v-if="!$auth('ADMIN')"
                         ><i class="icon i_add" />{{ $t('r.repair_create') }}</a-button
                     >
                 </div>
@@ -120,7 +120,7 @@
                 </div>
             </div>
             <div class="operate-container">
-                <a-button type="primary" @click="handleExportConfirm" v-if="$auth('repair-order.export')"
+                <a-button type="primary" @click="handleExportConfirm"
                     ><i class="icon i_download" />{{ $t('def.export') }}</a-button
                 >
             </div>
@@ -134,7 +134,7 @@
                     @change="handleTableChange"
                 >
                     <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.key === 'detail' && $auth('repair-order.detail')">
+                        <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title="text">
                                 <a-button type="link" @click="routerChange('detail', record)">{{
                                     text || '-'
@@ -192,35 +192,17 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'audit'">
-                            <!-- <a-button
-                                type="link"
-                                @click="handleModalShow(record.id, 'audit')"
-                                v-if="
-                                    (record.status == STATUS.SETTLEMENT ||
-                                        record.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS ||
-                                        record.status == STATUS.SETTLEMENT_DISTRIBUTOR) &&
-                                    record.service_type == 1 &&
-                                    $auth('repair-order.audit')
-                                "
-                                ><i class="icon i_audit" />{{ $t('n.audit') }}</a-button
-                            > -->
                             -
                         </template>
                         <template v-if="column.key === 'redit'">
                             <a-button
                                 type="link"
                                 @click="routerChange('edit', record)"
-                                v-if="record.status == STATUS.AUDIT_FAIL && $auth('repair-order.save')"
+                                v-if="record.status == STATUS.AUDIT_FAIL"
                                 ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                             >
                         </template>
                         <template v-if="column.key === 'invoice'">
-                            <!-- <a-button
-                                type="link"
-                                @click="handleModalShow(record.id, 'audit')"
-                                v-if="record.status == STATUS.DISTRIBUTOR_WAREHOUSE && $auth('repair-order.audit')"
-                                ><i class="icon i_audit" />{{ $t('n.audit') }}</a-button
-                            > -->
                             -
                         </template>
                         <template v-if="column.key === 'fault'">
@@ -230,8 +212,7 @@
                                 v-if="
                                     (record.status == STATUS.FAULT_ENTITY_AUDIT ||
                                         record.status == STATUS.AUDIT_SUCCESS) &&
-                                    record.service_type == 1 &&
-                                    $auth('repair-order.save-to-invoice')
+                                    record.service_type == 1
                                 "
                                 ><i class="icon i_s_warehouse" />{{ $t('n.storage') }}</a-button
                             >

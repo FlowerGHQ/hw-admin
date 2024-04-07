@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('r.repair_detail') }}</div>
                 <div class="btns-area">
-                    <template v-if="sameOrg && $auth('repair-order.save')">
+                    <template v-if="sameOrg">
                         <a-button
                             type="primary"
                             ghost
@@ -29,9 +29,6 @@
                         >
                             {{ $t('def.re_edit') }}
                         </a-button>
-                        <!--                    <a-button type="primary" ghost @click="handleDeliveryShow()" v-if="needDelivery">
-                        <i class="icon i_deliver"/>转单物流
-                    </a-button>-->
                         <a-button
                             type="primary"
                             @click="handleFaultSubmit()"
@@ -53,14 +50,14 @@
                     <a-button
                         type="primary"
                         @click="routerChange('invoice')"
-                        v-if="!haveSettle && $auth('repair-order.settlement')"
+                        v-if="!haveSettle"
                     >
                         <i class="icon i_detail_l" />{{ $t('r.bill') }}
                     </a-button>
                     <a-button
                         type="primary"
                         @click="handleAuditShow()"
-                        v-if="detail.status == STATUS.SETTLEMENT && $auth('DISTRIBUTOR') && $auth('repair-order.audit')"
+                        v-if="detail.status == STATUS.SETTLEMENT && $auth('DISTRIBUTOR')"
                     >
                         <i class="icon i_audit" />{{ $t('n.audit') }}
                     </a-button>
@@ -69,8 +66,7 @@
                         @click="handleAuditShow()"
                         v-if="
                             detail.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS &&
-                            $auth('ADMIN') &&
-                            $auth('repair-order.audit')
+                            $auth('ADMIN')
                         "
                     >
                         <i class="icon i_audit" />{{ $t('n.audit') }}
@@ -80,8 +76,7 @@
                         @click="handleAuditShow()"
                         v-if="
                             detail.status == STATUS.SETTLEMENT_DISTRIBUTOR &&
-                            $auth('ADMIN') &&
-                            $auth('repair-order.audit')
+                            $auth('ADMIN')
                         "
                     >
                         <i class="icon i_audit" />{{ $t('n.audit') }}

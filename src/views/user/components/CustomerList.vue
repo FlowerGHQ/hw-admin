@@ -85,7 +85,6 @@
                             <a-button
                                 type="link"
                                 @click="routerChange('detail', record)"
-                                v-if="$auth('crm-customer.detail')"
                                 ><i class="icon i_detail" />{{ $t('def.detail') }}</a-button
                             >
                         </template>

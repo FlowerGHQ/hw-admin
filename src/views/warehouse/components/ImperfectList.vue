@@ -10,7 +10,7 @@
                     :pagination="false"
                 >
                     <template #bodyCell="{ column, record, text }">
-                        <template v-if="column.key === 'detail' && $auth('repair-order.detail')">
+                        <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title="text">
                                 <a-button type="link" @click="routerChange('detail', record)">{{
                                     text || '-'
@@ -36,7 +36,6 @@
                             <a-button
                                 type="link"
                                 @click="handleDelete(record.id)"
-                                v-if="$auth('warehouse.save')"
                                 class="danger"
                                 ><i class="icon i_delete" />删除</a-button
                             >

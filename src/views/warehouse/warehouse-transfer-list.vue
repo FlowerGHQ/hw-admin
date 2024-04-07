@@ -138,12 +138,11 @@
                                     type="link"
                                     @click="handleCancel(record.id)"
                                     class="danger"
-                                    v-if="$auth('invoice.delete')"
                                     ><i class="icon i_close_c" />取消
                                 </a-button>
                             </template>
                             <AuditMaterialPurchase
-                                v-if="record.status === STATUS.WAIT_AUDIT && $auth('invoice.warehouse-audit')"
+                                v-if="record.status === STATUS.WAIT_AUDIT"
                                 btnType="link"
                                 :status="STATUS.APPLICANT_AUDIT"
                                 :api-list="['WarehouseTransfer', 'audit']"

@@ -225,7 +225,7 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary" v-if="$auth('store.save')">{{ $t('def.sure') }}</a-button>
+            <a-button @click="handleSubmit" type="primary">{{ $t('def.sure') }}</a-button>
             <a-button @click="routerChange('back')" type="primary" ghost>{{ $t('def.cancel') }}</a-button>
         </div>
     </div>
@@ -483,9 +483,7 @@ export default {
             if (!formCopy.distributor_id && this.$auth('ADMIN')) {
                 return this.$message.warning(this.$t('def.enter') + `(${this.$t('n.distributor')})`);
             }
-            // if (!formCopy.agent_id && this.$auth('ADMIN','DISTRIBUTOR') ) {
-            //     return this.$message.warning(this.$t('def.enter'))
-            // }
+
             if (!formCopy.name) {
                 return this.$message.warning(this.$t('def.enter') + `(${this.$t('n.name')})`);
             }

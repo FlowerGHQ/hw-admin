@@ -10,7 +10,6 @@
                         :ghost="false"
                         ref="FaultList"
                         @saveFault="getTableData"
-                        v-if="$auth('fault.save')"
                         ><i class="icon i_add" />{{ $t('r.new_fault') }}</FaultEdit
                     >
                 </div>
@@ -38,7 +37,6 @@
                                 type="link"
                                 @click="handleDelete(record.id)"
                                 class="danger"
-                                v-if="$auth('fault.delete')"
                                 ><i class="icon i_delete" />{{ $t('def.delete') }}
                             </a-button>
                         </template>

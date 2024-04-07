@@ -219,7 +219,7 @@
                 collapsible="disabled"
             >
                 <template #extra>
-                    <template v-if="detail.status === STATUS.INIT && !addMode && $auth('invoice.save')">
+                    <template v-if="detail.status === STATUS.INIT && !addMode">
                         <ItemSelect
                             btnType="link"
                             :btnText="$t('i.add')"
@@ -229,20 +229,6 @@
                             :disabledChecked="disabledChecked"
                             @select="handleAddItemChange"
                         />
-                        <!--                    <a-popover v-model:visible="production.addVisible" trigger="click" placement="left" v-else-if="production.maxCount"-->
-                        <!--                        @visibleChange='(visible) => {!visible && handleProdAddCancel()}' title="{{ $t('in.input_add_amount') }}">-->
-                        <!--                        <template #content>-->
-                        <!--                            <div class="prod-edit-popover">-->
-                        <!--                                <a-input-number v-model:value="production.addCount" placeholder="{{ $t('in.add_amount') }}"-->
-                        <!--                                    @keydown.enter="handleProdAddChange(index)" :autofocus="true" :max="production.maxCount" :min='1' :precision="0"/>-->
-                        <!--                                <div class="btns">-->
-                        <!--                                    <a-button type="primary" @click="handleProdAddCancel()" ghost >{{ $t('def.cancel') }}</a-button>-->
-                        <!--                                    <a-button type="primary" @click="handleProdAddChange()" >{{ $t('def.sure') }}</a-button>-->
-                        <!--                                </div>-->
-                        <!--                            </div>-->
-                        <!--                        </template>-->
-                        <!--                        <a-button type="link" class="extra-btn" @click.stop>{{ $t('in.add_item') }}</a-button>-->
-                        <!--                    </a-popover>-->
                     </template>
                     <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('item')">{{
                         $t('in.add')
@@ -443,7 +429,7 @@
                                         ><i class="icon i_edit" />{{ $t('in.enter_instance_number') }}</a-button
                                     >
                                 </template>
-                                <template v-if="column.key === 'operation' && $auth('invoice.save')">
+                                <template v-if="column.key === 'operation'">
                                     <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"
                                         ><i class="icon i_edit" />{{ $t('in.change') }}</a-button
                                     >
@@ -474,97 +460,6 @@
                     </div>
                 </div>
             </a-collapse-panel>
-            <!-- 物料 -->
-            <!--        <a-collapse-panel key="ItemList" header="物料信息" class="gray-collapse-panel" collapsible="disabled" v-if="detail.target_type === COMMODITY_TYPE.MATERIALS">-->
-            <!--            <template #extra v-if="$auth('invoice.save')">-->
-            <!--                <MaterialSelect btnType='link' btnText="添加物料" v-if="detail.status === STATUS.INIT && !addMode" :sourceId="detail.type == TYPE.IN ? detail.source_id : 0"-->
-            <!--                                :sourceType="detail.type == TYPE.IN ? detail.source_type : 0" :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"-->
-            <!--                                @select="handleAddChange"/>-->
-            <!--                <a-button type="link" class="extra-btn" v-if="addMode" @click.stop="handleAddSubmit('material')">{{ $t('in.add') }}</a-button>-->
-            <!--            </template>-->
-            <!--            <div class="panel-content">-->
-            <!--                <div class="table-container no-mg">-->
-            <!--                    <a-table :columns="materialTableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"-->
-            <!--                             :row-key="record => record.id" :pagination='false'>-->
-            <!--                        <template #bodyCell="{ column, text, record }">-->
-            <!--                            <template v-if="column.dataIndex === 'supplier'">-->
-            <!--                                <template v-if="addMode">-->
-            <!--                                    <a-select v-model:value="record.supplier_id" placeholder="请选择供应商" style="width: 120px;">-->
-            <!--                                        <a-select-option v-for="item of record.supplier_list" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>-->
-            <!--                                    </a-select>-->
-            <!--                                </template>-->
-            <!--                                <template v-else>-->
-            <!--                                    <a-tooltip placement="top" :title='text'>-->
-            <!--                                        <a-button type="link" @click="routerChange('supplier', record )">{{ record.supplier_name }}</a-button>-->
-            <!--                                    </a-tooltip>-->
-            <!--                                </template>-->
-            <!--                            </template>-->
-            <!--                            <template v-if="column.key === 'tip_item'">-->
-            <!--                                <a-tooltip placement="top" :title='text'>-->
-            <!--                                    <div class="ell" style="max-width: 120px">-->
-            <!--                                        <a-button type="link" @click="routerChange('material', record )">{{ text || '-' }}</a-button>-->
-            <!--                                    </div>-->
-            <!--                                </a-tooltip>-->
-            <!--                            </template>-->
-            <!--                            <template v-if="column.key === 'item'">-->
-            <!--                                {{ text || '-' }}-->
-            <!--                            </template>-->
-            <!--                            <template v-if="column.key === 'spec'">-->
-            <!--                                <a-tooltip placement="top" :title='text'>-->
-            <!--                                    <div class="ell" style="max-width: 120px">-->
-            <!--                                        {{text || '-'}}-->
-            <!--                                    </div>-->
-            <!--                                </a-tooltip>-->
-            <!--                            </template>-->
-            <!--                            <template v-if="column.key === 'price'">-->
-            <!--                                <template v-if="addMode">-->
-            <!--                                    ￥ {{ $Util.countFilter(record.supplier_map[record.supplier_id]) || '0'}}-->
-            <!--                                </template>-->
-            <!--                                <template v-else>￥{{ $Util.countFilter(text) || '0'}}</template>-->
-            <!--                            </template>-->
-            <!--                            <template v-if="column.key === 'total_price'">-->
-            <!--                                <template v-if="addMode">-->
-            <!--                                    ￥{{ $Util.countFilter(record.supplier_map[record.supplier_id] * record.amount) }}-->
-            <!--                                </template>-->
-            <!--                                <template v-else>￥{{ $Util.countFilter(record.price * record.amount) }}</template>-->
-            <!--                            </template>-->
-            <!--                            <template v-if="column.key === 'count'">-->
-            <!--                                {{ text ? text + '件' : '-' }}-->
-            <!--                            </template>-->
-            <!--                            <template v-if="column.key === 'amount'">-->
-            <!--                                <template v-if="addMode || record.editMode">-->
-            <!--                                    <a-input-number v-model:value="record.amount" placeholder="请输入"-->
-            <!--                                                    :min="1" :max="detail.type === TYPE.IN ? 99999: record.material.stock" :precision="0"/> 件-->
-            <!--                                </template>-->
-            <!--                                <template v-else>{{ text ? text + '件' : '-' }}</template>-->
-            <!--                            </template>-->
-
-            <!--                            <template v-if="column.key === 'operation' && $auth('invoice.save')" >-->
-            <!--                                <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改数量</a-button>-->
-            <!--                                <a-button type="link" @click="handleRowSubmit(record, 'material')" v-else><i class="icon i_confirm"/>确认更改</a-button>-->
-            <!--                                <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>{{ $t('def.remove') }}</a-button>-->
-            <!--                            </template>-->
-            <!--                        </template>-->
-
-            <!--                    </a-table>-->
-            <!--                </div>-->
-            <!--                <div class="paging-container" v-if="!addMode">-->
-            <!--                    <a-pagination-->
-            <!--                        v-model:current="currPage"-->
-            <!--                        :page-size='pageSize'-->
-            <!--                        :total="total"-->
-            <!--                        show-quick-jumper-->
-            <!--                        show-size-changer-->
-            <!--                        show-less-items-->
-            <!--                        :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"-->
-            <!--                        :hide-on-single-page='false'-->
-            <!--                        :pageSizeOptions="['10', '20', '30', '40']"-->
-            <!--                        @change="pageChange"-->
-            <!--                        @showSizeChange="pageSizeChange"-->
-            <!--                    />-->
-            <!--                </div>-->
-            <!--            </div>-->
-            <!--        </a-collapse-panel>-->
         </a-collapse>
         <a-modal
             v-model:visible="childShow"
@@ -581,7 +476,6 @@
                             :placeholder="$t('def.input')"
                             @blur="handleVehicleBlur()"
                         />
-                        <!--                        <template v-if="!$auth('ADMIN')">-->
                         <span v-if="form.target_id"><i class="icon suffix i_confirm" /></span>
                         <span v-else-if="entity_no_exist"><i class="icon suffix i_close_c" /></span>
                         <!--                        </template>-->
@@ -604,7 +498,6 @@
                         <template
                             v-if="
                                 column.key === 'operation' &&
-                                $auth('invoice.save') &&
                                 authOrg(detail.org_id, detail.org_type)
                             "
                         >
