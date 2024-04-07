@@ -29,15 +29,15 @@
                 </div>
             </div>
         </div>
-        <auth-tab></auth-tab>
         <!-- 权限分配 -->
         <div class="form-block">
             <div class="form-title">
                 <div class="title-colorful">{{ $t('role.assignment') }}</div>
             </div>
             <div class="form-content long-key">
-                <template v-for="item of authItems" :key="item.key">
-                    <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
+                <auth-tab ref="authTabRef" class="m-b-20 m-l-140" @tab="onTab"></auth-tab>
+                <template v-for="item in authOptios" :key="item.key">
+                    <div v-for="(subItem, index) in item.list" :key="index" class="form-item afs">
                         <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
                         <div class="value">
                             <!-- 全选 -->
@@ -83,14 +83,14 @@
 
 <script>
 import Core from '@/core';
-import authTab  from './components/auth-tab.vue'
+import authTab from '@/components/authority/auth-tab.vue';
 import auth from '@/core/modules/units/auth';
 const AUTH_LIST_TEMP = Core.Const.SYSTEM_AUTH.AUTH_LIST_TEMP;
 
 export default {
     name: 'AuthRoleEdit',
     components: {
-        authTab
+        authTab,
     },
     props: {},
     data() {
@@ -103,7 +103,7 @@ export default {
             detail: {},
 
             authItems: Core.Util.deepCopy(AUTH_LIST_TEMP),
-
+            authOptios: [], // 渲染权限的数据
             form: {
                 id: '',
                 name: '',
@@ -178,6 +178,7 @@ export default {
 
                     // 回显数据
                     this.authClass.echoAuth(list);
+                    this.authOptios = this.authClass.tabFilter();
                 })
                 .catch(err => {
                     console.log('getRoleSelectedAuth err:', err);
@@ -217,7 +218,7 @@ export default {
                 list.push(...this.authClass.mergeItemSelect(item.list));
             }
 
-            this.saveROLEDATAFetch({ authority_ids: list.join(',') })
+            this.saveROLEDATAFetch({ authority_ids: list.join(',') });
         },
 
         // 全选操作
@@ -230,6 +231,10 @@ export default {
                 subItem.itemSelect = [];
             }
         },
+        // auth-tab组件
+        onTab(value) {            
+            this.authOptios = this.authClass.tabFilter(value);
+        }
     },
 };
 </script>
@@ -284,5 +289,9 @@ export default {
 
 .d-f {
     display: flex;
+}
+
+.m-l-140 {
+    margin-left: 140px;
 }
 </style>

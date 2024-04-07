@@ -4,7 +4,8 @@
             v-for="(item, index) in AUTH_LIST_TEMP"
             :key="index"
             class="auth-tab-item"
-            :class="{ 'auth-tab-item-change': item.tab === activeTab }"
+            :class="{ 'auth-tab-item-change': item.tab === activeTab, 'm-r-10': index !== AUTH_LIST_TEMP.length - 1 }"
+            @click="handelTab(item)"
         >
             {{ item.name }}
         </div>
@@ -19,7 +20,7 @@ import Core from '@/core';
 const route = useRoute();
 const router = useRouter();
 const props = defineProps({});
-const emits = defineEmits([]);
+const emits = defineEmits(["tab"]);
 
 // 常量
 const AUTH_LIST_TEMP = Core.Const.SYSTEM_AUTH.AUTH_LIST_TEMP;
@@ -37,6 +38,9 @@ watch();
 
 /* 生命周期*/
 onMounted(() => {});
+defineExpose({
+    activeTab
+})
 /* 生命周期*/
 
 /* fetch start */
@@ -52,10 +56,10 @@ const XXXX = (params = {}) => {
 /* fetch end */
 
 /* methods start */
-const handleInputFocus = (e, record) => {
-    record.inputInspectClassName = ['be-enter'];
+const handelTab = item => {
+    activeTab.value = item.tab;
+    emits('tab', item.tab)
 };
-const onXXXX = () => {};
 /* methods end */
 </script>
 
@@ -68,6 +72,7 @@ const onXXXX = () => {};
         border: 1px solid rgba(102, 102, 102, 0.5);
         font-size: 14px;
         color: #666;
+        cursor: pointer;
     }
 
     &-item-change {

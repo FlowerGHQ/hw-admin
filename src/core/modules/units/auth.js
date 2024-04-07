@@ -1,6 +1,6 @@
 // 分解
 function getNextLevelNodeNameList(authList, prefix = undefined) {
-    console.log('prefix', prefix);
+    // console.log('prefix', prefix);
     let items = {};
     authList.forEach((node, i) => {
         let nodeKey = node.key;
@@ -115,6 +115,10 @@ class Auth {
         this.authItems = authItems;
     }
 
+    /**
+     *
+     * @param { Array } authList
+     */
     processAuthList(authList) {
         this.authItems.forEach(el => {
             travelAuth(authList, el, el.key);
@@ -122,12 +126,18 @@ class Auth {
         console.log('this.authItems', this.authItems);
     }
 
-    // 添加禁用属性 到相应数据
+    /**
+     * @description 添加禁用属性 到相应数据
+     * @param { Array } ids
+     */
     addDisableItem(ids) {
         addDisabled(ids, this.authItems);
     }
 
-    // 回显数据
+    /**
+     *
+     * @param { Array } authList
+     */
     echoAuth(authList) {
         authList.forEach(el => {
             let parts = el.key.split('.')[0];
@@ -172,6 +182,25 @@ class Auth {
         });
 
         return [...new Set(result)];
+    }
+    /**
+     *
+     * @param {Number, String} tabValue tab值     
+     * @param { Object } authItems 所有权限对象
+     * @returns Array
+     */
+    tabFilter(tabValue, authItems) {
+        let authList = authItems || this.authItems || [];
+        let activeTab = tabValue || authList[0].tab;
+        // console.log("activeTab", activeTab);
+        if (activeTab) {
+            const findItem = authList.find(el => el.tab === activeTab);
+            if (findItem) {                
+                return [findItem];
+            }
+        }
+        
+        return []
     }
 }
 

@@ -35,8 +35,10 @@
                         <SimpleImageEmpty v-if="org.isEmpty" :desc="$t('n.no_org_auth')" />
                         <template v-else v-for="item of org.options" :key="item.key">
                             <template v-for="(subItem, index) of item.list" :key="index">
-                                <div v-if="subItem.itemSelect.length"  class="form-item afs">
-                                    <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
+                                <div v-if="subItem.itemSelect.length" class="form-item afs">
+                                    <div class="key">
+                                        {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:
+                                    </div>
                                     <div class="value d-f">
                                         <span
                                             class="authority-item"
@@ -56,7 +58,11 @@
                                                         )
                                                     }}
                                                 </span>
-                                                <span v-for="(fourItem, index) in threeItem.list" :key="fourItem.id" class="m-r-8">
+                                                <span
+                                                    v-for="(fourItem, index) in threeItem.list"
+                                                    :key="fourItem.id"
+                                                    class="m-r-8"
+                                                >
                                                     <template v-if="$Util.Common.isMember(fourItem.id, item.select)">
                                                         {{
                                                             $t(
@@ -87,7 +93,8 @@
                     </div>
                     <!-- 全部的 -->
                     <div v-else class="panel-content">
-                        <template v-for="item of org.options" :key="item.key">
+                        <auth-tab ref="authTabRef" class="m-b-20" @tab="onTab"></auth-tab>
+                        <template v-for="item of org.authOptios" :key="item.key">
                             <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs d-f-a">
                                 <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
                                 <div class="value d-f">
@@ -138,13 +145,14 @@
 import Core from '@/core';
 import SimpleImageEmpty from '../../components/common/SimpleImageEmpty.vue';
 import auth from '@/core/modules/units/auth';
+import authTab from '@/components/authority/auth-tab.vue';
 
 const AUTH_LIST_TEMP = Core.Const.SYSTEM_AUTH.AUTH_LIST_TEMP;
 const USER_TYPE = Core.Const.USER.TYPE;
 
 export default {
     name: 'AllotOrgAuth',
-    components: { SimpleImageEmpty },
+    components: { SimpleImageEmpty, authTab },
     props: {},
     data() {
         let _this = this;
@@ -158,13 +166,15 @@ export default {
                 type: USER_TYPE.DISTRIBUTOR, // 分销商
                 edit: false,
                 options: [],
-                isEmpty: true,  // 是否回显数据为空
+                authOptios: [],
+                isEmpty: true, // 是否回显数据为空
             },
             agent: {
                 name: 'n.agent_auth',
                 type: USER_TYPE.AGENT, // 零售商
                 edit: false,
                 options: [],
+                authOptios: [],
                 isEmpty: true,
             },
             store: {
@@ -172,8 +182,10 @@ export default {
                 type: USER_TYPE.STORE, // 门店
                 edit: false,
                 options: [],
+                authOptios: [],
                 isEmpty: true,
             },
+            user_type: null,
             authClass: null,
         };
     },
@@ -215,6 +227,7 @@ export default {
         },
         // 获取 某类型组织 已分配的 权限项
         getOrgAuthFetch(user_type) {
+            this.user_type = user_type;
             Core.Api.Authority.authOptions({
                 org_type: this[user_type].type,
             })
@@ -224,13 +237,12 @@ export default {
                     // 回显数据
                     if (list.length === 0) {
                         this[user_type].isEmpty = true;
-                        return
+                        return;
                     }
                     this.authClass.echoAuth(list);
                     this[user_type].options = Core.Util.deepCopy(this.authItems);
                     this[user_type].isEmpty = false;
-
-                    console.log("this[user_type]", this[user_type]);
+                    console.log('this[user_type]', this[user_type]);
                 })
                 .catch(err => {
                     console.log('getOrgAuth', user_type, 'err:', err);
@@ -240,7 +252,7 @@ export default {
             let obj = {
                 ...params,
             };
-            Core.Api.xxx(obj)
+            Core.Api.Authority.allotOrgAuth(obj)
                 .then(res => {
                     this.$message.success(this.$t('pop_up.save_success'));
                     this.handleEditClose(type);
@@ -254,6 +266,7 @@ export default {
         // 进入编辑模式
         handleEditShow(type) {
             this[type].edit = true;
+            this[this.user_type].authOptios = this.authClass.tabFilter(value);
         },
         // 取消编辑
         handleEditClose(type) {
@@ -267,11 +280,15 @@ export default {
             for (const item of this[type].options) {
                 list.push(...this.authClass.mergeItemSelect(item.list));
             }
-            
+
             this.saveAllotOrgAuthFetch({
                 org_type: this[type].type,
                 authority_ids: list.join(','),
             });
+        },
+        // auth-tab组件
+        onTab(value) {
+            this[this.user_type].authOptios = this.authClass.tabFilter(value);
         },
     },
 };

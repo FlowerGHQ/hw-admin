@@ -101,10 +101,13 @@
                             </template>
                         </template>
                     </div>
-                    <div class="panel-content" v-else>
-                        <template v-for="item of options" :key="item.key">
+                    <div v-else class="panel-content">
+                        <auth-tab ref="authTabRef" class="m-b-20" @tab="onTab"></auth-tab>
+                        <template v-for="item of authOptios" :key="item.key">
                             <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
-                                <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
+                                <div class="key">
+                                    {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:
+                                </div>
                                 <div class="value">
                                     <!-- 全选 -->
                                     <div class="m-b-10">
@@ -187,13 +190,13 @@ import Core from '@/core';
 import SimpleImageEmpty from '@/components/common/SimpleImageEmpty.vue';
 import UserScope from './UserScope.vue';
 import auth from '@/core/modules/units/auth';
+import authTab from '@/components/authority/auth-tab.vue';
 
 const AUTH_LIST_TEMP = Core.Const.SYSTEM_AUTH.AUTH_LIST_TEMP;
-const USER_TYPE = Core.Const.USER.TYPE;
 
 export default {
     name: 'UserAuth',
-    components: { SimpleImageEmpty, UserScope },
+    components: { SimpleImageEmpty, UserScope, authTab },
     props: {
         userId: {
             type: Number,
@@ -220,10 +223,11 @@ export default {
             edit: false,
             scopeShow: false,
             scopeType: 0,
-            options: [],
+            options: [], // 用户下
+            authOptios: [], // 全部权限编辑下
             disabledIds: [], // 禁用的ids
             ids_arr: [],
-            authClass: null,
+            authClass: null, // 权限类
         };
     },
 
@@ -322,6 +326,7 @@ export default {
         handleEditShow() {
             // 进入编辑模式
             this.edit = true;
+            this.authOptios = this.authClass.tabFilter();
         },
         handleEditSubmit() {
             let list = [];
@@ -373,6 +378,10 @@ export default {
             } else {
                 subItem.itemSelect = [];
             }
+        }, 
+        // auth-tab组件
+        onTab(value) {
+            this.authOptios = this.authClass.tabFilter(value);            
         },
     },
 };
