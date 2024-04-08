@@ -169,7 +169,7 @@ const routes = [
                 name: 'AdminPurchaseOrderListAll',
                 component: () => import('@/views/purchase/purchase-order-list.vue'),
                 meta: {
-                    title: '订单列表',
+                    title: '采购订单',
                     title_en: 'Order List',
                     search_type: PURCHASE_SEARCH_TYPE.ALL,
                     roles: [LOGIN_TYPE.ADMIN],
@@ -364,19 +364,7 @@ const routes = [
             roles: [LOGIN_TYPE.DISTRIBUTOR],
             icon: 'i_s_item',
         },
-        children: [
-            {
-                path: 'item-list',
-                name: 'PurchaseItemList',
-                component: () => import('@/views/purchase/item-index.vue'),
-                meta: {
-                    title: '采购',
-                    title_en: 'Purchase',
-                    roles: [LOGIN_TYPE.DISTRIBUTOR],
-                    auth: ['item.list'],
-                    hidden: true,
-                },
-            },
+        children: [            
             {
                 path: 'item-display',
                 name: 'ItemDisplay',
