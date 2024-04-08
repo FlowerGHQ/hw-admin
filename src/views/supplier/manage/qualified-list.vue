@@ -185,6 +185,8 @@ const tableColumns = computed(() => {
         { title: $t('supply-chain.main_supply'), dataIndex: 'supply_main', key: 'item' },
         { title: $t('supply-chain.secondary_supply'), dataIndex: 'supply_secondary', key: 'item' },
         { title: $t('supply-chain.other_items'), dataIndex: 'supply_other', key: 'item' },
+        { title: $t('common.vehicle_model'), dataIndex: 'vehicle_model', key: 'item' },
+        { title: $t('common.manager'), dataIndex: 'manager', key: 'item' },
         { title: $t('supply-chain.introduction_date'), dataIndex: 'register_time', key: 'time' },
         { title: $t('supply-chain.change_class'), dataIndex: 'register_type', key: 'register_type' },
         { title: $t('supply-chain.remark'), dataIndex: 'remark', key: 'remark' },
