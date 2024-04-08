@@ -365,40 +365,34 @@ const routes = [
             icon: 'i_s_item',
         },
         children: [            
-            {
-                path: 'item-display',
-                name: 'ItemDisplay',
-                component: () => import('@/views/purchase/item-display.vue'),
-                meta: {
-                    hidden: true,
-                    title: '商品详情',
-                    roles: [LOGIN_TYPE.DISTRIBUTOR],
-                    auth: ['item.detail'],
-                },
-            },
-            {
-                path: 'item-collect',
-                name: 'ItemCollect',
-                component: () => import('@/views/purchase/item-collect.vue'),
-                meta: {
-                    roles: [LOGIN_TYPE.DISTRIBUTOR],
-                    title: '购物车',
-                    title_en: 'Shopping cart',
-                    auth: ['purchase-order.save'],
-                    hidden: true,
-                },
-            },
-            {
-                path: 'item-settle',
-                name: 'ItemSettle',
-                component: () => import('@/views/purchase/item-settle.vue'),
-                meta: {
-                    hidden: true,
-                    roles: [LOGIN_TYPE.DISTRIBUTOR],
-                    title: '结算',
-                    auth: ['purchase-order.save'],
-                },
-            },
+            // {
+            //     path: 'item-display',
+            //     name: 'ItemDisplay',
+            //     component: () => import('@/views/purchase/item-display.vue'),
+            //     meta: {                    
+            //         title: '商品详情',
+            //         roles: [LOGIN_TYPE.DISTRIBUTOR],
+            //     },
+            // },
+            // {
+            //     path: 'item-collect',
+            //     name: 'ItemCollect',
+            //     component: () => import('@/views/purchase/item-collect.vue'),
+            //     meta: {
+            //         roles: [LOGIN_TYPE.DISTRIBUTOR],
+            //         title: '购物车',
+            //         title_en: 'Shopping cart',
+            //     },
+            // },
+            // {
+            //     path: 'item-settle',
+            //     name: 'ItemSettle',
+            //     component: () => import('@/views/purchase/item-settle.vue'),
+            //     meta: {                    
+            //         roles: [LOGIN_TYPE.DISTRIBUTOR],
+            //         title: '结算',                    
+            //     },
+            // },
             {
                 path: 'purchase-order-list',
                 name: 'PurchaseOrderList',
