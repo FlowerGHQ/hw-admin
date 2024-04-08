@@ -840,7 +840,7 @@ export default {
                             path = '/production/manufacture-order-detail';
                             break;
                         case SOURCE_TYPE.PURCHASE:
-                            path = '/purchase/purchase-order-detail';
+                            path = '/distributor/purchase-order-detail';
                             break;
                         case SOURCE_TYPE.AFTER_SALES:
                             path = '/aftersales/aftersales-detail';

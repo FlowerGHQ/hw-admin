@@ -28,6 +28,9 @@ export default {
                 'supply-material': {
                     title: '供货订单',
                 },
+                'purchase-order': {
+                    title: '采购订单',
+                },
                 distributor: {
                     title: '分销商列表',
                     save: "新建分销商",
@@ -167,6 +170,9 @@ export default {
                 },
                 'supply-material': {
                     title: '供货订单',
+                },
+                'purchase-order': {
+                    title: '采购订单',
                 },
                 distributor: {
                     title: '分销商列表',

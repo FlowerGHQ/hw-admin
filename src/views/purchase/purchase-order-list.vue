@@ -614,7 +614,7 @@ export default {
             switch (type) {
                 case 'detail': // 详情
                     routeUrl = this.$router.resolve({
-                        path: '/purchase/purchase-order-detail',
+                        path: '/distributor/purchase-order-detail',
                         query: {
                             id: item.id,
                         },
@@ -623,7 +623,7 @@ export default {
                     break;
                 case 'parent_detail': // 详情
                     routeUrl = this.$router.resolve({
-                        path: '/purchase/purchase-order-detail',
+                        path: '/distributor/purchase-order-detail',
                         query: {
                             id: item.parent_id,
                         },

@@ -117,7 +117,7 @@ export default {
             switch (type) {
                 case 'purchase': // 编辑
                     routeUrl = this.$router.resolve({
-                        path: '/purchase/purchase-order-detail',
+                        path: '/distributor/purchase-order-detail',
                         query: { id: item.source_id },
                     });
                     window.open(routeUrl.href, '_blank');

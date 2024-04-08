@@ -254,7 +254,7 @@ export default {
                     break;
                 case 'purchase': //采购单 详情
                     routeUrl = this.$router.resolve({
-                        path: '/purchase/purchase-order-detail',
+                        path: '/distributor/purchase-order-detail',
                         query: { id: item.order_id },
                     });
                     window.open(routeUrl.href, '_blank');

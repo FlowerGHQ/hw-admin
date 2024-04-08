@@ -163,16 +163,36 @@ const routes = [
             icon: 'i_s_agent',
             auth: ['sales.distribution', 'aftermarket.distribution'],
         },
-        children: [
+        children: [            
+            {
+                path: 'purchase-order-self',
+                name: 'PurchaseOrderListSelf',
+                component: () => import('@/views/purchase/purchase-order-list.vue'),
+                meta: {
+                    title: '采购订单',
+                    title_en: 'Purchase order',
+                    search_type: PURCHASE_SEARCH_TYPE.SELF,
+                    auth: ['sales.distribution.purchase-order', 'aftermarket.distribution.purchase-order'],
+                },
+            },
+            {
+                path: 'purchase-order-detail',
+                name: 'PurchaseOrderDetail',
+                component: () => import('@/views/purchase/purchase-order-detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '采购订单详情',
+                    title_en: 'Purchase Order Detail',
+                },
+            },
             {
                 path: 'purchase-order-list',
                 name: 'AdminPurchaseOrderListAll',
                 component: () => import('@/views/purchase/purchase-order-list.vue'),
                 meta: {
-                    title: '采购订单',
+                    title: '订单列表',
                     title_en: 'Order List',
                     search_type: PURCHASE_SEARCH_TYPE.ALL,
-                    roles: [LOGIN_TYPE.ADMIN],
                     auth: ['sales.distribution.order', 'aftermarket.distribution.order'],
                 },
             },
@@ -184,7 +204,6 @@ const routes = [
                     title: '供货订单',
                     title_en: 'Supply order',
                     search_type: PURCHASE_SEARCH_TYPE.CHILDREN,
-                    roles: [LOGIN_TYPE.ADMIN],
                     auth: ['sales.distribution.supply-material', 'aftermarket.distribution.supply-material'],
                 },
             },
@@ -238,7 +257,6 @@ const routes = [
                 meta: {
                     title: '零售商列表',
                     title_en: 'List of retailers',
-                    roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN],
                     auth: ['sales.distribution.agent', 'aftermarket.distribution.agent'],
                 },
             },
@@ -250,7 +268,6 @@ const routes = [
                     hidden: true,
                     title: '零售商编辑',
                     parent: '/distributor/agent-list',
-                    roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN],
                 },
             },
             {
@@ -261,7 +278,6 @@ const routes = [
                     hidden: true,
                     title: '零售商详情',
                     parent: '/distributor/agent-list',
-                    roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN],
                 },
             },
             {
@@ -271,7 +287,6 @@ const routes = [
                 meta: {
                     title: '零售商详情',
                     title_en: 'Details',
-                    roles: [LOGIN_TYPE.AGENT],
                 },
             },
             {
@@ -281,7 +296,6 @@ const routes = [
                 meta: {
                     title: '门店列表',
                     title_en: 'Store list',
-                    roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN, LOGIN_TYPE.AGENT],
                     auth: ['sales.distribution.store', 'aftermarket.distribution.store'],
                 },
             },
@@ -293,7 +307,6 @@ const routes = [
                     hidden: true,
                     title: '门店编辑',
                     parent: '/distributor/store-list',
-                    roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN, LOGIN_TYPE.AGENT],
                 },
             },
             {
@@ -304,7 +317,6 @@ const routes = [
                     hidden: true,
                     title: '门店详情',
                     parent: '/distributor/store-list',
-                    roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.ADMIN, LOGIN_TYPE.AGENT],
                 },
             },
             {
@@ -314,7 +326,6 @@ const routes = [
                 meta: {
                     title: '门店详情',
                     title_en: 'Details',
-                    roles: [LOGIN_TYPE.STORE],
                 },
             },
             {
@@ -347,97 +358,6 @@ const routes = [
                     title: '区域编辑',
                     roles: [LOGIN_TYPE.ADMIN],
                     parent: '/item/sales-area-list',
-                },
-            },
-        ],
-    },
-    {
-        // 采购管理 -分销商端
-        path: '/purchase',
-        component: Layout,
-        redirect: '/purchase/purchase-order-list',
-        name: 'PurchaseManagement',
-        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
-        meta: {
-            title: '采购管理',
-            title_en: 'Purchase',
-            roles: [LOGIN_TYPE.DISTRIBUTOR],
-            icon: 'i_s_item',
-        },
-        children: [            
-            // {
-            //     path: 'item-display',
-            //     name: 'ItemDisplay',
-            //     component: () => import('@/views/purchase/item-display.vue'),
-            //     meta: {                    
-            //         title: '商品详情',
-            //         roles: [LOGIN_TYPE.DISTRIBUTOR],
-            //     },
-            // },
-            // {
-            //     path: 'item-collect',
-            //     name: 'ItemCollect',
-            //     component: () => import('@/views/purchase/item-collect.vue'),
-            //     meta: {
-            //         roles: [LOGIN_TYPE.DISTRIBUTOR],
-            //         title: '购物车',
-            //         title_en: 'Shopping cart',
-            //     },
-            // },
-            // {
-            //     path: 'item-settle',
-            //     name: 'ItemSettle',
-            //     component: () => import('@/views/purchase/item-settle.vue'),
-            //     meta: {                    
-            //         roles: [LOGIN_TYPE.DISTRIBUTOR],
-            //         title: '结算',                    
-            //     },
-            // },
-            {
-                path: 'purchase-order-list',
-                name: 'PurchaseOrderList',
-                component: () => import('@/views/purchase/purchase-order-list.vue'),
-                meta: {
-                    roles: [LOGIN_TYPE.ADMIN],
-                    title: '订单列表',
-                    title_en: 'Order List',
-                    search_type: PURCHASE_SEARCH_TYPE.ALL,
-                    auth: ['purchase-order.list'],
-                },
-            },
-            {
-                path: 'purchase-order-self',
-                name: 'PurchaseOrderListSelf',
-                component: () => import('@/views/purchase/purchase-order-list.vue'),
-                meta: {
-                    roles: [LOGIN_TYPE.DISTRIBUTOR],
-                    title: '采购订单',
-                    title_en: 'Purchase order',
-                    search_type: PURCHASE_SEARCH_TYPE.SELF,
-                    auth: ['purchase-order.list'],
-                },
-            },
-            {
-                path: 'purchase-order-children',
-                name: 'PurchaseOrderListChildren',
-                component: () => import('@/views/purchase/purchase-order-list.vue'),
-                meta: {
-                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-                    title: '供货订单',
-                    title_en: 'Supply orders',
-                    search_type: PURCHASE_SEARCH_TYPE.CHILDREN,
-                    auth: ['purchase-order.list'],
-                },
-            },
-            {
-                path: 'purchase-order-detail',
-                name: 'PurchaseOrderDetail',
-                component: () => import('@/views/purchase/purchase-order-detail.vue'),
-                meta: {
-                    hidden: true,
-                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-                    title: '采购订单详情',
-                    auth: ['purchase-order.detail'],
                 },
             },
         ],
