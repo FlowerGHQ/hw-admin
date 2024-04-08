@@ -145,10 +145,6 @@ class Auth {
      */
     echoAuth(authList) {
         // [{}. {}, {id: 1, key: "xxx.xxx"}]
-        // 每次调用这个方法把之前的清空
-        this.authItems.forEach(el => {
-            el.select = []
-        })
         authList.forEach(el => {
             let parts = el.key.split('.')[0];
             const find = this.authItems.find(el => el.key === parts);
@@ -162,7 +158,7 @@ class Auth {
         // 根据回显数据返回的 select  将对应的 itemSelect加上被选中的id
         this.authItems.forEach(item => {
             // 模块赋值
-            item.templateSelect = item.select.includes(item.id) ? [item.id] : []
+            item.templateSelect = item.select.includes(item.id) ? [item.id] : [];
 
             // 二级统计
             item.list.forEach(subItem => {
@@ -177,6 +173,14 @@ class Auth {
             });
         });
         // console.log("echoAuth", this.authItems);
+    }
+
+    clearAuthItemsSelect(authList) {
+        let clearList = authList || this.authItems || []
+        // 每次调用这个方法把之前的清空
+        clearList.forEach(el => {
+            el.select = [];
+        });
     }
 
     /**
@@ -204,19 +208,19 @@ class Auth {
      * @param { Object } authItems 所有权限对象
      * @returns Array
      */
-    tabFilter(tabValue, authItems) {
-        let authList = authItems || this.authItems || [];
-        let activeTab = tabValue || authList[0].tab;
-        // console.log("activeTab", activeTab);
-        if (activeTab) {
-            const findItem = authList.find(el => el.tab === activeTab);
-            if (findItem) {
-                console.log('[findItem]', [findItem]);
-                return [findItem];
-            }
-        }
-        return [];
-    }
+    // tabFilter(tabValue, authItems) {
+    //     let authList = authItems || this.authItems || [];
+    //     let activeTab = tabValue || authList[0].tab;
+    //     // console.log("activeTab", activeTab);
+    //     if (activeTab) {
+    //         const findItem = authList.find(el => el.tab === activeTab);
+    //         if (findItem) {
+    //             console.log('[findItem]', [findItem]);
+    //             return [findItem];
+    //         }
+    //     }
+    //     return [];
+    // }
 }
 
 export default Auth;
