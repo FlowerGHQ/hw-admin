@@ -4,9 +4,9 @@ import Data from '../core/data';
 import Layout from '../views/layout/index.vue';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
-const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE;
+const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 
-// 客户关怀
+// 分销商客户关怀
 const customerCare = {
     path: '/customer-care',
     component: Layout,
@@ -17,7 +17,7 @@ const customerCare = {
         title_en: 'Customer Care',
         icon: 'i_menu_fankuguanli',
         roles: [LOGIN_TYPE.DISTRIBUTOR],
-        // auth: ['enquiry-ticket.list'],
+        auth: ['aftermarket.enquiry'],
     },
     children: [
         {
@@ -27,7 +27,7 @@ const customerCare = {
             meta: {
                 title: '客服问询单',
                 title_en: 'Customer Service Inquiry',
-                // auth: ['enquiry-ticket.list'],
+                auth: ['aftermarket.enquiry.enquiry-ticket'],
             },
         },
         {

@@ -4,9 +4,9 @@ import Data from '../core/data';
 import Layout from '../views/layout/index.vue';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
-const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE;
+const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 
-// 问询单管理
+// 平台方客户关怀
 const inquiryManagement = {
     path: '/inquiry-management',
     component: Layout,
@@ -14,8 +14,8 @@ const inquiryManagement = {
     redirect: '/inquiry-management/list',
     type: [ROUTER_TYPE.AFTER],
     meta: {
-        title: '问询单管理',
-        title_en: 'Inquiry Management',
+        title: '客户关怀',
+        title_en: 'Customer Care',
         icon: 'i_menu_fankuguanli',
         roles: [LOGIN_TYPE.ADMIN],
         auth: ['aftermarket.enquiry'],
@@ -26,7 +26,7 @@ const inquiryManagement = {
             name: 'InquiryManagementList',
             component: () => import('@/views/customer-care/customer-care-list.vue'),
             meta: {
-                title: '问询单列表',
+                title: '客服问询单',
                 title_en: 'Customer Service Inquiry',
                 auth: ['aftermarket.enquiry.enquiry-ticket'],
             },
@@ -37,7 +37,7 @@ const inquiryManagement = {
             component: () => import('@/views/customer-care/customer-care-edit.vue'),
             meta: {
                 hidden: true,
-                title: '问询单编辑',
+                title: '客服问询单编辑',
                 title_en: 'Customer Service Inquiry Edit',
             },
         },
@@ -47,7 +47,7 @@ const inquiryManagement = {
             component: () => import('@/views/customer-care/customer-care-detail.vue'),
             meta: {
                 hidden: true,
-                title: '问询单详情',
+                title: '客服问询单详情',
                 title_en: 'Customer Service Inquiry Detail',
             },
         },

@@ -18,7 +18,7 @@ import { fsLogin } from './fs-login';
 import { SYSTEM } from './system';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
-const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE;
+const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 const PURCHASE_SEARCH_TYPE = Const.PURCHASE.SEARCH_TYPE;
 const REFUND_QUERY_TYPE = Const.AFTERSALES.QUERY_TYPE;
 const NOW_LOGIN_TYPE = Data.getLoginType();
@@ -51,8 +51,7 @@ switch (NOW_LOGIN_TYPE) {
  * @params meta.parent 类似于list里面有添加编辑需要给个上一级的地址让其显示
  * @params meta.hideen判断是否显示到侧边栏上 true为不显示
  * @params meta.not_sub_menu: true判断当前路由是否是一级标签
- * @params meta.super_admin_show: 只在权限为ADMIN(平台方的时候有用) 判断这个路由是否只展示在超级管理员中
- * @params children meta.admin_module: 区分在admin中四大 销售/售后/生产/CRM 路口的权限 子模块判断(判断例如  商品管理(子 BOM管理)即在销售/售后中 但是需要售后有[BOM管理] 销售不需要[BOM管理])
+ * @params meta.super_admin_show: 只在权限为ADMIN(平台方的时候有用) 判断这个路由是否只展示在超级管理员中 
  * @params auth: ['MANAGER]: MANAGER 表示管理员
  */
 const routes = [
@@ -353,7 +352,7 @@ const routes = [
         ],
     },
     {
-        // 采购管理 - 经销商端 && 门店端 && 分销商端
+        // 采购管理 -分销商端
         path: '/purchase',
         component: Layout,
         redirect: '/purchase/purchase-order-list',
@@ -362,7 +361,7 @@ const routes = [
         meta: {
             title: '采购管理',
             title_en: 'Purchase',
-            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
+            roles: [LOGIN_TYPE.DISTRIBUTOR],
             icon: 'i_s_item',
         },
         children: [
@@ -373,7 +372,7 @@ const routes = [
                 meta: {
                     title: '采购',
                     title_en: 'Purchase',
-                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
+                    roles: [LOGIN_TYPE.DISTRIBUTOR],
                     auth: ['item.list'],
                     hidden: true,
                 },
@@ -385,7 +384,7 @@ const routes = [
                 meta: {
                     hidden: true,
                     title: '商品详情',
-                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
+                    roles: [LOGIN_TYPE.DISTRIBUTOR],
                     auth: ['item.detail'],
                 },
             },
@@ -394,7 +393,7 @@ const routes = [
                 name: 'ItemCollect',
                 component: () => import('@/views/purchase/item-collect.vue'),
                 meta: {
-                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
+                    roles: [LOGIN_TYPE.DISTRIBUTOR],
                     title: '购物车',
                     title_en: 'Shopping cart',
                     auth: ['purchase-order.save'],
@@ -407,7 +406,7 @@ const routes = [
                 component: () => import('@/views/purchase/item-settle.vue'),
                 meta: {
                     hidden: true,
-                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
+                    roles: [LOGIN_TYPE.DISTRIBUTOR],
                     title: '结算',
                     auth: ['purchase-order.save'],
                 },
@@ -429,7 +428,7 @@ const routes = [
                 name: 'PurchaseOrderListSelf',
                 component: () => import('@/views/purchase/purchase-order-list.vue'),
                 meta: {
-                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
+                    roles: [LOGIN_TYPE.DISTRIBUTOR],
                     title: '采购订单',
                     title_en: 'Purchase order',
                     search_type: PURCHASE_SEARCH_TYPE.SELF,
@@ -454,7 +453,7 @@ const routes = [
                 component: () => import('@/views/purchase/purchase-order-detail.vue'),
                 meta: {
                     hidden: true,
-                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     title: '采购订单详情',
                     auth: ['purchase-order.detail'],
                 },
@@ -550,8 +549,7 @@ const routes = [
                 component: () => import('@/views/item/item-bom.vue'),
                 meta: {
                     title: 'BOM管理',
-                    title_en: 'BOM Management',
-                    admin_module: [ROUTER_TYPE.AFTER],
+                    title_en: 'BOM Management',                    
                     auth: ['sales.item.bom', 'aftermarket.item.bom'],
                 },
             },
@@ -2531,9 +2529,11 @@ let ADMIN = [],
     AGENT = [],
     STORE = [];
 
+// 过滤掉hideen 为true的路由
 let target = Util.deepCopy(routes).filter(first => {
     return first.meta && !first.meta.hidden;
 });
+// 过滤掉children中的hideen为true的路由
 target.forEach(first => {
     if (first.children) {
         let children = first.children.filter(second => {
@@ -2559,6 +2559,7 @@ ADMIN.forEach(first => {
     }
 });
 
+
 // 分销商
 DISTRIBUTOR = Util.deepCopy(target).filter(first => {
     let meta = first.meta;
@@ -2575,38 +2576,38 @@ DISTRIBUTOR.forEach(first => {
 });
 
 // 零售商
-AGENT = Util.deepCopy(target).filter(first => {
-    let meta = first.meta;
-    return !meta.roles || meta.roles.includes(LOGIN_TYPE.AGENT);
-});
-AGENT.forEach(first => {
-    if (first.children) {
-        let children = first.children.filter(second => {
-            let meta = second.meta;
-            return !meta.roles || meta.roles.includes(LOGIN_TYPE.AGENT);
-        });
-        first.children = children;
-    }
-});
+// AGENT = Util.deepCopy(target).filter(first => {
+//     let meta = first.meta;
+//     return !meta.roles || meta.roles.includes(LOGIN_TYPE.AGENT);
+// });
+// AGENT.forEach(first => {
+//     if (first.children) {
+//         let children = first.children.filter(second => {
+//             let meta = second.meta;
+//             return !meta.roles || meta.roles.includes(LOGIN_TYPE.AGENT);
+//         });
+//         first.children = children;
+//     }
+// });
 
 // 门店
-STORE = Util.deepCopy(target).filter(first => {
-    let meta = first.meta;
-    return !meta.roles || meta.roles.includes(LOGIN_TYPE.STORE);
-});
-STORE.forEach(first => {
-    if (first.children) {
-        let children = first.children.filter(second => {
-            let meta = second.meta;
-            return !meta.roles || meta.roles.includes(LOGIN_TYPE.STORE);
-        });
-        first.children = children;
-    }
-});
+// STORE = Util.deepCopy(target).filter(first => {
+//     let meta = first.meta;
+//     return !meta.roles || meta.roles.includes(LOGIN_TYPE.STORE);
+// });
+// STORE.forEach(first => {
+//     if (first.children) {
+//         let children = first.children.filter(second => {
+//             let meta = second.meta;
+//             return !meta.roles || meta.roles.includes(LOGIN_TYPE.STORE);
+//         });
+//         first.children = children;
+//     }
+// });
 
 export const SIDER = {
     ADMIN,
     DISTRIBUTOR,
-    AGENT,
-    STORE,
+    // AGENT,
+    // STORE,
 };

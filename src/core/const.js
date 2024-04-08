@@ -226,15 +226,7 @@ let Const = {
             AGENT: 20,
             STORE: 30,
             SUPPLIER: 60, // 供应商
-        },
-        ROUTER_TYPE: {
-            SALES: 1, // 销售
-            AFTER: 2, // 售后
-            PRODUCTION: 3, // 生产
-            CRM: 4, // CRM
-            SUPPLIER: 5, // 供应商
-            SYSTEM: 6, // 系统管理
-        },
+        },             
     },
     LOGINMALL: {
         // 登录

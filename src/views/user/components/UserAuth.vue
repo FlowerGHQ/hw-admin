@@ -25,12 +25,12 @@
                     <div class="panel-content" v-if="!edit && showExtra">
                         <SimpleImageEmpty v-if="false" desc="该用户尚未分配可管理权限" />
                         <template v-else v-for="item of options" :key="item.key">
-                            <div class="form-item">
+                            <!-- <div v-if="item.templateSelect.length" class="form-item">
                                 <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
                                 <div class="value">
                                     <span>{{ $t('authority.title.' + item.key) }}</span>
                                 </div>
-                            </div>
+                            </div> -->
                             <template v-for="(subItem, index) of item.list" :key="index">
                                 <div class="form-item afs">
                                     <div class="key">
@@ -105,10 +105,10 @@
                         </template>
                     </div>
                     <div v-else class="panel-content">
-                        <auth-tab ref="authTabRef" class="m-b-20" @tab="onTab"></auth-tab>
+                        <auth-tab v-if="!$auth('DISTRIBUTOR')" ref="authTabRef" class="m-b-20" @tab="onTab"></auth-tab>
                         <template v-for="item of options" :key="item.key">
-                            <template v-if="activeTab === item.tab">
-                                <div class="form-item afs">
+                            <template v-if="$auth('DISTRIBUTOR') || activeTab === item.tab">
+                                <!-- <div class="form-item afs">
                                     <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
                                     <div class="value">
                                         <a-checkbox-group v-model:value="item.templateSelect" :disabled="item.disabled">
@@ -117,7 +117,7 @@
                                             </a-checkbox>
                                         </a-checkbox-group>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
                                     <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
                                     <div class="value">

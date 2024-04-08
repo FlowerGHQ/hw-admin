@@ -6,6 +6,7 @@
                 <div class="header-left" :class="{ collapsed: collapsed }">
                     <img src="@images/header-logo2.png" class="logo" @click="collapsed = !collapsed" alt="浩万" />
                 </div>
+                <!-- tab切换 -->
                 <div class="header-center" v-if="loginType === Core.Const.USER.TYPE.ADMIN">
                     <a-radio-group v-model:value="tabPosition" @change="handleRouterSwitch">
                         <a-radio-button
@@ -18,6 +19,7 @@
                         </a-radio-button>
                     </a-radio-group>
                 </div>
+
                 <div class="header-right">
                     <a-button class="lang-switch" type="link" @click="handleLangSwitch(lang == 'zh' ? 'en' : 'zh')">
                         <i class="icon" :class="lang == 'zh' ? 'i_zh-en' : 'i_en-zh'" />
@@ -29,9 +31,9 @@
                         </a-badge>
                     </a-button>
                     <a-divider class="PC" type="vertical" />
-                    <a-tag class="PC" color="blue" style="font-size: 12px">{{
-                        USER_TYPE[loginType][$i18n.locale]
-                    }}</a-tag>
+                    <a-tag class="PC" color="blue" style="font-size: 12px">
+                        {{ USER_TYPE[loginType][$i18n.locale] }}
+                    </a-tag>
                     <a-dropdown :trigger="['click']" overlay-class-name="account-action-menu">
                         <a-button class="user-info" type="link">
                             <a-avatar class="user-avatar PC" :src="$Util.imageFilter(user.avatar, 3)" :size="30">
@@ -43,14 +45,14 @@
                         <template #overlay>
                             <a-menu style="text-align: center">
                                 <a-menu-item @click="handleEditShow">
-                                    <a-button type="link" class="menu-item-btn">{{
-                                        $t('n.password') /*修改密码*/
-                                    }}</a-button>
+                                    <a-button type="link" class="menu-item-btn">
+                                        {{ $t('n.password') /*修改密码*/ }}
+                                    </a-button>
                                 </a-menu-item>
                                 <a-menu-item @click="$router.push('/login')" v-if="user_type_list.length > 1">
-                                    <a-button type="link" class="menu-item-btn">{{
-                                        $t('mall.switch_identity') /*切换身份*/
-                                    }}</a-button>
+                                    <a-button type="link" class="menu-item-btn">
+                                        {{ $t('mall.switch_identity') /*切换身份*/ }}
+                                    </a-button>
                                 </a-menu-item>
                                 <a-menu-divider class="menu_divider" v-if="user_type_list.length > 1" />
                                 <a-menu-item @click="handleLogout">
@@ -79,12 +81,12 @@
                         :inlineIndent="8"
                     >
                         <template v-for="item of showList">
-                            <!-- 这个是只有当个导航栏 -->
+                            <!-- 这个是只有单个导航栏 -->
                             <a-menu-item v-if="item.not_sub_menu" :key="item.path" @click="handleLink(item.path)">
                                 <i class="icon" :class="item.meta.icon" />
-                                <span :class="{ 'collapsed-title': collapsed }">{{
-                                    lang == 'zh' ? item.meta.title : item.meta.title_en
-                                }}</span>
+                                <span :class="{ 'collapsed-title': collapsed }">
+                                    {{ lang == 'zh' ? item.meta.title : item.meta.title_en }}
+                                </span>
                             </a-menu-item>
                             <!-- 有二级导航栏的 -->
                             <a-sub-menu v-else :key="item.path">
@@ -94,21 +96,13 @@
                                         {{ lang == 'zh' ? item.meta.title : item.meta.title_en }}
                                     </span>
                                 </template>
-                                <template v-for="i of item.children">
-                                    <template
-                                        v-if="
-                                            $auth(...i.auth) && isExistArr(i.meta?.admin_module, tabPosition)
-                                            /*判断子children meta.admin_module admin中四大模块*/
-                                        "
-                                    >
-                                        <a-menu-item
-                                            :key="item.path + '/' + i.path"
-                                            @click="handleLink(item.path + '/' + i.path)"
-                                        >
-                                            <span>{{ lang == 'zh' ? i.meta.title : i.meta.title_en }}</span>
-                                        </a-menu-item>
-                                    </template>
-                                </template>
+                                <a-menu-item
+                                    v-for="i of item.children"
+                                    :key="item.path + '/' + i.path"
+                                    @click="handleLink(item.path + '/' + i.path)"
+                                >
+                                    <span>{{ lang == 'zh' ? i.meta.title : i.meta.title_en }}</span>
+                                </a-menu-item>
                             </a-sub-menu>
                         </template>
                     </a-menu>
@@ -164,7 +158,9 @@ import { SIDER } from '../../router/routes';
 import MyBreadcrumb from './components/Breadcrumb.vue';
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
 import enUS from 'ant-design-vue/lib/locale-provider/en_US';
-const ROUTER_TYPE = Core.Const.LOGIN.ROUTER_TYPE;
+import { result } from 'lodash';
+const ROUTER_TYPE = Core.Const.SYSTEM_AUTH.ROUTER_TYPE;
+const ROUTER_TYPE_MAP = Core.Const.SYSTEM_AUTH.ROUTER_TYPE_MAP;
 
 export default {
     components: {
@@ -180,6 +176,7 @@ export default {
             loginType: Core.Data.getLoginType(),
             USER_TYPE: Core.Const.USER.TYPE_MAP,
             ROUTER_TYPE,
+            ROUTER_TYPE_MAP,
             collapsed: false,
             openKeys: [],
             selectedKeys: [],
@@ -261,6 +258,7 @@ export default {
                     showList = SIDER.STORE;
                     break;
             }
+            // 这里操作相当于把meta中的数据拿到外面来
             showList.forEach(item => {
                 item.auth = item.meta ? item.meta.auth || [] : [];
                 item.not_sub_menu = item.meta ? item.meta.not_sub_menu || false : false;
@@ -274,35 +272,14 @@ export default {
 
             // 选择模块进行路由过滤ADMIN的时候的权限
             if (this.loginType === LOGIN_TYPE.ADMIN) {
-                let newShowList = [];
-                SIDER.ADMIN.forEach(item => {
-                    if (item.type != undefined ? item.type.indexOf(this.tabPosition) != -1 : true) {
-                        newShowList.push(item);
-                    }
-                });
-
-                showList = newShowList;
-
-                // 是否只在超级管理员显示，普通平台方不展示
-                if (!Core.Data.getManager()) {
-                    let superList = Core.Util.deepCopy(showList); // 为了防止影响之前的数据
-                    let result = superList.filter(first => {
-                        let firstMeta = first.meta;
-                        if (first.children) {
-                            let children = first.children.filter(second => {
-                                let secondMeta = second.meta;
-                                return !secondMeta.super_admin_show;
-                            });
-                            first.children = children;
-                        }
-                        return !firstMeta.super_admin_show;
-                    });
-
-                    showList = result;
-                }
+                showList = this.handleAdminRouter(SIDER.ADMIN);
             }
-
-            return showList.filter(el => this.$auth(...el.auth));
+            
+            // 过滤掉 路由不在 全局（authority.list）中的
+            showList = this.handleUnAuthListFilter(showList);
+            
+            console.log('showList', showList);
+            return showList;
         },
         lang() {
             return this.$store.state.lang;
@@ -381,7 +358,7 @@ export default {
     created() {
         this.user_type_list = Core.Data.getUserTypeList();
     },
-    mounted() {
+    mounted() {        
         this.loginType = Core.Data.getLoginType();
         console.log(this.loginType);
         this.getUnreadCount();
@@ -506,8 +483,7 @@ export default {
                 return;
             }
             Core.Data.setTabPosition(this.tabPosition);
-
-            // console.log('获取路由列表第一个的跳转', this.showList[0]?.path);
+            
             switch (this.tabPosition) {
                 case this.ROUTER_TYPE.SALES:
                     this.$router.replace({ path: this.showList[0]?.path });
@@ -530,7 +506,7 @@ export default {
                     break;
                 default:
                     break;
-            }
+            }            
         },
         // 判断顶部的 销售/售后/生产/CRM/供应链 路口显示(根据底下是否有路由)
         returnAdminFilter(tabPosition, data = SIDER.ADMIN) {
@@ -590,6 +566,66 @@ export default {
             const Arr = arr || [];
             const result = Arr.includes(value);
             return result; // true为显示 false 为不显示
+        },
+
+        // adminRouter过滤
+        handleAdminRouter(ADMIN) {   
+            let showList = Core.Util.deepCopy(ADMIN)                 
+            let newShowList = [];
+            let KEY = ROUTER_TYPE_MAP[this.tabPosition].KEY
+            // 过滤掉对应的数据            
+
+            const adminTemplateFilter = (list) => {
+                let result = [];
+                result = list.filter(el => {
+                    let someResult = el.auth?.some((authItem, index) => {
+                        let parts = authItem.split('.')[0]        
+                        // 过滤掉根据 模块 && 是否有权限             
+                        return parts === KEY && this.$auth(authItem)
+                    })                                  
+                    if (el.children?.length) {                        
+                        el.children = adminTemplateFilter(el.children);
+                    }                    
+                    return someResult
+                });
+                return result;
+            }
+            // 防止影响ADMIN数据
+            newShowList = adminTemplateFilter(showList)
+
+            // console.log("KEY",KEY, "newShowList", newShowList);
+
+            // 是否只在超级管理员显示，普通平台方不展示[不知干什么的]
+            // if (!Core.Data.getManager()) {
+            //     let superList = Core.Util.deepCopy(showList); // 为了防止影响之前的数据
+            //     let result = superList.filter(first => {
+            //         let firstMeta = first.meta;
+            //         if (first.children) {
+            //             let children = first.children.filter(second => {
+            //                 let secondMeta = second.meta;
+            //                 return !secondMeta.super_admin_show;
+            //             });
+            //             first.children = children;
+            //         }
+            //         return !firstMeta.super_admin_show;
+            //     });
+
+            //     showList = result;
+            // }
+
+            return newShowList;
+        },
+
+        // 过滤掉 路由不在 全局（authority.list）中的
+        handleUnAuthListFilter(showList) {
+            let result = [];
+            result = showList.filter(el => {
+                if (el.children?.length) {
+                    el.children = this.handleUnAuthListFilter(el.children);
+                }
+                return this.$auth(...el.auth);
+            });
+            return result;
         },
     },
 };

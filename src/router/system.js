@@ -4,7 +4,7 @@ import Data from '../core/data';
 import Layout from '../views/layout/index.vue';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
-const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE;
+const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 
 // 系统
 const SYSTEM = {

@@ -203,10 +203,10 @@ export default {
                 { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right' },
             ];
-            // if (this.$auth('user.set-admin')) {
-            //     // 维修工不显示管理员
-            //     columns.splice(5, 0, { title: this.$t('e.administrator'), dataIndex: 'flag_admin' });
-            // }
+            if (this.$auth('sys.sys.user.set-admin')) {
+                // 维修工不显示管理员
+                columns.splice(5, 0, { title: this.$t('e.administrator'), dataIndex: 'flag_admin' });
+            }
             return columns;
         },
     },

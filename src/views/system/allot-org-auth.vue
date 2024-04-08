@@ -31,12 +31,12 @@
                     <div v-if="!org.edit" class="panel-content">
                         <SimpleImageEmpty v-if="org.isEmpty" :desc="$t('n.no_org_auth')" />
                         <template v-else v-for="item of org.options" :key="item.key">
-                            <div v-if="item.templateSelect.length" class="form-item">
+                            <!-- <div v-if="item.templateSelect.length" class="form-item">
                                 <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
                                 <div class="value">
                                     <span>{{ $t('authority.title.' + item.key) }}</span>
                                 </div>
-                            </div>
+                            </div> -->
                             <template v-for="(subItem, index) of item.list" :key="index">
                                 <div v-if="subItem.itemSelect.length" class="form-item afs">
                                     <div class="key">
@@ -106,7 +106,7 @@
                         <auth-tab ref="authTabRef" class="m-b-20" @tab="onTab"></auth-tab>
                         <template v-for="item of org.options" :key="item.key">
                             <template v-if="activeTab === item.tab">
-                                <div class="form-item afs">
+                                <!-- <div class="form-item afs">
                                     <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
                                     <div class="value">
                                         <a-checkbox-group v-model:value="item.templateSelect">
@@ -115,7 +115,7 @@
                                             </a-checkbox>
                                         </a-checkbox-group>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs d-f-a">
                                     <div class="key">
                                         {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:
