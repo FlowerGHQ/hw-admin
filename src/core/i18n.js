@@ -244,7 +244,7 @@ const messages = {
             verification_code: '验证码',
             supplier: '供应链',
             system_management: '系统管理',
-            
+            warehousing: '仓储',
         },
         a: {
             // 零售商
@@ -3152,6 +3152,7 @@ const messages = {
             verification_code: 'Verification Code',
             supplier: 'Supplier',
             system_management: 'System Management',
+            warehousing: 'Warehousing',
         },
         a: {
             new_retailer: 'Create A New Retailer',
