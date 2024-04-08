@@ -233,7 +233,6 @@ let Const = {
             PRODUCTION: 3, // 生产
             CRM: 4, // CRM
             SUPPLIER: 5, // 供应商
-            SYSTEM: 6, // 系统管理
         },
     },
     LOGINMALL: {
@@ -1172,6 +1171,7 @@ let Const = {
         { list: [], select: [], key: 'allocation-rules', name: '分配规则' },
         { list: [], select: [], key: 'good-goods-order', name: '好物订单' },
         { list: [], select: [], key: 'email', name: '邮件管理' },
+        { list: [], select: [], key: 'supplier-cost-management', name: '成本管理' },
     ],
 
     ATTACHMENT: {

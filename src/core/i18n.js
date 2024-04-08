@@ -2033,6 +2033,7 @@ const messages = {
                 'allocation-rules': '分配规则',
                 'good-goods-order': '好物订单',
                 email: '邮件管理',
+                'supplier-cost-management': '成本管理',
             },
             distributor: {
                 list: '查看分销商列表',
@@ -2410,6 +2411,9 @@ const messages = {
             email: {
                 'email-list': '邮件列表',
                 'email-statistics': '邮件列表',
+            },
+            'supplier-cost-management': {
+                'model-cost-list': '车型成本列表',
             },
         },
         error_code: {
@@ -4890,6 +4894,7 @@ const messages = {
                 'allocation-rules': 'Allocation Rules',
                 'good-goods-order': 'Good Goods Order',
                 email: 'Email',
+                'supplier-cost-management': 'Supplier Cost Management',
             },
             distributor: {
                 list: 'View Distributor List',
@@ -5265,6 +5270,9 @@ const messages = {
             email: {
                 'email-list': 'Email List',
                 'email-statistics': 'Email Statistics',
+            },
+            'supplier-cost-management': {
+                'model-cost-list': 'Model Cost List',
             },
         },
         error_code: {
