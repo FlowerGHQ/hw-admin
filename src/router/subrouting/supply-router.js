@@ -1,7 +1,7 @@
-import Const from '../core/const';
-import Util from '../core/utils';
-import Data from '../core/data';
-import Layout from '../views/layout/index.vue';
+import Const from '../../core/const';
+import Util from '../../core/utils';
+import Data from '../../core/data';
+import Layout from '../../views/layout/index.vue';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
@@ -17,7 +17,6 @@ const supplyManage = {
         title: '供应商管理',
         title_en: 'supplier management',
         icon: 'i_menu_fankuguanli',
-        roles: [LOGIN_TYPE.ADMIN],
         auth: ['supply.supplier-manage'],
     },
     children: [

@@ -1,7 +1,7 @@
-import Const from '../core/const';
-import Util from '../core/utils';
-import Data from '../core/data';
-import MallLayout from '../views/mall/layout/index.vue';
+import Const from '../../core/const';
+import Util from '../../core/utils';
+import Data from '../../core/data';
+import MallLayout from '../../views/mall/layout/index.vue';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 
