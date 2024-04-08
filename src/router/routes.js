@@ -5,7 +5,7 @@ import Data from '../core/data';
 import Layout from '../views/layout/index.vue';
 
 // 供应商路由
-import { supplyManage, supplyRouters, supplyMaterialManagement } from './supply-router';
+import { supplyManage, supplyRouters, supplyMaterialManagement, costManagement } from './supply-router';
 // 新分销商路由
 import { mallRouters, dealsPreview } from './mall';
 // 分销商路由
@@ -2874,6 +2874,7 @@ const routes = [
     },
     ...supplyRouters,
     supplyMaterialManagement,
+    costManagement,
     fsLogin
 ];
 
