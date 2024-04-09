@@ -71,7 +71,7 @@ const MODULEAUTH = [
         id: 7,
         value: ROUTER_TYPE.FINANCE,
         key: ROUTER_TYPE_MAP[ROUTER_TYPE.FINANCE].KEY,
-        img: Core.Util.Image.getImageFile('router', 'router_type_1'),
+        img: Util.Image.getImageFile('router', 'router_type_1'),
         t: 'payment-management.finance',
     },
     {
