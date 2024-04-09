@@ -291,8 +291,33 @@
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
-                                <a-col :span="24">
-                                    <!-- 详细地址 -->
+                                <a-col :span="12">
+                                    <!-- 省市 -->
+                                    <a-form-item name="province_city">
+                                        <template #label>
+                                            <span class="require-icon">{{ $t('supply-chain.province_city') }}</span>
+                                        </template>
+                                        <a-cascader
+                                            v-model:value="formState.company_info.provinceAndCity"
+                                            :options="chinaOptions"
+                                            :placeholder="$t('common.please_select')"
+                                            :class="{
+                                                'require-change-red':
+                                                    isFormStateRequired &&
+                                                    !formState.company_info.provinceAndCity.length,
+                                            }"
+                                            :fieldNames="{ label: 'name', value: 'name', children: 'children' }"
+                                        />
+                                        <template v-if="isFormStateRequired && !formState.company_info.address" #extra>
+                                            <span class="tips"
+                                                >{{ $t('common.please_select')
+                                                }}{{ $t('supply-chain.province_city') }}</span
+                                            >
+                                        </template>
+                                    </a-form-item>
+                                </a-col>
+                                <!-- 详细地址 -->
+                                <a-col :span="12">
                                     <a-form-item name="company_address">
                                         <template #label>
                                             <span class="require-icon">{{ $t('supply-chain.detailed_address') }}</span>
@@ -306,7 +331,6 @@
                                             v-model:value="formState.company_info.address"
                                             :placeholder="$t('common.please_enter')"
                                         />
-
                                         <template v-if="isFormStateRequired && !formState.company_info.address" #extra>
                                             <span class="tips"
                                                 >{{ $t('common.please_enter')
@@ -348,7 +372,6 @@
                                     </a-form-item>
                                 </a-col>
                             </a-row>
-
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
@@ -457,7 +480,6 @@
                             </a-row>
                         </a-col>
                     </a-row>
-
                     <!-- 代理信息 -->
                     <a-row
                         v-if="isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
@@ -712,9 +734,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        !isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])
-                                            ? 12
-                                            : 0
+                                        !isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) ? 12 : 0
                                     "
                                 >
                                     <!-- 操作工人月平均工资 -->
@@ -729,9 +749,7 @@
                                 </a-col>
                                 <a-col
                                     :span="
-                                        !isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])
-                                            ? 12
-                                            : 0
+                                        !isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) ? 12 : 0
                                     "
                                 >
                                     <!-- 管理职员人均年产值 -->
@@ -955,11 +973,7 @@
                                 </a-col>
                             </a-row>
                             <template
-                                v-if="
-                                    !isMember(formState.type, [
-                                        Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
-                                    ])
-                                "
+                                v-if="!isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers])"
                             >
                                 <a-row :gutter="24">
                                     <a-col :span="8" v-for="(item, index) in 3">
@@ -1442,9 +1456,7 @@
                                 </a-col>
                                 <a-col
                                     :span="
-                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])
-                                            ? 12
-                                            : 0
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part]) ? 12 : 0
                                     "
                                 >
                                     <!-- 研发中心 -->
@@ -1459,9 +1471,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])
-                                            ? 24
-                                            : 0
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part]) ? 24 : 0
                                     "
                                 >
                                     <!-- 研发合作机构 -->
@@ -1499,9 +1509,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])
-                                            ? 24
-                                            : 0
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part]) ? 24 : 0
                                     "
                                 >
                                     <!-- 产品设计 -->
@@ -1538,9 +1546,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
-                                            ? 24
-                                            : 0
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0
                                     "
                                 >
                                     <!-- 模具轮廓 -->
@@ -1558,9 +1564,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
-                                            ? 24
-                                            : 0
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0
                                     "
                                 >
                                     <!-- 模具重量 -->
@@ -1578,9 +1582,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
-                                            ? 24
-                                            : 0
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0
                                     "
                                 >
                                     <!-- 模具品类 -->
@@ -1598,9 +1600,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
-                                            ? 24
-                                            : 0
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0
                                     "
                                 >
                                     <!-- 模具设计 -->
@@ -1618,9 +1618,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
-                                            ? 24
-                                            : 0
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0
                                     "
                                 >
                                     <!-- 模具制造 -->
@@ -1638,9 +1636,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
-                                            ? 24
-                                            : 0
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0
                                     "
                                 >
                                     <!-- 模具验收 -->
@@ -2514,6 +2510,11 @@ import Core from '@/core';
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import axios from 'axios';
+
+// json
+const chinaOptions = ref([]);
+
 const $t = useI18n().t;
 const $i18n = useI18n();
 const $store = useStore();
@@ -2795,6 +2796,12 @@ const formState = reactive({
         premises: '', // 经营场所
         parent_company_name: '', // 母公司名称
         parent_company_address: '', // 母公司地址
+        // 省市区
+        province: '',
+        city: '',
+        address: '',
+        //回显的数组
+        provinceAndCity: [],
     },
     // 代理公司概况
     agent_info: {
@@ -3074,6 +3081,7 @@ const step1Vaild = () => {
                     },
                 };
             }
+            console.log('baseInfo', data);
             // 保存数据
             $store.dispatch('SUPPLY_CHAIN/setSupplyChain', data);
             $store.dispatch('SUPPLY_CHAIN/setSupplyDraftChain', data);
@@ -3422,6 +3430,14 @@ const onTypeChange = item => {
     formState.type = item.value;
     isFormStateRequired.value = false;
 };
+// 获取china的地区数据
+const getChinaArea = () => {
+    let url = '/ext/China.json';
+    axios.get(url).then(res => {
+        console.log('china', res);
+        chinaOptions.value = res.data;
+    });
+};
 
 /* methods end */
 defineExpose({
@@ -3432,6 +3448,8 @@ defineExpose({
 onMounted(() => {
     // 回显数据
     reviewData();
+    // 获取china的地区数据
+    getChinaArea();
 });
 </script>
 

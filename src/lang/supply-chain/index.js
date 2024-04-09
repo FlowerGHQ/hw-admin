@@ -294,8 +294,12 @@ export default {
         submit_exit: '提交并退出',
         no_content: '无内容',
         please_upload_business_license_photos: '请上传营业执照照片',
+        // 省市
+        province_city: '省市',
     },
     en: {
+        // 省市
+        province_city: 'Province City',
         // 年
         year: 'Year',
         ten_thousand_yuan: 'TEN THOUSAND YUAN',

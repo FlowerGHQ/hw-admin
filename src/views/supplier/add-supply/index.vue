@@ -202,7 +202,6 @@ const handleNext = () => {
         BasicInfoRef.value
             .step1Vaild()
             .then(res => {
-                console.log('res-----------------:', res);
                 // 下一步
                 $store.dispatch('SUPPLY_CHAIN/nextStep');
             })
@@ -247,6 +246,9 @@ const handleSubmitOk = () => {
 const handleSubmitData = () => {
     // 获取本地上传表单数据
     const data = $store.state.SUPPLY_CHAIN.supplyChain;
+    console.log('dataform:', data.form);
+    data.form.company_info.province = data.form.company_info.provinceAndCity[0];
+    data.form.company_info.city = data.form.company_info.provinceAndCity[1];
     data?.form ? (data.form = JSON.stringify(data.form)) : '{}';
     // 获取类型
     if ($store.state.SUPPLY_CHAIN.supplyType != Core.Const.SUPPLAY.SUPPLAY_TYPE['2'].value) {
@@ -254,7 +256,6 @@ const handleSubmitData = () => {
             delete data.confirmatory_material.proxy_certificate;
         }
     }
-
     Core.Api.SUPPLY.adminAdd(data)
         .then(res => {
             visible.value = false;

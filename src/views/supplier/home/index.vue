@@ -347,7 +347,7 @@ const handleSubmitOk = () => {
 const handleSubmitData = () => {
     // 获取本地上传表单数据
     const data = $store.state.SUPPLY_CHAIN.supplyChain;
-    data?.form ? (data.form = JSON.stringify(data.form)) : '{}';
+    data?.form ? (data.form = JSON.stringify(data.form)) : (data.form = '{}');
     // 获取类型
     if ($store.state.SUPPLY_CHAIN.supplyType != Core.Const.SUPPLAY.SUPPLAY_TYPE['2'].value) {
         if (data?.confirmatory_material?.proxy_certificate) {
@@ -358,7 +358,8 @@ const handleSubmitData = () => {
         .then(res => {
             visible.value = false;
             // 获取详情数据
-            getDetail().then(() => {
+            getDetail().then(res => {
+                console.log('res:', res);
                 $store.dispatch('SUPPLY_CHAIN/nextStep');
             });
         })
@@ -387,11 +388,13 @@ const getDetail = () => {
                         } else {
                             DETAILS.form = {};
                         }
+                        console.log('DETAILS:', DETAILS);
+                        console.log('supplyDraftChain:', $store.state.SUPPLY_CHAIN.supplyDraftChain);
+
                         if (Object.keys($store.state.SUPPLY_CHAIN.supplyDraftChain).length > 0) {
                             DETAILS = Object.assign(DETAILS, $store.state.SUPPLY_CHAIN.supplyDraftChain);
                         }
                         let data = DETAILS;
-                        console.log('data:', data);
                         // 存储到草稿数据
                         $store.commit('SUPPLY_CHAIN/setSupplyDraftChain', data);
                         // 如果已经提交了
@@ -408,11 +411,11 @@ const getDetail = () => {
                     $store.dispatch('SUPPLY_CHAIN/setSubmitEd', false);
                     $store.dispatch('SUPPLY_CHAIN/setSupplyDraftChain', {});
                 }
-                resolve();
+                resolve(true);
             })
             .catch(err => {
                 $store.dispatch('SUPPLY_CHAIN/setSupplyDraftChain', {});
-                reject();
+                reject(false);
             });
     });
 };

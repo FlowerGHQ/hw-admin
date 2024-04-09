@@ -291,7 +291,40 @@
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
-                                <a-col :span="24">
+                                <a-col :span="12">
+                                    <!-- 详细地址 -->
+                                    <a-form-item name="province_city">
+                                        <template #label>
+                                            <span class="require-icon">{{ $t('supply-chain.province_city') }}</span>
+                                        </template>
+                                        <a-cascader
+                                            v-model:value="formState.company_info.provinceAndCity"
+                                            :options="chinaOptions"
+                                            :placeholder="$t('common.please_select')"
+                                            :class="{
+                                                'require-change-red':
+                                                    isFormStateRequired &&
+                                                    (!formState.company_info.provinceAndCity ||
+                                                        formState.company_info.provinceAndCity.length == 0),
+                                            }"
+                                            :fieldNames="{ label: 'name', value: 'name', children: 'children' }"
+                                        />
+                                        <template
+                                            v-if="
+                                                isFormStateRequired &&
+                                                (!formState.company_info.provinceAndCity ||
+                                                    formState.company_info.provinceAndCity.length == 0)
+                                            "
+                                            #extra
+                                        >
+                                            <span class="tips"
+                                                >{{ $t('common.please_select')
+                                                }}{{ $t('supply-chain.province_city') }}</span
+                                            >
+                                        </template>
+                                    </a-form-item>
+                                </a-col>
+                                <a-col :span="12">
                                     <!-- 详细地址 -->
                                     <a-form-item name="company_address">
                                         <template #label>
@@ -459,10 +492,7 @@
                     </a-row>
 
                     <!-- 代理信息 -->
-                    <a-row
-                        v-if="isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
-                        :gutter="24"
-                    >
+                    <a-row v-if="isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])" :gutter="24">
                         <a-col :span="3" class="title-area">
                             <div class="title-two" id="agent_info">
                                 <!-- 代理信息 -->
@@ -711,9 +741,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        !isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])
-                                            ? 12
-                                            : 0
+                                        !isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) ? 12 : 0
                                     "
                                 >
                                     <!-- 操作工人月平均工资 -->
@@ -728,9 +756,7 @@
                                 </a-col>
                                 <a-col
                                     :span="
-                                        !isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])
-                                            ? 12
-                                            : 0
+                                        !isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) ? 12 : 0
                                     "
                                 >
                                     <!-- 管理职员人均年产值 -->
@@ -954,11 +980,7 @@
                                 </a-col>
                             </a-row>
                             <template
-                                v-if="
-                                    !isMember(formState.type, [
-                                        Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
-                                    ])
-                                "
+                                v-if="!isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers])"
                             >
                                 <a-row :gutter="24">
                                     <a-col :span="8" v-for="(item, index) in 3">
@@ -1441,9 +1463,7 @@
                                 </a-col>
                                 <a-col
                                     :span="
-                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])
-                                            ? 12
-                                            : 0
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part]) ? 12 : 0
                                     "
                                 >
                                     <!-- 研发中心 -->
@@ -1458,9 +1478,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])
-                                            ? 24
-                                            : 0
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part]) ? 24 : 0
                                     "
                                 >
                                     <!-- 研发合作机构 -->
@@ -1498,9 +1516,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])
-                                            ? 24
-                                            : 0
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part]) ? 24 : 0
                                     "
                                 >
                                     <!-- 产品设计 -->
@@ -1537,9 +1553,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
-                                            ? 24
-                                            : 0
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0
                                     "
                                 >
                                     <!-- 模具轮廓 -->
@@ -1557,9 +1571,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
-                                            ? 24
-                                            : 0
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0
                                     "
                                 >
                                     <!-- 模具重量 -->
@@ -1577,9 +1589,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
-                                            ? 24
-                                            : 0
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0
                                     "
                                 >
                                     <!-- 模具品类 -->
@@ -1597,9 +1607,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
-                                            ? 24
-                                            : 0
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0
                                     "
                                 >
                                     <!-- 模具设计 -->
@@ -1617,9 +1625,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
-                                            ? 24
-                                            : 0
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0
                                     "
                                 >
                                     <!-- 模具制造 -->
@@ -1637,9 +1643,7 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
-                                            ? 24
-                                            : 0
+                                        isMember(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0
                                     "
                                 >
                                     <!-- 模具验收 -->
@@ -2513,10 +2517,13 @@ import Core from '@/core';
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
+import axios from 'axios';
+
 const $t = useI18n().t;
-const $i18n = useI18n();
 const $store = useStore();
 
+// json
+const chinaOptions = ref([]);
 const TimeSearchRef = ref(null);
 const TECHNICAL_INFORMATION = computed(() => {
     let arr = [];
@@ -2793,6 +2800,11 @@ const formState = reactive({
         premises: '', // 经营场所
         parent_company_name: '', // 母公司名称
         parent_company_address: '', // 母公司地址
+        // 省市区
+        province: '',
+        city: '',
+        //回显的数组
+        provinceAndCity: [],
     },
     // 代理公司概况
     agent_info: {
@@ -2955,23 +2967,6 @@ const formState = reactive({
     additional_info: '',
 });
 const isFormStateRequired = ref(false);
-
-/* methods start */
-// 查询当前校验的字段的父级,直到找到class为ant-form-item-control的元素的递归函数
-// const findParent = (el) => {
-//     // 查找到父级
-//     let parent = el.parentNode;
-//     let classNameArr = parent.className.split(" ");
-//     if (parent && !classNameArr.includes("ant-form-item")) {
-//         return findParent(parent);
-//     } else if (!parent && parent.parentNode) {
-//         return findParent(parent.parentNode);
-//     } else if (!parent && !parent.parentNode) {
-//         return "";
-//     } else {
-//         return parent.querySelector(".ant-form-item-label > label").innerText;
-//     }
-// };
 const handleCheckBox = checkedValue => {
     // 清除
     formState.position = checkedValue;
@@ -3006,6 +3001,7 @@ const draftDataReview = () => {
     } else {
         draftData = {};
     }
+    console.log('draftData', draftData);
     // 判断是否为空对象
     if (Object.keys(draftData).length === 0) {
         console.log('空对象', '详情回显');
@@ -3022,13 +3018,14 @@ const draftDataReview = () => {
     }
     setTimeout(() => {
         if (TimeSearchRef.value) {
-            // 给timeSearch赋值
+            //
             TimeSearchRef.value.createTime = [
                 formState.agent_info.agent_effective_begin_time,
                 formState.agent_info.agent_effective_end_time,
             ];
         }
     });
+    console.log('formState', formState);
 };
 // 判断哪些类型显示哪些模块
 const isMember = (type, typeIncludes) => {
@@ -3048,6 +3045,11 @@ const step1Vaild = () => {
         if (!paramsRequired.length) {
             isFormStateRequired.value = false;
             let data = $store.state.SUPPLY_CHAIN.supplyChain;
+            console.log('formState***************************', formState);
+            formState.company_info.province = formState.company_info.provinceAndCity[0];
+            formState.company_info.city = formState.company_info.provinceAndCity[1];
+            console.log('data***************************', data);
+            console.log('formState***************************', formState);
             // 判断是否为空对象
             if (Object.keys(data).length === 0) {
                 // 为空对象
@@ -3078,7 +3080,7 @@ const step1Vaild = () => {
         } else {
             isFormStateRequired.value = true;
             let tips = null;
-            // console.log("tips msg", paramsRequired[0].split('.'));
+            console.log(paramsRequired[0].split('.')[0]);
             switch (paramsRequired[0].split('.')[0]) {
                 case 'position':
                     tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.Position') + ')';
@@ -3157,6 +3159,7 @@ const paramsRequiredFilter = () => {
             address: null,
             established_time: null,
             legal_person: null,
+            provinceAndCity: [],
         },
         financial_info: {
             flag_legal_dispute: null, // 是否有法律纠纷
@@ -3301,7 +3304,7 @@ const paramsRequiredFilter = () => {
 
     for (const key in requiredParams) {
         let keys = requiredParams[key];
-
+        console.log('key', key, keys);
         if (keys instanceof Array) {
             console.log('数组', formState[key]);
             if (key === 'position') {
@@ -3419,6 +3422,14 @@ const onTypeChange = item => {
     formState.type = item.value;
     isFormStateRequired.value = false;
 };
+// 获取china的地区数据
+const getChinaArea = () => {
+    let url = '/ext/China.json';
+    axios.get(url).then(res => {
+        console.log('china', res);
+        chinaOptions.value = res.data;
+    });
+};
 
 /* methods end */
 defineExpose({
@@ -3427,6 +3438,7 @@ defineExpose({
     reviewData,
 });
 onMounted(() => {
+    getChinaArea();
     // 回显数据
     reviewData();
 });

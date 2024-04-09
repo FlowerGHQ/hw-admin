@@ -48,8 +48,8 @@ switch (window.location.hostname) {
         URL_POINT = 'https://eos-api-release.horwincloud.com'; // 预发环境
         break;
     default:
-        // URL_POINT = 'https://eos-dev-api.horwincloud.com'; // 测试服
-        URL_POINT = 'https://eos-api.horwincloud.com'; // 新正式服
+        URL_POINT = 'https://eos-dev-api.horwincloud.com'; // 测试服
+        // URL_POINT = 'https://eos-api.horwincloud.com'; // 新正式服6
         // URL_POINT = 'https://eos-api-release.horwincloud.com'; // 预发环境
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.10.12.194:8889' // zwq
@@ -100,7 +100,7 @@ let Const = {
         ADMIN_NEW_MSG: 'admin-new-msg',
         DISTRIBUTOR_NEW_MSG: 'distributor-new-msg',
         REPORT_DATA: 'report_data',
-        AUTHFIRST: 'authfirst',  // 销售/售后/生产/CRM/供应链 存储信息
+        AUTHFIRST: 'authfirst', // 销售/售后/生产/CRM/供应链 存储信息
     },
     DEFULT_IMG: {
         1: defult_img,
