@@ -2,13 +2,7 @@
     <div class="UserRole gray-panel no-margin">
         <div class="panel-content">
             <div class="table-container">
-                <a-button
-                    type="primary"
-                    ghost
-                    @click="handleRoleShow"
-                    v-if="$auth('account.save', 'MANAGER')"
-                    class="panel-btn"
-                >
+                <a-button type="primary" ghost @click="handleRoleShow" v-if="$auth('MANAGER')" class="panel-btn">
                     <i class="icon i_add" />{{ $t('u.add_role') }}
                 </a-button>
                 <a-table
@@ -26,11 +20,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button
-                                type="link"
-                                @click="handleDelete(record)"
-                                v-if="$auth('account.save', 'MANAGER')"
-                                class="danger"
+                            <a-button type="link" @click="handleDelete(record)" v-if="$auth('MANAGER')" class="danger"
                                 ><i class="icon i_delete" />{{ $t('def.delete') }}</a-button
                             >
                         </template>

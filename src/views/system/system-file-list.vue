@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('f.list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('ADMIN') && $auth('file.save')"
+                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('ADMIN')"
                         ><i class="icon i_add" />{{ $t('f.save') }}</a-button
                     >
                 </div>
@@ -57,14 +57,13 @@
                                 ><i class="icon i_download" />{{ $t('n.download') }}</a-button
                             >
                             <template v-if="$auth('ADMIN')">
-                                <a-button type="link" @click="routerChange('edit', record)" v-if="$auth('file.save')"
+                                <a-button type="link" @click="routerChange('edit', record)"
                                     ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                                 >
                                 <a-button
                                     type="link"
                                     @click="handleDelete(record.id)"
                                     class="danger"
-                                    v-if="$auth('file.delete')"
                                     ><i class="icon i_delete" />{{ $t('def.delete') }}</a-button
                                 >
                             </template>

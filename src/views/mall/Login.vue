@@ -616,7 +616,7 @@ export default {
                     Core.Data.setAuthority(authorityMap);
                     if (userType === Core.Const.USER.TYPE.ADMIN) {
                         setTimeout(() => {
-                            this.$router.replace({ path: '/distributor', query: { from: 'login' } });
+                            this.$router.replace({ path: '/distributor' });
                         }, 1000);
                     } else {
                         setTimeout(() => {

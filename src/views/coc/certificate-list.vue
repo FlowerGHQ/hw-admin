@@ -459,7 +459,7 @@ const onDeliveryTime = params => {
 
 const goToDetail = record => {
     router.push({
-        path: `/purchase/purchase-order-detail`,
+        path: `/distributor/purchase-order-detail`,
         query: {
             id: route.query.id,
         },

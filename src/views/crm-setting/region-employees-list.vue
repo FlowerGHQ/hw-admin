@@ -3,16 +3,11 @@
         <div class="list-container">
             <div class="title-container">
                 <div class="title-area">{{ $t('crm_region_e.list') }}</div>
-                <div class="btns-area">
-                    <!-- <a-button type="primary" @click="handleModalShow({})" v-if="$auth('material-category.save')"><i class="icon i_add"/>{{ $t('crm_region.new_top') }}</a-button>-->
-                </div>
             </div>
             <a-row>
                 <a-col class="group-container" :xs="9" :sm="6" :xl="4" :xxl="3">
                     <div class="category-container">
-                        <!-- <div class="category-title" >区域</div>-->
                         <div class="category-content">
-                            <!-- <a-input-search v-model:value="searchValue" style="margin-bottom: 8px" placeholder="Search" />-->
                             <a-tree
                                 v-if="groupOptions.length"
                                 v-model:value="checkedKeys"
@@ -36,15 +31,6 @@
                                     />
                                 </div>
                             </a-col>
-                            <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                                <div class="key">类型:</div>
-                                <div class="value">
-                                    <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择用户类型" allow-clear>
-                                        <a-select-option :value="orgType">普通用户</a-select-option>
-                                        <a-select-option :value="USER_TYPE.WORKER">维修工</a-select-option>
-                                    </a-select>
-                                </div>
-                            </a-col>-->
                             <a-col :xs="24" :sm="24" :xl="16" :xxl="12" class="search-item">
                                 <div class="key">{{ $t('d.create_time') }}:</div>
                                 <div class="value"><TimeSearch @search="handleOtherSearch" ref="TimeSearch" /></div>
@@ -80,7 +66,7 @@
                                     {{ text || '-' }}
                                 </template>
                                 <template v-if="column.key === 'flag_admin_group'">
-                                    <template v-if="$auth('user.set-admin') && admin_user_id === loginUser.id">
+                                    <template v-if="admin_user_id === loginUser.id">
                                         <a-switch
                                             :checked="!!record.flag_admin_group"
                                             :checked-children="$t('i.yes')"
@@ -110,7 +96,6 @@
                                         type="link"
                                         @click="handleDelete(record.crm_group_member_id)"
                                         class="danger"
-                                        v-if="$auth('crm-group.delete')"
                                         ><i class="icon i_delete" />{{ $t('def.delete') }}</a-button
                                     >
                                 </template>

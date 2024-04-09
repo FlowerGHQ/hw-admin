@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('a.list_of_retailers') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('agent.save')"
+                    <a-button type="primary" @click="routerChange('edit')"
                         ><i class="icon i_add" />{{ $t('a.new_retailer') }}</a-button
                     >
                 </div>
@@ -24,9 +24,6 @@
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="$auth('ADMIN')">
                         <div class="key">{{ $t('a.superior') }}:</div>
                         <div class="value">
-                            <!--                        <a-select v-model:value="searchForm.distributor_id" :placeholder="$t('def.select')" @change="handleSearch">-->
-                            <!--                            <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{item.name}}</a-select-option>-->
-                            <!--                        </a-select>-->
                             <a-tree-select
                                 v-model:value="searchForm.parent_id"
                                 show-search
@@ -70,7 +67,7 @@
                     @change="handleTableChange"
                 >
                     <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.dataIndex === 'name' && $auth('agent.detail')">
+                        <template v-if="column.dataIndex === 'name'">
                             <a-tooltip placement="top" :title="text">
                                 <a-button type="link" @click="routerChange('detail', record)">{{ text }}</a-button>
                             </a-tooltip>
@@ -98,10 +95,10 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('detail', record)" v-if="$auth('agent.detail')">
+                            <a-button type="link" @click="routerChange('detail', record)">
                                 <i class="icon i_detail" /> {{ $t('def.detail') }}</a-button
                             >
-                            <a-button type="link" @click="routerChange('edit', record)" v-if="$auth('agent.save')">
+                            <a-button type="link" @click="routerChange('edit', record)">
                                 <i class="icon i_edit" /> {{ $t('def.edit') }}</a-button
                             >
                             <a-button
@@ -109,10 +106,10 @@
                                 @click="handleStatusChange(record)"
                                 :class="record.status ? 'danger' : ''"
                             >
-                                <template v-if="record.status && $auth('agent.delete')"
+                                <template v-if="record.status"
                                     ><i class="icon i_forbidden" />{{ $t('def.disable') }}</template
                                 >
-                                <template v-if="!record.status && $auth('agent.enable')"
+                                <template v-if="!record.status"
                                     ><i class="icon i_enable" />{{ $t('def.enable') }}</template
                                 >
                             </a-button>

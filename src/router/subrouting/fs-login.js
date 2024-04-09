@@ -1,4 +1,4 @@
-import Layout from '../views/fs-login/index.vue';
+import Layout from '../../views/fs-login/index.vue';
 
 // 飞书登录相关页面
 const fsLogin = {

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="value">
-            <a-button type="primary" v-if="$auth('customer.detail')" @click="addPopShow">{{
+            <a-button type="primary" @click="addPopShow">{{
                 $t('crm_st.add_len')
             }}</a-button>
         </div>

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <script>
+            const list = [
+                {
+                    id: 3,
+                    key: 'test.oneMange1.bookList.edit',
+                    name: '编辑',
+                },
+                {
+                    id: 2,
+                    key: 'test.oneMange1.bookList',
+                    name: 'book列表1',
+                },
+                {
+                    id: 1,
+                    key: 'test.oneMange1',
+                    name: '管理1',
+                },
+            ];
+
+            function processAuthList(authList) {
+                let tree = {
+                    route: '',
+                    key: '',
+                    children: [],
+                };
+                travelAuth(authList, tree);
+                return tree;
+            }
+
+            // 拆分 key='test.aa.bb.cc'
+            function getNextLevelNodeNameList(authList, prefix) {
+                let items = {};
+                authList.forEach((node, i) => {
+                    let nodeKey = node.key;
+                    if (prefix !== undefined) {
+                        if (nodeKey.indexOf(prefix) < 0) {
+                            return;
+                        }
+                    }
+
+                    prefix = prefix || '';
+
+                    let subKey = nodeKey.substring(prefix.length);
+                    let parts = subKey.split('.').filter(s => s !== '');
+                    if (parts.length == 0) {
+                        return;
+                    }
+                    let key = parts[0];
+                    items[key] = key;
+                });
+
+                return Object.keys(items);
+            }
+
+            // 根据prefix过滤相应开头的数据
+            function getSubAuthList(authList, prefix) {
+                return authList.filter(node => node.key.indexOf(prefix) === 0);
+            }
+
+            function travelAuth(authList, node, parentRoute) {
+                console.log('travel', parentRoute);
+
+                let children = [];
+
+                let currentLevelNodeNameList = getNextLevelNodeNameList(authList, parentRoute);
+                console.log('nextLevel', currentLevelNodeNameList);
+
+                if (currentLevelNodeNameList.length === 0) {
+                    node.key = node.route + '.' + node.key;
+                    return;
+                }
+
+                currentLevelNodeNameList.forEach((key, _) => {
+                    let route = parentRoute + '.' + key;
+                    if (node.route === '') {
+                        route = key;
+                    }
+
+                    console.log('getSubAuthList', route);
+                    let childAuthList = getSubAuthList(authList, route);
+                    if (childAuthList.length === 0) {
+                        return;
+                    }
+
+                    let childNode = {
+                        route: parentRoute,
+                        key: key,
+                        parent: node,
+                    };
+
+                    travelAuth(authList, childNode, route);
+
+                    children.push(childNode);
+                });
+
+                node.children = children;
+            }
+
+            console.log(processAuthList(list));
+        </script>
+    </body>
+</html>

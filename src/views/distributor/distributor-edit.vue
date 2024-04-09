@@ -150,7 +150,7 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary" v-if="$auth('distributor.save')">{{
+            <a-button @click="handleSubmit" type="primary">{{
                 $t('def.sure')
             }}</a-button>
             <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>

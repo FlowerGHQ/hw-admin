@@ -164,22 +164,25 @@
                 </div>
             </div>
             <div class="operate-container">
-                <a-button type="primary" @click="handleExportConfirm" v-if="$auth('purchase-order.export')"
-                    ><i class="icon i_download" />{{ $t('def.export') }}</a-button
-                >
-                <a-button type="primary" @click="handleExportSalesReport" v-if="$auth('ADMIN')"
-                    ><i class="icon i_download" />{{ $t('def.sales_report_export') }}</a-button
-                >
-                <a-button type="primary" @click="handleExportSalesQuantityStatistics" v-if="$auth('ADMIN')"
-                    ><i class="icon i_download" />{{ $t('def.quantity_sales_report_export') }}</a-button
-                >
+                <a-button v-if="$auth('sales.distribution.order.export')" type="primary" @click="handleExportConfirm">
+                    <i class="icon i_download" />
+                    {{ $t('def.export') }}
+                </a-button>
+                <a-button v-if="$auth('sales.distribution.order.sales-report-export')" type="primary" @click="handleExportSalesReport">
+                    <i class="icon i_download" />{{ $t('def.sales_report_export') }}
+                </a-button>
+                <a-button v-if="$auth('sales.distribution.order.statistics-report-export')"  type="primary" @click="handleExportSalesQuantityStatistics">
+                    <i class="icon i_download" />
+                    {{ $t('def.quantity_sales_report_export') }}
+                </a-button>
                 <a-button
                     class="right-f"
                     v-if="searchForm.status === '150' && $auth('ADMIN')"
                     :disabled="!isShowErpDisabled"
                     @click="sendErp"
-                    >{{ /* 同步至ERP */ $t('p.synchronization_to_erp') }}</a-button
                 >
+                {{ /* 同步至ERP */ $t('p.synchronization_to_erp') }}
+                </a-button>
             </div>
             <div class="table-container">
                 <a-table
@@ -192,7 +195,7 @@
                     :pagination="false"
                 >
                     <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.dataIndex === 'sn' && $auth('purchase-order.detail')">
+                        <template v-if="column.dataIndex === 'sn'">
                             <a-tooltip placement="top" :title="text">
                                 <a-button type="link" @click="routerChange('detail', record)" v-if="text !== ''">{{
                                     text
@@ -212,7 +215,7 @@
                                 }}
                             </span>
                         </template>
-                        <template v-else-if="column.dataIndex === 'parent_sn' && $auth('purchase-order.detail')">
+                        <template v-else-if="column.dataIndex === 'parent_sn'">
                             <a-tooltip placement="top" :title="text">
                                 <a-button
                                     type="link"
@@ -318,16 +321,16 @@
                         </template>
                         <template v-else-if="column.key === 'operation'">
                             <a-button
+                                v-if="search_type === SEARCH_TYPE.SELF"
                                 type="link"
                                 @click="handleRecreate(record)"
-                                v-if="search_type === SEARCH_TYPE.SELF"
                             >
-                                <i class="icon i_cart" /> {{ $t('p.buy_again') }}</a-button
-                            >
+                                <i class="icon i_cart" /> {{ $t('p.buy_again') }}
+                            </a-button>
                             <a-button
+                            v-if="$auth('sales.distribution.order.detail')"
                                 type="link"
                                 @click="routerChange('detail', record)"
-                                v-if="$auth('purchase-order.detail')"
                             >
                                 <i class="icon i_detail" />{{ $t('def.detail') }}</a-button
                             >
@@ -691,7 +694,7 @@ export default {
             switch (type) {
                 case 'detail': // 详情
                     routeUrl = this.$router.resolve({
-                        path: '/purchase/purchase-order-detail',
+                        path: '/distributor/purchase-order-detail',
                         query: {
                             id: item.id,
                         },
@@ -700,7 +703,7 @@ export default {
                     break;
                 case 'parent_detail': // 详情
                     routeUrl = this.$router.resolve({
-                        path: '/purchase/purchase-order-detail',
+                        path: '/distributor/purchase-order-detail',
                         query: {
                             id: item.parent_id,
                         },

@@ -15,7 +15,7 @@
                         {{ $t(title) }}
                     </template>
                     <template #bodyCell="{ record, column, text }">
-                        <template v-if="column.dataIndex === 'uid' && $auth('quality-feedback.detail')">
+                        <template v-if="column.dataIndex === 'uid'">
                             <a-tooltip placement="top" :title="text">
                                 <a-button type="link" @click="routerChange('detail', record)">{{
                                     text || '-'

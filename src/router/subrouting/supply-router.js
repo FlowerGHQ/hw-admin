@@ -1,10 +1,10 @@
-import Const from '../core/const';
-import Util from '../core/utils';
-import Data from '../core/data';
-import Layout from '../views/layout/index.vue';
+import Const from '../../core/const';
+import Util from '../../core/utils';
+import Data from '../../core/data';
+import Layout from '../../views/layout/index.vue';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
-const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE;
+const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 
 const supplyManage = {
     // 供应商管理(仅平台方可看)
@@ -17,8 +17,7 @@ const supplyManage = {
         title: '供应商管理',
         title_en: 'supplier management',
         icon: 'i_menu_fankuguanli',
-        roles: [LOGIN_TYPE.ADMIN],
-        auth: ['supplier-application.list'],
+        auth: ['supply.supplier-manage'],
     },
     children: [
         {
@@ -28,6 +27,7 @@ const supplyManage = {
             meta: {
                 title: '新增供应商',
                 title_en: 'Add New Suppliers',
+                auth: ['supply.supplier-manage.save-supplier'],
             },
         },
         {
@@ -57,6 +57,7 @@ const supplyManage = {
             meta: {
                 title: '合格供应商名录',
                 title_en: 'Qualified Supplier List',
+                auth: ['supply.supplier-manage.qualified'],
             },
         },
     ],
@@ -76,7 +77,7 @@ const supplyRouters = [
 ];
 
 // 物料管理(代码其实就是商品管理的代码只是路由不一样)
-const supplyMaterialManagement =  {
+const supplyMaterialManagement = {
     // 物料管理
     path: '/material',
     component: Layout,
@@ -87,7 +88,6 @@ const supplyMaterialManagement =  {
         title: '物料管理',
         title_en: 'Material Management',
         icon: 'i_menu_shangpingguanli',
-        roles: [LOGIN_TYPE.ADMIN],
         auth: ['supplier-material.list'],
     },
     children: [
@@ -182,8 +182,7 @@ const costManagement =  {
         title: '成本管理',
         title_en: 'Cost Management',
         icon: 'i_menu_shangpingguanli',
-        roles: [LOGIN_TYPE.ADMIN],
-        auth: ['supplier-cost-management.model-cost-list'],
+        auth: ['supply.cost-manage'],
     },
     children: [
         {
@@ -193,7 +192,7 @@ const costManagement =  {
             meta: {
                 title: '车型成本表',
                 title_en: 'Vehicle Cost Table',
-                auth: ['supplier-cost-management.model-cost-list'],
+                auth: ['supply.cost-manage.vehicle'],
             },
         },
     ],

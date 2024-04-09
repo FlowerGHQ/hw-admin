@@ -8,53 +8,6 @@
                         : Core.Const.CRM_ORDER.SOURCE_TYPE[detail.source_type]?.en
                 }}）
             </div>
-            <!-- <div class="btns-area">
-        <template
-          v-if="
-            trackMemberDetail != null
-              ? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ
-              : false
-          ">
-          <a-button
-            @click="routerChange('edit', detail)"
-            v-if="$auth('crm-order.save')"
-            >{{ $t("def.edit") }}</a-button
-          >
-          <a-button
-            @click="routerChange('income')"
-            v-if="$auth('crm-order-income.save')"
-            >{{ $t("crm_oi.save") }}</a-button
-          >
-          <a-button
-            @click="handleDelete(detail.id)"
-            type="danger"
-            v-if="$auth('crm-order.delete')"
-            >{{ $t("def.delete") }}</a-button
-          >
-        </template>
-        <template
-          v-if="
-            trackMemberDetail != null
-              ? trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN
-              : false
-          ">
-          <a-button type="primary" @click="handleBatch('transfer')">{{
-            $t("crm_c.transfer")
-          }}</a-button>
-        </template>
-        <AuditHandle
-          v-if="user.id === audit.audit_user_id"
-          btnType="primary"
-          :api-list="['CRMOrder', 'audit']"
-          :id="detail.id"
-          @submit="getOrderDetail"
-          :s-pass="Core.Const.FLAG.YES"
-          :s-refuse="Core.Const.FLAG.NO"
-          :current-audit-process-id="detail.current_audit_process_id"
-          no-refuse
-          ><i class="icon i_audit" />{{ $t("n.audit") }}
-        </AuditHandle>
-      </div> -->
         </div>
         <div class="infomation">
             <a-row :gutter="16">

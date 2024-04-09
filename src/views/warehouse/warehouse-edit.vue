@@ -18,8 +18,6 @@
                     <div class="key">{{ $t('n.type') }}：</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.type">
-                            <!--                            <a-radio class="type-item" v-for="(val, key) in warehouseType" :key="key" :value="key">{{ val }}
-                            </a-radio>-->
                             <a-radio-group v-model:value="form.type">
                                 <a-radio :value="warehouseType.QUALITY">{{ $t('wa.good') }}</a-radio>
                                 <a-radio :value="warehouseType.DEFECTIVE">{{ $t('wa.imperfect') }}</a-radio>
@@ -54,9 +52,7 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('wa.address') }}：</div>
                     <div class="value">
-                        <!--                        <ChinaAddressCascader @select='handleAddressSelect' :default-address='defAddr' v-if="$auth('ADMIN')"/>-->
-                        <AddressCascader v-model:value="areaMap" :def-area="area" :default-address="defAddr" />
-                        <!--                        <ReceiverAddressEdit btnType="link" :detail='item' :orgId='orgId' :orgType='orgType' btnClass='edit-btn' @click.stop @submit='getReceiveList'>{{ $t('def.edit') }}</ReceiverAddressEdit>-->
+                        <AddressCascader v-model:value="areaMap" :def-area="area" :default-address="defAddr" />                        
                     </div>
                 </div>
                 <div class="form-item">
@@ -68,7 +64,7 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary" v-if="$auth('warehouse.save')">{{
+            <a-button @click="handleSubmit" type="primary">{{
                 $t('def.sure')
             }}</a-button>
             <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>

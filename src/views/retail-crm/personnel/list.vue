@@ -185,16 +185,12 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <!-- $auth页面按钮显示与否 具体可以看i18n 文件中authority的配置 -->
-                            <!-- v-if="$auth('crm-user.detail')" -->
                             <a-button type="link" @click="routerChange('detail', record)">
                                 {{ $t('retail.view') }}
                             </a-button>
-                            <!-- v-if="$auth('crm-user.save')" -->
                             <a-button type="link" @click="routerChange('edit', record)">
                                 {{ $t('retail.edit') }}
                             </a-button>
-                            <!-- v-if="$auth('crm-user.delete')" -->
                             <a-popconfirm
                                 :ok-text="$t('retail.confirm')"
                                 :cancel-text="$t('retail.cancel')"
@@ -324,9 +320,9 @@ const tableColumns = computed(() => {
     ];
 
     // 判断权限有这个权限之一就显示
-    if (proxy.$auth('crm-user.detail', 'crm-user.save', 'crm-user.delete')) {
-        columns.push({ title: 'retail.operate', key: 'operation', fixed: 'right' });
-    }
+    // if (proxy.$auth('crm-user.detail', 'crm-user.save', 'crm-user.delete')) {
+    //     columns.push({ title: 'retail.operate', key: 'operation', fixed: 'right' });
+    // }
 
     return columns;
 });

@@ -3,10 +3,10 @@
         <div class="title-container">
             <div class="title-area">{{ $t('m.material_detail') }}</div>
             <div class="btns-area">
-                <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('material.save')"
+                <a-button type="primary" ghost @click="routerChange('edit')"
                     ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                 >
-                <a-button type="danger" ghost @click="handleDelete(id)" v-if="$auth('material.delete')"
+                <a-button type="danger" ghost @click="handleDelete(id)"
                     ><i class="icon i_close_c" />{{ $t('def.delete') }}</a-button
                 >
             </div>

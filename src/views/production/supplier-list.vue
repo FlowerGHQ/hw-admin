@@ -2,7 +2,7 @@
     <div id="SupplierList" class="list-container">
         <div class="title-container">
             <div class="title-area">供应商列表</div>
-            <div class="btns-area" v-if="$auth('supplier.import-export')">
+            <div class="btns-area">
                 <a-upload
                     name="file"
                     class="file-uploader"
@@ -16,7 +16,7 @@
                 >
                     <a-button type="primary" ghost class="panel-btn"> <i class="icon i_add" /> 批量导入 </a-button>
                 </a-upload>
-                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('supplier.save')"
+                <a-button type="primary" @click="routerChange('edit')"
                     ><i class="icon i_add" />新建供应商</a-button
                 >
             </div>
@@ -91,7 +91,7 @@
                 @change="handleTableChange"
             >
                 <template #bodyCell="{ column, text, record }">
-                    <template v-if="column.key === 'detail' && $auth('supplier.list')">
+                    <template v-if="column.key === 'detail'">
                         <a-tooltip placement="top" :title="text">
                             <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}</a-button>
                         </a-tooltip>
@@ -124,17 +124,16 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type="link" @click="routerChange('detail', record)" v-if="$auth('supplier.list')"
+                        <a-button type="link" @click="routerChange('detail', record)"
                             ><i class="icon i_detail" /> 详情</a-button
                         >
-                        <a-button type="link" @click="routerChange('edit', record)" v-if="$auth('supplier.save')"
+                        <a-button type="link" @click="routerChange('edit', record)"
                             ><i class="icon i_edit" />编辑</a-button
                         >
                         <a-button
                             type="link"
                             @click="handleDelete(record.id)"
                             class="danger"
-                            v-if="$auth('supplier.delete')"
                             ><i class="icon i_delete" /> 删除</a-button
                         >
                     </template>

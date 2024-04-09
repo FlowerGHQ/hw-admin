@@ -6,8 +6,6 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('wa.detail') }}</div>
                 <div class="btns-area">
-                    <!-- <a-button type="primary" ghost  v-if="$auth('warehouse.save')"><i class="icon i_edit"/>编辑</a-button> -->
-                    <!-- <a-button type="danger" ghost  v-if="$auth('warehouse.delete')"><i class="icon i_delete"/>删除</a-button> -->
                 </div>
             </div>
             <!-- 仓库详情 -->

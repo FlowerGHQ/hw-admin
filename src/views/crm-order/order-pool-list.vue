@@ -19,7 +19,7 @@
                             <i class="icon i_add" />{{ $t('i.import') }}
                         </a-button>
                     </a-upload>
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('crm-order.save')"
+                    <a-button type="primary" @click="routerChange('edit')"
                         ><i class="icon i_add" />{{ $t('crm_o.save') }}</a-button
                     >
                 </div>
@@ -155,10 +155,7 @@
                 </div>
             </div>
             <div class="operate-container">
-                <!--                <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-order.save')">{{ $t('crm_c.transfer') }}</a-button>-->
-                <a-button type="danger" @click="handleBatchDelete" v-if="$auth('crm-order.delete')">{{
-                    $t('crm_c.delete')
-                }}</a-button>
+                <a-button type="danger" @click="handleBatchDelete">{{ $t('crm_c.delete') }}</a-button>
             </div>
             <div class="table-container">
                 <a-table
@@ -176,10 +173,7 @@
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title="text">
-                                <a-button
-                                    type="link"
-                                    @click="routerChange('detail', record)"
-                                    v-if="$auth('crm-order.detail')"
+                                <a-button type="link" @click="routerChange('detail', record)"
                                     ><span :class="{ nameStyle: nameBoolean(record) }">{{
                                         text || '-'
                                     }}</span></a-button
@@ -198,9 +192,6 @@
                         <template v-if="column.key === 'money'">
                             {{ record.mType }}{{ $Util.countFilter(text) || '-' }}
                         </template>
-                        <!--                        <template v-if="column.key === 'income_money'">-->
-                        <!--                            {{$Util.countFilter(text ) + '元' || '-' }}-->
-                        <!--                        </template>-->
                         <template v-if="column.key === 'customer_name'">
                             {{ record.customer_name || '-' }}
                         </template>
@@ -218,10 +209,7 @@
                             <a-button type="link" @click="handleBatch('transfer', record)">{{
                                 $t('crm_c.transfer')
                             }}</a-button>
-                            <a-button
-                                type="link"
-                                @click="routerChange('detail', record)"
-                                v-if="$auth('crm-order.detail')"
+                            <a-button type="link" @click="routerChange('detail', record)"
                                 ><i class="icon i_detail" />{{ $t('def.detail') }}</a-button
                             >
                         </template>

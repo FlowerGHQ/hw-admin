@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('dept.list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleModalShow({})" v-if="$auth('material-category.save')"
+                    <a-button type="primary" @click="handleModalShow({})"
                         ><i class="icon i_add" />{{ $t('dept.new_top') }}</a-button
                     >
                 </div>
@@ -35,20 +35,17 @@
                             <a-button
                                 type="link"
                                 @click="handleModalShow(record, record)"
-                                v-if="$auth('material-category.save')"
                                 ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                             >
                             <a-button
                                 type="link"
                                 @click="handleModalShow({ parent_id: record.id }, null, record)"
-                                v-if="$auth('material-category.save')"
                                 ><i class="icon i_add" />{{ $t('dept.sub') }}</a-button
                             >
                             <a-button
                                 type="link"
                                 @click="handleDelete(record)"
                                 class="danger"
-                                v-if="$auth('material-category.delete')"
                                 ><i class="icon i_delete" />{{ $t('def.delete') }}</a-button
                             >
                         </template>

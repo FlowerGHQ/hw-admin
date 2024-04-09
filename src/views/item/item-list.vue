@@ -262,18 +262,10 @@
                             </template>
                             <template v-if="column.key === 'operation'">
                                 <template v-if="!record.default_item_id">
-                                    <a-button
-                                        type="link"
-                                        v-if="$auth('item.save') /*编辑权限*/"
-                                        @click="routerChange('edit', record)"
-                                    >
+                                    <a-button type="link" @click="routerChange('edit', record)">
                                         <i class="icon i_edit" />{{ $t('def.edit') }}
                                     </a-button>
-                                    <a-button
-                                        type="link"
-                                        v-if="$auth('item.detail') /*详情权限*/"
-                                        @click="routerChange('detail', record)"
-                                    >
+                                    <a-button type="link" @click="routerChange('detail', record)">
                                         <i class="icon i_detail" /> {{ $t('def.detail') }}
                                     </a-button>
                                 </template>

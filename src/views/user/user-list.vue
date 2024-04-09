@@ -4,11 +4,11 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('u.list') }}</div>
                 <div class="btns-area">
-                    <a-button @click="routerChange('edit')" v-if="$auth('user.save', 'MANAGER')">
+                    <a-button @click="routerChange('edit')" v-if="$auth('MANAGER')">
                         <!-- <i class="icon i_add" /> -->
                         {{ $t('u.manually_add') }}
                     </a-button>
-                    <a-button @click="routerChange('edit-fs')" v-if="$auth('user.save', 'MANAGER')">
+                    <a-button @click="routerChange('edit-fs')" v-if="$auth('MANAGER')">
                         <img src="@images/mall/login/fs-login.png" class="fs-icon" />
                         {{ $t('u.fs_add') }}
                     </a-button>
@@ -39,16 +39,7 @@
                                 tree-default-expand-all
                             />
                         </div>
-                    </a-col>
-                    <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                    <div class="key">类型:</div>
-                    <div class="value">
-                        <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择用户类型" allow-clear>
-                            <a-select-option :value="orgType">普通用户</a-select-option>
-                            <a-select-option :value="USER_TYPE.WORKER">维修工</a-select-option>
-                        </a-select>
-                    </div>
-                </a-col> -->
+                    </a-col>   
                     <a-col :xs="24" :sm="24" :xl="16" :xxl="12" class="search-item">
                         <div class="key">{{ $t('d.create_time') }}:</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref="TimeSearch" /></div>
@@ -72,7 +63,7 @@
                     </template>
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="column.dataIndex === 'flag_admin'">
-                            <template v-if="$auth('user.set-admin') && orgType === Core.Const.LOGIN.ORG_TYPE.ADMIN">
+                            <template v-if="orgType === Core.Const.LOGIN.ORG_TYPE.ADMIN">
                                 <a-switch
                                     :checked="!!record.flag_admin"
                                     :checked-children="$t('i.yes')"
@@ -113,17 +104,17 @@
                             <a-button
                                 type="link"
                                 @click="routerChange('edit', record)"
-                                v-if="$auth('user.save', 'MANAGER')"
+                                v-if="$auth('MANAGER')"
                                 ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                             >
-                            <a-button type="link" @click="handleEditShow(record)" v-if="$auth('user.save', 'MANAGER')"
+                            <a-button type="link" @click="handleEditShow(record)" v-if="$auth('MANAGER')"
                                 ><i class="icon i_lock" />{{ $t('u.reset') }}</a-button
                             >
                             <a-button
                                 type="link"
                                 @click="handleDelete(record.id)"
                                 class="danger"
-                                v-if="$auth('user.delete', 'MANAGER')"
+                                v-if="$auth('MANAGER')"
                                 ><i class="icon i_delete" />{{ $t('def.delete') }}</a-button
                             >
                         </template>

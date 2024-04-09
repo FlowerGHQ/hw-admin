@@ -3,10 +3,6 @@
         <div class="title-container">
             <div class="title-area">{{ $t('crm_b.detail') }}</div>
             <div class="btns-area">
-                <!-- <a-button @click="nextStep" v-if="detail.status + 2 < groupStatusTableData.length && detail.status !== STATUS.LOSE && $auth('crm-bo.update-status')" ><i class="icon i_audit"/>{{$t('crm_b.next_step')}}</a-button>
-                <a-button @click="loseTheOrder" v-if="detail.status !== STATUS.LOSE && $auth('crm-bo.update-status')"><i class="icon i_audit"/>{{$t('crm_b.lost_order')}}</a-button>
-                <a-button @click="winTheOrder"  v-if="detail.status !== STATUS.LOSE && detail.status !== STATUS.WIN && $auth('crm-bo.update-status')" ><i class="icon i_audit"/>{{$t('crm_b.win_order')}}</a-button>
-                <a-button @click="reactivation"  v-if="detail.status === STATUS.LOSE && $auth('crm-bo.reactivation')"><i class="icon i_audit"/>{{$t('crm_b.reactivation')}}</a-button> -->
                 <template
                     v-if="
                         trackMemberDetail != null
@@ -14,7 +10,7 @@
                             : false
                     "
                 >
-                    <a-button @click="routerChange('edit')" v-if="$auth('crm-bo.save')">{{ $t('n.edit') }}</a-button>
+                    <a-button @click="routerChange('edit')">{{ $t('n.edit') }}</a-button>
                 </template>
                 <template
                     v-if="
@@ -23,9 +19,7 @@
                             : false
                     "
                 >
-                    <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-bo.transfer')">{{
-                        $t('crm_c.transfer')
-                    }}</a-button>
+                    <a-button type="primary" @click="handleBatch('transfer')">{{ $t('crm_c.transfer') }}</a-button>
                     <a-button type="danger" @click="handleDelete">{{ $t('crm_c.delete') }}</a-button>
                 </template>
             </div>
@@ -77,16 +71,6 @@
                                 @reactivation="reactivation"
                             ></NewMySteps>
                         </div>
-                    </a-col>
-
-                    <a-col :xs="24" :sm="24" :lg="24" class="detail-item">
-                        <!-- <template v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
-                                <a-button @click="routerChange('edit')" v-if="$auth('crm-bo.save')">{{ $t('n.edit') }}</a-button>
-                            </template>
-                            <template v-if="trackMemberDetail!= null ? trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN : false">
-                                <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-bo.transfer')">{{ $t('crm_c.transfer') }}</a-button>
-                                <a-button type="danger" @click="handleDelete">{{ $t('crm_c.delete') }}</a-button>
-                            </template> -->
                     </a-col>
                 </a-row>
             </div>
@@ -149,12 +133,9 @@
                                 :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO"
                                 ref="CRMOrder"
                             >
-                                <a-button
-                                    type="primary"
-                                    @click="routerChange('order-save')"
-                                    v-if="$auth('crm-order.save')"
-                                    >{{ $t('crm_o.save') }}</a-button
-                                >
+                                <a-button type="primary" @click="routerChange('order-save')">{{
+                                    $t('crm_o.save')
+                                }}</a-button>
                             </CRMOrder>
                         </a-tab-pane>
                         <a-tab-pane key="customerInfo" :tab="$t('crm_o.customer_detail')">

@@ -4,9 +4,7 @@
             <div class="title-container">
                 <div class="title-area">调货单列表</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleModalShow" v-if="$auth('invoice.save')"
-                        ><i class="icon i_add" />新建调货单
-                    </a-button>
+                    <a-button type="primary" @click="handleModalShow"><i class="icon i_add" />新建调货单 </a-button>
                 </div>
             </div>
             <div class="tabs-container colorful">
@@ -21,7 +19,7 @@
                 </a-tabs>
             </div>
             <div class="search-container">
-                <a-row class="search-area">
+                <a-row class="search-area"
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
                         <div class="key">发货仓库:</div>
                         <div class="value">
@@ -87,10 +85,6 @@
                     <a-button @click="handleSearchReset">重置</a-button>
                 </div>
             </div>
-            <!--            <div class="operate-container">
-                <a-button type="primary" @click="handleExportConfirm" v-if="$auth('invoice.import-export')"><i class="icon i_download"/>{{ $t('def.export') }}
-                </a-button>
-            </div>-->
             <div class="table-container">
                 <a-table
                     :columns="tableColumns"
@@ -100,7 +94,7 @@
                     :pagination="false"
                 >
                     <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.key === 'detail' && $auth('invoice.detail')">
+                        <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title="text">
                                 <a-button type="link" @click="routerChange('detail', record)"
                                     >{{ text || '-' }}
@@ -136,21 +130,19 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('detail', record)" v-if="$auth('invoice.detail')"
+                            <a-button type="link" @click="routerChange('detail', record)"
                                 ><i class="icon i_detail" />详情
                             </a-button>
-                            <template v-if="record.status === STATUS.INIT">
-                                <!--                                 <a-button type="link" @click="routerChange('detail',record)" v-if="record.status === STATUS.INIT"><i class="icon i_edit"/>编辑</a-button>-->
+                            <template v-if="record.status === STATUS.INIT">                                
                                 <a-button
                                     type="link"
                                     @click="handleCancel(record.id)"
                                     class="danger"
-                                    v-if="$auth('invoice.delete')"
                                     ><i class="icon i_close_c" />取消
                                 </a-button>
                             </template>
                             <AuditMaterialPurchase
-                                v-if="record.status === STATUS.WAIT_AUDIT && $auth('invoice.warehouse-audit')"
+                                v-if="record.status === STATUS.WAIT_AUDIT"
                                 btnType="link"
                                 :status="STATUS.APPLICANT_AUDIT"
                                 :api-list="['WarehouseTransfer', 'audit']"

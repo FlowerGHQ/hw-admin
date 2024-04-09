@@ -3,22 +3,14 @@
         <div class="title-container">
             <div class="title-area">采购单详情</div>
             <div class="btn-area">
-                <a-button
-                    type="danger"
-                    ghost
-                    @click="handleCancel()"
-                    v-if="detail.status === STATUS.INIT && $auth('material-purchase-order.delete')"
-                >
+                <a-button type="danger" ghost @click="handleCancel()" v-if="detail.status === STATUS.INIT">
                     <i class="icon i_close_c" />撤销</a-button
                 >
-                <a-button
-                    type="primary"
-                    @click="handleSubmit()"
-                    v-if="detail.status === STATUS.INIT && $auth('material-purchase-order.save')"
+                <a-button type="primary" @click="handleSubmit()" v-if="detail.status === STATUS.INIT"
                     ><i class="icon i_confirm" />提交</a-button
                 >
                 <AuditHandle
-                    v-if="detail.status === STATUS.SUBMIT && $auth('material-purchase-order.audit')"
+                    v-if="detail.status === STATUS.SUBMIT"
                     btnType="primary"
                     :api-list="['MaterialPurchase', 'audit']"
                     :id="id"
@@ -28,19 +20,13 @@
                     no-refuse
                     ><i class="icon i_audit" />审核
                 </AuditHandle>
-                <!--                <a-button v-if="(detail.status === STATUS.PASS || detail.status === STATUS.PART) && $auth('material-purchase-order.save-to-invoice')" type="primary" @click="routerChange('invoice')"><i class="icon i_s_warehouse"/>入库</a-button>-->
                 <a-button
-                    v-if="
-                        (detail.status === STATUS.PASS || detail.status === STATUS.PART) &&
-                        $auth('material-purchase-order.save-to-invoice')
-                    "
+                    v-if="detail.status === STATUS.PASS || detail.status === STATUS.PART"
                     type="primary"
                     @click="handlePurchaseShow"
                     ><i class="icon i_s_warehouse" />全部入库</a-button
                 >
-                <a-button v-if="$auth('material-purchase-order.export')" type="primary" @click="handleExport"
-                    ><i class="icon i_download" />导出</a-button
-                >
+                <a-button type="primary" @click="handleExport"><i class="icon i_download" />导出</a-button>
             </div>
         </div>
         <div class="gray-panel info">

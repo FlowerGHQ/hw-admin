@@ -3,10 +3,10 @@
         <div class="title-container">
             <div class="title-area">{{ $t('ar.detail') }}</div>
             <div class="btns-area">
-                <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('sales-area.save')"
+                <a-button type="primary" ghost @click="routerChange('edit')"
                     ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                 >
-                <a-button type="danger" ghost @click="handleDelete(id)" v-if="$auth('sales-area.delete')"
+                <a-button type="danger" ghost @click="handleDelete(id)"
                     ><i class="icon i_delete" />{{ $t('def.delete') }}</a-button
                 >
             </div>

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <script>
+            const list = [
+                {
+                    id: 3,
+                    key: 'test.oneMange1.bookList.edit',
+                    name: '编辑',
+                },
+                {
+                    id: 2,
+                    key: 'test.oneMange1.bookList',
+                    name: 'book列表1',
+                },
+                {
+                    id: 1,
+                    key: 'test.oneMange1',
+                    name: '管理1',
+                },
+                // {
+                //     id: 4,
+                //     key: 'test.oneMange2',
+                //     name: '管理2',
+                // },
+            ];
+
+            const module = {
+                name: '测试模块',
+                key: 'test',
+                parentRoute: undefined,
+                list: [
+                    {
+                        id: 1,
+                        key: 'oneMange1',
+                        list: [
+                            {
+                                id: 3,
+                                key: 'bookList',
+                                list: [
+                                    {
+                                        id: 4,
+                                        key: 'edit',
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        id: 2,
+                        key: 'oneMange2',
+                    },
+                ],
+            };
+
+            function processAuthList(authList) {
+                let tree = {
+                    parentRoute: undefined,
+                    key: 'test',
+                    children: [],
+                };
+                travelAuth(authList, tree, tree.key);
+                return tree;
+            }
+
+            function getNextLevelNodeNameList(authList, prefix = undefined) {
+                let items = {};
+                authList.forEach((node, i) => {
+                    let nodeKey = node.key;
+
+                    if (nodeKey.indexOf(prefix) < 0) {
+                        return;
+                    }
+
+                    let subKey = nodeKey.substring(prefix.length);
+                    let parts = subKey.split('.').filter(s => s !== '');
+                    if (parts.length == 0) {
+                        return;
+                    }
+                    let key = parts[0];
+                    items[key] = key;
+                });
+
+                return Object.keys(items);
+            }
+
+            function travelAuth(authList, node, parentRoute) {
+                let children = []
+                let currentLevelNodeNameList = getNextLevelNodeNameList(authList, parentRoute);
+                console.log('currentLevelNodeNameList', currentLevelNodeNameList);
+
+                if (currentLevelNodeNameList.length === 0) {
+                    return
+                }
+
+                currentLevelNodeNameList.forEach((key, _) => {
+                    let currentrRoute = parentRoute + '.' + key
+                    let childNode = {
+                        parentRoute: parentRoute,
+                        key: currentrRoute,
+                    }
+                    const find = authList.find(el => el.key === currentrRoute)
+                    if (find) {
+                        childNode.id = find.id
+                    }
+
+
+                    travelAuth(authList, childNode, currentrRoute)
+
+                    children.push(childNode)
+                });
+
+                node.children = children
+            }
+
+
+
+            console.log(processAuthList(list));
+        </script>
+    </body>
+</html>
