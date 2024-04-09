@@ -30,7 +30,7 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'time'">
-                            {{ $Util.timeFilter(text) }}
+                            {{ $Util.timeFilter(text, 3) }}
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="handleDownload(record)"

@@ -1,7 +1,7 @@
 <template>
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">{{ $t('supply-chain.application_Materials') }}</div>
+            <div class="title-area">{{ $t('supply-chain.create_data') }}</div>
         </div>
         <!-- search -->
         <div class="search">

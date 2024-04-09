@@ -5,15 +5,17 @@ import Data from '../core/data';
 import Layout from '../views/layout/index.vue';
 
 // 供应商路由
-import { supplyManage, supplyRouters, supplyMaterialManagement } from './supply-router';
+import { supplyManage, supplyRouters, supplyMaterialManagement, costManagement } from './supply-router';
 // 新分销商路由
 import { mallRouters, dealsPreview } from './mall';
 // 分销商路由
 import { customerCare } from './distributor-router';
 // 平台方路由
 import { inquiryManagement, adminEmpty, operationManagement } from './admin-router';
-// 平台方路由
+// 飞书路由
 import { fsLogin } from './fs-login';
+// 仓储的路由
+import { warehousingManagement } from './warehousing'
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE;
@@ -1572,7 +1574,7 @@ const routes = [
                 },
             },
         ],
-    },
+    },    
     {
         // 账户管理
         path: '/wallet',
@@ -2157,6 +2159,16 @@ const routes = [
                     auth: ['crm-customer.detail'],
                 },
             },
+            // {
+            //     path: 'tob-customer-list',
+            //     name: 'ToBCustomerList',
+            //     component: () => import('@/views/crm-customer/tob-customer-list.vue'),
+            //     meta: {
+            //         title: 'TOB客户',
+            //         title_en: 'TOB Customers',
+            //         auth: ['crm-customer.list'],
+            //     },
+            // },
             // {
             // 	path: 'customer-list',
             // 	name: 'CustomerList',
@@ -2864,7 +2876,9 @@ const routes = [
     },
     ...supplyRouters,
     supplyMaterialManagement,
-    fsLogin
+    costManagement,    
+    fsLogin,
+    warehousingManagement,
 ];
 
 export default routes;

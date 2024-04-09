@@ -133,6 +133,12 @@ const SUPPLAY = {
         2: { value: 2, t: 'supply-chain.foreign_owned' },
         3: { value: 3, t: 'supply-chain.state_owned' },
     },
+    // 变化类列表 0.全部；1.新增；2.更名
+    CHANGE_CLASS_LIST: [
+        { value: 0, t: 'common.all' },
+        { value: 1, t: 'supply-chain.new_addition' },
+        { value: 2, t: 'supply-chain.rename' },
+    ],
 };
 
 export default SUPPLAY;

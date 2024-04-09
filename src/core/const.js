@@ -52,8 +52,8 @@ switch (window.location.hostname) {
         // URL_POINT = 'https://eos-api.horwincloud.com'; // 新正式服6
         // URL_POINT = 'https://eos-api-release.horwincloud.com'; // 预发环境
         // URL_POINT = 'http://10.0.0.170:8889' // my
-        // URL_POINT = 'http://10.10.12.194:8889' // zwq
-        // URL_POINT = 'http://10.10.12.75:8889'  // zy
+        // URL_POINT = 'http://localhost:8889' // zwq
+        // URL_POINT = 'http://localhost:8889'  // zy
 
         break;
 }
@@ -232,8 +232,9 @@ let Const = {
             AFTER: 2, // 售后
             PRODUCTION: 3, // 生产
             CRM: 4, // CRM
-            SUPPLIER: 5, // 供应商
+            SUPPLIER: 5, // 供应链
             SYSTEM: 6, // 系统管理
+            WAREHOUSING: 8, // 仓储
         },
     },
     LOGINMALL: {
@@ -1083,6 +1084,7 @@ let Const = {
                 2: { key: 2, zh: '整车', en: 'vehicle' },
                 3: { key: 3, zh: '唛头整车', en: 'Mark Vehicle' },
                 4: { key: 4, zh: '唛头配件', en: 'Mark Accessories' },
+                5: { key: 5, zh: '物料打托', en: 'Material Batching' },
             },
         },
         FILE: {
@@ -1172,6 +1174,7 @@ let Const = {
         { list: [], select: [], key: 'allocation-rules', name: '分配规则' },
         { list: [], select: [], key: 'good-goods-order', name: '好物订单' },
         { list: [], select: [], key: 'email', name: '邮件管理' },
+        { list: [], select: [], key: 'supplier-cost-management', name: '成本管理' },
     ],
 
     ATTACHMENT: {
