@@ -58,7 +58,7 @@ const NOW_LOGIN_TYPE = Data.getLoginType();
 let indexPath = '';
 switch (NOW_LOGIN_TYPE) {
     case LOGIN_TYPE.ADMIN:
-        indexPath = '/';
+        indexPath = Data.getTabPosition()?.path || '/';
         break;
     case LOGIN_TYPE.DISTRIBUTOR:
         indexPath = '/mall/index';
@@ -150,7 +150,18 @@ const routes = [
             icon: 'i_s_agent',
             auth: ['sales.distribution', 'aftermarket.distribution'],
         },
-        children: [
+        children: [            
+            {
+                path: 'purchase-order-list',
+                name: 'AdminPurchaseOrderListAll',
+                component: () => import('@/views/purchase/purchase-order-list.vue'),
+                meta: {
+                    title: '订单列表',
+                    title_en: 'Order List',
+                    search_type: PURCHASE_SEARCH_TYPE.ALL,
+                    auth: ['sales.distribution.order', 'aftermarket.distribution.order'],
+                },
+            },
             {
                 path: 'purchase-order-self',
                 name: 'PurchaseOrderListSelf',
@@ -170,17 +181,6 @@ const routes = [
                     hidden: true,
                     title: '采购订单详情',
                     title_en: 'Purchase Order Detail',
-                },
-            },
-            {
-                path: 'purchase-order-list',
-                name: 'AdminPurchaseOrderListAll',
-                component: () => import('@/views/purchase/purchase-order-list.vue'),
-                meta: {
-                    title: '订单列表',
-                    title_en: 'Order List',
-                    search_type: PURCHASE_SEARCH_TYPE.ALL,
-                    auth: ['sales.distribution.order', 'aftermarket.distribution.order'],
                 },
             },
             {

@@ -11,7 +11,7 @@ const SYSTEM = {
     // 系统管理
     path: '/system',
     component: Layout,
-    redirect: '/system/system-file-list',
+    redirect: '/system/user-list',
     name: 'SystemManagement',
     type: [ROUTER_TYPE.SYSTEM],
     meta: {
