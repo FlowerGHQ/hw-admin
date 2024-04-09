@@ -59,6 +59,77 @@ const supplyManage = {
                 title_en: 'Qualified Supplier List',
             },
         },
+        // 考虑免审供应商名录
+        {
+            path: 'exemptList',
+            name: 'ExemptSupplierList',
+            component: () => import('@/views/supplier/manage/exempt-list.vue'),
+            meta: {
+                title: '考虑免审供应商名录',
+                title_en: 'Consider Exempt Supplier List',
+            },
+        },
+
+        // 潜在供应商名录
+        {
+            path: 'potentialList',
+            name: 'PotentialSupplierList',
+            component: () => import('@/views/supplier/manage/potential-list.vue'),
+            meta: {
+                title: '潜在供应商名录',
+                title_en: 'Potential Supplier List',
+            },
+        },
+        // 注册供应商名录
+        {
+            path: 'registerList',
+            name: 'RegisterSupplierList',
+            component: () => import('@/views/supplier/manage/register-list.vue'),
+            meta: {
+                title: '注册供应商名录',
+                title_en: 'Register Supplier List',
+            },
+        },
+        // 淘汰供应商名录
+        {
+            path: 'eliminateList',
+            name: 'EliminateSupplierList',
+            component: () => import('@/views/supplier/manage/eliminate-list.vue'),
+            meta: {
+                title: '淘汰供应商名录',
+                title_en: 'Eliminate Supplier List',
+            },
+        },
+        // 待现场考核供应商名录
+        {
+            path: 'assessmentList',
+            name: 'AssessmentSupplierList',
+            component: () => import('@/views/supplier/manage/assessment-list.vue'),
+            meta: {
+                title: '待现场考核供应商名录',
+                title_en: 'Assessment Supplier List',
+            },
+        },
+        // 淘汰原因管理
+        {
+            path: 'eliminateReason',
+            name: 'EliminateReason',
+            component: () => import('@/views/supplier/manage/eliminate-reason.vue'),
+            meta: {
+                title: '淘汰原因管理',
+                title_en: 'Eliminate Reason Management',
+            },
+        },
+        // 车型分类管理
+        {
+            path: 'vehicleCategory',
+            name: 'VehicleCategory',
+            component: () => import('@/views/supplier/manage/vehicle-category.vue'),
+            meta: {
+                title: '车型分类管理',
+                title_en: 'Vehicle Category Management',
+            },
+        },
     ],
 };
 
@@ -76,7 +147,7 @@ const supplyRouters = [
 ];
 
 // 物料管理(代码其实就是商品管理的代码只是路由不一样)
-const supplyMaterialManagement =  {
+const supplyMaterialManagement = {
     // 物料管理
     path: '/material',
     component: Layout,
@@ -170,9 +241,9 @@ const supplyMaterialManagement =  {
             },
         },
     ],
-}
+};
 // 成本管理
-const costManagement =  {
+const costManagement = {
     path: '/cost',
     component: Layout,
     redirect: '/cost/cost-list',
@@ -197,5 +268,5 @@ const costManagement =  {
             },
         },
     ],
-}
+};
 export { supplyManage, supplyRouters, supplyMaterialManagement, costManagement };

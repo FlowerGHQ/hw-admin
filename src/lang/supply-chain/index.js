@@ -328,6 +328,13 @@ export default {
         detailed_address: '详细地址',
         model_selection: '车型选择',
         version_selection: '版本选择',
+        // supplier_stage
+        supplier_stage: '供应商阶段',
+        // status
+        status: '状态',
+        // 考虑免审供应商名录
+        consider_exempt_supplier_list: '考虑免审供应商名录',
+        exempt_application_form: '免审申请表',
     },
     en: {
         // 年
@@ -646,5 +653,10 @@ export default {
         detailed_address: 'Detailed Address',
         model_selection: 'Model Selection',
         version_selection: 'Version Selection',
+        supplier_stage: 'Supplier Stage',
+        status: 'Status',
+        consider_exempt_supplier_list: 'Consider Exempt Supplier List',
+        // exempt_application_form
+        exempt_application_form: 'Exempt Application Form',
     },
 };

@@ -18,12 +18,18 @@
                 :scroll="{ x: true }"
                 :loading="loading"
                 :row-key="record => record.id"
+                :row-selection="{
+                    onChange: (selectedRowKeys, selectedRows) => handleSelectChange(selectedRowKeys, selectedRows),
+                    getCheckboxProps: record => ({
+                        disabled: record.name === 'Disabled User',
+                    }),
+                }"
                 :pagination="false"
             >
                 <template #bodyCell="{ column, text, record, index }">
                     <!-- 序号 -->
                     <template v-if="column.key === 'number'">
-                        {{ index + 1 }}
+                        {{ (pagination.current - 1) * pagination.size + index + 1 }}
                     </template>
                     <!-- 公司名称 -->
                     <template v-if="column.key === 'company_name'">
@@ -46,6 +52,15 @@
                     <!-- 提交时间 -->
                     <template v-if="column.key === 'create_time'">
                         {{ text ? $Util.timeFormat(text) : '-' }}
+                    </template>
+                    <template v-if="column.key === 'remark'">
+                        <div class="remark">
+                            <a-tooltip>
+                                <template #title>{{ text }}</template>
+                                <span class="remark-text">{{ text ? text : '-' }}</span>
+                            </a-tooltip>
+                            <MySvgIcon icon-class="supply-edit" class-name="supply-edit" />
+                        </div>
                     </template>
                     <!-- 操作 -->
                     <template v-if="column.key === 'operations'">
@@ -88,21 +103,31 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
+
 const $store = useStore();
 const router = useRouter();
 const $t = useI18n().t;
-
+const selectedIds = ref([]);
+const handleSelectChange = (selectedRowKeys, selectedRows) => {
+    console.log(selectedRowKeys, selectedRows);
+    selectedIds.value = selectedRowKeys;
+};
 const tableColumns = computed(() => {
     let columns = [
         { title: $t('supply-chain.serial_number'), dataIndex: 'number', key: 'number' },
         { title: $t('supply-chain.company_name'), dataIndex: 'company_name', key: 'company_name' },
         { title: $t('supply-chain.supplier_type'), dataIndex: 'type', key: 'type' },
         { title: $t('supply-chain.submission_time'), dataIndex: 'create_time', key: 'create_time' },
+        // 供应商阶段
+        { title: $t('supply-chain.supplier_stage'), dataIndex: 'supplier_stage', key: 'supplier_stage' },
+        // 状态
+        { title: $t('supply-chain.status'), dataIndex: 'status', key: 'status' },
+        // 备注
+        { title: $t('supply-chain.remark'), dataIndex: 'remark', key: 'remark' },
         { title: $t('common.operations'), key: 'operations', fixed: 'right' },
     ];
     return columns;
 });
-
 const searchList = ref([
     {
         type: 'input',
@@ -129,8 +154,19 @@ const searchList = ref([
 onMounted(() => {});
 /* Fetch start*/
 const request = Core.Api.SUPPLY.adminList;
+
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request,
+    dataCallBack: res => {
+        console.log(res);
+        res.list.map((item, index) => {
+            item.supplier_stage = '注册供应商';
+            item.status = '待审核';
+            item.remark = '暂无';
+            return item;
+        });
+        return res.list;
+    },
 });
 /* Fetch end*/
 
@@ -181,4 +217,9 @@ const onBtn = () => {
 /* methods end*/
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.supply-edit {
+    margin-left: 6px;
+    cursor: pointer;
+}
+</style>
