@@ -244,7 +244,7 @@ const messages = {
             verification_code: '验证码',
             supplier: '供应链',
             system_management: '系统管理',
-            
+            warehousing: '仓储',
         },
         a: {
             // 零售商
@@ -1565,6 +1565,8 @@ const messages = {
             choose_class: '选择类别',
             information: '基本信息',
             address: '地址',
+            tob_customer: 'TOB客户',
+            leave_message: '留言',
         },
         crm_t: {
             track_record: '跟进记录',
@@ -2039,6 +2041,7 @@ const messages = {
                 'good-goods-order': '好物订单',
                 email: '邮件管理',
                 'recharge-review': '充值审核',
+                'supplier-cost-management': '成本管理',
             },
             distributor: {
                 list: '查看分销商列表',
@@ -2420,6 +2423,9 @@ const messages = {
             'recharge-review': {
                 'list': '充值审核列表',
                 'first_instance': '一审审核',
+            },
+            'supplier-cost-management': {
+                'model-cost-list': '车型成本列表',
             },
         },
         error_code: {
@@ -3158,6 +3164,7 @@ const messages = {
             verification_code: 'Verification Code',
             supplier: 'Supplier',
             system_management: 'System Management',
+            warehousing: 'Warehousing',
         },
         a: {
             new_retailer: 'Create A New Retailer',
@@ -4439,6 +4446,8 @@ const messages = {
             intentionality: 'Intentionality',
             be_added: 'To be added',
             address: 'Address',
+            tob_customer: 'TOB Customers',
+            leave_message: 'Leave Messages',
         },
         crm_t: {
             track_record: 'Track Record',
@@ -4905,7 +4914,8 @@ const messages = {
                 'allocation-rules': 'Allocation Rules',
                 'good-goods-order': 'Good Goods Order',
                 email: 'Email',
-                'recharge-review': 'Recharge Audit'
+                'recharge-review': 'Recharge Audit',
+                'supplier-cost-management': 'Supplier Cost Management',
             },
             distributor: {
                 list: 'View Distributor List',
@@ -5285,6 +5295,9 @@ const messages = {
             'recharge-review': {
                 'list': 'Recharge Audit List',
                 'first_instance': 'First Audit',
+            },
+            'supplier-cost-management': {
+                'model-cost-list': 'Model Cost List',
             },
         },
         error_code: {

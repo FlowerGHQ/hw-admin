@@ -53,19 +53,20 @@
 
 <script setup>
 import Core from '@/core';
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, getCurrentInstance } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
 const router = useRouter();
+const { proxy } = getCurrentInstance();
 const user = Core.Data.getUser() || {};
 const type = ref(null); // 1: 飞书扫码登录-组织外部员工；2：飞书扫码登录-组织内部员工
-const message = JSON.parse(route.query.message) || {};
+const message = JSON.parse(proxy.$Base64.parseQuery(route.query.message)) || {};
 const colorList = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae'];
 const color = ref(colorList[Math.floor(Math.random() * colorList.length)]);
 const GapList = [4, 3, 2, 1];
 const gap = ref(GapList[0]);
-switch (Number(route.query.code)) {
+switch (Number(proxy.$Base64.parseQuery(route.query.code))) {
     //1108：获取飞书用户信息失败；1109：飞书用户没有绑定；2103：未开通权限
     case 1108:
         type.value = 1;

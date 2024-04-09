@@ -232,9 +232,10 @@ let Const = {
             AFTER: 2, // 售后
             PRODUCTION: 3, // 生产
             CRM: 4, // CRM
-            SUPPLIER: 5, // 供应商
+            SUPPLIER: 5, // 供应链
             SYSTEM: 6, // 系统管理
             FINANCE: 7, // 财务
+            WAREHOUSING: 8, // 仓储
         },
     },
     LOGINMALL: {
@@ -1078,6 +1079,7 @@ let Const = {
                 2: { key: 2, zh: '整车', en: 'vehicle' },
                 3: { key: 3, zh: '唛头整车', en: 'Mark Vehicle' },
                 4: { key: 4, zh: '唛头配件', en: 'Mark Accessories' },
+                5: { key: 5, zh: '物料打托', en: 'Material Batching' },
             },
         },
         FILE: {
@@ -1168,6 +1170,7 @@ let Const = {
         { list: [], select: [], key: 'good-goods-order', name: '好物订单' },
         { list: [], select: [], key: 'email', name: '邮件管理' },
         { list: [], select: [], key: 'recharge-review', name: '充值审核' },
+        { list: [], select: [], key: 'supplier-cost-management', name: '成本管理' },
     ],
 
     ATTACHMENT: {

@@ -224,6 +224,12 @@ export default {
                     t: 'n.supplier',
                 },
                 {
+                    id: 8,
+                    value: ROUTER_TYPE.WAREHOUSING,
+                    img: Core.Util.Image.getImageFile('router', 'router_type_5'),
+                    t: 'n.warehousing',
+                },
+                {
                     id: 5,
                     value: ROUTER_TYPE.CRM,
                     img: Core.Util.Image.getImageFile('router', 'router_type_1'),
@@ -363,6 +369,7 @@ export default {
                         this.returnAdminFilter(ROUTER_TYPE.AFTER);
                         this.returnAdminFilter(ROUTER_TYPE.PRODUCTION);
                         this.returnAdminFilter(ROUTER_TYPE.SUPPLIER);
+                        this.returnAdminFilter(ROUTER_TYPE.WAREHOUSING);
                         this.returnAdminFilter(ROUTER_TYPE.CRM);
                         this.returnAdminFilter(ROUTER_TYPE.SYSTEM);
                         this.returnAdminFilter(ROUTER_TYPE.FINANCE);
@@ -531,6 +538,9 @@ export default {
                 case this.ROUTER_TYPE.SUPPLIER:
                     this.$router.replace({ path: this.showList[0]?.path });
                     break;
+                case this.ROUTER_TYPE.WAREHOUSING:
+                    this.$router.replace({ path: this.showList[0]?.path });
+                    break;
                 case this.ROUTER_TYPE.SYSTEM:
                     console.log(this.showList);
                     this.$router.replace({ path: this.showList[0]?.path });
@@ -573,6 +583,7 @@ export default {
                 }
             }
 
+            // console.log("路由数据", result);
             return result;
         },
 

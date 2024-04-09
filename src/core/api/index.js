@@ -25,6 +25,7 @@ const apiList = {
         phoneCode: ['Post', 'common/phone-verification-code-send'], // 发送手机验证码
         userInfo: ['Get', 'system/info'], // 获取当前登录账号的账户信息
         migrate: ['Post', 'migrate/order'], // 获取当前登录账号的账户信息
+        downloadImportQualifiedListTemplate: ['GetJson', 'file/download-import-template'], // 下载导入合格供应商名录模板
     },
     ThirdParty: {
         fsAuthorize: ['Get', 'feishu/web/authorize'], // 飞书登录验证
@@ -59,6 +60,7 @@ const apiList = {
         downloadTemplate: ['GetJson', 'aftermarket/bom/download-aftermarket-bom'], // 二级页面下载导入模板
         enquiryTickeTexport: ['GetJson', 'enquiry-ticket/export'], // 问询单导出接口
         downloadImportFobPriceTemplate: ['GetJson', 'item/download-import-fob-price-template'], // 下载导入商品价格模板
+        bomItemExport: ['GetJson', 'supplier/bom-item/export'], // 导出bom item
     },
     User: {
         // 用户
@@ -604,6 +606,13 @@ const apiList = {
         detail: ['PostJson', 'supplier/detail'],
         delete: ['PostJson', 'supplier/delete'],
         listAll: ['PostJson', 'supplier/list-name'],
+        bomList: ['PostJson', 'supplier/bom/list'], // bom列表
+        updateName: ['PostJson', 'supplier/bom/update-name'], // 修改bom名称
+        listVersion: ['PostJson', 'supplier/bom/list-version'], // bom版本列表
+        bomItemList: ['PostJson', 'supplier/bom-item/list'], // BomItem列表
+        bomLogSave: ['PostJson', 'supplier/bom-log/save'], // 修改价格
+        bomLogList: ['PostJson', 'supplier/bom-log/list'], // 价格变化记录
+        updateRemark: ['PostJson', 'supplier/update-remark'], // 更新备注
     },
     SupplierItem: {
         //供应商物料管理
@@ -1120,6 +1129,15 @@ const apiList = {
     FinalPayment: {
         list: ['PostJson', 'purchase-order/pending-final-pay/list'], // 列表
         count: ['PostJson', 'purchase-order/pending-final-pay/count-by-status'], // 状态计数
+    },
+    WarehousingManagement: {
+        MaterialPurchaseOrderList: ['PostJson', 'invoice-item/material-purchase-order-list'], // 采购入库单列表
+        ProductionOrderList: ['PostJson', 'production-order-item-bind/production-order-list'], // 生产单列表
+        ProductionOrderDetail: ['PostJson', 'production-order-item-bind/detail'], // 生产单子件列表
+        ProductionOrderItemlist: ['PostJson', 'production-order-item/list'], // 生产单子件列表
+    },
+    ToBCustomer: {
+        list: ['PostJson', 'comment/list'], // crm tob客户列表   
     },
 };
 

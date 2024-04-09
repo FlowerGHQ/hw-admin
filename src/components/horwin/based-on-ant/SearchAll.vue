@@ -21,13 +21,15 @@
                     select中的数据(里面字段必须这样)
                     数组 
                     [{
-                        * zh: '整车',
-                        * en: 'Vehicle',
+                        * (zh: '整车', * en: 'Vehicle', || t: 'xxxx')
                         * value: 1  // a-select-option 中的 :value="item.value"  // 固定的
                     }]
                     对象
                     {
-                        '1': { vlaue: 1, zh: '整车', en: 'Vehicle', key: 1 }, 
+                        '1': { 
+                            (zh: '整车', * en: 'Vehicle', || t: 'xxxx')
+                            vlaue: 1, 
+                        }, 
                     }            
               * placeholder: "def.select",
             },
