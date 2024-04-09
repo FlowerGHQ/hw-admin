@@ -6,7 +6,7 @@
  * 创建了一个test-w或者test_w文件夹 const TEST_W(建议这里定义的和文件夹名称一样大写字母) = { name: "测试用例" } export default TEST_W
  * 封装好了会自己封装成这样TEST_W  使用 TEST_W.name
  */
-const modules = import.meta.globEager('./*/*.js', { eager: true });
+const modules = import.meta.glob('./*/*.js', { eager: true });
 
 let constModules = {};
 

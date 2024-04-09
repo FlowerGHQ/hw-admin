@@ -97,7 +97,7 @@ import dayjs from 'dayjs';
 import TimeSearch from '@/components/common/TimeSearch.vue';
 import '../../../assets/iconfont/iconfont';
 
-const modules = import.meta.globEager('../../../assets/images/dashboard/*');
+const modules = import.meta.glob('../../../assets/images/dashboard/*', { eager: true });
 
 export default {
     name: 'Card',
