@@ -25,8 +25,8 @@ const supplyManage = {
             name: 'SupplyList',
             component: () => import('@/views/supplier/manage/list.vue'),
             meta: {
-                title: '供应商列表',
-                title_en: 'Supplier list',
+                title: '新增供应商',
+                title_en: 'Add New Suppliers',
                 auth: ['supply.supplier-manage.save-supplier'],
             },
         },
@@ -48,6 +48,15 @@ const supplyManage = {
                 title: '创建资料',
                 title_en: 'Create Data',
                 hidden: true,
+            },
+        },
+        {
+            path: 'qualifiedList',
+            name: 'QualifiedSupplierList',
+            component: () => import('@/views/supplier/manage/qualified-list.vue'),
+            meta: {
+                title: '合格供应商名录',
+                title_en: 'Qualified Supplier List',
             },
         },
     ],
@@ -160,5 +169,31 @@ const supplyMaterialManagement = {
             },
         },
     ],
-};
-export { supplyManage, supplyRouters, supplyMaterialManagement };
+}
+// 成本管理
+const costManagement =  {
+    path: '/cost',
+    component: Layout,
+    redirect: '/cost/cost-list',
+    name: 'CostManagement',
+    type: [ROUTER_TYPE.SUPPLIER],
+    meta: {
+        title: '成本管理',
+        title_en: 'Cost Management',
+        icon: 'i_menu_shangpingguanli',
+        // auth: ['supplier-cost-management.model-cost-list'],
+    },
+    children: [
+        {
+            path: 'cost-list',
+            name: 'CostList',
+            component: () => import('@/views/supplier/cost/list.vue'),
+            meta: {
+                title: '车型成本表',
+                title_en: 'Vehicle Cost Table',
+                // auth: ['supplier-cost-management.model-cost-list'],
+            },
+        },
+    ],
+}
+export { supplyManage, supplyRouters, supplyMaterialManagement, costManagement };

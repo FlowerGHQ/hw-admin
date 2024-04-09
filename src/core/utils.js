@@ -8,6 +8,7 @@ import localeData from 'dayjs/plugin/localeData';
 import Image from './modules/units/image';
 import Number from './modules/units/number';
 import Common from './modules/units/common';
+import Query from './modules/units/query';
 
 dayjs.extend(weekday);
 dayjs.extend(localeData);
@@ -1778,5 +1779,7 @@ const Util = {
     Image,
     // 数字处理
     Number,
+    // 传参处理
+    Query,
 };
 export default Util;

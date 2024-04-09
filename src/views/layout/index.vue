@@ -222,6 +222,12 @@ export default {
                     t: 'n.supplier',
                 },
                 {
+                    id: 8,
+                    value: ROUTER_TYPE.WAREHOUSING,
+                    img: Core.Util.Image.getImageFile('router', 'router_type_5'),
+                    t: 'n.warehousing',
+                },
+                {
                     id: 5,
                     value: ROUTER_TYPE.CRM,
                     key: ROUTER_TYPE_MAP[ROUTER_TYPE.CRM].KEY,

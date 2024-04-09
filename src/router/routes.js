@@ -5,7 +5,7 @@ import Data from '../core/data';
 import Layout from '../views/layout/index.vue';
 
 // 供应商路由
-import { supplyManage, supplyRouters, supplyMaterialManagement } from './subrouting/supply-router';
+import { supplyManage, supplyRouters, supplyMaterialManagement, costManagement } from './subrouting/supply-router';
 // 新分销商路由
 import { mallRouters, dealsPreview } from './subrouting/mall';
 // 分销商路由
@@ -47,6 +47,8 @@ import {
 } from './subrouting/do-konw-router';
 // 测试用例
 import { testUseCases } from './subrouting/test';
+// 仓储的路由
+import { warehousingManagement } from './warehousing';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
@@ -150,7 +152,7 @@ const routes = [
             icon: 'i_s_agent',
             auth: ['sales.distribution', 'aftermarket.distribution'],
         },
-        children: [            
+        children: [
             {
                 path: 'purchase-order-list',
                 name: 'AdminPurchaseOrderListAll',
@@ -498,7 +500,7 @@ const routes = [
             title: '售后管理',
             title_en: 'After-sales',
             icon: 'i_menu_shouhouguanli',
-            auth: ['aftermarket.aftermarket']
+            auth: ['aftermarket.aftermarket'],
         },
         children: [
             {
@@ -509,7 +511,7 @@ const routes = [
                     title: '售后单列表',
                     title_en: 'Aftersales list',
                     query_type: REFUND_QUERY_TYPE.APPLY,
-                    auth: ['aftermarket.aftermarket.aftermarket']
+                    auth: ['aftermarket.aftermarket.aftermarket'],
                 },
             },
             {
@@ -550,7 +552,7 @@ const routes = [
                     title: '售后响应',
                     title_en: 'Response',
                     query_type: REFUND_QUERY_TYPE.SUPPLY,
-                    auth: ['aftermarket.aftermarket.response']
+                    auth: ['aftermarket.aftermarket.response'],
                 },
             },
             {
@@ -560,7 +562,7 @@ const routes = [
                 meta: {
                     title: '退款审核',
                     title_en: 'Refund Audit',
-                    auth: ['aftermarket.aftermarket.refund-review']
+                    auth: ['aftermarket.aftermarket.refund-review'],
                 },
             },
         ],
@@ -624,6 +626,8 @@ const routes = [
     fsLogin,
     // 测试用例
     ...testUseCases,
+    costManagement,
+    warehousingManagement,
 ];
 
 export default routes;

@@ -3,6 +3,7 @@ import { message } from 'ant-design-vue';
 import i18n from '../i18n';
 import Data from '../data';
 import Const from '../const';
+import Util from '../utils';
 import messages from '../../lang';
 
 // const shownErrorMessages = [];
@@ -33,7 +34,8 @@ const errorHandle = (status, message = i18n.global.t('error_code.unknown')) => {
     }
     if (status === 1108 || status === 1109 || status === 2103) {
         return window.location.replace(
-            window.location.href.split('#')[0] + `#/feishu-login?code=${status}&message=${message}`,
+            window.location.href.split('#')[0] +
+                `#/feishu-login?code=${Util.Query.stringifyQuery(status)}&message=${Util.Query.stringifyQuery(message)}`,
         );
     }
     if (status >= 1000) {

@@ -337,55 +337,7 @@
             class="import-modal"
         >
             <div class="modal-content">
-                <div>
-                    <p class="title">
-                        <img src="@images/item/success.png" alt="" />
-                        <span>{{ $t('i.parsing_completed') }}</span>
-                    </p>
-                    <p class="dis">
-                        {{ $t('i.analysis_total') }}
-                        <span class="success-text">{{ totalCode }}</span>
-                        {{ $t('i.strip_data') }}，{{ $t('i.success') }}
-                        <span class="success-text">{{ successCode }}</span>
-                        {{ $t('i.strip_data') }}，{{ $t('i.error') }}
-                        <span class="error-text">{{ errorCode }}</span>
-                        {{ $t('i.strip') }}，{{ $t('i.invalid_encoding') }}
-                        <span class="error-text">{{ invalidCode }}</span>
-                        {{ $t('i.strip') }}
-                    </p>
-                    <div class="code" v-if="errorCodeList.length > 0 || invalidCodeList.length > 0">
-                        <p class="code-title" v-if="errorCodeList.length > 0">
-                            <span class="code-title-l">{{ $t('i.failure_encoding') }}</span>
-                            <a-button type="default" @click="copyText('code-body')">
-                                {{ $t('i.copy_encoding') }}
-                            </a-button>
-                        </p>
-                        <template v-if="errorCodeList.length > 0">
-                            <div class="code-body" id="code-body">
-                                <div class="code-item" v-for="item in errorCodeList">
-                                    {{ item }}
-                                </div>
-                            </div>
-                        </template>
-                        <p
-                            class="code-title"
-                            :class="errorCodeList.length > 0 ? 'border-top' : ''"
-                            v-if="invalidCodeList.length > 0"
-                        >
-                            <span class="code-title-l">{{ $t('i.invalid_encoding') }}</span>
-                            <a-button type="default" @click="copyText('code-body-invalid')">
-                                {{ $t('i.copy_encoding') }}
-                            </a-button>
-                        </p>
-                        <template v-if="invalidCodeList.length > 0">
-                            <div class="code-body" id="code-body-invalid">
-                                <div class="code-item" v-for="item in invalidCodeList">
-                                    {{ item }}
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                </div>
+                <ExportResult :data="importResultData" />
             </div>
             <template #footer>
                 <div class="btns">
@@ -404,6 +356,7 @@ import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import TimeSearch from '@/components/common/TimeSearch.vue';
 import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue';
 import CategoryTree from './components/TreeSelect.vue';
+import ExportResult from '@/components/common/ExportResult.vue';
 import { split } from 'lodash';
 const ITEM = Core.Const.ITEM;
 export default {
@@ -414,6 +367,7 @@ export default {
         CategoryTreeSelect,
         SearchAll,
         InfoCircleOutlined,
+        ExportResult,
     },
     props: {},
     data() {
@@ -505,12 +459,14 @@ export default {
             ],
             paramPrice: false,
             importVisible: false,
-            errorCodeList: [],
-            invalidCodeList: [],
-            totalCode: 0,
-            successCode: 0,
-            errorCode: 0,
-            invalidCode: 0,
+            importResultData: {
+                errorCodeList: [],
+                invalidCodeList: [],
+                totalCode: 0,
+                successCode: 0,
+                errorCode: 0,
+                invalidCode: 0,
+            },
         };
     },
     watch: {},
@@ -818,12 +774,12 @@ export default {
                     return this.$message.error(this.$t(file.response.code + ''));
                 } else {
                     const resData = file.response.data;
-                    this.errorCodeList = resData.fail_code_list;
-                    this.invalidCodeList = resData.invalid_code_list;
-                    this.totalCode = resData.total_count;
-                    this.errorCode = resData.fail_count;
-                    this.successCode = resData.success_count;
-                    this.invalidCode = resData.invalid_code_count;
+                    this.importResultData.errorCodeList = resData.fail_code_list;
+                    this.importResultData.invalidCodeList = resData.invalid_code_list;
+                    this.importResultData.totalCode = resData.total_count;
+                    this.importResultData.errorCode = resData.fail_count;
+                    this.importResultData.successCode = resData.success_count;
+                    this.importResultData.invalidCode = resData.invalid_code_count;
                     this.importVisible = true;
                     return this.$message.success(this.$t('i.uploaded'));
                 }
