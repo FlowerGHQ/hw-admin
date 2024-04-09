@@ -5,6 +5,7 @@ let ROUTER_TYPE = {
     CRM: 4, // CRM
     SUPPLIER: 5, // 供应商
     SYSTEM: 6, // 系统管理
+    WAREHOUSING: 8, // 仓储
 } 
 /**
  * ISMANAGER 是否管理员就能看到这个路由
@@ -16,6 +17,7 @@ const ROUTER_TYPE_MAP = {
     4: { KEY: 'crm', VALUE: 4 },
     5: { KEY: 'supply', VALUE: 5 },
     6: { KEY: 'sys', VALUE: 6, ISMANAGER: true },       
+    8: { KEY: 'invoice', VALUE: 8 },       
 }  
 
 const SYSTEM_AUTH = {
@@ -108,9 +110,9 @@ const SYSTEM_AUTH = {
             list: [],
             select: [],
             templateSelect: [], // 当前模块是否被选中了
-            key: 'invoice', // 仓储
+            key: ROUTER_TYPE_MAP[ROUTER_TYPE.WAREHOUSING].KEY, // 仓储
             name: '仓储',
-            tab: 8,
+            tab: ROUTER_TYPE.WAREHOUSING,
         },
     ],
 };

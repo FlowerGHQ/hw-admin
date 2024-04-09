@@ -1316,6 +1316,7 @@ const WarehouseManagement = {
             },*/
     ],
 };
+
 export {
     inquiryManagement,
     operationManagement,

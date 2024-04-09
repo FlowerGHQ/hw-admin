@@ -320,7 +320,7 @@ export default {
             supply: {
                 title: '供应管理',
                 supplier: {
-                    title: '供应商列表',
+                    title: '新增供应商',
                 },
                 'purchase-order': {
                     title: '采购单列表',
