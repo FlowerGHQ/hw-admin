@@ -6,13 +6,16 @@ let ROUTER_TYPE = {
     SUPPLIER: 5, // 供应商
     SYSTEM: 6, // 系统管理
 } 
+/**
+ * ISMANAGER 是否管理员就能看到这个路由
+*/
 const ROUTER_TYPE_MAP = {
     1: { KEY: 'sales', VALUE: 1 },
     2: { KEY: 'aftermarket', VALUE: 2 },
     3: { KEY: 'production', VALUE: 3 },
     4: { KEY: 'crm', VALUE: 4 },
     5: { KEY: 'supply', VALUE: 5 },
-    6: { KEY: 'sys', VALUE: 6 },       
+    6: { KEY: 'sys', VALUE: 6, ISMANAGER: true },       
 }  
 
 const SYSTEM_AUTH = {

@@ -30,13 +30,7 @@
                     <!-- 用户底下的 -->
                     <div v-if="!org.edit" class="panel-content">
                         <SimpleImageEmpty v-if="org.isEmpty" :desc="$t('n.no_org_auth')" />
-                        <template v-else v-for="item of org.options" :key="item.key">
-                            <!-- <div v-if="item.templateSelect.length" class="form-item">
-                                <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
-                                <div class="value">
-                                    <span>{{ $t('authority.title.' + item.key) }}</span>
-                                </div>
-                            </div> -->
+                        <template v-else v-for="item of org.options" :key="item.key">  
                             <template v-for="(subItem, index) of item.list" :key="index">
                                 <div v-if="subItem.itemSelect.length" class="form-item afs">
                                     <div class="key">
@@ -107,17 +101,7 @@
                     <div v-else class="panel-content">
                         <auth-tab ref="authTabRef" class="m-b-20" @tab="onTab"></auth-tab>
                         <template v-for="item of org.options" :key="item.key">
-                            <template v-if="activeTab === item.tab">
-                                <!-- <div class="form-item afs">
-                                    <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
-                                    <div class="value">
-                                        <a-checkbox-group v-model:value="item.templateSelect">
-                                            <a-checkbox :value="item.id">
-                                                {{ $t('authority.title.' + item.key) }}
-                                            </a-checkbox>
-                                        </a-checkbox-group>
-                                    </div>
-                                </div> -->
+                            <template v-if="activeTab === item.tab">             
                                 <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
                                     <div class="key">
                                         {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:
@@ -308,6 +292,7 @@ export default {
 
         // 进入编辑模式
         handleEditShow(type) {
+            this.activeTab = this.$refs.authTabRef?.activeTab || this.authItems[0].tab;
             this.user_type = type;
             this[type].edit = true;
         },

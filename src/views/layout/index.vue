@@ -234,6 +234,7 @@ export default {
                     key: ROUTER_TYPE_MAP[ROUTER_TYPE.SYSTEM].KEY,
                     img: Core.Util.Image.getImageFile('router', 'router_type_1'),
                     t: 'n.system_management',
+                    ismanager: ROUTER_TYPE_MAP[ROUTER_TYPE.SYSTEM]?.ISMANAGER,
                 },
             ],            
         };
@@ -292,7 +293,7 @@ export default {
             const arr = [];
             this.moduleAuth.forEach(el => {
                 // 根据权限判断顶部是否存在
-                if (this.$auth(el.key) || el.key === 'sys') {
+                if (this.$auth(el.key) || (el.ismanager && this.$auth('MANAGER')) ) {
                     arr.push(el);
                 }
             });
@@ -315,7 +316,7 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                console.log('输出的路由', n);
+                console.log('输出的路由', n);         
                 let meta = n.meta || {};
                 let not_sub_menu = n.matched.length > 1 ? n.matched[0].meta.not_sub_menu : meta.not_sub_menu;
 
@@ -359,9 +360,9 @@ export default {
         this.$store.state.lang = Core.Data.getLang();
         
         this.tabPosition = Core.Data.getTabPosition()?.tabPosition;
-        if (Core.Data.getTabPosition()?.path) {
-            this.$router.replace(Core.Data.getTabPosition()?.path);
-        }
+        // if (Core.Data.getTabPosition()?.path) {
+        //     this.$router.replace(Core.Data.getTabPosition()?.path);
+        // }
 
         // 监听页面窗口
         window.onresize = this.handleWindowResize;

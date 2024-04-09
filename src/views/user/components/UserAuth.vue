@@ -108,7 +108,7 @@
                         <auth-tab v-if="!$auth('DISTRIBUTOR')" ref="authTabRef" class="m-b-20" @tab="onTab"></auth-tab>
                         <template v-for="item of options" :key="item.key">
                             <template v-if="$auth('DISTRIBUTOR') || activeTab === item.tab">
-                                <!-- <div class="form-item afs">
+                                <div v-if="$auth('ADMIN')" class="form-item afs">
                                     <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
                                     <div class="value">
                                         <a-checkbox-group v-model:value="item.templateSelect" :disabled="item.disabled">
@@ -117,7 +117,7 @@
                                             </a-checkbox>
                                         </a-checkbox-group>
                                     </div>
-                                </div> -->
+                                </div>
                                 <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
                                     <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
                                     <div class="value">
@@ -360,6 +360,7 @@ export default {
         /* fetch end */
 
         async handleEditShow() {
+            this.activeTab = this.$refs.authTabRef?.activeTab || this.authItems[0].tab;
             await this.getUserRoleAuthFetch();
             // 进入编辑模式
             this.edit = true;
@@ -457,8 +458,7 @@ export default {
 }
 
 .ant-checkbox-wrapper {
-    margin-left: 0px;
-    margin-bottom: 10px;
+    margin-left: 0px;    
 }
 
 .color-1890ff {
