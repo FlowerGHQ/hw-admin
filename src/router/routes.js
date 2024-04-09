@@ -32,6 +32,7 @@ import {
     repairManagement,
     finalPaymentOrder,
     cancellationOrderRequest,
+    rechargeManagement,
 } from './subrouting/admin-router';
 // 公共的路由
 import { freightConfirmed } from './common';
@@ -685,6 +686,7 @@ const routes = [
     ...testUseCases,
     costManagement,
     warehousingManagement,
+    rechargeManagement,
 ];
 
 export default routes;

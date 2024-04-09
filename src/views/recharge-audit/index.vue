@@ -166,7 +166,7 @@ const statusList = computed(() => {
         { zh: '二审通过', en: 'Approval Second Audit', value: 0, color: 'yellow', key: 2 },
         { zh: '二审不通过', en: 'The Second Audit Was Rejected', value: 0, color: 'yellow', key: 5 },
     ];
-    if(Core.Data.getAuthority()['recharge-review.first_instance']) {
+    if(Core.Data.getAuthority()['finance.audit-record.recharge.first-instance']) {
         list.push({ zh: '等待一审', en: 'Pending First Audit', value: 0, color: 'yellow', key: 1 })
         list.push({ zh: '一审不通过', en: 'The First Audit Was Rejected', value: 0, color: 'yellow', key: 3 })
     }
@@ -199,13 +199,13 @@ const searchList = ref([
 ]);
 
 onMounted(() => {
-    console.log('auth', Core.Data.getAuthority()['recharge-review.first_instance']);
+    console.log('auth', Core.Data.getAuthority()['finance.audit-record.recharge.first-instance']);
 });
 /* Fetch start*/
 const request = Core.Api.RechargeAudit.list;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request,
-    initParam: { is_finance: Number(!Core.Data.getAuthority()['recharge-review.first_instance']) },
+    initParam: { is_finance: Number(!Core.Data.getAuthority()['finance.audit-record.recharge.first-instance']) },
 });
 /* Fetch end*/
 
@@ -232,7 +232,7 @@ const routerChange = (type, record) => {
 const handleSearch = (e) => {
     searchParam.value.status = e
     if(searchParam.value.status === 0) {
-        searchParam.value.is_finance = !Number(Core.Data.getAuthority()['recharge-review.first_instance']);        
+        searchParam.value.is_finance = !Number(Core.Data.getAuthority()['finance.audit-record.recharge.first-instance']);        
     }
     search();
 }

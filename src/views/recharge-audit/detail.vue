@@ -212,7 +212,7 @@ const currencyValue = computed(() => {
 });
 // 是否是财务权限
 const isFinance = computed(() => {
-    if (Core.Data.getAuthority()['recharge-review.first_instance']) {
+    if (Core.Data.getAuthority()['finance.audit-record.recharge.first-instance']) {
         return true;
     } else {
         return false;

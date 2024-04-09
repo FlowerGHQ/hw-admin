@@ -778,7 +778,43 @@ const cocCertificate = {
 /* 销售 end*/
 
 /* 财务 start*/
-
+// 审核
+const rechargeManagement = {
+    // 财务审核
+    path: '/recharge',
+    component: Layout,
+    redirect: '/recharge/recharge-audit',
+    name: 'RechargeManagement',
+    type: [ROUTER_TYPE.FINANCE],
+    meta: {
+        title: '审核',
+        title_en: 'Audit',
+        icon: 'i_s_agent',
+        auth: ['finance.audit-record'],
+    },
+    children: [
+        {
+            path: 'recharge-audit',
+            name: 'RechargeAudit',
+            component: () => import('@/views/recharge-audit/index.vue'),
+            meta: {
+                title: '充值审核',
+                title_en: 'Recharge Audit',
+                auth: ['finance.audit-record.recharge'],
+            },
+        },
+        {
+            path: 'detail',
+            name: 'RechargeDetail',
+            component: () => import('@/views/recharge-audit/detail.vue'),
+            meta: {
+                title: '充值审核详情',
+                title_en: 'Recharge Audit Details',
+                hidden: true,
+            },
+        },
+    ],
+};
 /* 财务 end*/
 
 /* 生产 start*/
@@ -1363,4 +1399,5 @@ export {
     repairManagement,
     finalPaymentOrder,
     cancellationOrderRequest,
+    rechargeManagement
 };
