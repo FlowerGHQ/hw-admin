@@ -13,6 +13,7 @@ const freightConfirmed = {
         title: '运费待确认订单',
         title_en: 'Freight Confirmed List',
         icon: 'i_menu_fankuguanli',
+        auth: ['sales.distribution.freight', 'aftermarket.distribution.freight'],
     },
 };
 

@@ -1326,6 +1326,7 @@ const finalPaymentOrder = {
         title: '尾款待支付订单表',
         title_en: 'Final Payment List',
         icon: 'i_menu_fankuguanli',
+        auth: ['sales.distribution.balance-payment', 'aftermarket.distribution.balance-payment'],
     },
 };
 // 取消订单申请列表
@@ -1337,6 +1338,7 @@ const cancellationOrderRequest = {
         title: '取消订单申请列表',
         title_en: 'Cancellation Order List',
         icon: 'i_menu_fankuguanli',
+        auth: ['sales.distribution.cancel-order', 'aftermarket.distribution.cancel-order'],
     },
 };
 
