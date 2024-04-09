@@ -133,7 +133,7 @@
                                                 {{ $t('u.select_all') }}
                                             </a-checkbox>
                                         </div>
-                                        <div class="d-f">
+                                        <div>
                                             <a-checkbox-group v-model:value="subItem.itemSelect">
                                                 <!-- 二级模块渲染 -->
                                                 <a-checkbox :value="subItem.id" :disabled="subItem.disabled">
@@ -425,7 +425,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #AllotUserAuth {
     .form-item {
         .key {
@@ -437,7 +437,7 @@ export default {
             .authority-item {
                 font-size: 12px;
                 line-height: 32px;
-                margin-right: 12px;
+                // margin-right: 12px;
             }
         }
     }
@@ -455,6 +455,12 @@ export default {
         }
     }
 }
+
+.ant-checkbox-wrapper {
+    margin-left: 0px;
+    margin-bottom: 10px;
+}
+
 .color-1890ff {
     color: #1890ff;
     cursor: pointer;

@@ -286,7 +286,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #AuthRoleEdit {
     .form-block .form-item .value {
         max-width: 100%;

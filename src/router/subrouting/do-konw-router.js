@@ -82,7 +82,6 @@ const retailBusinessVehicleManagement = {
             meta: {
                 title: '车辆列表',
                 title_en: 'Vehicle List',
-                roles: [LOGIN_TYPE.ADMIN],
             },
         },
         {
@@ -144,13 +143,85 @@ const RepairInvoiceExport = {
     },
 };
 
+// 账户管理(废弃)
+const walletManagement = {
+    path: '/wallet',
+    component: Layout,
+    redirect: '/wallet/wallet-list',
+    name: 'WalletManagement',
+    type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
+    meta: {
+        title: '账户管理',
+        title_en: 'Accounts',
+        icon: 'i_s_user',
+        hidden: true,
+    },
+    children: [
+        {
+            path: 'wallet-list',
+            name: 'WalletList',
+            component: () => import('@/views/wallet/wallet-list.vue'),
+            meta: {
+                title: '账户列表',
+                title_en: 'Account list',
+            },
+        },
+        {
+            path: 'wallet-detail',
+            name: 'WalletDetail',
+            auth: ['user.detail'],
+            component: () => import('@/views/wallet/wallet-detail.vue'),
+            meta: {
+                hidden: true,
+                title: '账户详情',
+                parent: '/wallet/wallet-list',
+            },
+        },
+    ],
+};
+
+// 可能废弃了
+const Dashboard = {    
+    path: '/dashboard',
+    component: Layout,
+    name: 'Dashboard',
+    redirect: '/dashboard/index',
+    type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION],
+    meta: {
+        title: '商城',
+        title_en: 'Data Board',
+        icon: 'i_s_dashboard',
+        hidden: true,
+    },
+    children: [
+        {
+            path: 'index',
+            name: 'Index',
+            component: () => import('@/views/dashboard/Analytics.vue'),
+            meta: {
+                title: '首页',
+                title_en: 'Index',
+            },
+        },
+        {
+            path: '',
+            name: 'Dashboard',
+            component: () => import('@/views/dashboard/Dashboard.vue'),
+            meta: {
+                title: '时效看板',
+                title_en: 'RTDB',
+                hidden: true,
+            },
+        },
+    ],
+}
+
 /*{ // 零售商管理 - 零售商端
         path: '/agent/agent-detail-sp',
         component: Layout,
         meta: {
             title: '零售商管理',
             icon: 'i_s_agent',
-            roles: [LOGIN_TYPE.AGENT],
         },
         children: [
             {
@@ -159,7 +230,6 @@ const RepairInvoiceExport = {
                 component: () => import('@/views/agent/agent-detail.vue'),
                 meta: {
                     title: '零售商详情',
-                    roles: [LOGIN_TYPE.AGENT],
                 }
             }
         ]
@@ -170,7 +240,6 @@ const RepairInvoiceExport = {
         meta: {
             title: '门店管理',
             icon: 'i_s_store',
-            roles: [LOGIN_TYPE.STORE],
         },
         children: [
             {
@@ -179,7 +248,6 @@ const RepairInvoiceExport = {
                 component: () => import('@/views/store/store-detail.vue'),
                 meta: {
                     title: '门店详情',
-                    roles: [LOGIN_TYPE.STORE],
                 }
             }
         ]
@@ -225,7 +293,6 @@ const RepairInvoiceExport = {
 //         title: '三包管理',
 //         title_en: 'Warranty Management',
 //         icon: 'i_s_temp',
-//         roles: [LOGIN_TYPE.ADMIN],
 //     },
 //     children: [
 //         {
@@ -235,7 +302,6 @@ const RepairInvoiceExport = {
 //             meta: {
 //                 title: '生效时间',
 //                 title_en: 'Effective Time',
-//                 roles: [LOGIN_TYPE.ADMIN],
 //             }
 //         },
 //         {
@@ -245,10 +311,9 @@ const RepairInvoiceExport = {
 //             meta: {
 //                 title: '三包时长',
 //                 title_en: 'Warranty Duration',
-//                 roles: [LOGIN_TYPE.ADMIN],
 //             }
 //         },
 //     ]
 // },
 /* 零售业务新添加在CRM中的 end*/
-export { mailManagement, retailBusinessVehicleManagement, retailBusinessOrderManagement, RepairInvoiceExport };
+export { mailManagement, retailBusinessVehicleManagement, retailBusinessOrderManagement, RepairInvoiceExport, walletManagement };

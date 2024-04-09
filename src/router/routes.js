@@ -13,7 +13,7 @@ import { customerCare } from './subrouting/distributor-router';
 // 平台方路由
 import {
     inquiryManagement,
-    operationManagement,    
+    operationManagement,
     crmCustomerManagement,
     crmBoManagement,
     crmOrder,
@@ -25,11 +25,11 @@ import {
     crmDashboard,
     cocCertificate,
     customerManagement,
-    walletManagement,
     InventoryManagement,
     WarehouseManagement,
     manufactureManagement,
     productionManagement,
+    repairManagement,
 } from './subrouting/admin-router';
 // 飞书路由
 import { fsLogin } from './subrouting/fs-login';
@@ -38,7 +38,13 @@ import { SYSTEM } from './subrouting/system';
 // 国内销售权限路由
 import { domesticSales } from './subrouting/domestic-sales';
 // 不知道用途的
-import { mailManagement, retailBusinessVehicleManagement, retailBusinessOrderManagement, RepairInvoiceExport } from './subrouting/do-konw-router';
+import {
+    mailManagement,
+    retailBusinessVehicleManagement,
+    retailBusinessOrderManagement,
+    RepairInvoiceExport,
+    walletManagement,
+} from './subrouting/do-konw-router';
 // 测试用例
 import { testUseCases } from './subrouting/test';
 
@@ -52,7 +58,7 @@ const NOW_LOGIN_TYPE = Data.getLoginType();
 let indexPath = '';
 switch (NOW_LOGIN_TYPE) {
     case LOGIN_TYPE.ADMIN:
-        indexPath = '/distributor';
+        indexPath = '/';
         break;
     case LOGIN_TYPE.DISTRIBUTOR:
         indexPath = '/mall/index';
@@ -129,40 +135,6 @@ const routes = [
     // 看板
     mallRouters,
     dealsPreview,
-    {
-        // 商城
-        path: '/dashboard',
-        component: Layout,
-        name: 'Dashboard',
-        redirect: '/dashboard/index',
-        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION],
-        meta: {
-            title: '商城',
-            title_en: 'Data Board',
-            icon: 'i_s_dashboard',
-        },
-        children: [
-            {
-                path: 'index',
-                name: 'Index',
-                component: () => import('@/views/dashboard/Analytics.vue'),
-                meta: {
-                    title: '首页',
-                    title_en: 'Index',
-                },
-            },
-            {
-                path: '',
-                name: 'Dashboard',
-                component: () => import('@/views/dashboard/Dashboard.vue'),
-                meta: {
-                    title: '时效看板',
-                    title_en: 'RTDB',
-                    hidden: true,
-                },
-            },
-        ],
-    },
     // 维修单 结算下载
     RepairInvoiceExport,
     {
@@ -229,7 +201,6 @@ const routes = [
                 meta: {
                     title: '分销商列表',
                     title_en: 'Distributors',
-                    roles: [LOGIN_TYPE.ADMIN],
                     auth: ['sales.distribution.distributor', 'aftermarket.distribution.distributor'],
                 },
             },
@@ -241,7 +212,6 @@ const routes = [
                     hidden: true,
                     title: '分销商编辑',
                     parent: '/distributor/distributor-list',
-                    roles: [LOGIN_TYPE.ADMIN],
                 },
             },
             {
@@ -350,7 +320,6 @@ const routes = [
                 meta: {
                     title: '销售区域',
                     title_en: 'Sales area',
-                    roles: [LOGIN_TYPE.ADMIN],
                     auth: ['sales.distribution.sale-area', 'aftermarket.distribution.sale-area'],
                 },
             },
@@ -371,7 +340,6 @@ const routes = [
                 meta: {
                     hidden: true,
                     title: '区域编辑',
-                    roles: [LOGIN_TYPE.ADMIN],
                     parent: '/item/sales-area-list',
                 },
             },
@@ -518,7 +486,7 @@ const routes = [
                 },
             },
         ],
-    },    
+    },
     {
         // 售后管理
         path: '/aftersales',
@@ -530,6 +498,7 @@ const routes = [
             title: '售后管理',
             title_en: 'After-sales',
             icon: 'i_menu_shouhouguanli',
+            auth: ['aftermarket.aftermarket']
         },
         children: [
             {
@@ -540,6 +509,7 @@ const routes = [
                     title: '售后单列表',
                     title_en: 'Aftersales list',
                     query_type: REFUND_QUERY_TYPE.APPLY,
+                    auth: ['aftermarket.aftermarket.aftermarket']
                 },
             },
             {
@@ -580,6 +550,7 @@ const routes = [
                     title: '售后响应',
                     title_en: 'Response',
                     query_type: REFUND_QUERY_TYPE.SUPPLY,
+                    auth: ['aftermarket.aftermarket.response']
                 },
             },
             {
@@ -589,126 +560,17 @@ const routes = [
                 meta: {
                     title: '退款审核',
                     title_en: 'Refund Audit',
+                    auth: ['aftermarket.aftermarket.refund-review']
                 },
             },
         ],
     },
-    {
-        // 工单管理
-        path: '/repair',
-        component: Layout,
-        name: 'RepairManagement',
-        redirect: '/repair/repair-list',
-        type: [ROUTER_TYPE.AFTER],
-        meta: {
-            title: '工单管理',
-            title_en: 'Maintenance',
-            icon: 'i_menu_gongdanguanli',
-            auth: ['aftermarket.repair'],
-        },
-        children: [
-            {
-                path: 'repair-list',
-                name: 'RepairList',
-                component: () => import('@/views/repair/repair-list.vue'),
-                meta: {
-                    title: '工单列表',
-                    title_en: 'Warranty Claim',
-                    auth: ['aftermarket.repair.repair'],
-                },
-            },
-            {
-                path: 'repair-audit-list',
-                name: 'RepairAuditList',
-                component: () => import('@/views/repair/repair-list.vue'),
-                meta: {
-                    title: '待审工单',
-                    title_en: 'Pending warranty claim',
-                    type: 'audit',
-                    auth: ['aftermarket.repair.wait-examine'],
-                },
-            },
-            {
-                path: 'repair-redit-list',
-                name: 'RepairReditList',
-                component: () => import('@/views/repair/repair-list.vue'),
-                meta: {
-                    title: '待改工单',
-                    title_en: 'Pending warranty claim',
-                    roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
-                    type: 'redit',
-                },
-            },
-            {
-                path: 'repair-invoice-list',
-                name: 'RepairInvoiceList',
-                component: () => import('@/views/repair/repair-list.vue'),
-                meta: {
-                    title: '待审核故障件',
-                    title_en: 'Pending defective parts',
-                    roles: [LOGIN_TYPE.ADMIN],
-                    type: 'invoice',
-                    auth: ['aftermarket.repair.wait-examine-fault'],
-                },
-            },
-            {
-                path: 'repair-fault-list',
-                name: 'RepairFaultList',
-                component: () => import('@/views/repair/repair-list.vue'),
-                meta: {
-                    title: '待入库故障件',
-                    title_en: 'Wait recall parts',
-                    type: 'fault',
-                    auth: ['aftermarket.repair.wait-warehouse-fault'],
-                },
-            },
-            {
-                path: 'repair-edit',
-                name: 'RepairEdit',
-                component: () => import('@/views/repair/repair-edit.vue'),
-                meta: {
-                    hidden: true,
-                    title: '维修单编辑',
-                    parent: '/repair/repair-list',
-                    roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
-                },
-            },
-            {
-                path: 'repair-detail',
-                name: 'RepairDetail',
-                component: () => import('@/views/repair/repair-detail.vue'),
-                meta: {
-                    hidden: true,
-                    title: '维修单详情',
-                    parent: '/repair/repair-list',
-                },
-            },
-            {
-                path: 'repair-invoice',
-                name: 'RepairInvoice',
-                component: () => import('@/views/repair/repair-invoice.vue'),
-                meta: {
-                    hidden: true,
-                    title: '维修单结算',
-                    parent: '/repair/repair-list',
-                },
-            },
-            {
-                path: 'item-fault-list',
-                name: 'FaultList',
-                component: () => import('@/views/repair/item-fault-list.vue'),
-                meta: {
-                    title: '故障管理',
-                    title_en: 'Fault management',
-                    roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
-                },
-            },
-        ],
-    },
+    // 工单管理
+    repairManagement,
     // 分销售客户关怀
     customerCare,
     // 平台方客户关怀
-    inquiryManagement,    
+    inquiryManagement,
     // 供应管理 - 平台端
     productionManagement,
     // 生产管理
@@ -716,7 +578,7 @@ const routes = [
     // 库存管理
     WarehouseManagement,
     // 存货管理
-    InventoryManagement,        
+    InventoryManagement,
     // 账户管理
     walletManagement,
     // 客户管理
@@ -726,7 +588,7 @@ const routes = [
     // 供应商管理
     supplyManage,
     // 数据
-    crmDashboard, 
+    crmDashboard,
     // 国内销售
     ...domesticSales,
     // 客户
@@ -750,11 +612,11 @@ const routes = [
     // 订单管理
     retailBusinessOrderManagement,
     // 系统设置
-    crmSettingManagement,  
+    crmSettingManagement,
     // 销售策略管理
     salesStrategyManagement,
     // 系统管理
-    SYSTEM,    
+    SYSTEM,
     ...supplyRouters,
     // 物料管理
     supplyMaterialManagement,

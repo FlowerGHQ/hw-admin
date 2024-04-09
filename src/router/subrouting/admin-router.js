@@ -132,6 +132,116 @@ const operationManagement = {
         },
     ],
 };
+// 工单管理
+const repairManagement = {
+    path: '/repair',
+    component: Layout,
+    name: 'RepairManagement',
+    redirect: '/repair/repair-list',
+    type: [ROUTER_TYPE.AFTER],
+    meta: {
+        title: '工单管理',
+        title_en: 'Maintenance',
+        icon: 'i_menu_gongdanguanli',
+        auth: ['aftermarket.repair'],
+    },
+    children: [
+        {
+            path: 'repair-list',
+            name: 'RepairList',
+            component: () => import('@/views/repair/repair-list.vue'),
+            meta: {
+                title: '工单列表',
+                title_en: 'Warranty Claim',
+                auth: ['aftermarket.repair.repair'],
+            },
+        },
+        {
+            path: 'repair-audit-list',
+            name: 'RepairAuditList',
+            component: () => import('@/views/repair/repair-list.vue'),
+            meta: {
+                title: '待审工单',
+                title_en: 'Pending warranty claim',
+                type: 'audit',
+                auth: ['aftermarket.repair.wait-examine'],
+            },
+        },
+        {
+            path: 'repair-redit-list',
+            name: 'RepairReditList',
+            component: () => import('@/views/repair/repair-list.vue'),
+            meta: {
+                title: '待改工单',
+                title_en: 'Pending warranty claim',
+                type: 'redit',
+                auth: ['aftermarket.repair.wait-modified'],
+            },
+        },
+        {
+            path: 'repair-invoice-list',
+            name: 'RepairInvoiceList',
+            component: () => import('@/views/repair/repair-list.vue'),
+            meta: {
+                title: '待审核故障件',
+                title_en: 'Pending defective parts',
+                type: 'invoice',
+                auth: ['aftermarket.repair.wait-examine-fault'],
+            },
+        },
+        {
+            path: 'repair-fault-list',
+            name: 'RepairFaultList',
+            component: () => import('@/views/repair/repair-list.vue'),
+            meta: {
+                title: '待入库故障件',
+                title_en: 'Wait recall parts',
+                type: 'fault',
+                auth: ['aftermarket.repair.wait-warehouse-fault'],
+            },
+        },
+        {
+            path: 'repair-edit',
+            name: 'RepairEdit',
+            component: () => import('@/views/repair/repair-edit.vue'),
+            meta: {
+                hidden: true,
+                title: '维修单编辑',
+                parent: '/repair/repair-list',
+            },
+        },
+        {
+            path: 'repair-detail',
+            name: 'RepairDetail',
+            component: () => import('@/views/repair/repair-detail.vue'),
+            meta: {
+                hidden: true,
+                title: '维修单详情',
+                parent: '/repair/repair-list',
+            },
+        },
+        {
+            path: 'repair-invoice',
+            name: 'RepairInvoice',
+            component: () => import('@/views/repair/repair-invoice.vue'),
+            meta: {
+                hidden: true,
+                title: '维修单结算',
+                parent: '/repair/repair-list',
+            },
+        },
+        {
+            path: 'item-fault-list',
+            name: 'FaultList',
+            component: () => import('@/views/repair/item-fault-list.vue'),
+            meta: {
+                title: '故障管理',
+                title_en: 'Fault management',
+                auth: ['aftermarket.repair.fault'],
+            },
+        },
+    ],
+};
 
 /* CRM start*/
 // 数据
@@ -191,6 +301,7 @@ const crmCustomerManagement = {
         title: '客户',
         title_en: 'Customers',
         icon: 'i_menu_kehu',
+        auth: ['crm.crm-customer'],
     },
     children: [
         {
@@ -201,6 +312,7 @@ const crmCustomerManagement = {
                 title: '区域客户',
                 title_en: 'Regional Customers',
                 type: 'region',
+                auth: ['crm.crm-customer.area'],
             },
         },
         {
@@ -211,6 +323,7 @@ const crmCustomerManagement = {
                 title: '我的客户',
                 title_en: 'My Customers',
                 type: 'private',
+                auth: ['crm.crm-customer.mine'],
             },
         },
         {
@@ -268,6 +381,7 @@ const crmBoManagement = {
         title: '商机',
         title_en: 'Business Opportunity',
         icon: 'i_menu_shangji',
+        auth: ['crm.business'],
     },
     children: [
         {
@@ -277,6 +391,7 @@ const crmBoManagement = {
             meta: {
                 title: '商机列表',
                 title_en: 'Opportunities List',
+                auth: ['crm.business.business'],
             },
         },
         {
@@ -313,6 +428,7 @@ const crmOrder = {
         title: '订单管理',
         title_en: 'Contract Order',
         icon: 'i_crm_order',
+        auth: ['crm.manage'],
     },
     children: [
         {
@@ -322,6 +438,7 @@ const crmOrder = {
             meta: {
                 title: '订单列表',
                 title_en: 'Contract Order list',
+                auth: ['crm.manage.order'],
             },
         },
         {
@@ -380,6 +497,7 @@ const crmOrderIncome = {
         title: '回款单',
         title_en: 'Payment Receipt',
         icon: 'i_crm_order_income',
+        auth: ['crm.payment'],
     },
     children: [
         {
@@ -389,6 +507,7 @@ const crmOrderIncome = {
             meta: {
                 title: '回款单列表',
                 title_en: 'Payment Receipt List',
+                auth: ['crm.payment.payment'],
             },
         },
         {
@@ -398,6 +517,7 @@ const crmOrderIncome = {
             meta: {
                 title: '待审列表',
                 title_en: 'Pending List',
+                auth: ['crm.payment.wait-audit'],
             },
         },
         {
@@ -435,6 +555,7 @@ const crmTestDriveList = {
         title: '试驾单',
         title_en: 'Test Drive',
         icon: 'i_crm_test_drive',
+        auth: ['crm.test-drive'],
     },
     children: [
         {
@@ -444,6 +565,7 @@ const crmTestDriveList = {
             meta: {
                 title: '试驾单列表',
                 title_en: 'Test Drive List',
+                auth: ['crm.test-drive.test-drive'],
             },
         },
         {
@@ -577,7 +699,6 @@ const salesStrategyManagement = {
         title: '销售策略管理',
         title_en: 'System Management',
         icon: 'i_a-iconmenu_xiaoshoucelue',
-        roles: [LOGIN_TYPE.ADMIN],
         auth: ['sales.sales-strategy'],
     },
     children: [
@@ -657,41 +778,7 @@ const cocCertificate = {
 /* 销售 end*/
 
 /* 财务 start*/
-// 账户管理
-const walletManagement = {
-    path: '/wallet',
-    component: Layout,
-    redirect: '/wallet/wallet-list',
-    name: 'WalletManagement',
-    type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
-    meta: {
-        title: '账户管理',
-        title_en: 'Accounts',
-        icon: 'i_s_user',
-    },
-    children: [
-        {
-            path: 'wallet-list',
-            name: 'WalletList',
-            component: () => import('@/views/wallet/wallet-list.vue'),
-            meta: {
-                title: '账户列表',
-                title_en: 'Account list',
-            },
-        },
-        {
-            path: 'wallet-detail',
-            name: 'WalletDetail',
-            auth: ['user.detail'],
-            component: () => import('@/views/wallet/wallet-detail.vue'),
-            meta: {
-                hidden: true,
-                title: '账户详情',
-                parent: '/wallet/wallet-list',
-            },
-        },
-    ],
-};
+
 /* 财务 end*/
 
 /* 生产 start*/
@@ -863,7 +950,6 @@ const productionManagement = {
             meta: {
                 title: '新建采购单',
                 hidden: true,
-                roles: [LOGIN_TYPE.ADMIN],
                 parent: '/production/material-purchase-list',
             }
         },*/
@@ -914,7 +1000,6 @@ const productionManagement = {
         //     name: 'MaterialAdjustStock',
         //     component: () => import('@/views/production/material-adjust-stock.vue'),
         //     meta: {
-        //         roles: [LOGIN_TYPE.ADMIN],
         //         title: '物料调库',
         //     }
         // },
@@ -923,7 +1008,6 @@ const productionManagement = {
         //     name: 'MaterialStockRecord',
         //     component: () => import('@/views/production/components/MaterialStockRecord.vue'),
         //     meta: {
-        //         roles: [LOGIN_TYPE.ADMIN],
         //         title: '物料调库',
         //     }
         // },
@@ -1002,6 +1086,7 @@ const InventoryManagement = {
         title: '存货管理',
         title_en: 'Stock Control',
         icon: 'i_menu_cunhuoguanli',
+        auth: ['sales.inventory-management', 'production.inventory-management'],
     },
     children: [
         {
@@ -1011,6 +1096,7 @@ const InventoryManagement = {
             meta: {
                 title: '存货档案',
                 title_en: 'Inventory Files',
+                auth: ['sales.inventory-management.files', 'production.inventory-management.files'],
             },
         },
         {
@@ -1020,6 +1106,7 @@ const InventoryManagement = {
             meta: {
                 title: '存货分类',
                 title_en: 'Inventory Category',
+                auth: ['sales.inventory-management.category', 'production.inventory-management.category'],
             },
         },
         {
@@ -1087,7 +1174,6 @@ const WarehouseManagement = {
             meta: {
                 title: '库存总览',
                 title_en: 'Inventory overview',
-                roles: [LOGIN_TYPE.ADMIN],
                 auth: ['sales.stock.overview', 'aftermarket.stock.overview', 'production.inventory.overview'],
             },
         },
@@ -1128,7 +1214,6 @@ const WarehouseManagement = {
             meta: {
                 title: '调货单管理',
                 title_en: 'Transfer order',
-                roles: [LOGIN_TYPE.ADMIN],
                 auth: [
                     'sales.stock.transfer-note',
                     'aftermarket.stock.transfer-note',
@@ -1144,7 +1229,6 @@ const WarehouseManagement = {
                 hidden: true,
                 title: '调货单详情',
                 parent: '/warehouse/warehouse-transfer-list',
-                roles: [LOGIN_TYPE.ADMIN],
             },
         },
         {
@@ -1152,7 +1236,6 @@ const WarehouseManagement = {
             name: 'MaterialPutStock',
             component: () => import('@/views/production/material-put-stock.vue'),
             meta: {
-                roles: [LOGIN_TYPE.ADMIN],
                 title: '入库',
                 title_en: 'Inbound',
                 auth: [
@@ -1167,7 +1250,6 @@ const WarehouseManagement = {
             name: 'MaterialOutStock',
             component: () => import('@/views/production/material-out-stock.vue'),
             meta: {
-                roles: [LOGIN_TYPE.ADMIN],
                 title: '出库',
                 title_en: 'Outbound',
                 auth: [
@@ -1183,7 +1265,6 @@ const WarehouseManagement = {
                 component: () => import('@/views/warehouse/transfer-order-list.vue'),
                 meta: {
                     title: '调货收货管理',
-                    roles: [LOGIN_TYPE.AGENT,LOGIN_TYPE.DISTRIBUTOR,LOGIN_TYPE.STORE],
                     type: 'in'
                 }
             },*/
@@ -1230,7 +1311,6 @@ const WarehouseManagement = {
                 component: () => import('@/views/warehouse/fault-entity-list.vue'),
                 meta: {
                     title: '待处理故障件',
-                    roles: [LOGIN_TYPE.ADMIN],
                     type: 'pending'
                 }
             },*/
@@ -1250,9 +1330,9 @@ export {
     crmDashboard,
     cocCertificate,
     customerManagement,
-    walletManagement,
     InventoryManagement,
     WarehouseManagement,
     manufactureManagement,
     productionManagement,
+    repairManagement,
 };

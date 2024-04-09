@@ -16,7 +16,6 @@ const customerCare = {
         title: '客户关怀',
         title_en: 'Customer Care',
         icon: 'i_menu_fankuguanli',
-        roles: [LOGIN_TYPE.DISTRIBUTOR],
         auth: ['aftermarket.enquiry'],
     },
     children: [

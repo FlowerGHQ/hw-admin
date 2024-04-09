@@ -78,7 +78,6 @@ const supplyMaterialManagement = {
         title: '物料管理',
         title_en: 'Material Management',
         icon: 'i_menu_shangpingguanli',
-        roles: [LOGIN_TYPE.ADMIN],
         auth: ['supplier-material.list'],
     },
     children: [

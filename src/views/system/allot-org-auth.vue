@@ -42,7 +42,7 @@
                                     <div class="key">
                                         {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:
                                     </div>
-                                    <div class="value d-f">
+                                    <div class="value">
                                         <span class="authority-item m-r-8">
                                             {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}
                                         </span>
@@ -65,12 +65,14 @@
                                                         )
                                                     }}
                                                 </span>
-                                                <span
+                                                <template
                                                     v-for="(fourItem, index) in threeItem.list"
                                                     :key="fourItem.id"
-                                                    class="m-r-8"
                                                 >
-                                                    <template v-if="$Util.Common.isMember(fourItem.id, item.select)">
+                                                    <span
+                                                        v-if="$Util.Common.isMember(fourItem.id, item.select)"
+                                                        class="m-r-8"
+                                                    >
                                                         {{
                                                             $t(
                                                                 'authority.' +
@@ -92,8 +94,8 @@
                                                                     fourItem.key,
                                                             )
                                                         }}
-                                                    </template>
-                                                </span>
+                                                    </span>
+                                                </template>
                                             </template>
                                         </span>
                                     </div>
@@ -116,11 +118,11 @@
                                         </a-checkbox-group>
                                     </div>
                                 </div> -->
-                                <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs d-f-a">
+                                <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
                                     <div class="key">
                                         {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:
                                     </div>
-                                    <div class="value d-f">
+                                    <div class="value">
                                         <a-checkbox-group v-model:value="subItem.itemSelect">
                                             <!-- 二级模块渲染 -->
                                             <a-checkbox :value="subItem.id">
@@ -341,7 +343,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #AllotOrgAuth {
     .form-item {
         .key {
@@ -393,7 +395,6 @@ export default {
             margin-left: 0;
         }
         .ant-checkbox-wrapper {
-            margin-right: 8px;
             margin-bottom: 4px;
         }
     }
@@ -401,9 +402,5 @@ export default {
 
 .d-f {
     display: flex;
-}
-.d-f-a {
-    display: flex;
-    align-items: center !important;
 }
 </style>

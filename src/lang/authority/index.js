@@ -19,8 +19,8 @@ export default {
                     export: '导出',
                     'sales-report-export': '已销售报表导出',
                     'statistics-report-export': '已销售统计报表导出',
-                    detail:'详情',
-                    out:'出库',
+                    detail: '详情',
+                    out: '出库',
                     'give-item': '赠送订单',
                     payment: '付款',
                     examine: '审核',
@@ -33,13 +33,13 @@ export default {
                 },
                 distributor: {
                     title: '分销商列表',
-                    save: "新建分销商",
-                    detail: "详情",
-                    edit: "编辑",
-                    forbidden: "禁用",
-                    'reset-password': "重置密码",
-                    'set-role': "设置角色",
-                    'account-operations': "账户操作",
+                    save: '新建分销商',
+                    detail: '详情',
+                    edit: '编辑',
+                    forbidden: '禁用',
+                    'reset-password': '重置密码',
+                    'set-role': '设置角色',
+                    'account-operations': '账户操作',
                 },
                 agent: {
                     title: '零售商列表',
@@ -59,17 +59,18 @@ export default {
                 'cancel-order': {
                     title: '取消订单申请列表',
                 },
+                
             },
             item: {
                 title: '商品管理',
                 item: {
                     title: '商品列表',
-                    edit: "编辑",
-                    detail: "详情",
-                    'up-off-shelf': "上架/下架",
-                    save: "新增商品",
-                    'set-sale-area': "批量设置销售区域",
-                    'import': "导入",
+                    edit: '编辑',
+                    detail: '详情',
+                    'up-off-shelf': '上架/下架',
+                    save: '新增商品',
+                    'set-sale-area': '批量设置销售区域',
+                    import: '导入',
                 },
                 'item-category': {
                     title: '商品分类',
@@ -152,6 +153,15 @@ export default {
                     list: '付款信息列表',
                 },
             },
+            'inventory-management': {
+                title: '存货管理',
+                files: {
+                    title: '存货档案',
+                },
+                category: {
+                    title: '存货分类',
+                },
+            },
         },
         // 售后
         aftermarket: {
@@ -162,8 +172,8 @@ export default {
                     export: '导出',
                     'sales-report-export': '已销售报表导出',
                     'statistics-report-export': '已销售统计报表导出',
-                    detail:'详情',
-                    out:'出库',
+                    detail: '详情',
+                    out: '出库',
                     'give-item': '赠送订单',
                     payment: '付款',
                     examine: '审核',
@@ -176,13 +186,13 @@ export default {
                 },
                 distributor: {
                     title: '分销商列表',
-                    save: "新建分销商",
-                    detail: "详情",
-                    edit: "编辑",
-                    forbidden: "禁用",
-                    'reset-password': "重置密码",
-                    'set-role': "设置角色",
-                    'account-operations': "账户操作",
+                    save: '新建分销商',
+                    detail: '详情',
+                    edit: '编辑',
+                    forbidden: '禁用',
+                    'reset-password': '重置密码',
+                    'set-role': '设置角色',
+                    'account-operations': '账户操作',
                 },
                 agent: {
                     title: '零售商列表',
@@ -207,12 +217,12 @@ export default {
                 title: '商品管理',
                 item: {
                     title: '商品列表',
-                    edit: "编辑",
-                    detail: "详情",
-                    'up-off-shelf': "上架/下架",
-                    save: "新增商品",
-                    'set-sale-area': "批量设置销售区域",
-                    'import': "导入",
+                    edit: '编辑',
+                    detail: '详情',
+                    'up-off-shelf': '上架/下架',
+                    save: '新增商品',
+                    'set-sale-area': '批量设置销售区域',
+                    import: '导入',
                 },
                 'item-category': {
                     title: '商品分类',
@@ -229,6 +239,9 @@ export default {
                 'refund-review': {
                     title: '退款审核',
                 },
+                aftermarket: {
+                    title: "售后单列表"
+                }
             },
             repair: {
                 title: '工单管理',
@@ -243,6 +256,12 @@ export default {
                 },
                 'wait-warehouse-fault': {
                     title: '待入库故障件',
+                },
+                'wait-modified': {
+                    title: '待改工单',
+                },
+                'fault': {
+                    title: '故障管理',
                 },
             },
             enquiry: {
@@ -355,6 +374,15 @@ export default {
                     title: '物料出库',
                 },
             },
+            'inventory-management': {
+                title: '存货管理',
+                files: {
+                    title: '存货档案',
+                },
+                category: {
+                    title: '存货分类',
+                },
+            },
         },
         // CRM
         crm: {
@@ -377,7 +405,7 @@ export default {
                 },
             },
             business: {
-                title: '商机',
+                title: '商机管理',
                 business: {
                     title: '商机列表',
                 },
@@ -398,7 +426,7 @@ export default {
                 },
             },
             'test-drive': {
-                title: '智能标签',
+                title: '试驾单',
                 'test-drive': {
                     title: '试驾单列表',
                 },
@@ -452,7 +480,7 @@ export default {
                 title: '系统管理',
                 user: {
                     title: '用户列表',
-                    'set-admin': "设置管理员",
+                    'set-admin': '设置管理员',
                 },
                 role: {
                     title: '角色管理',
@@ -494,7 +522,5 @@ export default {
             },
         },
     },
-    en: {
-      
-    },
+    en: {},
 };

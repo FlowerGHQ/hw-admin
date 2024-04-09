@@ -98,7 +98,6 @@ const SYSTEM = {
             meta: {
                 title: '权限管理',
                 title_en: 'Authority Management',
-                roles: [LOGIN_TYPE.ADMIN],
                 auth: ['sys.sys.authority', 'MANAGER'],
             },
         },
@@ -110,7 +109,6 @@ const SYSTEM = {
                 hidden: true,
                 title: '附件编辑',
                 parent: '/system/system-file-list',
-                roles: [LOGIN_TYPE.ADMIN],
             },
         },
         {
@@ -131,7 +129,6 @@ const SYSTEM = {
                 hidden: true,
                 title: '新增消息',
                 parent: '/system/notice-list',
-                roles: [LOGIN_TYPE.ADMIN],
             },
         },
         {
@@ -158,10 +155,8 @@ const SYSTEM = {
             path: 'print_template_list',
             name: 'PrintTemplatelList',
             component: () => import('@/views/system/print_template_list.vue'),
-            roles: [LOGIN_TYPE.ADMIN],
             meta: {
                 title: '标签规则',
-                roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                 title_en: 'Label rules ',
                 auth: ['sys.sys.label', 'MANAGER'],
             },
