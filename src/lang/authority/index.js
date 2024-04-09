@@ -59,6 +59,9 @@ export default {
                 'cancel-order': {
                     title: '取消订单申请列表',
                 },
+                'un-payment': {
+                    title: '尾款未支付订单表',
+                },
                 'distributor-detail': {
                     title: '分销商详情'
                 },
@@ -214,6 +217,9 @@ export default {
                 },
                 'cancel-order': {
                     title: '取消订单申请列表',
+                },
+                'un-payment': {
+                    title: '尾款未支付订单表',
                 },
                 'distributor-detail': {
                     title: '分销商详情'
