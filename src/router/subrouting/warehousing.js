@@ -1,11 +1,10 @@
-import Const from '../core/const';
-import Util from '../core/utils';
-import Data from '../core/data';
-import Layout from '../views/layout/index.vue';
+import Const from '../../core/const';
+import Util from '../../core/utils';
+import Data from '../../core/data';
+import Layout from '../../views/layout/index.vue';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
-const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE;
-
+const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 
 // 仓储管理(Warehousing management)
 const warehousingManagement = {
@@ -18,7 +17,7 @@ const warehousingManagement = {
         title: '仓储管理',
         title_en: 'Warehousing Management',
         icon: 'i_order',
-        roles: [LOGIN_TYPE.ADMIN],        
+        auth: ['invoice.storage'],
     },
     children: [
         {
@@ -27,18 +26,20 @@ const warehousingManagement = {
             component: () => import('@/views/admin/warehousing-management/procurement.vue'),
             meta: {
                 title: '采购入库单列表',
-                title_en: 'List Of Purchase Orders',                
+                title_en: 'List Of Purchase Orders',
+                auth: ["invoice.storage.purchase-order"]    
             },
-        },  
+        },
         {
             path: 'production',
             name: 'WarehousingManagementProduction',
             component: () => import('@/views/admin/warehousing-management/production.vue'),
             meta: {
                 title: '生产订单列表',
-                title_en: 'Production Order List',                
+                title_en: 'Production Order List',
+                auth: ["invoice.storage.production-order"]    
             },
-        },  
+        },
         {
             path: 'son-production',
             name: 'WarehousingManagementSonProduction',
@@ -46,9 +47,9 @@ const warehousingManagement = {
             meta: {
                 hidden: true,
                 title: '生产订单列表',
-                title_en: 'Production Order List',                
+                title_en: 'Production Order List',
             },
-        },  
+        },
     ],
 };
 

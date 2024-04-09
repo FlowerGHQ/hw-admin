@@ -48,7 +48,7 @@ import {
 // 测试用例
 import { testUseCases } from './subrouting/test';
 // 仓储的路由
-import { warehousingManagement } from './warehousing';
+import { warehousingManagement } from './subrouting/warehousing';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
@@ -220,11 +220,11 @@ const routes = [
                 path: 'distributor-detail',
                 name: 'DistributorDetail',
                 component: () => import('@/views/distributor/distributor-detail.vue'),
-                meta: {
-                    hidden: true,
+                meta: {                    
                     title: '分销商详情',
                     parent: '/distributor/distributor-list',
                     roles: [LOGIN_TYPE.ADMIN],
+                    auth: ['sales.distribution.distribution-detail', 'aftermarket.distribution.distributor-detail'],
                 },
             },
             {
@@ -235,6 +235,7 @@ const routes = [
                     title: '分销商详情',
                     title_en: 'Details',
                     roles: [LOGIN_TYPE.DISTRIBUTOR],
+                    auth: ['sales.distribution.distribution-detail', 'aftermarket.distribution.distributor-detail'],
                 },
             },
             {

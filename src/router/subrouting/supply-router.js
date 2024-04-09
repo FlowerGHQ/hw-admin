@@ -57,6 +57,7 @@ const supplyManage = {
             meta: {
                 title: '合格供应商名录',
                 title_en: 'Qualified Supplier List',
+                auth: ['supply.supplier-manage.qualified'],
             },
         },
     ],
@@ -181,7 +182,7 @@ const costManagement =  {
         title: '成本管理',
         title_en: 'Cost Management',
         icon: 'i_menu_shangpingguanli',
-        // auth: ['supplier-cost-management.model-cost-list'],
+        auth: ['supply.cost-manage'],
     },
     children: [
         {
@@ -191,7 +192,7 @@ const costManagement =  {
             meta: {
                 title: '车型成本表',
                 title_en: 'Vehicle Cost Table',
-                // auth: ['supplier-cost-management.model-cost-list'],
+                auth: ['supply.cost-manage.vehicle'],
             },
         },
     ],

@@ -1,3 +1,4 @@
+import Util from '../../../utils'
 let ROUTER_TYPE = {
     SALES: 1, // 销售
     AFTER: 2, // 售后
@@ -20,7 +21,62 @@ const ROUTER_TYPE_MAP = {
     8: { KEY: 'invoice', VALUE: 8 },       
 }  
 
+// Layout/index.vue中的数据
+const MODULEAUTH = [
+    {
+        id: 1,
+        value: ROUTER_TYPE.SALES,
+        key: ROUTER_TYPE_MAP[ROUTER_TYPE.SALES].KEY,
+        img: Util.Image.getImageFile('router', 'router_type_3'),
+        t: 'n.sales',
+    },
+    {
+        id: 2,
+        value: ROUTER_TYPE.AFTER,
+        key: ROUTER_TYPE_MAP[ROUTER_TYPE.AFTER].KEY,
+        img: Util.Image.getImageFile('router', 'router_type_2'),
+        t: 'n.after',
+    },
+    {
+        id: 3,
+        value: ROUTER_TYPE.PRODUCTION,
+        key: ROUTER_TYPE_MAP[ROUTER_TYPE.PRODUCTION].KEY,
+        img: Util.Image.getImageFile('router', 'router_type_4'),
+        t: 'n.production',
+    },
+    {
+        id: 4,
+        value: ROUTER_TYPE.SUPPLIER,
+        key: ROUTER_TYPE_MAP[ROUTER_TYPE.SUPPLIER].KEY,
+        img: Util.Image.getImageFile('router', 'router_type_5'),
+        t: 'n.supplier',
+    },
+    {
+        id: 8,
+        value: ROUTER_TYPE.WAREHOUSING,
+        key: ROUTER_TYPE_MAP[ROUTER_TYPE.WAREHOUSING].KEY,
+        img: Util.Image.getImageFile('router', 'router_type_5'),
+        t: 'n.warehousing',
+    },
+    {
+        id: 5,
+        value: ROUTER_TYPE.CRM,
+        key: ROUTER_TYPE_MAP[ROUTER_TYPE.CRM].KEY,
+        img: Util.Image.getImageFile('router', 'router_type_1'),
+        t: 'n.crm',
+    },
+    {
+        id: 6,
+        value: ROUTER_TYPE.SYSTEM,
+        key: ROUTER_TYPE_MAP[ROUTER_TYPE.SYSTEM].KEY,
+        img: Util.Image.getImageFile('router', 'router_type_1'),
+        t: 'n.system_management',
+        ismanager: ROUTER_TYPE_MAP[ROUTER_TYPE.SYSTEM]?.ISMANAGER,
+    },
+] 
+
 const SYSTEM_AUTH = {
+    MODULEAUTH,
     ROUTER_TYPE,
     ROUTER_TYPE_MAP,
     // 模块底下的权限

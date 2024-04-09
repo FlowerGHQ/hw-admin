@@ -59,6 +59,9 @@ export default {
                 'cancel-order': {
                     title: '取消订单申请列表',
                 },
+                'distributor-detail': {
+                    title: '分销商详情'
+                },
                 
             },
             item: {
@@ -211,6 +214,9 @@ export default {
                 },
                 'cancel-order': {
                     title: '取消订单申请列表',
+                },
+                'distributor-detail': {
+                    title: '分销商详情'
                 },
             },
             item: {

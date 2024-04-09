@@ -158,7 +158,7 @@ import { SIDER } from '../../router/routes';
 import MyBreadcrumb from './components/Breadcrumb.vue';
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
 import enUS from 'ant-design-vue/lib/locale-provider/en_US';
-const ROUTER_TYPE = Core.Const.SYSTEM_AUTH.ROUTER_TYPE;
+const MODULEAUTH = Core.Const.SYSTEM_AUTH.MODULEAUTH;
 const ROUTER_TYPE_MAP = Core.Const.SYSTEM_AUTH.ROUTER_TYPE_MAP;
 
 export default {
@@ -172,8 +172,7 @@ export default {
             enUS,
 
             loginType: Core.Data.getLoginType(),
-            USER_TYPE: Core.Const.USER.TYPE_MAP,
-            ROUTER_TYPE,
+            USER_TYPE: Core.Const.USER.TYPE_MAP,            
             ROUTER_TYPE_MAP,
             collapsed: false,
             openKeys: [],
@@ -192,57 +191,7 @@ export default {
             },
             tabPosition: null, // { tabPosition: 1, path: '' } tab和path 顶部的 销售 售后 生产 CRM权限
             user_type_list: [],
-            moduleAuth: [
-                {
-                    id: 1,
-                    value: ROUTER_TYPE.SALES,
-                    key: ROUTER_TYPE_MAP[ROUTER_TYPE.SALES].KEY,
-                    img: Core.Util.Image.getImageFile('router', 'router_type_3'),
-                    t: 'n.sales',
-                },
-                {
-                    id: 2,
-                    value: ROUTER_TYPE.AFTER,
-                    key: ROUTER_TYPE_MAP[ROUTER_TYPE.AFTER].KEY,
-                    img: Core.Util.Image.getImageFile('router', 'router_type_2'),
-                    t: 'n.after',
-                },
-                {
-                    id: 3,
-                    value: ROUTER_TYPE.PRODUCTION,
-                    key: ROUTER_TYPE_MAP[ROUTER_TYPE.PRODUCTION].KEY,
-                    img: Core.Util.Image.getImageFile('router', 'router_type_4'),
-                    t: 'n.production',
-                },
-                {
-                    id: 4,
-                    value: ROUTER_TYPE.SUPPLIER,
-                    key: ROUTER_TYPE_MAP[ROUTER_TYPE.SUPPLIER].KEY,
-                    img: Core.Util.Image.getImageFile('router', 'router_type_5'),
-                    t: 'n.supplier',
-                },
-                {
-                    id: 8,
-                    value: ROUTER_TYPE.WAREHOUSING,
-                    img: Core.Util.Image.getImageFile('router', 'router_type_5'),
-                    t: 'n.warehousing',
-                },
-                {
-                    id: 5,
-                    value: ROUTER_TYPE.CRM,
-                    key: ROUTER_TYPE_MAP[ROUTER_TYPE.CRM].KEY,
-                    img: Core.Util.Image.getImageFile('router', 'router_type_1'),
-                    t: 'n.crm',
-                },
-                {
-                    id: 6,
-                    value: ROUTER_TYPE.SYSTEM,
-                    key: ROUTER_TYPE_MAP[ROUTER_TYPE.SYSTEM].KEY,
-                    img: Core.Util.Image.getImageFile('router', 'router_type_1'),
-                    t: 'n.system_management',
-                    ismanager: ROUTER_TYPE_MAP[ROUTER_TYPE.SYSTEM]?.ISMANAGER,
-                },
-            ],            
+            moduleAuth: MODULEAUTH,            
         };
     },
     provide() {
@@ -366,9 +315,6 @@ export default {
         this.$store.state.lang = Core.Data.getLang();
         
         this.tabPosition = Core.Data.getTabPosition()?.tabPosition;
-        // if (Core.Data.getTabPosition()?.path) {
-        //     this.$router.replace(Core.Data.getTabPosition()?.path);
-        // }
 
         // 监听页面窗口
         window.onresize = this.handleWindowResize;
