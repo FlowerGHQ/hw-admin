@@ -7,6 +7,7 @@ import viteCompression from 'vite-plugin-compression';
 import inject from '@rollup/plugin-inject'; // 这个库可以实现 webpack.ProvidePlugin({…}) 的方式
 import { AntDesignVueResolver, ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import * as path from 'path';
+import vueJsx from '@vitejs/plugin-vue-jsx';
 // 正式环境清除console
 // https://vitejs.dev/config/
 
@@ -47,6 +48,7 @@ export default defineConfig(({ mode }) => {
         },
         plugins: [
             vue(),
+            vueJsx(),
             createSvgIconsPlugin({
                 // 配置路劲在src/icons/svg下面
                 iconDirs: [path.resolve(process.cwd(), 'src/assets/svg')],
