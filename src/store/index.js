@@ -1,6 +1,7 @@
 import { createStore } from 'vuex';
 import Data from '../core/data';
 import { SUPPLY_CHAIN } from './supply';
+import { ADMIN_AUTH_TAB } from './admin-auth-tab';
 
 const store = createStore({
     state() {
@@ -43,6 +44,7 @@ const store = createStore({
     // modules
     modules: {
         SUPPLY_CHAIN,
+        ADMIN_AUTH_TAB,
     },
 });
 
