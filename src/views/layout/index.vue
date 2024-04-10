@@ -172,7 +172,7 @@ export default {
             enUS,
 
             loginType: Core.Data.getLoginType(),
-            USER_TYPE: Core.Const.USER.TYPE_MAP,            
+            USER_TYPE: Core.Const.USER.TYPE_MAP,
             ROUTER_TYPE_MAP,
             collapsed: false,
             openKeys: [],
@@ -191,7 +191,7 @@ export default {
             },
             tabPosition: null, // { tabPosition: 1, path: '' } tab和path 顶部的 销售 售后 生产 CRM权限
             user_type_list: [],
-            moduleAuth: MODULEAUTH,            
+            moduleAuth: MODULEAUTH,
         };
     },
     provide() {
@@ -236,7 +236,7 @@ export default {
 
             // 过滤掉 路由不在 全局（authority.list）中的
             showList = this.handleUnAuthListFilter(showList);
-            
+
             console.log('showList', showList);
             return showList;
         },
@@ -248,20 +248,23 @@ export default {
             const arr = [];
             this.moduleAuth.forEach(el => {
                 // 根据权限判断顶部是否存在
-                if (this.$auth(el.key) || (el.ismanager && this.$auth('MANAGER')) ) {
+                if (this.$auth(el.key) || (el.ismanager && this.$auth('MANAGER'))) {
                     arr.push(el);
                 }
             });
             // 判断本地是否存在tabValue不存在赋值
-            if (!Core.Data.getTabPosition()?.tabPosition) {
+            if (!this.$store.state.ADMIN_AUTH_TAB.TABPOSITION) {
                 this.tabPosition = arr[0].value;
                 // 第一次进入重定向路由
-                if (this.showList[0].path) {                    
+                if (this.showList[0].path) {
                     this.$router.replace({ path: this.showList[0]?.path });
                 }
-                Core.Data.setTabPosition({ tabPosition: this.tabPosition, path: this.showList[0]?.path });                
+                this.$store.commit('ADMIN_AUTH_TAB/SETTABPOSITION', {
+                    tabPosition: this.tabPosition,
+                    path: this.showList[0]?.path,
+                });
                 console.log('moduleAuth', this.showList);
-            }            
+            }
 
             return arr;
         },
@@ -271,7 +274,7 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                console.log('输出的路由', n);         
+                console.log('输出的路由', n);
                 let meta = n.meta || {};
                 let not_sub_menu = n.matched.length > 1 ? n.matched[0].meta.not_sub_menu : meta.not_sub_menu;
 
@@ -313,15 +316,14 @@ export default {
         }
         this.$i18n.locale = Core.Data.getLang();
         this.$store.state.lang = Core.Data.getLang();
-        
-        this.tabPosition = Core.Data.getTabPosition()?.tabPosition;
+
+        this.tabPosition = this.$store.state.ADMIN_AUTH_TAB.TABPOSITION;
 
         // 监听页面窗口
         window.onresize = this.handleWindowResize;
         if (window.innerWidth <= 830) {
             this.collapsed = true;
         }
-
     },
     methods: {
         routerChange(type) {
@@ -365,7 +367,7 @@ export default {
         },
         handleLink(path) {
             this.$router.push(path);
-            Core.Data.setTabPosition({ tabPosition: this.tabPosition, path: path });
+            this.$store.commit('ADMIN_AUTH_TAB/SETTABPOSITION', { tabPosition: this.tabPosition, path: path });
         },
         handleLogout() {
             Core.Api.Common.logout().then(() => {
@@ -425,12 +427,15 @@ export default {
         },
 
         // 切换顶部的 销售 售后 生产 CRM权限操作
-        handleRouterSwitch() {
-            if (Core.Data.getTabPosition()?.tabPosition === this.tabPosition) {
+        handleRouterSwitch(e) {
+            if (this.$store.state.ADMIN_AUTH_TAB.TABPOSITION === this.tabPosition) {
                 return;
             }
             this.$router.replace({ path: this.showList[0]?.path });
-            Core.Data.setTabPosition({ tabPosition: this.tabPosition, path: this.showList[0]?.path });
+            this.$store.commit('ADMIN_AUTH_TAB/SETTABPOSITION', {
+                tabPosition: this.tabPosition,
+                path: this.showList[0]?.path,
+            });
         },
 
         // 监听窗口变化
@@ -444,7 +449,7 @@ export default {
         setIndex(tabPosition, selectedKeys) {
             this.tabPosition = tabPosition;
             this.selectedKeys = selectedKeys;
-            Core.Data.setTabPosition({ tabPosition: this.tabPosition, path: selectedKeys });
+            this.$store.commit('ADMIN_AUTH_TAB/SETTABPOSITION', { tabPosition: this.tabPosition, path: selectedKeys });
         },
         // 获取无参数路径
         getPathNoQuery(path) {
@@ -518,7 +523,7 @@ export default {
                 return this.$auth(...el.auth);
             });
             return result;
-        },       
+        },
     },
 };
 </script>
