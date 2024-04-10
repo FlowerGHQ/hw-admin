@@ -123,6 +123,11 @@ export function useTable({
         state.pagination.size = size;
         getTableData();
     };
+    const onPagenationChange = (current, size) => {
+        state.pagination.current = current;
+        state.pagination.size = size;
+        getTableData();
+    };
     return {
         ...toRefs(state),
         isPaginationVisible,
@@ -131,6 +136,7 @@ export function useTable({
         onSizeChange,
         onPageChange,
         getTableData,
+        onPagenationChange,
     };
 }
 

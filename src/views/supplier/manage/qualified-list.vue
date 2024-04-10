@@ -33,61 +33,20 @@
                 :scroll="{ x: true }"
                 :loading="loading"
                 :row-key="record => record.id"
-                :pagination="false"
+                :pagination="{
+                    current: pagination.current,
+                    pageSize: pagination.size,
+                    total: pagination.total,
+                    showQuickJumper: true,
+                    showSizeChanger: true,
+                    showLessItems: true,
+                    showTotal: total => $t('n.all_total') + ` ${pagination.total} ` + $t('in.total'),
+                    hideOnSinglePage: false,
+                    pageSizeOptions: ['10', '20', '30', '40'],
+                }"
+                @change="({ current, pageSize }) => onPagenationChange({ current, size: pageSize })"
             >
-                <template #bodyCell="{ column, text, record, index }">
-                    <!-- 序号 -->
-                    <template v-if="column.key === 'number'">
-                        {{ index + 1 }}
-                    </template>
-                    <template v-if="column.key === 'item'">
-                        {{ text ? text : '-' }}
-                    </template>
-                    <!-- 引入日期 -->
-                    <template v-if="column.key === 'time'">
-                        {{ text ? $Util.timeFormat(text, 'YYYY.MM') : '-' }}
-                    </template>
-                    <!-- 变化类 -->
-                    <template v-if="column.key === 'register_type'">
-                        <template v-if="text === 1">
-                            {{ text ? $t('supply-chain.new_addition') : '-' }}
-                        </template>
-                        <template v-if="text === 2">
-                            {{ text ? $t('supply-chain.rename') : '-' }}
-                        </template>
-                        <template v-if="!text">-</template>
-                    </template>
-                    <!-- 备注 -->
-                    <template v-if="column.key === 'remark'">
-                        <div class="remark">
-                            <a-tooltip>
-                                <template #title>{{ text }}</template>
-                                <span class="remark-text">{{ text ? text : '-' }}</span>
-                            </a-tooltip>
-                            <MySvgIcon
-                                icon-class="supply-edit"
-                                class-name="supply-edit"
-                                @click.native="handleRemark(record)"
-                            />
-                        </div>
-                    </template>
-                </template>
             </a-table>
-        </div>
-        <div class="paging-container">
-            <a-pagination
-                v-model:current="pagination.current"
-                :page-size="pagination.size"
-                :total="pagination.total"
-                show-quick-jumper
-                show-size-changer
-                show-less-items
-                :show-total="total => $t('n.all_total') + ` ${pagination.total} ` + $t('in.total')"
-                :hide-on-single-page="false"
-                :pageSizeOptions="['10', '20', '30', '40']"
-                @change="onPageChange"
-                @showSizeChange="onSizeChange"
-            />
         </div>
         <!-- 导出结果展示 -->
         <a-modal
@@ -137,21 +96,23 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="jsx">
 import { onMounted, ref, getCurrentInstance, computed, nextTick, reactive } from 'vue';
 import Core from '@/core';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import ExportResult from '@/components/common/ExportResult.vue';
+import MySvgIcon from '@/components/MySvgIcon/index.vue';
 import { useTable } from '@/hooks/useTable';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import MySvgIcon from '@/components/MySvgIcon/index.vue';
+import { CheckOutlined, EditOutlined } from '@ant-design/icons-vue';
+import _ from 'lodash';
+
 const $store = useStore();
 const router = useRouter();
 const $t = useI18n().t;
 const { proxy } = getCurrentInstance();
-
 const upload = reactive({
     action: Core.Const.NET.URL_POINT + '/admin/1/supplier/temp-import',
     fileList: [],
@@ -174,14 +135,60 @@ const editId = ref(null);
 const formState = reactive({
     remark: '',
 });
+
+// 车型的selectOption
+const vehicleModelOptions = ref([
+    { label: '车型1', value: '车型1' },
+    { label: '车型2', value: '车型2' },
+    { label: '车型3', value: '车型3' },
+]);
+
 const tableColumns = computed(() => {
     let columns = [
-        { title: $t('supply-chain.serial_number'), dataIndex: 'number', key: 'number' },
-        { title: $t('supply-chain.no'), dataIndex: 'no', key: 'item' },
-        { title: $t('supply-chain.supplier_code'), dataIndex: 'code', key: 'item' },
+        {
+            title: $t('supply-chain.serial_number'),
+            dataIndex: 'number',
+            key: 'number',
+            customRender: ({ text, record, index, column }) => {
+                // 当前页码-1 * 每页条数 + 索引 + 1
+                return (pagination.value.current - 1) * pagination.value.size + index + 1;
+            },
+        },
+        {
+            title: $t('supply-chain.no'),
+            dataIndex: 'no',
+            key: 'item',
+            customRender: ({ text, record, index, column }) => {
+                return renderInputEditableCell({ text, record, index, column });
+            },
+        },
+        {
+            title: $t('supply-chain.supplier_code'),
+            dataIndex: 'code',
+            key: 'item',
+            customRender: ({ text, record, index, column }) => {
+                return renderInputEditableCell({ text, record, index, column });
+            },
+        },
         { title: $t('supply-chain.supplier_full_name'), dataIndex: 'name', key: 'item' },
-        { title: $t('supply-chain.supplier_abbreviation'), dataIndex: 'short_name', key: 'item' },
-        { title: $t('supply-chain.procurement_category'), dataIndex: 'purchase_category', key: 'item' },
+        // 简称
+        {
+            title: $t('supply-chain.supplier_abbreviation'),
+            dataIndex: 'short_name',
+            key: 'item',
+            customRender: ({ text, record, index, column }) => {
+                return renderInputEditableCell({ text, record, index, column });
+            },
+        },
+        // 采购品类
+        {
+            title: $t('supply-chain.procurement_category'),
+            dataIndex: 'purchase_category',
+            key: 'item',
+            customRender: ({ text, record, index, column }) => {
+                return renderSelectEditableCell({ text, record, index, column }, vehicleModelOptions.value);
+            },
+        },
         { title: $t('supply-chain.main_supply'), dataIndex: 'supply_main', key: 'item' },
         { title: $t('supply-chain.secondary_supply'), dataIndex: 'supply_secondary', key: 'item' },
         { title: $t('supply-chain.other_items'), dataIndex: 'supply_other', key: 'item' },
@@ -193,6 +200,24 @@ const tableColumns = computed(() => {
         { title: $t('supply-chain.province'), dataIndex: 'province', key: 'item' },
         { title: $t('supply-chain.city'), dataIndex: 'city', key: 'item' },
         { title: $t('supply-chain.detailed_address'), dataIndex: 'address', key: 'item' },
+        // 操作
+        {
+            title: $t('def.operate'),
+            dataIndex: 'operate',
+            key: 'operate',
+            fixed: 'right',
+            width: 100,
+            // 淘汰按钮 danger
+            customRender: ({ text, record, index, column }) => {
+                return (
+                    <div>
+                        <a-button type="link" danger>
+                            {$t('supply-chain.eliminate')}
+                        </a-button>
+                    </div>
+                );
+            },
+        },
     ];
     return columns;
 });
@@ -224,12 +249,50 @@ const searchList = ref([
         selectMap: Core.Const.SUPPLAY.CHANGE_CLASS_LIST,
     },
 ]);
+const editableData = reactive({
+    // id: { //id为当前行id
+    //     dataIndex: 'no', //当前列
+    //     value: {}, //当前行数据
+    // },
+});
 
 onMounted(() => {});
 /* Fetch start*/
-const request = Core.Api.Supplier.list;
+// const request = Core.Api.Supplier.list;
+
+function request() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve({
+                list: [
+                    {
+                        id: 1,
+                        no: '1',
+                        code: 'code1',
+                        name: 'name1',
+                        short_name: 'short_name1',
+                        purchase_category: ['purchase_category1'],
+                        supply_main: 'supply_main1',
+                        supply_secondary: 'supply_secondary1',
+                        supply_other: 'supply_other1',
+                        vehicle_model: 'vehicle_model1',
+                        manager: 'manager1',
+                        register_time: '2021-01-01',
+                        register_type: 1,
+                        remark: 'remark1',
+                        province: 'province1',
+                        city: 'city1',
+                        address: 'address1',
+                    },
+                ],
+                count: 1,
+            });
+        }, 1000);
+    });
+}
+
 const updateRemark = Core.Api.Supplier.updateRemark;
-const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
+const { loading, tableData, pagination, search, onPagenationChange, refreshTable, searchParam } = useTable({
     request,
     initParam: {
         status: 10,
@@ -286,14 +349,89 @@ const handleImportClose = () => {
 const handleImportConfirm = () => {
     importVisible.value = false;
 };
-const handleRemark = record => {
-    editId.value = record.id;
-    formState.remark = record.remark;
-    changeRemarkVisible.value = true;
-};
 const handleRemarkClose = () => {
     changeRemarkVisible.value = false;
 };
+
+// 渲染可编辑cell单元格(input)
+const renderInputEditableCell = ({ text, record, index, column }) => {
+    const key = record.id; // 获取当前行id
+    const idEditValue = editableData[key]?.value; // 获取当前行数据
+    const isEditDataIndex = editableData[key]?.dataIndex; // 获取当前列
+    const isEditable = idEditValue && isEditDataIndex === column.dataIndex; // 判断当前单元格是否为编辑状态
+    // 如果isEditable为true，渲染编辑状态，否则渲染文本状态
+    return (
+        <div>
+            {isEditable ? ( // 编辑状态
+                <div class="editable-cell-input-wrapper">
+                    <a-input
+                        vModel:value={editableData[key].value[column.dataIndex]}
+                        onPressEnter={() => tabCellSave(key, column)}
+                    />
+                    <CheckOutlined class="editable-cell-icon-check" onClick={() => tabCellSave(key, column)} />
+                </div>
+            ) : (
+                <div class="editable-cell-text-wrapper">
+                    {text || ' '}
+                    <EditOutlined class="editable-cell-icon" onClick={() => tableEdit(key, column)} />
+                </div>
+            )}
+        </div>
+    );
+};
+// 渲染可编辑cell单元格(select)
+const renderSelectEditableCell = ({ text, record, index, column }, options) => {
+    const key = record.id; // 获取当前行id
+    const idEditValue = editableData[key]?.value; // 获取当前行数据
+    const isEditDataIndex = editableData[key]?.dataIndex; // 获取当前列
+    const isEditable = idEditValue && isEditDataIndex === column.dataIndex; // 判断当前单元格是否为编辑状态
+    // 如果isEditable为true，渲染编辑状态，否则渲染文本状态
+    return (
+        <div>
+            {isEditable ? ( // 编辑状态
+                <div class="editable-cell-input-wrapper">
+                    <a-select
+                        vModel:value={editableData[key].value[column.dataIndex]}
+                        style="width: 100%"
+                        options={options}
+                        mode="multiple"
+                        onChange={value => {
+                            editableData[key].value[column.dataIndex] = value;
+                        }}
+                    />
+                    <CheckOutlined class="editable-cell-icon-check" onClick={() => tabCellSave(key, column)} />
+                </div>
+            ) : (
+                <div class="editable-cell-text-wrapper">
+                    <div class="tag-area">
+                        {record[column.dataIndex] &&
+                            record[column.dataIndex].map((item, index) => {
+                                return <a-tag key={index}>{item}</a-tag>;
+                            })}
+                    </div>
+                    <a-button type="link" class="editable-cell-icon" onClick={() => tableEdit(key, column)}>
+                        {$t('def.edit')}
+                    </a-button>
+                </div>
+            )}
+        </div>
+    );
+};
+const tableEdit = (key, column) => {
+    const value = tableData.value.filter(item => key === item.id)[0]; // 获取当前行数据
+    editableData[key] = {}; // 初始化当前行数据
+    editableData[key].dataIndex = column.dataIndex; // 将当前列存入editableData
+    editableData[key].value = value; // 将当前列的值存入editableData
+};
+const tabCellSave = (key, column) => {
+    console.log(key, '当前行id'); //
+    console.log(column.dataIndex, '当前列'); //
+    console.log(editableData[key].value[column.dataIndex], '修改的值'); //
+    console.log(tableData.value.filter(item => key === item.id)[0], '当前行数据'); //
+    Object.assign(tableData.value.filter(item => key === item.id)[0], editableData[key]); // 将修改的值赋值给tableData
+    delete editableData[key]; // 删除editableData中的当前行数据
+};
+
 /* methods end*/
 </script>
 
@@ -338,6 +476,26 @@ const handleRemarkClose = () => {
                     color: #1890ff;
                 }
             }
+        }
+    }
+}
+:deep(.ant-table-cell) {
+    .editable-cell-input-wrapper {
+        display: flex;
+        align-items: center;
+        .editable-cell-icon-check {
+            cursor: pointer;
+            color: #006ef9;
+            margin-left: 4px;
+        }
+    }
+    .editable-cell-text-wrapper {
+        display: flex;
+        align-items: center;
+        .editable-cell-icon {
+            cursor: pointer;
+            color: #006ef9;
+            margin-left: 8px;
         }
     }
 }

@@ -337,8 +337,20 @@ export default {
         // 考虑免审供应商名录
         consider_exempt_supplier_list: '考虑免审供应商名录',
         exempt_application_form: '免审申请表',
+        // 审核
+        audit: '审核',
+        //合格供应商淘汰原因
+        elimination_reason: '合格供应商淘汰原因',
+        reason: ' 原因',
+        add_reason: '新增原因',
+        eliminate: '淘汰',
+        // 淘汰供应商名录
+        eliminate_supplier_list: '淘汰供应商名录',
     },
     en: {
+        // 淘汰供应商名录
+        eliminate_supplier_list: 'Eliminate Supplier List',
+        eliminate: 'Eliminate',
         // 省市
         province_city: 'Province City',
         // 年
@@ -662,5 +674,10 @@ export default {
         consider_exempt_supplier_list: 'Consider Exempt Supplier List',
         // exempt_application_form
         exempt_application_form: 'Exempt Application Form',
+        // 审核
+        audit: 'Audit',
+        elimination_reason: 'Qualified Supplier Elimination Reason',
+        reason: 'Reason',
+        add_reason: 'Add Reason',
     },
 };
