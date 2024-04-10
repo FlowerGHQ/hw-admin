@@ -15,7 +15,18 @@
                 :scroll="{ x: true }"
                 :loading="loading"
                 :row-key="record => record.id"
-                :pagination="false"
+                :pagination="{
+                    current: pagination.current,
+                    pageSize: pagination.size,
+                    total: pagination.total,
+                    showQuickJumper: true,
+                    showSizeChanger: true,
+                    showLessItems: true,
+                    showTotal: total => $t('n.all_total') + ` ${pagination.total} ` + $t('in.total'),
+                    hideOnSinglePage: false,
+                    pageSizeOptions: ['10', '20', '30', '40'],
+                }"
+                @change="channelPagination"
             >
                 <template #bodyCell="{ column, text, record, index }">
                     <!-- 序号 -->
@@ -56,7 +67,7 @@
                 </template>
             </a-table>
         </div>
-        <div class="paging-container">
+        <!-- <div class="paging-container">
             <a-pagination
                 v-model:current="pagination.current"
                 :page-size="pagination.size"
@@ -70,11 +81,11 @@
                 @change="onPageChange"
                 @showSizeChange="onSizeChange"
             />
-        </div>
+        </div> -->
     </div>
 </template>
 
-<script setup>
+<script setup lang="jsx">
 import { onMounted, ref, getCurrentInstance, computed, nextTick, reactive } from 'vue';
 import Core from '@/core';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
@@ -96,6 +107,14 @@ const tableColumns = computed(() => {
             title: $t('supply-chain.exempt_application_form'),
             dataIndex: 'exempt_application_form',
             key: 'exempt_application_form',
+            // cousomRender
+            customRender: ({ text, record, index, column }) => {
+                return (
+                    <a-button type="link" onClick={() => handleExemptApplicationForm(record)}>
+                        {$t('supply-chain.view')}
+                    </a-button>
+                );
+            },
         },
     ];
 
@@ -126,6 +145,10 @@ const onSearch = data => {
 };
 const onReset = () => {
     refreshTable();
+};
+const channelPagination = pagination => {
+    onPageChange(pagination.current, pagination.pageSize);
+    onSizeChange(pagination.pageSize);
 };
 
 /* methods end*/
