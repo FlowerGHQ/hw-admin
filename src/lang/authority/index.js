@@ -23,7 +23,8 @@ export default {
                     out: '出库',
                     'give-item': '赠送订单',
                     payment: '付款',
-                    examine: '审核',
+                    examine: '审核',                    
+                    'purchase-order': '采购单供货商查看',
                 },
                 'supply-material': {
                     title: '供货订单',
@@ -183,6 +184,7 @@ export default {
                     'give-item': '赠送订单',
                     payment: '付款',
                     examine: '审核',
+                    'purchase-order': '采购单供货商查看',
                 },
                 'supply-material': {
                     title: '供货订单',
@@ -198,7 +200,7 @@ export default {
                     forbidden: '禁用',
                     'reset-password': '重置密码',
                     'set-role': '设置角色',
-                    'account-operations': '账户操作',
+                    'account-operations': '账户操作',                    
                 },
                 agent: {
                     title: '零售商列表',
