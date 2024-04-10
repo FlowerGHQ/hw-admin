@@ -56,13 +56,7 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col
-                        :xs="24"
-                        :sm="24"
-                        :xl="8"
-                        :xxl="6"
-                        class="search-item"
-                    >
+                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
                         <div class="key">{{ $t('n.store') }}：</div>
                         <div class="value">
                             <a-select
@@ -162,19 +156,33 @@
                 </div>
             </div>
             <div class="operate-container">
-                <a-button v-if="$auth('sales.distribution.order.export')" type="primary" @click="handleExportConfirm">
+                <a-button
+                    v-if="$auth('sales.distribution.order.export', 'aftermarket.distribution.order.export')"
+                    type="primary"
+                    @click="handleExportConfirm"
+                >
                     <i class="icon i_download" />
                     {{ $t('def.export') }}
                 </a-button>
                 <a-button
-                    v-if="$auth('sales.distribution.order.sales-report-export')"
+                    v-if="
+                        $auth(
+                            'sales.distribution.order.sales-report-export',
+                            'aftermarket.distribution.order.sales-report-export',
+                        )
+                    "
                     type="primary"
                     @click="handleExportSalesReport"
                 >
                     <i class="icon i_download" />{{ $t('def.sales_report_export') }}
                 </a-button>
                 <a-button
-                    v-if="$auth('sales.distribution.order.statistics-report-export')"
+                    v-if="
+                        $auth(
+                            'sales.distribution.order.statistics-report-export',
+                            'aftermarket.distribution.order.statistics-report-export',
+                        )
+                    "
                     type="primary"
                     @click="handleExportSalesQuantityStatistics"
                 >
@@ -334,7 +342,7 @@
                                 <i class="icon i_cart" /> {{ $t('p.buy_again') }}
                             </a-button>
                             <a-button
-                                v-if="$auth('sales.distribution.order.detail')"
+                                v-if="$auth('sales.distribution.order.detail', 'aftermarket.distribution.order.detail')"
                                 type="link"
                                 @click="routerChange('detail', record)"
                             >
@@ -622,13 +630,13 @@ export default {
             return this.$store.state.lang;
         },
     },
-    mounted() {        
+    mounted() {
         this.getDistributorListAll();
         this.getAgentListAll();
         this.getStoreListAll();
         this.getStatusStat();
         this.timer = window.setInterval(() => {
-            setTimeout(() => {               
+            setTimeout(() => {
                 this.getDistributorListAll();
                 this.getAgentListAll();
                 this.getStoreListAll();

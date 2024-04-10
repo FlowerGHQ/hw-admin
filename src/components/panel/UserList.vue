@@ -42,13 +42,31 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleUserRole(record)">
+                            <a-button
+                                v-if="
+                                    $auth(
+                                        'sales.distribution.distributor.set-role',
+                                        'aftermarket.distribution.distributor.set-role',
+                                    )
+                                "
+                                type="link"
+                                @click="handleUserRole(record)"
+                            >
                                 <i class="icon i_edit" />{{ $t('u.set_role') }}
                             </a-button>
                             <a-button type="link" @click="routerChange('edit', record)">
                                 <i class="icon i_edit" />{{ $t('def.edit') }}
                             </a-button>
-                            <a-button type="link" @click="handleReset(record)" v-if="$UserAuth(loginUsername)">
+                            <a-button
+                                v-if="
+                                    $auth(
+                                        'sales.distribution.distributor.reset-password',
+                                        'aftermarket.distribution.distributor.reset-password',
+                                    ) && $UserAuth(loginUsername)
+                                "
+                                type="link"
+                                @click="handleReset(record)"
+                            >
                                 <i class="icon i_lock" />{{ $t('u.reset') }}
                             </a-button>
                             <a-button type="link" class="danger" @click="handleDelete(record.id)">

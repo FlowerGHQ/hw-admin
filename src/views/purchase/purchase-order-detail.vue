@@ -39,7 +39,7 @@
                         <a-dropdown placement="bottomRight">
                             <template #overlay>
                                 <a-menu>
-                                    <template v-if="$auth('purchase-order.export')">
+                                    <template v-if="$auth('sales.distribution.order.export', 'aftermarket.distribution.order.export')">
                                         <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
                                         <a-menu-item key="0">
                                             <!-- 导出PI -->
@@ -58,7 +58,7 @@
 
                                     <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
                                     <!-- 导出商品信息 -->
-                                    <!-- <template v-if="$auth('purchase-order.export')">
+                                    <!-- <template>
                                         <a-menu-item key="3">
                                             <div @click="handleExportInfo">
                                                 {{ $t('p.export_product_information') }}
@@ -102,7 +102,7 @@
                                 v-if="
                                     (detail.status === STATUS.WAIT_DELIVER ||
                                         detail.status === STATUS.WAIT_TAKE_DELIVER) &&
-                                    $auth('purchase-order.deliver')
+                                    $auth('sales.distribution.order.out', 'aftermarket.distribution.order.out')
                                 "
                                 type="primary"
                                 @click="handleModalShow('out_stock')"
@@ -123,7 +123,7 @@
                                     STATUS.WAIT_PRODUCED,
                                 ]) &&
                             !giveOrderShow &&
-                            $auth('purchase-order.give')
+                            $auth('sales.distribution.order.give-item', 'aftermarket.distribution.order.give-item')
                         "
                         type="primary"
                         ghost
@@ -202,7 +202,7 @@
                                 PAYMENT_STATUS.WAIT_PAY,
                                 PAYMENT_STATUS.PAYING,
                             ]) &&
-                            $auth('purchase-order.collection')
+                            $auth('sales.distribution.order.payment', 'aftermarket.distribution.order.payment')
                         "
                         type="primary"
                         @click="routerChange('payment')"
@@ -215,7 +215,7 @@
                         v-if="
                             $Util.Common.isMember(loginType, [USER_TYPE.ADMIN]) &&
                             $Util.Common.isMember(detail.status, [STATUS.WAIT_AUDIT]) &&
-                            $auth('purchase-order.audit')
+                            $auth('sales.distribution.order.examine', 'aftermarket.distribution.order.examine')
                         "
                     >
                         <a-button type="primary" @click="handleModalShow('createAuditShow')">
