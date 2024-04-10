@@ -5,11 +5,11 @@ import Data from '../core/data';
 import Layout from '../views/layout/index.vue';
 
 // 供应商路由
-import { supplyManage, supplyRouters, supplyMaterialManagement, costManagement } from './subrouting/supply-router';
+import { supplyManage, supplyRouters, supplyMaterialManagement, costManagement } from './subRouting/supply-router';
 // 新分销商路由
-import { mallRouters, dealsPreview } from './subrouting/mall';
+import { mallRouters, dealsPreview } from './subRouting/mall';
 // 分销商路由
-import { customerCare } from './subrouting/distributor-router';
+import { customerCare } from './subRouting/distributor-router';
 // 平台方路由
 import {
     inquiryManagement,
@@ -30,13 +30,13 @@ import {
     manufactureManagement,
     productionManagement,
     repairManagement,
-} from './subrouting/admin-router';
+} from './subRouting/admin-router';
 // 飞书路由
-import { fsLogin } from './subrouting/fs-login';
+import { fsLogin } from './subRouting/fs-login';
 // 系统权限路由
-import { SYSTEM } from './subrouting/system';
+import { SYSTEM } from './subRouting/system';
 // 国内销售权限路由
-import { domesticSales } from './subrouting/domestic-sales';
+import { domesticSales } from './subRouting/domestic-sales';
 // 不知道用途的
 import {
     mailManagement,
@@ -44,11 +44,11 @@ import {
     retailBusinessOrderManagement,
     RepairInvoiceExport,
     walletManagement,
-} from './subrouting/do-konw-router';
+} from './subRouting/un-konw-router';
 // 测试用例
-import { testUseCases } from './subrouting/test';
+import { testUseCases } from './subRouting/test';
 // 仓储的路由
-import { warehousingManagement } from './subrouting/warehousing';
+import { warehousingManagement } from './subRouting/warehousing';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
