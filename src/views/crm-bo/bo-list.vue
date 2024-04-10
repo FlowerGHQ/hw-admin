@@ -151,7 +151,7 @@
                                 @click="handleBatch('transfer', record)"
                                 >{{ $t('crm_c.transfer') }}</a-button
                             >
-                            <a-button type="link" @click="routerChange('detail', record)""
+                            <a-button type="link" @click="routerChange('detail', record)"
                                 ><i class="icon i_detail" />{{ $t('def.detail') }}</a-button
                             >                                                        
                         </template>

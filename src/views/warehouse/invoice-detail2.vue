@@ -34,7 +34,7 @@
                         class="btns-area"
                         v-if="
                             (detail.status === STATUS.AUDIT_PASS && detail.type === TYPE.IN) ||
-                            (detail.type === TYPE.OUT && detail.status === STATUS.AUDIT_PASS))
+                            (detail.type === TYPE.OUT && detail.status === STATUS.AUDIT_PASS)
                         "
                     >
                         <a-upload
