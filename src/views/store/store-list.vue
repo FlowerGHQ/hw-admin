@@ -38,7 +38,7 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
+                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
                         <div class="key">{{ $t('n.agent') }}:</div>
                         <div class="value">
                             <a-select

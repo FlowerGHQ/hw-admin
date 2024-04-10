@@ -118,8 +118,9 @@
                                     @click="handleDelete(record.id)"
                                     class="danger"
                                     v-if="$auth('user.delete', 'MANAGER')"
-                                    ><i class="icon i_delete" />{{ $t('def.delete') }}</a-button
                                 >
+                                    <i class="icon i_delete" />{{ $t('def.delete') }}
+                                </a-button>
                             </template>
                         </template>
                     </a-table>

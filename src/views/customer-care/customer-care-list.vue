@@ -255,7 +255,6 @@
                                 "
                             >
                                 <a-button
-                                    v-if="$auth('enquiry-ticket.edit')"
                                     type="link"
                                     @click="routerChange('edit', record)"
                                 >
@@ -263,7 +262,6 @@
                                     <span class="m-l-4">{{ $t('common.edit') }}</span>
                                 </a-button>
                                 <a-button
-                                    v-if="$auth('enquiry-ticket.comment')"
                                     type="link"
                                     @click="routerChange('msg', record)"
                                 >
