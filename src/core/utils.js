@@ -21,7 +21,7 @@ const Util = {
      */
     auth(...arr) {
         if (!arr.length) {
-            return true;
+            return false;
         }
         const rolesMap = Data.getAuthority() || {};
         return arr.some(key => {
