@@ -49,7 +49,7 @@
                             detail.distributor_name
                         }}</a-button>
                     </a-col>
-                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
+                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">{{ $t('n.agent') }}：</span>
                         <a-button type="link" @click="routerChange('agent')">{{ detail.agent_name }}</a-button>
                     </a-col>

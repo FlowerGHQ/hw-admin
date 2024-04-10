@@ -61,7 +61,6 @@
                         :xl="8"
                         :xxl="6"
                         class="search-item"
-                        v-if="$auth('ADMIN', 'DISTRIBUTOR', 'AGENT')"
                     >
                         <div class="key">{{ $t('n.store') }}：</div>
                         <div class="value">
@@ -544,18 +543,14 @@ export default {
             return this.$store.state.lang;
         },
     },
-    mounted() {
-        if (this.$auth('ADMIN') || this.$auth('DISTRIBUTOR')) {
-            this.getDistributorListAll();
-        }
+    mounted() {        
+        this.getDistributorListAll();
         this.getAgentListAll();
         this.getStoreListAll();
         this.getStatusStat();
         this.timer = window.setInterval(() => {
-            setTimeout(() => {
-                if (this.$auth('ADMIN') || this.$auth('DISTRIBUTOR')) {
-                    this.getDistributorListAll();
-                }
+            setTimeout(() => {               
+                this.getDistributorListAll();
                 this.getAgentListAll();
                 this.getStoreListAll();
             }, 0);

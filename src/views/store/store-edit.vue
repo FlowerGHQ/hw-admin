@@ -25,7 +25,7 @@
                         </a-select>
                     </div>
                 </div>
-                <div class="form-item" v-if="$auth('ADMIN', 'DISTRIBUTOR') && !form.id">
+                <div class="form-item" v-if="!form.id">
                     <div class="key">{{ $t('n.agent') }}</div>
                     <div class="value">
                         <a-select v-model:value="form.agent_id" :placeholder="$t('search.select_agent')">

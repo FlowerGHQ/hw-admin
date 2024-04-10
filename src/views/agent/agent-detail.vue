@@ -88,16 +88,14 @@
                 <a-tab-pane key="PurchaseList" :tab="$t('d.order')">
                     <PurchaseList :orgId="agent_id" :orgType="ORG_TYPE.AGENT" v-if="activeKey === 'PurchaseList'" />
                 </a-tab-pane>
-                <template v-if="$auth('ADMIN', 'DISTRIBUTOR')">
-                    <a-tab-pane key="StoreList" :tab="$t('d.manage_store')">
-                        <StoreList
-                            :agentId="agent_id"
-                            :type="USER_TYPE.AGENT"
-                            v-if="activeKey === 'StoreList'"
-                            @change="getAgentDetail"
-                        />
-                    </a-tab-pane>
-                </template>
+                <a-tab-pane key="StoreList" :tab="$t('d.manage_store')">
+                    <StoreList
+                        :agentId="agent_id"
+                        :type="USER_TYPE.AGENT"
+                        v-if="activeKey === 'StoreList'"
+                        @change="getAgentDetail"
+                    />
+                </a-tab-pane>
                 <template v-if="$auth('DISTRIBUTOR')">
                     <a-tab-pane key="PricingStructure" :tab="$t('d.item')">
                         <PricingStructure

@@ -64,7 +64,7 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
+                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
                         <div class="key">{{ $t('n.agent') }}:</div>
                         <div class="value">
                             <a-select
@@ -88,8 +88,7 @@
                         :sm="24"
                         :xl="8"
                         :xxl="6"
-                        class="search-item"
-                        v-if="$auth('ADMIN', 'DISTRIBUTOR', 'AGENT')"
+                        class="search-item"                        
                     >
                         <div class="key">{{ $t('n.store') }}:</div>
                         <div class="value">
@@ -465,7 +464,7 @@ export default {
                 { title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time' },
                 // { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
             ];
-            if (this.operMode === 'audit' && this.$auth('ADMIN', 'DISTRIBUTOR')) {
+            if (this.operMode === 'audit') {
                 columns.push({ title: this.$t('def.operate'), key: 'audit', fixed: 'right' });
             }
             if (this.operMode === 'redit' && !this.$auth('ADMIN')) {
@@ -474,7 +473,7 @@ export default {
             if (this.operMode === 'invoice' && this.$auth('ADMIN')) {
                 columns.push({ title: this.$t('def.operate'), key: 'invoice', fixed: 'right' });
             }
-            if (this.operMode === 'fault' && this.$auth('ADMIN', 'DISTRIBUTOR')) {
+            if (this.operMode === 'fault') {
                 columns.push({ title: this.$t('def.operate'), key: 'fault', fixed: 'right' });
             }
             return columns;
