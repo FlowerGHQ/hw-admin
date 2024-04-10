@@ -23,8 +23,7 @@ export default {
                     out: '出库',
                     'give-item': '赠送订单',
                     payment: '付款',
-                    examine: '审核',
-                    
+                    examine: '审核',                    
                     'purchase-order': '采购单供货商查看',
                 },
                 'supply-material': {
