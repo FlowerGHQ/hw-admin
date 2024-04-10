@@ -39,7 +39,14 @@
                         <a-dropdown placement="bottomRight">
                             <template #overlay>
                                 <a-menu>
-                                    <template v-if="$auth('sales.distribution.order.export', 'aftermarket.distribution.order.export')">
+                                    <template
+                                        v-if="
+                                            $auth(
+                                                'sales.distribution.order.export',
+                                                'aftermarket.distribution.order.export',
+                                            )
+                                        "
+                                    >
                                         <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
                                         <a-menu-item key="0">
                                             <!-- 导出PI -->
@@ -509,7 +516,10 @@
         </div>
 
         <!-- 付款明细、发货记录、收货记录、合同、操作记录 -->
-        <div v-if="!$auth('purchase-order.supply-detail')" class="list-container list-container2">
+        <div
+            v-if="!$auth('sales.distribution.order.purchase-order', 'aftermarket.distribution.order.purchase-order')"
+            class="list-container list-container2"
+        >
             <div class="title-container">
                 <div class="title-area" style="font-size: 14px">
                     <eosTabs v-model:activeKey="activeValue" :tabsList="nameList" @handlechange="tableChange">
@@ -892,7 +902,9 @@ export default {
                 { title: this.$t('i.deliver_amount'), dataIndex: 'deliver_amount', key: 'deliver_amount' }, // 发货数量
                 // { title: this.$t('i.remark'), dataIndex: "remark", key: 'remark' }, // 备注
             ];
-            if (!this.$auth('purchase-order.supply-detail')) {
+            if (
+                !this.$auth('sales.distribution.order.purchase-order', 'aftermarket.distribution.order.purchase-order')
+            ) {
                 columns.push(
                     { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'unit_price' }, // 单价
                     { title: this.$t('i.total_price'), dataIndex: 'price', key: 'price' }, // 总价

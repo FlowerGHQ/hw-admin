@@ -537,7 +537,7 @@ export default {
                     columns.splice(index, 1);
                 }
             }
-            if (!this.$auth('purchase-order.supply-detail')) {
+            if (!this.$auth('sales.distribution.order.purchase-order', 'aftermarket.distribution.order.purchase-order')) {
                 columns.splice(4, 0, {
                     title: this.$t('n.institution'),
                     dataIndex: ['create_org', 'name'],
