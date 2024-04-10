@@ -229,13 +229,17 @@ export default {
                 }
             });
 
+           
+            // 过滤掉 路由不在 全局（authority.list）中的
+            showList = this.handleUnAuthListFilter(showList);
+
             // 选择模块进行路由过滤ADMIN的时候的权限
             if (this.loginType === LOGIN_TYPE.ADMIN) {
+                // 例如: 销售和售后都有 订单列表 这时候就需要销售有权限 售后无
                 showList = this.handleAdminRouter(SIDER.ADMIN);
             }
 
-            // 过滤掉 路由不在 全局（authority.list）中的
-            showList = this.handleUnAuthListFilter(showList);
+
 
             console.log('showList', showList);
             return showList;
@@ -251,14 +255,18 @@ export default {
                 if (this.$auth(el.key) || (el.ismanager && this.$auth('MANAGER'))) {
                     arr.push(el);
                 }
-            });
+            });            
+
             // 判断本地是否存在tabValue不存在赋值
             if (!this.$store.state.ADMIN_AUTH_TAB.TABPOSITION) {
                 this.tabPosition = arr[0].value;
                 // 第一次进入重定向路由
-                if (this.showList[0].path) {
+                if (this.showList[0]?.path) {
                     this.$router.replace({ path: this.showList[0]?.path });
+                } else {
+                    this.$router.replace({ path: '/' });
                 }
+
                 this.$store.commit('ADMIN_AUTH_TAB/SETTABPOSITION', {
                     tabPosition: this.tabPosition,
                     path: this.showList[0]?.path,
@@ -477,8 +485,8 @@ export default {
                 result = list.filter(el => {
                     let someResult = el.auth?.some((authItem, index) => {
                         let parts = authItem.split('.')[0];
-                        // 过滤掉根据 模块 && 是否有权限
-                        return parts === KEY && this.$auth(authItem);
+                        // 过滤掉根据模块
+                        return parts === KEY && (this.$auth(authItem) || this.$auth('MANAGER'));
                     });
                     if (el.children?.length) {
                         el.children = adminTemplateFilter(el.children);
