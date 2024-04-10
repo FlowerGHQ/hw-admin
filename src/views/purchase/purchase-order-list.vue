@@ -70,9 +70,9 @@
                                 @change="handleSearch"
                                 :placeholder="$t('def.select')"
                             >
-                                <a-select-option v-for="(item, index) of storeList" :key="index" :value="item.id">{{
-                                    item.name
-                                }}</a-select-option>
+                                <a-select-option v-for="(item, index) of storeList" :key="index" :value="item.id">
+                                    {{ item.name }}
+                                </a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -88,8 +88,9 @@
                                     v-for="(item, index) of PAYMENT_TYPE_LIST"
                                     :key="index"
                                     :value="item.key"
-                                    >{{ item[$i18n.locale] }}</a-select-option
                                 >
+                                    {{ item[$i18n.locale] }}
+                                </a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -101,12 +102,9 @@
                                 @change="handleSearch"
                                 :placeholder="$t('def.select')"
                             >
-                                <a-select-option
-                                    v-for="(item, index) of PAY_TIME_LIST"
-                                    :key="index"
-                                    :value="item.key"
-                                    >{{ item[$i18n.locale] }}</a-select-option
-                                >
+                                <a-select-option v-for="(item, index) of PAY_TIME_LIST" :key="index" :value="item.key">
+                                    {{ item[$i18n.locale] }}
+                                </a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -122,8 +120,9 @@
                                     v-for="(item, index) of PAYMENT_STATUS_MAP"
                                     :key="index"
                                     :value="item.key"
-                                    >{{ item[$i18n.locale] }}</a-select-option
                                 >
+                                    {{ item[$i18n.locale] }}
+                                </a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -142,10 +141,18 @@
                     <i class="icon i_download" />
                     {{ $t('def.export') }}
                 </a-button>
-                <a-button v-if="$auth('sales.distribution.order.sales-report-export')" type="primary" @click="handleExportSalesReport">
+                <a-button
+                    v-if="$auth('sales.distribution.order.sales-report-export')"
+                    type="primary"
+                    @click="handleExportSalesReport"
+                >
                     <i class="icon i_download" />{{ $t('def.sales_report_export') }}
                 </a-button>
-                <a-button v-if="$auth('sales.distribution.order.statistics-report-export')"  type="primary" @click="handleExportSalesQuantityStatistics">
+                <a-button
+                    v-if="$auth('sales.distribution.order.statistics-report-export')"
+                    type="primary"
+                    @click="handleExportSalesQuantityStatistics"
+                >
                     <i class="icon i_download" />
                     {{ $t('def.quantity_sales_report_export') }}
                 </a-button>
@@ -155,7 +162,7 @@
                     :disabled="!isShowErpDisabled"
                     @click="sendErp"
                 >
-                {{ /* 同步至ERP */ $t('p.synchronization_to_erp') }}
+                    {{ /* 同步至ERP */ $t('p.synchronization_to_erp') }}
                 </a-button>
             </div>
             <div class="table-container">
@@ -289,7 +296,7 @@
                                 <i class="icon i_cart" /> {{ $t('p.buy_again') }}
                             </a-button>
                             <a-button
-                            v-if="$auth('sales.distribution.order.detail')"
+                                v-if="$auth('sales.distribution.order.detail')"
                                 type="link"
                                 @click="routerChange('detail', record)"
                             >
