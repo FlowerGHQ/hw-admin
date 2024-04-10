@@ -268,17 +268,41 @@
                         </div>
                         <div class="level-search-row">
                             <!-- 详细地址 -->
-                            <div class="search-col required">
+                            <div class="search-col required" v-if="!isEdit">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.detailed_address') }}</div>
-                                <div class="value m-l-8">
-                                    <a-input
-                                        :class="{ 'customer-input': !isEdit }"
-                                        v-model:value="parameters.company_info.address"
-                                        :placeholder="
-                                            isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')
-                                        "
-                                        :disabled="!isEdit"
-                                    />
+                                <div class="value m-l-18">
+                                    <!-- 省市 -->
+                                    <!-- 详细地址 -->
+                                    <div class="value m-l-8">
+                                        <a-input
+                                            class="customer-input"
+                                            v-model:value="parameters.company_info.detail_address"
+                                            :disabled="true"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 省市地址 -->
+                            <div class="search-col required" v-else>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.province_city') }}</div>
+                                <div class="value m-l-18">
+                                    <!-- 省市 -->
+                                    <!-- 详细地址 -->
+                                    <div class="value m-l-8">
+                                        <a-cascader
+                                            v-model:value="parameters.company_info.provinceAndCity"
+                                            :options="chinaOptions"
+                                            :placeholder="$t('common.please_select')"
+                                            :fieldNames="{ label: 'name', value: 'name', children: 'children' }"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.detailed_address') }}</div>
+                                <div class="value m-l-18">
+                                    <!-- 详细地址 -->
+                                    <div class="value m-l-8">
+                                        <a-input v-model:value="parameters.company_info.address" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2243,9 +2267,7 @@
                     <div
                         class="sub-title"
                         :class="{
-                            'sub-title-required': isMember(parameters.type, [
-                                Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
-                            ]),
+                            'sub-title-required': isMember(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]),
                         }"
                     >
                         {{ $t('supply-chain.critical_detection_equipment') }}
@@ -2860,7 +2882,9 @@ import TimeSearch from '@/components/common/TimeSearch.vue';
 import MyMask from '@/components/horwin/based-on-dom/MyMask.vue';
 import MyUpload from '@/components/MyUpload/index.vue';
 import dayjs from 'dayjs';
-
+import axios from 'axios';
+// json
+const chinaOptions = ref([]);
 const route = useRoute();
 const router = useRouter();
 const msgDetail = ref({});
@@ -2956,6 +2980,7 @@ const customerInfoColumns = computed(() => {
 const TimeBusinessTerm = ref(null); // 营业期限
 const TimeDurationOfAgency = ref(null); // 代理有效期间
 const isClose = ref(false); // MyMask 显影
+// const isEdit = ref(true);
 const isEdit = ref(route.query?.flag_edit);
 const parameters = ref({
     type: '',
@@ -2985,6 +3010,10 @@ const parameters = ref({
         premises: '', // 经营场所
         parent_company_name: '', // 母公司名称
         parent_company_address: '', // 母公司地址
+        provinceAndCity: [],
+        province: '',
+        city: '',
+        detail_address: '',
     },
     // 代理信息
     agent_info: {
@@ -3132,12 +3161,18 @@ const parameters = ref({
 }); // 一堆信息判断参数
 
 onMounted(() => {
-    getDetail({
-        id: route.query.id,
-    });
+    getChinaArea();
+    getDetail({ id: route.query.id });
 });
 
 /* Fetch start*/
+// 获取china的地区数据
+const getChinaArea = () => {
+    let url = '/ext/China.json';
+    axios.get(url).then(res => {
+        chinaOptions.value = res.data;
+    });
+};
 function getDetail(params = {}) {
     let obj = {
         ...params,
@@ -3145,25 +3180,15 @@ function getDetail(params = {}) {
 
     Core.Api.SUPPLY.adminDetail(obj)
         .then(res => {
-            console.log('getPhoneCodeFetchs res', res);
             msgDetail.value = res.detail?.form ? JSON.parse(res.detail?.form) : {};
-
+            console.log('msgDetail', msgDetail.value);
             // 回显数据
             for (const key in msgDetail.value) {
                 let keys = msgDetail.value[key];
-                // console.log("key",key,  msgDetail.value[key], msgDetail.value[key] instanceof String);
-                // console.log(typeof keys);
-                // console.log(key, keys instanceof Array);
-
                 if (keys instanceof Array) {
-                    // console.log("数组", parameters.value[key]);
-                    // 判断 数组
                     parameters.value[key] = keys;
-
                     if (key === 'customer_info') {
-                        // 开始合作时间
                         parameters.value[key].forEach(el => {
-                            // 标准格式
                             el.begin_cooperation_time = el.begin_cooperation_time
                                 ? dayjs.unix(el.begin_cooperation_time)
                                 : null;
@@ -3179,15 +3204,29 @@ function getDetail(params = {}) {
                     }
 
                     if (key === 'company_info') {
+                        console.log('公司概况', parameters.value[key]);
                         // 成立日期(过滤一下)
                         // console.log("parameters.value[key].established_time", parameters.value[key].established_time);
                         parameters.value[key].established_time = parameters.value[key].established_time
                             ? dayjs.unix(parameters.value[key].established_time)
                             : null;
+                        // parameters.value[key].province = parameters.value[key].provinceAndCity[0];
+                        // parameters.value[key].city = parameters.value[key].provinceAndCity[1];
+                        // 构建回显省市地址的数据
+                        parameters.value[key].provinceAndCity = [
+                            parameters.value[key].province,
+                            parameters.value[key].city,
+                        ];
+                        parameters.value[key].detail_address = [
+                            parameters.value[key].province,
+                            parameters.value[key].city,
+                            parameters.value[key].address,
+                        ]
+                            .filter(item => item)
+                            .join('/');
                     }
                 } else if (typeof keys === 'string' || typeof keys === 'number' || typeof keys === 'boolean') {
                     // | 字符串 | 数字 | 布尔
-                    console.log('kkk', key, keys);
                     parameters.value[key] = keys;
                 }
             }
@@ -3336,8 +3375,11 @@ const onSuction = type => {
                         break;
                 }
             }
+            form.company_info.province = form.company_info.provinceAndCity[0];
+            form.company_info.city = form.company_info.provinceAndCity[1];
+            delete form.company_info.provinceAndCity;
+            delete form.company_info.detail_address;
             console.log('提交数据 from', form);
-
             saveDetail({
                 id: route.query.id,
                 type: form.type,
@@ -3368,7 +3410,6 @@ const onAddBtn = type => {
                 market_share: '',
                 understand_evaluation: '',
             });
-            console.log('添加对手', parameters.value.competitor_analysis);
             break;
         case 'customer_information':
             // 添加客户
@@ -3448,8 +3489,6 @@ const plainOptions = data => {
 };
 // 职位选择change
 const onPosition = arr => {
-    console.log('e', arr);
-
     // 删除不在 arr 中的元素
     parameters.value.contact_info = parameters.value.contact_info.filter(el => arr.includes(el.position));
 
@@ -3465,8 +3504,6 @@ const onPosition = arr => {
             });
         }
     });
-
-    console.log('职位选择change', parameters.value.contact_info);
 };
 // 打开遮罩框
 const onPingPongMaskClose = () => {
@@ -3930,5 +3967,8 @@ const onBack = () => {
 }
 .custom-not-uploaded {
     color: #666;
+}
+:deep(.ant-cascader) {
+    width: 100%;
 }
 </style>
