@@ -79,7 +79,7 @@ const searchList = ref([
         // 入库单号
         type: 'input',
         value: undefined,
-        searchParmas: 'uid',
+        searchParmas: 'erp_bill_no',
         key: 'warehousing-management.uid',
     },
     {
