@@ -346,8 +346,12 @@ export default {
         eliminate: '淘汰',
         // 淘汰供应商名录
         eliminate_supplier_list: '淘汰供应商名录',
+        // 供应商免审申请
+        supplier_exempt_application: '供应商免审申请',
     },
     en: {
+        // 供应商免审申请
+        supplier_exempt_application: 'Supplier Exempt Application',
         // 淘汰供应商名录
         eliminate_supplier_list: 'Eliminate Supplier List',
         eliminate: 'Eliminate',

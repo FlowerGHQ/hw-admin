@@ -60,6 +60,17 @@ const supplyManage = {
                 title_en: 'Consider Exempt Supplier List',
             },
         },
+        // 免审申请表
+        {
+            path: 'exemptApply',
+            name: 'ExemptSupplierApply',
+            component: () => import('@/views/supplier/manage/exempt-apply.vue'),
+            meta: {
+                title: '免审申请表',
+                title_en: 'Exempt Application Form',
+                hidden: true,
+            },
+        },
         // 待现场考核供应商名录
         {
             path: 'assessmentList',

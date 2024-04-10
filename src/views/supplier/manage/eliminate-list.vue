@@ -107,7 +107,6 @@ const editId = ref(null);
 const formState = reactive({
     remark: '',
 });
-
 const tableColumns = computed(() => {
     let columns = [
         {
@@ -136,7 +135,6 @@ const tableColumns = computed(() => {
     ];
     return columns;
 });
-
 const searchList = ref([
     {
         type: 'input',
@@ -145,16 +143,7 @@ const searchList = ref([
         key: 'supply-chain.supplier_full_name',
     },
 ]);
-const editableData = reactive({
-    // id: { //id为当前行id
-    //     dataIndex: 'no', //当前列
-    //     value: {}, //当前行数据
-    // },
-});
-
 onMounted(() => {});
-/* Fetch start*/
-// const request = Core.Api.Supplier.list;
 
 function request() {
     return new Promise((resolve, reject) => {
@@ -186,7 +175,6 @@ function request() {
         }, 1000);
     });
 }
-
 const updateRemark = Core.Api.Supplier.updateRemark;
 const { loading, tableData, pagination, search, onPagenationChange, refreshTable, searchParam } = useTable({
     request,
