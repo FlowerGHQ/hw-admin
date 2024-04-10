@@ -5,11 +5,11 @@ import Data from '../core/data';
 import Layout from '../views/layout/index.vue';
 
 // 供应商路由
-import { supplyManage, supplyRouters, supplyMaterialManagement, costManagement } from './subRouting/supply-router';
+import { supplyManage, supplyRouters, supplyMaterialManagement, costManagement } from './sub-router/supply-router';
 // 新分销商路由
-import { mallRouters, dealsPreview } from './subRouting/mall';
+import { mallRouters, dealsPreview } from './sub-router/mall';
 // 分销商路由
-import { customerCare, unpaidFinalPayment } from './subRouting/distributor-router';
+import { customerCare, unpaidFinalPayment } from './sub-router/distributor-router';
 // 平台方路由
 import {
     inquiryManagement,
@@ -33,15 +33,15 @@ import {
     finalPaymentOrder,
     cancellationOrderRequest,
     rechargeManagement,
-} from './subRouting/admin-router';
+} from './sub-router/admin-router';
 // 公共的路由
-import { freightConfirmed } from './subRouting/common';
+import { freightConfirmed } from './sub-router/common';
 // 飞书路由
-import { fsLogin } from './subRouting/fs-login';
+import { fsLogin } from './sub-router/fs-login';
 // 系统权限路由
-import { SYSTEM } from './subRouting/system';
+import { SYSTEM } from './sub-router/system';
 // 国内销售权限路由
-import { domesticSales } from './subRouting/domestic-sales';
+import { domesticSales } from './sub-router/domestic-sales';
 // 不知道用途的
 import {
     mailManagement,
@@ -49,11 +49,11 @@ import {
     retailBusinessOrderManagement,
     RepairInvoiceExport,
     walletManagement,
-} from './subRouting/un-konw-router';
+} from './sub-router/un-konw-router';
 // 测试用例
-import { testUseCases } from './subRouting/test';
+import { testUseCases } from './sub-router/test';
 // 仓储的路由
-import { warehousingManagement } from './subRouting/warehousing';
+import { warehousingManagement } from './sub-router/warehousing';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
