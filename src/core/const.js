@@ -377,7 +377,7 @@ let Const = {
         PARTS_LIST: [
             { zh: '质保', en: 'quality guarantee', value: 5 },
             { zh: '开箱损', en: 'dead on arrival', value: 3 },
-            { zh: '电池维修', en: 'battery', value: 4 },
+            // { zh: '电池维修', en: 'battery', value: 4 },
         ],
         // 工单帐类
         SERVICE_TYPE: {
