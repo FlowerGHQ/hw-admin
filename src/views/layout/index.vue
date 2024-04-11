@@ -481,8 +481,8 @@ export default {
                 result = list.filter(el => {
                     let someResult = el.auth?.some((authItem, index) => {
                         let parts = authItem.split('.')[0];
-                        // 过滤掉根据模块
-                        return parts === 'MANAGER' || (parts === KEY && this.$auth(authItem));
+                        // 根据模块过滤掉 和 管理员的权限
+                        return  (parts === KEY && this.$auth(authItem)) || (authItem === 'MANAGER' && this.$auth('MANAGER'));
                     });
                     if (el.children?.length) {
                         el.children = adminTemplateFilter(el.children);
