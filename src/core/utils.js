@@ -28,6 +28,30 @@ const Util = {
             return rolesMap[key];
         });
     },
+    authBtn(...arr) {
+        if (!arr.length) {
+            return false;
+        }
+        const rolesMap = Data.getAuthority() || {};
+
+        if (rolesMap['ADMIN']) {
+            const ROUTER_TYPE_MAP = Const.SYSTEM_AUTH.ROUTER_TYPE_MAP;            
+            console.log('Arr', Data.getTabPosition());
+            let KEY = ROUTER_TYPE_MAP[Data.getTabPosition()?.tabPosition]?.KEY;
+            arr = arr.filter(authItem => {
+                let parts = authItem.split('.')[0];
+                return parts === KEY || parts === 'MANAGER';
+            });
+            console.log('Arr1', arr);
+            return arr.some(key => {
+                return rolesMap[key];
+            });
+        } else {
+            return arr.some(key => {
+                return rolesMap[key];
+            });
+        }
+    },
     confirm(param, type = 'warning') {
         Modal.confirm({
             ...param,

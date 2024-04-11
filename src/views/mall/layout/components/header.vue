@@ -303,7 +303,7 @@ export default {
                         return i;
                     });
                     if (!item.children.find(i => item.redirect === `${item.path}/${i.path}`)) {
-                        item.redirect = `${item.path}/${item.children[0].path}`;
+                        item.redirect = `${item.path}/${item.children[0]?.path}`;
                     }
                 }
                 return item;

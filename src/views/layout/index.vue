@@ -107,7 +107,7 @@
                         </template>
                     </a-menu>
                 </a-layout-sider>
-                <a-layout class="layout-main" :class="{ longer: collapsed }">                    
+                <a-layout class="layout-main" :class="{ longer: collapsed }">
                     <a-layout-content class="layout-content">
                         <router-view :key="tabPosition"></router-view>
                     </a-layout-content>
@@ -191,6 +191,8 @@ export default {
             tabPosition: null, // { tabPosition: 1, path: '' } tab和path 顶部的 销售 售后 生产 CRM权限
             user_type_list: [],
             moduleAuth: MODULEAUTH,
+            moduleAuthList: null,
+            showList: null,
         };
     },
     provide() {
@@ -199,78 +201,8 @@ export default {
         };
     },
     computed: {
-        showList() {
-            let showList;
-            let LOGIN_TYPE = Core.Const.USER.TYPE;
-            switch (this.loginType) {
-                case LOGIN_TYPE.ADMIN:
-                    showList = SIDER.ADMIN;
-                    break;
-                case LOGIN_TYPE.DISTRIBUTOR:
-                    showList = SIDER.DISTRIBUTOR;
-                    break;
-                case LOGIN_TYPE.AGENT:
-                    showList = SIDER.AGENT;
-                    break;
-                case LOGIN_TYPE.STORE:
-                    showList = SIDER.STORE;
-                    break;
-            }
-            // 这里操作相当于把meta中的数据拿到外面来
-            showList.forEach(item => {
-                item.auth = item.meta ? item.meta.auth || [] : [];
-                item.not_sub_menu = item.meta ? item.meta.not_sub_menu || false : false;
-                if (item.children) {
-                    item.children = item.children.map(i => {
-                        i.auth = i.meta ? i.meta.auth || [] : [];
-                        return i;
-                    });
-                }
-            });
-
-            // 过滤掉 路由不在 全局（authority.list）中的
-            showList = this.handleUnAuthListFilter(showList);
-
-            // 选择模块进行路由过滤ADMIN的时候的权限
-            if (this.loginType === LOGIN_TYPE.ADMIN) {
-                // 例如: 销售和售后都有 订单列表 这时候就需要销售有权限 售后无
-                showList = this.handleAdminRouter(SIDER.ADMIN);
-            }
-
-            console.log('showList', showList);
-            return showList;
-        },
         lang() {
             return this.$store.state.lang;
-        },
-        moduleAuthList() {
-            // 纯展示的显示模块有哪些
-            const arr = [];
-            this.moduleAuth.forEach(el => {
-                // 根据权限判断顶部是否存在
-                if (this.$auth(el.key) || (el.ismanager && this.$auth('MANAGER'))) {
-                    arr.push(el);
-                }
-            });
-
-            // 判断本地是否存在tabValue不存在赋值
-            if (!this.$store.state.ADMIN_AUTH_TAB.TABPOSITION) {
-                this.tabPosition = arr[0].value;
-                // 第一次进入重定向路由
-                if (this.showList[0]?.path) {
-                    this.$router.replace({ path: this.showList[0]?.path });
-                } else {
-                    this.$router.replace({ path: '/' });
-                }
-
-                this.$store.commit('ADMIN_AUTH_TAB/SETTABPOSITION', {
-                    tabPosition: this.tabPosition,
-                    path: this.showList[0]?.path,
-                });
-                console.log('moduleAuth', this.showList);
-            }
-
-            return arr;
         },
     },
     watch: {
@@ -311,6 +243,10 @@ export default {
     },
     created() {
         this.user_type_list = Core.Data.getUserTypeList();
+        this.handleInitRouter();
+        if (this.$auth('ADMIN')) {
+            this.moduleAuthList = this.handleModuleAuthList();
+        }
     },
     mounted() {
         this.loginType = Core.Data.getLoginType();
@@ -321,15 +257,109 @@ export default {
         this.$i18n.locale = Core.Data.getLang();
         this.$store.state.lang = Core.Data.getLang();
 
-        this.tabPosition = this.$store.state.ADMIN_AUTH_TAB.TABPOSITION;
-
         // 监听页面窗口
         window.onresize = this.handleWindowResize;
         if (window.innerWidth <= 830) {
             this.collapsed = true;
         }
     },
+    unmounted() {
+        console.log('销毁');
+        this.$store.commit('ADMIN_AUTH_TAB/SETTABPOSITION', null);
+        this.$store.commit('ADMIN_AUTH_TAB/SETSHOWCLASSIFY', null);
+    },
     methods: {
+        // 将路由分类
+        handleInitRouter() {
+            let showClassify = {};
+            let routeList = [];
+            let LOGIN_TYPE = Core.Const.USER.TYPE;
+            switch (this.loginType) {
+                case LOGIN_TYPE.ADMIN:
+                    routeList = SIDER.ADMIN;
+                    break;
+                case LOGIN_TYPE.DISTRIBUTOR:
+                    routeList = SIDER.DISTRIBUTOR;
+                    break;
+                case LOGIN_TYPE.AGENT:
+                    routeList = SIDER.AGENT;
+                    break;
+                case LOGIN_TYPE.STORE:
+                    routeList = SIDER.STORE;
+                    break;
+            }
+
+            // 这里操作相当于把meta中的数据拿到外面来
+            routeList.forEach(item => {
+                item.auth = item.meta ? item.meta.auth || [] : [];
+                item.not_sub_menu = item.meta ? item.meta.not_sub_menu || false : false;
+                if (item.children) {
+                    item.children = item.children.map(i => {
+                        i.auth = i.meta ? i.meta.auth || [] : [];
+                        return i;
+                    });
+                }
+            });
+
+            // 过滤掉 路由不在 全局（authority.list）中的
+            routeList = this.handleUnAuthListFilter(Core.Util.deepCopy(routeList));
+
+            // 平台方过滤数据
+            if (this.loginType === LOGIN_TYPE.ADMIN) {
+                routeList.forEach(el => {
+                    el.auth?.forEach(authItem => {
+                        let parts = authItem.split('.')[0];
+                        if (parts !== 'MANAGER') {
+                            showClassify[parts] = this.handleAdminRouter(parts, [el]);
+                        }
+                    });
+                });
+                this.$store.commit('ADMIN_AUTH_TAB/SETSHOWCLASSIFY', showClassify);
+            } else {
+                this.showList = routeList;
+                this.$store.commit('ADMIN_AUTH_TAB/SETSHOWCLASSIFY', routeList);
+            }
+        },
+        // 模块切换
+        handleGetModule() {
+            let showClassify = this.$store.state.ADMIN_AUTH_TAB.SHOWCLASSIFY;
+            let KEY = ROUTER_TYPE_MAP[this.tabPosition]?.KEY;
+            if (KEY) {
+                this.showList = showClassify[KEY];
+            }
+        },
+        handleModuleAuthList() {
+            const arr = [];
+            this.moduleAuth.forEach(el => {
+                // 根据权限判断顶部是否存在
+                if (this.$auth(el.key) || (el.ismanager && this.$auth('MANAGER'))) {
+                    arr.push(el);
+                }
+            });
+
+            // 判断本地是否存在tabValue不存在赋值
+            if (!this.$store.state.ADMIN_AUTH_TAB.TABPOSITION) {
+                this.tabPosition = arr[0].value;
+                this.handleGetModule();
+
+                console.log('第一次进入跳转', this.showList);
+
+                try {
+                    this.$router.replace({ path: this.showList[0]?.path });
+                    this.$store.commit('ADMIN_AUTH_TAB/SETTABPOSITION', {
+                        tabPosition: this.tabPosition,
+                        path: this.showList[0]?.path,
+                    });
+                } catch (error) {
+                    console.log('error', error);
+                }
+            } else {
+                this.tabPosition = this.$store.state.ADMIN_AUTH_TAB.TABPOSITION;
+                this.handleGetModule();
+            }
+
+            return arr;
+        },
         routerChange(type) {
             let routeUrl = '';
             switch (type) {
@@ -432,6 +462,7 @@ export default {
 
         // 切换顶部的 销售 售后 生产 CRM权限操作
         handleRouterSwitch(e) {
+            this.handleGetModule();
             if (this.$store.state.ADMIN_AUTH_TAB.TABPOSITION === this.tabPosition) {
                 return;
             }
@@ -469,12 +500,9 @@ export default {
         },
 
         // adminRouter过滤
-        handleAdminRouter(ADMIN) {
-            // console.log("ADMIN", ADMIN);
-            let showList = Core.Util.deepCopy(ADMIN);
+        handleAdminRouter(KEY, LIST) {
+            let routeList = Core.Util.deepCopy(LIST);
             let newShowList = [];
-            let KEY = ROUTER_TYPE_MAP[this.tabPosition]?.KEY;
-            // 过滤掉对应的数据
 
             const adminTemplateFilter = list => {
                 let result = [];
@@ -482,7 +510,9 @@ export default {
                     let someResult = el.auth?.some((authItem, index) => {
                         let parts = authItem.split('.')[0];
                         // 根据模块过滤掉 和 管理员的权限
-                        return  (parts === KEY && this.$auth(authItem)) || (authItem === 'MANAGER' && this.$auth('MANAGER'));
+                        return (
+                            (parts === KEY && this.$auth(authItem)) || (authItem === 'MANAGER' && this.$auth('MANAGER'))
+                        );
                     });
                     if (el.children?.length) {
                         el.children = adminTemplateFilter(el.children);
@@ -492,35 +522,15 @@ export default {
                 return result;
             };
             // 防止影响ADMIN数据
-            newShowList = adminTemplateFilter(showList);
-
-            // console.log("KEY",KEY, "newShowList", newShowList);
-
-            // 是否只在超级管理员显示，普通平台方不展示[不知干什么的]
-            // if (!Core.Data.getManager()) {
-            //     let superList = Core.Util.deepCopy(showList); // 为了防止影响之前的数据
-            //     let result = superList.filter(first => {
-            //         let firstMeta = first.meta;
-            //         if (first.children) {
-            //             let children = first.children.filter(second => {
-            //                 let secondMeta = second.meta;
-            //                 return !secondMeta.super_admin_show;
-            //             });
-            //             first.children = children;
-            //         }
-            //         return !firstMeta.super_admin_show;
-            //     });
-
-            //     showList = result;
-            // }
+            newShowList = adminTemplateFilter(routeList);
 
             return newShowList;
         },
 
         // 过滤掉 路由不在 全局（authority.list）中的
-        handleUnAuthListFilter(showList) {
+        handleUnAuthListFilter(list) {
             let result = [];
-            result = showList.filter(el => {
+            result = list.filter(el => {
                 if (el.children?.length) {
                     el.children = this.handleUnAuthListFilter(el.children);
                 }
