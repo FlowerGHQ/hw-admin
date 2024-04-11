@@ -310,7 +310,11 @@ export default {
                     el.auth?.forEach(authItem => {
                         let parts = authItem.split('.')[0];
                         if (parts !== 'MANAGER') {
-                            showClassify[parts] = this.handleAdminRouter(parts, [el]);
+                            if (showClassify[parts]?.length > 0) {
+                                showClassify[parts].push(...this.handleAdminRouter(parts, [el]))
+                            } else {
+                                showClassify[parts] = this.handleAdminRouter(parts, [el]);
+                            }
                         }
                     });
                 });
