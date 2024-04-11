@@ -107,10 +107,9 @@
                         </template>
                     </a-menu>
                 </a-layout-sider>
-                <a-layout class="layout-main" :class="{ longer: collapsed }">
-                    <!-- <MyBreadcrumb class="layout-breadcrumb"/> 面包屑没用上-->
+                <a-layout class="layout-main" :class="{ longer: collapsed }">                    
                     <a-layout-content class="layout-content">
-                        <router-view></router-view>
+                        <router-view :key="tabPosition"></router-view>
                     </a-layout-content>
                 </a-layout>
             </a-layout>
