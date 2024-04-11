@@ -229,7 +229,6 @@ export default {
                 }
             });
 
-           
             // 过滤掉 路由不在 全局（authority.list）中的
             showList = this.handleUnAuthListFilter(showList);
 
@@ -238,8 +237,6 @@ export default {
                 // 例如: 销售和售后都有 订单列表 这时候就需要销售有权限 售后无
                 showList = this.handleAdminRouter(SIDER.ADMIN);
             }
-
-
 
             console.log('showList', showList);
             return showList;
@@ -255,7 +252,7 @@ export default {
                 if (this.$auth(el.key) || (el.ismanager && this.$auth('MANAGER'))) {
                     arr.push(el);
                 }
-            });            
+            });
 
             // 判断本地是否存在tabValue不存在赋值
             if (!this.$store.state.ADMIN_AUTH_TAB.TABPOSITION) {
@@ -486,7 +483,7 @@ export default {
                     let someResult = el.auth?.some((authItem, index) => {
                         let parts = authItem.split('.')[0];
                         // 过滤掉根据模块
-                        return parts === KEY && (this.$auth(authItem) || this.$auth('MANAGER'));
+                        return parts === 'MANAGER' || (parts === KEY && this.$auth(authItem));
                     });
                     if (el.children?.length) {
                         el.children = adminTemplateFilter(el.children);
