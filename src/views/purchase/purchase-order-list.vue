@@ -156,33 +156,19 @@
                 </div>
             </div>
             <div class="operate-container">
-                <a-button
-                    v-if="$auth('sales.distribution.order.export', 'aftermarket.distribution.order.export')"
-                    type="primary"
-                    @click="handleExportConfirm"
-                >
+                <a-button v-if="$auth('sales.distribution.order.export')" type="primary" @click="handleExportConfirm">
                     <i class="icon i_download" />
                     {{ $t('def.export') }}
                 </a-button>
                 <a-button
-                    v-if="
-                        $auth(
-                            'sales.distribution.order.sales-report-export',
-                            'aftermarket.distribution.order.sales-report-export',
-                        )
-                    "
+                    v-if="$auth('sales.distribution.order.sales-report-export')"
                     type="primary"
                     @click="handleExportSalesReport"
                 >
                     <i class="icon i_download" />{{ $t('def.sales_report_export') }}
                 </a-button>
                 <a-button
-                    v-if="
-                        $auth(
-                            'sales.distribution.order.statistics-report-export',
-                            'aftermarket.distribution.order.statistics-report-export',
-                        )
-                    "
+                    v-if="$auth('sales.distribution.order.statistics-report-export')"
                     type="primary"
                     @click="handleExportSalesQuantityStatistics"
                 >
@@ -537,7 +523,9 @@ export default {
                     columns.splice(index, 1);
                 }
             }
-            if (!this.$auth('sales.distribution.order.purchase-order', 'aftermarket.distribution.order.purchase-order')) {
+            if (
+                !this.$auth('sales.distribution.order.purchase-order', 'aftermarket.distribution.order.purchase-order')
+            ) {
                 columns.splice(4, 0, {
                     title: this.$t('n.institution'),
                     dataIndex: ['create_org', 'name'],

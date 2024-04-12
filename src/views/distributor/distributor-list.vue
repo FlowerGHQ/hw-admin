@@ -5,7 +5,7 @@
                 <div class="title-area">{{ $t('d.distributor_list') }}</div>
                 <div class="btns-area">
                     <a-button
-                        v-if="$auth('sales.distribution.distributor.save', 'aftermarket.distribution.distributor.save')"
+                        v-if="$auth('sales.distribution.distributor.save')"
                         type="primary"
                         @click="routerChange('edit')"
                     >
@@ -101,35 +101,20 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button
-                                v-if="
-                                    $auth(
-                                        'sales.distribution.distributor.detail',
-                                        'aftermarket.distribution.distributor.detail',
-                                    )
-                                "
+                                v-if="$auth('sales.distribution.distributor.detail')"
                                 type="link"
                                 @click="routerChange('detail', record)"
                             >
                                 <i class="icon i_detail" /> {{ $t('def.detail') }}
                             </a-button>
                             <a-button
-                                v-if="
-                                    $auth(
-                                        'sales.distribution.distributor.edit',
-                                        'aftermarket.distribution.distributor.edit',
-                                    )
-                                "
+                                v-if="$auth('sales.distribution.distributor.edit')"
                                 type="link"
                                 @click="routerChange('edit', record)"
                                 ><i class="icon i_edit" />{{ $t('def.edit') }}
                             </a-button>
                             <a-button
-                                v-if="
-                                    $auth(
-                                        'sales.distribution.distributor.forbidden',
-                                        'aftermarket.distribution.distributor.forbidden',
-                                    )
-                                "
+                                v-if="$auth('sales.distribution.distributor.forbidden')"
                                 type="link"
                                 @click="handleStatusChange(record)"
                                 :class="record.status ? 'danger' : ''"

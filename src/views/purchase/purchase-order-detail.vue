@@ -109,7 +109,7 @@
                                 v-if="
                                     (detail.status === STATUS.WAIT_DELIVER ||
                                         detail.status === STATUS.WAIT_TAKE_DELIVER) &&
-                                    $auth('sales.distribution.order.out', 'aftermarket.distribution.order.out')
+                                    $auth('sales.distribution.order.out')
                                 "
                                 type="primary"
                                 @click="handleModalShow('out_stock')"
@@ -130,7 +130,7 @@
                                     STATUS.WAIT_PRODUCED,
                                 ]) &&
                             !giveOrderShow &&
-                            $auth('sales.distribution.order.give-item', 'aftermarket.distribution.order.give-item')
+                            $auth('sales.distribution.order.give-item')
                         "
                         type="primary"
                         ghost
@@ -209,7 +209,7 @@
                                 PAYMENT_STATUS.WAIT_PAY,
                                 PAYMENT_STATUS.PAYING,
                             ]) &&
-                            $auth('sales.distribution.order.payment', 'aftermarket.distribution.order.payment')
+                            $auth('sales.distribution.order.payment')
                         "
                         type="primary"
                         @click="routerChange('payment')"
@@ -222,7 +222,7 @@
                         v-if="
                             $Util.Common.isMember(loginType, [USER_TYPE.ADMIN]) &&
                             $Util.Common.isMember(detail.status, [STATUS.WAIT_AUDIT]) &&
-                            $auth('sales.distribution.order.examine', 'aftermarket.distribution.order.examine')
+                            $auth('sales.distribution.order.examine')
                         "
                     >
                         <a-button type="primary" @click="handleModalShow('createAuditShow')">
@@ -516,10 +516,7 @@
         </div>
 
         <!-- 付款明细、发货记录、收货记录、合同、操作记录 -->
-        <div
-            v-if="!$auth('sales.distribution.order.purchase-order', 'aftermarket.distribution.order.purchase-order')"
-            class="list-container list-container2"
-        >
+        <div v-if="!$auth('sales.distribution.order.purchase-order')" class="list-container list-container2">
             <div class="title-container">
                 <div class="title-area" style="font-size: 14px">
                     <eosTabs v-model:activeKey="activeValue" :tabsList="nameList" @handlechange="tableChange">
@@ -902,9 +899,7 @@ export default {
                 { title: this.$t('i.deliver_amount'), dataIndex: 'deliver_amount', key: 'deliver_amount' }, // 发货数量
                 // { title: this.$t('i.remark'), dataIndex: "remark", key: 'remark' }, // 备注
             ];
-            if (
-                !this.$auth('sales.distribution.order.purchase-order', 'aftermarket.distribution.order.purchase-order')
-            ) {
+            if (!this.$auth('sales.distribution.order.purchase-order')) {
                 columns.push(
                     { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'unit_price' }, // 单价
                     { title: this.$t('i.total_price'), dataIndex: 'price', key: 'price' }, // 总价

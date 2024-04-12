@@ -43,12 +43,7 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button
-                                v-if="
-                                    $auth(
-                                        'sales.distribution.distributor.set-role',
-                                        'aftermarket.distribution.distributor.set-role',
-                                    )
-                                "
+                                v-if="$auth('sales.distribution.distributor.set-role')"
                                 type="link"
                                 @click="handleUserRole(record)"
                             >
@@ -59,10 +54,7 @@
                             </a-button>
                             <a-button
                                 v-if="
-                                    $auth(
-                                        'sales.distribution.distributor.reset-password',
-                                        'aftermarket.distribution.distributor.reset-password',
-                                    ) && $UserAuth(loginUsername)
+                                    $auth('sales.distribution.distributor.reset-password') && $UserAuth(loginUsername)
                                 "
                                 type="link"
                                 @click="handleReset(record)"
