@@ -23,7 +23,7 @@ export default {
                     out: '出库',
                     'give-item': '赠送订单',
                     payment: '付款',
-                    examine: '审核',                    
+                    examine: '审核',
                     'purchase-order': '采购单供货商查看',
                 },
                 'supply-material': {
@@ -61,9 +61,8 @@ export default {
                     title: '取消订单申请列表',
                 },
                 'distributor-detail': {
-                    title: '分销商详情'
+                    title: '分销商详情',
                 },
-                
             },
             item: {
                 title: '商品管理',
@@ -78,10 +77,7 @@ export default {
                 },
                 'item-category': {
                     title: '商品分类',
-                },
-                bom: {
-                    title: 'bom管理',
-                },
+                },               
             },
             entity: {
                 title: '实例管理',
@@ -169,72 +165,8 @@ export default {
         },
         // 售后
         aftermarket: {
-            distribution: {
-                title: '分销管理',
-                order: {
-                    title: '订单列表',
-                    export: '导出',
-                    'sales-report-export': '已销售报表导出',
-                    'statistics-report-export': '已销售统计报表导出',
-                    detail: '详情',
-                    out: '出库',
-                    'give-item': '赠送订单',
-                    payment: '付款',
-                    examine: '审核',
-                    'purchase-order': '采购单供货商查看',
-                },
-                'supply-material': {
-                    title: '供货订单',
-                },
-                'purchase-order': {
-                    title: '采购订单',
-                },
-                distributor: {
-                    title: '分销商列表',
-                    save: '新建分销商',
-                    detail: '详情',
-                    edit: '编辑',
-                    forbidden: '禁用',
-                    'reset-password': '重置密码',
-                    'set-role': '设置角色',
-                    'account-operations': '账户操作',                    
-                },
-                agent: {
-                    title: '零售商列表',
-                },
-                store: {
-                    title: '门店列表',
-                },
-                'sale-area': {
-                    title: '销售区域',
-                },
-                freight: {
-                    title: '运费待确认订单',
-                },
-                'balance-payment': {
-                    title: '尾款待支付订单表',
-                },
-                'cancel-order': {
-                    title: '取消订单申请列表',
-                },
-                'distributor-detail': {
-                    title: '分销商详情'
-                },
-            },
             item: {
                 title: '商品管理',
-                item: {
-                    title: '商品列表',
-                    edit: '编辑',
-                    detail: '详情',
-                    'up-off-shelf': '上架/下架',
-                    save: '新增商品',
-                    'set-sale-area': '批量设置销售区域',
-                    import: '导入',
-                },
-                'item-category': {
-                    title: '商品分类',
-                },
                 bom: {
                     title: 'bom管理',
                 },
@@ -248,8 +180,8 @@ export default {
                     title: '退款审核',
                 },
                 aftermarket: {
-                    title: "售后单列表"
-                }
+                    title: '售后单列表',
+                },
             },
             repair: {
                 title: '工单管理',
@@ -268,7 +200,7 @@ export default {
                 'wait-modified': {
                     title: '待改工单',
                 },
-                'fault': {
+                fault: {
                     title: '故障管理',
                 },
             },
@@ -282,35 +214,6 @@ export default {
                 },
                 'enquiry-ticket-customer': {
                     title: '问询单分配列表',
-                },
-            },
-            stock: {
-                title: '库存管理',
-                warehouse: {
-                    title: '仓库管理',
-                },
-                overview: {
-                    title: '库存总览',
-                },
-                invoice: {
-                    title: '出入库管理',
-                },
-                'transfer-note': {
-                    title: '调货单管理',
-                },
-                'in-warehouse': {
-                    title: '入库',
-                    save: '保存',
-                },
-                'out-warehouse': {
-                    title: '出库',
-                    save: '保存',
-                },
-            },
-            customer: {
-                title: '客户管理',
-                customer: {
-                    title: '客户列表',
                 },
             },
         },
