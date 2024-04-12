@@ -63,21 +63,20 @@
                                 </div>
                             </template>
                             <div class="ell mw160">
-                                BENEFICIARY BANK: {{ record.content_json.payment_information.beneficiary_bank || '-' }}
-                                SWIFT CODE: {{ record.content_json.payment_information.swift_code || '-' }}
-                                BANK ADDRESS: {{ record.content_json.payment_information.bank_address || '-' }}
-                                ACCOUNT NUMBER: {{ record.content_json.payment_information.account_number || '-' }}
-                                COMPANY NAME: {{ record.content_json.payment_information.company_name || '-' }}
-                                COMAPANY ADDRESS: {{ record.content_json.payment_information.company_address || '-' }}
-                                {{ $t(/*其他汇款信息*/'payment-management.other_remittance_info') }}: {{ record.content_json.payment_information.remark || '-' }}
+                                BENEFICIARY BANK:
+                                {{ record.content_json.payment_information.beneficiary_bank || '-' }} SWIFT CODE:
+                                {{ record.content_json.payment_information.swift_code || '-' }} BANK ADDRESS:
+                                {{ record.content_json.payment_information.bank_address || '-' }} ACCOUNT NUMBER:
+                                {{ record.content_json.payment_information.account_number || '-' }} COMPANY NAME:
+                                {{ record.content_json.payment_information.company_name || '-' }} COMAPANY ADDRESS:
+                                {{ record.content_json.payment_information.company_address || '-' }}
+                                {{ $t(/*其他汇款信息*/ 'payment-management.other_remittance_info') }}:
+                                {{ record.content_json.payment_information.remark || '-' }}
                             </div>
                         </a-tooltip>
                     </template>
                     <template v-if="column.key === 'status'">
-                        <div
-                            class="status-box"
-                            :class="$Util.auditStatusFilter(text, 'color')"
-                        >
+                        <div class="status-box" :class="$Util.auditStatusFilter(text, 'color')">
                             {{ $Util.auditStatusFilter(text, 'text', [$i18n.locale]) }}
                         </div>
                     </template>
@@ -88,26 +87,33 @@
                         {{ record.currency === 'EUR' ? '€' : '$' }}{{ text ? $Util.countFilter(text) : '-' }}
                     </template>
                     <template v-if="column.key === 'log'">
-                        <div v-if="record.action_log.user_name || record.action_log.create_time || record.action_log.content || record.action_log.remark">
-                            {{ record.action_log.user_name || '-' }}, 
-                            {{ $Util.timeFormat(record.action_log.create_time) || '-' }}, 
+                        <div
+                            v-if="
+                                record.action_log.user_name ||
+                                record.action_log.create_time ||
+                                record.action_log.content ||
+                                record.action_log.remark
+                            "
+                        >
+                            {{ record.action_log.user_name || '-' }},
+                            {{ $Util.timeFormat(record.action_log.create_time) || '-' }},
                             {{ record.action_log.content || '-' }}
-                            <span 
-                                v-if="record.status === Core.Const.AUDIT_MANAGEMENT.AUDIT_STATUS_MAP.REJECT_FIRST || 
-                                    record.status === Core.Const.AUDIT_MANAGEMENT.AUDIT_STATUS_MAP.REJECT_SECOND"
+                            <span
+                                v-if="
+                                    record.status === Core.Const.AUDIT_MANAGEMENT.AUDIT_STATUS_MAP.REJECT_FIRST ||
+                                    record.status === Core.Const.AUDIT_MANAGEMENT.AUDIT_STATUS_MAP.REJECT_SECOND
+                                "
                             >
-                                {{ $t(/*原因*/'n.reason') }}:{{ record.action_log.remark || '-' }}
+                                {{ $t(/*原因*/ 'n.reason') }}:{{ record.action_log.remark || '-' }}
                             </span>
                         </div>
-                        <div v-else>
-                            -
-                        </div>
+                        <div v-else>-</div>
                     </template>
                     <!-- 操作 -->
                     <template v-if="column.key === 'operations'">
                         <a-button type="link" @click="routerChange('detail', record)">
                             <MySvgIcon icon-class="eyes-icon" class-name="eyes" />
-                            <span class="m-l-10">{{ $t(/*查看详情*/'item_order.see_detail') }}</span>
+                            <span class="m-l-10">{{ $t(/*查看详情*/ 'item_order.see_detail') }}</span>
                         </a-button>
                     </template>
                 </template>
@@ -146,13 +152,33 @@ import MySvgIcon from '@/components/MySvgIcon/index.vue';
 const tableColumns = computed(() => {
     let columns = [
         { title: $t(/*序号*/ 'n.index'), dataIndex: 'id', key: 'number' },
-        { title: $t(/*充值单号*/ 'payment-management.recharge_order_number'), dataIndex: ['content_json', 'recharge_uid'], key: 'item' },
+        {
+            title: $t(/*充值单号*/ 'payment-management.recharge_order_number'),
+            dataIndex: ['content_json', 'recharge_uid'],
+            key: 'item',
+        },
         { title: $t(/*分销商名称*/ 'payment-management.distributor_name'), dataIndex: 'name', key: 'item' },
         { title: $t(/*提交申请时间*/ 'payment-management.app_submit_time'), dataIndex: 'create_time', key: 'time' },
-        { title: $t(/*收款账号信息*/ 'payment-management.receiving_acc_info'), dataIndex: ['content_json', 'payment_information'], key: 'info' },
-        { title: $t(/*整车余额充值金额*/ 'payment-management.vehicle_balance_amount'), dataIndex: ['content_json', 'vehicle_balance'], key: 'money' },
-        { title: $t(/*配件余额充值金额*/ 'payment-management.spare_parts_balance_amount'), dataIndex: ['content_json', 'part_balance'], key: 'money' },
-        { title: $t(/*总充值金额*/ 'payment-management.total_top_up_amount'), dataIndex: ['content_json', 'total_amount'], key: 'money' },
+        {
+            title: $t(/*收款账号信息*/ 'payment-management.receiving_acc_info'),
+            dataIndex: ['content_json', 'payment_information'],
+            key: 'info',
+        },
+        {
+            title: $t(/*整车余额充值金额*/ 'payment-management.vehicle_balance_amount'),
+            dataIndex: ['content_json', 'vehicle_balance'],
+            key: 'money',
+        },
+        {
+            title: $t(/*配件余额充值金额*/ 'payment-management.spare_parts_balance_amount'),
+            dataIndex: ['content_json', 'part_balance'],
+            key: 'money',
+        },
+        {
+            title: $t(/*总充值金额*/ 'payment-management.total_top_up_amount'),
+            dataIndex: ['content_json', 'total_amount'],
+            key: 'money',
+        },
         { title: $t(/*状态*/ 'payment-management.state'), dataIndex: 'status', key: 'status' },
         { title: $t(/*操作记录*/ 'payment-management.operation_record'), dataIndex: 'action_log', key: 'log' },
         { title: $t(/*操作*/ 'common.operations'), key: 'operations', fixed: 'right' },
@@ -160,18 +186,22 @@ const tableColumns = computed(() => {
     return columns;
 });
 const statusList = computed(() => {
-    let list = [
-        { zh: '全  部', en: 'All', value: 0, color: 'primary', key: 0 },
-        { zh: '等待二审', en: 'Pending Second Audit', value: 0, color: 'yellow', key: 4 },        
-        { zh: '二审通过', en: 'Approval Second Audit', value: 0, color: 'yellow', key: 2 },
-        { zh: '二审不通过', en: 'The Second Audit Was Rejected', value: 0, color: 'yellow', key: 5 },
-    ];
-    if(Core.Data.getAuthority()['finance.audit-record.recharge.first-instance']) {
-        list.push({ zh: '等待一审', en: 'Pending First Audit', value: 0, color: 'yellow', key: 1 })
-        list.push({ zh: '一审不通过', en: 'The First Audit Was Rejected', value: 0, color: 'yellow', key: 3 })
+    let list = [{ zh: '全  部', en: 'All', value: 0, color: 'primary', key: 0 }];
+
+    if (proxy.$auth('finance.audit-record.recharge.second-instance')) {
+        list.push([
+            { zh: '等待二审', en: 'Pending Second Audit', value: 0, color: 'yellow', key: 4 },
+            { zh: '二审通过', en: 'Approval Second Audit', value: 0, color: 'yellow', key: 2 },
+            { zh: '二审不通过', en: 'The Second Audit Was Rejected', value: 0, color: 'yellow', key: 5 },
+        ]);
+    }
+
+    if (proxy.$auth('finance.audit-record.recharge.first-instance')) {
+        list.push({ zh: '等待一审', en: 'Pending First Audit', value: 0, color: 'yellow', key: 1 });
+        list.push({ zh: '一审不通过', en: 'The First Audit Was Rejected', value: 0, color: 'yellow', key: 3 });
     }
     return list;
-})
+});
 const tableFields = ref([
     { key: 'beneficiary_bank', label: 'BENEFICIARY BANK' },
     { key: 'swift_code', label: 'SWIFT CODE' },
@@ -179,8 +209,8 @@ const tableFields = ref([
     { key: 'account_number', label: 'ACCOUNT NUMBER' },
     { key: 'company_name', label: 'COMPANY NAME' },
     { key: 'company_address', label: 'COMPANY ADDRESS' },
-    { key: 'remark', label: $t(/*其他汇款信息*/'payment-management.other_remittance_info') }
-])
+    { key: 'remark', label: $t(/*其他汇款信息*/ 'payment-management.other_remittance_info') },
+]);
 const searchList = ref([
     // 名称
     {
@@ -229,13 +259,15 @@ const routerChange = (type, record) => {
             break;
     }
 };
-const handleSearch = (e) => {
-    searchParam.value.status = e
-    if(searchParam.value.status === 0) {
-        searchParam.value.is_finance = !Number(Core.Data.getAuthority()['finance.audit-record.recharge.first-instance']);        
+const handleSearch = e => {
+    searchParam.value.status = e;
+    if (searchParam.value.status === 0) {
+        searchParam.value.is_finance = !Number(
+            Core.Data.getAuthority()['finance.audit-record.recharge.first-instance'],
+        );
     }
     search();
-}
+};
 /* methods end*/
 </script>
 
@@ -284,16 +316,16 @@ const handleSearch = (e) => {
         text-align: center;
         border-radius: 4px;
         &.yellow {
-            background: #FEF7E7;
-            color: #FAAD14;
+            background: #fef7e7;
+            color: #faad14;
         }
         &.green {
-            background: #E9F6EE;
-            color: #26AB54;
+            background: #e9f6ee;
+            color: #26ab54;
         }
         &.red {
-            color: #FF3D40;
-            background: #FFEBEC;
+            color: #ff3d40;
+            background: #ffebec;
         }
         &.grey {
             color: #8090a6;
@@ -304,6 +336,6 @@ const handleSearch = (e) => {
 .ell {
     &.mw160 {
         max-width: 160px;
-    } 
+    }
 }
 </style>

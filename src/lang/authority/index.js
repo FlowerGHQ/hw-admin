@@ -520,7 +520,7 @@ export default {
                 recharge: {
                     title: '充值审核',
                     'first-instance': '一审',
-                    'second-instance': '一审',
+                    'second-instance': '二审',
                 },
             },
         },
