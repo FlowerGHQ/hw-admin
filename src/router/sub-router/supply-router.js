@@ -58,6 +58,7 @@ const supplyManage = {
             meta: {
                 title: '考虑免审供应商名录',
                 title_en: 'Consider Exempt Supplier List',
+                auth: ['supply.supplier-manage.save-supplier'], //临时
             },
         },
         // 免审申请表
@@ -79,6 +80,7 @@ const supplyManage = {
             meta: {
                 title: '待现场考核供应商名录',
                 title_en: 'Assessment Supplier List',
+                auth: ['supply.supplier-manage.save-supplier'], //临时
             },
         },
         {
@@ -100,6 +102,7 @@ const supplyManage = {
             meta: {
                 title: '淘汰供应商名录',
                 title_en: 'Eliminate Supplier List',
+                auth: ['supply.supplier-manage.save-supplier'], //临时
             },
         },
 
@@ -111,6 +114,7 @@ const supplyManage = {
             meta: {
                 title: '合格供应商淘汰原因',
                 title_en: 'Qualified Supplier Elimination Reason',
+                auth: ['supply.supplier-manage.save-supplier'], //临时
             },
         },
         // 车型分类管理
@@ -121,6 +125,7 @@ const supplyManage = {
             meta: {
                 title: '车型分类管理',
                 title_en: 'Vehicle Category Management',
+                auth: ['supply.supplier-manage.save-supplier'], //临时
             },
         },
     ],

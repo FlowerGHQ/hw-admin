@@ -1095,8 +1095,12 @@ const apiList = {
         ProductionOrderItemlist: ['PostJson', 'production-order-item/list'], // 生产单子件列表
     },
     ToBCustomer: {
-        list: ['PostJson', 'comment/list'], // crm tob客户列表   
-    }
+        list: ['PostJson', 'comment/list'], // crm tob客户列表
+    },
+    // 获取供应链角色下主管
+    SupplierApplication: {
+        getAdminList: ['PostJson', 'supplier-application/get-manager'], // 获取供应链角色下主管
+    },
 };
 
 export default new Api(baseUrl, apiList);

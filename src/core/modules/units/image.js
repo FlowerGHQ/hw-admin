@@ -1,4 +1,4 @@
-const Modules = import.meta.glob(`../../../assets/images/*/*`, { eager: true });
+const Modules = import.meta.globEager(`../../../assets/images/*/*`, { eager: true });
 
 export default {
     /**

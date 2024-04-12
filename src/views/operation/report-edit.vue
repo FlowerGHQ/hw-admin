@@ -163,7 +163,7 @@ import MyEditor from '@/components/MyEditor/index.vue';
 import MyPreviewImageVideo from '@/components/horwin/based-on-ant/MyPreviewImageVideo.vue';
 import CheckModal from '@/components/horwin/based-on-ant/CheckModal.vue';
 
-const imgModules = import.meta.glob('../../assets/images/operation/*', { eager: true });
+const imgModules = import.meta.globEager('../../assets/images/operation/*', { eager: true });
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();

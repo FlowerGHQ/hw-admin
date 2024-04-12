@@ -236,8 +236,8 @@ import fillTark from './components/fill-track.vue';
 import transport from './components/transport.vue';
 import { computed, onMounted, reactive, ref, getCurrentInstance } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-const testActiveModules = import.meta.glob('../../assets/images/good-items/*.png', { eager: true });
-// const womanImg =  import.meta.glob("../../assets/images/test-drive/*.png");
+const testActiveModules = import.meta.globEager('../../assets/images/good-items/*.png', { eager: true });
+// const womanImg =  import.meta.globEager("../../assets/images/test-drive/*.png");
 
 /* 使用图片的方法 */
 const getTestActiveSrc = name => {

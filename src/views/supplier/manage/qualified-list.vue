@@ -46,6 +46,52 @@
                 }"
                 @change="({ current, pageSize }) => onPagenationChange({ current, size: pageSize })"
             >
+                <template #bodyCell="{ column, text, record, index }">
+                    <!-- 品编 -->
+                    <template
+                        v-if="
+                            column.key === 'no' ||
+                            column.key === 'code' ||
+                            column.key === 'short_name' ||
+                            column.key === 'supply_main' ||
+                            column.key === 'supply_secondary' ||
+                            column.key === 'supply_other'
+                        "
+                    >
+                        <EditTableCell
+                            type="input"
+                            :cellData="{ column, text, record, index }"
+                            @handleCellSave="tabCellSave"
+                        />
+                    </template>
+                    <!-- name -->
+                    <template v-if="column.key === 'name'">
+                        <a-button type="link">
+                            {{ text }}
+                        </a-button>
+                    </template>
+                    <template
+                        v-if="
+                            column.key === 'purchase_category' ||
+                            column.key === 'register_type' ||
+                            column.key === 'manager'
+                        "
+                    >
+                        <EditTableCell
+                            type="select"
+                            :cellData="{ column, text, record, index }"
+                            @handleCellSave="tabCellSave"
+                            :selectOptions="column.selectOptions"
+                            :mode="column.mode"
+                        />
+                    </template>
+                    <!-- 操作 -->
+                    <template v-if="column.key === 'operate'">
+                        <a-button type="link" danger>
+                            {{ $t('supply-chain.eliminate') }}
+                        </a-button>
+                    </template>
+                </template>
             </a-table>
         </div>
         <!-- 导出结果展示 -->
@@ -97,11 +143,12 @@
 </template>
 
 <script setup lang="jsx">
-import { onMounted, ref, getCurrentInstance, computed, nextTick, reactive } from 'vue';
+import { onMounted, ref, getCurrentInstance, computed, nextTick, reactive, provide } from 'vue';
 import Core from '@/core';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import ExportResult from '@/components/common/ExportResult.vue';
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
+import EditTableCell from './components/edit-table-cell.vue';
 import { useTable } from '@/hooks/useTable';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -135,13 +182,11 @@ const editId = ref(null);
 const formState = reactive({
     remark: '',
 });
-
-// 车型的selectOption
-const vehicleModelOptions = ref([
-    { label: '车型1', value: '车型1' },
-    { label: '车型2', value: '车型2' },
-    { label: '车型3', value: '车型3' },
-]);
+// 采购品类
+const PURCHASE_CATEGORY_LIST = Core.Const.QUALIFIED_LIST.PURCHASE_CATEGORY_LIST;
+const REGISTRATION_TYPE_LIST = Core.Const.QUALIFIED_LIST.REGISTRATION_TYPE_LIST;
+// 供应链
+const SUPPLY_CHAIN_ROLES_LIST = ref([]);
 
 const tableColumns = computed(() => {
     let columns = [
@@ -154,52 +199,57 @@ const tableColumns = computed(() => {
                 return (pagination.value.current - 1) * pagination.value.size + index + 1;
             },
         },
+        // 品编
         {
             title: $t('supply-chain.no'),
             dataIndex: 'no',
-            key: 'item',
-            customRender: ({ text, record, index, column }) => {
-                return renderInputEditableCell({ text, record, index, column });
-            },
+            key: 'no',
         },
+        // 供方代码
         {
             title: $t('supply-chain.supplier_code'),
             dataIndex: 'code',
-            key: 'item',
-            customRender: ({ text, record, index, column }) => {
-                return renderInputEditableCell({ text, record, index, column });
-            },
+            key: 'code',
         },
-        { title: $t('supply-chain.supplier_full_name'), dataIndex: 'name', key: 'item' },
+        { title: $t('supply-chain.supplier_full_name'), dataIndex: 'name', key: 'name' },
         // 简称
         {
             title: $t('supply-chain.supplier_abbreviation'),
             dataIndex: 'short_name',
-            key: 'item',
-            customRender: ({ text, record, index, column }) => {
-                return renderInputEditableCell({ text, record, index, column });
-            },
+            key: 'short_name',
         },
         // 采购品类
         {
             title: $t('supply-chain.procurement_category'),
             dataIndex: 'purchase_category',
-            key: 'item',
-            customRender: ({ text, record, index, column }) => {
-                return renderSelectEditableCell({ text, record, index, column }, vehicleModelOptions.value);
-            },
+            key: 'purchase_category',
+            selectOptions: PURCHASE_CATEGORY_LIST,
+            mode: 'multiple',
         },
-        { title: $t('supply-chain.main_supply'), dataIndex: 'supply_main', key: 'item' },
-        { title: $t('supply-chain.secondary_supply'), dataIndex: 'supply_secondary', key: 'item' },
-        { title: $t('supply-chain.other_items'), dataIndex: 'supply_other', key: 'item' },
-        { title: $t('common.vehicle_model'), dataIndex: 'vehicle_model', key: 'item' },
-        { title: $t('common.manager'), dataIndex: 'manager', key: 'item' },
-        { title: $t('supply-chain.introduction_date'), dataIndex: 'register_time', key: 'time' },
-        { title: $t('supply-chain.change_class'), dataIndex: 'register_type', key: 'register_type' },
+        { title: $t('supply-chain.main_supply'), dataIndex: 'supply_main', key: 'supply_main' },
+        { title: $t('supply-chain.secondary_supply'), dataIndex: 'supply_secondary', key: 'supply_secondary' },
+        { title: $t('supply-chain.other_items'), dataIndex: 'supply_other', key: 'supply_other' },
+        { title: $t('common.vehicle_model'), dataIndex: 'vehicle_model', key: 'vehicle_model' },
+        {
+            title: $t('common.manager'),
+            dataIndex: 'manager',
+            key: 'manager',
+            selectOptions: SUPPLY_CHAIN_ROLES_LIST.value,
+            mode: 'multiple',
+        },
+        { title: $t('supply-chain.introduction_date'), dataIndex: 'register_time', key: 'register_time' },
+        {
+            title: $t('supply-chain.change_class'),
+            dataIndex: 'register_type',
+            key: 'register_type',
+            selectOptions: REGISTRATION_TYPE_LIST,
+            // 单选
+            mode: 'single',
+        },
         { title: $t('supply-chain.remark'), dataIndex: 'remark', key: 'remark' },
-        { title: $t('supply-chain.province'), dataIndex: 'province', key: 'item' },
-        { title: $t('supply-chain.city'), dataIndex: 'city', key: 'item' },
-        { title: $t('supply-chain.detailed_address'), dataIndex: 'address', key: 'item' },
+        { title: $t('supply-chain.province'), dataIndex: 'province', key: 'province' },
+        { title: $t('supply-chain.city'), dataIndex: 'city', key: 'city' },
+        { title: $t('supply-chain.detailed_address'), dataIndex: 'address', key: 'address' },
         // 操作
         {
             title: $t('def.operate'),
@@ -207,21 +257,10 @@ const tableColumns = computed(() => {
             key: 'operate',
             fixed: 'right',
             width: 100,
-            // 淘汰按钮 danger
-            customRender: ({ text, record, index, column }) => {
-                return (
-                    <div>
-                        <a-button type="link" danger>
-                            {$t('supply-chain.eliminate')}
-                        </a-button>
-                    </div>
-                );
-            },
         },
     ];
     return columns;
 });
-
 const searchList = ref([
     {
         type: 'input',
@@ -249,14 +288,12 @@ const searchList = ref([
         selectMap: Core.Const.SUPPLAY.CHANGE_CLASS_LIST,
     },
 ]);
-const editableData = reactive({
-    // id: { //id为当前行id
-    //     dataIndex: 'no', //当前列
-    //     value: {}, //当前行数据
-    // },
-});
 
-onMounted(() => {});
+// 主供件
+
+onMounted(() => {
+    getSupplyChainList();
+});
 /* Fetch start*/
 // const request = Core.Api.Supplier.list;
 
@@ -271,18 +308,37 @@ function request() {
                         code: 'code1',
                         name: 'name1',
                         short_name: 'short_name1',
-                        purchase_category: ['purchase_category1'],
+                        purchase_category: 'RP类, 包材类',
                         supply_main: 'supply_main1',
                         supply_secondary: 'supply_secondary1',
                         supply_other: 'supply_other1',
                         vehicle_model: 'vehicle_model1',
-                        manager: 'manager1',
+                        manager: 'tenann1',
                         register_time: '2021-01-01',
                         register_type: 1,
                         remark: 'remark1',
                         province: 'province1',
                         city: 'city1',
                         address: 'address1',
+                    },
+                    {
+                        id: 2,
+                        no: '2',
+                        code: 'code2',
+                        name: 'name2',
+                        short_name: 'short_name2',
+                        purchase_category: 'RP类, 包材类',
+                        supply_main: 'supply_main2',
+                        supply_secondary: 'supply_secondary2',
+                        supply_other: 'supply_other2',
+                        vehicle_model: 'vehicle_model2',
+                        manager: 'tenann1',
+                        register_time: '2021-01-02',
+                        register_type: 2,
+                        remark: 'remark2',
+                        province: 'province2',
+                        city: 'city2',
+                        address: 'address2',
                     },
                 ],
                 count: 1,
@@ -352,84 +408,25 @@ const handleImportConfirm = () => {
 const handleRemarkClose = () => {
     changeRemarkVisible.value = false;
 };
+const tabCellSave = ({ record, index, column }) => {
+    console.log('record', record);
+    console.log('index', index);
+    console.log('column', column);
+};
 
-// 渲染可编辑cell单元格(input)
-const renderInputEditableCell = ({ text, record, index, column }) => {
-    const key = record.id; // 获取当前行id
-    const idEditValue = editableData[key]?.value; // 获取当前行数据
-    const isEditDataIndex = editableData[key]?.dataIndex; // 获取当前列
-    const isEditable = idEditValue && isEditDataIndex === column.dataIndex; // 判断当前单元格是否为编辑状态
-    // 如果isEditable为true，渲染编辑状态，否则渲染文本状态
-    return (
-        <div>
-            {isEditable ? ( // 编辑状态
-                <div class="editable-cell-input-wrapper">
-                    <a-input
-                        vModel:value={editableData[key].value[column.dataIndex]}
-                        onPressEnter={() => tabCellSave(key, column)}
-                    />
-                    <CheckOutlined class="editable-cell-icon-check" onClick={() => tabCellSave(key, column)} />
-                </div>
-            ) : (
-                <div class="editable-cell-text-wrapper">
-                    {text || ' '}
-                    <EditOutlined class="editable-cell-icon" onClick={() => tableEdit(key, column)} />
-                </div>
-            )}
-        </div>
-    );
-};
-// 渲染可编辑cell单元格(select)
-const renderSelectEditableCell = ({ text, record, index, column }, options) => {
-    const key = record.id; // 获取当前行id
-    const idEditValue = editableData[key]?.value; // 获取当前行数据
-    const isEditDataIndex = editableData[key]?.dataIndex; // 获取当前列
-    const isEditable = idEditValue && isEditDataIndex === column.dataIndex; // 判断当前单元格是否为编辑状态
-    // 如果isEditable为true，渲染编辑状态，否则渲染文本状态
-    return (
-        <div>
-            {isEditable ? ( // 编辑状态
-                <div class="editable-cell-input-wrapper">
-                    <a-select
-                        vModel:value={editableData[key].value[column.dataIndex]}
-                        style="width: 100%"
-                        options={options}
-                        mode="multiple"
-                        onChange={value => {
-                            editableData[key].value[column.dataIndex] = value;
-                        }}
-                    />
-                    <CheckOutlined class="editable-cell-icon-check" onClick={() => tabCellSave(key, column)} />
-                </div>
-            ) : (
-                <div class="editable-cell-text-wrapper">
-                    <div class="tag-area">
-                        {record[column.dataIndex] &&
-                            record[column.dataIndex].map((item, index) => {
-                                return <a-tag key={index}>{item}</a-tag>;
-                            })}
-                    </div>
-                    <a-button type="link" class="editable-cell-icon" onClick={() => tableEdit(key, column)}>
-                        {$t('def.edit')}
-                    </a-button>
-                </div>
-            )}
-        </div>
-    );
-};
-const tableEdit = (key, column) => {
-    const value = tableData.value.filter(item => key === item.id)[0]; // 获取当前行数据
-    editableData[key] = {}; // 初始化当前行数据
-    editableData[key].dataIndex = column.dataIndex; // 将当前列存入editableData
-    editableData[key].value = value; // 将当前列的值存入editableData
-};
-const tabCellSave = (key, column) => {
-    console.log(key, '当前行id'); //
-    console.log(column.dataIndex, '当前列'); //
-    console.log(editableData[key].value[column.dataIndex], '修改的值'); //
-    console.log(tableData.value.filter(item => key === item.id)[0], '当前行数据'); //
-    Object.assign(tableData.value.filter(item => key === item.id)[0], editableData[key]); // 将修改的值赋值给tableData
-    delete editableData[key]; // 删除editableData中的当前行数据
+// 获取供应链下的角色
+const getSupplyChainList = () => {
+    Core.Api.SupplierApplication.getAdminList().then(res => {
+        console.log('res', res.list);
+        SUPPLY_CHAIN_ROLES_LIST.value = res.list.map((item, index) => {
+            return {
+                label: item,
+                value: item,
+                id: index,
+            };
+        });
+        console.log('SUPPLY_CHAIN_ROLES_LIST', SUPPLY_CHAIN_ROLES_LIST.value);
+    });
 };
 
 /* methods end*/
@@ -476,26 +473,6 @@ const tabCellSave = (key, column) => {
                     color: #1890ff;
                 }
             }
-        }
-    }
-}
-:deep(.ant-table-cell) {
-    .editable-cell-input-wrapper {
-        display: flex;
-        align-items: center;
-        .editable-cell-icon-check {
-            cursor: pointer;
-            color: #006ef9;
-            margin-left: 4px;
-        }
-    }
-    .editable-cell-text-wrapper {
-        display: flex;
-        align-items: center;
-        .editable-cell-icon {
-            cursor: pointer;
-            color: #006ef9;
-            margin-left: 8px;
         }
     }
 }

@@ -172,7 +172,7 @@ import Core from '../../core';
 import { h } from 'vue';
 import mailTemplete from './components/mail-templete.vue';
 
-const modules = import.meta.glob('../../assets/images/crm-mail-management/*', { eager: true });
+const modules = import.meta.globEager('../../assets/images/crm-mail-management/*', { eager: true });
 
 export default {
     name: 'mailSendStatistics',

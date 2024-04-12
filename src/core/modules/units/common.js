@@ -1,4 +1,4 @@
-const Modules = import.meta.glob(`../../../assets/images/*/*`, { eager: true });
+const Modules = import.meta.globEager(`../../../assets/images/*/*`, { eager: true });
 
 export default {
     /**
@@ -93,24 +93,24 @@ export default {
     },
     /**
      * @description 判断两个数组是否相同
-     * @param { Array } arr1 
-     * @param { Array } arr2 
+     * @param { Array } arr1
+     * @param { Array } arr2
      * @returns Boolean
      */
-    arraysAreEqual(arr1, arr2) {    
-        // console.log("arr1", arr1, "arr2", arr2);    
-        let result = false
+    arraysAreEqual(arr1, arr2) {
+        // console.log("arr1", arr1, "arr2", arr2);
+        let result = false;
         // 检查数组长度是否相等
         if (arr1.length !== arr2.length) {
-            result = false
+            result = false;
             return result;
         }
 
         // 逐个比较数组元素
         result = arr1.every(el => {
-            return arr2.some(ele => ele === el)
-        })
-        console.log("arraysAreEqual", result);
+            return arr2.some(ele => ele === el);
+        });
+        console.log('arraysAreEqual', result);
 
         // 所有元素都相等
         return result;

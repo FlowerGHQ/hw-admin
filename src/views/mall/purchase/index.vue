@@ -175,7 +175,7 @@ import Core from '@/core';
 import MyButton from '@/components/common/MyButton.vue';
 import SvgIcon from '@/components/SvgIcon/index.vue';
 
-const purchaseModules = import.meta.glob('@/assets/images/mall/purchase/*', { eager: true });
+const purchaseModules = import.meta.globEager('@/assets/images/mall/purchase/*', { eager: true });
 
 export default {
     components: {

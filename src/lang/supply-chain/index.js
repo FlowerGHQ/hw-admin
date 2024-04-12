@@ -354,8 +354,52 @@ export default {
         add_classification: '新增分类',
         // classification_name
         classification_name: '分类名称',
+        // 编辑分类
+        edit_classification: '编辑分类',
+        // 更改
+        change: '更改',
+        // 确定
+        determine: '确定',
+        // 新增分类成功
+        add_classification_successfully: '新增分类成功',
+        // 编辑分类成功
+        edit_classification_successfully: '编辑分类成功',
+        // 删除分类成功
+        delete_classification_successfully: '删除分类成功',
+        // 新增分类失败
+        add_classification_failed: '新增分类失败',
+        // 编辑分类失败
+        edit_classification_failed: '编辑分类失败',
+        // 删除分类失败
+        delete_classification_failed: '删除分类失败',
+        // delete_classification
+        delete_classification: '删除分类',
+        // delete_classification_warning
+        delete_classification_warning: '删除分类后，所有被引用的内容都会被清除，请确认操作',
     },
     en: {
+        // delete_classification
+        delete_classification: 'Delete Classification',
+        // delete_classification_warning
+        c: 'After deleting the classification, all referenced content will be cleared, please confirm the operation',
+        // 编辑分类
+        edit_classification: 'Edit Classification',
+        // 新增岑类成功
+        add_classification_successfully: 'Add Classification Successfully',
+        // 编辑分类成功
+        edit_classification_successfully: 'Edit Classification Successfully',
+        // 删除分类成功
+        delete_classification_successfully: 'Delete Classification Successfully',
+        // 新增分类失败
+        add_classification_failed: 'Add Classification Failed',
+        // 编辑分类失败
+        edit_classification_failed: 'Edit Classification Failed',
+        // 删除分类失败
+        delete_classification_failed: 'Delete Classification Failed',
+        // 确定
+        determine: 'Determine',
+        // 更改
+        change: 'Change',
         classification_name: 'Classification Name',
         // 新增分类
         add_classification: 'Add Classification',
