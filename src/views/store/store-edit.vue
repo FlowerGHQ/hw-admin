@@ -222,6 +222,17 @@
                         <div class="tip">{{ $t('n.size') }}: 400*400px</div>
                     </div>
                 </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('n.ishas_sk3_plus') }}:</div>
+                    <div class="value">
+                        <div class="value">
+                            <a-radio-group v-model:value="form.is_has_sk3_plus">
+                                <a-radio :value="Core.Const.FLAG.YES">{{ $t('i.yes') }}</a-radio>
+                                <a-radio :value="Core.Const.FLAG.NO">{{ $t('i.no') }}</a-radio>
+                            </a-radio-group>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="form-btns">
@@ -276,6 +287,7 @@ export default {
                 currency: undefined, // 货币
                 logo: '', // logo
                 flag_stock_change_use_pda: undefined, // 启用PDA
+                is_has_sk3_plus: undefined, // 启用PDA
             },
             work: {
                 time: {
@@ -522,6 +534,10 @@ export default {
                 // 货币
                 return this.$message.warning(this.$t('def.enter') + `(${this.$t('p.currency')})`);
             }
+            if (!formCopy.is_has_sk3_plus && formCopy.is_has_sk3_plus !== 0) {
+                // 货币
+                return this.$message.warning(this.$t('def.enter') + `(${this.$t('n.ishas_sk3_plus')})`);
+            }
 
             return false;
         },
@@ -586,4 +602,10 @@ export default {
 
 <style lang="less" scoped>
 // #DistributorEdit {}
+.edit-container .form-block .form-item .key {
+    width: 110px;
+}
+#Layout.en .form-item .key {
+    width: 160px;
+}
 </style>

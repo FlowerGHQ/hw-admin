@@ -245,6 +245,7 @@ const messages = {
             supplier: '供应链',
             system_management: '系统管理',
             warehousing: '仓储',
+            ishas_sk3_plus: '是否有SK3 PLUS',
         },
         a: {
             // 零售商
@@ -3153,6 +3154,7 @@ const messages = {
             supplier: 'Supplier',
             system_management: 'System Management',
             warehousing: 'Warehousing',
+            ishas_sk3_plus: 'Is There Include SK3 PLUS',
         },
         a: {
             new_retailer: 'Create A New Retailer',
@@ -4092,7 +4094,8 @@ const messages = {
             configure_permissions: 'Configure Permissions',
             department: 'Department',
             sure_exit_fs: 'Are You Sure To Exit And Add Users From Feishu?',
-            not_been_successfully: 'The user has not been successfully added yet. Do you want to exit the current operation',
+            not_been_successfully:
+                'The user has not been successfully added yet. Do you want to exit the current operation',
             authority_abbreviation: 'Authority',
             allocated: 'Allocated',
             unallocated: 'Unallocated',
