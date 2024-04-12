@@ -55,15 +55,17 @@
                     <template v-if="column.key === 'create_time'">
                         {{ text ? $Util.timeFormat(text) : '-' }}
                     </template>
-                    <!-- 供应商阶段 -->
-                    <template v-if="column.key === 'supplier_stage'">
-                        <EditTableCell
-                            type="select"
-                            :cellData="{ column, text, record, index }"
-                            @handleCellSave="tabCellSave"
-                            :selectOptions="column.selectOptions"
-                            :mode="column.mode"
-                        />
+                    <!-- qualified_record -->
+                    <template v-if="column.key === 'qualified_record'">
+                        <a-button
+                            type="link"
+                            @click="onView('add', record)"
+                            v-if="record.stage === 30 || record.stage === 40"
+                        >
+                            {{ $t('supply-chain.view') }}
+                        </a-button>
+                        <span v-else-if="record.stage === 10 || record.stage === 20">无</span>
+                        <span v-else>无</span>
                     </template>
                     <!-- 操作 -->
                     <template v-if="column.key === 'operations'">
@@ -118,16 +120,10 @@ const handleSelectChange = (selectedRowKeys, selectedRows) => {
     selectedIds.value = selectedRowKeys;
 };
 const AUDIT_STATUS = Core.Const.SUPPLAY.AUDIT_STATUS;
-const STAGE_LIST = Core.Const.SUPPLAY.STAGE_LIST;
+const STAGE_LIST = Core.Const.SUPPLAY.STAGE;
 const STATUS_LIST = Core.Const.SUPPLAY.STATUS_LIST;
 
 const tableColumns = computed(() => {
-    STAGE_LIST.forEach(item => {
-        item.label = $t(item.label);
-        item.value = $t(item.label);
-    });
-    console.log('STATUS_LIST', STATUS_LIST);
-
     let columns = [
         { title: $t('supply-chain.serial_number'), dataIndex: 'number', key: 'number' },
         { title: $t('supply-chain.supplier_full_name'), dataIndex: 'company_name', key: 'company_name' },
@@ -136,10 +132,11 @@ const tableColumns = computed(() => {
         // 供应商阶段
         {
             title: $t('supply-chain.supplier_stage'),
-            dataIndex: 'supplier_stage',
-            key: 'supplier_stage',
-            selectOptions: STAGE_LIST,
-            mode: 'single',
+            dataIndex: 'stage',
+            key: 'stage',
+            customRender: ({ text, record, index }) => {
+                return STAGE_LIST[text] ? $t(STAGE_LIST[text].t) : '-';
+            },
         },
         // 状态
         {
@@ -156,11 +153,15 @@ const tableColumns = computed(() => {
             dataIndex: 'remark',
             key: 'remark',
             customRender: ({ text, record, index }) => {
-                return text ? text : '暂无';
+                return text ? text : '无';
             },
         },
         // 合格记录
-        { title: $t('supply-chain.qualified_record'), dataIndex: 'qualified_record', key: 'qualified_record' },
+        {
+            title: $t('supply-chain.qualified_record'),
+            dataIndex: 'qualified_record',
+            key: 'qualified_record',
+        },
         { title: $t('common.operations'), key: 'operations', fixed: 'right' },
     ];
     return columns;
