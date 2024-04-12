@@ -28,7 +28,7 @@
                                     <div class="radio-btn first">{{ $t('i.import_name') }}</div>
                                 </a-upload>
                                 <div
-                                    v-if="$authBtn('sales.item.item.import', 'aftermarket.item.item.import')"
+                                    v-if="$auth('sales.item.item.import', 'aftermarket.item.item.import')"
                                     class="radio-btn"
                                     @click="handleExportConfirm"
                                 >
@@ -37,7 +37,7 @@
                                 <div class="radio-btn last" @click="downTemplate">{{ $t('i.down_template') }}</div>
                             </div>
                             <a-button
-                                v-if="$authBtn('sales.item.item.set-sale-area', 'aftermarket.item.item.set-sale-area')"
+                                v-if="$auth('sales.item.item.set-sale-area', 'aftermarket.item.item.set-sale-area')"
                                 class="ml-8"
                                 type="primary"
                                 @click="handleSalesAreaByIdsShow()"
@@ -45,7 +45,7 @@
                                 <i class="icon i_edit" /> {{ $t('ar.set_sales') }}
                             </a-button>
                             <a-button
-                                v-if="$authBtn('sales.item.item.save', 'aftermarket.item.item.save')"
+                                v-if="$auth('sales.item.item.save', 'aftermarket.item.item.save')"
                                 type="primary"
                                 @click="routerChange('add')"
                             >
@@ -278,14 +278,14 @@
                             <template v-if="column.key === 'operation'">
                                 <template v-if="!record.default_item_id">
                                     <a-button
-                                        v-if="$authBtn('sales.item.item.edit', 'aftermarket.item.item.edit')"
+                                        v-if="$auth('sales.item.item.edit', 'aftermarket.item.item.edit')"
                                         type="link"
                                         @click="routerChange('edit', record)"
                                     >
                                         <i class="icon i_edit" />{{ $t('def.edit') }}
                                     </a-button>
                                     <a-button
-                                        v-if="$authBtn('sales.item.item.detail', 'aftermarket.item.item.detail')"
+                                        v-if="$auth('sales.item.item.detail', 'aftermarket.item.item.detail')"
                                         type="link"
                                         @click="routerChange('detail', record)"
                                     >
@@ -294,7 +294,7 @@
                                 </template>
                                 <a-button
                                     v-if="
-                                        $authBtn('sales.item.item.up-off-shelf', 'aftermarket.item.item.up-off-shelf') &&
+                                        $auth('sales.item.item.up-off-shelf', 'aftermarket.item.item.up-off-shelf') &&
                                         !record.children
                                     "
                                     type="link"
