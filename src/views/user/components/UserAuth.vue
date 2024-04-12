@@ -24,15 +24,9 @@
 
                     <div class="panel-content" v-if="!edit && showExtra">
                         <SimpleImageEmpty v-if="false" desc="该用户尚未分配可管理权限" />
-                        <template v-else v-for="item of options" :key="item.key">
-                            <!-- <div v-if="item.templateSelect.length" class="form-item">
-                                <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
-                                <div class="value">
-                                    <span>{{ $t('authority.title.' + item.key) }}</span>
-                                </div>
-                            </div> -->
+                        <template v-else v-for="item of options" :key="item.key">                            
                             <template v-for="(subItem, index) of item.list" :key="index">
-                                <div class="form-item afs">
+                                <div v-if="subItem.itemSelect?.length" class="form-item afs">
                                     <div class="key">
                                         {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:
                                     </div>
@@ -42,7 +36,7 @@
                                             v-for="(threeItem, index) of subItem.list"
                                             :key="index"
                                         >
-                                            <template v-if="$Util.Common.isMember(threeItem.id, item.select) || true">
+                                            <template v-if="$Util.Common.isMember(threeItem.id, item.select)">
                                                 <span
                                                     class="m-r-8"
                                                     :class="{ 'color-1890ff': threeItem.scope_type > 0 }"
@@ -67,7 +61,7 @@
                                                     class="m-r-8"
                                                 >
                                                     <template
-                                                        v-if="$Util.Common.isMember(fourItem.id, item.select) || true"
+                                                        v-if="$Util.Common.isMember(fourItem.id, item.select)"
                                                     >
                                                         <span
                                                             :class="{ 'color-1890ff': fourItem.scope_type > 0 }"
