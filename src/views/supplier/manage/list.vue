@@ -3,9 +3,21 @@
         <div class="title-container">
             <div class="title-area">{{ $t('supply-chain.create_data') }}</div>
         </div>
+        <div class="tabs-container colorful">
+            <a-tabs v-model:activeKey="searchParam.status" @change="handleTableChange">
+                <a-tab-pane :key="item.key" v-for="item of STATUS_LIST">
+                    <template #tab>
+                        <div class="tabs-title">
+                            {{ item[$i18n.locale] }}<span :class="item.color">{{ item.value }}</span>
+                        </div>
+                    </template>
+                </a-tab-pane>
+            </a-tabs>
+        </div>
         <!-- search -->
         <div class="search">
-            <SearchAll :options="searchList" :isShowMore="false" @search="onSearch" @reset="onReset"> </SearchAll>
+            <SearchAll :options="searchList" :isShowMore="false" @search="onSearch" @reset="onReset" ref="MySearchAll">
+            </SearchAll>
         </div>
         <!-- table -->
         <div class="table-container">
@@ -33,17 +45,7 @@
                     </template>
                     <!-- 公司名称 -->
                     <template v-if="column.key === 'company_name'">
-                        <a-tooltip placement="topLeft">
-                            <template #title>{{ text }}</template>
-                            <div
-                                class="one-spils cursor"
-                                :style="{
-                                    width: text?.length > 15 ? 7 * 12 + 'px' : '',
-                                }"
-                            >
-                                {{ text }}
-                            </div>
-                        </a-tooltip>
+                        {{ text || '-' }}
                     </template>
                     <!-- 供应商类型 -->
                     <template v-if="column.key === 'type'">
@@ -53,14 +55,15 @@
                     <template v-if="column.key === 'create_time'">
                         {{ text ? $Util.timeFormat(text) : '-' }}
                     </template>
-                    <template v-if="column.key === 'remark'">
-                        <div class="remark">
-                            <a-tooltip>
-                                <template #title>{{ text }}</template>
-                                <span class="remark-text">{{ text ? text : '-' }}</span>
-                            </a-tooltip>
-                            <MySvgIcon icon-class="supply-edit" class-name="supply-edit" />
-                        </div>
+                    <!-- 供应商阶段 -->
+                    <template v-if="column.key === 'supplier_stage'">
+                        <EditTableCell
+                            type="select"
+                            :cellData="{ column, text, record, index }"
+                            @handleCellSave="tabCellSave"
+                            :selectOptions="column.selectOptions"
+                            :mode="column.mode"
+                        />
                     </template>
                     <!-- 操作 -->
                     <template v-if="column.key === 'operations'">
@@ -103,6 +106,8 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
+import EditTableCell from './components/edit-table-cell.vue';
+import _ from 'lodash';
 
 const $store = useStore();
 const router = useRouter();
@@ -112,18 +117,50 @@ const handleSelectChange = (selectedRowKeys, selectedRows) => {
     console.log(selectedRowKeys, selectedRows);
     selectedIds.value = selectedRowKeys;
 };
+const AUDIT_STATUS = Core.Const.SUPPLAY.AUDIT_STATUS;
+const STAGE_LIST = Core.Const.SUPPLAY.STAGE_LIST;
+const STATUS_LIST = Core.Const.SUPPLAY.STATUS_LIST;
+
 const tableColumns = computed(() => {
+    STAGE_LIST.forEach(item => {
+        item.label = $t(item.label);
+        item.value = $t(item.label);
+    });
+    console.log('STATUS_LIST', STATUS_LIST);
+
     let columns = [
         { title: $t('supply-chain.serial_number'), dataIndex: 'number', key: 'number' },
-        { title: $t('supply-chain.company_name'), dataIndex: 'company_name', key: 'company_name' },
+        { title: $t('supply-chain.supplier_full_name'), dataIndex: 'company_name', key: 'company_name' },
         { title: $t('supply-chain.supplier_type'), dataIndex: 'type', key: 'type' },
         { title: $t('supply-chain.submission_time'), dataIndex: 'create_time', key: 'create_time' },
         // 供应商阶段
-        { title: $t('supply-chain.supplier_stage'), dataIndex: 'supplier_stage', key: 'supplier_stage' },
+        {
+            title: $t('supply-chain.supplier_stage'),
+            dataIndex: 'supplier_stage',
+            key: 'supplier_stage',
+            selectOptions: STAGE_LIST,
+            mode: 'single',
+        },
         // 状态
-        { title: $t('supply-chain.status'), dataIndex: 'status', key: 'status' },
+        {
+            title: $t('supply-chain.status'),
+            dataIndex: 'audit_status',
+            key: 'audit_status',
+            customRender: ({ text, record, index }) => {
+                return AUDIT_STATUS[text] ? $t(AUDIT_STATUS[text].t) : '-';
+            },
+        },
         // 备注
-        { title: $t('supply-chain.remark'), dataIndex: 'remark', key: 'remark' },
+        {
+            title: $t('supply-chain.eliminate_reason'),
+            dataIndex: 'remark',
+            key: 'remark',
+            customRender: ({ text, record, index }) => {
+                return text ? text : '暂无';
+            },
+        },
+        // 合格记录
+        { title: $t('supply-chain.qualified_record'), dataIndex: 'qualified_record', key: 'qualified_record' },
         { title: $t('common.operations'), key: 'operations', fixed: 'right' },
     ];
     return columns;
@@ -133,7 +170,7 @@ const searchList = ref([
         type: 'input',
         value: '',
         searchParmas: 'company_name',
-        key: 'supply-chain.company_name',
+        key: 'supply-chain.supplier_full_name',
     },
     {
         type: 'select',
@@ -149,35 +186,41 @@ const searchList = ref([
         key: 'supply-chain.submission_time',
         defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_E,
     },
+    {
+        // 供应商阶段
+        type: 'select',
+        value: undefined,
+        searchParmas: 'supplier_stage',
+        key: 'supply-chain.supplier_stage',
+        selectMap: Core.Const.SUPPLAY.STAGE_LIST,
+    },
 ]);
-
-onMounted(() => {});
-/* Fetch start*/
+const MySearchAll = ref(null);
 const request = Core.Api.SUPPLY.adminList;
-
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request,
     dataCallBack: res => {
-        console.log(res);
-        res.list.map((item, index) => {
-            item.supplier_stage = '注册供应商';
-            item.status = '待审核';
-            item.remark = '暂无';
-            return item;
+        let list = _.cloneDeep(res.list);
+        // item 和 item.form字段合并
+        list.forEach(item => {
+            item = Object.assign(item, item.form);
         });
-        return res.list;
+        return list;
     },
 });
-/* Fetch end*/
 
-/* methods start*/
+const handleTableChange = key => {
+    searchParam.value = Object.assign(searchParam.value, MySearchAll.value.getSearchFrom());
+    search();
+};
+
 const onSearch = data => {
-    console.log(data);
-    searchParam.value = data;
+    searchParam.value = Object.assign(searchParam.value, data);
     search();
 };
 const onReset = () => {
     refreshTable();
+    searchParam.value.status = '';
 };
 // 点击查看
 const onView = (type, record) => {
@@ -214,7 +257,28 @@ const onBtn = () => {
     $store.commit('SUPPLY_CHAIN/setStep', 0);
     $store.commit('SUPPLY_CHAIN/setSubmitEd', false);
 };
-/* methods end*/
+// 获取各个状态的数量
+const getStatusCount = () => {
+    Core.Api.SUPPLY.countStatus().then(res => {
+        STATUS_LIST.forEach(item => {
+            let obj = res.list.find(v => v.status === item.key);
+            item.value = obj ? obj.count : 0;
+        });
+        let all_total = STATUS_LIST.reduce((total, item) => {
+            return total + item.value;
+        }, 0);
+        STATUS_LIST[0].value = all_total;
+    });
+};
+const tabCellSave = ({ record, index, column }) => {
+    console.log('record', record);
+    console.log('index', index);
+    console.log('column', column);
+};
+
+onMounted(() => {
+    getStatusCount();
+});
 </script>
 
 <style lang="less" scoped>

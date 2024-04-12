@@ -26,55 +26,10 @@
                     hideOnSinglePage: false,
                     pageSizeOptions: ['10', '20', '30', '40'],
                 }"
-                @change="({ current, pageSize }) => onPagenationChange({ current, size: pageSize })"
+                @change="({ current, pageSize }) => onPagenationChange(current, pageSize)"
             >
             </a-table>
         </div>
-        <!-- 导出结果展示 -->
-        <a-modal
-            v-model:visible="importVisible"
-            :title="$t('i.import_data')"
-            :width="540"
-            centered
-            class="import-modal"
-        >
-            <div class="modal-content">
-                <ExportResult :data="importResultData" :showInvalidNum="false" :showList="false" />
-            </div>
-            <template #footer>
-                <div class="btns">
-                    <a-button @click="handleImportClose">{{ $t('def.cancel') }}</a-button>
-                    <a-button type="primary" @click="handleImportConfirm">{{ $t('def.sure') }}</a-button>
-                </div>
-            </template>
-        </a-modal>
-        <!-- 修改备注 -->
-        <a-modal
-            v-model:visible="changeRemarkVisible"
-            :title="$t('supply-chain.remark')"
-            :width="540"
-            centered
-            class="import-modal"
-        >
-            <div class="modal-content">
-                <a-form ref="formRef" :model="formState" layout="vertical" name="form_in_modal">
-                    <a-form-item name="description" label="">
-                        <a-textarea
-                            v-model:value="formState.remark"
-                            show-count
-                            :maxlength="50"
-                            :autoSize="{ minRows: 3, maxRows: 6 }"
-                        />
-                    </a-form-item>
-                </a-form>
-            </div>
-            <template #footer>
-                <div class="btns">
-                    <a-button @click="handleRemarkClose">{{ $t('def.cancel') }}</a-button>
-                    <a-button type="primary" @click="updateRemarkFetch">{{ $t('def.sure') }}</a-button>
-                </div>
-            </template>
-        </a-modal>
     </div>
 </template>
 
@@ -82,8 +37,6 @@
 import { onMounted, ref, getCurrentInstance, computed, nextTick, reactive } from 'vue';
 import Core from '@/core';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
-import ExportResult from '@/components/common/ExportResult.vue';
-import MySvgIcon from '@/components/MySvgIcon/index.vue';
 import { useTable } from '@/hooks/useTable';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -96,17 +49,23 @@ const router = useRouter();
 const $t = useI18n().t;
 const { proxy } = getCurrentInstance();
 
-const importVisible = ref(false);
-const changeRemarkVisible = ref(false);
-const importResultData = reactive({
-    totalCode: 0,
-    successCode: 0,
-    errorCode: 0,
+const request = Core.Api.SUPPLY.adminList;
+const { loading, tableData, pagination, search, onPagenationChange, refreshTable, searchParam } = useTable({
+    request,
+    initParam: {
+        stage: 30, //淘汰
+    },
+    dataCallBack: res => {
+        let list = _.cloneDeep(res.list);
+        // item 和 item.form字段合并
+        list.forEach(item => {
+            item = Object.assign(item, item.form);
+        });
+        console.log('list', list);
+        return list;
+    },
 });
-const editId = ref(null);
-const formState = reactive({
-    remark: '',
-});
+
 const tableColumns = computed(() => {
     let columns = [
         {
@@ -118,20 +77,104 @@ const tableColumns = computed(() => {
                 return (pagination.value.current - 1) * pagination.value.size + index + 1;
             },
         },
+        {
+            title: $t('supply-chain.supplier_full_name'),
+            dataIndex: 'company_name',
+            key: 'company_name',
+            customRender: ({ text, record, index, column }) => {
+                return text || '-';
+            },
+        },
         // 采购品类
         {
             title: $t('supply-chain.procurement_category'),
             dataIndex: 'purchase_category',
-            key: 'item',
+            key: 'purchase_category',
+            customRender: ({ text, record, index, column }) => {
+                return text || '-';
+            },
         },
-        { title: $t('supply-chain.main_supply'), dataIndex: 'supply_main', key: 'item' },
-        { title: $t('supply-chain.secondary_supply'), dataIndex: 'supply_secondary', key: 'item' },
-        { title: $t('supply-chain.other_items'), dataIndex: 'supply_other', key: 'item' },
-        { title: $t('common.vehicle_model'), dataIndex: 'vehicle_model', key: 'item' },
-        { title: $t('supply-chain.introduction_date'), dataIndex: 'register_time', key: 'time' },
-        { title: $t('supply-chain.province'), dataIndex: 'province', key: 'item' },
-        { title: $t('supply-chain.city'), dataIndex: 'city', key: 'item' },
-        { title: $t('supply-chain.detailed_address'), dataIndex: 'address', key: 'item' },
+        {
+            title: $t('supply-chain.main_supply'),
+            dataIndex: 'supply_main',
+            key: 'supply_main',
+            customRender: ({ text, record, index, column }) => {
+                return text || '-';
+            },
+        },
+        {
+            title: $t('supply-chain.secondary_supply'),
+            dataIndex: 'supply_secondary',
+            key: 'supply_secondary',
+            customRender: ({ text, record, index, column }) => {
+                return text || '-';
+            },
+        },
+        {
+            title: $t('supply-chain.other_items'),
+            dataIndex: 'supply_other',
+            key: 'supply_other',
+            customRender: ({ text, record, index, column }) => {
+                return text || '-';
+            },
+        },
+        // cooperative_manufacturers 合作厂商
+        {
+            title: $t('supply-chain.cooperative_manufacturers'),
+            dataIndex: 'cooperative_manufacturers',
+            key: 'cooperative_manufacturers',
+            customRender: ({ text, record, index, column }) => {
+                return text || '-';
+            },
+        },
+        {
+            title: $t('common.vehicle_model'),
+            dataIndex: 'vehicle_model',
+            key: 'vehicle_model',
+            customRender: ({ text, record, index, column }) => {
+                return text || '-';
+            },
+        },
+        {
+            title: $t('supply-chain.introduction_date'),
+            dataIndex: 'create_time',
+            key: 'create_time',
+            customRender: ({ text, record, index, column }) => {
+                return Core.Util.timeFilter(record.create_time) || '-';
+            },
+        },
+        {
+            title: $t('supply-chain.province'),
+            dataIndex: 'province',
+            key: 'province',
+            customRender: ({ text, record, index, column }) => {
+                return text || '-';
+            },
+        },
+        {
+            title: $t('supply-chain.city'),
+            dataIndex: 'city',
+            key: 'city',
+            customRender: ({ text, record, index, column }) => {
+                return text || '-';
+            },
+        },
+        {
+            title: $t('supply-chain.detailed_address'),
+            dataIndex: 'address',
+            key: 'address',
+            customRender: ({ text, record, index, column }) => {
+                return text || '-';
+            },
+        },
+        {
+            title: $t('supply-chain.eliminate_reason'),
+            dataIndex: 'remark',
+            key: 'remark',
+            customRender: ({ text, record, index, column }) => {
+                return text || '-';
+            },
+        },
     ];
     return columns;
 });
@@ -139,61 +182,10 @@ const searchList = ref([
     {
         type: 'input',
         value: '',
-        searchParmas: 'name',
+        searchParmas: 'company_name',
         key: 'supply-chain.supplier_full_name',
     },
 ]);
-onMounted(() => {});
-
-function request() {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve({
-                list: [
-                    {
-                        id: 1,
-                        no: '1',
-                        code: 'code1',
-                        name: 'name1',
-                        short_name: 'short_name1',
-                        purchase_category: ['purchase_category1'],
-                        supply_main: 'supply_main1',
-                        supply_secondary: 'supply_secondary1',
-                        supply_other: 'supply_other1',
-                        vehicle_model: 'vehicle_model1',
-                        manager: 'manager1',
-                        register_time: '2021-01-01',
-                        register_type: 1,
-                        remark: 'remark1',
-                        province: 'province1',
-                        city: 'city1',
-                        address: 'address1',
-                    },
-                ],
-                count: 1,
-            });
-        }, 1000);
-    });
-}
-const updateRemark = Core.Api.Supplier.updateRemark;
-const { loading, tableData, pagination, search, onPagenationChange, refreshTable, searchParam } = useTable({
-    request,
-    initParam: {
-        status: 10,
-    },
-});
-const updateRemarkFetch = () => {
-    const params = {
-        id: editId.value,
-        remark: formState.remark,
-    };
-    updateRemark({ ...params }).then(res => {
-        proxy.$message.success(proxy.$t('pop_up.modify'));
-        onSearch();
-        handleRemarkClose();
-    });
-};
-/* Fetch end*/
 
 /* methods start*/
 const onSearch = data => {
@@ -202,15 +194,6 @@ const onSearch = data => {
 };
 const onReset = () => {
     refreshTable();
-};
-const handleImportClose = () => {
-    importVisible.value = false;
-};
-const handleImportConfirm = () => {
-    importVisible.value = false;
-};
-const handleRemarkClose = () => {
-    changeRemarkVisible.value = false;
 };
 
 /* methods end*/

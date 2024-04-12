@@ -1044,6 +1044,7 @@ const apiList = {
         adminDetail: ['PostJson', 'supplier-application/detail'], // 平台方供应商管理详情
         adminAdd: ['PostJson', 'supplier-application/save'], // 平台方供应商管理添加
         add: ['PostJson', 'supplier-application/save'], // 供应商前缀 /supplier
+        countStatus: ['PostJson', 'supplier-application/count-status'], // 供应商前缀 /supplier
     },
     SALES_STRATEGY: {
         list: ['PostJson', 'sales-strategy/list'],

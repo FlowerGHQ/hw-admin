@@ -376,8 +376,65 @@ export default {
         delete_classification: '删除分类',
         // delete_classification_warning
         delete_classification_warning: '删除分类后，所有被引用的内容都会被清除，请确认操作',
+        // 新增原因成功
+        add_reason_successfully: '新增原因成功',
+        // edit_reason_successfully
+        edit_reason_successfully: '编辑原因成功',
+        // delete_confirm
+        delete_confirm: '删除确认?',
+        // cooperative_manufacturers
+        cooperative_manufacturers: '合作厂商',
+        // 淘汰原因
+        eliminate_reason: '淘汰原因',
+        pending_audit: '待审核',
+        not_deal: '暂不处理',
+        initial_elimination: '初审淘汰',
+        pending_review: '待复审',
+        consideration_exempt: '考虑免审',
+        review_elimination: '复审淘汰',
+        pending_final_review: '待终审',
+        final_review_elimination: '终审淘汰',
+        special_approval: '特批合格',
+        qualified_elimination: '合格淘汰',
+        exempt_pass: '免审通过',
+        registered_supplier: '注册供应商',
+        // 潜在供应商
+        potential_supplier: '潜在供应商',
+        eliminated_supplier: '淘汰供应商',
+        qualified_supplier: '合格供应商',
+        qualified_record: '合格记录',
     },
     en: {
+        qualified_record: 'Qualified Record',
+
+        registered_supplier: 'Registered Supplier',
+        // 潜在供应商
+        potential_supplier: 'Potential Supplier',
+        // 淘汰供应商
+        eliminated_supplier: 'Eliminated Supplier',
+        // 供应商阶段
+        qualified_supplier: 'Qualified Supplier',
+        pending_audit: 'Pending Audit',
+        not_deal: 'Not Deal',
+        initial_elimination: 'Initial Elimination',
+        pending_review: 'Pending Review',
+        consideration_exempt: 'Consideration Exempt',
+        review_elimination: 'Review Elimination',
+        pending_final_review: 'Pending Final Review',
+        final_review_elimination: 'Final Review Elimination',
+        special_approval: 'Special Approval',
+        qualified_elimination: 'Qualified Elimination',
+        exempt_pass: 'Exempt Pass',
+
+        eliminate_reason: 'Eliminate Reason',
+        // cooperative_manufacturers
+        cooperative_manufacturers: 'Cooperative Manufacturers',
+        // delete_confirm
+        delete_confirm: 'Delete Confirm?',
+        // edit_reason_successfully
+        edit_reason_successfully: 'Edit Reason Successfully',
+        // 新增原因成功
+        add_reason_successfully: 'Add Reason Successfully',
         // delete_classification
         delete_classification: 'Delete Classification',
         // delete_classification_warning

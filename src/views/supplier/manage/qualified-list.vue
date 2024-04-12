@@ -294,8 +294,6 @@ const searchList = ref([
 onMounted(() => {
     getSupplyChainList();
 });
-/* Fetch start*/
-// const request = Core.Api.Supplier.list;
 
 function request() {
     return new Promise((resolve, reject) => {

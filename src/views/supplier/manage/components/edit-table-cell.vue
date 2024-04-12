@@ -5,7 +5,7 @@
             <CheckOutlined class="editable-cell-icon-check" @click="tabCellSave()" />
         </div>
         <div class="editable-cell-text-wrapper" v-else>
-            {{ text || ' ' }}
+            {{ text || '-' }}
             <EditOutlined class="editable-cell-icon" @click="tableEdit()" />
         </div>
     </div>
@@ -18,7 +18,7 @@
             </span>
         </div>
         <div class="editable-cell-text-wrapper" v-else>
-            {{ filterOption(text) || ' ' }}
+            {{ filterOption(text) || '-' }}
             <span @click="tableEdit()" class="editable-cell-icon"> {{ $t('supply-chain.change') }}</span>
         </div>
     </div>

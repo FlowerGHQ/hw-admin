@@ -244,6 +244,20 @@ export default {
             });
             this.$emit('search', resultParams);
         },
+        // 获取数据
+        getSearchFrom() {
+            const resultParams = {};
+            this.options.forEach(el => {
+                resultParams[el.searchParmas] = el.value;
+                // 时间的处理
+                if (el.type === 'time-range') {
+                    resultParams[el.searchParmas[0]] = el?.value[0] ?? undefined;
+                    resultParams[el.searchParmas[1]] = el?.value[1] ?? undefined;
+                    delete resultParams[el.searchParmas];
+                }
+            });
+            return resultParams;
+        },
         // 重置
         handleSearchReset() {
             this.options.forEach(el => {

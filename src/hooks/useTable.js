@@ -64,6 +64,7 @@ export function useTable({
             const res = await request(state.totalParam);
             state.tableData = res.list;
             state.responseData = res;
+            console.log('res', res);
             try {
                 dataCallBack && (state.tableData = dataCallBack(res));
             } catch (error) {

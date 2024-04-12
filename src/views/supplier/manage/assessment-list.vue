@@ -26,14 +26,8 @@
                     hideOnSinglePage: false,
                     pageSizeOptions: ['10', '20', '30', '40'],
                 }"
-                @change="channelPagination"
+                @change="({ current, pageSize }) => onPagenationChange(current, pageSize)"
             >
-                <template #bodyCell="{ column, text, record, index }">
-                    <!-- number -->
-                    <template v-if="column.key === 'number'">
-                        {{ (pagination.current - 1) * pagination.size + index + 1 }}
-                    </template>
-                </template>
             </a-table>
         </div>
     </div>
@@ -46,9 +40,21 @@ import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import { useTable } from '@/hooks/useTable';
 import { useI18n } from 'vue-i18n';
 import _ from 'lodash';
-const request = Core.Api.Supplier.list;
+const request = Core.Api.SUPPLY.adminList;
 const { loading, tableData, pagination, search, onPagenationChange, refreshTable, searchParam } = useTable({
     request,
+    initParam: {
+        stage: 20, //淘汰
+        status: 70,
+    },
+    dataCallBack: res => {
+        let list = _.cloneDeep(res.list);
+        // item 和 item.form字段合并
+        list.forEach(item => {
+            item = Object.assign(item, item.form);
+        });
+        return list;
+    },
 });
 
 const $t = useI18n().t;
@@ -58,13 +64,27 @@ const tableColumns = computed(() => {
             title: $t('supply-chain.serial_number'),
             dataIndex: 'number',
             key: 'number',
+            customRender: ({ text, record, index, column }) => {
+                // 当前页码-1 * 每页条数 + 索引 + 1
+                return (pagination.value.current - 1) * pagination.value.size + index + 1;
+            },
         },
         {
             title: $t('supply-chain.supplier_full_name'),
-            dataIndex: 'name',
-            key: 'item',
+            dataIndex: 'company_name',
+            key: 'company_name',
+            customRender: ({ text, record, index, column }) => {
+                return text || '-';
+            },
         },
-        { title: $t('supply-chain.supplier_type'), dataIndex: 'type', key: 'type' },
+        {
+            title: $t('supply-chain.supplier_type'),
+            dataIndex: 'purchase_category',
+            key: 'purchase_category',
+            customRender: ({ text, record, index, column }) => {
+                return text || '-';
+            },
+        },
     ];
     return columns;
 });
@@ -72,7 +92,7 @@ const searchList = ref([
     {
         type: 'input',
         value: '',
-        searchParmas: 'name',
+        searchParmas: 'company_name',
         key: 'supply-chain.supplier_full_name',
     },
 ]);
@@ -89,9 +109,6 @@ const onSearch = data => {
 };
 const onReset = () => {
     refreshTable();
-};
-const channelPagination = ({ current, pageSize }) => {
-    onPagenationChange(current, pageSize);
 };
 
 /* methods end*/
