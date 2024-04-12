@@ -155,7 +155,7 @@ const routes = [
             title: '分销管理',
             title_en: 'Distribution',
             icon: 'i_s_agent',
-            auth: ['sales.distribution', 'aftermarket.distribution'],
+            auth: ['sales.distribution'],
         },
         children: [
             {
@@ -166,7 +166,7 @@ const routes = [
                     title: '订单列表',
                     title_en: 'Order List',
                     search_type: PURCHASE_SEARCH_TYPE.ALL,
-                    auth: ['sales.distribution.order', 'aftermarket.distribution.order'],
+                    auth: ['sales.distribution.order'],
                 },
             },
             {
@@ -177,7 +177,7 @@ const routes = [
                     title: '采购订单',
                     title_en: 'Purchase order',
                     search_type: PURCHASE_SEARCH_TYPE.SELF,
-                    auth: ['sales.distribution.purchase-order', 'aftermarket.distribution.purchase-order'],
+                    auth: ['sales.distribution.purchase-order'],
                 },
             },
             {
@@ -198,7 +198,7 @@ const routes = [
                     title: '供货订单',
                     title_en: 'Supply order',
                     search_type: PURCHASE_SEARCH_TYPE.CHILDREN,
-                    auth: ['sales.distribution.supply-material', 'aftermarket.distribution.supply-material'],
+                    auth: ['sales.distribution.supply-material'],
                 },
             },
             {
@@ -208,7 +208,7 @@ const routes = [
                 meta: {
                     title: '分销商列表',
                     title_en: 'Distributors',
-                    auth: ['sales.distribution.distributor', 'aftermarket.distribution.distributor'],
+                    auth: ['sales.distribution.distributor'],
                 },
             },
             {
@@ -229,7 +229,7 @@ const routes = [
                     title: '分销商详情',
                     parent: '/distributor/distributor-list',
                     roles: [LOGIN_TYPE.ADMIN],
-                    auth: ['sales.distribution.distribution-detail', 'aftermarket.distribution.distributor-detail'],
+                    auth: ['sales.distribution.distribution-detail'],
                 },
             },
             {
@@ -240,7 +240,7 @@ const routes = [
                     title: '分销商详情',
                     title_en: 'Details',
                     roles: [LOGIN_TYPE.DISTRIBUTOR],
-                    auth: ['sales.distribution.distribution-detail', 'aftermarket.distribution.distributor-detail'],
+                    auth: ['sales.distribution.distribution-detail'],
                 },
             },
             // 资金变化明细
@@ -298,7 +298,7 @@ const routes = [
                 meta: {
                     title: '零售商列表',
                     title_en: 'List of retailers',
-                    auth: ['sales.distribution.agent', 'aftermarket.distribution.agent'],
+                    auth: ['sales.distribution.agent'],
                 },
             },
             {
@@ -337,7 +337,7 @@ const routes = [
                 meta: {
                     title: '门店列表',
                     title_en: 'Store list',
-                    auth: ['sales.distribution.store', 'aftermarket.distribution.store'],
+                    auth: ['sales.distribution.store'],
                 },
             },
             {
@@ -376,7 +376,7 @@ const routes = [
                 meta: {
                     title: '销售区域',
                     title_en: 'Sales area',
-                    auth: ['sales.distribution.sale-area', 'aftermarket.distribution.sale-area'],
+                    auth: ['sales.distribution.sale-area'],
                 },
             },
             {
@@ -426,7 +426,7 @@ const routes = [
                 meta: {
                     title: '商品列表',
                     title_en: 'Product list',
-                    auth: ['sales.item.item', 'aftermarket.item.item'],
+                    auth: ['sales.item.item'],
                 },
             },
             {
@@ -466,7 +466,7 @@ const routes = [
                 meta: {
                     title: '商品分类',
                     title_en: 'Categories',
-                    auth: ['sales.item.item-category', 'aftermarket.item.item-category'],
+                    auth: ['sales.item.item-category'],
                 },
             },
             {
@@ -494,7 +494,7 @@ const routes = [
                 meta: {
                     title: 'BOM管理',
                     title_en: 'BOM Management',
-                    auth: ['sales.item.bom', 'aftermarket.item.bom'],
+                    auth: ['aftermarket.item.bom'],
                 },
             },
         ],

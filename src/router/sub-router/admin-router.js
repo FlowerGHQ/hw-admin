@@ -1085,7 +1085,7 @@ const customerManagement = {
         title: '客户管理',
         title_en: 'Customers',
         icon: 'i_s_customer',
-        auth: ['sales.customer', 'aftermarket.customer'],
+        auth: ['sales.customer'],
     },
     children: [
         {
@@ -1095,7 +1095,7 @@ const customerManagement = {
             meta: {
                 title: '客户列表',
                 title_en: 'Customer list',
-                auth: ['sales.customer.customer', 'aftermarket.customer.customer'],
+                auth: ['sales.customer.customer'],
             },
         },
         {
