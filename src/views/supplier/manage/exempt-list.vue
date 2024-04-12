@@ -28,12 +28,37 @@
                 }"
                 @change="channelPagination"
             >
+                <template #bodyCell="{ column, text, record, index }">
+                    <!-- number -->
+                    <template v-if="column.key === 'number'">
+                        {{ (pagination.current - 1) * pagination.size + index + 1 }}
+                    </template>
+                    <!-- name -->
+                    <template v-if="column.key === 'name'">
+                        <a-button type="link" @click="handleSupplierDetail(record)">{{ text }}</a-button>
+                    </template>
+                    <!-- exempt_application_form -->
+                    <template v-if="column.key === 'exempt_application_form'">
+                        <a-button type="link" @click="handleExemptApplicationForm(record)">{{
+                            $t('supply-chain.view')
+                        }}</a-button>
+                    </template>
+                    <!-- operation -->
+                    <template v-if="column.key === 'operation'">
+                        <a-button type="link" @click="handleSupplierAudit(record)">{{
+                            $t('supply-chain.audit')
+                        }}</a-button>
+                        <a-button type="link" @click="handleSupplierDetail(record)">{{
+                            $t('supply-chain.view')
+                        }}</a-button>
+                    </template>
+                </template>
             </a-table>
         </div>
     </div>
 </template>
 
-<script setup lang="jsx">
+<script setup>
 import { ref, computed } from 'vue';
 import Core from '@/core';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
@@ -52,53 +77,22 @@ const tableColumns = computed(() => {
             title: $t('supply-chain.serial_number'),
             dataIndex: 'number',
             key: 'number',
-            customRender: ({ text, record, index, column }) => {
-                // 当前页码-1 * 每页条数 + 索引 + 1
-                return (pagination.value.current - 1) * pagination.value.size + index + 1;
-            },
         },
         {
             title: $t('supply-chain.supplier_full_name'),
             dataIndex: 'name',
             key: 'item',
-            customRender: ({ text, record, index, column }) => {
-                return (
-                    <a-button type="link" onClick={() => handleSupplierDetail(record)}>
-                        {text}
-                    </a-button>
-                );
-            },
         },
         { title: $t('supply-chain.supplier_type'), dataIndex: 'type', key: 'type' },
         {
             title: $t('supply-chain.exempt_application_form'),
             dataIndex: 'exempt_application_form',
             key: 'exempt_application_form',
-            // cousomRender
-            customRender: ({ text, record, index, column }) => {
-                return (
-                    <a-button type="link" onClick={() => handleExemptApplicationForm(record)}>
-                        {$t('supply-chain.view')}
-                    </a-button>
-                );
-            },
         },
         {
             title: $t('def.operate'),
             dataIndex: 'operation',
             key: 'operation',
-            customRender: ({ text, record, index, column }) => {
-                return (
-                    <>
-                        <a-button type="link" onClick={() => handleSupplierAudit(record)}>
-                            {$t('supply-chain.audit')}
-                        </a-button>
-                        <a-button type="link" onClick={() => handleSupplierDetail(record)}>
-                            {$t('supply-chain.view')}
-                        </a-button>
-                    </>
-                );
-            },
         },
     ];
     return columns;
@@ -111,12 +105,6 @@ const searchList = ref([
         key: 'supply-chain.supplier_full_name',
     },
 ]);
-
-/* Fetch start*/
-
-/* Fetch end*/
-
-/* methods start*/
 
 // 审核
 const handleSupplierAudit = record => {
@@ -140,8 +128,6 @@ const onReset = () => {
 const channelPagination = ({ current, pageSize }) => {
     onPagenationChange(current, pageSize);
 };
-
-/* methods end*/
 </script>
 
 <style lang="less" scoped></style>

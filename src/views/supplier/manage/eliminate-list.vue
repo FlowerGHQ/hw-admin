@@ -78,7 +78,7 @@
     </div>
 </template>
 
-<script setup lang="jsx">
+<script setup>
 import { onMounted, ref, getCurrentInstance, computed, nextTick, reactive } from 'vue';
 import Core from '@/core';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';

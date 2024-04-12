@@ -28,12 +28,18 @@
                 }"
                 @change="channelPagination"
             >
+                <template #bodyCell="{ column, text, record, index }">
+                    <!-- number -->
+                    <template v-if="column.key === 'number'">
+                        {{ (pagination.current - 1) * pagination.size + index + 1 }}
+                    </template>
+                </template>
             </a-table>
         </div>
     </div>
 </template>
 
-<script setup lang="jsx">
+<script setup>
 import { ref, computed, reactive, withDirectives } from 'vue';
 import Core from '@/core';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
@@ -52,9 +58,6 @@ const tableColumns = computed(() => {
             title: $t('supply-chain.serial_number'),
             dataIndex: 'number',
             key: 'number',
-            customRender: ({ text, record, index, column }) => {
-                return index + 1 + (pagination.value.current - 1) * pagination.value.size;
-            },
         },
         {
             title: $t('supply-chain.supplier_full_name'),

@@ -20,12 +20,19 @@
                 :row-key="record => record.id"
                 :pagination="false"
             >
+                <template #bodyCell="{ column, text, record }">
+                    <!-- 操作 -->
+                    <template v-if="column.key === 'operation'">
+                        <a-button type="link" @click="handleEdit(record)">{{ $t('def.edit') }}</a-button>
+                        <a-button type="link" danger @click="handleDelete(record)">{{ $t('def.delete') }}</a-button>
+                    </template>
+                </template>
             </a-table>
         </div>
     </div>
 </template>
 
-<script setup lang="jsx">
+<script setup>
 import { ref, computed } from 'vue';
 import Core from '@/core';
 import { PlusOutlined } from '@ant-design/icons-vue';
@@ -69,25 +76,19 @@ const tableColumns = computed(() => {
             title: $t('def.operate'),
             dataIndex: 'operation',
             key: 'operation',
-            width: 200,
+            width: 100,
             fixed: 'right',
-            customRender: ({ text, record, index, column }) => {
-                return (
-                    // 编辑名称和删除
-                    <>
-                        <a-button type="link" size="small" onClick={() => onEdit(record)}>
-                            {$t('i.edit_name')}
-                        </a-button>
-                        <a-button type="link" size="small" danger onClick={() => onDelete(record)}>
-                            {$t('def.delete')}
-                        </a-button>
-                    </>
-                );
-            },
         },
     ];
     return columns;
 });
+
+const handleEdit = record => {
+    console.log('编辑', record);
+};
+const handleDelete = record => {
+    console.log('删除', record);
+};
 
 /* methods end*/
 </script>

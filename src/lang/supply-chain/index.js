@@ -348,8 +348,19 @@ export default {
         eliminate_supplier_list: '淘汰供应商名录',
         // 供应商免审申请
         supplier_exempt_application: '供应商免审申请',
+        // 车辆分类管理
+        vehicle_classification_management: '车辆分类管理',
+        // 新增分类
+        add_classification: '新增分类',
+        // classification_name
+        classification_name: '分类名称',
     },
     en: {
+        classification_name: 'Classification Name',
+        // 新增分类
+        add_classification: 'Add Classification',
+        // 车辆分类管理
+        vehicle_classification_management: 'Vehicle Classification Management',
         // 供应商免审申请
         supplier_exempt_application: 'Supplier Exempt Application',
         // 淘汰供应商名录
