@@ -16,7 +16,7 @@
                         }}</span>
                     </span>
                     <!-- 订单 -->
-                    <span class="header-menu" @click="changeMenu(2, '/purchase/purchase-order-self')">
+                    <span class="header-menu" @click="changeMenu(2, '/distributor/purchase-order-self')">
                         <span class="header-menu-img">
                             <a-avatar :src="getHeaderSrc('orders', 'png')" :size="18" alt="user" />
                         </span>
@@ -303,7 +303,7 @@ export default {
                         return i;
                     });
                     if (!item.children.find(i => item.redirect === `${item.path}/${i.path}`)) {
-                        item.redirect = `${item.path}/${item.children[0].path}`;
+                        item.redirect = `${item.path}/${item.children[0]?.path}`;
                     }
                 }
                 return item;

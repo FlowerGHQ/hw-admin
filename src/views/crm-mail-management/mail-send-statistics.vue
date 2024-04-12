@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('crm_b.mail_title') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('add-mail')" v-if="$auth('crm-bo.save')"
+                    <a-button type="primary" @click="routerChange('add-mail')"
                         ><i class="icon i_add" />{{ $t('crm_b.add') }}</a-button
                     >
                 </div>

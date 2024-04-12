@@ -1559,7 +1559,7 @@ export default {
                     break;
                 case 'orderList':
                     routeUrl = this.$router.resolve({
-                        path: '/purchase/purchase-order-self',
+                        path: '/distributor/purchase-order-self',
                     });
                     window.open(routeUrl.href, '_blank');
                     break;

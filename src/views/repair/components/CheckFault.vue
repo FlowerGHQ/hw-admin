@@ -37,7 +37,6 @@
                                 btn-type="primary"
                                 :btn-text="$t('i.add')"
                                 btn-class="fault-btn"
-                                v-if="$auth('repair-order.save')"
                             />
                         </div>
                         <a-table

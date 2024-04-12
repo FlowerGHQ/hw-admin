@@ -3,16 +3,11 @@
         <div class="title-container">
             <div class="title-area">生产订单详情</div>
             <div class="btns-area">
-                <!--                <a-button type="primary" ghost @click="handleSubmit" v-if="$auth('production-order.picking')"><i class="icon i_goods"/>一键领料</a-button>-->
-                <a-button type="primary" ghost @click="handleAdd(id)" v-if="$auth('production-order.picking')"
-                    >生产整车码</a-button
-                >
-                <a-button type="primary" ghost @click="routerChange('picking')" v-if="$auth('production-order.picking')"
+                <a-button type="primary" ghost @click="handleAdd(id)">生产整车码</a-button>
+                <a-button type="primary" ghost @click="routerChange('picking')"
                     ><i class="icon i_goods" />领料</a-button
                 >
-                <a-button type="danger" ghost @click="handleCancel(id)" v-if="$auth('production-order.delete')"
-                    ><i class="icon i_close_c" />取消</a-button
-                >
+                <a-button type="danger" ghost @click="handleCancel(id)"><i class="icon i_close_c" />取消</a-button>
             </div>
         </div>
         <div class="gray-panel">

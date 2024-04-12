@@ -19,21 +19,6 @@
                                 >{{ distributor.name }}</a-select-option
                             >
                         </a-select>
-                        <!--                    <a-tree-select
-                        v-model:value="form.parent_id"
-                        show-search
-                        style="width: 100%"
-                        :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-                        placeholder="Please select"
-                        allow-clear
-                        treeDefaultExpandAll
-                        :tree-data="treeData"
-                        :placeholder="$t('def.select')"
-                    >
-                        <template #title="{ value: value, id, name }">
-                            {{name }}
-                        </template>
-                    </a-tree-select>-->
                     </div>
                 </div>
                 <div class="form-item required">
@@ -110,7 +95,7 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary" v-if="$auth('agent.save')">{{ $t('def.sure') }}</a-button>
+            <a-button @click="handleSubmit" type="primary">{{ $t('def.sure') }}</a-button>
             <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
         </div>
     </div>

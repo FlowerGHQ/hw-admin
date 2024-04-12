@@ -28,6 +28,7 @@ const app = createApp(App);
 
 app.config.globalProperties.$Util = Util;
 app.config.globalProperties.$auth = Util.auth;
+app.config.globalProperties.$authBtn = Util.authBtn;
 app.config.globalProperties.$UserAuth = Util.userAuth; // 判断登录是哪个账号
 app.config.globalProperties.$Base64 = Util.Query;
 app.config.globalProperties.$message = message;

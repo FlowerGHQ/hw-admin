@@ -3,9 +3,6 @@
         <div class="title-container">
             <div class="title-area">
                 {{ $t('crm_oi.detail') }}
-                <!-- <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>-->
-                <!--     {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}-->
-                <!-- </a-tag>-->
             </div>
             <div class="btns-area">
                 <AuditHandle
@@ -27,12 +24,8 @@
                             : false
                     "
                 >
-                    <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order-income.save')">{{
-                        $t('def.edit')
-                    }}</a-button>
-                    <a-button @click="handleDelete(detail.id)" v-if="$auth('crm-order-income.delete')">{{
-                        $t('def.delete')
-                    }}</a-button>
+                    <a-button @click="routerChange('edit', detail)">{{ $t('def.edit') }}</a-button>
+                    <a-button @click="handleDelete(detail.id)">{{ $t('def.delete') }}</a-button>
                 </span>
             </div>
         </div>
@@ -47,14 +40,15 @@
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">{{ $t('crm_oi.order') }}：</span>
                         <span class="value">
-                            <template v-if="$auth('crm-order.detail')">
+                            {{ detail.order ? detail.order.name || '-' : '-' }}
+                            <!-- <template v-if="$auth('crm-order.detail')">
                                 <a-button type="link" @click="routerChange('detail-order', detail)">
                                     {{ detail.order ? detail.order.name || '-' : '-' }}
                                 </a-button>
                             </template>
                             <template v-else>
                                 {{ detail.order ? detail.order.name || '-' : '-' }}
-                            </template>
+                            </template> -->
                         </span>
                     </a-col>
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
@@ -76,12 +70,6 @@
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">{{ $t('crm_refund.refunded') }}：</span>
                         <span class="value">{{ $Util.countFilter(detail.refunded) + '元' }}</span>
-                    </a-col>
-                    <a-col :xs="24" :sm="24" :lg="24" class="detail-item">
-                        <!-- <span v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
-                            <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order-income.save')">{{$t('def.edit')}}</a-button>
-                            <a-button @click="handleDelete(detail.id)" v-if="$auth('crm-order-income.delete')">{{$t('def.delete')}}</a-button>
-                        </span> -->
                     </a-col>
                     <a-col :xs="24" :sm="24" :lg="24" class="detail-item">
                         <span class="key">{{ $t('sl.show') }}：</span>
@@ -126,12 +114,9 @@
                                 :orderIncomeId="detail.id"
                                 ref="CrmRefundRecord"
                             >
-                                <a-button
-                                    type="primary"
-                                    @click="handleRefundShow"
-                                    v-if="$auth('crm-order-income.refund')"
-                                    >{{ $t('crm_refund.refund') }}</a-button
-                                >
+                                <a-button type="primary" @click="handleRefundShow">{{
+                                    $t('crm_refund.refund')
+                                }}</a-button>
                             </CrmRefundRecord>
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('n.attachment_list')">

@@ -44,8 +44,8 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <!--                        <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('customer.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>-->
-                            <!--                        <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('customer.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>-->
+                            <!-- <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>-->
+                            <!-- <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>-->
                         </template>
                     </template>
                 </a-table>

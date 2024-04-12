@@ -21,12 +21,42 @@ const Util = {
      */
     auth(...arr) {
         if (!arr.length) {
-            return true;
+            return false;
         }
         const rolesMap = Data.getAuthority() || {};
         return arr.some(key => {
             return rolesMap[key];
         });
+    },
+    /**
+     * 判断按钮权限
+     * @param {String,String} keys 权限的关键字
+     */
+    authBtn(...arr) {
+        if (!arr.length) {
+            return false;
+        }
+        const rolesMap = Data.getAuthority() || {};
+        let result = null;
+
+        if (rolesMap['ADMIN']) {
+            const ROUTER_TYPE_MAP = Const.SYSTEM_AUTH.ROUTER_TYPE_MAP;
+            let KEY = ROUTER_TYPE_MAP[Data.getTabPosition()?.tabPosition]?.KEY;
+            arr = arr.filter(authItem => {
+                let parts = authItem.split('.')[0];
+                return parts === 'MANAGER' || parts === 'ADMIN' || parts === KEY;
+            });
+            result = arr.some(key => {
+                return rolesMap[key];
+            });
+            // console.log("result", result);
+            return result;
+        } else {
+            result = arr.some(key => {
+                return rolesMap[key];
+            });
+            return result;
+        }
     },
     confirm(param, type = 'warning') {
         Modal.confirm({

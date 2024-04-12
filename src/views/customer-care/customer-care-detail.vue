@@ -192,13 +192,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- 按钮 v-if="editCommentAuth($auth('enquiry-ticket.edit'))" -->
+            </div>            
             <div
-                v-if="
-                    editCommentAuth($auth('enquiry-ticket.edit')) /*先判断是否有权限*/ &&
-                    Number(customerCareDetail.status) !== Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED /*已解决*/
-                "
+                v-if="Number(customerCareDetail.status) !== Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED"
                 class="detail-btn m-t-20"
             >
                 <a-button @click="onBtn('msg-edit')">

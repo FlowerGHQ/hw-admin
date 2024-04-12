@@ -27,15 +27,30 @@
                                 >
                                     <div class="radio-btn first">{{ $t('i.import_name') }}</div>
                                 </a-upload>
-                                <div class="radio-btn" @click="handleExportConfirm">{{ $t('i.export') }}</div>
+                                <div
+                                    v-if="$auth('sales.item.item.import', 'aftermarket.item.item.import')"
+                                    class="radio-btn"
+                                    @click="handleExportConfirm"
+                                >
+                                    {{ $t('i.export') }}
+                                </div>
                                 <div class="radio-btn last" @click="downTemplate">{{ $t('i.down_template') }}</div>
                             </div>
-                            <a-button class="ml-8" type="primary" @click="handleSalesAreaByIdsShow()"
-                                ><i class="icon i_edit" /> {{ $t('ar.set_sales') }}
-                            </a-button>
-                            <a-button type="primary" @click="routerChange('add')"
-                                ><i class="icon i_add" />{{ $t('i.new') }}</a-button
+                            <a-button
+                                v-if="$auth('sales.item.item.set-sale-area', 'aftermarket.item.item.set-sale-area')"
+                                class="ml-8"
+                                type="primary"
+                                @click="handleSalesAreaByIdsShow()"
                             >
+                                <i class="icon i_edit" /> {{ $t('ar.set_sales') }}
+                            </a-button>
+                            <a-button
+                                v-if="$auth('sales.item.item.save', 'aftermarket.item.item.save')"
+                                type="primary"
+                                @click="routerChange('add')"
+                            >
+                                <i class="icon i_add" />{{ $t('i.new') }}
+                            </a-button>
                         </div>
                     </div>
                     <div :style="{ width: fixedWidth }">
@@ -263,22 +278,25 @@
                             <template v-if="column.key === 'operation'">
                                 <template v-if="!record.default_item_id">
                                     <a-button
+                                        v-if="$auth('sales.item.item.edit', 'aftermarket.item.item.edit')"
                                         type="link"
-                                        v-if="$auth('item.save') /*编辑权限*/"
                                         @click="routerChange('edit', record)"
                                     >
                                         <i class="icon i_edit" />{{ $t('def.edit') }}
                                     </a-button>
                                     <a-button
+                                        v-if="$auth('sales.item.item.detail', 'aftermarket.item.item.detail')"
                                         type="link"
-                                        v-if="$auth('item.detail') /*详情权限*/"
                                         @click="routerChange('detail', record)"
                                     >
                                         <i class="icon i_detail" /> {{ $t('def.detail') }}
                                     </a-button>
                                 </template>
                                 <a-button
-                                    v-if="!record.children"
+                                    v-if="
+                                        $auth('sales.item.item.up-off-shelf', 'aftermarket.item.item.up-off-shelf') &&
+                                        !record.children
+                                    "
                                     type="link"
                                     @click="handleStatusChange(record)"
                                     :class="record.status === 0 ? 'danger' : ''"

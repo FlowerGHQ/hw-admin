@@ -5,12 +5,7 @@
         </div>
         <div class="panel-content">
             <div class="table-container">
-                <a-button
-                    type="primary"
-                    ghost
-                    @click="handleModalShow('addWalletShow')"
-                    v-if="$auth('account.save')"
-                    class="panel-btn"
+                <a-button type="primary" ghost @click="handleModalShow('addWalletShow')" class="panel-btn"
                     ><i class="icon i_add" />{{ $t('ac.new_account') }}
                 </a-button>
                 <a-table
@@ -36,10 +31,16 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button
+                                v-if="
+                                    $auth(
+                                        'sales.distribution.distributor.account-operations',
+                                        'aftermarket.distribution.distributor.account-operations',
+                                    )
+                                "
                                 type="link"
                                 @click="handleModalShow('operate', record.id)"
-                                v-if="$auth('account.operate')"
-                                ><i class="icon i_settle" />{{ $t('ac.operation') }}
+                            >
+                                <i class="icon i_settle" />{{ $t('ac.operation') }}
                             </a-button>
                             <a-button type="link" @click="routerChange('detail', record)"
                                 ><i class="icon i_detail" />{{ $t('def.detail') }}

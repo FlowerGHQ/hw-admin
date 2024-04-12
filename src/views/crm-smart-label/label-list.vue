@@ -80,18 +80,10 @@
                         <template v-if="column.key === 'category'">
                             {{ $Util.CRMLabelCategoryMapFilter(text, $i18n.locale) }}
                         </template>
-                        <!-- <template v-if="column.key === 'time'">-->
-                        <!--     {{ $Util.timeFilter(text) }}-->
-                        <!-- </template>-->
                         <template v-if="column.key === 'operation'">
-                            <a-button
-                                type="link"
-                                @click="routerChange(record.target_type, record)"
-                                v-if="$auth('customer.detail')"
+                            <a-button type="link" @click="routerChange(record.target_type, record)"
                                 ><i class="icon i_detail" />{{ $t('def.detail') }}</a-button
                             >
-                            <!-- <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('customer.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button> -->
-                            <!-- <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('customer.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button> -->
                         </template>
                     </template>
                 </a-table>
@@ -115,34 +107,6 @@
                 />
             </div>
         </div>
-        <!-- <template class="modal-container">-->
-        <!--     <a-modal v-model:visible="modalVisible" :title="editForm.id ? $t('sl.edit') : $t('sl.save')" @ok="handleModalSubmit">-->
-        <!--         <div class="modal-content">-->
-        <!--             <div class="form-item">-->
-        <!--                 <div class="key">{{ $t('sl.name') }}</div>-->
-        <!--                 <div class="value">-->
-        <!--                     <a-input v-model:value="editForm.name" :placeholder="$t('def.input')"/>-->
-        <!--                 </div>-->
-        <!--             </div>-->
-        <!--             <div class="form-item textarea">-->
-        <!--                 <div class="key">{{ $t('sl.remark') }}</div>-->
-        <!--                 <div class="value">-->
-        <!--                     <a-textarea v-model:value="editForm.remark" placeholder="请输入维修备注" :auto-size="{ minRows: 2, maxRows: 2 }"/>-->
-        <!--                 </div>-->
-        <!--             </div>-->
-        <!--             <div class="form-item" >-->
-        <!--                 <div class="key">{{ $t('sl.synchronize') }}：</div>-->
-        <!--                 <div class="value">-->
-        <!--                     <a-radio-group v-model:value="editForm.gender">-->
-        <!--                         <a-radio v-for="item in LABEl_CATEGORY_MAP" :value="item.value">-->
-        <!--                             {{lang === 'zh' ? item.zh: item.en}}-->
-        <!--                         </a-radio>-->
-        <!--                     </a-radio-group>-->
-        <!--                 </div>-->
-        <!--             </div>-->
-        <!--         </div>-->
-        <!--     </a-modal>-->
-        <!-- </template>-->
     </div>
 </template>
 

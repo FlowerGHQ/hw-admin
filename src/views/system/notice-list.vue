@@ -7,7 +7,7 @@
                     <a-button
                         type="primary"
                         @click="routerChange('edit')"
-                        v-if="$auth('ADMIN') && $auth('message.save')"
+                        v-if="$auth('ADMIN')"
                         ><i class="icon i_add" />{{ $t('no.save') }}</a-button
                     >
                 </div>
@@ -28,14 +28,6 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <!--                    <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
-                        <div class="key">消息类型:</div>
-                        <div class="value">
-                            <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择消息类型">
-                                <a-select-option v-for="(val, key) in typeMap" :key="key" :value="key">{{val.text}}</a-select-option>
-                            </a-select>
-                        </div>
-                    </a-col>-->
                 </a-row>
                 <div class="btn-area">
                     <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
@@ -54,7 +46,7 @@
                         {{ $t(title) }}
                     </template>
                     <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.key === 'detail' && $auth('message.detail')">
+                        <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title="text">
                                 <a-button type="link" @click="routerChange('detail', record)">{{
                                     text || '-'
@@ -73,18 +65,17 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('detail', record)" v-if="$auth('message.detail')"
+                            <a-button type="link" @click="routerChange('detail', record)"
                                 ><i class="icon i_detail" />{{ $t('def.detail') }}</a-button
                             >
                             <template v-if="$auth('ADMIN')">
-                                <a-button type="link" @click="routerChange('edit', record)" v-if="$auth('message.save')"
+                                <a-button type="link" @click="routerChange('edit', record)"
                                     ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                                 >
                                 <a-button
                                     type="link"
                                     @click="handleDelete(record.id)"
                                     class="danger"
-                                    v-if="$auth('message.delete')"
                                     ><i class="icon i_delete" />{{ $t('def.delete') }}</a-button
                                 >
                             </template>

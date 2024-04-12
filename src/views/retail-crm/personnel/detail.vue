@@ -293,7 +293,7 @@ onMounted(async () => {
     }
     getStoreDataFetch();
     personDetailFetch();
-    getRoleData();
+    getROLEDATA();
 });
 
 const { proxy } = getCurrentInstance();
@@ -397,7 +397,7 @@ const getStoreDataFetch = (params = {}) => {
         });
 };
 // 获取角色list数据
-const getRoleData = (params = {}) => {
+const getROLEDATA = (params = {}) => {
     Core.Api.Authority.roleList({ ...params })
         .then(res => {
             // Core.Logger.log("获取角色 success", res);

@@ -3,7 +3,7 @@
         <div class="list-container">
             <div class="title-container">
                 <div class="title-area">{{ $t('c.list') }}</div>
-                <div class="btns-area" v-if="$auth('customer.save')">
+                <div class="btns-area">
                     <a-button type="primary" @click="routerChange('edit')" v-if="!$auth('ADMIN')"
                         ><i class="icon i_add" />{{ $t('c.save') }}</a-button
                     >
@@ -98,14 +98,10 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('edit', record)" v-if="$auth('customer.save')"
+                            <a-button type="link" @click="routerChange('edit', record)"
                                 ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                             >
-                            <a-button
-                                type="link"
-                                @click="handleDelete(record.id)"
-                                class="danger"
-                                v-if="$auth('customer.delete')"
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger"
                                 ><i class="icon i_delete" /> {{ $t('def.delete') }}</a-button
                             >
                         </template>

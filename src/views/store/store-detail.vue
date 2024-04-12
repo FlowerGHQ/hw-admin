@@ -8,7 +8,7 @@
                 >
             </div>
             <div class="btns-area" v-if="$auth('ADMIN')">
-                <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('store.save')"
+                <a-button type="primary" ghost @click="routerChange('edit')"
                     ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                 >
                 <a-button
@@ -17,10 +17,10 @@
                     :danger="detail.status ? true : false"
                     @click="handleStatusChange()"
                 >
-                    <template v-if="detail.status && $auth('store.delete')"
+                    <template v-if="detail.status"
                         ><i class="icon i_forbidden" />{{ $t('def.disable') }}</template
                     >
-                    <template v-if="!detail.status && $auth('store.enable')"
+                    <template v-if="!detail.status"
                         ><i class="icon i_enable" />{{ $t('def.enable') }}</template
                     >
                 </a-button>
@@ -49,16 +49,10 @@
                             detail.distributor_name
                         }}</a-button>
                     </a-col>
-                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
+                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">{{ $t('n.agent') }}：</span>
                         <a-button type="link" @click="routerChange('agent')">{{ detail.agent_name }}</a-button>
                     </a-col>
-                    <!--                <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                    <span class="key">转单接受：</span>
-                    <a-switch v-if="$auth('ADMIN')" :checked="!!detail.flag_receive_transfer"
-                        checked-children="接受" un-checked-children="不接受" @click="handleTransferChange(detail)"/>
-                    <span v-else >{{ text ? '接受' : '不接受' }}</span>
-                </a-col>-->
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">{{ $t('n.contact') }}：</span>
                         <span class="value">{{ detail.contact_name }}</span>
@@ -75,8 +69,6 @@
                 <div class="desc-stat">
                     <a-statistic :title="$t('d.user')" :value="detail.user_count" />
                     <a-divider type="vertical" />
-                    <!--                <a-statistic title="维修工数量" :value="detail.repair_worker_count" />
-                <a-divider type="vertical" />-->
                     <a-statistic :title="$t('d.revenue')" :value="0" :precision="2" prefix="€" />
                     <a-divider type="vertical" />
                     <a-statistic :title="$t('d.orders')" :value="detail.order_count" />

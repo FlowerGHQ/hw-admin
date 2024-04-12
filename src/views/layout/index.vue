@@ -6,7 +6,8 @@
                 <div class="header-left" :class="{ collapsed: collapsed }">
                     <img src="@images/header-logo2.png" class="logo" @click="collapsed = !collapsed" alt="浩万" />
                 </div>
-                <div class="header-center" v-if="loginType === Core.Const.USER.TYPE.ADMIN">
+                <!-- tab切换 -->
+                <div v-if="$auth('ADMIN')" class="header-center">
                     <a-radio-group v-model:value="tabPosition" @change="handleRouterSwitch">
                         <a-radio-button
                             v-for="item in moduleAuthList"
@@ -18,6 +19,7 @@
                         </a-radio-button>
                     </a-radio-group>
                 </div>
+
                 <div class="header-right">
                     <a-button class="lang-switch" type="link" @click="handleLangSwitch(lang == 'zh' ? 'en' : 'zh')">
                         <i class="icon" :class="lang == 'zh' ? 'i_zh-en' : 'i_en-zh'" />
@@ -29,9 +31,9 @@
                         </a-badge>
                     </a-button>
                     <a-divider class="PC" type="vertical" />
-                    <a-tag class="PC" color="blue" style="font-size: 12px">{{
-                        USER_TYPE[loginType][$i18n.locale]
-                    }}</a-tag>
+                    <a-tag class="PC" color="blue" style="font-size: 12px">
+                        {{ USER_TYPE[loginType][$i18n.locale] }}
+                    </a-tag>
                     <a-dropdown :trigger="['click']" overlay-class-name="account-action-menu">
                         <a-button class="user-info" type="link">
                             <a-avatar class="user-avatar PC" :src="$Util.imageFilter(user.avatar, 3)" :size="30">
@@ -43,14 +45,14 @@
                         <template #overlay>
                             <a-menu style="text-align: center">
                                 <a-menu-item @click="handleEditShow">
-                                    <a-button type="link" class="menu-item-btn">{{
-                                        $t('n.password') /*修改密码*/
-                                    }}</a-button>
+                                    <a-button type="link" class="menu-item-btn">
+                                        {{ $t('n.password') /*修改密码*/ }}
+                                    </a-button>
                                 </a-menu-item>
                                 <a-menu-item @click="$router.push('/login')" v-if="user_type_list.length > 1">
-                                    <a-button type="link" class="menu-item-btn">{{
-                                        $t('mall.switch_identity') /*切换身份*/
-                                    }}</a-button>
+                                    <a-button type="link" class="menu-item-btn">
+                                        {{ $t('mall.switch_identity') /*切换身份*/ }}
+                                    </a-button>
                                 </a-menu-item>
                                 <a-menu-divider class="menu_divider" v-if="user_type_list.length > 1" />
                                 <a-menu-item @click="handleLogout">
@@ -79,12 +81,12 @@
                         :inlineIndent="8"
                     >
                         <template v-for="item of showList">
-                            <!-- 这个是只有当个导航栏 -->
+                            <!-- 这个是只有单个导航栏 -->
                             <a-menu-item v-if="item.not_sub_menu" :key="item.path" @click="handleLink(item.path)">
                                 <i class="icon" :class="item.meta.icon" />
-                                <span :class="{ 'collapsed-title': collapsed }">{{
-                                    lang == 'zh' ? item.meta.title : item.meta.title_en
-                                }}</span>
+                                <span :class="{ 'collapsed-title': collapsed }">
+                                    {{ lang == 'zh' ? item.meta.title : item.meta.title_en }}
+                                </span>
                             </a-menu-item>
                             <!-- 有二级导航栏的 -->
                             <a-sub-menu v-else :key="item.path">
@@ -94,29 +96,20 @@
                                         {{ lang == 'zh' ? item.meta.title : item.meta.title_en }}
                                     </span>
                                 </template>
-                                <template v-for="i of item.children">
-                                    <template
-                                        v-if="
-                                            $auth(...i.auth) && isExistArr(i.meta?.admin_module, tabPosition)
-                                            /*判断子children meta.admin_module admin中四大模块*/
-                                        "
-                                    >
-                                        <a-menu-item
-                                            :key="item.path + '/' + i.path"
-                                            @click="handleLink(item.path + '/' + i.path)"
-                                        >
-                                            <span>{{ lang == 'zh' ? i.meta.title : i.meta.title_en }}</span>
-                                        </a-menu-item>
-                                    </template>
-                                </template>
+                                <a-menu-item
+                                    v-for="i of item.children"
+                                    :key="item.path + '/' + i.path"
+                                    @click="handleLink(item.path + '/' + i.path)"
+                                >
+                                    <span>{{ lang == 'zh' ? i.meta.title : i.meta.title_en }}</span>
+                                </a-menu-item>
                             </a-sub-menu>
                         </template>
                     </a-menu>
                 </a-layout-sider>
                 <a-layout class="layout-main" :class="{ longer: collapsed }">
-                    <!-- <MyBreadcrumb class="layout-breadcrumb"/> 面包屑没用上-->
                     <a-layout-content class="layout-content">
-                        <router-view></router-view>
+                        <router-view :key="tabPosition"></router-view>
                     </a-layout-content>
                 </a-layout>
             </a-layout>
@@ -164,7 +157,8 @@ import { SIDER } from '../../router/routes';
 import MyBreadcrumb from './components/Breadcrumb.vue';
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
 import enUS from 'ant-design-vue/lib/locale-provider/en_US';
-const ROUTER_TYPE = Core.Const.LOGIN.ROUTER_TYPE;
+const MODULEAUTH = Core.Const.SYSTEM_AUTH.MODULEAUTH;
+const ROUTER_TYPE_MAP = Core.Const.SYSTEM_AUTH.ROUTER_TYPE_MAP;
 
 export default {
     components: {
@@ -175,11 +169,10 @@ export default {
             Core,
             zhCN,
             enUS,
-            breadcrumbList: [],
 
             loginType: Core.Data.getLoginType(),
             USER_TYPE: Core.Const.USER.TYPE_MAP,
-            ROUTER_TYPE,
+            ROUTER_TYPE_MAP,
             collapsed: false,
             openKeys: [],
             selectedKeys: [],
@@ -195,53 +188,11 @@ export default {
                 master: '',
                 org: '',
             },
-            tabPosition: 1, // 顶部的 销售 售后 生产 CRM权限
+            tabPosition: null, // { tabPosition: 1, path: '' } tab和path 顶部的 销售 售后 生产 CRM权限
             user_type_list: [],
-            authFirst: Core.Data.getAuthFirst() || [], // 判断 CRM等模块的谁在第一
-            moduleAuth: [
-                {
-                    id: 1,
-                    value: ROUTER_TYPE.SALES,
-                    img: Core.Util.Image.getImageFile('router', 'router_type_3'),
-                    t: 'n.sales',
-                },
-                {
-                    id: 2,
-                    value: ROUTER_TYPE.AFTER,
-                    img: Core.Util.Image.getImageFile('router', 'router_type_2'),
-                    t: 'n.after',
-                },
-                {
-                    id: 3,
-                    value: ROUTER_TYPE.PRODUCTION,
-                    img: Core.Util.Image.getImageFile('router', 'router_type_4'),
-                    t: 'n.production',
-                },
-                {
-                    id: 4,
-                    value: ROUTER_TYPE.SUPPLIER,
-                    img: Core.Util.Image.getImageFile('router', 'router_type_5'),
-                    t: 'n.supplier',
-                },
-                {
-                    id: 8,
-                    value: ROUTER_TYPE.WAREHOUSING,
-                    img: Core.Util.Image.getImageFile('router', 'router_type_5'),
-                    t: 'n.warehousing',
-                },
-                {
-                    id: 5,
-                    value: ROUTER_TYPE.CRM,
-                    img: Core.Util.Image.getImageFile('router', 'router_type_1'),
-                    t: 'n.crm',
-                },
-                {
-                    id: 6,
-                    value: ROUTER_TYPE.SYSTEM,
-                    img: Core.Util.Image.getImageFile('router', 'router_type_1'),
-                    t: 'n.system_management',
-                },
-            ],
+            moduleAuth: MODULEAUTH,
+            moduleAuthList: null,
+            showList: null,
         };
     },
     provide() {
@@ -250,82 +201,8 @@ export default {
         };
     },
     computed: {
-        showList() {
-            let showList;
-            let LOGIN_TYPE = Core.Const.USER.TYPE;
-            switch (this.loginType) {
-                case LOGIN_TYPE.ADMIN:
-                    showList = SIDER.ADMIN;
-                    break;
-                case LOGIN_TYPE.DISTRIBUTOR:
-                    showList = SIDER.DISTRIBUTOR;
-                    break;
-                case LOGIN_TYPE.AGENT:
-                    showList = SIDER.AGENT;
-                    break;
-                case LOGIN_TYPE.STORE:
-                    showList = SIDER.STORE;
-                    break;
-            }
-            showList.forEach(item => {
-                item.auth = item.meta ? item.meta.auth || [] : [];
-                item.not_sub_menu = item.meta ? item.meta.not_sub_menu || false : false;
-                if (item.children) {
-                    item.children = item.children.map(i => {
-                        i.auth = i.meta ? i.meta.auth || [] : [];
-                        return i;
-                    });
-                }
-            });
-
-            // 选择模块进行路由过滤ADMIN的时候的权限
-            if (this.loginType === LOGIN_TYPE.ADMIN) {
-                let newShowList = [];
-                SIDER.ADMIN.forEach(item => {
-                    if (item.type != undefined ? item.type.indexOf(this.tabPosition) != -1 : true) {
-                        newShowList.push(item);
-                    }
-                });
-
-                showList = newShowList;
-
-                // 是否只在超级管理员显示，普通平台方不展示
-                if (!Core.Data.getManager()) {
-                    let superList = Core.Util.deepCopy(showList); // 为了防止影响之前的数据
-                    let result = superList.filter(first => {
-                        let firstMeta = first.meta;
-                        if (first.children) {
-                            let children = first.children.filter(second => {
-                                let secondMeta = second.meta;
-                                return !secondMeta.super_admin_show;
-                            });
-                            first.children = children;
-                        }
-                        return !firstMeta.super_admin_show;
-                    });
-
-                    showList = result;
-                }
-            }
-
-            return showList.filter(el => this.$auth(...el.auth));
-        },
         lang() {
             return this.$store.state.lang;
-        },
-        moduleAuthList() {
-            // 纯展示的显示模块有哪些
-            const arr = [];
-            this.moduleAuth.forEach(el => {
-                const find = this.authFirst.find(item => el.value == item.tabPosition);
-                if (find) {
-                    arr.push(el);
-                }
-            });
-
-            console.log('moduleAuth', arr);
-
-            return arr;
         },
     },
     watch: {
@@ -335,39 +212,18 @@ export default {
             handler(n) {
                 console.log('输出的路由', n);
                 let meta = n.meta || {};
-                let not_sub_menu = n.matched.length > 1 ? n.matched[0].meta.not_sub_menu : n.meta.not_sub_menu;
+                let not_sub_menu = n.matched.length > 1 ? n.matched[0].meta.not_sub_menu : meta.not_sub_menu;
 
                 let path = n.path.split('/').slice(1);
-
-                if (n.meta.parent) {
-                    this.selectedKeys = [this.getPathNoQuery(n.meta.parent)];
+                console.log('path', path);
+                if (meta.parent) {
+                    this.selectedKeys = [this.getPathNoQuery(meta.parent)];
                 } else if (not_sub_menu) {
                     this.selectedKeys = [this.getPathNoQuery('/' + path[0])];
                 } else {
                     this.selectedKeys = [this.getPathNoQuery(n.fullPath)]; // 例如 '/distributor/purchase-order-list'
                 }
-
                 this.openKeys = [`/${path[0]}`];
-
-                if (!meta.hidden || (this.breadcrumbList[0] && this.breadcrumbList[0].key !== path[0])) {
-                    this.breadcrumbList = [{ text: meta.title, path: n.path, key: path[0] }];
-                } else {
-                    this.breadcrumbList.push({ text: meta.title, path: n.path, key: path[0] });
-                }
-
-                // 登录页面走过来在执行
-                if (n.query.from) {
-                    if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
-                        // 平台方执行
-                        this.returnAdminFilter(ROUTER_TYPE.SALES);
-                        this.returnAdminFilter(ROUTER_TYPE.AFTER);
-                        this.returnAdminFilter(ROUTER_TYPE.PRODUCTION);
-                        this.returnAdminFilter(ROUTER_TYPE.SUPPLIER);
-                        this.returnAdminFilter(ROUTER_TYPE.WAREHOUSING);
-                        this.returnAdminFilter(ROUTER_TYPE.CRM);
-                        this.returnAdminFilter(ROUTER_TYPE.SYSTEM);
-                    }
-                }
             },
         },
         $lang: {
@@ -387,17 +243,19 @@ export default {
     },
     created() {
         this.user_type_list = Core.Data.getUserTypeList();
+        this.handleInitRouter();
+        if (this.$auth('ADMIN')) {
+            this.moduleAuthList = this.handleModuleAuthList();
+        }
     },
     mounted() {
         this.loginType = Core.Data.getLoginType();
-        console.log(this.loginType);
         this.getUnreadCount();
         if (Core.Data.getLang() === '' || Core.Data.getLang() === null) {
             Core.Data.setLang('zh');
         }
         this.$i18n.locale = Core.Data.getLang();
         this.$store.state.lang = Core.Data.getLang();
-        this.tabPosition = Core.Data.getTabPosition() || 1;
 
         // 监听页面窗口
         window.onresize = this.handleWindowResize;
@@ -405,7 +263,107 @@ export default {
             this.collapsed = true;
         }
     },
+    unmounted() {
+        console.log('销毁');
+        this.$store.commit('ADMIN_AUTH_TAB/SETTABPOSITION', null);
+        this.$store.commit('ADMIN_AUTH_TAB/SETSHOWCLASSIFY', null);
+    },
     methods: {
+        // 将路由分类
+        handleInitRouter() {
+            let showClassify = {};
+            let routeList = [];
+            let LOGIN_TYPE = Core.Const.USER.TYPE;
+            switch (this.loginType) {
+                case LOGIN_TYPE.ADMIN:
+                    routeList = SIDER.ADMIN;
+                    break;
+                case LOGIN_TYPE.DISTRIBUTOR:
+                    routeList = SIDER.DISTRIBUTOR;
+                    break;
+                case LOGIN_TYPE.AGENT:
+                    routeList = SIDER.AGENT;
+                    break;
+                case LOGIN_TYPE.STORE:
+                    routeList = SIDER.STORE;
+                    break;
+            }
+
+            // 这里操作相当于把meta中的数据拿到外面来
+            routeList.forEach(item => {
+                item.auth = item.meta ? item.meta.auth || [] : [];
+                item.not_sub_menu = item.meta ? item.meta.not_sub_menu || false : false;
+                if (item.children) {
+                    item.children = item.children.map(i => {
+                        i.auth = i.meta ? i.meta.auth || [] : [];
+                        return i;
+                    });
+                }
+            });
+
+            // 过滤掉 路由不在 全局（authority.list）中的
+            routeList = this.handleUnAuthListFilter(Core.Util.deepCopy(routeList));
+
+            // 平台方过滤数据
+            if (this.loginType === LOGIN_TYPE.ADMIN) {
+                routeList.forEach(el => {
+                    el.auth?.forEach(authItem => {
+                        let parts = authItem.split('.')[0];
+                        if (parts !== 'MANAGER') {
+                            if (showClassify[parts]?.length > 0) {
+                                showClassify[parts].push(...this.handleAdminRouter(parts, [el]))
+                            } else {
+                                showClassify[parts] = this.handleAdminRouter(parts, [el]);
+                            }
+                        }
+                    });
+                });
+                this.$store.commit('ADMIN_AUTH_TAB/SETSHOWCLASSIFY', showClassify);
+            } else {
+                this.showList = routeList;
+                this.$store.commit('ADMIN_AUTH_TAB/SETSHOWCLASSIFY', routeList);
+            }
+        },
+        // 模块切换
+        handleGetModule() {
+            let showClassify = this.$store.state.ADMIN_AUTH_TAB.SHOWCLASSIFY;
+            let KEY = ROUTER_TYPE_MAP[this.tabPosition]?.KEY;
+            if (KEY) {
+                this.showList = showClassify[KEY];
+            }
+        },
+        handleModuleAuthList() {
+            const arr = [];
+            this.moduleAuth.forEach(el => {
+                // 根据权限判断顶部是否存在
+                if (this.$auth(el.key) || (el.ismanager && this.$auth('MANAGER'))) {
+                    arr.push(el);
+                }
+            });
+
+            // 判断本地是否存在tabValue不存在赋值
+            if (!this.$store.state.ADMIN_AUTH_TAB.TABPOSITION) {
+                this.tabPosition = arr[0].value;
+                this.handleGetModule();
+
+                console.log('第一次进入跳转', this.showList);
+
+                try {
+                    this.$router.replace({ path: this.showList[0]?.path });
+                    this.$store.commit('ADMIN_AUTH_TAB/SETTABPOSITION', {
+                        tabPosition: this.tabPosition,
+                        path: this.showList[0]?.path,
+                    });
+                } catch (error) {
+                    console.log('error', error);
+                }
+            } else {
+                this.tabPosition = this.$store.state.ADMIN_AUTH_TAB.TABPOSITION;
+                this.handleGetModule();
+            }
+
+            return arr;
+        },
         routerChange(type) {
             let routeUrl = '';
             switch (type) {
@@ -447,8 +405,8 @@ export default {
         },
         handleLink(path) {
             this.$router.push(path);
+            this.$store.commit('ADMIN_AUTH_TAB/SETTABPOSITION', { tabPosition: this.tabPosition, path: path });
         },
-
         handleLogout() {
             Core.Api.Common.logout().then(() => {
                 Core.Data.clearSpecificItem();
@@ -459,7 +417,6 @@ export default {
                 }
             });
         },
-
         handleEditShow() {
             this.passShow = true;
         },
@@ -499,7 +456,6 @@ export default {
                     console.log('handleSubmit err:', err);
                 });
         },
-
         // 中英文切换
         handleLangSwitch(lang) {
             console.log('handleLangSwitch');
@@ -507,74 +463,18 @@ export default {
             this.$i18n.locale = this.$store.state.lang;
             console.log('this.$i18n.locale', this.$i18n.locale);
         },
+
         // 切换顶部的 销售 售后 生产 CRM权限操作
-        handleRouterSwitch() {
-            if (Core.Data.getTabPosition() === this.tabPosition) {
+        handleRouterSwitch(e) {
+            this.handleGetModule();
+            if (this.$store.state.ADMIN_AUTH_TAB.TABPOSITION === this.tabPosition) {
                 return;
             }
-            Core.Data.setTabPosition(this.tabPosition);
-
-            // console.log('获取路由列表第一个的跳转', this.showList[0]?.path);
-            switch (this.tabPosition) {
-                case this.ROUTER_TYPE.SALES:
-                    this.$router.replace({ path: this.showList[0]?.path });
-                    break;
-                case this.ROUTER_TYPE.AFTER:
-                    this.$router.replace({ path: this.showList[0]?.path });
-                    break;
-                case this.ROUTER_TYPE.PRODUCTION:
-                    this.$router.replace({ path: this.showList[0]?.path });
-                    break;
-                case this.ROUTER_TYPE.CRM:
-                    this.$router.replace({ path: this.showList[0]?.path });
-                    break;
-                case this.ROUTER_TYPE.SUPPLIER:
-                    this.$router.replace({ path: this.showList[0]?.path });
-                    break;
-                case this.ROUTER_TYPE.WAREHOUSING:
-                    this.$router.replace({ path: this.showList[0]?.path });
-                    break;
-                case this.ROUTER_TYPE.SYSTEM:
-                    console.log(this.showList);
-                    this.$router.replace({ path: this.showList[0]?.path });
-                    break;
-                default:
-                    break;
-            }
-        },
-        // 判断顶部的 销售/售后/生产/CRM/供应链 路口显示(根据底下是否有路由)
-        returnAdminFilter(tabPosition, data = SIDER.ADMIN) {
-            let result = undefined;
-
-            result = data.find(el => {
-                if (el.type?.includes(tabPosition)) {
-                    if (el.meta?.auth) {
-                        return this.$auth(...el.meta?.auth);
-                    } else {
-                        return true;
-                    }
-                }
+            this.$router.replace({ path: this.showList[0]?.path });
+            this.$store.commit('ADMIN_AUTH_TAB/SETTABPOSITION', {
+                tabPosition: this.tabPosition,
+                path: this.showList[0]?.path,
             });
-
-            if (result) {
-                this.authFirst.push({ tabPosition, path: result.path });
-                // 对象去重
-                this.authFirst = Array.from(
-                    this.authFirst.reduce((map, item) => map.set(item.tabPosition, item), new Map()).values(),
-                ).sort((a, b) => a.tabPosition - b.tabPosition);
-
-                console.log('returnAdminFilter', this.authFirst);
-                this.tabPosition = this.authFirst[0].tabPosition;
-                Core.Data.setTabPosition(this.authFirst[0].tabPosition);
-                Core.Data.setAuthFirst(this.authFirst);
-
-                if (this.authFirst[0].path) {
-                    this.$router.replace({ path: this.authFirst[0]?.path });
-                }
-            }
-
-            // console.log("路由数据", result);
-            return result;
         },
 
         // 监听窗口变化
@@ -588,7 +488,7 @@ export default {
         setIndex(tabPosition, selectedKeys) {
             this.tabPosition = tabPosition;
             this.selectedKeys = selectedKeys;
-            Core.Data.setTabPosition(this.tabPosition);
+            this.$store.commit('ADMIN_AUTH_TAB/SETTABPOSITION', { tabPosition: this.tabPosition, path: selectedKeys });
         },
         // 获取无参数路径
         getPathNoQuery(path) {
@@ -601,6 +501,46 @@ export default {
             const Arr = arr || [];
             const result = Arr.includes(value);
             return result; // true为显示 false 为不显示
+        },
+
+        // adminRouter过滤
+        handleAdminRouter(KEY, LIST) {
+            let routeList = Core.Util.deepCopy(LIST);
+            let newShowList = [];
+
+            const adminTemplateFilter = list => {
+                let result = [];
+                result = list.filter(el => {
+                    let someResult = el.auth?.some((authItem, index) => {
+                        let parts = authItem.split('.')[0];
+                        // 根据模块过滤掉 和 管理员的权限
+                        return (
+                            (parts === KEY && this.$auth(authItem)) || (authItem === 'MANAGER' && this.$auth('MANAGER'))
+                        );
+                    });
+                    if (el.children?.length) {
+                        el.children = adminTemplateFilter(el.children);
+                    }
+                    return someResult;
+                });
+                return result;
+            };
+            // 防止影响ADMIN数据
+            newShowList = adminTemplateFilter(routeList);
+
+            return newShowList;
+        },
+
+        // 过滤掉 路由不在 全局（authority.list）中的
+        handleUnAuthListFilter(list) {
+            let result = [];
+            result = list.filter(el => {
+                if (el.children?.length) {
+                    el.children = this.handleUnAuthListFilter(el.children);
+                }
+                return this.$auth(...el.auth);
+            });
+            return result;
         },
     },
 };

@@ -7,7 +7,7 @@
                     <a-button
                         type="primary"
                         @click="routerChange('edit')"
-                        v-if="!$auth('ADMIN') && $auth('repair-order.save')"
+                        v-if="!$auth('ADMIN')"
                         ><i class="icon i_add" />{{ $t('r.repair_create') }}</a-button
                     >
                 </div>
@@ -64,7 +64,7 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
+                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
                         <div class="key">{{ $t('n.agent') }}:</div>
                         <div class="value">
                             <a-select
@@ -88,8 +88,7 @@
                         :sm="24"
                         :xl="8"
                         :xxl="6"
-                        class="search-item"
-                        v-if="$auth('ADMIN', 'DISTRIBUTOR', 'AGENT')"
+                        class="search-item"                        
                     >
                         <div class="key">{{ $t('n.store') }}:</div>
                         <div class="value">
@@ -120,7 +119,7 @@
                 </div>
             </div>
             <div class="operate-container">
-                <a-button type="primary" @click="handleExportConfirm" v-if="$auth('repair-order.export')"
+                <a-button type="primary" @click="handleExportConfirm"
                     ><i class="icon i_download" />{{ $t('def.export') }}</a-button
                 >
             </div>
@@ -134,7 +133,7 @@
                     @change="handleTableChange"
                 >
                     <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.key === 'detail' && $auth('repair-order.detail')">
+                        <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title="text">
                                 <a-button type="link" @click="routerChange('detail', record)">{{
                                     text || '-'
@@ -192,35 +191,17 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'audit'">
-                            <!-- <a-button
-                                type="link"
-                                @click="handleModalShow(record.id, 'audit')"
-                                v-if="
-                                    (record.status == STATUS.SETTLEMENT ||
-                                        record.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS ||
-                                        record.status == STATUS.SETTLEMENT_DISTRIBUTOR) &&
-                                    record.service_type == 1 &&
-                                    $auth('repair-order.audit')
-                                "
-                                ><i class="icon i_audit" />{{ $t('n.audit') }}</a-button
-                            > -->
                             -
                         </template>
                         <template v-if="column.key === 'redit'">
                             <a-button
                                 type="link"
                                 @click="routerChange('edit', record)"
-                                v-if="record.status == STATUS.AUDIT_FAIL && $auth('repair-order.save')"
+                                v-if="record.status == STATUS.AUDIT_FAIL"
                                 ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                             >
                         </template>
                         <template v-if="column.key === 'invoice'">
-                            <!-- <a-button
-                                type="link"
-                                @click="handleModalShow(record.id, 'audit')"
-                                v-if="record.status == STATUS.DISTRIBUTOR_WAREHOUSE && $auth('repair-order.audit')"
-                                ><i class="icon i_audit" />{{ $t('n.audit') }}</a-button
-                            > -->
                             -
                         </template>
                         <template v-if="column.key === 'fault'">
@@ -230,8 +211,7 @@
                                 v-if="
                                     (record.status == STATUS.FAULT_ENTITY_AUDIT ||
                                         record.status == STATUS.AUDIT_SUCCESS) &&
-                                    record.service_type == 1 &&
-                                    $auth('repair-order.save-to-invoice')
+                                    record.service_type == 1
                                 "
                                 ><i class="icon i_s_warehouse" />{{ $t('n.storage') }}</a-button
                             >
@@ -484,7 +464,7 @@ export default {
                 { title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time' },
                 // { title: '完成时间', dataIndex: 'finish_time', key: 'time' },
             ];
-            if (this.operMode === 'audit' && this.$auth('ADMIN', 'DISTRIBUTOR')) {
+            if (this.operMode === 'audit') {
                 columns.push({ title: this.$t('def.operate'), key: 'audit', fixed: 'right' });
             }
             if (this.operMode === 'redit' && !this.$auth('ADMIN')) {
@@ -493,7 +473,7 @@ export default {
             if (this.operMode === 'invoice' && this.$auth('ADMIN')) {
                 columns.push({ title: this.$t('def.operate'), key: 'invoice', fixed: 'right' });
             }
-            if (this.operMode === 'fault' && this.$auth('ADMIN', 'DISTRIBUTOR')) {
+            if (this.operMode === 'fault') {
                 columns.push({ title: this.$t('def.operate'), key: 'fault', fixed: 'right' });
             }
             return columns;

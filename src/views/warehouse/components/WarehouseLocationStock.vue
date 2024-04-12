@@ -55,26 +55,7 @@
                     </div>
                 </div>
                 <div class="btns-area">
-                    <!--                        <a-upload name="file" class="file-uploader"-->
-                    <!--                                  :file-list="upload.fileList" :action="upload.action"-->
-                    <!--                                  :show-upload-list='false'-->
-                    <!--                                  :headers="upload.headers" :data='upload.data'-->
-                    <!--                                  accept=".xlsx,.xls"-->
-                    <!--                                  @change="handleFileUpload">-->
-                    <!--                            <a-button type="primary" ghost class="panel-btn" style="margin-right: 7px">-->
-                    <!--                                <i class="icon i_add"/> {{$t('i.import')}}-->
-                    <!--                            </a-button>-->
-                    <!--                        </a-upload>-->
 
-                    <!--                        <a-button type="primary" ghost @click="handleLocation()" v-if="$auth('warehouse.save')" class="panel-btn">-->
-                    <!--                            <i class="icon i_add"/>{{ $t('wa.add_location') }}-->
-                    <!--                        </a-button>-->
-                    <!--                        <a-button type="primary" ghost @click="handleMaterial()" v-if="$auth('warehouse.save')" class="panel-btn">-->
-                    <!--                            <i class="icon i_add"/>{{ $t('wa.allocated_material') }}-->
-                    <!--                        </a-button>-->
-                    <!--                        <a-button type="primary" ghost @click="handleAdjustMaterial()" v-if="$auth('warehouse.save')" class="panel-btn">-->
-                    <!--                            <i class="icon i_add"/>{{ $t('wa.adjust') }}-->
-                    <!--                        </a-button>-->
                 </div>
 
                 <a-table
@@ -94,18 +75,15 @@
                             </span>
                             <span v-if="record.target_type === ITEM_TYPE.COMPONENT">
                                 {{ record.material ? record.material.code || '-' : '-' }}
-                            </span>
-                            <!--                            </a-button>-->
+                            </span>                            
                         </template>
-                        <template v-if="column.key === 'target_name'">
-                            <!--                            <a-button type="link" @click="routerChange('detail', record)">-->
+                        <template v-if="column.key === 'target_name'">                            
                             <span v-if="record.target_type === ITEM_TYPE.PRODUCT">
                                 {{ record.item ? record.item.name || '-' : '-' }}
                             </span>
                             <span v-if="record.target_type === ITEM_TYPE.COMPONENT">
                                 {{ record.material ? record.material.name || '-' : '-' }}
-                            </span>
-                            <!--                            </a-button>-->
+                            </span>                            
                         </template>
                         <template v-if="column.key === 'uid'">
                             {{ record.warehouse_location.uid || '-' }}
@@ -114,10 +92,10 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleUpdateShow(record)" v-if="$auth('agent.save')"
+                            <a-button type="link" @click="handleUpdateShow(record)"
                                 ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                             >
-                            <a-button type="link" @click="handleDelete(record.id)" v-if="$auth('agent.save')">{{
+                            <a-button type="link" @click="handleDelete(record.id)">{{
                                 $t('def.delete')
                             }}</a-button>
                         </template>

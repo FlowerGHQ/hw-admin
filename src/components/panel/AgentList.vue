@@ -5,12 +5,7 @@
         </div>
         <div class="panel-content">
             <div class="table-container">
-                <a-button
-                    type="primary"
-                    ghost
-                    @click="routerChange('edit')"
-                    v-if="$auth('agent.save')"
-                    class="panel-btn"
+                <a-button type="primary" ghost @click="routerChange('edit')" class="panel-btn"
                     ><i class="icon i_add" />{{ $t('a.new_retailer') }}</a-button
                 >
                 <a-table
@@ -21,7 +16,7 @@
                     :pagination="false"
                 >
                     <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.key === 'detail' && $auth('agent.detail')">
+                        <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title="text">
                                 <a-button type="link" @click="routerChange('detail', record)">{{
                                     text || '-'
@@ -37,23 +32,23 @@
                             </div>
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('detail', record)" v-if="$auth('agent.detail')"
-                                ><i class="icon i_detail" />{{ $t('def.detail') }}</a-button
-                            >
-                            <a-button type="link" @click="routerChange('edit', record)" v-if="$auth('agent.save')"
-                                ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
-                            >
+                            <a-button type="link" @click="routerChange('detail', record)">
+                                <i class="icon i_detail" />{{ $t('def.detail') }}
+                            </a-button>
+                            <a-button type="link" @click="routerChange('edit', record)">
+                                <i class="icon i_edit" />{{ $t('def.edit') }}
+                            </a-button>
                             <a-button
                                 type="link"
                                 @click="handleStatusChange(record)"
                                 :class="record.status ? 'danger' : ''"
                             >
-                                <template v-if="record.status && $auth('agent.delete')"
-                                    ><i class="icon i_forbidden" />{{ $t('def.disable') }}</template
-                                >
-                                <template v-if="!record.status && $auth('agent.enable')"
-                                    ><i class="icon i_enable" />{{ $t('def.enable') }}</template
-                                >
+                                <template v-if="record.status">
+                                    <i class="icon i_forbidden" />{{ $t('def.disable') }}
+                                </template>
+                                <template v-if="!record.status">
+                                    <i class="icon i_enable" />{{ $t('def.enable') }}
+                                </template>
                             </a-button>
                         </template>
                     </template>
@@ -101,10 +96,7 @@ export default {
             ];
             if (this.$i18n.locale === 'en') {
                 tableColumns.splice(1, 1, { title: this.$t('n.country'), dataIndex: 'country_en', key: 'country' });
-            }
-            /*if (this.$auth('ADMIN')) {
-                tableColumns.splice(1, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'name'})
-            }*/
+            }  
             return tableColumns;
         },
     },

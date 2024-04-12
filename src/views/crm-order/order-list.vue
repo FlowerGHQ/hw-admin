@@ -25,7 +25,7 @@
                             <i class="icon i_add" />{{ $t('i.import') }}
                         </a-button>
                     </a-upload>
-                    <a-button class="m-l-10" type="primary" @click="routerChange('edit')" v-if="$auth('crm-order.save')"
+                    <a-button class="m-l-10" type="primary" @click="routerChange('edit')"
                         ><i class="icon i_add" />{{ $t('crm_o.save') }}</a-button
                     >
                 </div>
@@ -42,19 +42,6 @@
                         <div class="key">{{ $t('dis.order_source') }}：</div>
                         <!-- 订单来源 -->
                         <div class="value">
-                            <!-- <a-select
-                v-model:value="searchForm.source_type"
-                :placeholder="$t('def.select')">
-                <a-select-option :value="0">
-                  {{ lang === "zh" ? "全部" : "all" }}
-                </a-select-option>
-                <a-select-option
-                  v-for="item of SOURCE_TYPE"
-                  :key="item.key"
-                  :value="item.value"
-                  >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
-                >
-              </a-select> -->
                             <a-cascader
                                 v-model:value="cascaderValue"
                                 :options="CRM_ORDER_SOURCE_TYPE"
@@ -313,19 +300,12 @@
                                 <a-button type="link" @click="handleBatch('transfer', record)">{{
                                     $t('crm_c.transfer')
                                 }}</a-button>
-                                <a-button
-                                    type="link"
-                                    @click="routerChange('detail', record)"
-                                    v-if="$auth('crm-order.detail')"
+                                <a-button type="link" @click="routerChange('detail', record)"
                                     ><i class="icon i_detail" />{{ $t('def.detail') }}</a-button
                                 >
-                                <a-button
-                                    type="link"
-                                    class="danger"
-                                    @click="handleDelete(record.id)"
-                                    v-if="$auth('crm-order.delete')"
-                                    >{{ $t('def.delete') }}</a-button
-                                >
+                                <a-button type="link" class="danger" @click="handleDelete(record.id)">{{
+                                    $t('def.delete')
+                                }}</a-button>
                             </div>
                         </template>
                         <template v-else>

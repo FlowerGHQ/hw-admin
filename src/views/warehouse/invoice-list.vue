@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('in.list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('invoice.save')"
+                    <a-button type="primary" @click="routerChange('edit')"
                         ><i class="icon i_add" />{{ $t('in.save') }}
                     </a-button>
                 </div>
@@ -76,7 +76,7 @@
                 </div>
             </div>
             <div class="operate-container">
-                <a-button type="primary" @click="handleExportConfirm" v-if="$auth('invoice.import-export')"
+                <a-button type="primary" @click="handleExportConfirm"
                     ><i class="icon i_download" />{{ $t('def.export') }}
                 </a-button>
             </div>
@@ -89,7 +89,7 @@
                     :pagination="false"
                 >
                     <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.key === 'detail' && $auth('invoice.detail')">
+                        <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title="text">
                                 <a-button type="link" @click="routerChange('detail', record)"
                                     >{{ text || '-' }}
@@ -122,24 +122,18 @@
                             {{ $Util.timeFilter(text) || '-' }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('detail', record)" v-if="$auth('invoice.detail')"
+                            <a-button type="link" @click="routerChange('detail', record)"
                                 ><i class="icon i_detail" />{{ $t('def.detail') }}
                             </a-button>
                             <template v-if="record.status === STATUS.INIT">
-                                <!-- <a-button type="link" @click="routerChange('edit',record)"><i class="icon i_edit"/>编辑</a-button> -->
-                                <a-button
-                                    type="link"
-                                    @click="handleCancel(record.id)"
-                                    class="danger"
-                                    v-if="$auth('invoice.delete')"
+                                <a-button type="link" @click="handleCancel(record.id)" class="danger"
                                     ><i class="icon i_close_c" />{{ $t('def.cancel') }}
                                 </a-button>
                             </template>
                             <AuditMaterialPurchase
                                 v-if="
-                                    (record.status === STATUS.FINANCE_PASS ||
-                                        (record.status === STATUS.WAIT_AUDIT && record.type === TYPE.IN)) &&
-                                    $auth('invoice.warehouse-audit')
+                                    record.status === STATUS.FINANCE_PASS ||
+                                    (record.status === STATUS.WAIT_AUDIT && record.type === TYPE.IN)
                                 "
                                 btnType="link"
                                 :status="STATUS.WAIT_AUDIT"
@@ -149,12 +143,7 @@
                                 ><i class="icon i_audit" />{{ $t('in.admin') }}</AuditMaterialPurchase
                             >
                             <AuditMaterialPurchase
-                                v-if="
-                                    record.status === STATUS.WAIT_AUDIT &&
-                                    record.type === TYPE.OUT &&
-                                    $auth('invoice.finance-audit') &&
-                                    $auth('ADMIN')
-                                "
+                                v-if="record.status === STATUS.WAIT_AUDIT && record.type === TYPE.OUT && $auth('ADMIN')"
                                 btnType="link"
                                 :api-list="['Invoice', 'audit']"
                                 :invoiceId="record.id"
@@ -162,11 +151,6 @@
                                 @submit="getTableData"
                                 ><i class="icon i_audit" />{{ $t('in.finance_audit') }}</AuditMaterialPurchase
                             >
-                            <!--                            <AuditHandle v-if="(detail.status === STATUS.FINANCE_PASS || (detail.status === STATUS.WAIT_AUDIT && detail.type === TYPE.IN)) && $auth('invoice.warehouse-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"-->
-                            <!--                                         :sPass="STATUS.AUDIT_PASS" :sRefuse="STATUS.AUDIT_REFUSE" @submit="getTableData" ><i class="icon i_audit"/>仓库审核</AuditHandle>-->
-
-                            <!--                            <AuditHandle v-if="detail.status === STATUS.WAIT_AUDIT && $auth('invoice.finance-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"-->
-                            <!--                                         :sPass="STATUS.FINANCE_PASS" :sRefuse="STATUS.AUDIT_REFUSE" @submit="getTableData" ><i class="icon i_audit"/>财务审核</AuditHandle>-->
                         </template>
                     </template>
                 </a-table>
@@ -274,9 +258,6 @@ export default {
                 { zh: '已收货', en: 'Received', value: '0', color: 'green', key: STATUS.RECEIVED },
                 { zh: '已取消', en: 'Cancelled', value: '0', color: 'grey', key: STATUS.CANCEL },
             ];
-            // if (this.$auth('ADMIN')) {
-            //     columns.splice(4, 0, {zh: '财务审核', en: 'Waiting for financial approval', value: '0', color: 'yellow', key: STATUS.WAIT_AUDIT})
-            // }
             return columns;
         },
     },

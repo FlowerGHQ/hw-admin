@@ -58,7 +58,7 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary" v-if="$auth('user.save', 'MANAGER')">{{
+            <a-button @click="handleSubmit" type="primary" v-if="$auth('MANAGER')">{{
                 $t('def.sure')
             }}</a-button>
             <a-button @click="routerChange('back')" type="primary" ghost>{{ $t('def.cancel') }}</a-button>

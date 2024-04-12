@@ -47,13 +47,15 @@
                                 :placeholder="$t('def.select')"
                                 @change="handleSearch"
                             >
-                                <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{
-                                    item.name
-                                }}</a-select-option>
+                                <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">
+                                    {{
+                                        item.name
+                                    }}
+                                </a-select-option>
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
+                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
                         <div class="key">{{ $t('n.agent') }}:</div>
                         <div class="value">
                             <a-select
@@ -68,7 +70,7 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="!$auth('STORE')">
+                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
                         <div class="key">{{ $t('n.store') }}:</div>
                         <div class="value">
                             <a-select

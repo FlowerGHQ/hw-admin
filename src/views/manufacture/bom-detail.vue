@@ -3,20 +3,10 @@
         <div class="title-container">
             <div class="title-area">BOM表详情</div>
             <div class="btns-area" v-if="$auth('ADMIN')">
-                <!-- <a-upload name="file" class="file-uploader"
-                    :file-list="upload.fileList" :action="upload.action"
-                    :show-upload-list='false'
-                    :headers="upload.headers" :data='upload.data'
-                    accept=".xlsx,.xls"
-                    @change="handleFileUpload">
-                    <a-button type="primary"  class="file-upload-btn" style="margin-right: 12px;">
-                        导入明细
-                    </a-button>
-                </a-upload> -->
-                <EditBomModel @submit="getBomDetail" :ghost="true" :detail="detail" v-if="$auth('bom.save')">
+                <EditBomModel @submit="getBomDetail" :ghost="true" :detail="detail">
                     <i class="icon i_edit" />编辑
                 </EditBomModel>
-                <a-button ghost danger @click="handleDelete()" v-if="$auth('bom.delete')"
+                <a-button ghost danger @click="handleDelete()"
                     ><i class="icon i_delete" />删除</a-button
                 >
             </div>
@@ -37,10 +27,6 @@
                             }}</a-button>
                         </span>
                     </a-col>
-                    <!--                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">版本号：</span>
-                        <span class="value">{{detail.version_num}}</span>
-                    </a-col>-->
                     <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                         <span class="key">版本号：</span>
                         <span class="value">{{ detail.version }}</span>

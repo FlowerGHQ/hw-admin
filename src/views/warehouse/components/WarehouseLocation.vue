@@ -76,17 +76,10 @@
                         type="primary"
                         ghost
                         @click="handleLocation()"
-                        v-if="$auth('warehouse.save')"
                         class="panel-btn"
                     >
                         <i class="icon i_add" />{{ $t('wa.add_location') }}
                     </a-button>
-                    <!--                        <a-button type="primary" ghost @click="handleMaterial()" v-if="$auth('warehouse.save')" class="panel-btn">-->
-                    <!--                            <i class="icon i_add"/>{{ $t('wa.allocated_material') }}-->
-                    <!--                        </a-button>-->
-                    <!--                        <a-button type="primary" ghost @click="handleAdjustMaterial()" v-if="$auth('warehouse.save')" class="panel-btn">-->
-                    <!--                            <i class="icon i_add"/>{{ $t('wa.adjust') }}-->
-                    <!--                        </a-button>-->
                 </div>
 
                 <a-table
@@ -112,13 +105,13 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleDetailShow(record)" v-if="$auth('agent.detail')">{{
+                            <a-button type="link" @click="handleDetailShow(record)">{{
                                 $t('n.detail')
                             }}</a-button>
-                            <a-button type="link" @click="handleUpdateShow(record)" v-if="$auth('agent.save')"
+                            <a-button type="link" @click="handleUpdateShow(record)"
                                 ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                             >
-                            <a-button type="link" @click="handleDelete(record.id)" v-if="$auth('agent.save')">{{
+                            <a-button type="link" @click="handleDelete(record.id)">{{
                                 $t('def.delete')
                             }}</a-button>
                         </template>
@@ -155,7 +148,6 @@
                             type="primary"
                             ghost
                             @click="handleMaterial()"
-                            v-if="$auth('warehouse.save')"
                             class="panel-btn"
                         >
                             <i class="icon i_add" />{{ $t('wa.allocated_material') }}
@@ -164,7 +156,6 @@
                             type="primary"
                             ghost
                             @click="adjustMode = !adjustMode"
-                            v-if="$auth('warehouse.save')"
                             class="panel-btn"
                         >
                             <i class="icon i_add" />{{ adjustMode ? $t('wa.close_adjust') : $t('wa.open_adjust') }}
@@ -253,7 +244,7 @@
                             {{ record.unit || '件' }}
                         </template>
                         <template v-if="column.key === 'operation' && !adjustMode">
-                            <a-button type="link" @click="handleLocationDelete(record.id)" v-if="$auth('agent.save')">{{
+                            <a-button type="link" @click="handleLocationDelete(record.id)">{{
                                 $t('def.delete')
                             }}</a-button>
                         </template>
