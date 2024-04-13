@@ -2,30 +2,16 @@
     <div v-if="isClose" class="my-preview-image-video">
         <MyMask :isClose="true" :isClickMaskClose="true">
             <div v-if="type === 'image'" class="preview-image">
-                <slot name="image">                    
-                    <a-carousel arrows :dots="false" :style="'transform: scale(' + scaleCount + ');'">
-                        <!-- <template v-if="previewData.length > 1" #prevArrow>
-                            <div class="custom-slick-arrow" style="left: 60px; z-index: 1">
-                                <left-circle-outlined />
-                            </div>
-                        </template>
-                        <template v-if="previewData.length > 1" #nextArrow>
-                            <div class="custom-slick-arrow" style="right: 60px">
-                                <right-circle-outlined />
-                            </div>
-                        </template> -->
-                        <template v-for="(item, index) in previewData" :key="index">
-                            <div>
-                                <img class="preview-img" :src="previewData[0]" alt="" />
-                            </div>
-                        </template>
-                    </a-carousel>
+                <slot name="image">
+                    <div :style="'transform: scale(' + scaleCount + ');'">
+                        <img class="preview-img" :src="previewData" alt="" />
+                    </div>
                 </slot>
             </div>
             <div v-else-if="type === 'video'" class="preview-video">
                 <slot name="video">
                     <div class="modal-body">
-                        <video width="1140" height="600" :src="previewData[0]" autoplay controls></video>
+                        <video width="1140" height="600" :src="previewData" autoplay controls></video>
                     </div>
                 </slot>
             </div>
@@ -77,12 +63,12 @@ const scaleCount = ref(1);
 const onAddBtn = type => {
     switch (type) {
         case 'close':
-            scaleCount.value = 1
+            scaleCount.value = 1;
             emits('update:isClose', false);
             break;
     }
 };
-const onZoom = type => {    
+const onZoom = type => {
     switch (type) {
         case 'zoom-out':
             if (scaleCount.value <= 0.5) {
@@ -92,7 +78,7 @@ const onZoom = type => {
             }
             console.log('放小', scaleCount.value);
             break;
-        case 'zoom-in':                        
+        case 'zoom-in':
             if (scaleCount.value >= 2.5) {
                 scaleCount.value = 2.5;
             } else {
@@ -113,47 +99,13 @@ onMounted(() => {
     // Image
     .preview-image {
         height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         .preview-img {
             min-width: 300px;
             max-width: 800px;
-        }
-
-        :deep(.ant-carousel) {
-            height: 100%;
-        }
-        :deep(.slick-slider) {
-            height: 100%;
-        }
-
-        :deep(.slick-list) {
-            height: 100%;
-        }
-        :deep(.slick-track) {
-            height: 100%;
-        }
-
-        :deep(.slick-slide) {
-            background-color: initial;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .ant-carousel :deep(.slick-arrow.custom-slick-arrow) {
-            width: 60px;
-            height: 60px;
-            font-size: 60px;
-            color: #fff;
-            opacity: 0.5;
-            z-index: 1;
-        }
-        .ant-carousel :deep(.custom-slick-arrow:before) {
-            display: none;
-        }
-        .ant-carousel :deep(.custom-slick-arrow:hover) {
-            opacity: 1;
         }
     }
 

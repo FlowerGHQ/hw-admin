@@ -259,7 +259,7 @@ const uploadOptions = ref({
     fileData: [], // 提交的数据
     // previewImageVideo
     // "https://horwin.oss-cn-hangzhou.aliyuncs.com//img/ba37a2f6f160d68d31f1a96b4a17f2b068b6cee17e6c7b96db51ba5016ef1df0.png", "https://horwin.oss-cn-hangzhou.aliyuncs.com//img/ba37a2f6f160d68d31f1a96b4a17f2b068b6cee17e6c7b96db51ba5016ef1df0.png"
-    previewImageVideo: [],
+    previewImageVideo: null,
 });
 
 const props = defineProps({
@@ -671,35 +671,22 @@ const handleDetailChange = ({ file, fileList }) => {
 const handlePreview = ({ file, fileList }) => {
     console.log('预览', file, fileList);
 
+
     if (videoRegx.test(file.type)) {
         console.log('video/*(视频预览)');
 
-        uploadOptions.value.previewImageVideo = [];
         uploadOptions.value.previewType = 'video';
-        uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(file.response?.data?.filename, 4));
+        uploadOptions.value.previewImageVideo = Core.Util.imageFilter(file.response?.data?.filename, 4);
         isClose.value = true;
     } else if (imageRegx.test(file.type)) {
         console.log('image/*(照片预览)');
 
         uploadOptions.value.previewType = 'image';
-        uploadOptions.value.previewImageVideo = [];
-        fileList.forEach(el => {
-            if (el.response) {
-                if (imageRegx.test(el.type)) {
-                    if (file.uid === el.uid) {
-                        // 让预览的哪张图片在第一张
-                        uploadOptions.value.previewImageVideo.unshift(
-                            Core.Util.imageFilter(el.response?.data?.filename, 1),
-                        );
-                    } else {
-                        uploadOptions.value.previewImageVideo.push(
-                            Core.Util.imageFilter(el.response?.data?.filename, 1),
-                        );
-                    }
-                }
-            }
-        });
-        console.log('结果', uploadOptions.value.previewImageVideo);
+
+        if (file.response) {
+            uploadOptions.value.previewImageVideo = Core.Util.imageFilter(file.response?.data?.filename, 1)
+        }
+
         isClose.value = true;
     } else if (pdfRegx.test(file.type)) {
         console.log('application/pdf(pdf预览)', Core.Util.imageFilter(file.response?.data?.filename, 4));
