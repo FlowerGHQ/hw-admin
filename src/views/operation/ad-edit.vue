@@ -146,7 +146,7 @@ const detail = ref({});
 const uploadOptions = ref({
     previewType: 'image',
     fileData: [], // 提交的数据
-    previewImageVideo: [],
+    previewImageVideo: null,
 });
 const isClose = ref(false);
 const modalText = ref(undefined);
@@ -217,17 +217,10 @@ const routerChange = (type, item) => {
 };
 const handlePreview = ({ file, fileList }) => {
     uploadOptions.value.previewType = 'image';
-    uploadOptions.value.previewImageVideo = [];
-    fileList.forEach(el => {
-        if (el.response) {
-            if (file.uid === el.uid) {
-                // 让预览的哪张图片在第一张
-                uploadOptions.value.previewImageVideo.unshift(Core.Util.imageFilter(file.response?.data?.filename, 1));
-            } else {
-                uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(file.response?.data?.filename, 1));
-            }
-        }
-    });
+
+    if (file.response) {
+        uploadOptions.value.previewImageVideo = Core.Util.imageFilter(file.response?.data?.filename, 1);
+    }
     isClose.value = true;
 };
 const checkInput = form => {
