@@ -78,39 +78,7 @@ export default {
                 'item-category': {
                     title: '商品分类',
                 },               
-            },
-            entity: {
-                title: '实例管理',
-                vehicle: {
-                    title: '整车列表',
-                },
-                parts: {
-                    title: '零部件列表',
-                },
-            },
-            stock: {
-                title: '库存管理',
-                warehouse: {
-                    title: '仓库管理',
-                },
-                overview: {
-                    title: '库存总览',
-                },
-                invoice: {
-                    title: '出入库管理',
-                },
-                'transfer-note': {
-                    title: '调货单管理',
-                },
-                'in-warehouse': {
-                    title: '入库',
-                    save: '保存',
-                },
-                'out-warehouse': {
-                    title: '出库',
-                    save: '保存',
-                },
-            },
+            },            
             customer: {
                 title: '客户管理',
                 customer: {
@@ -151,15 +119,6 @@ export default {
                 payment: {
                     title: '付款信息管理',
                     list: '付款信息列表',
-                },
-            },
-            'inventory-management': {
-                title: '存货管理',
-                files: {
-                    title: '存货档案',
-                },
-                category: {
-                    title: '存货分类',
                 },
             },
         },

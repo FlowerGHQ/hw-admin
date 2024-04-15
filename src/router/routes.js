@@ -453,7 +453,7 @@ const routes = [
             title: '实例管理',
             title_en: 'Instance',
             icon: 'i_menu_shiliguanli',
-            auth: ['sales.entity', 'production.instance'],
+            auth: ['production.instance'],
         },
         children: [
             {
@@ -464,7 +464,7 @@ const routes = [
                     title: '整车列表',
                     title_en: 'Vehicles list',
                     type: 'vehicle',
-                    auth: ['sales.entity.vehicle', 'production.instance.vehicle'],
+                    auth: ['production.instance.vehicle'],
                 },
             },
             {
@@ -475,7 +475,7 @@ const routes = [
                     title: '零部件列表',
                     title_en: 'Parts',
                     type: 'part',
-                    auth: ['sales.entity.parts', 'production.instance.parts'],
+                    auth: ['production.instance.parts'],
                 },
             },
             {
