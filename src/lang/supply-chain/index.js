@@ -403,8 +403,82 @@ export default {
         eliminated_supplier: '淘汰供应商',
         qualified_supplier: '合格供应商',
         qualified_record: '合格记录',
+        // 特批为合格供应商
+        special_approval_qualified_supplier: '特批为合格供应商',
+        // 是否将
+        whether_to: '是否将',
+        // 调整为合格供应商
+        adjust_to_qualified_supplier: '调整为合格供应商',
+        please_select_supplier: '请选择供应商',
+        operator: '操作人',
+        operation_time: '操作时间',
+        qualified_approach: '合格途径',
+        // 附件
+        attachment: '附件',
+        // 初审
+        first_trial: '初审',
+        // 审核供应商
+        audit_supplier: '审核供应商',
+        // 请输入原因
+        please_enter_reason: '请输入原因',
+        // 成为潜在供应商
+        become_potential_supplier: '成为潜在供应商',
+        // 暂不处理
+        not_deal: '暂不处理',
+        // 考虑免审
+        consider_exempt: '考虑免审',
+        // 现场考核
+        on_site_assessment: '现场考核',
+        // 复审
+        review: '复审',
+        // 主营业务
+        main_business: '主营业务',
+        // 经营业绩
+        business_performance: '经营业绩',
+        // 拟供产品
+        proposed_products: '拟供产品',
+        // 免审理由
+        exempt_reason: '免审理由',
+        // exempt_result
+        exempt_result: '免审结果',
+        // 同意免审
+        agree_exempt: '同意免审',
+        upload_attachment: '支持上传图片（PNG、JPG、JEPG）,图片最大10M,最多上传3个',
+        please_select_result: '请选择结果',
     },
     en: {
+        please_select_result: 'Please select result',
+        upload_attachment: 'Support upload pictures (PNG, JPG, JEPG), pictures up to 10M, up to 3',
+        agree_exempt: 'Agree Exempt',
+        exempt_result: 'Exempt Result',
+        // 免审理由
+        exempt_reason: 'Exempt Reason',
+        proposed_products: 'Proposed Products',
+        // 经营业绩
+        business_performance: 'Business Performance',
+        main_business: 'Main Business',
+        review: 'Review',
+        become_potential_supplier: 'Become Potential Supplier',
+        not_deal: 'Not Deal',
+        consider_exempt: 'Consider Exempt',
+        on_site_assessment: 'On Site Assessment',
+        // 请输入原因
+        please_enter_reason: 'Please enter reason',
+        // 审核供应商
+        audit_supplier: 'Audit Supplier',
+
+        // 初审
+        first_trial: 'First Trial',
+        operator: 'Operator',
+        operation_time: 'Operation Time',
+        qualified_approach: 'Qualified Approach',
+        attachment: 'Attachment',
+        please_select_supplier: 'Please select supplier',
+        // 是否将
+        whether_to: 'Whether to',
+        // 调整为合格供应商
+        adjust_to_qualified_supplier: 'Adjust to Qualified Supplier',
+        special_approval_qualified_supplier: 'Special Approval Qualified Supplier',
         qualified_record: 'Qualified Record',
 
         registered_supplier: 'Registered Supplier',

@@ -1514,12 +1514,12 @@
                                                 }}
                                             </a-checkbox>
                                         </template>
-                                        <sapn
+                                        <span
                                             class="custom-not-uploaded"
                                             v-if="!msgDetail.technical_info?.product_design?.length"
                                         >
                                             {{ $t('supply-chain.not_selected') }}
-                                        </sapn>
+                                        </span>
                                     </template>
                                     <template v-else>
                                         <a-checkbox-group
@@ -1552,12 +1552,12 @@
                                                 }}
                                             </a-checkbox>
                                         </template>
-                                        <sapn
+                                        <span
                                             class="custom-not-uploaded"
                                             v-if="!msgDetail.technical_info?.process_design?.length"
                                         >
                                             {{ $t('supply-chain.not_selected') }}
-                                        </sapn>
+                                        </span>
                                     </template>
                                     <template v-else>
                                         <a-checkbox-group
@@ -1592,12 +1592,12 @@
                                                 }}
                                             </a-checkbox>
                                         </template>
-                                        <sapn
+                                        <span
                                             class="custom-not-uploaded"
                                             v-if="!msgDetail.technical_info?.process_validation?.length"
                                         >
                                             {{ $t('supply-chain.not_selected') }}
-                                        </sapn>
+                                        </span>
                                     </template>
                                     <template v-else>
                                         <a-checkbox-group
@@ -2431,12 +2431,12 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn
+                                        <span
                                             class="custom-not-uploaded"
                                             v-if="!msgDetail.confirmatory_material?.business_license_photo?.length"
                                         >
                                             {{ $t('supply-chain.not_uploaded') }}
-                                        </sapn>
+                                        </span>
                                     </template>
                                     <template v-else>
                                         <MyUpload
@@ -2640,12 +2640,12 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn
+                                        <span
                                             class="custom-not-uploaded"
                                             v-if="!msgDetail.confirmatory_material?.quality_system_certificate?.length"
                                         >
                                             {{ $t('supply-chain.not_uploaded') }}
-                                        </sapn>
+                                        </span>
                                     </template>
                                     <template v-else>
                                         <MyUpload
@@ -2682,9 +2682,9 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn v-if="!msgDetail.confirmatory_material?.proxy_certificate?.length">
+                                        <span v-if="!msgDetail.confirmatory_material?.proxy_certificate?.length">
                                             {{ $t('supply-chain.not_uploaded') }}
-                                        </sapn>
+                                        </span>
                                     </template>
                                     <template v-else>
                                         <MyUpload
@@ -2730,14 +2730,14 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn
+                                        <span
                                             class="custom-not-uploaded"
                                             v-if="
                                                 !msgDetail.confirmatory_material?.account_opening_bank_license?.length
                                             "
                                         >
                                             {{ $t('supply-chain.not_uploaded') }}
-                                        </sapn>
+                                        </span>
                                     </template>
                                     <template v-else>
                                         <MyUpload
@@ -2775,12 +2775,12 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn
+                                        <span
                                             class="custom-not-uploaded"
                                             v-if="!msgDetail.confirmatory_material?.eia_certificate?.length"
                                         >
                                             {{ $t('supply-chain.not_uploaded') }}
-                                        </sapn>
+                                        </span>
                                     </template>
                                     <template v-else>
                                         <MyUpload
@@ -2817,12 +2817,12 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn
+                                        <span
                                             class="custom-not-uploaded"
                                             v-if="!msgDetail.confirmatory_material?.environmental_report?.length"
                                         >
                                             {{ $t('supply-chain.not_uploaded') }}
-                                        </sapn>
+                                        </span>
                                     </template>
                                     <template v-else>
                                         <MyUpload
@@ -2842,12 +2842,22 @@
                 </div>
             </div>
         </div>
-
         <a-modal width="800px" :visible="previewVisible" title="" :footer="null" @cancel="handleCancel">
             <img alt="" style="width: 100%" :src="previewImage" />
         </a-modal>
-
         <div class="suction-bottom">
+            <!-- 审核按钮 -->
+            <a-button v-if="allDetails.audit_status == 10" type="primary" @click="onSuction('audit')">{{
+                $t('supply-chain.first_trial')
+            }}</a-button>
+            <!-- 40 待复审 -->
+            <a-button v-if="allDetails.audit_status == 40" type="primary" @click="onSuction('audit')">{{
+                $t('supply-chain.review')
+            }}</a-button>
+            <!-- 50 免审结果 v-if="allDetails.audit_status == 50"-->
+            <a-button type="primary" @click="onSuction('audit')">
+                {{ $t('supply-chain.exempt_result') }}
+            </a-button>
             <template v-if="!isEdit">
                 <a-button @click="onSuction('edit')">{{ $t('supply-chain.editing_data') }}</a-button>
             </template>
@@ -2856,7 +2866,6 @@
                 <a-button type="primary" @click="onSuction('add')">{{ $t('supply-chain.submit_materials') }}</a-button>
             </template>
         </div>
-
         <MyMask :isClose="isClose" @close="onPingPongMaskClose">
             <div class="mask-center">
                 <div class="title">{{ $t('supply-chain.mask_tips1') }}</div>
@@ -2870,17 +2879,24 @@
                 </div>
             </div>
         </MyMask>
+        <TrialModal
+            :modalVisible="TrialModalVisible"
+            @handleOk="trialOk"
+            @handleCancel="tralCancel"
+            :details="allDetails"
+        />
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed, getCurrentInstance } from 'vue';
+import { ref, onMounted, computed, getCurrentInstance, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Core from '@/core';
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
 import TimeSearch from '@/components/common/TimeSearch.vue';
 import MyMask from '@/components/horwin/based-on-dom/MyMask.vue';
 import MyUpload from '@/components/MyUpload/index.vue';
+import TrialModal from './components/trial-modal.vue';
 import dayjs from 'dayjs';
 import axios from 'axios';
 // json
@@ -2888,11 +2904,14 @@ const chinaOptions = ref([]);
 const route = useRoute();
 const router = useRouter();
 const msgDetail = ref({});
+const allDetails = ref({});
 const { proxy } = getCurrentInstance();
-
 // 预览显影
 const previewVisible = ref(false);
 const previewImage = ref('');
+
+// 审核
+const TrialModalVisible = ref(false);
 
 // 联系方式
 const contactInformation = computed(() => {
@@ -2905,7 +2924,6 @@ const contactInformation = computed(() => {
 
     return columns;
 });
-
 // 关键生产设备
 const deviceProductionColumns = computed(() => {
     let columns = [
@@ -3180,7 +3198,16 @@ function getDetail(params = {}) {
 
     Core.Api.SUPPLY.adminDetail(obj)
         .then(res => {
-            msgDetail.value = res.detail?.form ? JSON.parse(res.detail?.form) : {};
+            allDetails.value = res.detail;
+            console.log('allDetails', allDetails.value);
+            if (res.detail.form) {
+                console.log('res.detail.form', typeof res.detail.form);
+                typeof res.detail.form === 'string'
+                    ? (msgDetail.value = JSON.parse(res.detail.form))
+                    : (msgDetail.value = res.detail.form);
+            } else {
+                msgDetail.value = {};
+            }
             console.log('msgDetail', msgDetail.value);
             // 回显数据
             for (const key in msgDetail.value) {
@@ -3230,14 +3257,12 @@ function getDetail(params = {}) {
                     parameters.value[key] = keys;
                 }
             }
-
             let businessLicensePhoto = msgDetail.value.confirmatory_material?.business_license_photo;
             let qualitySystemCertificate = msgDetail.value.confirmatory_material?.quality_system_certificate;
             let proxyCertificate = msgDetail.value.confirmatory_material?.proxy_certificate;
             let accountOpeningBankLicense = msgDetail.value.confirmatory_material?.account_opening_bank_license;
             let eiaCertificate = msgDetail.value.confirmatory_material?.eia_certificate;
             let environmentalReport = msgDetail.value.confirmatory_material?.environmental_report;
-
             // 营业执照照片
             if (businessLicensePhoto) {
                 msgDetail.value.confirmatory_material.business_license_photo = businessLicensePhoto.split(',');
@@ -3264,9 +3289,7 @@ function getDetail(params = {}) {
             if (environmentalReport) {
                 msgDetail.value.confirmatory_material.environmental_report = environmentalReport.split(',');
             }
-
             // msgDetail.value.type = 1
-
             console.log('输出的', parameters.value);
         })
         .catch(err => {
@@ -3394,6 +3417,9 @@ const onSuction = type => {
         case 'submit_exit':
             onSuction('add');
             break;
+        case 'audit':
+            TrialModalVisible.value = true;
+            break;
 
         default:
             break;
@@ -3516,6 +3542,18 @@ const onBack = () => {
     } else {
         router.back();
     }
+};
+
+// 审核
+const trialOk = () => {
+    TrialModalVisible.value = false;
+    // 返回列表页
+    router.push({
+        path: '/supply-manage/list',
+    });
+};
+const tralCancel = () => {
+    TrialModalVisible.value = false;
 };
 
 /* methods end*/

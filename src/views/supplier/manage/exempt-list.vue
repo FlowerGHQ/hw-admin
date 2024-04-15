@@ -38,8 +38,6 @@
                     <template v-if="column.key === 'operation'">
                         <!-- 审核 -->
                         <a-button type="link" @click="handleAudit(record)">{{ $t('n.audit') }}</a-button>
-                        <!-- 查看 -->
-                        <a-button type="link" @click="handleView(record)">{{ $t('retail.view') }}</a-button>
                     </template>
                 </template>
             </a-table>
@@ -65,14 +63,6 @@ const { loading, tableData, pagination, search, onPagenationChange, refreshTable
         stage: 20,
         status: 50,
     },
-    dataCallBack: res => {
-        let list = _.cloneDeep(res.list);
-        // item 和 item.form字段合并
-        list.forEach(item => {
-            item = Object.assign(item, item.form);
-        });
-        return list;
-    },
 });
 
 const $t = useI18n().t;
@@ -97,10 +87,10 @@ const tableColumns = computed(() => {
         },
         {
             title: $t('supply-chain.supplier_type'),
-            dataIndex: 'purchase_category',
-            key: 'purchase_category',
+            dataIndex: 'type',
+            key: 'type',
             customRender: ({ text, record, index, column }) => {
-                return text || '-';
+                return Core.Const.SUPPLAY.SUPPLAY_TYPE[text] ? $t(Core.Const.SUPPLAY.SUPPLAY_TYPE[text]?.t) : '-';
             },
         },
         // 免审核申请表
@@ -155,10 +145,20 @@ const handleViewForm = record => {
     });
 };
 const handleAudit = record => {
-    console.log(record);
+    router.push({
+        path: '/supply-manage/detail',
+        query: {
+            id: record.id,
+        },
+    });
 };
 const handleView = record => {
-    console.log(record);
+    router.push({
+        path: '/supply-manage/detail',
+        query: {
+            id: record.id,
+        },
+    });
 };
 
 /* methods end*/

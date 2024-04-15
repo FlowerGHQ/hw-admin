@@ -21,9 +21,15 @@
         </div>
         <!-- table -->
         <div class="table-container">
-            <a-button class="m-b-10" type="primary" @click="onBtn">
-                {{ $t('supply-chain.create_data') }}
-            </a-button>
+            <div class="button-area m-b-10">
+                <a-button type="primary" @click="onBtn">
+                    {{ $t('supply-chain.create_data') }}
+                </a-button>
+                <!-- 特批为合格供应商 -->
+                <a-button type="primary" @click="handleApproval">
+                    {{ $t('supply-chain.special_approval_qualified_supplier') }}
+                </a-button>
+            </div>
             <a-table
                 :columns="tableColumns"
                 :data-source="tableData"
@@ -33,7 +39,7 @@
                 :row-selection="{
                     onChange: (selectedRowKeys, selectedRows) => handleSelectChange(selectedRowKeys, selectedRows),
                     getCheckboxProps: record => ({
-                        disabled: record.name === 'Disabled User',
+                        disabled: record.stage === 30 || record.stage === 40,
                     }),
                 }"
                 :pagination="false"
@@ -57,14 +63,9 @@
                     </template>
                     <!-- qualified_record -->
                     <template v-if="column.key === 'qualified_record'">
-                        <a-button
-                            type="link"
-                            @click="onView('add', record)"
-                            v-if="record.stage === 30 || record.stage === 40"
-                        >
+                        <a-button type="link" @click="onViewReason(record)" v-if="record.stage === 40">
                             {{ $t('supply-chain.view') }}
                         </a-button>
-                        <span v-else-if="record.stage === 10 || record.stage === 20">无</span>
                         <span v-else>无</span>
                     </template>
                     <!-- 操作 -->
@@ -96,11 +97,51 @@
                 @showSizeChange="onSizeChange"
             />
         </div>
+        <div class="modal-area" ref="modalAreaRef">
+            <!-- 特批弹窗 -->
+            <Modal
+                :title="$t('supply-chain.special_approval_qualified_supplier')"
+                v-model:visible="approvalVisible"
+                @ok="handleApprovalOk"
+                @cancel="handleApprovalCancel"
+                wrapClassName="area-you-sure"
+                :getContainer="() => modalAreaRef"
+            >
+                <div class="area-you-sure">
+                    {{ $t('supply-chain.whether_to') }}{{ selectNameStr
+                    }}{{ $t('supply-chain.adjust_to_qualified_supplier') }}
+                </div>
+            </Modal>
+            <!-- 合格记录 -->
+            <Modal
+                :title="$t('supply-chain.qualified_record')"
+                v-model:visible="qualifiedRecordVisible"
+                @ok="handleQualifiedRecordOk"
+                @cancel="handleQualifiedRecordCancel"
+                wrapClassName="qualified-record"
+                :getContainer="() => modalAreaRef"
+            >
+                <!-- table -->
+                <a-table
+                    :columns="qualifiedTableColumns"
+                    :data-source="qualifiedTableData"
+                    :scroll="{ x: true }"
+                    :loading="loading"
+                    :row-key="record => record.id"
+                    :pagination="false"
+                >
+                    <template #bodyCell="{ column, text, record, index }">
+                        <!-- 附件 -->
+                        <template v-if="column.key === 'attachment'"> </template>
+                    </template>
+                </a-table>
+            </Modal>
+        </div>
     </div>
 </template>
 
 <script setup>
-import { onMounted, ref, getCurrentInstance, computed, watch } from 'vue';
+import { onMounted, ref, getCurrentInstance, computed, watch, reactive } from 'vue';
 import Core from '@/core';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import { useTable } from '@/hooks/useTable';
@@ -110,18 +151,26 @@ import { useStore } from 'vuex';
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
 import EditTableCell from './components/edit-table-cell.vue';
 import _ from 'lodash';
+import { Modal } from 'ant-design-vue';
 
 const $store = useStore();
 const router = useRouter();
 const $t = useI18n().t;
 const selectedIds = ref([]);
-const handleSelectChange = (selectedRowKeys, selectedRows) => {
-    console.log(selectedRowKeys, selectedRows);
-    selectedIds.value = selectedRowKeys;
-};
-const AUDIT_STATUS = Core.Const.SUPPLAY.AUDIT_STATUS;
-const STAGE_LIST = Core.Const.SUPPLAY.STAGE;
-const STATUS_LIST = Core.Const.SUPPLAY.STATUS_LIST;
+const selectedRowObjs = ref([]);
+const selectNameStr = ref('');
+const approvalVisible = ref(false);
+const modalAreaRef = ref(null);
+const qualifiedRecordVisible = ref(false);
+const qualifiedTableData = ref([]);
+const auditStatusMap = reactive({
+    90: { text: '特批合格', value: 1501 },
+    110: { text: '免审合格', value: 1502 },
+});
+
+const AUDIT_STATUS = reactive(Core.Const.SUPPLAY.AUDIT_STATUS);
+const STAGE_LIST = reactive(Core.Const.SUPPLAY.STAGE);
+const STATUS_LIST = reactive(Core.Const.SUPPLAY.STATUS_LIST);
 
 const tableColumns = computed(() => {
     let columns = [
@@ -166,6 +215,46 @@ const tableColumns = computed(() => {
     ];
     return columns;
 });
+const qualifiedTableColumns = computed(() => {
+    // 操作人 操作时间 合格途径 原因 附件
+    let columns = [
+        {
+            title: $t('supply-chain.operator'),
+            dataIndex: 'operator',
+            key: 'operator',
+            customRender: ({ text, record, index }) => {
+                return record?.user?.account?.name || '-';
+            },
+        },
+        {
+            title: $t('supply-chain.operation_time'),
+            dataIndex: 'create_time',
+            key: 'create_time',
+            customRender: ({ text, record, index }) => {
+                return text ? Core.Util.timeFormat(record.create_time) : '-';
+            },
+        },
+        {
+            title: $t('supply-chain.qualified_approach'),
+            dataIndex: 'type',
+            key: 'type',
+            customRender: ({ text, record, index }) => {
+                return record?.type ? (record.type == 1501 ? '特批合格' : record.type == 1501 ? '免审合格' : '-') : '-';
+            },
+        },
+        {
+            title: $t('supply-chain.reason'),
+            dataIndex: 'remark',
+            key: 'remark',
+            customRender: ({ text, record, index }) => {
+                return text ? text : '无';
+            },
+        },
+        { title: $t('supply-chain.attachment'), dataIndex: 'attachment', key: 'attachment' },
+    ];
+    return columns;
+});
+
 const searchList = ref([
     {
         type: 'input',
@@ -200,15 +289,16 @@ const MySearchAll = ref(null);
 const request = Core.Api.SUPPLY.adminList;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
     request,
-    dataCallBack: res => {
-        let list = _.cloneDeep(res.list);
-        // item 和 item.form字段合并
-        list.forEach(item => {
-            item = Object.assign(item, item.form);
-        });
-        return list;
-    },
 });
+
+const handleSelectChange = (selectedRowKeys, selectedRows) => {
+    selectedIds.value = selectedRowKeys;
+    selectedRowObjs.value = selectedRows;
+    selectNameStr.value = selectedRows
+        .map(item => item.company_name)
+        .filter(item => item)
+        .join('、');
+};
 
 const handleTableChange = key => {
     searchParam.value = Object.assign(searchParam.value, MySearchAll.value.getSearchFrom());
@@ -228,24 +318,22 @@ const onView = (type, record) => {
     let routeUrl = null;
     switch (type) {
         case 'add':
-            routeUrl = router.resolve({
+            router.push({
                 path: '/supply-manage/detail',
                 query: {
                     id: record.id,
                 },
             });
-            window.open(routeUrl.href, '_blank');
 
             break;
         case 'edit':
-            routeUrl = router.resolve({
+            router.push({
                 path: '/supply-manage/detail',
                 query: {
                     id: record.id,
                     flag_edit: true,
                 },
             });
-            window.open(routeUrl.href, '_blank');
             break;
     }
 };
@@ -269,12 +357,66 @@ const getStatusCount = () => {
             return total + item.value;
         }, 0);
         STATUS_LIST[0].value = all_total;
+        console.log('STATUS_LIST', STATUS_LIST);
     });
 };
 const tabCellSave = ({ record, index, column }) => {
     console.log('record', record);
     console.log('index', index);
     console.log('column', column);
+};
+// handleApproval
+const handleApproval = () => {
+    if (selectedIds.value.length === 0) {
+        Core.Util.message.error($t('supply-chain.please_select_supplier'));
+        return;
+    }
+    approvalVisible.value = true;
+};
+// handleApprovalOk
+const handleApprovalOk = () => {
+    Core.Api.SUPPLY.batchUpdateStage({ id_list: selectedIds.value }).then(res => {
+        approvalVisible.value = false;
+        //清空选中
+        selectedIds.value = [];
+        selectedRowObjs.value = [];
+        selectNameStr.value = '';
+        refreshTable();
+    });
+};
+const handleApprovalCancel = () => {
+    approvalVisible.value = false;
+    // 清空选中
+    selectedIds.value = [];
+    selectedRowObjs.value = [];
+    selectNameStr.value = '';
+};
+const handleQualifiedRecordOk = () => {
+    console.log('handleQualifiedRecordOk');
+    qualifiedRecordVisible.value = false;
+};
+const handleQualifiedRecordCancel = () => {
+    qualifiedRecordVisible.value = false;
+};
+// 查看合格记录
+const onViewReason = record => {
+    console.log('record', record);
+    let params = {
+        type: auditStatusMap[record.audit_status] ? auditStatusMap[record.audit_status].value : '',
+        source_id: record.id,
+        source_type: 150, //申请供应商类型
+    };
+    // // 获取表格数据
+    Core.Api.ActionLog.list(params).then(res => {
+        let list = _.cloneDeep(res.list);
+        // item 和 item.form字段合并
+        list.forEach(item => {
+            item = Object.assign(item, item.form);
+        });
+        qualifiedTableData.value = list;
+        console.log('qualifiedTableData', qualifiedTableData.value);
+        qualifiedRecordVisible.value = true;
+    });
 };
 
 onMounted(() => {
@@ -286,5 +428,12 @@ onMounted(() => {
 .supply-edit {
     margin-left: 6px;
     cursor: pointer;
+}
+:deep(.area-you-sure),
+:deep(.qualified-record) {
+    .ant-modal-header,
+    .ant-modal-footer {
+        text-align: center;
+    }
 }
 </style>

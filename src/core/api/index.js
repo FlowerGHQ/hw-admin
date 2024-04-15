@@ -1045,6 +1045,14 @@ const apiList = {
         adminAdd: ['PostJson', 'supplier-application/save'], // 平台方供应商管理添加
         add: ['PostJson', 'supplier-application/save'], // 供应商前缀 /supplier
         countStatus: ['PostJson', 'supplier-application/count-status'], // 供应商前缀 /supplier
+        // 特批为合格供应商
+        batchUpdateStage: ['PostJson', 'supplier-application/batch-update-stage'], // 供应商前缀 /supplier
+        // 审核
+        audit: ['PostJson', 'supplier-application/audit'], // 供应商前缀 /supplier
+        // 免审审核详情
+        noExamineDetail: ['PostJson', 'supplier-application/no-examine-application-detail'], // 供应商前缀 /supplier
+        // 免审申请
+        noExamine: ['PostJson', 'supplier-application/no-examine-application'], // 供应商前缀 /supplier
     },
     SALES_STRATEGY: {
         list: ['PostJson', 'sales-strategy/list'],
