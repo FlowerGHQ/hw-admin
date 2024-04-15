@@ -17,6 +17,7 @@ const inquiryManagement = {
         title: '客户关怀',
         title_en: 'Customer Care',
         icon: 'i_menu_fankuguanli',
+        roles: [LOGIN_TYPE.ADMIN],
         auth: ['aftermarket.enquiry'],
     },
     children: [
@@ -1086,7 +1087,7 @@ const InventoryManagement = {
         title: '存货管理',
         title_en: 'Stock Control',
         icon: 'i_menu_cunhuoguanli',
-        auth: ['sales.inventory-management', 'production.inventory-management'],
+        auth: ['production.inventory-management'],
     },
     children: [
         {
@@ -1096,7 +1097,7 @@ const InventoryManagement = {
             meta: {
                 title: '存货档案',
                 title_en: 'Inventory Files',
-                auth: ['sales.inventory-management.files', 'production.inventory-management.files'],
+                auth: ['production.inventory-management.files'],
             },
         },
         {
@@ -1106,7 +1107,7 @@ const InventoryManagement = {
             meta: {
                 title: '存货分类',
                 title_en: 'Inventory Category',
-                auth: ['sales.inventory-management.category', 'production.inventory-management.category'],
+                auth: ['production.inventory-management.category'],
             },
         },
         {
@@ -1133,7 +1134,7 @@ const WarehouseManagement = {
         title: '库存管理',
         title_en: 'Inventories',
         icon: 'i_menu_kucunguanli',
-        auth: ['sales.stock', 'aftermarket.stock', 'production.inventory'],
+        auth: ['production.inventory'],
     },
     children: [
         {
@@ -1143,7 +1144,7 @@ const WarehouseManagement = {
             meta: {
                 title: '仓库管理',
                 title_en: 'Warehouses',
-                auth: ['sales.stock.warehouse', 'aftermarket.stock.warehouse', 'production.inventory.warehouse'],
+                auth: ['production.inventory.warehouse'],
             },
         },
         {
@@ -1174,7 +1175,7 @@ const WarehouseManagement = {
             meta: {
                 title: '库存总览',
                 title_en: 'Inventory overview',
-                auth: ['sales.stock.overview', 'aftermarket.stock.overview', 'production.inventory.overview'],
+                auth: ['production.inventory.overview'],
             },
         },
         {
@@ -1184,7 +1185,7 @@ const WarehouseManagement = {
             meta: {
                 title: '出入库管理',
                 title_en: 'Inbound and outbound',
-                auth: ['sales.stock.invoice', 'aftermarket.stock.invoice', 'production.inventory.invoice'],
+                auth: ['production.inventory.invoice'],
             },
         },
         {
@@ -1214,11 +1215,7 @@ const WarehouseManagement = {
             meta: {
                 title: '调货单管理',
                 title_en: 'Transfer order',
-                auth: [
-                    'sales.stock.transfer-note',
-                    'aftermarket.stock.transfer-note',
-                    'production.inventory.transfer-note',
-                ],
+                auth: ['production.inventory.transfer-note'],
             },
         },
         {
@@ -1238,11 +1235,7 @@ const WarehouseManagement = {
             meta: {
                 title: '入库',
                 title_en: 'Inbound',
-                auth: [
-                    'sales.stock.in-warehouse',
-                    'aftermarket.stock.in-warehouse',
-                    'production.inventory.material-in',
-                ],
+                auth: ['production.inventory.material-in'],
             },
         },
         {
@@ -1252,11 +1245,7 @@ const WarehouseManagement = {
             meta: {
                 title: '出库',
                 title_en: 'Outbound',
-                auth: [
-                    'sales.stock.out-warehouse',
-                    'aftermarket.stock.out-warehouse',
-                    'production.inventory.material-out',
-                ],
+                auth: ['production.inventory.material-out'],
             },
         },
         /*  {
