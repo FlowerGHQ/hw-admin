@@ -19,7 +19,7 @@
                                     v-else-if="item.type === 'textarea'"
                                     :placeholder="item.placeholder"
                                     v-model:value="formState[item.value]"
-                                    :autosize="item.autosize"
+                                    :autoSize="item.autosize"
                                     :maxlength="item.maxlength"
                                     :show-count="item.showCount"
                                     :disabled="item.disabled"
@@ -104,6 +104,8 @@ import { useI18n } from 'vue-i18n';
 import Core from '@/core';
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
+import dayjs from 'dayjs';
+import _ from 'lodash';
 
 const $t = useI18n().t;
 const route = useRoute();
@@ -164,8 +166,8 @@ const form = computed(() => [
             },
             {
                 title: $t('supply-chain.Sales_share'),
-                dataIndex: 'sales_proportion',
-                key: 'sales_proportion',
+                dataIndex: 'sales_share',
+                key: 'sales_share',
                 type: 'input-number',
                 placeholder: $t('common.please_enter'),
                 addonAfter: '%',
@@ -177,8 +179,8 @@ const form = computed(() => [
             },
             {
                 title: $t('supply-chain.Main_supply_part'),
-                dataIndex: 'main_supply_parts',
-                key: 'main_supply_parts',
+                dataIndex: 'main_supply_part',
+                key: 'main_supply_part',
                 type: 'input',
                 placeholder: $t('common.please_enter'),
                 maxlength: 100,
@@ -187,8 +189,8 @@ const form = computed(() => [
             },
             {
                 title: $t('supply-chain.Start_time'),
-                dataIndex: 'begin_time',
-                key: 'begin_time',
+                dataIndex: 'begin_cooperation_time',
+                key: 'begin_cooperation_time',
                 type: 'date-picker',
                 disabled: true,
             },
@@ -272,7 +274,9 @@ const getDetail = () => {
     Core.Api.SUPPLY.noExamineDetail(obj)
         .then(res => {
             formState.value = res.detail;
-            console.log('getDetail', formState.value);
+            formState.value.list.forEach((item, index) => {
+                item.begin_cooperation_time = dayjs.unix(item.begin_cooperation_time);
+            });
         })
         .catch(err => {
             console.log('getPhoneCodeFetchs err', err);
@@ -297,8 +301,11 @@ const handleDelete = index => {
     formState.value.list.splice(index, 1);
 };
 const handleSubmit = () => {
-    console.log('formState', formState.value);
-    Core.Api.SUPPLY.noExamine({ supplier_examine: formState.value })
+    let params = _.cloneDeep(formState.value);
+    params.list.forEach((item, index) => {
+        item.begin_cooperation_time = item.begin_cooperation_time.unix();
+    });
+    Core.Api.SUPPLY.noExamine({ supplier_examine: params })
         .then(res => {
             console.log('handleSubmit', res);
             // 获取详情

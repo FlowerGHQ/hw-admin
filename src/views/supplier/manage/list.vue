@@ -120,6 +120,7 @@
                 @cancel="handleQualifiedRecordCancel"
                 wrapClassName="qualified-record"
                 :getContainer="() => modalAreaRef"
+                width="800px"
             >
                 <!-- table -->
                 <a-table
@@ -132,7 +133,18 @@
                 >
                     <template #bodyCell="{ column, text, record, index }">
                         <!-- 附件 -->
-                        <template v-if="column.key === 'attachment'"> </template>
+                        <template v-if="column.key === 'attachment'">
+                            <div class="attachment" v-if="record.attachment && record.attachment.length > 0">
+                                <a-image
+                                    v-for="item in record.attachment"
+                                    :width="60"
+                                    :height="60"
+                                    :src="$Util.imageFilter(item)"
+                                    fallback="无"
+                                />
+                            </div>
+                            <span v-else>无</span>
+                        </template>
                     </template>
                 </a-table>
             </Modal>
@@ -239,7 +251,7 @@ const qualifiedTableColumns = computed(() => {
             dataIndex: 'type',
             key: 'type',
             customRender: ({ text, record, index }) => {
-                return record?.type ? (record.type == 1501 ? '特批合格' : record.type == 1501 ? '免审合格' : '-') : '-';
+                return record?.type ? (record.type == 1501 ? '特批合格' : record.type == 1502 ? '免审合格' : '-') : '-';
             },
         },
         {
@@ -408,12 +420,15 @@ const onViewReason = record => {
     };
     // // 获取表格数据
     Core.Api.ActionLog.list(params).then(res => {
-        let list = _.cloneDeep(res.list);
-        // item 和 item.form字段合并
-        list.forEach(item => {
-            item = Object.assign(item, item.form);
-        });
-        qualifiedTableData.value = list;
+        qualifiedTableData.value = res.list;
+        // 处理附件
+        if (qualifiedTableData.value.length > 0) {
+            qualifiedTableData.value.forEach(item => {
+                if (item.content) {
+                    item.attachment = item.content.split(',');
+                }
+            });
+        }
         console.log('qualifiedTableData', qualifiedTableData.value);
         qualifiedRecordVisible.value = true;
     });
@@ -434,6 +449,16 @@ onMounted(() => {
     .ant-modal-header,
     .ant-modal-footer {
         text-align: center;
+    }
+}
+:deep(.ant-table-cell) {
+    .attachment {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        img {
+            cursor: pointer;
+        }
     }
 }
 </style>

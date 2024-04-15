@@ -2854,8 +2854,8 @@
             <a-button v-if="allDetails.audit_status == 40" type="primary" @click="onSuction('audit')">{{
                 $t('supply-chain.review')
             }}</a-button>
-            <!-- 50 免审结果 v-if="allDetails.audit_status == 50"-->
-            <a-button type="primary" @click="onSuction('audit')">
+            <!-- 50 免审结果 -->
+            <a-button type="primary" @click="onSuction('audit')" v-if="allDetails.audit_status == 50">
                 {{ $t('supply-chain.exempt_result') }}
             </a-button>
             <template v-if="!isEdit">
