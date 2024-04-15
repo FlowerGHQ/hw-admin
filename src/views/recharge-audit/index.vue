@@ -189,7 +189,7 @@ const statusList = computed(() => {
     let list = [{ zh: '全  部', en: 'All', value: 0, color: 'primary', key: 0 }];
 
     if (proxy.$auth('finance.audit-record.recharge.second-instance')) {
-        list.push([
+        list.push(...[
             { zh: '等待二审', en: 'Pending Second Audit', value: 0, color: 'yellow', key: 4 },
             { zh: '二审通过', en: 'Approval Second Audit', value: 0, color: 'yellow', key: 2 },
             { zh: '二审不通过', en: 'The Second Audit Was Rejected', value: 0, color: 'yellow', key: 5 },
