@@ -106,6 +106,7 @@ import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import _ from 'lodash';
+import { message } from 'ant-design-vue';
 
 const $t = useI18n().t;
 const route = useRoute();
@@ -310,6 +311,7 @@ const handleSubmit = () => {
             console.log('handleSubmit', res);
             // 获取详情
             getDetail();
+            message.success($t('supply-chain.supply_submit_successfully'));
         })
         .catch(err => {
             console.log('handleSubmit err', err);
