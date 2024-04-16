@@ -30,6 +30,10 @@
                 @change="({ current, pageSize }) => onPagenationChange(current, pageSize)"
             >
                 <template #bodyCell="{ column, text, record, index }">
+                    <!-- 供方全称 -->
+                    <template v-if="column.key === 'company_name'">
+                        <a-button type="link" @click="handleView(record)">{{ text || '-' }}</a-button>
+                    </template>
                     <!-- exempt_application_form -->
                     <template v-if="column.key === 'exempt_application_form'">
                         <a-button type="link" @click="handleViewForm(record)">{{ $t('common.view') }}</a-button>
