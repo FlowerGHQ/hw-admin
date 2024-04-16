@@ -386,7 +386,7 @@ export default {
         cooperative_manufacturers: '合作厂商',
         // 淘汰原因
         eliminate_reason: '淘汰原因',
-        pending_audit: '待审核',
+        pending_audit: '待初审',
         not_deal: '暂不处理',
         initial_elimination: '初审淘汰',
         pending_review: '待复审',
@@ -488,7 +488,7 @@ export default {
         eliminated_supplier: 'Eliminated Supplier',
         // 供应商阶段
         qualified_supplier: 'Qualified Supplier',
-        pending_audit: 'Pending Audit',
+        pending_audit: 'Pending First Audit',
         not_deal: 'Not Deal',
         initial_elimination: 'Initial Elimination',
         pending_review: 'Pending Review',

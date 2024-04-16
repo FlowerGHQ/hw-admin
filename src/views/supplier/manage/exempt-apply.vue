@@ -39,9 +39,9 @@
                                     <div class="name">
                                         {{ item.label }}
                                     </div>
-                                    <a-button type="primary" @click="handleAddRow">
+                                    <!-- <a-button type="primary" @click="handleAddRow">
                                         {{ $t('db.new_customer') }}
-                                    </a-button>
+                                    </a-button> -->
                                 </div>
                                 <a-table
                                     :columns="item.columns"
@@ -289,14 +289,14 @@ const getChinaArea = () => {
         chinaOptions.value = res.data;
     });
 };
-const handleAddRow = () => {
-    formState.value.list.push({
-        customer_name: '', //客户名称
-        sales_proportion: undefined, //销售占比
-        main_supply_parts: '', //主供零件
-        begin_time: undefined, //开始合作时间
-    });
-};
+// const handleAddRow = () => {
+//     formState.value.list.push({
+//         customer_name: '', //客户名称
+//         sales_proportion: undefined, //销售占比
+//         main_supply_parts: '', //主供零件
+//         begin_time: undefined, //开始合作时间
+//     });
+// };
 const handleDelete = index => {
     formState.value.list.splice(index, 1);
 };
