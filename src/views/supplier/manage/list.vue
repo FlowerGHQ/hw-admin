@@ -214,7 +214,7 @@ const tableColumns = computed(() => {
             dataIndex: 'remark',
             key: 'remark',
             customRender: ({ text, record, index }) => {
-                return text ? text : '无';
+                return text && record.stage === 30 ? text : '无';
             },
         },
         // 合格记录
