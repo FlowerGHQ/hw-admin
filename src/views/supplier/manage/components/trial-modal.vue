@@ -86,6 +86,13 @@ const radioList = computed(() => {
                 { label: $t('supply-chain.eliminate'), value: 60 },
             ];
             break;
+        case 20:
+            return [
+                { label: $t('supply-chain.become_potential_supplier'), value: 10 },
+                { label: $t('supply-chain.not_deal'), value: 50 },
+                { label: $t('supply-chain.eliminate'), value: 60 },
+            ];
+            break;
         case 40:
             return [
                 // 考虑免审20 现场考核40 淘汰60
