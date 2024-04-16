@@ -322,8 +322,12 @@ const onSearch = data => {
     search();
 };
 const onReset = () => {
-    refreshTable();
-    searchParam.value.status = '';
+    Object.keys(searchParam.value).forEach(key => {
+        if (key !== 'status') {
+            searchParam.value[key] = undefined;
+        }
+    });
+    search();
 };
 // 点击查看
 const onView = (type, record) => {
