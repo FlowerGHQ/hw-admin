@@ -306,7 +306,7 @@ const request = Core.Api.SUPPLY.adminList;
 const { loading, tableData, pagination, search, onPagenationChange, refreshTable, searchParam } = useTable({
     request,
     initParam: {
-        stage: 10,
+        stage: 40,
     },
     dataCallBack: res => {
         // item 和 item.form字段合并
