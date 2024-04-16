@@ -292,7 +292,7 @@ const searchList = ref([
         // 供应商阶段
         type: 'select',
         value: undefined,
-        searchParmas: 'supplier_stage',
+        searchParmas: 'stage',
         key: 'supply-chain.supplier_stage',
         selectMap: Core.Const.SUPPLAY.STAGE_LIST,
     },
