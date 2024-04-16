@@ -1053,6 +1053,8 @@ const apiList = {
         noExamineDetail: ['PostJson', 'supplier-application/no-examine-application-detail'], // 供应商前缀 /supplier
         // 免审申请
         noExamine: ['PostJson', 'supplier-application/no-examine-application'], // 供应商前缀 /supplier
+        // 获取淘汰原因
+        getEliminateReason: ['PostJson', 'supplier-application/get-eliminate-reason'], // 供应商前缀 /supplier
     },
     SALES_STRATEGY: {
         list: ['PostJson', 'sales-strategy/list'],
@@ -1109,6 +1111,8 @@ const apiList = {
     // 获取供应链角色下主管
     SupplierApplication: {
         getAdminList: ['PostJson', 'supplier-application/get-manager'], // 获取供应链角色下主管
+        //合作供应商修改
+        update: ['PostJson', 'supplier-application/update'],
     },
 };
 

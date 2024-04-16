@@ -87,7 +87,7 @@
                     </template>
                     <!-- 操作 -->
                     <template v-if="column.key === 'operate'">
-                        <a-button type="link" danger>
+                        <a-button type="link" danger @click="handleEliminate(record)">
                             {{ $t('supply-chain.eliminate') }}
                         </a-button>
                     </template>
@@ -112,43 +112,24 @@
                 </div>
             </template>
         </a-modal>
-        <!-- 修改备注 -->
-        <a-modal
-            v-model:visible="changeRemarkVisible"
-            :title="$t('supply-chain.remark')"
-            :width="540"
-            centered
-            class="import-modal"
-        >
-            <div class="modal-content">
-                <a-form ref="formRef" :model="formState" layout="vertical" name="form_in_modal">
-                    <a-form-item name="description" label="">
-                        <a-textarea
-                            v-model:value="formState.remark"
-                            show-count
-                            :maxlength="50"
-                            :autoSize="{ minRows: 3, maxRows: 6 }"
-                        />
-                    </a-form-item>
-                </a-form>
-            </div>
-            <template #footer>
-                <div class="btns">
-                    <a-button @click="handleRemarkClose">{{ $t('def.cancel') }}</a-button>
-                    <a-button type="primary" @click="updateRemarkFetch">{{ $t('def.sure') }}</a-button>
-                </div>
-            </template>
-        </a-modal>
+        <!-- 淘汰弹框 -->
+        <EliminateModal
+            :modalVisible="eliminateVisible"
+            :details="eliminateRecord"
+            @handleOk="handleEliminateOk"
+            @handleCancel="handleEliminateCancel"
+        />
     </div>
 </template>
 
 <script setup lang="jsx">
-import { onMounted, ref, getCurrentInstance, computed, nextTick, reactive, provide } from 'vue';
+import { onMounted, ref, getCurrentInstance, computed, nextTick, reactive, provide, watch } from 'vue';
 import Core from '@/core';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import ExportResult from '@/components/common/ExportResult.vue';
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
 import EditTableCell from './components/edit-table-cell.vue';
+import EliminateModal from './components/eliminate-modal.vue';
 import { useTable } from '@/hooks/useTable';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -172,21 +153,23 @@ const upload = reactive({
     },
 });
 const importVisible = ref(false);
-const changeRemarkVisible = ref(false);
+// const changeRemarkVisible = ref(false);
 const importResultData = reactive({
     totalCode: 0,
     successCode: 0,
     errorCode: 0,
 });
 const editId = ref(null);
-const formState = reactive({
-    remark: '',
-});
+const eliminateVisible = ref(false);
+const eliminateRecord = ref({});
+
 // 采购品类
 const PURCHASE_CATEGORY_LIST = Core.Const.QUALIFIED_LIST.PURCHASE_CATEGORY_LIST;
 const REGISTRATION_TYPE_LIST = Core.Const.QUALIFIED_LIST.REGISTRATION_TYPE_LIST;
-// 供应链
+// 供应链角色
 const SUPPLY_CHAIN_ROLES_LIST = ref([]);
+// 车型
+const VEHICLE_MODEL_LIST = ref([]);
 
 const tableColumns = computed(() => {
     let columns = [
@@ -211,7 +194,7 @@ const tableColumns = computed(() => {
             dataIndex: 'code',
             key: 'code',
         },
-        { title: $t('supply-chain.supplier_full_name'), dataIndex: 'name', key: 'name' },
+        { title: $t('supply-chain.supplier_full_name'), dataIndex: 'company_name', key: 'company_name' },
         // 简称
         {
             title: $t('supply-chain.supplier_abbreviation'),
@@ -229,7 +212,13 @@ const tableColumns = computed(() => {
         { title: $t('supply-chain.main_supply'), dataIndex: 'supply_main', key: 'supply_main' },
         { title: $t('supply-chain.secondary_supply'), dataIndex: 'supply_secondary', key: 'supply_secondary' },
         { title: $t('supply-chain.other_items'), dataIndex: 'supply_other', key: 'supply_other' },
-        { title: $t('common.vehicle_model'), dataIndex: 'vehicle_model', key: 'vehicle_model' },
+        {
+            title: $t('common.vehicle_model'),
+            dataIndex: 'vehicle_model',
+            key: 'vehicle_model',
+            slelectOptions: VEHICLE_MODEL_LIST.value,
+            mode: 'multiple',
+        },
         {
             title: $t('common.manager'),
             dataIndex: 'manager',
@@ -237,7 +226,14 @@ const tableColumns = computed(() => {
             selectOptions: SUPPLY_CHAIN_ROLES_LIST.value,
             mode: 'multiple',
         },
-        { title: $t('supply-chain.introduction_date'), dataIndex: 'register_time', key: 'register_time' },
+        {
+            title: $t('supply-chain.introduction_date'),
+            dataIndex: 'create_time',
+            key: 'create_time',
+            customRender: ({ text, record, index }) => {
+                return Core.Util.timeFormat(text);
+            },
+        },
         {
             title: $t('supply-chain.change_class'),
             dataIndex: 'register_type',
@@ -246,7 +242,14 @@ const tableColumns = computed(() => {
             // 单选
             mode: 'single',
         },
-        { title: $t('supply-chain.remark'), dataIndex: 'remark', key: 'remark' },
+        {
+            title: $t('supply-chain.remark'),
+            dataIndex: 'remark',
+            key: 'remark',
+            customRender: ({ text, record, index }) => {
+                return text ? text : '无';
+            },
+        },
         { title: $t('supply-chain.province'), dataIndex: 'province', key: 'province' },
         { title: $t('supply-chain.city'), dataIndex: 'city', key: 'city' },
         { title: $t('supply-chain.detailed_address'), dataIndex: 'address', key: 'address' },
@@ -265,7 +268,7 @@ const searchList = ref([
     {
         type: 'input',
         value: '',
-        searchParmas: 'name',
+        searchParmas: 'company_name',
         key: 'supply-chain.supplier_full_name',
     },
     {
@@ -295,74 +298,34 @@ onMounted(() => {
     getSupplyChainList();
 });
 
-function request() {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve({
-                list: [
-                    {
-                        id: 1,
-                        no: '1',
-                        code: 'code1',
-                        name: 'name1',
-                        short_name: 'short_name1',
-                        purchase_category: 'RP类, 包材类',
-                        supply_main: 'supply_main1',
-                        supply_secondary: 'supply_secondary1',
-                        supply_other: 'supply_other1',
-                        vehicle_model: 'vehicle_model1',
-                        manager: 'tenann1',
-                        register_time: '2021-01-01',
-                        register_type: 1,
-                        remark: 'remark1',
-                        province: 'province1',
-                        city: 'city1',
-                        address: 'address1',
-                    },
-                    {
-                        id: 2,
-                        no: '2',
-                        code: 'code2',
-                        name: 'name2',
-                        short_name: 'short_name2',
-                        purchase_category: 'RP类, 包材类',
-                        supply_main: 'supply_main2',
-                        supply_secondary: 'supply_secondary2',
-                        supply_other: 'supply_other2',
-                        vehicle_model: 'vehicle_model2',
-                        manager: 'tenann1',
-                        register_time: '2021-01-02',
-                        register_type: 2,
-                        remark: 'remark2',
-                        province: 'province2',
-                        city: 'city2',
-                        address: 'address2',
-                    },
-                ],
-                count: 1,
-            });
-        }, 1000);
-    });
-}
-
-const updateRemark = Core.Api.Supplier.updateRemark;
+const request = Core.Api.SUPPLY.adminList;
 const { loading, tableData, pagination, search, onPagenationChange, refreshTable, searchParam } = useTable({
     request,
     initParam: {
-        status: 10,
+        stage: 10,
+    },
+    dataCallBack: res => {
+        // item 和 item.form字段合并
+        let list = _.cloneDeep(res.list);
+        list.map(item => {
+            item.code = item?.form?.code || '';
+            item.no = item?.form?.no || '';
+            item.short_name = item?.form?.short_name || '';
+            item.purchase_category = item?.form?.purchase_category || undefined;
+            item.supply_main = item?.form?.supply_main || '';
+            item.supply_secondary = item?.form?.supply_secondary || '';
+            item.supply_other = item?.form?.supply_other || '';
+            item.vehicle_model = item?.form?.vehicle_model || '';
+            item.manager = item?.form?.manager || undefined;
+            item.register_type = item?.form?.register_type || '';
+            item.province = item?.form?.company_info?.province || '';
+            item.city = item?.form?.company_info?.city || '';
+            item.address = item?.form?.company_info?.address || '';
+        });
+        return list;
     },
 });
-const updateRemarkFetch = () => {
-    const params = {
-        id: editId.value,
-        remark: formState.remark,
-    };
-    updateRemark({ ...params }).then(res => {
-        proxy.$message.success(proxy.$t('pop_up.modify'));
-        onSearch();
-        handleRemarkClose();
-    });
-};
+
 /* Fetch end*/
 
 /* methods start*/
@@ -403,19 +366,48 @@ const handleImportClose = () => {
 const handleImportConfirm = () => {
     importVisible.value = false;
 };
-const handleRemarkClose = () => {
-    changeRemarkVisible.value = false;
-};
 const tabCellSave = ({ record, index, column }) => {
     console.log('record', record);
     console.log('index', index);
     console.log('column', column);
+    let params = {
+        id: 1,
+        company_name: '', //供方全称
+        supplier_application_form: {
+            no: '', //品编
+            code: '', //供方代码
+            short_name: '', //供方简称
+            purchase_category: '', //采购品类
+            supply_main: '', //主供件
+            supply_secondary: '', //次供件
+            supply_other: '', //其他件
+            vehicle_model: '', //车型
+            manager: '', //主管
+            register_type: '', //变化类
+            remark: '', //备注
+        },
+    };
+    params.id = record.id;
+    params.company_name = record.company_name;
+    params.supplier_application_form.no = record.no;
+    params.supplier_application_form.code = record.code;
+    params.supplier_application_form.short_name = record.short_name;
+    params.supplier_application_form.purchase_category = record.purchase_category;
+    params.supplier_application_form.supply_main = record.supply_main;
+    params.supplier_application_form.supply_secondary = record.supply_secondary;
+    params.supplier_application_form.supply_other = record.supply_other;
+    params.supplier_application_form.vehicle_model = record.vehicle_model;
+    params.supplier_application_form.manager = record.manager;
+    params.supplier_application_form.register_type = record.register_type;
+    params.supplier_application_form.remark = record.remark;
+    console.log('params', params);
+    Core.Api.SupplierApplication.update(params).then(res => {
+        search();
+    });
 };
-
 // 获取供应链下的角色
 const getSupplyChainList = () => {
     Core.Api.SupplierApplication.getAdminList().then(res => {
-        console.log('res', res.list);
         SUPPLY_CHAIN_ROLES_LIST.value = res.list.map((item, index) => {
             return {
                 label: item,
@@ -423,7 +415,24 @@ const getSupplyChainList = () => {
                 id: index,
             };
         });
-        console.log('SUPPLY_CHAIN_ROLES_LIST', SUPPLY_CHAIN_ROLES_LIST.value);
+    });
+};
+const handleEliminate = record => {
+    eliminateRecord.value = record;
+    eliminateVisible.value = true;
+};
+const handleEliminateOk = () => {
+    eliminateVisible.value = false;
+    // 重新请求数据
+    search();
+};
+const handleEliminateCancel = () => {
+    eliminateVisible.value = false;
+};
+// 获取车型
+const getVehicleModel = () => {
+    Core.Api.ItemCategory.tree({ type: 30, parent_id: 0, depth: 2 }).then(res => {
+        console.log(res.list);
     });
 };
 

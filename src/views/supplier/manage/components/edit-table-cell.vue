@@ -50,8 +50,13 @@ const props = defineProps({
 });
 
 const isEditable = ref(false);
-const { column, text, record, index } = toRefs(props.cellData);
-const showData = ref('');
+// const { column, text, record, index } = toRefs(props.cellData);
+const column = computed(() => props.cellData.column);
+const text = computed(() => props.cellData.text);
+const record = computed(() => props.cellData.record);
+const index = computed(() => props.cellData.index);
+
+const showData = ref(undefined);
 const emit = defineEmits(['handleCellSave']);
 
 watch();
@@ -77,7 +82,7 @@ const tableEdit = () => {
 };
 const filterOption = text => {
     if (props.mode === 'multiple') {
-        let arr = text.split(',');
+        let arr = text ? text.split(',') : [];
         arr = arr.map(item => item.trim());
         let result = [];
         props.selectOptions.forEach(item => {

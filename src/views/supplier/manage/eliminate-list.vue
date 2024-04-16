@@ -59,9 +59,20 @@ const { loading, tableData, pagination, search, onPagenationChange, refreshTable
         let list = _.cloneDeep(res.list);
         // item 和 item.form字段合并
         list.forEach(item => {
-            item = Object.assign(item, item.form);
+            item.code = item?.form?.code || '';
+            item.no = item?.form?.no || '';
+            item.short_name = item?.form?.short_name || '';
+            item.purchase_category = item?.form?.purchase_category || undefined;
+            item.supply_main = item?.form?.supply_main || '';
+            item.supply_secondary = item?.form?.supply_secondary || '';
+            item.supply_other = item?.form?.supply_other || '';
+            item.vehicle_model = item?.form?.vehicle_model || '';
+            item.manager = item?.form?.manager || undefined;
+            item.register_type = item?.form?.register_type || '';
+            item.province = item?.form?.company_info?.province || '';
+            item.city = item?.form?.company_info?.city || '';
+            item.address = item?.form?.company_info?.address || '';
         });
-        console.log('list', list);
         return list;
     },
 });

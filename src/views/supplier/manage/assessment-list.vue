@@ -79,10 +79,10 @@ const tableColumns = computed(() => {
         },
         {
             title: $t('supply-chain.supplier_type'),
-            dataIndex: 'purchase_category',
-            key: 'purchase_category',
+            dataIndex: 'type',
+            key: 'type',
             customRender: ({ text, record, index, column }) => {
-                return text || '-';
+                return Core.Const.SUPPLAY.SUPPLAY_TYPE[text] ? $t(Core.Const.SUPPLAY.SUPPLAY_TYPE[text]?.t) : '-';
             },
         },
     ];
