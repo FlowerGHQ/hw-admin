@@ -157,7 +157,7 @@ const SUPPLAY = {
     STATUS_LIST: [
         { zh: '全  部', en: 'All', value: 0, color: 'primary', key: '' },
         // 待初审
-        { zh: '待审核', en: 'Pending Audit', value: 0, color: 'yellow', key: 10 },
+        { zh: '待初审', en: 'Pending First Audit', value: 0, color: 'yellow', key: 10 },
         // 待复审
         { zh: '待复审', en: 'Pending Review', value: 0, color: 'blue', key: 40 },
         // 待终审
