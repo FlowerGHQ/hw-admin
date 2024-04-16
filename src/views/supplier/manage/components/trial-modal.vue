@@ -96,9 +96,9 @@ const radioList = computed(() => {
             break;
         case 50:
             return [
-                //  30 同意免审 70 现场考核 （终审)
-                { label: $t('supply-chain.agree_exempt'), value: 110 },
-                { label: $t('supply-chain.on_site_assessment'), value: 70 },
+                //  30 同意免审 40 现场考核
+                { label: $t('supply-chain.agree_exempt'), value: 30 },
+                { label: $t('supply-chain.on_site_assessment'), value: 40 },
             ];
             break;
         default:
