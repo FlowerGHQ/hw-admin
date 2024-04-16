@@ -8,7 +8,12 @@
                 <a-form ref="formRef" :model="formState" layout="vertical">
                     <a-row :gutter="16" justify="start" :wrap="true">
                         <a-col :span="item.span" v-for="item in form" :key="item.value">
-                            <a-form-item :label="item.label" :name="item.value" v-if="item.type !== 'table'">
+                            <a-form-item
+                                :label="item.label"
+                                :name="item.value"
+                                v-if="item.type !== 'table'"
+                                :rules="item.required ? [item.requiredRule] : []"
+                            >
                                 <a-input
                                     v-if="item.type === 'input'"
                                     :placeholder="item.placeholder"
@@ -207,6 +212,8 @@ const form = computed(() => [
         maxlength: 2000,
         autosize: { minRows: 4, maxRows: 6 },
         showCount: true,
+        required: true,
+        requiredRule: { required: true, message: `${$t('common.please_enter')}${$t('supply-chain.main_business')}` },
     },
     // 经营业绩
     {
@@ -218,6 +225,11 @@ const form = computed(() => [
         maxlength: 1000,
         autosize: { minRows: 4, maxRows: 6 },
         showCount: true,
+        required: true,
+        requiredRule: {
+            required: true,
+            message: `${$t('common.please_enter')}${$t('supply-chain.business_performance')}`,
+        },
     },
     // 拟供产品
     {
@@ -229,6 +241,11 @@ const form = computed(() => [
         maxlength: 500,
         autosize: { minRows: 4, maxRows: 6 },
         showCount: true,
+        required: true,
+        requiredRule: {
+            required: true,
+            message: `${$t('common.please_enter')}${$t('supply-chain.proposed_products')}`,
+        },
     },
     // 免审理由
     {
@@ -240,6 +257,8 @@ const form = computed(() => [
         maxlength: 500,
         autosize: { minRows: 4, maxRows: 6 },
         showCount: true,
+        required: true,
+        requiredRule: { required: true, message: `${$t('common.please_enter')}${$t('supply-chain.exempt_reason')}` },
     },
 ]);
 const formState = ref({
@@ -258,6 +277,7 @@ const formState = ref({
         },
     ],
 });
+const formRef = ref(null);
 // 中国的地区数据
 const chinaOptions = ref([]);
 // 一行的数据
@@ -292,33 +312,27 @@ const getChinaArea = () => {
         chinaOptions.value = res.data;
     });
 };
-// const handleAddRow = () => {
-//     formState.value.list.push({
-//         customer_name: '', //客户名称
-//         sales_proportion: undefined, //销售占比
-//         main_supply_parts: '', //主供零件
-//         begin_time: undefined, //开始合作时间
-//     });
-// };
 const handleDelete = index => {
     formState.value.list.splice(index, 1);
 };
 const handleSubmit = () => {
-    let params = _.cloneDeep(formState.value);
-    delete params.province_city;
-    params.list.forEach((item, index) => {
-        item.begin_cooperation_time = item.begin_cooperation_time.unix();
-    });
-    Core.Api.SUPPLY.noExamine({ supplier_examine: params })
-        .then(res => {
-            console.log('handleSubmit', res);
-            // 获取详情
-            getDetail();
-            message.success($t('supply-chain.supply_submit_successfully'));
-        })
-        .catch(err => {
-            console.log('handleSubmit err', err);
+    formRef.value.validate().then(() => {
+        let params = _.cloneDeep(formState.value);
+        delete params.province_city;
+        params.list.forEach((item, index) => {
+            item.begin_cooperation_time = item.begin_cooperation_time.unix();
         });
+        Core.Api.SUPPLY.noExamine({ supplier_examine: params })
+            .then(res => {
+                console.log('handleSubmit', res);
+                // 获取详情
+                getDetail();
+                message.success($t('supply-chain.supply_submit_successfully'));
+            })
+            .catch(err => {
+                console.log('handleSubmit err', err);
+            });
+    });
 };
 const handleCancle = () => {
     router.go(-1);
