@@ -5,26 +5,24 @@
                 <template #expandIcon></template>
                 <a-collapse-panel v-for="(org, key) of orgType" :key="key" :header="name" class="gray-collapse-panel">
                     <template #extra v-if="showExtra">
-                        <a-button @click.stop="handleEditShow(key)" type="link" v-if="!edit && $auth('MANAGER')"
-                            ><i class="icon i_edit" />{{ $t('def.set') }}</a-button
-                        >
+                        <a-button v-if="!edit" @click.stop="handleEditShow(key)" type="link">
+                            <i class="icon i_edit" />
+                            {{ $t('def.set') }}
+                        </a-button>
                         <template v-else>
-                            <a-button @click.stop="handleEditSubmit(key)" type="link" v-if="$auth('MANAGER')"
-                                ><i class="icon i_confirm" />{{ $t('def.save') }}</a-button
-                            >
-                            <a-button
-                                @click.stop="handleEditClose(key)"
-                                type="link"
-                                class="cancel"
-                                v-if="$auth('MANAGER')"
-                                ><i class="icon i_close_c" />{{ $t('def.cancel') }}</a-button
-                            >
+                            <a-button @click.stop="handleEditSubmit(key)" type="link">
+                                <i class="icon i_confirm" />{{ $t('def.save') }}
+                            </a-button>
+                            <a-button @click.stop="handleEditClose(key)" type="link" class="cancel">
+                                <i class="icon i_close_c" />
+                                {{ $t('def.cancel') }}
+                            </a-button>
                         </template>
                     </template>
 
                     <div class="panel-content" v-if="!edit && showExtra">
                         <SimpleImageEmpty v-if="false" desc="该用户尚未分配可管理权限" />
-                        <template v-else v-for="item of options" :key="item.key">                            
+                        <template v-else v-for="item of options" :key="item.key">
                             <template v-for="(subItem, index) of item.list" :key="index">
                                 <div v-if="subItem.itemSelect?.length" class="form-item afs">
                                     <div class="key">
@@ -60,9 +58,7 @@
                                                     :key="fourItem.id"
                                                     class="m-r-8"
                                                 >
-                                                    <template
-                                                        v-if="$Util.Common.isMember(fourItem.id, item.select)"
-                                                    >
+                                                    <template v-if="$Util.Common.isMember(fourItem.id, item.select)">
                                                         <span
                                                             :class="{ 'color-1890ff': fourItem.scope_type > 0 }"
                                                             @click="handleScopeTypeShow(fourItem.scope_type)"
@@ -113,13 +109,18 @@
                                     </div>
                                 </div>
                                 <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
-                                    <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
+                                    <div class="key">
+                                        {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:
+                                    </div>
                                     <div class="value">
                                         <!-- 全选 -->
                                         <div class="m-b-10">
                                             <a-checkbox
                                                 :checked="
-                                                    $Util.Common.arraysAreEqual(subItem.itemSelect, subItem.itemCheckAll)
+                                                    $Util.Common.arraysAreEqual(
+                                                        subItem.itemSelect,
+                                                        subItem.itemCheckAll,
+                                                    )
                                                 "
                                                 :disabled="subItem.disabled"
                                                 @change="e => handleCheckAllChange(e, subItem)"
@@ -302,28 +303,28 @@ export default {
         // 获取该用户对应角色下的全部权限 [] 让其不能更改disabled
         getUserRoleAuthFetch() {
             this.options = Core.Util.deepCopy(this.authItems);
-            return new Promise( (resolve, reject) => {
+            return new Promise((resolve, reject) => {
                 Core.Api.Authority.authRoleUser({
                     user_id: this.userId,
                 })
-                    .then(async(res) => {
+                    .then(async res => {
                         let list = res.list;
                         console.log('getUserRoleAuthFetch', list);
                         this.disabledIds = list.map(el => el.id);
                         this.authClass.addDisableItem(this.disabledIds);
                         // 先清空select在重新赋值
-                        this.authClass.clearAuthItemsSelect()
+                        this.authClass.clearAuthItemsSelect();
                         // 回显数据
                         this.authClass.echoAuth(list);
                         this.options = Core.Util.deepCopy(this.authItems);
                         await this.getUserAuthFetch();
-                        resolve()
+                        resolve();
                     })
                     .catch(err => {
                         console.log('err', err);
-                        reject()
+                        reject();
                     });
-            })
+            });
         },
         // 某个用户对应角色 已选的权限
         getUserAuthFetch() {
@@ -371,7 +372,7 @@ export default {
             list = list.filter(el => !this.disabledIds.includes(el));
 
             list = [...new Set(list)];
-            console.log("list", list);
+            console.log('list', list);
             if (!this.showExtra) {
                 return this.$emit('submit', list.join(','));
             }
@@ -414,7 +415,7 @@ export default {
         },
         // auth-tab组件
         onTab(value) {
-            this.activeTab = value
+            this.activeTab = value;
         },
     },
 };
@@ -452,7 +453,7 @@ export default {
 }
 
 .ant-checkbox-wrapper {
-    margin-left: 0px;    
+    margin-left: 0px;
 }
 
 .color-1890ff {
