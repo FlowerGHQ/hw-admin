@@ -38,6 +38,7 @@
                 :row-key="record => record.id"
                 :row-selection="{
                     onChange: (selectedRowKeys, selectedRows) => handleSelectChange(selectedRowKeys, selectedRows),
+                    selectedRowKeys: selectedIds,
                     getCheckboxProps: record => ({
                         disabled: record.stage === 30 || record.stage === 40,
                     }),
@@ -164,6 +165,7 @@ import MySvgIcon from '@/components/MySvgIcon/index.vue';
 import EditTableCell from './components/edit-table-cell.vue';
 import _ from 'lodash';
 import { Modal } from 'ant-design-vue';
+import { message } from 'ant-design-vue';
 
 const $store = useStore();
 const router = useRouter();
@@ -384,7 +386,7 @@ const tabCellSave = ({ record, index, column }) => {
 // handleApproval
 const handleApproval = () => {
     if (selectedIds.value.length === 0) {
-        Core.Util.message.error($t('supply-chain.please_select_supplier'));
+        message.error($t('supply-chain.please_select_supplier'));
         return;
     }
     approvalVisible.value = true;
