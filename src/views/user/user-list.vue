@@ -77,6 +77,13 @@
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
+                        <template v-if="column.key === 'role_names'">
+                            <span v-for="(item, index) in text">
+                                <span>{{ item || '' }}</span>
+                                <span v-if="text[index + 1]">,</span>
+                            </span>
+                            <span v-if="!text?.length">-</span>
+                        </template>
                         <template v-if="column.key === 'user'">
                             <a-tooltip placement="top" :title="text">
                                 <a-button type="link" @click="routerChange('detail', record)" style="margin-left: 6px">
@@ -206,7 +213,7 @@ export default {
                 { title: 'n.phone', dataIndex: ['account', 'phone'], key: 'item' },
                 { title: 'n.email', dataIndex: ['account', 'email'], key: 'item' },
                 { title: 'u.employee_no', dataIndex: 'employee_no', key: 'item' },
-                { title: 'u.role', dataIndex: 'role_name', key: 'item' },
+                { title: 'u.role', dataIndex: 'role_names', key: 'role_names' },
                 { title: 'u.authority_abbreviation', dataIndex: 'flag_authority', key: 'authority' },
                 { title: 'e.administrator', dataIndex: 'flag_admin', align: 'center' },
                 { title: 'u.login', dataIndex: ['account', 'last_login_time'], key: 'time' },

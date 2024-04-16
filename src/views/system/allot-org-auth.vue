@@ -238,7 +238,8 @@ export default {
                 .then(res => {
                     console.log('getAllAuthItem res:', res);
 
-                    let list = res.list;
+                    let sysData = ['sys.sys.authority', 'sys.sys.message', 'sys.sys.file', 'sys.sys.label']
+                    let list = res.list.filter(el => !sysData.includes(el.key));
 
                     this.authClass.processAuthList(list);
                     this.getOrgAuthFetch('distributor');
@@ -251,6 +252,7 @@ export default {
         },
         // 获取 某类型组织 已分配的 权限项
         getOrgAuthFetch(user_type) {
+            console.log("cc", this.authItems);
             this[user_type].options = Core.Util.deepCopy(this.authItems);
             Core.Api.Authority.authOptions({
                 org_type: this[user_type].type,

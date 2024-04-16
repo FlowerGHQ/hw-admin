@@ -141,14 +141,6 @@ const SYSTEM_AUTH = {
         },
         {
             list: [],
-            select: [], // CRM
-            templateSelect: [], // 当前模块是否被选中了
-            key: ROUTER_TYPE_MAP[ROUTER_TYPE.CRM].KEY,
-            name: 'CRM',
-            tab: ROUTER_TYPE.CRM,
-        },
-        {
-            list: [],
             select: [],
             templateSelect: [], // 当前模块是否被选中了
             key: ROUTER_TYPE_MAP[ROUTER_TYPE.SUPPLIER].KEY,  // 供应链
@@ -159,9 +151,9 @@ const SYSTEM_AUTH = {
             list: [],
             select: [],
             templateSelect: [], // 当前模块是否被选中了
-            key: ROUTER_TYPE_MAP[ROUTER_TYPE.SYSTEM].KEY,  // 系统管理
-            name: '系统管理',
-            tab: ROUTER_TYPE.SYSTEM,
+            key: ROUTER_TYPE_MAP[ROUTER_TYPE.WAREHOUSING].KEY, // 仓储
+            name: '仓储',
+            tab: ROUTER_TYPE.WAREHOUSING,
         },
         {
             list: [],
@@ -170,14 +162,22 @@ const SYSTEM_AUTH = {
             key: ROUTER_TYPE_MAP[ROUTER_TYPE.FINANCE].KEY, // 财务
             name: '财务',
             tab: ROUTER_TYPE.FINANCE,
+        },        
+        {
+            list: [],
+            select: [], // CRM
+            templateSelect: [], // 当前模块是否被选中了
+            key: ROUTER_TYPE_MAP[ROUTER_TYPE.CRM].KEY,
+            name: 'CRM',
+            tab: ROUTER_TYPE.CRM,
         },
         {
             list: [],
             select: [],
             templateSelect: [], // 当前模块是否被选中了
-            key: ROUTER_TYPE_MAP[ROUTER_TYPE.WAREHOUSING].KEY, // 仓储
-            name: '仓储',
-            tab: ROUTER_TYPE.WAREHOUSING,
+            key: ROUTER_TYPE_MAP[ROUTER_TYPE.SYSTEM].KEY,  // 系统管理
+            name: '系统管理',
+            tab: ROUTER_TYPE.SYSTEM,
         },
     ],
 };
