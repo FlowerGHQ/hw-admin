@@ -132,7 +132,6 @@ const handlePreview = ({ file, fileList }) => {
 // 获取淘汰原因
 const getEliminateReason = () => {
     Core.Api.ItemCategory.tree({ type: 40, parent_id: 0, depth: 1 }).then(res => {
-        console.log(res.list);
         eliminateReasonOptions.value = res.list;
     });
 };

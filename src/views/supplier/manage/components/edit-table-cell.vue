@@ -9,9 +9,30 @@
             <EditOutlined class="editable-cell-icon" @click="tableEdit()" />
         </div>
     </div>
-    <div class="edit-cell" v-else-if="type === 'select'">
+    <div class="edit-cell" v-else-if="type === 'select' && !isSort">
         <div class="editable-cell-select-wrapper" v-if="isEditable">
             <a-select v-model:value="showData" :mode="mode" :options="selectOptions" @change="handleSelectChange">
+            </a-select>
+            <span class="editable-cell-icon-check" @click="tabCellSave()">
+                {{ $t('supply-chain.determine') }}
+            </span>
+        </div>
+        <div class="editable-cell-text-wrapper" v-else>
+            {{ filterOption(text) || '-' }}
+            <span @click="tableEdit()" class="editable-cell-icon"> {{ $t('supply-chain.change') }}</span>
+        </div>
+    </div>
+    <div class="edit-cell" v-else-if="type === 'select' && isSort">
+        <div class="editable-cell-select-wrapper" v-if="isEditable">
+            <a-select v-model:value="showData" :mode="mode" @change="handleSelectChange">
+                <a-select-opt-group v-for="item in selectOptions">
+                    <template #label>
+                        <span>{{ item.label }}</span>
+                    </template>
+                    <a-select-option v-for="child in item.options" :value="child.value">
+                        {{ child.label }}
+                    </a-select-option>
+                </a-select-opt-group>
             </a-select>
             <span class="editable-cell-icon-check" @click="tabCellSave()">
                 {{ $t('supply-chain.determine') }}
@@ -47,6 +68,10 @@ const props = defineProps({
         type: String,
         default: '',
     },
+    isSort: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const isEditable = ref(false);
@@ -74,14 +99,14 @@ const tabCellSave = () => {
 const tableEdit = () => {
     isEditable.value = true;
     if (props.type === 'input' || (props.type === 'select' && props.mode !== 'multiple')) {
-        showData.value = text.value;
+        showData.value = text?.value || undefined;
     } else if (props.type === 'select' && props.mode === 'multiple') {
-        showData.value = text.value.split(',').map(item => item.trim());
+        showData.value = text?.value ? text.value.split(',').map(item => item.trim()) : undefined;
     }
-    console.log(showData.value);
+    console.log(showData.value, 'showData');
 };
 const filterOption = text => {
-    if (props.mode === 'multiple') {
+    if (props.mode === 'multiple' && !props.isSort) {
         let arr = text ? text.split(',') : [];
         arr = arr.map(item => item.trim());
         let result = [];
@@ -91,12 +116,25 @@ const filterOption = text => {
             }
         });
         return result.join(',');
+    } else if (props.mode === 'multiple' && props.isSort) {
+        let arr = text ? text.split(',') : [];
+        console.log(arr, 'arr');
+        arr = arr.map(item => item.trim());
+        let result = [];
+        props.selectOptions.forEach(item => {
+            item.options.forEach(child => {
+                if (arr.includes(child.value)) {
+                    result.push(child.value);
+                }
+            });
+        });
+        console.log(result, 'result');
+        return result.join(',');
     } else {
         return props.selectOptions.find(item => item.value == text)?.label;
     }
 };
 const handleSelectChange = value => {
-    console.log(value, 'value');
     showData.value = value;
 };
 </script>

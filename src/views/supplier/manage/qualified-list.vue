@@ -74,7 +74,8 @@
                         v-if="
                             column.key === 'purchase_category' ||
                             column.key === 'register_type' ||
-                            column.key === 'manager'
+                            column.key === 'manager' ||
+                            column.key === 'vehicle_model'
                         "
                     >
                         <EditTableCell
@@ -83,6 +84,7 @@
                             @handleCellSave="tabCellSave"
                             :selectOptions="column.selectOptions"
                             :mode="column.mode"
+                            :isSort="column.isSort"
                         />
                     </template>
                     <!-- 操作 -->
@@ -122,7 +124,7 @@
     </div>
 </template>
 
-<script setup lang="jsx">
+<script setup>
 import { onMounted, ref, getCurrentInstance, computed, nextTick, reactive, provide, watch } from 'vue';
 import Core from '@/core';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
@@ -216,8 +218,9 @@ const tableColumns = computed(() => {
             title: $t('common.vehicle_model'),
             dataIndex: 'vehicle_model',
             key: 'vehicle_model',
-            slelectOptions: VEHICLE_MODEL_LIST.value,
+            selectOptions: VEHICLE_MODEL_LIST.value,
             mode: 'multiple',
+            isSort: true,
         },
         {
             title: $t('common.manager'),
@@ -296,6 +299,7 @@ const searchList = ref([
 
 onMounted(() => {
     getSupplyChainList();
+    getVehicleModel();
 });
 
 const request = Core.Api.SUPPLY.adminList;
@@ -429,10 +433,32 @@ const handleEliminateOk = () => {
 const handleEliminateCancel = () => {
     eliminateVisible.value = false;
 };
+// 递归生成车型数据
+const getVehicleModelFilter = arr => {
+    let result = [];
+    arr.forEach(item => {
+        if (item.children && item.children.length > 0) {
+            result.push({
+                label: item.name,
+                value: item.name,
+                id: item.id,
+                options: getVehicleModelFilter(item.children),
+            });
+        } else {
+            result.push({
+                label: item.name,
+                value: item.name,
+                id: item.id,
+            });
+        }
+    });
+    return result;
+};
 // 获取车型
 const getVehicleModel = () => {
     Core.Api.ItemCategory.tree({ type: 30, parent_id: 0, depth: 2 }).then(res => {
-        console.log(res.list);
+        VEHICLE_MODEL_LIST.value = getVehicleModelFilter(res.list);
+        console.log(VEHICLE_MODEL_LIST.value, 'VEHICLE_MODEL_LIST.value');
     });
 };
 
@@ -482,5 +508,15 @@ const getVehicleModel = () => {
             }
         }
     }
+}
+:deep(.ant-select),
+:deep(.ant-input) {
+    min-width: 120px;
+}
+:deep(.ant-table-cell) {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 </style>
