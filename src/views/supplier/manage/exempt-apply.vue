@@ -275,9 +275,11 @@ const getDetail = () => {
     Core.Api.SUPPLY.noExamineDetail(obj)
         .then(res => {
             formState.value = res.detail;
+            console.log('getDetail', res.detail);
             formState.value.list.forEach((item, index) => {
                 item.begin_cooperation_time = dayjs.unix(item.begin_cooperation_time);
             });
+            formState.value.province_city = [formState.value.province, formState.value.city];
         })
         .catch(err => {
             console.log('getPhoneCodeFetchs err', err);
@@ -303,6 +305,7 @@ const handleDelete = index => {
 };
 const handleSubmit = () => {
     let params = _.cloneDeep(formState.value);
+    delete params.province_city;
     params.list.forEach((item, index) => {
         item.begin_cooperation_time = item.begin_cooperation_time.unix();
     });
