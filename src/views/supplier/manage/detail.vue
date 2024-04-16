@@ -2847,9 +2847,12 @@
         </a-modal>
         <div class="suction-bottom">
             <!-- 审核按钮 -->
-            <a-button v-if="allDetails.audit_status == 10" type="primary" @click="onSuction('audit')">{{
-                $t('supply-chain.first_trial')
-            }}</a-button>
+            <a-button
+                v-if="allDetails.audit_status == 10 || allDetails.audit_status == 20"
+                type="primary"
+                @click="onSuction('audit')"
+                >{{ $t('supply-chain.first_trial') }}</a-button
+            >
             <!-- 40 待复审 -->
             <a-button v-if="allDetails.audit_status == 40" type="primary" @click="onSuction('audit')">{{
                 $t('supply-chain.review')
