@@ -46,7 +46,12 @@
                     <div class="form-item required">
                         <div class="key">{{ $t('m.category_name') }}</div>
                         <div class="value">
-                            <a-input v-model:value="editForm.name" :placeholder="$t('def.input')" />
+                            <a-input
+                                v-model:value="editForm.name"
+                                :placeholder="$t('def.input')"
+                                maxlength="10"
+                                showCount
+                            />
                         </div>
                     </div>
                 </div>
