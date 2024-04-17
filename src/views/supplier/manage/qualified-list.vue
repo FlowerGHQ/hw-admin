@@ -149,7 +149,7 @@ const router = useRouter();
 const $t = useI18n().t;
 const { proxy } = getCurrentInstance();
 const upload = reactive({
-    action: Core.Const.NET.URL_POINT + '/admin/1/supplier/temp-import',
+    action: Core.Const.NET.URL_POINT + '/admin/1/supplier/import',
     fileList: [],
     headers: {
         ContentType: false,
@@ -343,6 +343,7 @@ const { loading, tableData, pagination, search, onPagenationChange, refreshTable
             item.city = item?.form?.company_info?.city || '';
             item.address = item?.form?.company_info?.address || '';
             item.cooperative_factory = item?.form?.customer_info.map(item => item.customer_name).join('、') || '';
+            item.remark = item?.form?.remark || '';
         });
         return list;
     },

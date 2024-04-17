@@ -115,7 +115,6 @@ const tableEdit = () => {
     } else if (props.type === 'select' && props.mode === 'multiple') {
         showData.value = text?.value ? text.value.split(',').map(item => item.trim()) : undefined;
     }
-    console.log(showData.value, 'showData');
 };
 const filterOption = text => {
     if (props.mode === 'multiple' && !props.isSort) {
@@ -141,7 +140,6 @@ const filterOption = text => {
                 });
             }
         });
-        console.log(result, 'result');
         return result.join(',');
     } else {
         return props.selectOptions.find(item => item.value == text)?.label;

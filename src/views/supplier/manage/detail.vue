@@ -2909,6 +2909,7 @@ import MyUpload from '@/components/MyUpload/index.vue';
 import TrialModal from './components/trial-modal.vue';
 import dayjs from 'dayjs';
 import axios from 'axios';
+import { message } from 'ant-design-vue';
 // json
 const chinaOptions = ref([]);
 const route = useRoute();
@@ -3211,14 +3212,12 @@ function getDetail(params = {}) {
             allDetails.value = res.detail;
             console.log('allDetails', allDetails.value);
             if (res.detail.form) {
-                console.log('res.detail.form', typeof res.detail.form);
                 typeof res.detail.form === 'string'
                     ? (msgDetail.value = JSON.parse(res.detail.form))
                     : (msgDetail.value = res.detail.form);
             } else {
                 msgDetail.value = {};
             }
-            console.log('msgDetail', msgDetail.value);
             // 回显数据
             for (const key in msgDetail.value) {
                 let keys = msgDetail.value[key];
@@ -3228,9 +3227,12 @@ function getDetail(params = {}) {
                         parameters.value[key].forEach(el => {
                             el.begin_cooperation_time = el.begin_cooperation_time
                                 ? dayjs.unix(el.begin_cooperation_time)
-                                : null;
+                                : '';
                         });
-                    }
+                    } else if (key === 'contact_info') {
+                        msgDetail.value['position'] = parameters.value[key].map(item => item.position);
+                        parameters.value['position'] = msgDetail.value['position'];
+                    } 
                 } else if (keys instanceof Object) {
                     // 判断 是对象 [数组其实也是对象 所以先判断数组在判断对象]
                     for (const item in parameters.value[key]) {
@@ -3241,12 +3243,11 @@ function getDetail(params = {}) {
                     }
 
                     if (key === 'company_info') {
-                        console.log('公司概况', parameters.value[key]);
                         // 成立日期(过滤一下)
                         // console.log("parameters.value[key].established_time", parameters.value[key].established_time);
                         parameters.value[key].established_time = parameters.value[key].established_time
                             ? dayjs.unix(parameters.value[key].established_time)
-                            : "";
+                            : undefined;
                         // parameters.value[key].province = parameters.value[key].provinceAndCity[0];
                         // parameters.value[key].city = parameters.value[key].provinceAndCity[1];
                         // 构建回显省市地址的数据
@@ -3261,6 +3262,10 @@ function getDetail(params = {}) {
                         ]
                             .filter(item => item)
                             .join('/');
+                    }else if (key === 'financial_info') {
+                        parameters.value[key].flag_legal_dispute = parameters?.value[key]?.flag_legal_dispute
+                            ? 1
+                            : '-1';
                     }
                 } else if (typeof keys === 'string' || typeof keys === 'number' || typeof keys === 'boolean') {
                     // | 字符串 | 数字 | 布尔
@@ -3284,7 +3289,6 @@ function getDetail(params = {}) {
             // 代理证书
             if (proxyCertificate) {
                 msgDetail.value.confirmatory_material.proxy_certificate = proxyCertificate.split(',');
-                // console.log("代理证书", msgDetail.value.confirmatory_material.proxy_certificate);
             }
             // 开户行许可证
             if (accountOpeningBankLicense) {
@@ -3299,8 +3303,8 @@ function getDetail(params = {}) {
             if (environmentalReport) {
                 msgDetail.value.confirmatory_material.environmental_report = environmentalReport.split(',');
             }
-            // msgDetail.value.type = 1
-            console.log('输出的', parameters.value);
+            console.log('msgDetail', msgDetail.value);
+            console.log('parameters', parameters.value);
         })
         .catch(err => {
             console.log('getPhoneCodeFetchs err', err);
@@ -3314,7 +3318,6 @@ const saveDetail = (params = {}) => {
 
     Core.Api.SUPPLY.adminAdd(obj)
         .then(res => {
-            console.log('成功', res);
             proxy.$message.success(proxy.$t('common.successfully_saved'));
             router.push({
                 path: '/supply-manage/list',
@@ -3345,15 +3348,12 @@ const handleCancel = () => {
 
 // 营业期限时间选择器
 const handleTimeSearch = (params, type, recordItem) => {
-    console.log('时间组件', params);
     switch (type) {
         case 'business_term':
-            console.log('营业期限', params);
             parameters.value.confirmatory_material.begin_business_time = params.begin_time;
             parameters.value.confirmatory_material.end_business_time = params.end_time;
             break;
         case 'date_establishment':
-            console.log('sss', dayjs(parameters.value.company_info.established_time).format('DD/MM/YYYY'));
             // 成立日期
             // parameters.value.company_info.established_time = dayjs(params).unix()
             break;
@@ -3520,6 +3520,7 @@ const plainOptions = data => {
             value: data[key].value,
         });
     }
+    console.log('arr', arr);
 
     return arr;
 };
