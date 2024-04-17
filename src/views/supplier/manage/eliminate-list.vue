@@ -29,12 +29,13 @@
                 @change="({ current, pageSize }) => onPagenationChange(current, pageSize)"
             >
                 <template #bodyCell="{ text, record, index, column }">
-                    <template v-if="column.key && column.key !== 'create_time'">
-                        <span class="cell-max-with">
-                            <a-tooltip placement="topLeft" :title="text || '-'">
-                                <span class="remark-text">{{ text || '-' }}</span>
+                    <template v-if="column.key && column.key !== 'create_time' && column.key !== 'number'">
+                        <span class="cell-max-with" v-if="text">
+                            <a-tooltip placement="topLeft" :title="text">
+                                <span class="remark-text">{{ text }}</span>
                             </a-tooltip>
                         </span>
+                        <span v-else> - </span>
                     </template>
                 </template>
             </a-table>

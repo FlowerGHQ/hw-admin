@@ -5,11 +5,12 @@
             <CheckOutlined class="editable-cell-icon-check" @click="tabCellSave()" />
         </div>
         <div class="editable-cell-text-wrapper" v-else>
-            <span class="text">
-                <a-tooltip placement="topLeft" :title="text || '-'">
-                    {{ text || '-' }}
+            <span class="text" v-if="text">
+                <a-tooltip placement="topLeft" :title="text">
+                    {{ text }}
                 </a-tooltip>
             </span>
+            <span v-else> - </span>
             <EditOutlined class="editable-cell-icon" @click="tableEdit()" />
         </div>
     </div>
@@ -25,11 +26,12 @@
             <CheckOutlined class="editable-cell-icon-check" @click="tabCellSave()" />
         </div>
         <div class="editable-cell-text-wrapper" v-else>
-            <span class="text">
-                <a-tooltip placement="topLeft" :title="text || '-'">
-                    {{ text || '-' }}
+            <span class="text" v-if="text">
+                <a-tooltip placement="topLeft" :title="text">
+                    {{ text }}
                 </a-tooltip>
             </span>
+            <span v-else> - </span>
             <EditOutlined class="editable-cell-icon" @click="tableEdit()" />
         </div>
     </div>
@@ -42,11 +44,12 @@
             </span>
         </div>
         <div class="editable-cell-text-wrapper" v-else>
-            <span class="text">
-                <a-tooltip placement="topLeft" :title="filterOption(text) || '-'">
-                    {{ filterOption(text) || '-' }}
+            <span class="text" v-if="filterOption(text)">
+                <a-tooltip placement="topLeft" :title="filterOption(text)">
+                    {{ filterOption(text) }}
                 </a-tooltip>
             </span>
+            <span v-else> - </span>
             <span @click="tableEdit()" class="editable-cell-icon"> {{ $t('supply-chain.change') }}</span>
         </div>
     </div>
@@ -67,11 +70,12 @@
             </span>
         </div>
         <div class="editable-cell-text-wrapper" v-else>
-            <span class="text">
-                <a-tooltip placement="topLeft" :title="filterOption(text) || '-'">
-                    {{ filterOption(text) || '-' }}
+            <span class="text" v-if="filterOption(text)">
+                <a-tooltip placement="topLeft" :title="filterOption(text)">
+                    {{ filterOption(text) }}
                 </a-tooltip>
             </span>
+            <span v-else> - </span>
             <span @click="tableEdit()" class="editable-cell-icon"> {{ $t('supply-chain.change') }}</span>
         </div>
     </div>
