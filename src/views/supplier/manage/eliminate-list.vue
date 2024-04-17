@@ -28,6 +28,15 @@
                 }"
                 @change="({ current, pageSize }) => onPagenationChange(current, pageSize)"
             >
+                <template #bodyCell="{ text, record, index, column }">
+                    <template v-if="column.key && column.key !== 'create_time'">
+                        <span class="cell-max-with">
+                            <a-tooltip placement="topLeft" :title="text || '-'">
+                                <span class="remark-text">{{ text || '-' }}</span>
+                            </a-tooltip>
+                        </span>
+                    </template>
+                </template>
             </a-table>
         </div>
     </div>
@@ -92,99 +101,66 @@ const tableColumns = computed(() => {
             title: $t('supply-chain.supplier_full_name'),
             dataIndex: 'company_name',
             key: 'company_name',
-            customRender: ({ text, record, index, column }) => {
-                return text || '-';
-            },
         },
         // 采购品类
         {
             title: $t('supply-chain.procurement_category'),
             dataIndex: 'purchase_category',
             key: 'purchase_category',
-            customRender: ({ text, record, index, column }) => {
-                return text || '-';
-            },
         },
         {
             title: $t('supply-chain.main_supply'),
             dataIndex: 'supply_main',
             key: 'supply_main',
-            customRender: ({ text, record, index, column }) => {
-                return text || '-';
-            },
         },
         {
             title: $t('supply-chain.secondary_supply'),
             dataIndex: 'supply_secondary',
             key: 'supply_secondary',
-            customRender: ({ text, record, index, column }) => {
-                return text || '-';
-            },
         },
         {
             title: $t('supply-chain.other_items'),
             dataIndex: 'supply_other',
             key: 'supply_other',
-            customRender: ({ text, record, index, column }) => {
-                return text || '-';
-            },
         },
         // cooperative_manufacturers 合作厂商
         {
             title: $t('supply-chain.cooperative_manufacturers'),
             dataIndex: 'cooperative_manufacturers',
             key: 'cooperative_manufacturers',
-            customRender: ({ text, record, index, column }) => {
-                return text || '-';
-            },
         },
         {
             title: $t('common.vehicle_model'),
             dataIndex: 'vehicle_model',
             key: 'vehicle_model',
-            customRender: ({ text, record, index, column }) => {
-                return text || '-';
-            },
         },
         {
             title: $t('supply-chain.introduction_date'),
             dataIndex: 'create_time',
             key: 'create_time',
             customRender: ({ text, record, index, column }) => {
-                return Core.Util.timeFilter(record.create_time) || '-';
+                return text ? Core.Util.timeFormat(text) : '-';
             },
         },
         {
             title: $t('supply-chain.province'),
             dataIndex: 'province',
             key: 'province',
-            customRender: ({ text, record, index, column }) => {
-                return text || '-';
-            },
         },
         {
             title: $t('supply-chain.city'),
             dataIndex: 'city',
             key: 'city',
-            customRender: ({ text, record, index, column }) => {
-                return text || '-';
-            },
         },
         {
             title: $t('supply-chain.detailed_address'),
             dataIndex: 'address',
             key: 'address',
-            customRender: ({ text, record, index, column }) => {
-                return text || '-';
-            },
         },
         {
             title: $t('supply-chain.eliminate_reason'),
             dataIndex: 'remark',
             key: 'remark',
-            customRender: ({ text, record, index, column }) => {
-                return text || '-';
-            },
         },
     ];
     return columns;
@@ -272,6 +248,14 @@ const onReset = () => {
             color: #006ef9;
             margin-left: 8px;
         }
+    }
+    .cell-max-with {
+        max-width: 200px;
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
     }
 }
 </style>
