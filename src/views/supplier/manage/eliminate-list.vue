@@ -81,6 +81,7 @@ const { loading, tableData, pagination, search, onPagenationChange, refreshTable
             item.province = item?.form?.company_info?.province || '';
             item.city = item?.form?.company_info?.city || '';
             item.address = item?.form?.company_info?.address || '';
+            item.cooperative_manufacturers = item?.form?.customer_info.map(item => item.customer_name).join('、') || '';
         });
         return list;
     },
