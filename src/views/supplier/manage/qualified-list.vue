@@ -285,7 +285,7 @@ const tableColumns = computed(() => {
             title: $t('supply-chain.remark'),
             dataIndex: 'remark',
             key: 'remark',
-            maxLength: 200,
+            maxLength: 50,
         },
         { title: $t('supply-chain.province'), dataIndex: 'province', key: 'province' },
         { title: $t('supply-chain.city'), dataIndex: 'city', key: 'city' },
