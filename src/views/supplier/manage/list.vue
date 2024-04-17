@@ -371,8 +371,8 @@ const getStatusCount = () => {
             let obj = res.list.find(v => v.status === item.key);
             item.value = obj ? obj.count : 0;
         });
-        let all_total = STATUS_LIST.reduce((total, item) => {
-            return total + item.value;
+        let all_total = res.list.reduce((total, item) => {
+            return total + item.count;
         }, 0);
         STATUS_LIST[0].value = all_total;
         console.log('STATUS_LIST', STATUS_LIST);
