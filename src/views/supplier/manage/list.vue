@@ -460,10 +460,12 @@ onMounted(() => {
 :deep(.ant-table-cell) {
     .attachment {
         display: flex;
-        flex-wrap: wrap;
+        justify-content: space-between;
         gap: 10px;
         img {
             cursor: pointer;
+            width: 100%;
+            height: 100%;
         }
     }
 }

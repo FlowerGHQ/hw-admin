@@ -5,7 +5,11 @@
             <CheckOutlined class="editable-cell-icon-check" @click="tabCellSave()" />
         </div>
         <div class="editable-cell-text-wrapper" v-else>
-            {{ text || '-' }}
+            <span class="text">
+                <a-tooltip placement="topLeft" :title="text || '-'">
+                    {{ text || '-' }}
+                </a-tooltip>
+            </span>
             <EditOutlined class="editable-cell-icon" @click="tableEdit()" />
         </div>
     </div>
@@ -18,7 +22,11 @@
             </span>
         </div>
         <div class="editable-cell-text-wrapper" v-else>
-            {{ filterOption(text) || '-' }}
+            <span class="text">
+                <a-tooltip placement="topLeft" :title="filterOption(text) || '-'">
+                    {{ filterOption(text) || '-' }}
+                </a-tooltip>
+            </span>
             <span @click="tableEdit()" class="editable-cell-icon"> {{ $t('supply-chain.change') }}</span>
         </div>
     </div>
@@ -39,7 +47,11 @@
             </span>
         </div>
         <div class="editable-cell-text-wrapper" v-else>
-            {{ filterOption(text) || '-' }}
+            <span class="text">
+                <a-tooltip placement="topLeft" :title="filterOption(text) || '-'">
+                    {{ filterOption(text) || '-' }}
+                </a-tooltip>
+            </span>
             <span @click="tableEdit()" class="editable-cell-icon"> {{ $t('supply-chain.change') }}</span>
         </div>
     </div>
@@ -166,6 +178,13 @@ const handleSelectChange = value => {
 .editable-cell-text-wrapper {
     display: flex;
     align-items: center;
+    .text {
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+    }
     .editable-cell-icon {
         cursor: pointer;
         color: #006ef9;
