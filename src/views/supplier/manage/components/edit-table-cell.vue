@@ -94,7 +94,6 @@
 import { ref, computed, reactive, toRefs, watch } from 'vue';
 import { CheckOutlined, EditOutlined } from '@ant-design/icons-vue';
 import { useI18n } from 'vue-i18n';
-import { max } from 'lodash';
 import { rules } from 'eslint-plugin-prettier';
 import { message } from 'ant-design-vue';
 
