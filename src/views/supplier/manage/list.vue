@@ -26,7 +26,7 @@
                     {{ $t('supply-chain.create_data') }}
                 </a-button>
                 <!-- 特批为合格供应商 -->
-                <a-button type="primary" @click="handleApproval">
+                <a-button type="primary" @click="handleApproval" v-show="selectedIds && selectedIds.length > 0">
                     {{ $t('supply-chain.special_approval_qualified_supplier') }}
                 </a-button>
             </div>
