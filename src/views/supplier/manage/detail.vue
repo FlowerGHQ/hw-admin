@@ -3246,7 +3246,7 @@ function getDetail(params = {}) {
                         // console.log("parameters.value[key].established_time", parameters.value[key].established_time);
                         parameters.value[key].established_time = parameters.value[key].established_time
                             ? dayjs.unix(parameters.value[key].established_time)
-                            : null;
+                            : "";
                         // parameters.value[key].province = parameters.value[key].provinceAndCity[0];
                         // parameters.value[key].city = parameters.value[key].provinceAndCity[1];
                         // 构建回显省市地址的数据
