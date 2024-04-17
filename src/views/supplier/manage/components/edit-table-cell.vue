@@ -1,7 +1,27 @@
 <template>
     <div class="edit-cell" v-if="type === 'input'">
         <div class="editable-cell-input-wrapper" v-if="isEditable">
-            <a-input v-model:value="showData"></a-input>
+            <a-input v-model:value="showData" :maxlength="maxLength" showCount></a-input>
+            <CheckOutlined class="editable-cell-icon-check" @click="tabCellSave()" />
+        </div>
+        <div class="editable-cell-text-wrapper" v-else>
+            <span class="text">
+                <a-tooltip placement="topLeft" :title="text || '-'">
+                    {{ text || '-' }}
+                </a-tooltip>
+            </span>
+            <EditOutlined class="editable-cell-icon" @click="tableEdit()" />
+        </div>
+    </div>
+    <!-- input-number -->
+    <div class="edit-cell" v-else-if="type === 'input-number'">
+        <div class="editable-cell-input-wrapper" v-if="isEditable">
+            <a-input-number
+                v-model:value="showData"
+                :min="minNumber"
+                :max="maxNumber"
+                :precision="precisionNumber"
+            ></a-input-number>
             <CheckOutlined class="editable-cell-icon-check" @click="tabCellSave()" />
         </div>
         <div class="editable-cell-text-wrapper" v-else>
@@ -61,6 +81,7 @@
 import { ref, computed, reactive, toRefs, watch } from 'vue';
 import { CheckOutlined, EditOutlined } from '@ant-design/icons-vue';
 import { useI18n } from 'vue-i18n';
+import { max } from 'lodash';
 
 const $t = useI18n().t;
 const props = defineProps({
@@ -84,6 +105,22 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    maxLength: {
+        type: Number,
+        default: 0,
+    },
+    max: {
+        type: Number,
+        default: 0,
+    },
+    precision: {
+        type: Number,
+        default: 0,
+    },
+    min: {
+        type: Number,
+        default: 0,
+    },
 });
 
 const isEditable = ref(false);
@@ -92,16 +129,21 @@ const column = computed(() => props.cellData.column);
 const text = computed(() => props.cellData.text);
 const record = computed(() => props.cellData.record);
 const index = computed(() => props.cellData.index);
+const maxNumber = computed(() => props.max);
+const precisionNumber = computed(() => props.precision);
+const minNumber = computed(() => props.min);
 
 const showData = ref(undefined);
 const emit = defineEmits(['handleCellSave']);
 
-watch();
-
 // methods
 const tabCellSave = () => {
     isEditable.value = false;
-    if (props.type === 'input' || (props.type === 'select' && props.mode !== 'multiple')) {
+    if (
+        props.type === 'input' ||
+        props.type === 'input-number' ||
+        (props.type === 'select' && props.mode !== 'multiple')
+    ) {
         record.value[column.value.dataIndex] = showData.value;
     } else if (props.type === 'select' && props.mode === 'multiple') {
         record.value[column.value.dataIndex] = showData.value.join(',');
@@ -110,7 +152,11 @@ const tabCellSave = () => {
 };
 const tableEdit = () => {
     isEditable.value = true;
-    if (props.type === 'input' || (props.type === 'select' && props.mode !== 'multiple')) {
+    if (
+        props.type === 'input' ||
+        props.type === 'input-number' ||
+        (props.type === 'select' && props.mode !== 'multiple')
+    ) {
         showData.value = text?.value || undefined;
     } else if (props.type === 'select' && props.mode === 'multiple') {
         showData.value = text?.value ? text.value.split(',').map(item => item.trim()) : undefined;

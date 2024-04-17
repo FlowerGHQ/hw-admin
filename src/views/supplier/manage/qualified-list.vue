@@ -50,7 +50,6 @@
                     <!-- 品编 -->
                     <template
                         v-if="
-                            column.key === 'no' ||
                             column.key === 'code' ||
                             column.key === 'short_name' ||
                             column.key === 'supply_main' ||
@@ -63,16 +62,22 @@
                             type="input"
                             :cellData="{ column, text, record, index }"
                             @handleCellSave="tabCellSave"
+                            :maxLength="column.maxLength"
                         />
                     </template>
-                    <!-- name -->
-                    <template v-if="column.key === 'name'">
-                        <a-button type="link">
-                            {{ text }}
-                        </a-button>
+                    <!--    column.key === 'no' || -->
+                    <template v-else-if="column.key === 'no'">
+                        <EditTableCell
+                            type="input-number"
+                            :cellData="{ column, text, record, index }"
+                            @handleCellSave="tabCellSave"
+                            :max="column.max"
+                            :min="column.min"
+                            :precision="column.precision"
+                        />
                     </template>
                     <template
-                        v-if="
+                        v-else-if="
                             column.key === 'purchase_category' ||
                             column.key === 'register_type' ||
                             column.key === 'manager' ||
@@ -88,12 +93,18 @@
                             :isSort="column.isSort"
                         />
                     </template>
+                    <!-- name -->
+                    <template v-else-if="column.key === 'name'">
+                        <a-button type="link">
+                            {{ text }}
+                        </a-button>
+                    </template>
                     <!-- 供方全称 -->
-                    <template v-if="column.key === 'company_name'">
+                    <template v-else-if="column.key === 'company_name'">
                         <a-button type="link" @click="handleView(record)">{{ text || '-' }}</a-button>
                     </template>
                     <!-- 操作 -->
-                    <template v-if="column.key === 'operate'">
+                    <template v-else-if="column.key === 'operate'">
                         <a-button type="link" danger @click="handleEliminate(record)">
                             {{ $t('supply-chain.eliminate') }}
                         </a-button>
@@ -194,12 +205,17 @@ const tableColumns = computed(() => {
             title: $t('supply-chain.no'),
             dataIndex: 'no',
             key: 'no',
+            type: 'input-number',
+            max: 99999,
+            min: 0,
+            precision: 0,
         },
         // 供方代码
         {
             title: $t('supply-chain.supplier_code'),
             dataIndex: 'code',
             key: 'code',
+            maxLength: 70,
         },
         { title: $t('supply-chain.supplier_full_name'), dataIndex: 'company_name', key: 'company_name' },
         // 简称
@@ -207,6 +223,7 @@ const tableColumns = computed(() => {
             title: $t('supply-chain.supplier_abbreviation'),
             dataIndex: 'short_name',
             key: 'short_name',
+            maxLength: 10,
         },
         // 采购品类
         {
@@ -216,9 +233,14 @@ const tableColumns = computed(() => {
             selectOptions: PURCHASE_CATEGORY_LIST,
             mode: 'multiple',
         },
-        { title: $t('supply-chain.main_supply'), dataIndex: 'supply_main', key: 'supply_main' },
-        { title: $t('supply-chain.secondary_supply'), dataIndex: 'supply_secondary', key: 'supply_secondary' },
-        { title: $t('supply-chain.other_items'), dataIndex: 'supply_other', key: 'supply_other' },
+        { title: $t('supply-chain.main_supply'), dataIndex: 'supply_main', key: 'supply_main', maxLength: 100 },
+        {
+            title: $t('supply-chain.secondary_supply'),
+            dataIndex: 'supply_secondary',
+            key: 'supply_secondary',
+            maxLength: 100,
+        },
+        { title: $t('supply-chain.other_items'), dataIndex: 'supply_other', key: 'supply_other', maxLength: 100 },
 
         // 合作厂商
         {
@@ -265,9 +287,7 @@ const tableColumns = computed(() => {
             title: $t('supply-chain.remark'),
             dataIndex: 'remark',
             key: 'remark',
-            customRender: ({ text, record, index }) => {
-                return text ? text : '无';
-            },
+            maxLength: 200,
         },
         { title: $t('supply-chain.province'), dataIndex: 'province', key: 'province' },
         { title: $t('supply-chain.city'), dataIndex: 'city', key: 'city' },
@@ -540,7 +560,7 @@ const handleView = record => {
 }
 :deep(.ant-select),
 :deep(.ant-input) {
-    min-width: 120px;
+    // min-width: 120px;
 }
 :deep(.ant-table-cell) {
     max-width: 200px;
