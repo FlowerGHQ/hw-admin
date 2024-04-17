@@ -298,6 +298,7 @@ export default {
         province_city: '省市',
         qualified_supplier: '合格供应商名录',
         no: '品编',
+        format_error: '格式错误,请输入5位数字',
         supplier_code: '供方代码',
         supplier_full_name: '供方全称',
         supplier_abbreviation: '供方简称',
@@ -382,6 +383,9 @@ export default {
         edit_reason_successfully: '编辑原因成功',
         // delete_confirm
         delete_confirm: '删除确认?',
+        delete_confirm1: '1.此处若修改名称，则之前被淘汰时选择的名称对应修改',
+        delete_confirm2: '2.此处删除名称，不影响之前淘汰时选择的名称。',
+        delete_confirm3: '举例：”法律法规整车要求影响的“被删除，之前淘汰合格供应商时选择的原因仍被保留',
         // cooperative_manufacturers
         cooperative_manufacturers: '合作厂商',
         // 淘汰原因
@@ -509,6 +513,12 @@ export default {
         cooperative_manufacturers: 'Cooperative Manufacturers',
         // delete_confirm
         delete_confirm: 'Delete Confirm?',
+        delete_confirm1:
+            '1.If the name is modified here, the name selected when the supplier was eliminated will be modified accordingly',
+        delete_confirm2:
+            '2.If the name is deleted here, the name selected when the supplier was eliminated will remain.',
+        delete_confirm3:
+            'Example: "The impact of legal and regulatory requirements on the whole vehicle" is deleted, and the reason selected when the qualified supplier was eliminated will remain.',
         // edit_reason_successfully
         edit_reason_successfully: 'Edit Reason Successfully',
         // 新增原因成功
@@ -831,6 +841,7 @@ export default {
         please_upload_business_license_photos: 'Please upload business license photos',
         qualified_supplier: 'Qualified Supplier List',
         no: 'Pin Bian',
+        format_error: 'Format error, please enter 5 digits',
         supplier_code: 'Supplier Code',
         supplier_full_name: 'Supplier Full Name',
         supplier_abbreviation: 'Supplier Abbreviation',

@@ -4,7 +4,7 @@
             <div class="title-area">{{ $t('supply-chain.elimination_reason') }}</div>
             <div class="btn-area">
                 <!-- 新增原因 -->
-                <a-button type="primary" @click="handleAddReason">
+                <a-button type="primary" @click="handleAddReason" :disabled="tableData && tableData.length >= 50">
                     <template #icon><PlusOutlined /></template>
                     {{ $t('supply-chain.add_reason') }}
                 </a-button>
@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, getCurrentInstance, h } from 'vue';
 import Core from '@/core';
 import { PlusOutlined } from '@ant-design/icons-vue';
 import { useTable } from '@/hooks/useTable';
@@ -79,6 +79,16 @@ const { loading, tableData, pagination, search, onPagenationChange, refreshTable
 const $t = useI18n().t;
 const tableColumns = computed(() => {
     let columns = [
+        // 序号
+        {
+            title: $t('supply-chain.serial_number'),
+            dataIndex: 'number',
+            key: 'number',
+            customRender: ({ text, record, index, column }) => {
+                // 当前页码-1 * 每页条数 + 索引 + 1
+                return (pagination.value.current - 1) * pagination.value.size + index + 1;
+            },
+        },
         // 原因
         {
             title: $t('supply-chain.reason'),
@@ -101,7 +111,7 @@ const editForm = ref({
     name: '',
 });
 const type = ref('');
-
+const appContext = getCurrentInstance().appContext;
 const handleEdit = record => {
     modalTitle.value = $t('def.edit');
     type.value = 'edit';
@@ -111,10 +121,29 @@ const handleEdit = record => {
     };
     modalVisible.value = true;
 };
+
+const ModalRender = () => {
+    return h('div', {}, [
+        h('div', {}, $t('supply-chain.delete_confirm1')),
+        h('div', {}, $t('supply-chain.delete_confirm2')),
+        h(
+            'div',
+            {
+                style: {
+                    marginTop: '10px',
+                },
+            },
+            $t('supply-chain.delete_confirm3'),
+        ),
+    ]);
+};
 const handleDelete = record => {
+    console.log(appContext);
     Modal.confirm({
-        title: $t('def.delete'),
-        content: $t('supply-chain.delete_confirm'),
+        title: $t('supply-chain.delete_confirm'),
+        appContext,
+        content: h => ModalRender(),
+        centered: true,
         onOk() {
             Core.Api.ItemCategory.delete({ id: record.id }).then(res => {
                 message.success($t('pop_up.delete_success'));

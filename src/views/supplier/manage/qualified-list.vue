@@ -55,7 +55,8 @@
                             column.key === 'supply_main' ||
                             column.key === 'supply_secondary' ||
                             column.key === 'supply_other' ||
-                            column.key === 'remark'
+                            column.key === 'remark' ||
+                            column.key === 'no'
                         "
                     >
                         <EditTableCell
@@ -63,17 +64,8 @@
                             :cellData="{ column, text, record, index }"
                             @handleCellSave="tabCellSave"
                             :maxLength="column.maxLength"
-                        />
-                    </template>
-                    <!--    column.key === 'no' || -->
-                    <template v-else-if="column.key === 'no'">
-                        <EditTableCell
-                            type="input-number"
-                            :cellData="{ column, text, record, index }"
-                            @handleCellSave="tabCellSave"
-                            :max="column.max"
-                            :min="column.min"
-                            :precision="column.precision"
+                            :required="column.required"
+                            :rules="column.rules"
                         />
                     </template>
                     <template
@@ -205,17 +197,23 @@ const tableColumns = computed(() => {
             title: $t('supply-chain.no'),
             dataIndex: 'no',
             key: 'no',
-            type: 'input-number',
-            max: 99999,
-            min: 0,
-            precision: 0,
+            maxLength: 5,
+            // 校验规则:5位数字
+            required: true,
+            rules: [
+                {
+                    // 0-5位数字
+                    pattern: /^\d{0,5}$/g,
+                    message: $t('supply-chain.no') + $t('supply-chain.format_error'),
+                },
+            ],
         },
         // 供方代码
         {
             title: $t('supply-chain.supplier_code'),
             dataIndex: 'code',
             key: 'code',
-            maxLength: 70,
+            maxLength: 7,
         },
         { title: $t('supply-chain.supplier_full_name'), dataIndex: 'company_name', key: 'company_name' },
         // 简称
