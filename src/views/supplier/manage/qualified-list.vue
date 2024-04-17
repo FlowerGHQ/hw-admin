@@ -149,7 +149,7 @@ const router = useRouter();
 const $t = useI18n().t;
 const { proxy } = getCurrentInstance();
 const upload = reactive({
-    action: Core.Const.NET.URL_POINT + '/admin/1/supplier/import',
+    action: Core.Const.NET.URL_POINT + '/admin/1/supplier/import-qualified-supplier',
     fileList: [],
     headers: {
         ContentType: false,
