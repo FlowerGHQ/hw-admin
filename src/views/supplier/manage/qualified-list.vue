@@ -64,8 +64,8 @@
                             :cellData="{ column, text, record, index }"
                             @handleCellSave="tabCellSave"
                             :maxLength="column.maxLength"
-                            :required="column.required"
-                            :rules="column.rules"
+                            :isRequired="column.isRequired"
+                            :requiredRules="column.requiredRules"
                         />
                     </template>
                     <template
@@ -199,8 +199,8 @@ const tableColumns = computed(() => {
             key: 'no',
             maxLength: 5,
             // 校验规则:5位数字
-            required: true,
-            rules: [
+            isRequired: true,
+            requiredRules: [
                 {
                     // 0-5位数字
                     pattern: /^\d{0,5}$/g,

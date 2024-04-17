@@ -135,11 +135,11 @@ const props = defineProps({
         type: Number,
         default: 0,
     },
-    required: {
+    isRequired: {
         type: Boolean,
         default: false,
     },
-    rules: {
+    requiredRules: {
         type: Array,
         default: () => [],
     },
@@ -155,6 +155,14 @@ const index = computed(() => props.cellData.index);
 const maxNumber = computed(() => props.max);
 const precisionNumber = computed(() => props.precision);
 const minNumber = computed(() => props.min);
+
+const isRequired = computed(() => {
+    return props.isRequired;
+});
+const requiredRules = computed(() => {
+    return props.requiredRules;
+});
+
 const inputRef = ref(null);
 const showData = ref(undefined);
 
@@ -165,12 +173,13 @@ const tabCellSave = () => {
         props.type === 'input-number' ||
         (props.type === 'select' && props.mode !== 'multiple')
     ) {
-        if (props.required) {
-            for (let i = 0; i < props.rules.length; i++) {
+        console.log('showData', props.required, props.rules);
+        if (isRequired.value) {
+            for (let i = 0; i < requiredRules.value.length; i++) {
                 // pattern
-                if (props.rules[i].pattern) {
-                    if (!props.rules[i].pattern.test(showData.value)) {
-                        message.error(props.rules[i].message);
+                if (requiredRules.value[i].pattern) {
+                    if (!requiredRules.value[i].pattern.test(showData.value)) {
+                        message.error(requiredRules.value[i].message);
                         return;
                     }
                 }
