@@ -55,7 +55,8 @@
                             column.key === 'short_name' ||
                             column.key === 'supply_main' ||
                             column.key === 'supply_secondary' ||
-                            column.key === 'supply_other'
+                            column.key === 'supply_other' ||
+                            column.key === 'remark'
                         "
                     >
                         <EditTableCell
@@ -86,6 +87,10 @@
                             :mode="column.mode"
                             :isSort="column.isSort"
                         />
+                    </template>
+                    <!-- 供方全称 -->
+                    <template v-if="column.key === 'company_name'">
+                        <a-button type="link" @click="handleView(record)">{{ text || '-' }}</a-button>
                     </template>
                     <!-- 操作 -->
                     <template v-if="column.key === 'operate'">
@@ -214,6 +219,17 @@ const tableColumns = computed(() => {
         { title: $t('supply-chain.main_supply'), dataIndex: 'supply_main', key: 'supply_main' },
         { title: $t('supply-chain.secondary_supply'), dataIndex: 'supply_secondary', key: 'supply_secondary' },
         { title: $t('supply-chain.other_items'), dataIndex: 'supply_other', key: 'supply_other' },
+
+        // 合作厂商
+        {
+            title: $t('supply-chain.cooperative_factory'),
+            dataIndex: 'cooperative_factory',
+            key: 'cooperative_factory',
+            customRender: ({ text, record, index }) => {
+                return text ? text : '-';
+            },
+        },
+
         {
             title: $t('common.vehicle_model'),
             dataIndex: 'vehicle_model',
@@ -311,6 +327,7 @@ const { loading, tableData, pagination, search, onPagenationChange, refreshTable
     dataCallBack: res => {
         // item 和 item.form字段合并
         let list = _.cloneDeep(res.list);
+        console.log('list', list);
         list.map(item => {
             item.code = item?.form?.code || '';
             item.no = item?.form?.no || '';
@@ -325,6 +342,7 @@ const { loading, tableData, pagination, search, onPagenationChange, refreshTable
             item.province = item?.form?.company_info?.province || '';
             item.city = item?.form?.company_info?.city || '';
             item.address = item?.form?.company_info?.address || '';
+            item.cooperative_factory = item?.form?.customer_info.map(item => item.customer_name).join('、') || '';
         });
         return list;
     },
@@ -459,6 +477,16 @@ const getVehicleModel = () => {
     Core.Api.ItemCategory.tree({ type: 30, parent_id: 0, depth: 2 }).then(res => {
         VEHICLE_MODEL_LIST.value = getVehicleModelFilter(res.list);
         console.log(VEHICLE_MODEL_LIST.value, 'VEHICLE_MODEL_LIST.value');
+    });
+};
+// 查看详情
+const handleView = record => {
+    router.push({
+        path: '/supply-manage/detail',
+        query: {
+            id: record.id,
+            isView: true,
+        },
     });
 };
 

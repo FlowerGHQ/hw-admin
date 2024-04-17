@@ -445,8 +445,12 @@ export default {
         agree_exempt: '同意免审',
         upload_attachment: '支持上传图片（PNG、JPG、JEPG）,图片最大10M,最多上传3个',
         please_select_result: '请选择结果',
+        //
+        cooperative_factory: '合作厂商',
     },
     en: {
+        // cooperative_factory
+        cooperative_factory: 'Cooperative Factory',
         please_select_result: 'Please select result',
         upload_attachment: 'Support upload pictures (PNG, JPG, JEPG), pictures up to 10M, up to 3',
         agree_exempt: 'Agree Exempt',

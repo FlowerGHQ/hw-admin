@@ -161,6 +161,7 @@ const handleView = record => {
         path: '/supply-manage/detail',
         query: {
             id: record.id,
+            isView: true,
         },
     });
 };

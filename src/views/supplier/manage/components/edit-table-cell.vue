@@ -118,15 +118,16 @@ const filterOption = text => {
         return result.join(',');
     } else if (props.mode === 'multiple' && props.isSort) {
         let arr = text ? text.split(',') : [];
-        console.log(arr, 'arr');
         arr = arr.map(item => item.trim());
         let result = [];
         props.selectOptions.forEach(item => {
-            item.options.forEach(child => {
-                if (arr.includes(child.value)) {
-                    result.push(child.value);
-                }
-            });
+            if (item.options && item.options.length > 0) {
+                item.options.forEach(child => {
+                    if (arr.includes(child.value)) {
+                        result.push(child.value);
+                    }
+                });
+            }
         });
         console.log(result, 'result');
         return result.join(',');
