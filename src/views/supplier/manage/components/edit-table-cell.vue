@@ -249,6 +249,10 @@ const handleSelectChange = value => {
         color: #006ef9;
         margin-left: 4px;
     }
+    .ant-input {
+        flex: 1;
+        min-width: 150px;
+    }
 }
 .editable-cell-select-wrapper {
     display: flex;
