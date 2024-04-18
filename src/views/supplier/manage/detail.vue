@@ -3568,10 +3568,16 @@ const onBack = () => {
 // 审核
 const trialOk = () => {
     TrialModalVisible.value = false;
-    // 返回列表页
-    router.push({
-        path: '/supply-manage/list',
-    });
+    if (route.query.redirect) {
+        router.push({
+            path: route.query.redirect,
+        });
+    } else {
+        // 返回列表页
+        router.push({
+            path: '/supply-manage/list',
+        });
+    }
 };
 const tralCancel = () => {
     TrialModalVisible.value = false;

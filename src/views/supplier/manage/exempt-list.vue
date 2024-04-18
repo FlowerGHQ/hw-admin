@@ -153,6 +153,7 @@ const handleAudit = record => {
         path: '/supply-manage/detail',
         query: {
             id: record.id,
+            redirect: route.fullPath,
         },
     });
 };
