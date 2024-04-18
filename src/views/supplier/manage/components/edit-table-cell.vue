@@ -177,7 +177,7 @@ const tabCellSave = () => {
             for (let i = 0; i < requiredRules.value.length; i++) {
                 // pattern
                 if (requiredRules.value[i].pattern) {
-                    if (!requiredRules.value[i].pattern.test(showData.value)) {
+                    if (!requiredRules.value[i].pattern.test(showData.value) && showData.value) {
                         message.error(requiredRules.value[i].message);
                         return;
                     }
