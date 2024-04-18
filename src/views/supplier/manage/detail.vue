@@ -2868,13 +2868,17 @@
             >
                 {{ $t('supply-chain.exempt_result') }}
             </a-button>
-            <template v-if="!isEdit">
-                <a-button @click="onSuction('edit')">{{ $t('supply-chain.editing_data') }}</a-button>
-            </template>
-            <template v-else>
-                <a-button @click="onSuction('cancel-edit')">{{ $t('supply-chain.cancel_editing') }}</a-button>
-                <a-button type="primary" @click="onSuction('add')">{{ $t('supply-chain.submit_materials') }}</a-button>
-            </template>
+            <div class="edit-save" v-if="allDetails.audit_status == 10 && allDetails.stage == 10">
+                <template v-if="!isEdit">
+                    <a-button @click="onSuction('edit')">{{ $t('supply-chain.editing_data') }}</a-button>
+                </template>
+                <template v-else>
+                    <a-button @click="onSuction('cancel-edit')">{{ $t('supply-chain.cancel_editing') }}</a-button>
+                    <a-button type="primary" @click="onSuction('add')">{{
+                        $t('supply-chain.submit_materials')
+                    }}</a-button>
+                </template>
+            </div>
         </div>
         <MyMask :isClose="isClose" @close="onPingPongMaskClose">
             <div class="mask-center">
@@ -3321,6 +3325,9 @@ const saveDetail = (params = {}) => {
             proxy.$message.success(proxy.$t('common.successfully_saved'));
             router.push({
                 path: '/supply-manage/list',
+                query: {
+                    searchStaus: route.query.searchStaus,
+                },
             });
         })
         .catch(err => {
@@ -3888,6 +3895,11 @@ const tralCancel = () => {
 
     // 编辑资料
     .suction-bottom {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        // 间距10px
+        gap: 10px;
         width: calc(100% - 232px);
         position: fixed;
         bottom: 0;

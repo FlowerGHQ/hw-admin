@@ -75,7 +75,11 @@
                             <MySvgIcon icon-class="supply-view" />
                             <span class="m-l-10">{{ $t('supply-chain.view') }}</span>
                         </a-button>
-                        <a-button type="link" @click="onView('edit', record)">
+                        <a-button
+                            type="link"
+                            @click="onView('edit', record)"
+                            v-if="record.stage === 10 && record.audit_status === 10"
+                        >
                             <MySvgIcon icon-class="supply-edit" />
                             <span class="m-l-10">{{ $t('common.edit') }}</span>
                         </a-button>
@@ -159,7 +163,7 @@ import Core from '@/core';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import { useTable } from '@/hooks/useTable';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
 import EditTableCell from './components/edit-table-cell.vue';
@@ -169,6 +173,7 @@ import { message } from 'ant-design-vue';
 
 const $store = useStore();
 const router = useRouter();
+const route = useRoute();
 const $t = useI18n().t;
 const selectedIds = ref([]);
 const selectedRowObjs = ref([]);
@@ -225,7 +230,7 @@ const tableColumns = computed(() => {
             dataIndex: 'qualified_record',
             key: 'qualified_record',
         },
-        { title: $t('common.operations'), key: 'operations', fixed: 'right' },
+        { title: $t('common.operations'), key: 'operations', fixed: 'right', width: 150 },
     ];
     return columns;
 });
@@ -268,7 +273,6 @@ const qualifiedTableColumns = computed(() => {
     ];
     return columns;
 });
-
 const searchList = ref([
     {
         type: 'input',
@@ -340,6 +344,7 @@ const onView = (type, record) => {
                 path: '/supply-manage/detail',
                 query: {
                     id: record.id,
+                    searchStaus: searchParam.value.status,
                 },
             });
 
@@ -350,6 +355,7 @@ const onView = (type, record) => {
                 query: {
                     id: record.id,
                     flag_edit: true,
+                    searchStaus: searchParam.value.status,
                 },
             });
             break;
@@ -442,6 +448,8 @@ const onViewReason = record => {
 
 onMounted(() => {
     getStatusCount();
+    searchParam.value.status = route?.query?.searchStaus ? Number(route.query.searchStaus) : '';
+    console.log('searchParam', searchParam.value);
 });
 </script>
 
