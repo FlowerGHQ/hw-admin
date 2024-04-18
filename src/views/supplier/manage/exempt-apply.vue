@@ -324,10 +324,12 @@ const handleSubmit = () => {
         });
         Core.Api.SUPPLY.noExamine({ supplier_examine: params })
             .then(res => {
-                console.log('handleSubmit', res);
-                // 获取详情
-                getDetail();
                 message.success($t('supply-chain.supply_submit_successfully'));
+                if (route.query.redirect) {
+                    router.push({ path: route.query.redirect });
+                } else {
+                    router.go(-1);
+                }
             })
             .catch(err => {
                 console.log('handleSubmit err', err);
