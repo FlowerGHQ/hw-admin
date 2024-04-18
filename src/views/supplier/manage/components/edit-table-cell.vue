@@ -188,7 +188,8 @@ const tabCellSave = () => {
             record.value[column.value.dataIndex] = showData.value;
         }
     } else if (props.type === 'select' && props.mode === 'multiple') {
-        record.value[column.value.dataIndex] = showData.value.join(',');
+        record.value[column.value.dataIndex] =
+            showData.value && showData.value.length > 0 ? showData.value.join(',') : '';
     }
     isEditable.value = false;
     emit('handleCellSave', { record: record.value, index: index.value, column: column.value });
@@ -260,6 +261,7 @@ const handleSelectChange = value => {
     }
     .ant-select {
         flex: 1;
+        min-width: 150px;
     }
 }
 .editable-cell-text-wrapper {
