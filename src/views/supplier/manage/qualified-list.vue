@@ -187,6 +187,8 @@ const tableColumns = computed(() => {
             title: $t('supply-chain.serial_number'),
             dataIndex: 'number',
             key: 'number',
+            with: 50,
+            fixed: 'left',
             customRender: ({ text, record, index, column }) => {
                 // 当前页码-1 * 每页条数 + 索引 + 1
                 return (pagination.value.current - 1) * pagination.value.size + index + 1;
@@ -556,12 +558,8 @@ const handleView = record => {
         }
     }
 }
-:deep(.ant-select),
-:deep(.ant-input) {
-    // min-width: 120px;
-}
 :deep(.ant-table-cell) {
-    max-width: 200px;
+    width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

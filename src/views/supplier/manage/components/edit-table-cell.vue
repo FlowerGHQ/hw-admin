@@ -249,8 +249,7 @@ const handleSelectChange = value => {
         color: #006ef9;
         margin-left: 4px;
     }
-    .ant-input {
-        flex: 1;
+    :deep(.ant-input) {
         min-width: 150px;
     }
 }
@@ -263,8 +262,7 @@ const handleSelectChange = value => {
         color: #006ef9;
         margin-left: 4px;
     }
-    .ant-select {
-        flex: 1;
+    :deep(.ant-select) {
         min-width: 150px;
     }
 }
