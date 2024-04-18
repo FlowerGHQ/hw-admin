@@ -75,11 +75,7 @@
                             <MySvgIcon icon-class="supply-view" />
                             <span class="m-l-10">{{ $t('supply-chain.view') }}</span>
                         </a-button>
-                        <a-button
-                            type="link"
-                            @click="onView('edit', record)"
-                            v-if="record.stage === 10 && record.audit_status === 10"
-                        >
+                        <a-button type="link" @click="onView('edit', record)">
                             <MySvgIcon icon-class="supply-edit" />
                             <span class="m-l-10">{{ $t('common.edit') }}</span>
                         </a-button>

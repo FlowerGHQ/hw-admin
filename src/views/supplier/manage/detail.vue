@@ -2868,17 +2868,13 @@
             >
                 {{ $t('supply-chain.exempt_result') }}
             </a-button>
-            <div class="edit-save" v-if="allDetails.audit_status == 10 && allDetails.stage == 10">
-                <template v-if="!isEdit">
-                    <a-button @click="onSuction('edit')">{{ $t('supply-chain.editing_data') }}</a-button>
-                </template>
-                <template v-else>
-                    <a-button @click="onSuction('cancel-edit')">{{ $t('supply-chain.cancel_editing') }}</a-button>
-                    <a-button type="primary" @click="onSuction('add')">{{
-                        $t('supply-chain.submit_materials')
-                    }}</a-button>
-                </template>
-            </div>
+            <template v-if="!isEdit">
+                <a-button @click="onSuction('edit')">{{ $t('supply-chain.editing_data') }}</a-button>
+            </template>
+            <template v-else>
+                <a-button @click="onSuction('cancel-edit')">{{ $t('supply-chain.cancel_editing') }}</a-button>
+                <a-button type="primary" @click="onSuction('add')">{{ $t('supply-chain.submit_materials') }}</a-button>
+            </template>
         </div>
         <MyMask :isClose="isClose" @close="onPingPongMaskClose">
             <div class="mask-center">
