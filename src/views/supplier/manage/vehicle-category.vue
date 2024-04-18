@@ -43,7 +43,7 @@
                 @cancel="handleModalCancel"
             >
                 <div class="modal-content">
-                    <div class="form-item required">
+                    <!-- <div class="form-item required">
                         <div class="key">{{ $t('m.category_name') }}</div>
                         <div class="value">
                             <a-input
@@ -53,7 +53,22 @@
                                 showCount
                             />
                         </div>
-                    </div>
+                    </div> -->
+                    <a-form :model="editForm" :rules="rules" ref="formRef">
+                        <a-form-item
+                            :label="$t('supply-chain.classification_name')"
+                            name="name"
+                            :label-col="{ span: 4 }"
+                            :wrapper-col="{ span: 18 }"
+                        >
+                            <a-input
+                                v-model:value="editForm.name"
+                                :placeholder="$t('def.input')"
+                                maxlength="10"
+                                showCount
+                            />
+                        </a-form-item>
+                    </a-form>
                 </div>
             </a-modal>
         </div>
@@ -108,6 +123,10 @@ const editForm = reactive({
 });
 const modalTitle = ref('');
 const type = ref('');
+const rules = {
+    name: [{ required: true, message: `${$t('def.input')}${$t('supply-chain.classification_name')}` }],
+};
+const formRef = ref(null);
 
 const handleAdd = (record = null) => {
     modalVisible.value = true;
@@ -145,34 +164,36 @@ const handleDelete = record => {
     });
 };
 const handleModalSubmit = () => {
-    let params = {
-        name: '',
-        parent_id: 0,
-        type: 30,
-    };
+    formRef.value.validate().then(() => {
+        let params = {
+            name: '',
+            parent_id: 0,
+            type: 30,
+        };
 
-    if (type.value === 'edit') {
-        params.id = editForm.id;
-        params.name = editForm.name;
-        delete params.parent_id;
-    } else {
-        if (editForm.id) {
-            params.parent_id = editForm.parent_id;
+        if (type.value === 'edit') {
+            params.id = editForm.id;
             params.name = editForm.name;
+            delete params.parent_id;
         } else {
-            params.name = editForm.name;
-            params.parent_id = 0;
+            if (editForm.id) {
+                params.parent_id = editForm.parent_id;
+                params.name = editForm.name;
+            } else {
+                params.name = editForm.name;
+                params.parent_id = 0;
+            }
         }
-    }
 
-    Core.Api.ItemCategory.save(params).then(res => {
-        message.success(
-            type.value === 'edit'
-                ? $t('supply-chain.edit_classification_successfully')
-                : $t('supply-chain.add_classification_successfully'),
-        );
-        handleModalCancel();
-        search();
+        Core.Api.ItemCategory.save(params).then(res => {
+            message.success(
+                type.value === 'edit'
+                    ? $t('supply-chain.edit_classification_successfully')
+                    : $t('supply-chain.add_classification_successfully'),
+            );
+            handleModalCancel();
+            search();
+        });
     });
 };
 const handleModalCancel = () => {
@@ -181,6 +202,7 @@ const handleModalCancel = () => {
     editForm.name = '';
     editForm.parent_id = 0;
     type.value = '';
+    formRef.value.resetFields();
 };
 const filterChildren = (arr, level = 0) => {
     level++;

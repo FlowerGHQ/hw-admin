@@ -33,17 +33,21 @@
     <div class="modal-area">
         <a-modal v-model:visible="modalVisible" :title="modalTitle" @ok="handleModalSubmit" @cancel="handleModalCancel">
             <div class="modal-content">
-                <div class="form-item required">
-                    <div class="key">{{ $t('supply-chain.reason') }}</div>
-                    <div class="value">
+                <a-form :model="editForm" :rules="rules" ref="formRef">
+                    <a-form-item
+                        :label="$t('supply-chain.reason')"
+                        name="name"
+                        :label-col="{ span: 4 }"
+                        :wrapper-col="{ span: 18 }"
+                    >
                         <a-input
                             v-model:value="editForm.name"
                             :placeholder="$t('def.input')"
                             maxlength="50"
                             showCount
                         />
-                    </div>
-                </div>
+                    </a-form-item>
+                </a-form>
             </div>
             <!-- footer -->
             <template #footer>
@@ -110,6 +114,17 @@ const modalTitle = ref('');
 const editForm = ref({
     name: '',
 });
+const formRef = ref(null);
+const rules = {
+    name: [
+        {
+            required: true,
+            message: $t('def.input') + $t('supply-chain.reason'),
+            trigger: 'blur',
+        },
+    ],
+};
+
 const type = ref('');
 const appContext = getCurrentInstance().appContext;
 const handleEdit = record => {
@@ -161,28 +176,30 @@ const handleAddReason = () => {
     };
 };
 const handleModalSubmit = () => {
-    let params;
-    if (type.value === 'edit') {
-        params = {
-            id: editForm.value.id,
-            name: editForm.value.name,
-            type: 40,
-        };
-    } else {
-        params = {
-            name: editForm.value.name,
-            parent_id: 0,
-            type: 40,
-        };
-    }
-    Core.Api.ItemCategory.save(params).then(res => {
-        message.success(
-            type.value === 'edit'
-                ? $t('supply-chain.edit_reason_successfully')
-                : $t('supply-chain.add_reason_successfully'),
-        );
-        handleModalCancel();
-        search();
+    formRef.value.validate().then(() => {
+        let params;
+        if (type.value === 'edit') {
+            params = {
+                id: editForm.value.id,
+                name: editForm.value.name,
+                type: 40,
+            };
+        } else {
+            params = {
+                name: editForm.value.name,
+                parent_id: 0,
+                type: 40,
+            };
+        }
+        Core.Api.ItemCategory.save(params).then(res => {
+            message.success(
+                type.value === 'edit'
+                    ? $t('supply-chain.edit_reason_successfully')
+                    : $t('supply-chain.add_reason_successfully'),
+            );
+            handleModalCancel();
+            search();
+        });
     });
 };
 const handleModalCancel = () => {
@@ -191,8 +208,8 @@ const handleModalCancel = () => {
         name: '',
     };
     modalTitle.value = '';
+    formRef.value.resetFields();
 };
-
 const filterChildren = (arr, level = 0) => {
     level++;
     arr.forEach(item => {
