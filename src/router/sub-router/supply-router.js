@@ -112,8 +112,8 @@ const supplyManage = {
             name: 'EliminateReason',
             component: () => import('@/views/supplier/manage/eliminate-reason.vue'),
             meta: {
-                title: '合格供应商淘汰原因',
-                title_en: 'Qualified Supplier Elimination Reason',
+                title: '合格供应商淘汰原因管理',
+                title_en: 'Qualified Supplier Elimination Reason Management',
                 auth: ['supply.supplier-manage.save-supplier'], //临时
             },
         },
