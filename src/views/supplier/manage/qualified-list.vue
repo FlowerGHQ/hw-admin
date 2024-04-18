@@ -238,7 +238,7 @@ const tableColumns = computed(() => {
             title: $t('supply-chain.secondary_supply'),
             dataIndex: 'supply_secondary',
             key: 'supply_secondary',
-            maxLength: 100,
+            maxLength: 99,
         },
         { title: $t('supply-chain.other_items'), dataIndex: 'supply_other', key: 'supply_other', maxLength: 100 },
 
@@ -298,7 +298,7 @@ const tableColumns = computed(() => {
             dataIndex: 'operate',
             key: 'operate',
             fixed: 'right',
-            width: 100,
+            width: 99,
         },
     ];
     return columns;
