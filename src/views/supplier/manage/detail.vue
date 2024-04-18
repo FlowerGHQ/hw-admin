@@ -3319,12 +3319,13 @@ const saveDetail = (params = {}) => {
     Core.Api.SUPPLY.adminAdd(obj)
         .then(res => {
             proxy.$message.success(proxy.$t('common.successfully_saved'));
-            router.push({
-                path: '/supply-manage/list',
-                query: {
-                    searchStaus: route.query.searchStaus,
-                },
-            });
+            if(route.query.redirect){
+                router.push(route.query.redirect);
+            }else{
+                router.push({
+                    path: '/supply-manage/list',
+                });
+            }
         })
         .catch(err => {
             console.log('getPhoneCodeFetchs err', err);
@@ -3572,6 +3573,9 @@ const trialOk = () => {
         // 返回列表页
         router.push({
             path: '/supply-manage/list',
+            query: {
+                searchStaus: route?.query?.searchStaus || '',
+            },
         });
     }
 };

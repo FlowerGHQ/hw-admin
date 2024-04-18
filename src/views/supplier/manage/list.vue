@@ -340,7 +340,6 @@ const onView = (type, record) => {
                 path: '/supply-manage/detail',
                 query: {
                     id: record.id,
-                    searchStaus: searchParam.value.status,
                 },
             });
 
@@ -351,7 +350,6 @@ const onView = (type, record) => {
                 query: {
                     id: record.id,
                     flag_edit: true,
-                    searchStaus: searchParam.value.status,
                 },
             });
             break;
@@ -444,8 +442,6 @@ const onViewReason = record => {
 
 onMounted(() => {
     getStatusCount();
-    searchParam.value.status = route?.query?.searchStaus ? Number(route.query.searchStaus) : '';
-    console.log('searchParam', searchParam.value);
 });
 </script>
 
