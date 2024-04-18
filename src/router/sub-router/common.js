@@ -1,5 +1,4 @@
 import Const from '../../core/const';
-import Layout from '../../views/layout/index.vue';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE;

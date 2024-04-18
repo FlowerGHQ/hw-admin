@@ -786,7 +786,7 @@ const cocCertificate = {
 const rechargeManagement = {
     // 财务审核
     path: '/recharge',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/recharge/recharge-audit',
     name: 'RechargeManagement',
     type: [ROUTER_TYPE.FINANCE],
