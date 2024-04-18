@@ -141,15 +141,12 @@
                                         <span v-for="(item, index) in record.vehicle_list">
                                             <span>
                                                 {{
-                                                    item.vehicle_uid +
-                                                    '(' +
                                                     $t(
                                                         $Util.Common.returnTranslation(
                                                             item?.fault_type,
                                                             Core.Const.CUSTOMER_CARE.FAULT_TYPE,
                                                         ),
-                                                    ) +
-                                                    ')'
+                                                    )
                                                 }}
                                             </span>
                                             <span v-if="record.vehicle_list.length > 1">,</span>
