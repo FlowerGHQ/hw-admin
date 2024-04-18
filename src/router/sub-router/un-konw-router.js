@@ -1,7 +1,6 @@
 import Const from '../../core/const';
 import Util from '../../core/utils';
 import Data from '../../core/data';
-import Layout from '../../views/layout/index.vue';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
@@ -10,7 +9,7 @@ const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 // 邮件管理
 const mailManagement = {
     path: '/mail-management',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/mail-management/subscription-list',
     name: 'MailManagement',
     type: [ROUTER_TYPE.CRM],
@@ -65,7 +64,7 @@ const mailManagement = {
 // 车辆管理
 const retailBusinessVehicleManagement = {
     path: '/retail-vehicle',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/retail-vehicle/vehicle-list',
     type: [ROUTER_TYPE.CRM],
     meta: {
@@ -99,7 +98,7 @@ const retailBusinessVehicleManagement = {
 // 订单管理
 const retailBusinessOrderManagement = {
     path: '/retail-order',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/retail-order/order-list',
     type: [ROUTER_TYPE.CRM],
     meta: {
@@ -146,7 +145,7 @@ const RepairInvoiceExport = {
 // 账户管理(废弃)
 const walletManagement = {
     path: '/wallet',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/wallet/wallet-list',
     name: 'WalletManagement',
     type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
@@ -183,7 +182,7 @@ const walletManagement = {
 // 可能废弃了
 const Dashboard = {    
     path: '/dashboard',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     name: 'Dashboard',
     redirect: '/dashboard/index',
     type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION],
@@ -218,7 +217,7 @@ const Dashboard = {
 
 /*{ // 零售商管理 - 零售商端
         path: '/agent/agent-detail-sp',
-        component: Layout,
+        component: () => import('@/views/layout/index.vue'),
         meta: {
             title: '零售商管理',
             icon: 'i_s_agent',
@@ -236,7 +235,7 @@ const Dashboard = {
     },*/
 /* { // 门店管理 - 门店端
         path: '/store/store-detail-sp',
-        component: Layout,
+        component: () => import('@/views/layout/index.vue'),
         meta: {
             title: '门店管理',
             icon: 'i_s_store',
@@ -255,7 +254,7 @@ const Dashboard = {
 
 /* { // 物流管理
         path: '/waybill',
-        component: Layout,
+        component: () => import('@/views/layout/index.vue'),
         redirect: '/waybill/waybill-list',
         name: 'WayBillManagement',
         meta: {
@@ -285,7 +284,7 @@ const Dashboard = {
 
 // { // 三包管理 - 平台端
 //     path: '/warranty',
-//     component: Layout,
+//     component: () => import('@/views/layout/index.vue'),
 //     redirect: '/warranty/time-config',
 //     name: 'Warranty',
 //     type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],

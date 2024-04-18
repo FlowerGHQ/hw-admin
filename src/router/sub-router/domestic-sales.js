@@ -1,7 +1,6 @@
 import Const from '../../core/const';
 import Util from '../../core/utils';
 import Data from '../../core/data';
-import Layout from '../../views/layout/index.vue';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
@@ -9,98 +8,14 @@ const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 // 国内销售
 const domesticSales = [
     {
-        // 工作台
-        path: '/crm-staging',
-        component: Layout,
-        redirect: '/crm-staging/staging',
-        name: 'crm-staging',
-        type: [ROUTER_TYPE.CRM],
-        meta: {
-            title: '工作台',
-            title_en: 'Staging',
-            icon: 'i_crm_bo',
-            hidden: true,
-        },
-        children: [
-            {
-                path: 'staging',
-                name: 'CrmStaging',
-                component: () => import('@/views/crm-staging/staging.vue'),
-                meta: {
-                    title: '工作台',
-                    title_en: 'Staging',
-                },
-            },
-            {
-                // 工作台详情
-                path: 'staging-detail',
-                name: 'stagingDetail',
-                component: () => import('@/views/crm-staging-detail/staging.vue'),
-                meta: {
-                    title: '工作台详情',
-                    title_en: 'StagingDetail',
-                    hidden: true,
-                },
-            },
-        ],
-    },
-    {
-        // 用户中心
-        path: '/user-center',
-        component: Layout,
-        redirect: '/user-center/clue-list',
-        type: [ROUTER_TYPE.CRM],
-        meta: {
-            title: '用户中心',
-            title_en: 'User Center',
-            icon: 'i_menu_yonghuzhognxin',
-            hidden: true,            
-        },
-        children: [
-            {
-                path: 'clue-list',
-                name: 'clueList',
-                component: () => import('@/views/crm-customer-center/clue-list.vue'),
-                meta: {
-                    title: '线索',
-                    title_en: 'Clue List',
-                    icon: 'i_home',
-                },
-            },
-            {
-                path: 'user-list',
-                name: 'userList',
-                component: () => import('@/views/crm-customer-center/user-list.vue'),
-                meta: {
-                    title: '用户列表',
-                    title_en: 'User List',
-                    icon: 'i_home',
-                },
-            },
-            {
-                path: 'user-edit',
-                name: 'userEdit',
-                component: () => import('@/views/crm-customer-center/user-edit.vue'),
-                meta: {
-                    hidden: true,
-                    title: '门店详情',
-                    title_en: 'Payment Receipt Phase',
-                    parent: '/stores-vehicle/stores-list',
-                },
-            },
-        ],
-    },
-    {
-        // 门店管理
         path: '/stores-vehicle',
-        component: Layout,
+        component: () => import('@/views/layout/index.vue'),
         redirect: '/stores-vehicle/stores-list',
-        type: [ROUTER_TYPE.CRM],
         meta: {
-            title: '门店管理',
-            title_en: 'Stores Management',
+            title: '国内销售门店管理',
+            title_en: 'Domestic Sales Stores',
             icon: 'i_stores',
-            hidden: true,
+            auth: ['crm.store'],
         },
         children: [
             {
@@ -111,6 +26,7 @@ const domesticSales = [
                     title: '门店列表',
                     title_en: 'Stores List',
                     icon: 'i_home',
+                    auth: ['crm.store.store-list'],
                 },
             },
             {
@@ -121,6 +37,7 @@ const domesticSales = [
                     title: '区域管理',
                     title_en: 'Regional Mangage',
                     icon: 'i_home',
+                    auth: ['crm.store.area'],
                 },
             },
             {
@@ -171,14 +88,13 @@ const domesticSales = [
     {
         // 人员管理
         path: '/retail-personnel',
-        component: Layout,
+        component: () => import('@/views/layout/index.vue'),
         redirect: '/retail-personnel/personnel-list',
-        type: [ROUTER_TYPE.CRM],
         meta: {
-            title: '人员管理',
-            title_en: 'Personnel Management',
+            title: '国内销售人员管理',
+            title_en: 'Domestic Personnel Management',
             icon: 'i_menu_renyuanguanli',
-            hidden: true,
+            auth: ['crm.personnel'],
         },
         children: [
             {
@@ -189,6 +105,7 @@ const domesticSales = [
                     title: '人员列表',
                     title_en: 'Personnel List',
                     icon: 'i_s_user',
+                    auth: ['crm.personnel.personnel-list'],
                 },
             },
             {
@@ -204,9 +121,91 @@ const domesticSales = [
         ],
     },
     {
+        // 工作台
+        path: '/crm-staging',
+        component: () => import('@/views/layout/index.vue'),
+        redirect: '/crm-staging/staging',
+        name: 'crm-staging',
+        type: [ROUTER_TYPE.CRM],
+        meta: {
+            title: '工作台',
+            title_en: 'Staging',
+            icon: 'i_crm_bo',
+            hidden: true,
+        },
+        children: [
+            {
+                path: 'staging',
+                name: 'CrmStaging',
+                component: () => import('@/views/crm-staging/staging.vue'),
+                meta: {
+                    title: '工作台',
+                    title_en: 'Staging',
+                },
+            },
+            {
+                // 工作台详情
+                path: 'staging-detail',
+                name: 'stagingDetail',
+                component: () => import('@/views/crm-staging-detail/staging.vue'),
+                meta: {
+                    title: '工作台详情',
+                    title_en: 'StagingDetail',
+                    hidden: true,
+                },
+            },
+        ],
+    },
+    {
+        // 用户中心
+        path: '/user-center',
+        component: () => import('@/views/layout/index.vue'),
+        redirect: '/user-center/clue-list',
+        type: [ROUTER_TYPE.CRM],
+        meta: {
+            title: '用户中心',
+            title_en: 'User Center',
+            icon: 'i_menu_yonghuzhognxin',
+            hidden: true,            
+        },
+        children: [
+            {
+                path: 'clue-list',
+                name: 'clueList',
+                component: () => import('@/views/crm-customer-center/clue-list.vue'),
+                meta: {
+                    title: '线索',
+                    title_en: 'Clue List',
+                    icon: 'i_home',
+                },
+            },
+            {
+                path: 'user-list',
+                name: 'userList',
+                component: () => import('@/views/crm-customer-center/user-list.vue'),
+                meta: {
+                    title: '用户列表',
+                    title_en: 'User List',
+                    icon: 'i_home',
+                },
+            },
+            {
+                path: 'user-edit',
+                name: 'userEdit',
+                component: () => import('@/views/crm-customer-center/user-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '门店详情',
+                    title_en: 'Payment Receipt Phase',
+                    parent: '/stores-vehicle/stores-list',
+                },
+            },
+        ],
+    },      
+    {
         // 探索
         path: '/retail-explore',
-        component: Layout,
+        component: () => import('@/views/layout/index.vue'),
         redirect: '/retail-explore/file-list',
         type: [ROUTER_TYPE.CRM],
         meta: {
@@ -259,7 +258,7 @@ const domesticSales = [
     {
         // 分配规则
         path: '/service',
-        component: Layout,
+        component: () => import('@/views/layout/index.vue'),
         redirect: '/service/lead-list',
         type: [ROUTER_TYPE.CRM],
         meta: {
@@ -283,7 +282,7 @@ const domesticSales = [
     {
         // 好物订单
         path: '/good-items-order',
-        component: Layout,
+        component: () => import('@/views/layout/index.vue'),
         redirect: '/good-items-order/order-list',
         name: 'good-items-order',
         type: [ROUTER_TYPE.CRM],

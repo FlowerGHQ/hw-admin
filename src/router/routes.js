@@ -2,8 +2,6 @@ import Const from '../core/const';
 import Util from '../core/utils';
 import Data from '../core/data';
 
-import Layout from '../views/layout/index.vue';
-
 // 供应商路由
 import { supplyManage, supplyRouters, supplyMaterialManagement, costManagement } from './sub-router/supply-router';
 // 新分销商路由
@@ -142,7 +140,7 @@ const routes = [
     {
         // 分销管理 - 平台端
         path: '/distributor',
-        component: Layout,
+        component: () => import('@/views/layout/index.vue'),
         redirect: '/distributor/purchase-order-list',
         name: 'DistributorManagement',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
@@ -351,7 +349,7 @@ const routes = [
     {
         // 商品管理
         path: '/item',
-        component: Layout,
+        component: () => import('@/views/layout/index.vue'),
         redirect: '/item/item-list',
         name: 'ItemManagement',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
@@ -445,7 +443,7 @@ const routes = [
     {
         // 实例管理
         path: '/entity',
-        component: Layout,
+        component: () => import('@/views/layout/index.vue'),
         redirect: '/entity/vehicle-list',
         name: 'EntityManagement',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.PRODUCTION],
@@ -493,7 +491,7 @@ const routes = [
     {
         // 售后管理
         path: '/aftersales',
-        component: Layout,
+        component: () => import('@/views/layout/index.vue'),
         redirect: '/aftersales/aftersales-list',
         name: 'AftersalesManagement',
         type: [ROUTER_TYPE.AFTER],

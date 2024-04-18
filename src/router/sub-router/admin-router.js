@@ -1,7 +1,7 @@
 import Const from '../../core/const';
 import Util from '../../core/utils';
 import Data from '../../core/data';
-import Layout from '../../views/layout/index.vue';
+
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
@@ -9,7 +9,7 @@ const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 // 平台方客户关怀
 const inquiryManagement = {
     path: '/inquiry-management',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     name: 'InquiryManagement',
     redirect: '/inquiry-management/list',
     type: [ROUTER_TYPE.AFTER],
@@ -75,10 +75,11 @@ const inquiryManagement = {
         },
     ],
 };
+
 // 运营管理
 const operationManagement = {
     path: '/operation',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/operation/report-list',
     name: 'Operation',
     type: [ROUTER_TYPE.SALES],
@@ -133,10 +134,11 @@ const operationManagement = {
         },
     ],
 };
+
 // 工单管理
 const repairManagement = {
     path: '/repair',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     name: 'RepairManagement',
     redirect: '/repair/repair-list',
     type: [ROUTER_TYPE.AFTER],
@@ -248,7 +250,7 @@ const repairManagement = {
 // 数据
 const crmDashboard = {
     path: '/crm-dashboard',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/crm-dashboard/vote-dashboard',
     name: 'crm-dashboard',
     type: [ROUTER_TYPE.CRM],
@@ -291,10 +293,11 @@ const crmDashboard = {
         },
     ],
 };
+
 // 客户
 const crmCustomerManagement = {
     path: '/crm-customer',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/crm-customer/customer-list',
     name: 'CRMCustomerManagement',
     type: [ROUTER_TYPE.CRM],
@@ -374,7 +377,7 @@ const crmCustomerManagement = {
 // 商机管理
 const crmBoManagement = {
     path: '/crm-bo',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/crm-bo/bo-list',
     name: 'CRMBoManagement',
     type: [ROUTER_TYPE.CRM],
@@ -421,7 +424,7 @@ const crmBoManagement = {
 // 订单管理
 const crmOrder = {
     path: '/crm-order',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/crm-order/order-list',
     name: 'CRMOrder',
     type: [ROUTER_TYPE.CRM],
@@ -490,7 +493,7 @@ const crmOrder = {
 // 回款单
 const crmOrderIncome = {
     path: '/crm-order-income',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/crm-order-income/order-income-list',
     name: 'CRMOrderIncome',
     type: [ROUTER_TYPE.CRM],
@@ -548,7 +551,7 @@ const crmOrderIncome = {
 // 试驾单
 const crmTestDriveList = {
     path: '/crm-test-drive-order',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/crm-test-drive-order/test-drive-list',
     name: 'CRMTestDriveList',
     type: [ROUTER_TYPE.CRM],
@@ -595,7 +598,7 @@ const crmTestDriveList = {
 // 智能标签
 const smartLabel = {
     path: '/crm-smart-label',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/crm-smart-label/label-list',
     name: 'SmartLabel',
     type: [ROUTER_TYPE.CRM],
@@ -632,7 +635,7 @@ const smartLabel = {
 // 系统设置
 const crmSettingManagement = {
     path: '/crm-setting',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/crm-setting/setting-list',
     name: 'CRMSettingManagement',
     type: [ROUTER_TYPE.CRM],
@@ -692,7 +695,7 @@ const crmSettingManagement = {
 // 销售策略管理
 const salesStrategyManagement = {
     path: '/sales-strategy-management',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/sales-strategy-management/sales-strategy-list',
     name: 'SalesStrategyManagement',
     type: [ROUTER_TYPE.SALES],
@@ -731,7 +734,7 @@ const salesStrategyManagement = {
 // COC证书管理
 const cocCertificate = {
     path: '/coc',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/coc/coc-list',
     name: 'COC',
     type: [ROUTER_TYPE.SALES],
@@ -786,7 +789,7 @@ const cocCertificate = {
 // 生产管理
 const manufactureManagement = {
     path: '/manufacture',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/manufacture/manufacture-list',
     name: 'ManufactureManagement',
     type: [ROUTER_TYPE.PRODUCTION],
@@ -892,7 +895,7 @@ const manufactureManagement = {
 // 供应管理
 const productionManagement = {
     path: '/production',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/production/stock-list',
     name: 'ProductionManagement',
     type: [ROUTER_TYPE.PRODUCTION],
@@ -1038,11 +1041,10 @@ const productionManagement = {
 };
 /* 财务 end*/
 
-// 多个
 // 客户管理
 const customerManagement = {
     path: '/eos-customer',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/eos-customer/customer-list',
     name: 'CustomerManagement',
     type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
@@ -1079,7 +1081,7 @@ const customerManagement = {
 // 存货管理
 const InventoryManagement = {
     path: '/inventory',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/inventory/inventory-list',
     name: 'InventoryManagement',
     type: [ROUTER_TYPE.SALES, ROUTER_TYPE.PRODUCTION],
@@ -1126,7 +1128,7 @@ const InventoryManagement = {
 // 库存管理
 const WarehouseManagement = {
     path: '/warehouse',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/warehouse/warehouse-list',
     name: 'WarehouseManagement',
     type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION],

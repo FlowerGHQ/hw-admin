@@ -1,7 +1,6 @@
 import Const from '../../core/const';
 import Util from '../../core/utils';
 import Data from '../../core/data';
-import Layout from '../../views/layout/index.vue';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
@@ -9,7 +8,7 @@ const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 // 分销商客户关怀
 const customerCare = {
     path: '/customer-care',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     name: 'CustomerCare',
     redirect: '/customer-care/list',
     meta: {

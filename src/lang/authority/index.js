@@ -262,6 +262,21 @@ export default {
                     title: '投票看板',
                 },
             },
+            store: {
+                title: '国内销售门店管理',
+                'store-list': {
+                    title: '门店列表',
+                },
+                area: {
+                    title: '区域管理',
+                }
+            },
+            personnel: {
+                title: '国内销售人员管理',
+                'personnel-list': {
+                    title: '人员列表',
+                }
+            },
             'crm-customer': {
                 title: '客户',
                 area: {
