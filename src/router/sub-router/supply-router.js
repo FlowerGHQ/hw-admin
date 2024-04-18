@@ -1,7 +1,6 @@
 import Const from '../../core/const';
 import Util from '../../core/utils';
 import Data from '../../core/data';
-import Layout from '../../views/layout/index.vue';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
@@ -9,7 +8,7 @@ const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 const supplyManage = {
     // 供应商管理(仅平台方可看)
     path: '/supply-manage',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     name: 'SupplyManage',
     redirect: '/supply-manage/list',
     type: [ROUTER_TYPE.SUPPLIER],
@@ -80,7 +79,7 @@ const supplyRouters = [
 const supplyMaterialManagement = {
     // 物料管理
     path: '/material',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/material/material-list',
     name: 'MaterialManagement',
     type: [ROUTER_TYPE.SUPPLIER],
@@ -174,7 +173,7 @@ const supplyMaterialManagement = {
 // 成本管理
 const costManagement =  {
     path: '/cost',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/cost/cost-list',
     name: 'CostManagement',
     type: [ROUTER_TYPE.SUPPLIER],

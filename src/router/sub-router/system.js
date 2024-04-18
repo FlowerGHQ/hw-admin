@@ -1,7 +1,6 @@
 import Const from '../../core/const';
 import Util from '../../core/utils';
 import Data from '../../core/data';
-import Layout from '../../views/layout/index.vue';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
@@ -10,7 +9,7 @@ const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 const SYSTEM = {
     // 系统管理
     path: '/system',
-    component: Layout,
+    component: () => import('@/views/layout/index.vue'),
     redirect: '/system/user-list',
     name: 'SystemManagement',
     type: [ROUTER_TYPE.SYSTEM],

@@ -1,14 +1,13 @@
 import Const from '../../core/const';
 import Util from '../../core/utils';
 import Data from '../../core/data';
-import MallLayout from '../../views/mall/layout/index.vue';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE;
 
 const mallRouters = {
     // 看板
     path: '/mall',
-    component: MallLayout,
+    component: () => import('@/views/mall/layout/index.vue'),
     name: 'Mall',
     meta: {
         title: '商城',
@@ -190,7 +189,7 @@ const mallRouters = {
 };
 const dealsPreview = {
     path: '/preview',
-    component: MallLayout,
+    component: () => import('@/views/mall/layout/index.vue'),
     name: 'Preview',
     meta: {
         title: '商城',

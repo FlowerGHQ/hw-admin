@@ -391,7 +391,8 @@ export default {
             this.loading = true;
             Core.Api.User.setPlatformAdmin({
                 id: record.id,
-                flag_admin: record.flag_admin ? 0 : 1,
+                user_type: Core.Data.getLoginType(),
+                flag_admin: record.flag_admin ? 0 : 1, // 0 取消 1 设置
             })
                 .then(() => {
                     this.getTableData();
