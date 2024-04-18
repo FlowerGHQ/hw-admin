@@ -3232,7 +3232,7 @@ function getDetail(params = {}) {
                     } else if (key === 'contact_info') {
                         msgDetail.value['position'] = parameters.value[key].map(item => item.position);
                         parameters.value['position'] = msgDetail.value['position'];
-                    } 
+                    }
                 } else if (keys instanceof Object) {
                     // 判断 是对象 [数组其实也是对象 所以先判断数组在判断对象]
                     for (const item in parameters.value[key]) {
@@ -3262,10 +3262,10 @@ function getDetail(params = {}) {
                         ]
                             .filter(item => item)
                             .join('/');
-                    }else if (key === 'financial_info') {
+                    } else if (key === 'financial_info') {
                         parameters.value[key].flag_legal_dispute = parameters?.value[key]?.flag_legal_dispute
-                            ? 1
-                            : '-1';
+                            ? parameters?.value[key]?.flag_legal_dispute
+                            : '';
                     }
                 } else if (typeof keys === 'string' || typeof keys === 'number' || typeof keys === 'boolean') {
                     // | 字符串 | 数字 | 布尔
@@ -3403,7 +3403,10 @@ const onSuction = type => {
                             ).unix();
                         });
                         break;
-
+                    case 'financial_info':
+                        // 是否有法律纠纷
+                        form[key].flag_legal_dispute = parameters?.value[key]?.flag_legal_dispute || '';
+                        break;
                     default:
                         break;
                 }

@@ -99,7 +99,6 @@ const { loading, tableData, pagination, search, onPagenationChange, refreshTable
         return filterChildren(res.list);
     },
 });
-
 const tableColumns = computed(() => {
     let columns = [
         {
@@ -127,7 +126,6 @@ const rules = {
     name: [{ required: true, message: `${$t('def.input')}${$t('supply-chain.classification_name')}` }],
 };
 const formRef = ref(null);
-
 const handleAdd = (record = null) => {
     modalVisible.value = true;
     if (record) {
