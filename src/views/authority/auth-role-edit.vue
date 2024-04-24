@@ -254,6 +254,9 @@ export default {
             list = [...new Set(list)];
 
             console.log("list", list);
+            if (list.length === 0) {
+                return this.$message.warning(this.$t('def.required_new'));
+            }
             this.saveRoledataFetch({ ...form, authority_ids: list.join(',') });
         },
 

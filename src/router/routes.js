@@ -61,18 +61,7 @@ switch (NOW_LOGIN_TYPE) {
         indexPath = Data.getTabPosition()?.path || '/';
         break;
     case LOGIN_TYPE.DISTRIBUTOR:
-        indexPath = '/mall/index';
-        break;
-    case LOGIN_TYPE.AGENT:
-        indexPath = '/mall/index';
-        break;
-    case LOGIN_TYPE.STORE:
-        indexPath = '/mall/index';
-        break;
-    case LOGIN_TYPE.SUPPLIER:
-        indexPath = '/supply-home';
-        break;
-    default:
+        indexPath = '/';
         break;
 }
 /**
