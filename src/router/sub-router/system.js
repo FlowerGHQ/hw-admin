@@ -9,8 +9,7 @@ const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 const SYSTEM = {
     // 系统管理
     path: '/system',
-    component: () => import('@/views/layout/index.vue'),
-    redirect: '/system/user-list',
+    component: () => import('@/views/layout/index.vue'),    
     name: 'SystemManagement',
     type: [ROUTER_TYPE.SYSTEM],
     meta: {

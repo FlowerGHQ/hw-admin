@@ -98,16 +98,6 @@
                         <auth-tab v-if="!$auth('DISTRIBUTOR')" ref="authTabRef" class="m-b-20" @tab="onTab"></auth-tab>
                         <template v-for="item of options" :key="item.key">
                             <template v-if="$auth('DISTRIBUTOR') || activeTab === item.tab">
-                                <div v-if="$auth('ADMIN')" class="form-item afs">
-                                    <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
-                                    <div class="value">
-                                        <a-checkbox-group v-model:value="item.templateSelect" :disabled="item.disabled">
-                                            <a-checkbox :value="item.id">
-                                                {{ $t('authority.title.' + item.key) }}
-                                            </a-checkbox>
-                                        </a-checkbox-group>
-                                    </div>
-                                </div>
                                 <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
                                     <div class="key">
                                         {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:

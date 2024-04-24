@@ -9,8 +9,7 @@ const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 const customerCare = {
     path: '/customer-care',
     component: () => import('@/views/layout/index.vue'),
-    name: 'CustomerCare',
-    redirect: '/customer-care/list',
+    name: 'CustomerCare',    
     meta: {
         title: '客户关怀',
         title_en: 'Customer Care',

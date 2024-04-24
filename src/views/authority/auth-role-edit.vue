@@ -37,17 +37,7 @@
             <div class="form-content long-key">
                 <auth-tab ref="authTabRef" class="m-b-20 m-l-140" @tab="onTab"></auth-tab>
                 <template v-for="item in authItems" :key="item.key">
-                    <template v-if="activeTab === item.tab">
-                        <div class="form-item afs">
-                            <div class="key">{{ $t('authority.title.' + item.key) }}:</div>
-                            <div class="value">
-                                <a-checkbox-group v-model:value="item.templateSelect">
-                                    <a-checkbox :value="item.id">
-                                        {{ $t('authority.title.' + item.key) }}
-                                    </a-checkbox>
-                                </a-checkbox-group>
-                            </div>
-                        </div>
+                    <template v-if="activeTab === item.tab">                       
                         <div v-for="(subItem, index) in item.list" :key="index" class="form-item afs">
                             <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
                             <div class="value">

@@ -244,9 +244,6 @@ export default {
     created() {
         this.user_type_list = Core.Data.getUserTypeList();
         this.handleInitRouter();
-        if (this.$auth('ADMIN')) {
-            this.moduleAuthList = this.handleModuleAuthList();
-        }
     },
     mounted() {
         this.loginType = Core.Data.getLoginType();
@@ -317,26 +314,28 @@ export default {
                             }
                         }
                     });
-                });
+                });                
                 this.$store.commit('ADMIN_AUTH_TAB/SETSHOWCLASSIFY', showClassify);
+
+                this.moduleAuthList = this.handleModuleAuthList(Object.keys(showClassify));
             } else {
                 this.showList = routeList;
                 this.$store.commit('ADMIN_AUTH_TAB/SETSHOWCLASSIFY', routeList);
             }
         },
         // 模块切换
-        handleGetModule() {
+        handleGetModule() {            
             let showClassify = this.$store.state.ADMIN_AUTH_TAB.SHOWCLASSIFY;
             let KEY = ROUTER_TYPE_MAP[this.tabPosition]?.KEY;
             if (KEY) {
                 this.showList = showClassify[KEY];
             }
         },
-        handleModuleAuthList() {
+        handleModuleAuthList(routerArr) {
             const arr = [];
             this.moduleAuth.forEach(el => {
                 // 根据权限判断顶部是否存在
-                if (this.$auth(el.key) || (el.ismanager && this.$auth('MANAGER'))) {
+                if (routerArr.includes(el.key)) {
                     arr.push(el);
                 }
             });
@@ -349,7 +348,7 @@ export default {
                 console.log('第一次进入跳转', this.showList);
 
                 try {
-                    this.$router.replace({ path: this.showList[0]?.path });
+                    this.routerReplace()
                     this.$store.commit('ADMIN_AUTH_TAB/SETTABPOSITION', {
                         tabPosition: this.tabPosition,
                         path: this.showList[0]?.path,
@@ -470,7 +469,8 @@ export default {
             if (this.$store.state.ADMIN_AUTH_TAB.TABPOSITION === this.tabPosition) {
                 return;
             }
-            this.$router.replace({ path: this.showList[0]?.path });
+            
+            this.routerReplace()
             this.$store.commit('ADMIN_AUTH_TAB/SETTABPOSITION', {
                 tabPosition: this.tabPosition,
                 path: this.showList[0]?.path,
@@ -542,6 +542,15 @@ export default {
             });
             return result;
         },
+
+        // 路由替换
+        routerReplace() {
+            console.log("使用");
+            let path = this.showList[0]?.path
+            let subPath = this.showList[0].children?.length ? '/' + this.showList[0].children[0].path : ''
+            
+            this.$router.replace({ path: path + subPath });
+        }
     },
 };
 </script>

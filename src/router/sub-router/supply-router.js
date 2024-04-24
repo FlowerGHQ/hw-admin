@@ -9,8 +9,7 @@ const supplyManage = {
     // 供应商管理(仅平台方可看)
     path: '/supply-manage',
     component: () => import('@/views/layout/index.vue'),
-    name: 'SupplyManage',
-    redirect: '/supply-manage/list',
+    name: 'SupplyManage',    
     type: [ROUTER_TYPE.SUPPLIER],
     meta: {
         title: '供应商管理',
@@ -79,8 +78,7 @@ const supplyRouters = [
 const supplyMaterialManagement = {
     // 物料管理
     path: '/material',
-    component: () => import('@/views/layout/index.vue'),
-    redirect: '/material/material-list',
+    component: () => import('@/views/layout/index.vue'),    
     name: 'MaterialManagement',
     type: [ROUTER_TYPE.SUPPLIER],
     meta: {
@@ -173,8 +171,7 @@ const supplyMaterialManagement = {
 // 成本管理
 const costManagement =  {
     path: '/cost',
-    component: () => import('@/views/layout/index.vue'),
-    redirect: '/cost/cost-list',
+    component: () => import('@/views/layout/index.vue'),    
     name: 'CostManagement',
     type: [ROUTER_TYPE.SUPPLIER],
     meta: {

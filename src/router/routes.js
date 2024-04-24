@@ -141,7 +141,6 @@ const routes = [
         // 分销管理 - 平台端
         path: '/distributor',
         component: () => import('@/views/layout/index.vue'),
-        redirect: '/distributor/purchase-order-list',
         name: 'DistributorManagement',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
         meta: {
@@ -349,8 +348,7 @@ const routes = [
     {
         // 商品管理
         path: '/item',
-        component: () => import('@/views/layout/index.vue'),
-        redirect: '/item/item-list',
+        component: () => import('@/views/layout/index.vue'),        
         name: 'ItemManagement',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
         meta: {
@@ -443,8 +441,7 @@ const routes = [
     {
         // 实例管理
         path: '/entity',
-        component: () => import('@/views/layout/index.vue'),
-        redirect: '/entity/vehicle-list',
+        component: () => import('@/views/layout/index.vue'),        
         name: 'EntityManagement',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.PRODUCTION],
         meta: {
@@ -491,8 +488,7 @@ const routes = [
     {
         // 售后管理
         path: '/aftersales',
-        component: () => import('@/views/layout/index.vue'),
-        redirect: '/aftersales/aftersales-list',
+        component: () => import('@/views/layout/index.vue'),        
         name: 'AftersalesManagement',
         type: [ROUTER_TYPE.AFTER],
         meta: {
