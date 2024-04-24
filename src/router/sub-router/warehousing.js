@@ -8,8 +8,7 @@ const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 // 仓储管理(Warehousing management)
 const warehousingManagement = {
     path: '/warehousing-management',
-    component: () => import('@/views/layout/index.vue'),
-    redirect: '/warehousing-management/procurement',
+    component: () => import('@/views/layout/index.vue'),    
     name: 'WarehousingManagement',
     type: [ROUTER_TYPE.WAREHOUSING],
     meta: {

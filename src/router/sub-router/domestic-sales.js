@@ -9,8 +9,7 @@ const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 const domesticSales = [
     {
         path: '/stores-vehicle',
-        component: () => import('@/views/layout/index.vue'),
-        redirect: '/stores-vehicle/stores-list',
+        component: () => import('@/views/layout/index.vue'),        
         meta: {
             title: '国内销售门店管理',
             title_en: 'Domestic Sales Stores',
@@ -88,8 +87,7 @@ const domesticSales = [
     {
         // 人员管理
         path: '/retail-personnel',
-        component: () => import('@/views/layout/index.vue'),
-        redirect: '/retail-personnel/personnel-list',
+        component: () => import('@/views/layout/index.vue'),        
         meta: {
             title: '国内销售人员管理',
             title_en: 'Domestic Personnel Management',
@@ -123,8 +121,7 @@ const domesticSales = [
     {
         // 工作台
         path: '/crm-staging',
-        component: () => import('@/views/layout/index.vue'),
-        redirect: '/crm-staging/staging',
+        component: () => import('@/views/layout/index.vue'),        
         name: 'crm-staging',
         type: [ROUTER_TYPE.CRM],
         meta: {
@@ -159,8 +156,7 @@ const domesticSales = [
     {
         // 用户中心
         path: '/user-center',
-        component: () => import('@/views/layout/index.vue'),
-        redirect: '/user-center/clue-list',
+        component: () => import('@/views/layout/index.vue'),        
         type: [ROUTER_TYPE.CRM],
         meta: {
             title: '用户中心',
@@ -205,8 +201,7 @@ const domesticSales = [
     {
         // 探索
         path: '/retail-explore',
-        component: () => import('@/views/layout/index.vue'),
-        redirect: '/retail-explore/file-list',
+        component: () => import('@/views/layout/index.vue'),        
         type: [ROUTER_TYPE.CRM],
         meta: {
             title: '探索',
@@ -258,8 +253,7 @@ const domesticSales = [
     {
         // 分配规则
         path: '/service',
-        component: () => import('@/views/layout/index.vue'),
-        redirect: '/service/lead-list',
+        component: () => import('@/views/layout/index.vue'),        
         type: [ROUTER_TYPE.CRM],
         meta: {
             title: '分配规则',
@@ -282,8 +276,7 @@ const domesticSales = [
     {
         // 好物订单
         path: '/good-items-order',
-        component: () => import('@/views/layout/index.vue'),
-        redirect: '/good-items-order/order-list',
+        component: () => import('@/views/layout/index.vue'),        
         name: 'good-items-order',
         type: [ROUTER_TYPE.CRM],
         meta: {

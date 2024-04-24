@@ -9,8 +9,7 @@ const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 // 邮件管理
 const mailManagement = {
     path: '/mail-management',
-    component: () => import('@/views/layout/index.vue'),
-    redirect: '/mail-management/subscription-list',
+    component: () => import('@/views/layout/index.vue'),    
     name: 'MailManagement',
     type: [ROUTER_TYPE.CRM],
     meta: {
@@ -64,8 +63,7 @@ const mailManagement = {
 // 车辆管理
 const retailBusinessVehicleManagement = {
     path: '/retail-vehicle',
-    component: () => import('@/views/layout/index.vue'),
-    redirect: '/retail-vehicle/vehicle-list',
+    component: () => import('@/views/layout/index.vue'),    
     type: [ROUTER_TYPE.CRM],
     meta: {
         title: '车辆管理',
@@ -98,8 +96,7 @@ const retailBusinessVehicleManagement = {
 // 订单管理
 const retailBusinessOrderManagement = {
     path: '/retail-order',
-    component: () => import('@/views/layout/index.vue'),
-    redirect: '/retail-order/order-list',
+    component: () => import('@/views/layout/index.vue'),    
     type: [ROUTER_TYPE.CRM],
     meta: {
         title: '订单管理',
@@ -145,8 +142,7 @@ const RepairInvoiceExport = {
 // 账户管理(废弃)
 const walletManagement = {
     path: '/wallet',
-    component: () => import('@/views/layout/index.vue'),
-    redirect: '/wallet/wallet-list',
+    component: () => import('@/views/layout/index.vue'),    
     name: 'WalletManagement',
     type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
     meta: {
@@ -183,8 +179,7 @@ const walletManagement = {
 const Dashboard = {    
     path: '/dashboard',
     component: () => import('@/views/layout/index.vue'),
-    name: 'Dashboard',
-    redirect: '/dashboard/index',
+    name: 'Dashboard',    
     type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION],
     meta: {
         title: '商城',
@@ -254,8 +249,7 @@ const Dashboard = {
 
 /* { // 物流管理
         path: '/waybill',
-        component: () => import('@/views/layout/index.vue'),
-        redirect: '/waybill/waybill-list',
+        component: () => import('@/views/layout/index.vue'),        
         name: 'WayBillManagement',
         meta: {
             title: '物流管理',
@@ -285,7 +279,6 @@ const Dashboard = {
 // { // 三包管理 - 平台端
 //     path: '/warranty',
 //     component: () => import('@/views/layout/index.vue'),
-//     redirect: '/warranty/time-config',
 //     name: 'Warranty',
 //     type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
 //     meta: {
