@@ -189,7 +189,6 @@ export default {
             this.loading = true;
             Core.Api.User.setAdmin({
                 id: record.id,
-                user_type: Core.Data.getLoginType(),
                 flag_admin: record.flag_admin ? 0 : 1,
             })
                 .then(() => {
