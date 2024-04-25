@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('d.distributor_list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('distributor.save')"
+                    <a-button type="primary" @click="routerChange('edit')"
                         ><i class="icon i_add" />{{ $t('d.new_distributor') }}</a-button
                     >
                 </div>
@@ -64,7 +64,7 @@
                         <template v-if="column.dataIndex === 'type'">
                             {{ $Util.distributorTypeFilter(text, $i18n.locale) }}
                         </template>
-                        <template v-if="column.dataIndex === 'name' && $auth('distributor.detail')">
+                        <template v-if="column.dataIndex === 'name'">
                             <a-tooltip placement="top" :title="text">
                                 <a-button type="link" @click="routerChange('detail', record)">{{ text }}</a-button>
                             </a-tooltip>
@@ -99,10 +99,9 @@
                             <a-button
                                 type="link"
                                 @click="routerChange('detail', record)"
-                                v-if="$auth('distributor.detail')"
                                 ><i class="icon i_detail" /> {{ $t('def.detail') }}
                             </a-button>
-                            <a-button type="link" @click="routerChange('edit', record)" v-if="$auth('distributor.save')"
+                            <a-button type="link" @click="routerChange('edit', record)"
                                 ><i class="icon i_edit" />{{ $t('def.edit') }}
                             </a-button>
                             <a-button
@@ -110,10 +109,10 @@
                                 @click="handleStatusChange(record)"
                                 :class="record.status ? 'danger' : ''"
                             >
-                                <template v-if="record.status && $auth('distributor.delete')"
+                                <template v-if="record.status"
                                     ><i class="icon i_forbidden" />{{ $t('def.disable') }}</template
                                 >
-                                <template v-if="$auth('distributor.enable') && !record.status"
+                                <template v-if="!record.status"
                                     ><i class="icon i_enable" />{{ $t('def.enable') }}</template
                                 >
                             </a-button>

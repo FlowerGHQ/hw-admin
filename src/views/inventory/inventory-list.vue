@@ -10,10 +10,9 @@
                             modalShow = true;
                             upload.data.inventory_type = '';
                         "
-                        v-if="$auth('inventory.import')"
                         ><i class="icon i_add" />{{ $t('inv.importInv') }}</a-button
                     >
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('inventory.save')"
+                    <a-button type="primary" @click="routerChange('edit')"
                         ><i class="icon i_add" />{{ $t('inv.add') }}</a-button
                     >
                 </div>
@@ -115,16 +114,14 @@
                         <template v-if="column.key === 'flag_extra_feature'">
                             {{ record.flag_extra_feature ? '是' : '否' }}
                         </template>
-                        <template v-if="column.key === 'operation'">
-                            <!-- <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('warehouse.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button> -->
-                            <a-button type="link" @click="routerChange('edit', record)" v-if="$auth('inventory.save')"
+                        <template v-if="column.key === 'operation'">                            
+                            <a-button type="link" @click="routerChange('edit', record)"
                                 ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                             >
                             <a-button
                                 type="link"
                                 @click="handleDelete(record.id)"
                                 class="danger"
-                                v-if="$auth('inventory.delete')"
                                 ><i class="icon i_delete" />{{ $t('def.delete') }}</a-button
                             >
                         </template>

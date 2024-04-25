@@ -12,7 +12,7 @@
                 :showUploadList="false"
                 @change="handleCoverChange"
             >
-                <a-button type="primary" v-if="$auth('customer.detail')">{{ $t('crm_st.add_len') }}</a-button>
+                <a-button type="primary">{{ $t('crm_st.add_len') }}</a-button>
             </a-upload>
         </div>
 

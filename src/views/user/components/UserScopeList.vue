@@ -26,7 +26,7 @@
                             <a-button
                                 type="link"
                                 @click="handleScopeTypeShow(record)"
-                                v-if="$auth('account.save', 'MANAGER')"
+                                v-if="$auth('MANAGER')"
                                 >{{ $t('n.amend') }}</a-button
                             >
                         </template>

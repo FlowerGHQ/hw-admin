@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('crm_d.list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('crm-customer.save')"
+                    <a-button type="primary" @click="routerChange('edit')"
                         ><i class="icon i_add" />{{ $t('crm_d.save') }}</a-button
                     >
                 </div>
@@ -130,15 +130,6 @@
                     <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
-            <div class="operate-container">
-                <!-- <a-button type="primary" @click="handleBatch('distribute')" v-if="$auth('crm-customer.distribute')">{{ $t('crm_c.distribute') }}</a-button>-->
-                <!-- <a-button
-          type="danger"
-          @click="handleBatchDelete"
-          v-if="$auth('crm-customer.delete')"
-          >{{ $t("crm_c.delete") }}</a-button
-        > -->
-            </div>
             <div class="table-container">
                 <a-table
                     :columns="tableColumns"
@@ -203,23 +194,13 @@
                         </template>
                         <!-- 操作-->
                         <template v-if="column.key === 'operation'">
-                            <a-button
-                                type="link"
-                                @click="routerChange('detail', record)"
-                                v-if="$auth('crm-customer.detail')"
+                            <a-button type="link" @click="routerChange('detail', record)"
                                 ><i class="icon i_detail" />{{ $t('def.detail') }}</a-button
                             >
-                            <a-button
-                                type="link"
-                                @click="routerChange('edit', record)"
-                                v-if="$auth('crm-customer.save')"
+                            <a-button type="link" @click="routerChange('edit', record)"
                                 ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                             >
-                            <a-button
-                                type="link"
-                                @click="handleDelete(record.id)"
-                                class="danger"
-                                v-if="$auth('crm-customer.delete')"
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger"
                                 ><i class="icon i_delete" /> {{ $t('def.delete') }}</a-button
                             >
                         </template>

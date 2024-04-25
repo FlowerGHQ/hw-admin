@@ -106,9 +106,7 @@
                     <template v-if="column.key === 'operation'">
                         <AuditHandle
                             v-if="
-                                record.status === STATUS.APPLY &&
-                                $auth('after-sales-order.audit') &&
-                                sameOrg(record.supply_org_id, record.supply_org_type)
+                                record.status === STATUS.APPLY && sameOrg(record.supply_org_id, record.supply_org_type)
                             "
                             btnType="link"
                             :api-list="['Aftersales', 'audit']"
@@ -119,17 +117,10 @@
                             ><i class="icon i_audit" />{{ $t('n.audit') }}
                         </AuditHandle>
                         <template v-if="canEdit(record) && sameOrg(record.org_id, record.org_type)">
-                            <a-button
-                                type="link"
-                                @click="routerChange('edit', record)"
-                                v-if="$auth('after-sales-order.edit')"
+                            <a-button type="link" @click="routerChange('edit', record)"
                                 ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                             >
-                            <a-button
-                                type="link"
-                                @click="handleCancel(record.id)"
-                                class="danger"
-                                v-if="$auth('after-sales-order.cancel')"
+                            <a-button type="link" @click="handleCancel(record.id)" class="danger"
                                 ><i class="icon i_m_error" />{{ $t('def.cancel') }}</a-button
                             >
                         </template>
@@ -263,7 +254,7 @@ export default {
                     break;
                 case 'purchase': //采购单 详情
                     routeUrl = this.$router.resolve({
-                        path: '/purchase/purchase-order-detail',
+                        path: '/distributor/purchase-order-detail',
                         query: { id: item.order_id },
                     });
                     window.open(routeUrl.href, '_blank');

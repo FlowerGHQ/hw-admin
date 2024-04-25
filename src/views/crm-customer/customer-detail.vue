@@ -3,31 +3,22 @@
         <div class="title-container">
             <div class="title-area">
                 {{ $t('crm_c.detail') }}
-                <!--  <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>-->
-                <!--      {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}-->
-                <!--  </a-tag>-->
             </div>
             <div class="btns-area">
                 <template v-if="detail.status === STATUS.POOL">
-                    <!-- 编辑 -->
-                    <!-- <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button> -->
-                    <!-- <a-button @click="routerChange('edit')"
-                        v-if="$auth('crm-customer.save') && (lang === 'en' || detail.country !== '中国')">{{
-                            $t('n.edit')
-                        }}</a-button> -->
-                    <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save') && !isMoreCss">{{
+                    <a-button @click="routerChange('edit')" v-if="!isMoreCss">{{
                         $t('n.edit')
                     }}</a-button>
                     <!-- 领取 -->
-                    <a-button type="primary" @click="handleObtain" v-if="$auth('crm-customer.obtain')">
+                    <a-button type="primary" @click="handleObtain" >
                         {{ $t('crm_c.obtain') }}
                     </a-button>
                     <!-- 分配 -->
-                    <a-button type="primary" @click="handleBatch('distribute')" v-if="$auth('crm-customer.distribute')">
+                    <a-button type="primary" @click="handleBatch('distribute')">
                         {{ $t('crm_c.distribute') }}
                     </a-button>
                     <!-- 删除 -->
-                    <a-button type="danger" @click="handleDelete" v-if="$auth('crm-customer.delete')">
+                    <a-button type="danger" @click="handleDelete">
                         {{ $t('crm_c.delete') }}
                     </a-button>
                 </template>
@@ -39,18 +30,13 @@
                         trackMemberDetail !== ''
                     "
                 >
-                    <template v-if="trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ">
-                        <!-- <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">
-                            {{ $t('n.edit') }}
-                        </a-button> -->
-                    </template>
                     <template v-if="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN">
                         <!-- 移交 -->
-                        <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-customer.transfer')">
+                        <a-button type="primary" @click="handleBatch('transfer')">
                             {{ $t('crm_c.transfer') }}
                         </a-button>
                         <!-- 退回 -->
-                        <a-button type="danger" @click="handleReturnPool" v-if="$auth('crm-customer.return-pool')">
+                        <a-button type="danger" @click="handleReturnPool">
                             {{ $t('crm_c.return_pool') }}
                         </a-button>
                     </template>
@@ -187,30 +173,6 @@
                             <div v-else>
                                 -
                             </div>
-                        </a-col>
-                        <a-col :xs="24" :sm="24" :lg="24" class="detail-item">
-                            <!-- <a-button type="primary" @click="routerChange('test-drive')" v-if="$auth('crm-customer.save')">{{ $t('crm_d.save') }}</a-button>
-                            <template v-if="detail.status === STATUS.POOL">
-                                <FollowUpShow :btnText="$t('crm_c.add_follow_records')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord" />
-                                <CustomerAdd :btnText="$t('crm_c.add')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id"  @select="getCRMContactList" />
-                                <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button>
-                                <a-button type="primary" @click="handleObtain" v-if="$auth('crm-customer.obtain')">{{ $t('crm_c.obtain') }}</a-button>
-                                <a-button type="primary" @click="handleBatch('distribute')" v-if="$auth('crm-customer.distribute')">{{ $t('crm_c.distribute') }}</a-button>
-                                <a-button type="danger" @click="handleDelete" v-if="$auth('crm-customer.delete')">{{ $t('crm_c.delete') }}</a-button>
-                            </template>
-                            <template v-if="detail.status === STATUS.CUSTOMER &&  trackMemberDetail!== undefined  &&  trackMemberDetail!== null  &&  trackMemberDetail!== ''">
-                                <template v-if="trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ">
-                                    <FollowUpShow :btnText="$t('crm_c.add_follow_records')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord"/>
-                                    <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button>
-                                    <a-button @click="routerChange('bo-save')" v-if="$auth('crm-bo.save')">{{$t('crm_b.save')}}</a-button>
-                                    <a-button @click="routerChange('order-save')" v-if="$auth('crm-order.save')">{{ $t('crm_o.save') }}</a-button>
-                                    <CustomerAdd :btnText="$t('crm_c.add')"  :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id" @select="getCRMContactList" :addCustomerBtn="true"/>
-                                </template>
-                                <template v-if="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN">
-                                    <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-customer.transfer')">{{ $t('crm_c.transfer') }}</a-button>
-                                    <a-button type="danger" @click="handleReturnPool" v-if="$auth('crm-customer.return-pool')">{{ $t('crm_c.return_pool') }}</a-button>
-                                </template>
-                            </template> -->
                         </a-col>
                     </a-row>
                 </div>
@@ -757,7 +719,6 @@
                                 <a-button
                                     type="primary"
                                     @click="routerChange('test-drive')"
-                                    v-if="$auth('crm-customer.save')"
                                     >{{ $t('crm_d.save') }}</a-button
                                 >
                             </CRMTestDrive>
@@ -788,7 +749,7 @@
                         <!-- 商机 tab -->
                         <a-tab-pane key="Opportunity" :tab="$t('crm_b.new_bo')">
                             <CRMBo v-if="id > 0" :detail="detail" :customerId="detail.id" ref="CRMBo">
-                                <a-button type="primary" @click="routerChange('add-crm-bo')" v-if="$auth('crm-bo.save')"
+                                <a-button type="primary" @click="routerChange('add-crm-bo')"
                                     ><i class="icon i_add" />{{ $t('crm_b.save') }}</a-button
                                 >
                             </CRMBo>
@@ -799,7 +760,6 @@
                                 <a-button
                                     type="primary"
                                     @click="routerChange('add-order')"
-                                    v-if="$auth('crm-order.save')"
                                     ><i class="icon i_add" />{{ $t('crm_o.save') }}</a-button
                                 >
                             </CRMOrder>

@@ -6,7 +6,7 @@
                 <div class="title-area">
                     {{ form.id ? $t('crm_st.edit_st') : $t('crm_st.add_st') }}
                 </div>
-                <a-button type="primary" v-if="$auth('customer.detail')" @click="handelSave">{{
+                <a-button type="primary" @click="handelSave">{{
                     $t('def.save')
                 }}</a-button>
             </div>

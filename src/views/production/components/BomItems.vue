@@ -2,17 +2,7 @@
     <div class="BomItems gray-panel no-margin">
         <div class="panel-title">
             <div class="title">BOM表明细</div>
-            <div class="btn-area" v-if="!addMode && !editShow && $auth('bom.save')">
-                <!--            <a-upload name="file" class="file-uploader"
-                      :file-list="upload.fileList" :action="upload.action"
-                      :show-upload-list='false'
-                      :headers="upload.headers" :data='upload.data'
-                      accept=".xlsx,.xls"
-                      @change="handleFileUpload">
-                <a-button type="primary" ghost class="panel-btn">
-                    <i class="icon i_add"/> 批量导入
-                </a-button>
-            </a-upload>-->
+            <div class="btn-area" v-if="!addMode && !editShow">
                 <ItemSelect
                     @select="(ids, items) => handleAddShow(TARGET_TYPE.ITEM, ids, items)"
                     btn-class="panel-btn"
@@ -31,7 +21,7 @@
         </div>
         <div class="panel-content">
             <div class="table-container">
-                <template v-if="!addMode && $auth('bom.save')">
+                <template v-if="!addMode">
                     <a-button
                         class="panel-btn"
                         @click="handleMutiEditChange()"
@@ -53,7 +43,7 @@
                         批量删除
                     </a-button>
                 </template>
-                <template v-if="addMode && $auth('bom.save')">
+                <template v-if="addMode">
                     <a-button class="panel-btn" @click="handleAddConfirm()" type="primary">确认添加</a-button>
                     <a-button class="panel-btn" @click="handleAddClose()">取消添加</a-button>
                 </template>
@@ -128,21 +118,14 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button
-                                type="link"
-                                @click="routerChange('detail', record.target)"
-                                v-if="$auth('material.detail')"
+                            <a-button type="link" @click="routerChange('detail', record.target)"
                                 ><i class="icon i_detail" /> 详情</a-button
                             >
-                            <a-button type="link" @click="handleEditChange(record)" v-if="$auth('bom.save')">
+                            <a-button type="link" @click="handleEditChange(record)">
                                 <template v-if="record.edit_show"><i class="icon i_confirm" />确认</template>
                                 <template v-else><i class="icon i_edit" />编辑</template>
                             </a-button>
-                            <a-button
-                                type="link"
-                                class="danger"
-                                @click="handleRemove('', [record])"
-                                v-if="$auth('bom.save')"
+                            <a-button type="link" class="danger" @click="handleRemove('', [record])"
                                 ><i class="icon i_delete" />移出</a-button
                             >
                         </template>

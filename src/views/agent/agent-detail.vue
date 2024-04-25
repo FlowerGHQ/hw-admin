@@ -8,22 +8,17 @@
                 >
             </div>
             <div class="btns-area" v-if="$auth('ADMIN')">
-                <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('agent.save')"
+                <a-button type="primary" ghost @click="routerChange('edit')"
                     ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                 >
-                <!-- <a-button type="primary" ghost @click="handleDelete(agent_id)"><i class="icon i_delete"/>删除</a-button> -->
                 <a-button
                     :type="detail.status ? 'default' : 'primary'"
                     :danger="detail.status ? true : false"
                     ghost
                     @click="handleStatusChange()"
                 >
-                    <template v-if="detail.status && $auth('agent.delete')"
-                        ><i class="icon i_forbidden" />{{ $t('def.disable') }}</template
-                    >
-                    <template v-if="!detail.status && $auth('agent.enable')"
-                        ><i class="icon i_enable" />{{ $t('def.enable') }}</template
-                    >
+                    <template v-if="detail.status"><i class="icon i_forbidden" />{{ $t('def.disable') }}</template>
+                    <template v-if="!detail.status"><i class="icon i_enable" />{{ $t('def.enable') }}</template>
                 </a-button>
             </div>
         </div>
@@ -93,16 +88,14 @@
                 <a-tab-pane key="PurchaseList" :tab="$t('d.order')">
                     <PurchaseList :orgId="agent_id" :orgType="ORG_TYPE.AGENT" v-if="activeKey === 'PurchaseList'" />
                 </a-tab-pane>
-                <template v-if="$auth('ADMIN', 'DISTRIBUTOR')">
-                    <a-tab-pane key="StoreList" :tab="$t('d.manage_store')">
-                        <StoreList
-                            :agentId="agent_id"
-                            :type="USER_TYPE.AGENT"
-                            v-if="activeKey === 'StoreList'"
-                            @change="getAgentDetail"
-                        />
-                    </a-tab-pane>
-                </template>
+                <a-tab-pane key="StoreList" :tab="$t('d.manage_store')">
+                    <StoreList
+                        :agentId="agent_id"
+                        :type="USER_TYPE.AGENT"
+                        v-if="activeKey === 'StoreList'"
+                        @change="getAgentDetail"
+                    />
+                </a-tab-pane>
                 <template v-if="$auth('DISTRIBUTOR')">
                     <a-tab-pane key="PricingStructure" :tab="$t('d.item')">
                         <PricingStructure

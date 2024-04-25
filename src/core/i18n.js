@@ -1308,6 +1308,7 @@ const messages = {
             unfold: '展开',
             stow: '收起',
             sure_create: '确定创建',
+            required_new: "至少选择一项权限 !",
         },
         search: {
             repair_sn: '工单编号',
@@ -4198,6 +4199,7 @@ const messages = {
             unfold: 'Unfold',
             stow: 'Stow',
             sure_create: 'Sure Create',
+            required_new: "Select at least one permission !",
         },
         search: {
             repair_sn: 'Warranty Claim Number',

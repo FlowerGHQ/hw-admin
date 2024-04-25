@@ -505,7 +505,7 @@ const onDownLoad = (record, array) => {
 
 const goToDetail = record => {
     router.push({
-        path: `/purchase/purchase-order-detail`,
+        path: `/distributor/purchase-order-detail`,
         query: {
             id: record.id,
         },

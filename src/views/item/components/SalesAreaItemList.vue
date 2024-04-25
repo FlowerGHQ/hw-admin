@@ -8,7 +8,6 @@
                     @select="(ids, items) => handleAddShow(TARGET_TYPE.ITEM, ids, items)"
                     btn-class="panel-btn"
                     :disabledChecked="checkedIds"
-                    v-if="$auth('sales-area.save')"
                 >
                     {{ $t('i.add') }}
                 </ItemSelect>
@@ -29,7 +28,7 @@
                     :loading="loading"
                 >
                     <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.key === 'detail' && $auth('item.detail')">
+                        <template v-if="column.key === 'detail'">
                             <a-image
                                 class="image"
                                 :width="55"
@@ -53,7 +52,6 @@
                             {{ $Util.itemTypeFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'attr_list'">
-                            <!--                            <p class="sub-info" v-if="record.attr_list && record.attr_list.length">{{$Util.itemSpecFilter(record.item.attr_list)}}</p>-->
                             <a-tooltip placement="top" :title="$Util.itemSpecFilter(record.item.attr_list)">
                                 <div
                                     class="ell"
@@ -85,14 +83,10 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('detail', record)" v-if="$auth('item.detail')"
+                            <a-button type="link" @click="routerChange('detail', record)"
                                 ><i class="icon i_detail" /> {{ $t('def.detail') }}</a-button
                             >
-                            <a-button
-                                type="link"
-                                @click="handleDelete(record)"
-                                class="danger"
-                                v-if="$auth('sales-area.delete')"
+                            <a-button type="link" @click="handleDelete(record)" class="danger"
                                 ><i class="icon i_delete" /> {{ $t('def.delete') }}</a-button
                             >
                         </template>

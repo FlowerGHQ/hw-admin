@@ -3,7 +3,7 @@
         <div class="list-container">
             <div class="title-container">
                 <div class="title-area">问题解答</div>
-                <div class="btns-area" v-if="$auth('customer.save')">
+                <div class="btns-area">
                     <!--全部导出-->
                     <a-upload
                         name="file"

@@ -61,7 +61,6 @@
                         :xl="8"
                         :xxl="6"
                         class="search-item"
-                        v-if="$auth('ADMIN', 'DISTRIBUTOR', 'AGENT')"
                     >
                         <div class="key">{{ $t('n.store') }}：</div>
                         <div class="value">
@@ -70,9 +69,9 @@
                                 @change="handleSearch"
                                 :placeholder="$t('def.select')"
                             >
-                                <a-select-option v-for="(item, index) of storeList" :key="index" :value="item.id">{{
-                                    item.name
-                                }}</a-select-option>
+                                <a-select-option v-for="(item, index) of storeList" :key="index" :value="item.id">
+                                    {{ item.name }}
+                                </a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -88,8 +87,9 @@
                                     v-for="(item, index) of PAYMENT_TYPE_LIST"
                                     :key="index"
                                     :value="item.key"
-                                    >{{ item[$i18n.locale] }}</a-select-option
                                 >
+                                    {{ item[$i18n.locale] }}
+                                </a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -101,12 +101,9 @@
                                 @change="handleSearch"
                                 :placeholder="$t('def.select')"
                             >
-                                <a-select-option
-                                    v-for="(item, index) of PAY_TIME_LIST"
-                                    :key="index"
-                                    :value="item.key"
-                                    >{{ item[$i18n.locale] }}</a-select-option
-                                >
+                                <a-select-option v-for="(item, index) of PAY_TIME_LIST" :key="index" :value="item.key">
+                                    {{ item[$i18n.locale] }}
+                                </a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -122,8 +119,9 @@
                                     v-for="(item, index) of PAYMENT_STATUS_MAP"
                                     :key="index"
                                     :value="item.key"
-                                    >{{ item[$i18n.locale] }}</a-select-option
                                 >
+                                    {{ item[$i18n.locale] }}
+                                </a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -138,22 +136,33 @@
                 </div>
             </div>
             <div class="operate-container">
-                <a-button type="primary" @click="handleExportConfirm" v-if="$auth('purchase-order.export')"
-                    ><i class="icon i_download" />{{ $t('def.export') }}</a-button
+                <a-button v-if="$auth('sales.distribution.order.export')" type="primary" @click="handleExportConfirm">
+                    <i class="icon i_download" />
+                    {{ $t('def.export') }}
+                </a-button>
+                <a-button
+                    v-if="$auth('sales.distribution.order.sales-report-export')"
+                    type="primary"
+                    @click="handleExportSalesReport"
                 >
-                <a-button type="primary" @click="handleExportSalesReport" v-if="$auth('ADMIN')"
-                    ><i class="icon i_download" />{{ $t('def.sales_report_export') }}</a-button
+                    <i class="icon i_download" />{{ $t('def.sales_report_export') }}
+                </a-button>
+                <a-button
+                    v-if="$auth('sales.distribution.order.statistics-report-export')"
+                    type="primary"
+                    @click="handleExportSalesQuantityStatistics"
                 >
-                <a-button type="primary" @click="handleExportSalesQuantityStatistics" v-if="$auth('ADMIN')"
-                    ><i class="icon i_download" />{{ $t('def.quantity_sales_report_export') }}</a-button
-                >
+                    <i class="icon i_download" />
+                    {{ $t('def.quantity_sales_report_export') }}
+                </a-button>
                 <a-button
                     class="right-f"
                     v-if="searchForm.status === '150' && $auth('ADMIN')"
                     :disabled="!isShowErpDisabled"
                     @click="sendErp"
-                    >{{ /* 同步至ERP */ $t('p.synchronization_to_erp') }}</a-button
                 >
+                    {{ /* 同步至ERP */ $t('p.synchronization_to_erp') }}
+                </a-button>
             </div>
             <div class="table-container">
                 <a-table
@@ -166,7 +175,7 @@
                     :pagination="false"
                 >
                     <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.dataIndex === 'sn' && $auth('purchase-order.detail')">
+                        <template v-if="column.dataIndex === 'sn'">
                             <a-tooltip placement="top" :title="text">
                                 <a-button type="link" @click="routerChange('detail', record)" v-if="text !== ''">{{
                                     text
@@ -186,7 +195,7 @@
                                 }}
                             </span>
                         </template>
-                        <template v-else-if="column.dataIndex === 'parent_sn' && $auth('purchase-order.detail')">
+                        <template v-else-if="column.dataIndex === 'parent_sn'">
                             <a-tooltip placement="top" :title="text">
                                 <a-button
                                     type="link"
@@ -279,16 +288,16 @@
                         </template>
                         <template v-else-if="column.key === 'operation'">
                             <a-button
+                                v-if="search_type === SEARCH_TYPE.SELF"
                                 type="link"
                                 @click="handleRecreate(record)"
-                                v-if="search_type === SEARCH_TYPE.SELF"
                             >
-                                <i class="icon i_cart" /> {{ $t('p.buy_again') }}</a-button
-                            >
+                                <i class="icon i_cart" /> {{ $t('p.buy_again') }}
+                            </a-button>
                             <a-button
+                                v-if="$auth('sales.distribution.order.detail')"
                                 type="link"
                                 @click="routerChange('detail', record)"
-                                v-if="$auth('purchase-order.detail')"
                             >
                                 <i class="icon i_detail" />{{ $t('def.detail') }}</a-button
                             >
@@ -446,16 +455,16 @@ export default {
                     columns.splice(index, 1);
                 }
             }
-            if (!this.$auth('purchase-order.supply-detail')) {
-                columns.splice(4, 0, {
-                    title: this.$t('n.institution'),
-                    dataIndex: ['create_org', 'name'],
-                    key: 'item',
-                });
-                columns.splice(5, 0, { title: this.$t('p.total_price'), dataIndex: 'total_price', key: 'total_price' });
-                columns.splice(6, 0, { title: this.$t('p.freight'), dataIndex: 'freight', key: 'freight' });
-                columns.splice(9, 0, { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'amount_paid' });
-            }
+            // if (!this.$auth('purchase-order.supply-detail')) {
+            //     columns.splice(4, 0, {
+            //         title: this.$t('n.institution'),
+            //         dataIndex: ['create_org', 'name'],
+            //         key: 'item',
+            //     });
+            //     columns.splice(5, 0, { title: this.$t('p.total_price'), dataIndex: 'total_price', key: 'total_price' });
+            //     columns.splice(6, 0, { title: this.$t('p.freight'), dataIndex: 'freight', key: 'freight' });
+            //     columns.splice(9, 0, { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'amount_paid' });
+            // }
             // 失败原因列表-仅存在与待生产tab
             if (this.searchForm.status === '150' && this.$auth('ADMIN')) {
                 columns.push({
@@ -534,18 +543,14 @@ export default {
             return this.$store.state.lang;
         },
     },
-    mounted() {
-        if (this.$auth('ADMIN') || this.$auth('DISTRIBUTOR')) {
-            this.getDistributorListAll();
-        }
+    mounted() {        
+        this.getDistributorListAll();
         this.getAgentListAll();
         this.getStoreListAll();
         this.getStatusStat();
         this.timer = window.setInterval(() => {
-            setTimeout(() => {
-                if (this.$auth('ADMIN') || this.$auth('DISTRIBUTOR')) {
-                    this.getDistributorListAll();
-                }
+            setTimeout(() => {               
+                this.getDistributorListAll();
                 this.getAgentListAll();
                 this.getStoreListAll();
             }, 0);
@@ -611,7 +616,7 @@ export default {
             switch (type) {
                 case 'detail': // 详情
                     routeUrl = this.$router.resolve({
-                        path: '/purchase/purchase-order-detail',
+                        path: '/distributor/purchase-order-detail',
                         query: {
                             id: item.id,
                         },
@@ -620,7 +625,7 @@ export default {
                     break;
                 case 'parent_detail': // 详情
                     routeUrl = this.$router.resolve({
-                        path: '/purchase/purchase-order-detail',
+                        path: '/distributor/purchase-order-detail',
                         query: {
                             id: item.parent_id,
                         },
@@ -673,17 +678,6 @@ export default {
             if (flag) {
                 this.$refs.TimeSearch.handleReset();
             }
-            /*  if (this.$auth('ADMIN')) {
-                this.getDistributorListAll();
-            } else if (this.$auth('DISTRIBUTOR')) {
-                this.searchForm.distributor_id = Core.Data.getOrgId()
-                this.getAgentListAll();
-            } else if (this.$auth('AGENT')) {
-                this.searchForm.agent_id = Core.Data.getOrgId()
-                this.getStoreListAll();
-            } else if (this.$auth('STORE')) {
-                this.searchForm.store_id = Core.Data.getOrgId()
-            }*/
             this.pageChange(1);
         },
         getTableData() {
@@ -699,9 +693,6 @@ export default {
                     this.total = res.count;
                     this.tableData = res.list;
                     this.loading = false;
-                    // this.tableData.forEach(item=>{
-                    //     item['total_price'] = (item['price'] || 0) + (item['freight'] || 0);
-                    // })
                 })
                 .catch(err => {
                     console.log('getTableData err:', err);

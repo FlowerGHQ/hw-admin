@@ -4,7 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('wa.list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('warehouse.save')"
+                    <a-button type="primary" @click="routerChange('edit')"
                         ><i class="icon i_add" />{{ $t('wa.add') }}</a-button
                     >
                 </div>
@@ -54,7 +54,7 @@
                     :pagination="false"
                 >
                     <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.key === 'detail' && $auth('warehouse.detail')">
+                        <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title="text">
                                 <a-button type="link" @click="routerChange('detail', record)">{{
                                     text || '-'
@@ -74,17 +74,15 @@
                             <a-button
                                 type="link"
                                 @click="routerChange('detail', record)"
-                                v-if="$auth('warehouse.detail')"
                                 ><i class="icon i_detail" />{{ $t('def.detail') }}</a-button
                             >
-                            <a-button type="link" @click="routerChange('edit', record)" v-if="$auth('warehouse.save')"
+                            <a-button type="link" @click="routerChange('edit', record)"
                                 ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                             >
                             <a-button
                                 type="link"
                                 @click="handleDelete(record.id)"
                                 class="danger"
-                                v-if="$auth('warehouse.delete')"
                                 ><i class="icon i_delete" />{{ $t('def.delete') }}</a-button
                             >
                         </template>

@@ -164,7 +164,7 @@ export default {
             switch (type) {
                 case 'detail': // 详情
                     routeUrl = this.$router.resolve({
-                        path: '/purchase/purchase-order-detail',
+                        path: '/distributor/purchase-order-detail',
                         query: { id: item.id },
                     });
                     window.open(routeUrl.href, '_blank');

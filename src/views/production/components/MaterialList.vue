@@ -2,7 +2,7 @@
     <div class="MaterialList gray-panel no-margin">
         <div class="panel-title">
             <div class="title">供应物料列表</div>
-            <div class="btn-area" v-if="$auth('supplier.edit')">
+            <div class="btn-area">
                 <MaterialSelect
                     @select="(ids, items) => handleAddShow(ids, items)"
                     btn-class="panel-btn"
@@ -23,7 +23,7 @@
                     :loading="loading"
                 >
                     <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.key === 'detail' && $auth('material.detail')">
+                        <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title="text">
                                 <a-button type="link" @click="routerChange('detail', record)"
                                     >{{ text || '-' }}
@@ -55,7 +55,7 @@
                             </template>
                             <template v-else>￥{{ text }}</template>
                         </template>
-                        <template v-if="column.key === 'operation' && $auth('supplier.edit')">
+                        <template v-if="column.key === 'operation'">
                             <template v-if="!this.addMode">
                                 <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"
                                     ><i class="icon i_edit" />修改单价</a-button

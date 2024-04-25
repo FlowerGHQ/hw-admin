@@ -34,7 +34,6 @@
                         <template
                             v-if="
                                 $auth('ADMIN') &&
-                                $auth('purchase-order.export') &&
                                 type == Core.Const.STOCK_RECORD.TYPE.OUT &&
                                 detail.type == Core.Const.PURCHASE.TYPE.PRE_SALES
                             "

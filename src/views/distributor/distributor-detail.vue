@@ -8,7 +8,7 @@
                 </a-tag>
             </div>
             <div class="btns-area" v-if="$auth('ADMIN')">
-                <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('distributor.save')"
+                <a-button type="primary" ghost @click="routerChange('edit')"
                     ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                 >
                 <a-button
@@ -17,10 +17,10 @@
                     ghost
                     @click="handleStatusChange()"
                 >
-                    <template v-if="detail.status && $auth('distributor.delete')"
+                    <template v-if="detail.status"
                         ><i class="icon i_forbidden" />{{ $t('def.disable') }}</template
                     >
-                    <template v-if="!detail.status && $auth('distributor.enable')"
+                    <template v-if="!detail.status"
                         ><i class="icon i_enable" />{{ $t('def.enable') }}</template
                     >
                 </a-button>

@@ -3,19 +3,7 @@
         <div class="title-container">
             <div class="title-area">BOM列表</div>
             <div class="btns-area">
-                <EditBomModel @submit="getTableData" v-if="$auth('bom.save')"
-                    ><i class="icon i_add" />新增BOM表</EditBomModel
-                >
-                <!--            <a-upload name="file" class="file-uploader"
-                :file-list="upload.fileList" :action="upload.action"
-                :show-upload-list='false'
-                :headers="upload.headers" :data='upload.data'
-                accept=".xlsx,.xls"
-                @change="handleFileUpload">
-                <a-button type="primary" class="file-upload-btn" style="margin-left: 12px;">
-                    批量导入明细
-                </a-button>
-            </a-upload>-->
+                <EditBomModel @submit="getTableData"><i class="icon i_add" />新增BOM表</EditBomModel>
             </div>
         </div>
         <div class="search-container">
@@ -59,12 +47,12 @@
                 :pagination="false"
             >
                 <template #bodyCell="{ column, text, record }">
-                    <template v-if="column.key === 'detail' && $auth('bom.detail')">
+                    <template v-if="column.key === 'detail'">
                         <a-tooltip placement="top" :title="text">
                             <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}</a-button>
                         </a-tooltip>
                     </template>
-                    <template v-if="column.key === 'item-detail' && $auth('item.detail')">
+                    <template v-if="column.key === 'item-detail'">
                         <a-tooltip placement="top" :title="text">
                             <a-button type="link" @click="routerChange('item', record.item)">{{
                                 text || '-'
@@ -78,13 +66,13 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type="link" @click="routerChange('detail', record)" v-if="$auth('bom.detail')"
+                        <a-button type="link" @click="routerChange('detail', record)"
                             ><i class="icon i_detail" /> 详情</a-button
                         >
-                        <EditBomModel @submit="getTableData" btnType="link" :detail="record" v-if="$auth('bom.save')">
+                        <EditBomModel @submit="getTableData" btnType="link" :detail="record">
                             <i class="icon i_edit" />编辑
                         </EditBomModel>
-                        <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('bom.delete')"
+                        <a-button type="link" @click="handleDelete(record.id)" class="danger"
                             ><i class="icon i_delete" /> 删除</a-button
                         >
                     </template>

@@ -40,7 +40,7 @@
                 >
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="record.target_type === TARGET_TYPE.MATERIAL">
-                            <template v-if="column.key === 'item_detail' && $auth('material.detail')">
+                            <template v-if="column.key === 'item_detail'">
                                 <a-tooltip placement="top" :title="text">
                                     <div class="ell" style="max-width: 120px">
                                         <a-button type="link" @click="routerChange('material', record.material)"
@@ -58,7 +58,7 @@
                             </template>
                         </template>
                         <template v-if="record.target_type === TARGET_TYPE.ITEM">
-                            <template v-if="column.key === 'item_detail' && $auth('item.detail')">
+                            <template v-if="column.key === 'item_detail'">
                                 <a-tooltip placement="top" :title="text">
                                     <a-button type="link" @click="routerChange('item', record.item)"
                                         >{{ $i18n.locale == 'zh' ? record.item.name : record.item.name_en || '-' }}
@@ -90,13 +90,13 @@
                         <template v-if="column.key === 'operation'">
                             <a-button
                                 type="link"
-                                v-if="record.target_type === TARGET_TYPE.ITEM && $auth('item.detail')"
+                                v-if="record.target_type === TARGET_TYPE.ITEM"
                                 @click="routerChange('item', record.item)"
                                 ><i class="icon i_detail" />{{ $t('def.detail') }}</a-button
                             >
                             <a-button
                                 type="link"
-                                v-if="record.target_type === TARGET_TYPE.MATERIAL && $auth('material.detail')"
+                                v-if="record.target_type === TARGET_TYPE.MATERIAL"
                                 @click="routerChange('material', record.material)"
                                 ><i class="icon i_detail" />详情</a-button
                             >

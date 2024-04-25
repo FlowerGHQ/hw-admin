@@ -216,7 +216,7 @@ export default {
             switch (type) {
                 case TARGET_TYPE.PURCHASE_ORDER: // 采购单详情
                     // routeUrl = this.$router.resolve({
-                    //     path: "/purchase/purchase-order-detail",
+                    //     path: "/distributor/purchase-order-detail",
                     //     query: {id: item.target_id}
                     // })
                     routeUrl = this.$router.resolve({

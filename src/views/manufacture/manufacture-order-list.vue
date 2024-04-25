@@ -3,7 +3,7 @@
         <div class="title-container">
             <div class="title-area">生产单列表</div>
             <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('production-order.save')"
+                <a-button type="primary" @click="routerChange('edit')"
                     ><i class="icon i_add" />新建生产单</a-button
                 >
             </div>
@@ -70,12 +70,12 @@
                 :pagination="false"
             >
                 <template #bodyCell="{ column, text, record }">
-                    <template v-if="column.key === 'detail' && $auth('production-order.detail')">
+                    <template v-if="column.key === 'detail'">
                         <a-tooltip placement="top" :title="text">
                             <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }} </a-button>
                         </a-tooltip>
                     </template>
-                    <template v-if="column.key === 'warehouse' && $auth('warehouse.detail')">
+                    <template v-if="column.key === 'warehouse'">
                         <a-tooltip placement="top" :title="text">
                             <a-button type="link" @click="routerChange('warehouse', record)"
                                 >{{ text || '-' }}
@@ -103,14 +103,12 @@
                         <a-button
                             type="link"
                             @click="routerChange('detail', record)"
-                            v-if="$auth('production-order.detail')"
                             ><i class="icon i_detail" />详情</a-button
                         >
                         <a-button
                             type="link"
                             @click="handleCancel(record.id)"
                             class="danger"
-                            v-if="$auth('production-order.delete')"
                             ><i class="icon i_close_c" />取消</a-button
                         >
                     </template>

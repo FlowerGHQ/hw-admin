@@ -216,7 +216,7 @@ const routerChange = (type, item = {}) => {
                 });
             } else if (item.source_type == 20) {
                 routeUrl = router.resolve({
-                    path: '/purchase/purchase-order-detail',
+                    path: '/distributor/purchase-order-detail',
                     query: { id: item.source_id },
                 });
             }

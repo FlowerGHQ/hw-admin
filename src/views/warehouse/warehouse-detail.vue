@@ -3,10 +3,10 @@
         <div class="title-container">
             <div class="title-area"></div>
             <div class="btns-area">
-                <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('warehouse.save')"
+                <a-button type="primary" ghost @click="routerChange('edit')"
                     ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                 >
-                <a-button type="danger" ghost @click="handleDelete(warehouse_id)" v-if="$auth('warehouse.delete')"
+                <a-button type="danger" ghost @click="handleDelete(warehouse_id)"
                     ><i class="icon i_delete" />{{ $t('def.delete') }}</a-button
                 >
             </div>
@@ -44,17 +44,6 @@
         </div>
         <div class="tabs-container">
             <a-tabs v-model:activeKey="activeKey">
-                <!--                <template v-if="detail.type == WAREHOUSE_TYPE.QUALITY">
-                                    <a-tab-pane key="ItemStockList" tab="库存产品">
-                                        <StockList type='item' :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail" v-if="activeKey === 'ItemStockList'"/>
-                                    </a-tab-pane>
-                                    <a-tab-pane key="MaterialStockList" tab="库存物料" v-if="$auth('ADMIN')">
-                                        <StockList type='material' :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail" v-if="activeKey === 'MaterialStockList'"/>
-                                    </a-tab-pane>
-                                    <a-tab-pane key="StockRecord" tab="出入库记录">
-                                        <StockRecord :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail" v-if="activeKey === 'StockRecord'"/>
-                                    </a-tab-pane>
-                                </template>-->
                 <!-- 库存产品(成品仓) -->
                 <a-tab-pane key="ItemStockList" :tab="$t('wa.goods')" v-if="detail.type == WAREHOUSE_TYPE.QUALITY">
                     <StockList

@@ -27,7 +27,7 @@
             <span
                 class="reactivation"
                 @click="reactivation"
-                v-if="current === STATUS.LOSE && $auth('crm-bo.reactivation')"
+                v-if="current === STATUS.LOSE"
                 >{{ $t('crm_b.reactivation') }}</span
             >
             <span class="lose" @click="loseTheOrder" v-else>{{ $t('crm_b.lost_order') }}</span>
@@ -63,15 +63,13 @@ export default {
             if (
                 i === this.stepsList.length - 1 &&
                 this.current !== this.STATUS.LOSE &&
-                this.current !== this.STATUS.WIN &&
-                this.$auth('crm-bo.update-status')
+                this.current !== this.STATUS.WIN
             )
                 this.$emit('winTheOrder'); //赢单
             if (
                 i === c + 1 &&
                 this.current + 2 < this.stepsList.length &&
-                this.current !== this.STATUS.LOSE &&
-                this.$auth('crm-bo.update-status')
+                this.current !== this.STATUS.LOSE
             ) {
                 //下一步
                 this.$emit('nextStep');
@@ -79,11 +77,11 @@ export default {
         },
         loseTheOrder() {
             //输单
-            if (this.current !== this.STATUS.LOSE && this.$auth('crm-bo.update-status')) this.$emit('loseTheOrder');
+            if (this.current !== this.STATUS.LOSE) this.$emit('loseTheOrder');
         },
         reactivation() {
             //重新激活
-            if (this.current === this.STATUS.LOSE && this.$auth('crm-bo.reactivation')) this.$emit('reactivation');
+            if (this.current === this.STATUS.LOSE) this.$emit('reactivation');
         },
     },
 };

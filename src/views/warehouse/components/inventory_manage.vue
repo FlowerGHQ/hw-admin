@@ -43,22 +43,15 @@
                     <template v-if="column.key === 'create_time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
-                    <!-- 留着这个说不定是状态 -->
-                    <!-- <template v-if="column.dataIndex === 'type'">
-                        {{ $Util.stockRecordFilter(text, $i18n.locale) }}
-                    </template>
-                    <template v-if="column.dataIndex === 'source_type'">
-                        {{ $Util.sourceFormFilter(text, $i18n.locale) }}
-                    </template> -->
 
                     <template v-if="column.key === 'operation'">
-                        <a-button type="link" @click="handleUpdateShow(record)" v-if="$auth('agent.save')"
+                        <a-button type="link" @click="handleUpdateShow(record)"
                             ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
                         >
-                        <a-button type="link" @click="handleDetailShow(record)" v-if="$auth('agent.detail')"
+                        <a-button type="link" @click="handleDetailShow(record)"
                             ><i class="icon i_detail" />{{ $t('n.detail') }}</a-button
                         >
-                        <a-button type="link" @click="handleDelete(record.id)" v-if="$auth('agent.save')"
+                        <a-button type="link" @click="handleDelete(record.id)"
                             ><i class="icon i_delete" />{{ $t('def.delete') }}</a-button
                         >
                     </template>
