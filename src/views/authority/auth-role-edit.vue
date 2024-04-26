@@ -35,9 +35,9 @@
                 <div class="title-colorful">{{ $t('role.assignment') }}</div>
             </div>
             <div class="form-content long-key">
-                <auth-tab ref="authTabRef" class="m-b-20 m-l-140" @tab="onTab"></auth-tab>
+                <auth-tab v-if="!$auth('DISTRIBUTOR')" ref="authTabRef" class="m-b-20 m-l-140" @tab="onTab"></auth-tab>
                 <template v-for="item in authItems" :key="item.key">
-                    <template v-if="activeTab === item.tab">                       
+                    <template v-if="$auth('DISTRIBUTOR') || activeTab === item.tab">                       
                         <div v-for="(subItem, index) in item.list" :key="index" class="form-item afs">
                             <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
                             <div class="value">

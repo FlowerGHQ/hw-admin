@@ -30,7 +30,7 @@
                     <!-- 用户底下的 -->
                     <div v-if="!org.edit" class="panel-content">
                         <SimpleImageEmpty v-if="org.isEmpty" :desc="$t('n.no_org_auth')" />
-                        <template v-else v-for="item of org.options" :key="item.key">  
+                        <template v-else v-for="item of org.options" :key="item.key">
                             <template v-for="(subItem, index) of item.list" :key="index">
                                 <div v-if="subItem.itemSelect.length" class="form-item afs">
                                     <div class="key">
@@ -101,7 +101,7 @@
                     <div v-else class="panel-content">
                         <auth-tab ref="authTabRef" class="m-b-20" @tab="onTab"></auth-tab>
                         <template v-for="item of org.options" :key="item.key">
-                            <template v-if="activeTab === item.tab">             
+                            <template v-if="activeTab === item.tab">
                                 <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
                                     <div class="key">
                                         {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:
@@ -238,7 +238,13 @@ export default {
                 .then(res => {
                     console.log('getAllAuthItem res:', res);
 
-                    let sysData = ['sys.sys.authority', 'sys.sys.message', 'sys.sys.file', 'sys.sys.label']
+                    let sysData = [
+                        'sys.sys.authority',
+                        'sys.sys.message',
+                        'sys.sys.file',
+                        'sys.sys.label',
+                        'sys.sys.user.set-admin',
+                    ];
                     let list = res.list.filter(el => !sysData.includes(el.key));
 
                     this.authClass.processAuthList(list);
@@ -252,7 +258,7 @@ export default {
         },
         // 获取 某类型组织 已分配的 权限项
         getOrgAuthFetch(user_type) {
-            console.log("cc", this.authItems);
+            console.log('cc', this.authItems);
             this[user_type].options = Core.Util.deepCopy(this.authItems);
             Core.Api.Authority.authOptions({
                 org_type: this[user_type].type,

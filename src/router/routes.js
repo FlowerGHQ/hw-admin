@@ -215,7 +215,7 @@ const routes = [
                     title: '分销商详情',
                     parent: '/distributor/distributor-list',
                     roles: [LOGIN_TYPE.ADMIN],
-                    auth: ['sales.distribution.distribution-detail'],
+                    auth: ['sales.distribution.distributor-detail'],
                 },
             },
             {
@@ -226,7 +226,7 @@ const routes = [
                     title: '分销商详情',
                     title_en: 'Details',
                     roles: [LOGIN_TYPE.DISTRIBUTOR],
-                    auth: ['sales.distribution.distribution-detail'],
+                    auth: ['sales.distribution.distributor-detail'],
                 },
             },
             // 资金变化明细
