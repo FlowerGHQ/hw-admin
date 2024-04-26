@@ -1,10 +1,10 @@
 <template>
     <div class="auth-tab">
         <div
-            v-for="(item, index) in AUTH_LIST_TEMP"
+            v-for="(item, index) in tabList"
             :key="index"
             class="auth-tab-item"
-            :class="{ 'auth-tab-item-change': item.tab === activeTab, 'm-r-10': index !== AUTH_LIST_TEMP.length - 1 }"
+            :class="{ 'auth-tab-item-change': item.tab === activeTab, 'm-r-10': index !== tabList.length - 1 }"
             @click="handelTab(item)"
         >
             {{ item.name }}
@@ -19,11 +19,13 @@ import Core from '@/core';
 
 const route = useRoute();
 const router = useRouter();
-const props = defineProps({});
+const props = defineProps({
+    tabList: {
+        type: [Array, Object],
+        default: () => Core.Const.SYSTEM_AUTH.AUTH_LIST_TEMP
+    }
+});
 const emits = defineEmits(["tab"]);
-
-// 常量
-const AUTH_LIST_TEMP = Core.Const.SYSTEM_AUTH.AUTH_LIST_TEMP;
 
 // 响应式常量
 const activeTab = ref(1);
