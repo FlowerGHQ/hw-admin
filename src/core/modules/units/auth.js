@@ -176,7 +176,7 @@ class Auth {
     }
 
     clearAuthItemsSelect(authList) {
-        let clearList = authList || this.authItems || []
+        let clearList = authList || this.authItems || [];
         // 每次调用这个方法把之前的清空
         clearList.forEach(el => {
             el.select = [];
@@ -202,25 +202,32 @@ class Auth {
 
         return [...new Set(result)];
     }
+
     /**
-     *
-     * @param {Number, String} tabValue tab值
-     * @param { Object } authItems 所有权限对象
-     * @returns Array
+     * @description 过滤tab数据
+     * @param {Object Array} tabList
+     * @returns {Object Array}
      */
-    // tabFilter(tabValue, authItems) {
-    //     let authList = authItems || this.authItems || [];
-    //     let activeTab = tabValue || authList[0].tab;
-    //     // console.log("activeTab", activeTab);
-    //     if (activeTab) {
-    //         const findItem = authList.find(el => el.tab === activeTab);
-    //         if (findItem) {
-    //             console.log('[findItem]', [findItem]);
-    //             return [findItem];
-    //         }
-    //     }
-    //     return [];
-    // }
+    tabFilter(tabList) {
+        let result = null
+        if (tabList instanceof Array) {
+            result = []
+            tabList.forEach((el, index) => {                
+                if (el.list?.length) {                    
+                    result.push(el)
+                }
+            });
+        } else if (tabList instanceof Object) {
+            result = {}
+            for (const key in tabList) {
+                if (tabList[key].list?.length) {                    
+                    result[key] = tabList[key]
+                }
+            }
+        }
+
+        return result;
+    }
 }
 
 export default Auth;

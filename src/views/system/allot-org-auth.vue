@@ -99,7 +99,7 @@
                     </div>
                     <!-- 全部的 -->
                     <div v-else class="panel-content">
-                        <auth-tab ref="authTabRef" class="m-b-20" @tab="onTab"></auth-tab>
+                        <auth-tab :tabList="tabList" ref="authTabRef" class="m-b-20" @tab="onTab"></auth-tab>
                         <template v-for="item of org.options" :key="item.key">
                             <template v-if="activeTab === item.tab">
                                 <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
@@ -210,6 +210,7 @@ export default {
             user_type: null,
             authClass: null,
             activeTab: null, // tab value
+            tabList: [], // tab
         };
     },
     watch: {},
@@ -246,6 +247,8 @@ export default {
                     let list = res.list;
 
                     this.authClass.processAuthList(list);
+                    this.tabList = this.authClass.tabFilter(Core.Util.deepCopy(this.authItems));
+                    // console.log("this.tabList", this.tabList);
                     this.getOrgAuthFetch('distributor');
                     // this.getOrgAuthFetch('agent');
                     // this.getOrgAuthFetch('store');
@@ -256,7 +259,6 @@ export default {
         },
         // 获取 某类型组织 已分配的 权限项
         getOrgAuthFetch(user_type) {
-            console.log('cc', this.authItems);
             this[user_type].options = Core.Util.deepCopy(this.authItems);
             Core.Api.Authority.authOptions({
                 org_type: this[user_type].type,
