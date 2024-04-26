@@ -223,7 +223,9 @@ export default {
         },
     },
     created() {
-        this.getAllAuthItemFetch();
+        this.getAllAuthItemFetch({
+            org_type: USER_TYPE.DISTRIBUTOR,
+        });
     },
     mounted() {
         this.activeKey = ['distributor', 'agent', 'store'];
@@ -232,9 +234,12 @@ export default {
     },
     methods: {
         /* fetch start */
-        getAllAuthItemFetch() {
+        getAllAuthItemFetch(params = {}) {
+            let obj = {
+                ...params,
+            };
             // 获取所权限项
-            Core.Api.Authority.allOptions()
+            Core.Api.Authority.allOptions(obj)
                 .then(res => {
                     console.log('getAllAuthItem res:', res);
 
@@ -249,8 +254,8 @@ export default {
 
                     this.authClass.processAuthList(list);
                     this.getOrgAuthFetch('distributor');
-                    this.getOrgAuthFetch('agent');
-                    this.getOrgAuthFetch('store');
+                    // this.getOrgAuthFetch('agent');
+                    // this.getOrgAuthFetch('store');
                 })
                 .catch(err => {
                     console.log('getAllAuthItem err:', err);
