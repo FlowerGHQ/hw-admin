@@ -243,14 +243,7 @@ export default {
                 .then(res => {
                     console.log('getAllAuthItem res:', res);
 
-                    let sysData = [
-                        'sys.sys.authority',
-                        'sys.sys.message',
-                        'sys.sys.file',
-                        'sys.sys.label',
-                        'sys.sys.user.set-admin',
-                    ];
-                    let list = res.list.filter(el => !sysData.includes(el.key));
+                    let list = res.list;
 
                     this.authClass.processAuthList(list);
                     this.getOrgAuthFetch('distributor');
