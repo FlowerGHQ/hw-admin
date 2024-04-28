@@ -36,9 +36,11 @@
                                 <span class="header-menu-img">
                                     <a-avatar :src="getHeaderSrc('more', 'png')" :size="18" alt="user" />
                                 </span>
-                                <span class="header-menu-text tab-animate" :class="menuIndex === 3 ? 'active' : ''">{{
-                                    $t('mall.more_features')
-                                }}</span>
+                                <span class="header-menu-text tab-animate" :class="menuIndex === 3 ? 'active' : ''">
+                                    {{
+                                        $t('mall.more_features')
+                                    }}
+                                </span>
                                 <svg-icon
                                     icon-class="header-expand-icon"
                                     :class-name="moreShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'"
@@ -371,6 +373,18 @@ export default {
         this.getShopCartList();
     },
     methods: {
+        // 过滤掉 路由不在 全局（authority.list）中的
+        handleUnAuthListFilter(list) {
+            console.log("list", list);
+            let result = [];
+            result = list.filter(el => {
+                if (el.children?.length) {
+                    el.children = this.handleUnAuthListFilter(el.children);
+                }
+                return this.$auth(...el.meta?.auth);
+            });
+            return result;
+        },
         getHeaderSrc(name, type = 'png') {
             const path = `../../../../assets/images/mall/header/${name}.${type}`;
             return headerModules[path]?.default || '';

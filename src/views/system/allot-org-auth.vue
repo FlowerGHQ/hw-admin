@@ -37,7 +37,10 @@
                                         {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:
                                     </div>
                                     <div class="value">
-                                        <span class="authority-item m-r-8">
+                                        <span
+                                            v-if="$Util.Common.isMember(subItem.id, item.select)"
+                                            class="authority-item m-r-8"
+                                        >
                                             {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}
                                         </span>
                                         <span
