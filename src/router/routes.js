@@ -146,19 +146,7 @@ const routes = [
                 meta: {
                     title: '订单列表',
                     title_en: 'Order List',
-                    search_type: PURCHASE_SEARCH_TYPE.ALL,
                     auth: ['sales.distribution.order'],
-                },
-            },
-            {
-                path: 'purchase-order-self',
-                name: 'PurchaseOrderListSelf',
-                component: () => import('@/views/purchase/purchase-order-list.vue'),
-                meta: {
-                    title: '采购订单',
-                    title_en: 'Purchase order',
-                    search_type: PURCHASE_SEARCH_TYPE.SELF,
-                    auth: ['sales.distribution.purchase-order'],
                 },
             },
             {
