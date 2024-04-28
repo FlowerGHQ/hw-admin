@@ -28,6 +28,7 @@ import {
     manufactureManagement,
     productionManagement,
     repairManagement,
+    SalesTargetManagement,
 } from './sub-router/admin-router';
 // 飞书路由
 import { fsLogin } from './sub-router/fs-login';
@@ -600,6 +601,7 @@ const routes = [
     ...testUseCases,
     costManagement,
     warehousingManagement,
+    SalesTargetManagement,
 ];
 
 export default routes;

@@ -1096,7 +1096,13 @@ const apiList = {
     },
     ToBCustomer: {
         list: ['PostJson', 'comment/list'], // crm tob客户列表   
-    }
+    },
+    SaleTarget: {
+        list: ['PostJson', 'sale-order-target/list'], // 销售目标管理列表   
+        detail: ['PostJson', 'sale-order-target/detail'], // 销售目标详情   
+        save: ['PostJson', 'sale-order-target/save'], // 销售目标保存   
+        delete: ['PostJson', 'sale-order-target/delete'], // 销售目标删除   
+    },
 };
 
 export default new Api(baseUrl, apiList);
