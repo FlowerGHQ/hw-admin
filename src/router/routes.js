@@ -488,6 +488,17 @@ const routes = [
                 },
             },
             {
+                path: 'aftersales-supply-list',
+                name: 'AftersalesSupplyList',
+                component: () => import('@/views/aftersales/aftersales-list.vue'),
+                meta: {
+                    title: '售后响应',
+                    title_en: 'Response',
+                    query_type: REFUND_QUERY_TYPE.SUPPLY,
+                    auth: ['aftermarket.aftermarket.response'],
+                },
+            },
+            {
                 path: 'aftersales-edit',
                 name: 'AftersalesEdit',
                 component: () => import('@/views/aftersales/aftersales-edit.vue'),
@@ -516,18 +527,7 @@ const routes = [
                     hidden: true,
                     title: '退款单详情',
                 },
-            },
-            {
-                path: 'aftersales-supply-list',
-                name: 'AftersalesSupplyList',
-                component: () => import('@/views/aftersales/aftersales-list.vue'),
-                meta: {
-                    title: '售后响应',
-                    title_en: 'Response',
-                    query_type: REFUND_QUERY_TYPE.SUPPLY,
-                    auth: ['aftermarket.aftermarket.response'],
-                },
-            },
+            },            
             {
                 path: 'refund-list',
                 name: 'RefundList',
