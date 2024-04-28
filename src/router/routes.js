@@ -206,7 +206,7 @@ const routes = [
                 path: 'distributor-detail',
                 name: 'DistributorDetail',
                 component: () => import('@/views/distributor/distributor-detail.vue'),
-                meta: {                    
+                meta: {
                     title: '分销商详情',
                     parent: '/distributor/distributor-list',
                     roles: [LOGIN_TYPE.ADMIN],
@@ -337,7 +337,7 @@ const routes = [
     {
         // 商品管理
         path: '/item',
-        component: () => import('@/views/layout/index.vue'),        
+        component: () => import('@/views/layout/index.vue'),
         name: 'ItemManagement',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
         meta: {
@@ -420,8 +420,18 @@ const routes = [
                 name: 'ItemBom',
                 component: () => import('@/views/item/item-bom.vue'),
                 meta: {
-                    title: 'BOM管理',
-                    title_en: 'BOM Management',
+                    title: 'BOM列表',
+                    title_en: 'BOM List',
+                    auth: ['aftermarket.item.bom'],
+                },
+            },
+            {
+                path: 'parts-management',
+                name: 'PartsManagement',
+                component: () => import('@/views/item/parts-management.vue'),
+                meta: {
+                    title: '售后配件管理',
+                    title_en: 'After Sales Parts Management',
                     auth: ['aftermarket.item.bom'],
                 },
             },
@@ -430,7 +440,7 @@ const routes = [
     {
         // 实例管理
         path: '/entity',
-        component: () => import('@/views/layout/index.vue'),        
+        component: () => import('@/views/layout/index.vue'),
         name: 'EntityManagement',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.PRODUCTION],
         meta: {
@@ -477,7 +487,7 @@ const routes = [
     {
         // 售后管理
         path: '/aftersales',
-        component: () => import('@/views/layout/index.vue'),        
+        component: () => import('@/views/layout/index.vue'),
         name: 'AftersalesManagement',
         type: [ROUTER_TYPE.AFTER],
         meta: {

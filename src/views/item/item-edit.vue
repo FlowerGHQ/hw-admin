@@ -123,7 +123,13 @@
                             @change="handleCategorySelect"
                             :category="item_category"
                             :category-id="form.category_ids"
-                            v-if="form.id !== ''"
+                            v-show="form.id !== '' && form.type !== itemTypeMap['2']?.key"
+                        />
+                        <CategoryTreeSelect
+                            @change="handleCategorySelect"
+                            :category="item_category"
+                            :category-id="form.category_ids"
+                            v-show="form.id !== '' && form.type === itemTypeMap['2']?.key"
                         />
                     </div>
                 </div>
@@ -149,6 +155,23 @@
                         </a-select>
                     </div>
                 </div>
+                <template v-if="form.type === Core.Const.ITEM.TYPE.COMPONENT">
+                    <!-- 最小起购量 -->
+                    <div class="form-item required">
+                        <div class="key" :class="!form.min_number && isValidate ? 'error' : ''">
+                            {{ $t('d.minimum_purchase') }}
+                        </div>
+                        <div class="value">
+                            <a-input-number
+                                v-model:value="form.min_number"
+                                :placeholder="$t('d.enter_1_1000')"
+                                :min="1"
+                                :max="1000"
+                                style="width: 100%"
+                            />
+                        </div>
+                    </div>
+                </template>
                 <template v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
                     <!-- 图面代号 -->
                     <div class="form-item required" v-if="false">
@@ -180,7 +203,7 @@
                     <div class="form-item not-aligin-item">
                         <div class="key not-white-space appearance-font">{{ $t('d.appearance') }}</div>
                         <div class="value">
-                            <a-row gutter="16">
+                            <a-row :gutter="16">
                                 <!-- 净重 -->
                                 <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
                                     <a-input v-model:value="form.net_weight" :placeholder="$t('def.input')">
@@ -204,7 +227,7 @@
                                     </a-input>
                                 </a-col>
                             </a-row>
-                            <a-row gutter="16" class="m-t-16">
+                            <a-row :gutter="16" class="m-t-16">
                                 <!-- 长 -->
                                 <a-col :xs="24" :sm="8" :xl="8" :xxl="8">
                                     <a-input-number
@@ -1153,6 +1176,7 @@
 <script>
 import Core from '../../core';
 import CategoryTreeSelectMultiple from '@/components/popup-btn/CategoryTreeSelectMultiple.vue';
+import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue';
 import ItemHeader from './components/ItemHeader.vue';
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 import _ from 'lodash';
@@ -1245,6 +1269,7 @@ export default {
                 length: undefined, // 长
                 width: undefined, // 宽
                 height: undefined, // 高
+                min_number: 1,
             },
             // temporarily_deposit: 0,// 临时定金支付按钮
             salesList: [], // 销售区域
@@ -1656,6 +1681,9 @@ export default {
             this.form.fob_20gp_usd = Core.Util.countFilter(res.fob_20gp_usd);
             this.form.fob_40qh_usd = Core.Util.countFilter(res.fob_40qh_usd);
             this.form.category_ids = this.detail.category_list ? this.detail.category_list.map(i => i.category_id) : [];
+            if (this.form.type === this.itemTypeMap['2']?.key && this.form.category_id?.length > 1) {
+                this.form.category_ids = this.form.category_ids[0];
+            }
             this.form.sales_area_ids = this.detail.sales_area_list ? this.detail.sales_area_list.map(i => i.id) : [];
             this.form.color = res.color;
             this.form.color_en = res.color_en;
@@ -1868,6 +1896,9 @@ export default {
             form.sales_area_ids = form.sales_area_ids.join(',');
             // form.man_hour = Math.round(form.man_hour * 100)
             form.config = JSON.stringify(form.config);
+            if (form.type === this.itemTypeMap['2']?.key && form.category_ids.length > 1) {
+                form.category_ids = form.category_ids[0];
+            }
 
             let apiName = 'save';
 
@@ -1945,6 +1976,8 @@ export default {
             if (form.type === this.itemTypeMap['1']?.key && this.specific.mode === 2) {
                 this.handleDescripttion();
             }
+            console.log(form);
+            return;
             Core.Api.Item[apiName](Core.Util.searchFilter(form))
                 .then(() => {
                     this.$message.success(this.$t('pop_up.save_success'));
@@ -1984,12 +2017,16 @@ export default {
                 );
             }
             // 商品分类
-            if (!form.category_ids.length) {
+            if (!String(form.category_ids).length) {
                 return this.$message.warning(`${this.$t('def.enter')}(${this.$t('i.categories')})`);
             }
             // 销售区域
             if (!form.sales_area_ids.length) {
                 return this.$message.warning(`${this.$t('def.enter')}(${this.$t('d.sales_area')})`);
+            }
+            // 最小起购量 类型为零部件时
+            if (form.type === this.itemTypeMap['2']?.key && !form.min_number) {
+                return this.$message.warning(`${this.$t('def.enter')}(${this.$t('d.minimum_purchase')})`);
             }
             // 封面图片
             if (

@@ -496,6 +496,8 @@ const messages = {
             p_enter_amount: '请输入定金金额',
             not_null_and_0: '不能为空或为0',
             not_null_and_1: '不能填写小于0',
+            minimum_purchase: '最小起购量',
+            enter_1_1000: '请输入1-1000',
         },
         e: {
             // 用户
@@ -1308,7 +1310,7 @@ const messages = {
             unfold: '展开',
             stow: '收起',
             sure_create: '确定创建',
-            required_new: "至少选择一项权限 !",
+            required_new: '至少选择一项权限 !',
         },
         search: {
             repair_sn: '工单编号',
@@ -1978,7 +1980,7 @@ const messages = {
                 'purchase-order': '采购订单',
                 'sales-area': '销售区域',
                 item: '商品管理',
-                'aftermarket-bom': 'BOM管理',
+                'aftermarket-bom': 'BOM列表',
                 'item-category': '商品分类',
                 entity: '商品实例',
                 'after-sales-order': '售后订单',
@@ -3406,6 +3408,8 @@ const messages = {
             p_enter_amount: 'Please enter the deposit amount',
             not_null_and_0: 'Cannot be empty or 0',
             not_null_and_1: 'The value cannot be less than 0',
+            minimum_purchase: 'Minimum Purchase Quantity',
+            enter_1_1000: 'Please Enter 1-1000',
         },
         e: {
             employee_list: 'employee list',
@@ -4199,7 +4203,7 @@ const messages = {
             unfold: 'Unfold',
             stow: 'Stow',
             sure_create: 'Sure Create',
-            required_new: "Select at least one permission !",
+            required_new: 'Select at least one permission !',
         },
         search: {
             repair_sn: 'Warranty Claim Number',
@@ -4888,7 +4892,7 @@ const messages = {
                 'crm-user': 'Personnel management',
                 'feishu-data': 'Flying book management',
                 coc: 'Coc Certificate Management',
-                'aftermarket-bom': 'BOM Management',
+                'aftermarket-bom': 'BOM List',
                 'supplier-application': 'Supplier Application',
                 'sales-strategy': 'Sales Strategy',
                 'enquiry-ticket': 'List Of Inquiry Forms, Customer Care',

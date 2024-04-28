@@ -42,12 +42,12 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleSalesAreaByIdsShow(record.id)"
+                            <!-- <a-button type="link" @click="handleSalesAreaByIdsShow(record.id)"
                                 ><i class="icon i_edit" /> {{ $t('ar.set_sales') }}
                             </a-button>
                             <a-button type="link" @click="routerChange('explored', record)"
                                 ><i class="icon i_edit" />{{ $t('i.edit_bom') }}
-                            </a-button>
+                            </a-button> -->
                             <a-button type="link" @click="handleModalShow(record, record)"
                                 ><i class="icon i_edit" />{{ $t('i.edit_name') }}
                             </a-button>

@@ -22,7 +22,7 @@ export default {
             default: 0,
         },
         categoryId: {
-            type: Number,
+            type: [Number, String, Array],
         },
         category: {
             type: Object,
@@ -87,7 +87,11 @@ export default {
         this.getFirstItemCategory(this.parentId);
         console.log('mounted this.categoryId:', this.categoryId);
         if (this.categoryId) {
-            this.value = this.categoryId;
+            if (this.categoryId instanceof Array) {
+                this.value = this.categoryId[0];
+            } else {
+                this.value = this.categoryId;
+            }
         }
     },
     methods: {

@@ -56,6 +56,26 @@
                                     </span>
                                 </p>
                                 <p class="code">{{ vehicle_mes.code }}</p>
+                                <p class="model" ref="modelRef" v-if="record?.type === 2" @click.stop>
+                                    <span class="model-text">model</span>
+                                    <a-popover
+                                        v-model:visible="visible"
+                                        title=""
+                                        trigger="click"
+                                        placement="bottom"
+                                        :getPopupContainer="() => modelRef"
+                                    >
+                                        <template #content>
+                                            <div class="model-ul">
+                                                <p class="model-li" v-for="item in 3">Option2-1{{ item }}</p>
+                                            </div>
+                                        </template>
+                                        <span class="model-value" @click="visible = true">
+                                            <span>Option2-1</span>
+                                            <img class="model-img" src="@images/down-arrow.png" />
+                                        </span>
+                                    </a-popover>
+                                </p>
                             </div>
                             <div class="single-bottom">
                                 <div class="price">
@@ -159,6 +179,7 @@ const vehicle_id = Number(route.query?.id);
 /* state start */
 const currency = ref('€');
 const paramPrice = ref(false);
+const modelRef = ref(null);
 const swiperRef = ref(null);
 const spinning = ref(false);
 const vehicle_mes = reactive({});
@@ -633,6 +654,40 @@ const getShopCartList = () => {
                         font-weight: 400;
                         line-height: 150%;
                         /* 24px */
+                    }
+                }
+                .model {
+                    width: 100%;
+                    background: #f5f5f5;
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 0;
+                    padding: 2px;
+                    .model-text {
+                        padding: 7px 8px;
+                        font-size: 12px;
+                        line-height: 18px;
+                        color: #999;
+                    }
+                    .model-value {
+                        flex: 1;
+                        padding: 7px 8px;
+                        background: #fff;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        .model-img {
+                            height: 16px;
+                        }
+                    }
+                    .model-ul {
+                        width: 100%;
+                        .model-li {
+                            width: 100%;
+                            &:last-child {
+                                margin-bottom: 0;
+                            }
+                        }
                     }
                 }
 

@@ -48,13 +48,10 @@
         <div class="fittings-list">
             <div class="title">
                 <span> {{ $t('item-bom.accessories_list') }}</span>
-                <div class="btn">
+                <!-- <div class="btn">
                     <a-button class="download-template" @click="downUploadTemplate">
                         {{ $t('item-bom.download_template') }}
                     </a-button>
-                    <!-- <a-button class="bulk-import" @click="importTemplate" >
-                        {{ $t('item-bom.bulk_import') }}
-                    </a-button> -->
 
                     <a-upload
                         name="file"
@@ -66,15 +63,12 @@
                         :data="{ ...uploadFileObj.data, bom_version_id: bomId }"
                         accept=".xlsx,.xls"
                         @change="importTemplate"
-                        ><!-- 
-                        <a-button type="primary" ghost class="file-upload-btn">
-                        <i class="icon i_add" />{{ $t("i.import") }}
-                        </a-button> -->
+                        >
                         <a-button class="bulk-import">
                             {{ $t('item-bom.bulk_import') }}
                         </a-button>
                     </a-upload>
-                </div>
+                </div> -->
             </div>
             <a-table
                 :row-key="record => record.id"
@@ -104,25 +98,28 @@
                     <span v-else-if="column.key === 'sales_area_list' /*销售区域*/">
                         <a-tooltip>
                             <template #title>{{ $Util.getSalesAreaStr(text, lang) || '-' }}</template>
-                            <div class="one-spils cursor" :style="{ width: text?.length > 5 ? 6 * 12 + 'px' : '' }">
+                            <div
+                                class="one-spils cursor"
+                                :style="{ width: $Util.getSalesAreaStr(text, lang)?.length > 10 ? 11 + 'em' : '' }"
+                            >
                                 {{ $Util.getSalesAreaStr(text, lang) || '-' }}
                             </div>
                         </a-tooltip>
                     </span>
                     <span v-else-if="column.key === 'bom_category' /*分类*/">
                         <div class="classify-box">
-                            <a-tooltip v-if="text" class="left-text">
+                            <a-tooltip class="left-text">
                                 <template #title>{{ text?.name }}</template>
                                 <div
                                     class="one-spils cursor"
                                     :style="{ width: text?.name?.length > 6 ? 7 * 12 + 'px' : '' }"
                                 >
-                                    {{ !text?.name ? '-' : text?.name }}
+                                    {{ text && text?.name ? text?.name : '未分类' }}
                                 </div>
                             </a-tooltip>
-                            <span class="to-classify" @click="toClassify(record.sync_id)" v-if="record.sync_id">
-                                {{ !text ? $t('item-bom.select_grouping') : $t('item-bom.classify_update') }}
-                            </span>
+                            <!-- <span class="to-classify" @click="toClassify(record.sync_id)" v-if="record.sync_id">
+                                {{ !text ? $t('item-bom.classify') : $t('item-bom.classify_update') }}
+                            </span> -->
                         </div>
                         <!-- <span v-else-if="!text?.name">
                             -
@@ -139,6 +136,11 @@
                             </div>
                         </a-tooltip>
                     </span>
+                    <template v-else-if="column.key === 'operation' /*操作*/">
+                        <button class="edit" @click="handleEdit(record)">
+                            {{ $t('common.edit') }}
+                        </button>
+                    </template>
                 </template>
             </a-table>
         </div>
@@ -157,6 +159,10 @@
 import { onMounted, onUnmounted, ref, getCurrentInstance, computed, reactive, inject, watch } from 'vue';
 import Core from '@/core';
 import ExportModal from './export-modal.vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
 const classifyShowModal = inject('classifyShowModal');
 const emits = defineEmits(['handleRefresh']);
 const bomId = ref(0);
@@ -240,7 +246,7 @@ const tableColumns = computed(() => {
         },
         {
             // 分类
-            title: proxy.$t('item-bom.select_grouping'),
+            title: proxy.$t('item-bom.classify'),
             dataIndex: 'bom_category',
             key: 'bom_category',
         },
@@ -250,12 +256,12 @@ const tableColumns = computed(() => {
             dataIndex: 'amount',
             key: 'amount',
         },
-        // {
-        //     // 销售区域
-        //     title: proxy.$t('item-bom.sales_area'),
-        //     dataIndex: 'sales_area_list',
-        //     key: 'sales_area_list',
-        // },
+        {
+            // 销售区域
+            title: proxy.$t('item-bom.sales_area'),
+            dataIndex: 'sales_area_list',
+            key: 'sales_area_list',
+        },
         {
             // 创建时间
             title: proxy.$t('item-bom.create_time'),
@@ -267,6 +273,11 @@ const tableColumns = computed(() => {
             title: proxy.$t('item-bom.remark'),
             dataIndex: 'comment',
             key: 'comment',
+        },
+        {
+            title: proxy.$t('common.operations'),
+            dataIndex: 'operation',
+            key: 'operation',
         },
     ];
     return result;
@@ -424,6 +435,18 @@ const handleTableChange = (pagination, filters, sorter) => {
         page: channelPagination.value.current,
     });
 };
+// 编辑跳转
+const handleEdit = item => {
+    const routeUrl = router.resolve({
+        path: '/item/item-edit',
+        query: {
+            id: item.target_id,
+            set_id: 0, // 配件默认单规格
+            edit: true,
+        },
+    });
+    window.open(routeUrl.href, '_blank');
+};
 /* methods end*/
 // 分类弹窗展示
 const toClassify = sync_id => {
@@ -578,5 +601,10 @@ defineExpose({
     .left-text {
         margin-right: 10px;
     }
+}
+.edit {
+    font-weight: 400;
+    line-height: 19.6px;
+    color: #0061ff;
 }
 </style>
