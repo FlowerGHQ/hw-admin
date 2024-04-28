@@ -37,7 +37,10 @@
                                         {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:
                                     </div>
                                     <div class="value">
-                                        <span class="authority-item m-r-8">
+                                        <span
+                                            v-if="$Util.Common.isMember(subItem.id, item.select)"
+                                            class="authority-item m-r-8"
+                                        >
                                             {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}
                                         </span>
                                         <span
@@ -76,7 +79,9 @@
                                                                     '.' +
                                                                     threeItem.key +
                                                                     '.title',
-                                                            ) +
+                                                            )
+                                                        }}
+                                                        ({{
                                                             $t(
                                                                 'authority.' +
                                                                     item.key +
@@ -87,7 +92,7 @@
                                                                     '.' +
                                                                     fourItem.key,
                                                             )
-                                                        }}
+                                                        }})
                                                     </span>
                                                 </template>
                                             </template>
@@ -140,7 +145,9 @@
                                                                 '.' +
                                                                 threeItem.key +
                                                                 '.title',
-                                                        ) +
+                                                        )
+                                                    }}
+                                                    ({{
                                                         $t(
                                                             'authority.' +
                                                                 item.key +
@@ -151,7 +158,7 @@
                                                                 '.' +
                                                                 fourItem.key,
                                                         )
-                                                    }}
+                                                    }})
                                                 </a-checkbox>
                                             </template>
                                         </a-checkbox-group>

@@ -172,6 +172,8 @@ const Util = {
                 return dayjs.unix(value).format('HH:mm:ss');
             case 6: // 英文时间格式
                 return dayjs.unix(value).format('DD.MM.YYYY');
+            case 7:
+                return dayjs.unix(value).format('YYYY-MM');
             default:
                 return '-';
         }
@@ -1783,6 +1785,13 @@ const Util = {
             return parseFloat(value / 1000).toFixed(dp) + 'k';
         }
     },
+    /* =============== 销售目标部门 ================ */
+    saleTargetSectionFilter(val, to = 'zh') {
+        const MAP = Const.TARGET.SECTION_TYPE;
+        let item = MAP[val + ''] || {};
+        return item[to] || '';
+    },
+    /* =============== 销售目标部门 ================ */
     auditStatusFilter(val, to = 'text', lang) {
         const MAP = Const.AUDIT_MANAGEMENT.STATUS_MAP;
         const COLOR_MAP = Const.AUDIT_MANAGEMENT.STATUS_COLOR_MAP;

@@ -1,7 +1,14 @@
 <template>
     <div id="AftersalesList" class="list-container">
         <div class="title-container">
-            <div class="title-area">{{ $t('af.list') }}</div>
+            <div class="title-area">
+                <span v-if="query_type === QUERY_TYPE.SUPPLY">
+                    {{ $t('af.sales_response') }}
+                </span>
+                <span v-else>
+                    {{ $t('af.list') }}
+                </span>
+            </div>
             <div class="btns-area">
                 <a-button type="primary" @click="routerChange('edit')" v-if="!$auth('ADMIN')"
                     ><i class="icon i_add" />{{ $t('af.sales') }}</a-button
@@ -163,6 +170,7 @@ export default {
     props: {},
     data() {
         return {
+            QUERY_TYPE,
             STATUS,
             orgId: Core.Data.getOrgId(),
             orgType: Core.Data.getOrgType(),

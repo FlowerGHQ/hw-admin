@@ -167,9 +167,9 @@ export default {
                 },
             },
             enquiry: {
-                title: '问询单管理',
+                title: '客户关怀',
                 'enquiry-ticket': {
-                    title: '问询单列表',
+                    title: '客户问询单',
                 },
                 'quiry-ticket-category': {
                     title: '问询单车型分类列表',

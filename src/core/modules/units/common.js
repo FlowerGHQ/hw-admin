@@ -108,9 +108,9 @@ export default {
      * @param { Array } arr2
      * @returns Boolean
      */
-    arraysAreEqual(arr1, arr2) {
-        // console.log("arr1", arr1, "arr2", arr2);
-        let result = false;
+    arraysAreEqual(arr1 = [], arr2 = []) {    
+        // console.log("arr1", arr1, "arr2", arr2);    
+        let result = false
         // 检查数组长度是否相等
         if (arr1.length !== arr2.length) {
             result = false;

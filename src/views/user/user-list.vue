@@ -4,11 +4,11 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('u.list') }}</div>
                 <div class="btns-area">
-                    <a-button @click="routerChange('edit')" v-if="$auth('MANAGER')">
+                    <a-button @click="routerChange('edit')">
                         <!-- <i class="icon i_add" /> -->
                         {{ $t('u.manually_add') }}
                     </a-button>
-                    <a-button @click="routerChange('edit-fs')" v-if="$auth('MANAGER')">
+                    <a-button v-if="$auth('ADMIN')" @click="routerChange('edit-fs')">
                         <img src="@images/mall/login/fs-login.png" class="fs-icon" />
                         {{ $t('u.fs_add') }}
                     </a-button>
@@ -39,7 +39,7 @@
                                 tree-default-expand-all
                             />
                         </div>
-                    </a-col>   
+                    </a-col>
                     <a-col :xs="24" :sm="24" :xl="16" :xxl="12" class="search-item">
                         <div class="key">{{ $t('d.create_time') }}:</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref="TimeSearch" /></div>
@@ -105,25 +105,19 @@
                         </template>
 
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('detail', record)"
-                                ><i class="icon i_detail" />{{ $t('def.detail') }}</a-button
-                            >
-                            <a-button
-                                type="link"
-                                @click="routerChange('edit', record)"
-                                v-if="$auth('MANAGER')"
-                                ><i class="icon i_edit" />{{ $t('def.edit') }}</a-button
-                            >
-                            <a-button type="link" @click="handleEditShow(record)" v-if="$auth('MANAGER')"
-                                ><i class="icon i_lock" />{{ $t('u.reset') }}</a-button
-                            >
-                            <a-button
-                                type="link"
-                                @click="handleDelete(record.id)"
-                                class="danger"
-                                v-if="$auth('MANAGER')"
-                                ><i class="icon i_delete" />{{ $t('def.delete') }}</a-button
-                            >
+                            <a-button type="link" @click="routerChange('detail', record)">
+                                <i class="icon i_detail" />{{ $t('def.detail') }}
+                            </a-button>
+                            <a-button type="link" @click="routerChange('edit', record)">
+                                <i class="icon i_edit" />{{ $t('def.edit') }}
+                            </a-button>
+                            <a-button type="link" @click="handleEditShow(record)">
+                                <i class="icon i_lock" />{{ $t('u.reset') }}
+                            </a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger">
+                                <i class="icon i_delete" />
+                                {{ $t('def.delete') }}
+                            </a-button>
                         </template>
                     </template>
                 </a-table>

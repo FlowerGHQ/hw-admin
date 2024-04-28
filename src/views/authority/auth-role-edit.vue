@@ -37,7 +37,7 @@
             <div class="form-content long-key">
                 <auth-tab v-if="!$auth('DISTRIBUTOR')" ref="authTabRef" class="m-b-20 m-l-140" @tab="onTab"></auth-tab>
                 <template v-for="item in authItems" :key="item.key">
-                    <template v-if="$auth('DISTRIBUTOR') || activeTab === item.tab">                       
+                    <template v-if="$auth('DISTRIBUTOR') || activeTab === item.tab">
                         <div v-for="(subItem, index) in item.list" :key="index" class="form-item afs">
                             <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
                             <div class="value">
@@ -84,7 +84,9 @@
                                                             '.' +
                                                             threeItem.key +
                                                             '.title',
-                                                    ) +
+                                                    )
+                                                }}
+                                                ({{
                                                     $t(
                                                         'authority.' +
                                                             item.key +
@@ -95,7 +97,7 @@
                                                             '.' +
                                                             fourItem.key,
                                                     )
-                                                }}
+                                                }})
                                             </a-checkbox>
                                         </template>
                                     </a-checkbox-group>
@@ -240,7 +242,7 @@ export default {
                     break;
             }
         },
-        handleSubmit() {    
+        handleSubmit() {
             let form = Core.Util.deepCopy(this.form);
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter'));
@@ -248,12 +250,12 @@ export default {
             let list = [];
 
             for (const item of this.authItems) {
-                list = list.concat(item.templateSelect)
+                list = list.concat(item.templateSelect);
                 list.push(...this.authClass.mergeItemSelect(item.list));
             }
             list = [...new Set(list)];
 
-            console.log("list", list);
+            console.log('list', list);
             if (list.length === 0) {
                 return this.$message.warning(this.$t('def.required_new'));
             }
@@ -269,11 +271,11 @@ export default {
             } else {
                 subItem.itemSelect = [];
             }
-            console.log("subItem", subItem);
+            console.log('subItem', subItem);
         },
         // auth-tab组件
         onTab(value) {
-            this.activeTab = value
+            this.activeTab = value;
         },
     },
 };

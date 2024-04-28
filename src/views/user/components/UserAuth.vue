@@ -72,7 +72,9 @@
                                                                         '.' +
                                                                         threeItem.key +
                                                                         '.title',
-                                                                ) +
+                                                                )
+                                                            }}
+                                                            ({{
                                                                 $t(
                                                                     'authority.' +
                                                                         item.key +
@@ -83,7 +85,7 @@
                                                                         '.' +
                                                                         fourItem.key,
                                                                 )
-                                                            }}
+                                                            }})
                                                         </span>
                                                     </template>
                                                 </span>
@@ -153,7 +155,9 @@
                                                                     '.' +
                                                                     threeItem.key +
                                                                     '.title',
-                                                            ) +
+                                                            )
+                                                        }}
+                                                        ({{
                                                             $t(
                                                                 'authority.' +
                                                                     item.key +
@@ -164,7 +168,7 @@
                                                                     '.' +
                                                                     fourItem.key,
                                                             )
-                                                        }}
+                                                        }})
                                                     </a-checkbox>
                                                 </template>
                                             </a-checkbox-group>
