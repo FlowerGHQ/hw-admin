@@ -1051,6 +1051,17 @@ const apiList = {
         adminDetail: ['PostJson', 'supplier-application/detail'], // 平台方供应商管理详情
         adminAdd: ['PostJson', 'supplier-application/save'], // 平台方供应商管理添加
         add: ['PostJson', 'supplier-application/save'], // 供应商前缀 /supplier
+        countStatus: ['PostJson', 'supplier-application/count-status'], // 供应商前缀 /supplier
+        // 特批为合格供应商
+        batchUpdateStage: ['PostJson', 'supplier-application/batch-update-stage'], // 供应商前缀 /supplier
+        // 审核
+        audit: ['PostJson', 'supplier-application/audit'], // 供应商前缀 /supplier
+        // 免审审核详情
+        noExamineDetail: ['PostJson', 'supplier-application/no-examine-application-detail'], // 供应商前缀 /supplier
+        // 免审申请
+        noExamine: ['PostJson', 'supplier-application/no-examine-application'], // 供应商前缀 /supplier
+        // 获取淘汰原因
+        getEliminateReason: ['PostJson', 'supplier-application/get-eliminate-reason'], // 供应商前缀 /supplier
     },
     SALES_STRATEGY: {
         list: ['PostJson', 'sales-strategy/list'],
@@ -1137,7 +1148,13 @@ const apiList = {
         ProductionOrderItemlist: ['PostJson', 'production-order-item/list'], // 生产单子件列表
     },
     ToBCustomer: {
-        list: ['PostJson', 'comment/list'], // crm tob客户列表   
+        list: ['PostJson', 'comment/list'], // crm tob客户列表
+    },
+    // 获取供应链角色下主管
+    SupplierApplication: {
+        getAdminList: ['PostJson', 'supplier-application/get-manager'], // 获取供应链角色下主管
+        //合作供应商修改
+        update: ['PostJson', 'supplier-application/update'],
     },
     SaleTarget: {
         list: ['PostJson', 'sale-order-target/list'], // 销售目标管理列表   

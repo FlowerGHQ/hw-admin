@@ -45,7 +45,7 @@ import Core from '@/core';
 import TimeSearch from '@/components/common/TimeSearch.vue';
 import { computed, getCurrentInstance, onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-const testActiveModules = import.meta.globEager('../../../assets/images/good-items/*.png');
+const testActiveModules = import.meta.globEager('../../../assets/images/good-items/*.png', { eager: true });
 // const womanImg =  import.meta.globEager("../../assets/images/test-drive/*.png");
 const props = defineProps({
     wayillobj: {

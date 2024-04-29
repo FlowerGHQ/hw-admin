@@ -262,7 +262,7 @@ import { SIDER } from '@/router/routes';
 import SvgIcon from '@/components/SvgIcon/index.vue';
 import MyButton from '@/components/common/MyButton.vue';
 
-const headerModules = import.meta.globEager('@/assets/images/mall/header/*');
+const headerModules = import.meta.globEager('@/assets/images/mall/header/*', { eager: true });
 
 export default {
     components: {

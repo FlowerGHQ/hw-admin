@@ -97,7 +97,7 @@
 import Core from '../../core';
 import { SearchOutlined, ArrowRightOutlined, RightOutlined } from '@ant-design/icons-vue';
 
-const serviceModules = import.meta.globEager('../../assets/images/service/*');
+const serviceModules = import.meta.globEager('../../assets/images/service/*', { eager: true });
 
 export default {
     name: 'Analytics',

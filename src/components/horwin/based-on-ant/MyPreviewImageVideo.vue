@@ -2,7 +2,7 @@
     <div v-if="isClose" class="my-preview-image-video">
         <MyMask :isClose="true" :isClickMaskClose="true">
             <div v-if="type === 'image'" class="preview-image">
-                <slot name="image">                    
+                <slot name="image">
                     <a-carousel arrows :dots="false" :style="'transform: scale(' + scaleCount + ');'">
                         <!-- <template v-if="previewData.length > 1" #prevArrow>
                             <div class="custom-slick-arrow" style="left: 60px; z-index: 1">
@@ -77,12 +77,12 @@ const scaleCount = ref(1);
 const onAddBtn = type => {
     switch (type) {
         case 'close':
-            scaleCount.value = 1
+            scaleCount.value = 1;
             emits('update:isClose', false);
             break;
     }
 };
-const onZoom = type => {    
+const onZoom = type => {
     switch (type) {
         case 'zoom-out':
             if (scaleCount.value <= 0.5) {
@@ -92,7 +92,7 @@ const onZoom = type => {
             }
             console.log('放小', scaleCount.value);
             break;
-        case 'zoom-in':                        
+        case 'zoom-in':
             if (scaleCount.value >= 2.5) {
                 scaleCount.value = 2.5;
             } else {
@@ -103,9 +103,7 @@ const onZoom = type => {
     }
 };
 /* Methods end */
-onMounted(() => {
-    console.log('previewData', props.previewData);
-});
+onMounted(() => {});
 </script>
 
 <style lang="less" scoped>

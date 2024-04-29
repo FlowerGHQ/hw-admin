@@ -59,12 +59,11 @@ export function useTable({
         console.log('state.totalParam', state.totalParam);
         initParam && (state.searchInitParam = initParam);
         state.loading = true;
-        // const [error, res] = await request(state.totalParam)
-        console.log('state.totalParam', state.totalParam);
         try {
             const res = await request(state.totalParam);
             state.tableData = res.list;
             state.responseData = res;
+            console.log('res', res);
             try {
                 dataCallBack && (state.tableData = dataCallBack(res));
             } catch (error) {
@@ -124,6 +123,11 @@ export function useTable({
         state.pagination.size = size;
         getTableData();
     };
+    const onPagenationChange = (current, size) => {
+        state.pagination.current = current;
+        state.pagination.size = size;
+        getTableData();
+    };
     return {
         ...toRefs(state),
         isPaginationVisible,
@@ -132,6 +136,7 @@ export function useTable({
         onSizeChange,
         onPageChange,
         getTableData,
+        onPagenationChange,
     };
 }
 

@@ -294,8 +294,11 @@ export default {
         submit_exit: '提交并退出',
         no_content: '无内容',
         please_upload_business_license_photos: '请上传营业执照照片',
+        // 省市
+        province_city: '省市',
         qualified_supplier: '合格供应商名录',
         no: '品编',
+        format_error: '格式错误,请输入5位数字',
         supplier_code: '供方代码',
         supplier_full_name: '供方全称',
         supplier_abbreviation: '供方简称',
@@ -328,8 +331,232 @@ export default {
         detailed_address: '详细地址',
         model_selection: '车型选择',
         version_selection: '版本选择',
+        // supplier_stage
+        supplier_stage: '供应商阶段',
+        // status
+        status: '状态',
+        // 考虑免审供应商名录
+        consider_exempt_supplier_list: '考虑免审供应商名录',
+        exempt_application_form: '免审申请表',
+        // 审核
+        audit: '审核',
+        //合格供应商淘汰原因
+        elimination_reason: '合格供应商淘汰原因',
+        reason: ' 原因',
+        add_reason: '新增原因',
+        eliminate: '淘汰',
+        // 淘汰供应商名录
+        eliminate_supplier_list: '淘汰供应商名录',
+        // 供应商免审申请
+        supplier_exempt_application: '供应商免审申请',
+        // 车辆分类管理
+        vehicle_classification_management: '车辆分类管理',
+        // 新增分类
+        add_classification: '新增分类',
+        // classification_name
+        classification_name: '分类名称',
+        // 编辑分类
+        edit_classification: '编辑分类',
+        // 更改
+        change: '更改',
+        // 确定
+        determine: '确定',
+        // 新增分类成功
+        add_classification_successfully: '新增分类成功',
+        // 编辑分类成功
+        edit_classification_successfully: '编辑分类成功',
+        // 删除分类成功
+        delete_classification_successfully: '删除分类成功',
+        // 新增分类失败
+        add_classification_failed: '新增分类失败',
+        // 编辑分类失败
+        edit_classification_failed: '编辑分类失败',
+        // 删除分类失败
+        delete_classification_failed: '删除分类失败',
+        // delete_classification
+        delete_classification: '删除分类',
+        // delete_classification_warning
+        delete_classification_warning: '删除分类后，所有被引用的内容都会被清除，请确认操作',
+        // 新增原因成功
+        add_reason_successfully: '新增原因成功',
+        // edit_reason_successfully
+        edit_reason_successfully: '编辑原因成功',
+        // delete_confirm
+        delete_confirm: '删除确认?',
+        delete_confirm1: '1.此处若修改名称，则之前被淘汰时选择的名称对应修改',
+        delete_confirm2: '2.此处删除名称，不影响之前淘汰时选择的名称。',
+        delete_confirm3: '举例：”法律法规整车要求影响的“被删除，之前淘汰合格供应商时选择的原因仍被保留',
+        // cooperative_manufacturers
+        cooperative_manufacturers: '合作厂商',
+        // 淘汰原因
+        eliminate_reason: '淘汰原因',
+        pending_audit: '待初审',
+        not_deal: '暂不处理',
+        initial_elimination: '初审淘汰',
+        pending_review: '待复审',
+        consideration_exempt: '考虑免审',
+        review_elimination: '复审淘汰',
+        pending_final_review: '待终审',
+        final_review_elimination: '终审淘汰',
+        special_approval: '特批合格',
+        qualified_elimination: '合格淘汰',
+        exempt_pass: '免审通过',
+        registered_supplier: '注册供应商',
+        // 潜在供应商
+        potential_supplier: '潜在供应商',
+        eliminated_supplier: '淘汰供应商',
+        qualified_supplier: '合格供应商',
+        qualified_record: '合格记录',
+        // 特批为合格供应商
+        special_approval_qualified_supplier: '特批为合格供应商',
+        // 是否将
+        whether_to: '是否将',
+        // 调整为合格供应商
+        adjust_to_qualified_supplier: '调整为合格供应商',
+        please_select_supplier: '请选择供应商',
+        operator: '操作人',
+        operation_time: '操作时间',
+        qualified_approach: '合格途径',
+        // 附件
+        attachment: '附件',
+        // 初审
+        first_trial: '初审',
+        // 审核供应商
+        audit_supplier: '审核供应商',
+        // 请输入原因
+        please_enter_reason: '请输入原因',
+        // 成为潜在供应商
+        become_potential_supplier: '成为潜在供应商',
+        // 暂不处理
+        not_deal: '暂不处理',
+        // 考虑免审
+        consider_exempt: '考虑免审',
+        // 现场考核
+        on_site_assessment: '现场考核',
+        // 复审
+        review: '复审',
+        // 主营业务
+        main_business: '主营业务',
+        // 经营业绩
+        business_performance: '经营业绩',
+        // 拟供产品
+        proposed_products: '拟供产品',
+        // 免审理由
+        exempt_reason: '免审理由',
+        // exempt_result
+        exempt_result: '免审结果',
+        // 同意免审
+        agree_exempt: '同意免审',
+        upload_attachment: '支持上传图片（PNG、JPG、JEPG）,图片最大10M,最多上传3个',
+        please_select_result: '请选择结果',
+        //
+        cooperative_factory: '合作厂商',
     },
     en: {
+        // cooperative_factory
+        cooperative_factory: 'Cooperative Factory',
+        please_select_result: 'Please select result',
+        upload_attachment: 'Support upload pictures (PNG, JPG, JEPG), pictures up to 10M, up to 3',
+        agree_exempt: 'Agree Exempt',
+        exempt_result: 'Exempt Result',
+        // 免审理由
+        exempt_reason: 'Exempt Reason',
+        proposed_products: 'Proposed Products',
+        // 经营业绩
+        business_performance: 'Business Performance',
+        main_business: 'Main Business',
+        review: 'Review',
+        become_potential_supplier: 'Become Potential Supplier',
+        not_deal: 'Not Deal',
+        consider_exempt: 'Consider Exempt',
+        on_site_assessment: 'On Site Assessment',
+        // 请输入原因
+        please_enter_reason: 'Please enter reason',
+        // 审核供应商
+        audit_supplier: 'Audit Supplier',
+
+        // 初审
+        first_trial: 'First Trial',
+        operator: 'Operator',
+        operation_time: 'Operation Time',
+        qualified_approach: 'Qualified Approach',
+        attachment: 'Attachment',
+        please_select_supplier: 'Please select supplier',
+        // 是否将
+        whether_to: 'Whether to',
+        // 调整为合格供应商
+        adjust_to_qualified_supplier: 'Adjust to Qualified Supplier',
+        special_approval_qualified_supplier: 'Special Approval Qualified Supplier',
+        qualified_record: 'Qualified Record',
+
+        registered_supplier: 'Registered Supplier',
+        // 潜在供应商
+        potential_supplier: 'Potential Supplier',
+        // 淘汰供应商
+        eliminated_supplier: 'Eliminated Supplier',
+        // 供应商阶段
+        qualified_supplier: 'Qualified Supplier',
+        pending_audit: 'Pending First Audit',
+        not_deal: 'Not Deal',
+        initial_elimination: 'Initial Elimination',
+        pending_review: 'Pending Review',
+        consideration_exempt: 'Consideration Exempt',
+        review_elimination: 'Review Elimination',
+        pending_final_review: 'Pending Final Review',
+        final_review_elimination: 'Final Review Elimination',
+        special_approval: 'Special Approval',
+        qualified_elimination: 'Qualified Elimination',
+        exempt_pass: 'Exempt Pass',
+
+        eliminate_reason: 'Eliminate Reason',
+        // cooperative_manufacturers
+        cooperative_manufacturers: 'Cooperative Manufacturers',
+        // delete_confirm
+        delete_confirm: 'Delete Confirm?',
+        delete_confirm1:
+            '1.If the name is modified here, the name selected when the supplier was eliminated will be modified accordingly',
+        delete_confirm2:
+            '2.If the name is deleted here, the name selected when the supplier was eliminated will remain.',
+        delete_confirm3:
+            'Example: "The impact of legal and regulatory requirements on the whole vehicle" is deleted, and the reason selected when the qualified supplier was eliminated will remain.',
+        // edit_reason_successfully
+        edit_reason_successfully: 'Edit Reason Successfully',
+        // 新增原因成功
+        add_reason_successfully: 'Add Reason Successfully',
+        // delete_classification
+        delete_classification: 'Delete Classification',
+        // delete_classification_warning
+        c: 'After deleting the classification, all referenced content will be cleared, please confirm the operation',
+        // 编辑分类
+        edit_classification: 'Edit Classification',
+        // 新增岑类成功
+        add_classification_successfully: 'Add Classification Successfully',
+        // 编辑分类成功
+        edit_classification_successfully: 'Edit Classification Successfully',
+        // 删除分类成功
+        delete_classification_successfully: 'Delete Classification Successfully',
+        // 新增分类失败
+        add_classification_failed: 'Add Classification Failed',
+        // 编辑分类失败
+        edit_classification_failed: 'Edit Classification Failed',
+        // 删除分类失败
+        delete_classification_failed: 'Delete Classification Failed',
+        // 确定
+        determine: 'Determine',
+        // 更改
+        change: 'Change',
+        classification_name: 'Classification Name',
+        // 新增分类
+        add_classification: 'Add Classification',
+        // 车辆分类管理
+        vehicle_classification_management: 'Vehicle Classification Management',
+        // 供应商免审申请
+        supplier_exempt_application: 'Supplier Exempt Application',
+        // 淘汰供应商名录
+        eliminate_supplier_list: 'Eliminate Supplier List',
+        eliminate: 'Eliminate',
+        // 省市
+        province_city: 'Province City',
         // 年
         year: 'Year',
         ten_thousand_yuan: 'TEN THOUSAND YUAN',
@@ -614,6 +841,7 @@ export default {
         please_upload_business_license_photos: 'Please upload business license photos',
         qualified_supplier: 'Qualified Supplier List',
         no: 'Pin Bian',
+        format_error: 'Format error, please enter 5 digits',
         supplier_code: 'Supplier Code',
         supplier_full_name: 'Supplier Full Name',
         supplier_abbreviation: 'Supplier Abbreviation',
@@ -646,5 +874,15 @@ export default {
         detailed_address: 'Detailed Address',
         model_selection: 'Model Selection',
         version_selection: 'Version Selection',
+        supplier_stage: 'Supplier Stage',
+        status: 'Status',
+        consider_exempt_supplier_list: 'Consider Exempt Supplier List',
+        // exempt_application_form
+        exempt_application_form: 'Exempt Application Form',
+        // 审核
+        audit: 'Audit',
+        elimination_reason: 'Qualified Supplier Elimination Reason',
+        reason: 'Reason',
+        add_reason: 'Add Reason',
     },
 };
