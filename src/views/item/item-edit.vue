@@ -158,12 +158,12 @@
                 <template v-if="form.type === Core.Const.ITEM.TYPE.COMPONENT">
                     <!-- 最小起购量 -->
                     <div class="form-item required">
-                        <div class="key" :class="!form.min_number && isValidate ? 'error' : ''">
+                        <div class="key" :class="!form.min_purchase_amount && isValidate ? 'error' : ''">
                             {{ $t('d.minimum_purchase') }}
                         </div>
                         <div class="value">
                             <a-input-number
-                                v-model:value="form.min_number"
+                                v-model:value="form.min_purchase_amount"
                                 :placeholder="$t('d.enter_1_1000')"
                                 :min="1"
                                 :max="1000"
@@ -1269,7 +1269,7 @@ export default {
                 length: undefined, // 长
                 width: undefined, // 宽
                 height: undefined, // 高
-                min_number: 1,
+                min_purchase_amount: 1,
             },
             // temporarily_deposit: 0,// 临时定金支付按钮
             salesList: [], // 销售区域
@@ -1896,8 +1896,12 @@ export default {
             form.sales_area_ids = form.sales_area_ids.join(',');
             // form.man_hour = Math.round(form.man_hour * 100)
             form.config = JSON.stringify(form.config);
-            if (form.type === this.itemTypeMap['2']?.key && form.category_ids.length > 1) {
-                form.category_ids = form.category_ids[0];
+            if (form.type === this.itemTypeMap['2']?.key) {
+                if (form.category_ids instanceof Array) {
+                    form.category_ids = [form.category_ids[0]] || '';
+                } else {
+                    form.category_ids = [form.category_ids] || '';
+                }
             }
 
             let apiName = 'save';
@@ -1976,8 +1980,6 @@ export default {
             if (form.type === this.itemTypeMap['1']?.key && this.specific.mode === 2) {
                 this.handleDescripttion();
             }
-            console.log(form);
-            return;
             Core.Api.Item[apiName](Core.Util.searchFilter(form))
                 .then(() => {
                     this.$message.success(this.$t('pop_up.save_success'));
@@ -2025,7 +2027,7 @@ export default {
                 return this.$message.warning(`${this.$t('def.enter')}(${this.$t('d.sales_area')})`);
             }
             // 最小起购量 类型为零部件时
-            if (form.type === this.itemTypeMap['2']?.key && !form.min_number) {
+            if (form.type === this.itemTypeMap['2']?.key && !form.min_purchase_amount) {
                 return this.$message.warning(`${this.$t('def.enter')}(${this.$t('d.minimum_purchase')})`);
             }
             // 封面图片

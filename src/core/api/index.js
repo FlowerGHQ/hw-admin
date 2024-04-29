@@ -310,6 +310,7 @@ const apiList = {
         detail: ['PostJson', 'item-category/detail'],
         // 是否显示爆炸图
         updateDisplay: ['PostJson', 'item-category/update-display'],
+        categoryBomTree: ['PostJson', 'item-category/bom-tree'], // 平台端绑定bom的商品分类
     },
     ItemPrice: {
         // 商品价格体系
@@ -1037,6 +1038,8 @@ const apiList = {
         addBindCategory: ['PostJson', 'aftermarket/bom/add-bind-category'], // 给Bom商品添加（不覆盖）-绑定分类
         parsingImportFile: ['PostJson', 'aftermarket/bom/parsing-import-file'], // 二级页面解析导入表格情况返回
         importBindBomItem: ['PostJson', 'aftermarket/bom/import-bind-bom-item'], // 保存导入成功表格情况返回
+        setItemCategoryId: ['PostJson', 'aftermarket/bom/set/item-category-id'], // 给售后bom设置商品分类
+        ManagerListParts: ['PostJson', 'aftermarket/bom/manager-list-parts'], // 售后配件管理bom对应配件
     },
     // 供应商接口
     SUPPLY: {
@@ -1095,8 +1098,8 @@ const apiList = {
         ProductionOrderItemlist: ['PostJson', 'production-order-item/list'], // 生产单子件列表
     },
     ToBCustomer: {
-        list: ['PostJson', 'comment/list'], // crm tob客户列表   
-    }
+        list: ['PostJson', 'comment/list'], // crm tob客户列表
+    },
 };
 
 export default new Api(baseUrl, apiList);

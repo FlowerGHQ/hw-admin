@@ -3,7 +3,7 @@
         destroyOnClose
         v-model:visible="visibility"
         :width="860"
-        title="配件分类"
+        title="配件分组"
         @ok="handleOk"
         @cancel="handleCancle"
     >
@@ -333,7 +333,7 @@ const getTableDataFetch = (parmas = {}) => {
         page_size: pageSize.value,
         ...parmas,
     };
-    Core.Api.ITEM_BOM.partsList(obj)
+    Core.Api.ITEM_BOM.ManagerListParts(obj)
         .then(res => {
             total.value = res.count;
             tableData.value = res.list;
@@ -372,7 +372,7 @@ const getDefaultChecked = async () => {
             page_size: 1000,
             bom_category_id: categoryId.value,
         };
-        await Core.Api.ITEM_BOM.partsList(obj)
+        await Core.Api.ITEM_BOM.ManagerListParts(obj)
             .then(res => {
                 defaultChecked.value = res.list.map(item => item.id);
                 console.log('00000000000000000000defaultChecked.value', defaultChecked.value);

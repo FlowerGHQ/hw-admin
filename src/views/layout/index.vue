@@ -308,23 +308,23 @@ export default {
                         let parts = authItem.split('.')[0];
                         if (parts !== 'MANAGER') {
                             if (showClassify[parts]?.length > 0) {
-                                showClassify[parts].push(...this.handleAdminRouter(parts, [el]))
+                                showClassify[parts].push(...this.handleAdminRouter(parts, [el]));
                             } else {
                                 showClassify[parts] = this.handleAdminRouter(parts, [el]);
                             }
                         }
                     });
-                });                
+                });
                 this.$store.commit('ADMIN_AUTH_TAB/SETSHOWCLASSIFY', showClassify);
 
-                this.moduleAuthList = this.handleModuleAuthList(Object.keys(showClassify));
+                // this.moduleAuthList = this.handleModuleAuthList(Object.keys(showClassify));
             } else {
                 this.showList = routeList;
                 this.$store.commit('ADMIN_AUTH_TAB/SETSHOWCLASSIFY', routeList);
             }
         },
         // 模块切换
-        handleGetModule() {            
+        handleGetModule() {
             let showClassify = this.$store.state.ADMIN_AUTH_TAB.SHOWCLASSIFY;
             let KEY = ROUTER_TYPE_MAP[this.tabPosition]?.KEY;
             if (KEY) {
@@ -348,7 +348,7 @@ export default {
                 console.log('第一次进入跳转', this.showList);
 
                 try {
-                    this.routerReplace()
+                    this.routerReplace();
                     this.$store.commit('ADMIN_AUTH_TAB/SETTABPOSITION', {
                         tabPosition: this.tabPosition,
                         path: this.showList[0]?.path,
@@ -469,8 +469,8 @@ export default {
             if (this.$store.state.ADMIN_AUTH_TAB.TABPOSITION === this.tabPosition) {
                 return;
             }
-            
-            this.routerReplace()
+
+            this.routerReplace();
             this.$store.commit('ADMIN_AUTH_TAB/SETTABPOSITION', {
                 tabPosition: this.tabPosition,
                 path: this.showList[0]?.path,
@@ -545,12 +545,12 @@ export default {
 
         // 路由替换
         routerReplace() {
-            console.log("使用");
-            let path = this.showList[0]?.path
-            let subPath = this.showList[0].children?.length ? '/' + this.showList[0].children[0].path : ''
-            
+            console.log('使用');
+            let path = this.showList[0]?.path;
+            let subPath = this.showList[0].children?.length ? '/' + this.showList[0].children[0].path : '';
+
             this.$router.replace({ path: path + subPath });
-        }
+        },
     },
 };
 </script>

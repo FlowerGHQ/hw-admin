@@ -7,7 +7,11 @@
             <div class="item-tree" :style="{ height: 'calc(100% - ' + titleHeight + ')' }">
                 <!-- 左边 -->
                 <div class="category-tree">
-                    <CategoryTree @change="handleCategoryChange" ref="CategoryTreeRef" key="left-category-tree" />
+                    <TreeSelectCategory
+                        @change="handleCategoryChange"
+                        ref="TreeSelectCategoryRef"
+                        key="left-category-tree"
+                    />
                 </div>
                 <div
                     class="item-tree-left"
@@ -77,11 +81,11 @@ import FittingsThree from './components/parts-management/FittingsThree.vue';
 import FittingsTree from './components/parts-management/FittingsTree.vue';
 import ClassifyModal from './components/parts-management/ClassifyModal.vue'; // 分类弹窗组件
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
-import CategoryTree from './components/TreeSelect.vue';
+import TreeSelectCategory from './components/TreeSelectCategory.vue';
 // const router = useRouter()
 const minWidthCount = 890;
 const treeRef = ref(null);
-const CategoryTreeRef = ref(null);
+const TreeSelectCategoryRef = ref(null);
 // 标题高度
 const titleRefs = ref(null);
 const titleHeight = ref(0);
@@ -166,7 +170,10 @@ const TreeRefresh = val => {
         treeRef.value.getCurrentVersion(val.shop_id, val.version_id);
     }
 };
-const handleCategoryChange = val => {};
+const handleCategoryChange = val => {
+    console.log(val, treeRef.value);
+    if (treeRef.value) treeRef.value.getGoodsList(val);
+};
 
 onMounted(() => {
     titleHeight.value = titleRefs.value.offsetHeight + 'px';

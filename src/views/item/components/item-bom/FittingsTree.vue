@@ -403,6 +403,7 @@ let wrap = ref(null);
 
 // 当前父级shop_id
 const shopId = ref(null);
+const bomItemCategoryId = ref('');
 
 // 接受activeObj
 const props = defineProps({
@@ -424,7 +425,7 @@ const props = defineProps({
 
 // 搜索
 const onSearch = value => {
-    getGoodsList();
+    getGoodsList(bomItemCategoryId.value);
 };
 const setChildRen = (arr, level) => {
     arr.forEach(item => {
@@ -569,14 +570,17 @@ const handleEditName = item => {
 };
 
 // 初始化请求商品列表数据
-const getGoodsList = () => {
+const getGoodsList = (bom_item_category_id = '') => {
     loading1.value = true;
+    bomItemCategoryId.value = bom_item_category_id;
     Core.Api.ITEM_BOM.listName({
+        bom_item_category_id,
         key: keyWord.value,
     })
         .then(res => {
             realData.value = res.list;
             realData.value = setChildRen(realData.value, 1);
+            console.log(realData.value);
             loading1.value = false;
         })
         .catch(err => {
@@ -742,6 +746,7 @@ const getCurrentVersion = (parentId, id) => {
 };
 defineExpose({
     getCurrentVersion,
+    getGoodsList,
 });
 
 // 生命周期

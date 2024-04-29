@@ -109,33 +109,25 @@
                     <span v-else-if="column.key === 'bom_category' /*分类*/">
                         <div class="classify-box">
                             <a-tooltip class="left-text">
-                                <template #title>{{ text?.name }}</template>
+                                <template #title>{{
+                                    text && text?.name ? text?.name : $t('item-bom.unclassified')
+                                }}</template>
                                 <div
                                     class="one-spils cursor"
                                     :style="{ width: text?.name?.length > 6 ? 7 * 12 + 'px' : '' }"
                                 >
-                                    {{ text && text?.name ? text?.name : '未分类' }}
+                                    {{ text && text?.name ? text?.name : $t('item-bom.unclassified') }}
                                 </div>
                             </a-tooltip>
-                            <!-- <span class="to-classify" @click="toClassify(record.sync_id)" v-if="record.sync_id">
-                                {{ !text ? $t('item-bom.classify') : $t('item-bom.classify_update') }}
-                            </span> -->
                         </div>
-                        <!-- <span v-else-if="!text?.name">
-                            -
-                        </span> -->
                     </span>
-                    <span v-else-if="column.key === 'sync_time' /*创建时间*/">
-                        {{ $Util.timeFilter(text, 3) }}
-                    </span>
-                    <span v-else-if="column.key === 'comment' /*备注*/">
-                        <a-tooltip>
-                            <template #title>{{ text }}</template>
-                            <div class="one-spils set-width cursor">
-                                {{ text || '-' }}
-                            </div>
-                        </a-tooltip>
-                    </span>
+
+                    <template v-else-if="column.dataIndex === 'fob_eur'">
+                        {{ `€ ${$Util.countFilter(record.fob_eur)}` }}
+                    </template>
+                    <template v-else-if="column.dataIndex === 'fob_usd'">
+                        {{ `$ ${$Util.countFilter(record.fob_usd)}` }}
+                    </template>
                     <template v-else-if="column.key === 'operation' /*操作*/">
                         <button class="edit" @click="handleEdit(record)">
                             {{ $t('common.edit') }}
@@ -234,27 +226,15 @@ const tableColumns = computed(() => {
         {
             // 商品名称
             title: proxy.$t('item-bom.product_name'),
-            dataIndex: 'sync_name',
-            key: 'sync_name',
+            dataIndex: 'name',
+            key: 'name',
             width: '160px',
         },
         {
             // 商品编码
             title: proxy.$t('item-bom.commodity_code'),
-            dataIndex: 'sync_id',
-            key: 'sync_id',
-        },
-        {
-            // 分类
-            title: proxy.$t('item-bom.classify'),
-            dataIndex: 'bom_category',
-            key: 'bom_category',
-        },
-        {
-            // 用量
-            title: proxy.$t('item-bom.dosage'),
-            dataIndex: 'amount',
-            key: 'amount',
+            dataIndex: 'code',
+            key: 'code',
         },
         {
             // 销售区域
@@ -263,16 +243,30 @@ const tableColumns = computed(() => {
             key: 'sales_area_list',
         },
         {
-            // 创建时间
-            title: proxy.$t('item-bom.create_time'),
-            dataIndex: 'effective_time',
-            key: 'sync_time',
+            // 最小起购量
+            title: proxy.$t('d.minimum_purchase'),
+            dataIndex: 'min_purchase_amount',
+            key: 'min_purchase_amount',
         },
         {
-            // 备注
-            title: proxy.$t('item-bom.remark'),
-            dataIndex: 'comment',
-            key: 'comment',
+            title: 'FOB(EUR)',
+            key: 'money',
+            dataIndex: 'fob_eur',
+            unit: '€',
+            width: 160,
+        },
+        {
+            title: 'FOB(USD)',
+            key: 'money',
+            dataIndex: 'fob_usd',
+            unit: '$',
+            width: 160,
+        },
+        {
+            // 分组
+            title: proxy.$t('item-bom.classify'),
+            dataIndex: 'bom_category',
+            key: 'bom_category',
         },
         {
             title: proxy.$t('common.operations'),
@@ -398,15 +392,14 @@ const getChangeCount = () => {
 const getTableDataFetch = (parmas = {}) => {
     loading.value = true;
     let obj = {
-        // name:'主撑弹簧',
-        bom_id: bomId.value,
+        id: bomId.value,
         page: channelPagination.value.current,
         page_size: channelPagination.value.pageSize,
         ...parmas,
         ...props.searchParams,
     };
 
-    Core.Api.ITEM_BOM.partsList(obj)
+    Core.Api.ITEM_BOM.ManagerListParts(obj)
         .then(res => {
             channelPagination.value.total = res.count;
             tableData.value = res.list;
@@ -440,7 +433,7 @@ const handleEdit = item => {
     const routeUrl = router.resolve({
         path: '/item/item-edit',
         query: {
-            id: item.target_id,
+            id: item.id,
             set_id: 0, // 配件默认单规格
             edit: true,
         },

@@ -59,10 +59,9 @@
                                 <div class="new_version" v-if="item.flag_new">
                                     {{ $t('item-bom.change_new_version') }}
                                 </div>
-                                <template v-if="2 < 3">
-                                    <a-popover placement="right" :overlayStyle="popoverStyle">
-                                        <template #content>
-                                            <!-- <a-tree
+                                <a-popover placement="right" :overlayStyle="popoverStyle">
+                                    <template #content>
+                                        <!-- <a-tree
                                                 class="draggable-tree"
                                                 block-node
                                                 :tree-data="treeData"
@@ -71,18 +70,20 @@
                                                 v-model:selectedKeys="selectedKeys"
                                                 @select="handleSelect"
                                             /> -->
-                                            <CategoryTree
-                                                @change="handleCategoryChange"
-                                                ref="CategoryTreeRef"
-                                                key="select-category-tree"
-                                            />
-                                        </template>
-                                        <button class="add-type" @click.stop="">选择分类</button>
-                                    </a-popover>
-                                </template>
-                                <template v-else>
-                                    <span class="add-type">已分类</span>
-                                </template>
+                                        <CategoryTree
+                                            @change="handleCategoryChange"
+                                            :syncId="item.sync_id"
+                                            ref="CategoryTreeRef"
+                                            :key="item.sync_id"
+                                        />
+                                    </template>
+                                    <button class="add-type" @click.stop="">
+                                        {{ item.item_category_name || '选择分类' }}
+                                    </button>
+                                </a-popover>
+                                <!-- <template v-else>
+                                    <span class="add-type">{{ item.item_category_name }}</span>
+                                </template> -->
                                 <!-- <MySvgIcon icon-class="edit" @click.stop="handleEdit(item, $event)" /> -->
                             </div>
                         </div>
@@ -395,13 +396,14 @@
 
 <script setup>
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
-import { ref, reactive, computed, onMounted, watch, onBeforeUnmount } from 'vue';
+import { ref, reactive, computed, onMounted, watch, onBeforeUnmount, getCurrentInstance } from 'vue';
 import { useI18n } from 'vue-i18n';
 import Core from '@/core';
 const $t = useI18n().t;
 const $emit = defineEmits(['update:activeObj']);
 import Util from '@/core/utils';
 import CategoryTree from '../TreeSelect.vue';
+const { proxy } = getCurrentInstance();
 
 // // -----------------定义数据-------------------------------
 
@@ -429,6 +431,7 @@ const CategoryTreeRef = ref(null);
 
 // 当前父级shop_id
 const shopId = ref(null);
+const bomItemCategoryId = ref('');
 
 // 接受activeObj
 const props = defineProps({
@@ -467,10 +470,13 @@ const treeData = [
 const popoverStyle = { minWidth: '150px' };
 
 // -----------------定义方法--------------------------
-const handleCategoryChange = val => {};
+const handleCategoryChange = (val, syncId) => {
+    if (!syncId) return;
+    setItemCategoryId(val, syncId);
+};
 // 搜索
 const onSearch = value => {
-    getGoodsList();
+    getGoodsList(bomItemCategoryId.value);
 };
 const setChildRen = (arr, level) => {
     arr.forEach(item => {
@@ -544,7 +550,8 @@ const selectKey = (parentItem = {}, item) => {
                 version_name: item.version,
                 category_id: '',
                 name: item.name,
-                sync_id: '',
+                sync_id: parentItem.sync_id,
+                bom_item_category_id: parentItem.item_category_id,
                 flag_new: item.flag_new,
             });
             break;
@@ -553,11 +560,12 @@ const selectKey = (parentItem = {}, item) => {
             $emit('update:activeObj', {
                 level: item.level,
                 version_id: parentItem.id,
-                version_name: item.version,
+                version_name: parentItem.version,
                 shop_id: '',
                 category_id: item.id,
                 name: item.name,
-                sync_id: '',
+                sync_id: parentItem.sync_id,
+                bom_item_category_id: parentItem.item_category_id,
             });
             break;
         default:
@@ -615,9 +623,11 @@ const handleEditName = item => {
 };
 
 // 初始化请求商品列表数据
-const getGoodsList = () => {
+const getGoodsList = (bom_item_category_id = '') => {
     loading1.value = true;
+    bomItemCategoryId.value = bom_item_category_id;
     Core.Api.ITEM_BOM.listName({
+        bom_item_category_id,
         key: keyWord.value,
     })
         .then(res => {
@@ -786,9 +796,20 @@ const getCurrentVersion = (parentId, id) => {
     // 请求该版本下的分类
     getCategory(currentVersion);
 };
+const setItemCategoryId = (bom_item_category_id = '', sync_id = '') => {
+    const params = {
+        sync_id, //同步id
+        bom_item_category_id, //商品分类id
+    };
+    Core.Api.ITEM_BOM.setItemCategoryId({ ...params }).then(res => {
+        onSearch();
+        proxy.$message.success($t('pop_up.operate'));
+    });
+};
 const handleSelect = () => {};
 defineExpose({
     getCurrentVersion,
+    getGoodsList,
 });
 
 // 生命周期
@@ -796,6 +817,7 @@ onMounted(() => {
     // 请求商品列表
     loading1.value = true;
     Core.Api.ITEM_BOM.listName({
+        bom_item_category_id: '', //商品分类id
         key: keyWord.value,
     })
         .then(res => {

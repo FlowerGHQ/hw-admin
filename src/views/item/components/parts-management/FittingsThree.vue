@@ -316,6 +316,9 @@
                             </div>
                         </a-tooltip>
                     </span>
+                    <span v-if="column.key === 'version' /*创建时间*/">
+                        {{ activeObj.version_name }}
+                    </span>
                     <span v-if="column.key === 'effective_time' /*创建时间*/">
                         {{ $Util.timeFilter(text, 3) }}
                     </span>
@@ -392,14 +395,14 @@ const tableColumns = computed(() => {
         {
             // 商品名称
             title: proxy.$t('item-bom.product_name'),
-            dataIndex: 'sync_name',
-            key: 'sync_name',
+            dataIndex: 'name',
+            key: 'name',
         },
         {
             // 商品编码
             title: proxy.$t('item-bom.commodity_code'),
-            dataIndex: 'sync_id',
-            key: 'sync_id',
+            dataIndex: 'code',
+            key: 'code',
         },
         {
             // 版本号
@@ -569,18 +572,19 @@ onUnmounted(() => {
 // 获取表格list(依靠爆炸图数据在执行这里)
 const getTableDataFetch = (parmas = {}) => {
     loading.value = true;
+    console.log(props.activeObj);
     let obj = {
-        bom_id: props.activeObj.version_id, // 版本id
-        bom_category_id: props.activeObj.category_id, // 分类 id
-        // name: "", // search 商品名称
-        // code_list: [], // search 商品编号
+        // id: props.activeObj.version_id, // 版本id
+        bom_category_id: props.activeObj.category_id, // 分组id
+        // sync_id: props.activeObj.sync_id, //同步id
+        // bom_item_category_id: props.activeObj.bom_item_category_id,
         page: channelPagination.value.current,
         page_size: channelPagination.value.pageSize,
         ...props.searchParams,
         ...parmas,
     };
 
-    Core.Api.ITEM_BOM.partsList(obj)
+    Core.Api.ITEM_BOM.ManagerListParts(obj)
         .then(res => {
             loading.value = false;
             channelPagination.value.total = res.count;

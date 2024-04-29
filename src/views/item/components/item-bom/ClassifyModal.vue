@@ -3,7 +3,7 @@
         destroyOnClose
         v-model:visible="visibility"
         :width="860"
-        title="配件分类"
+        title="配件分组"
         @ok="handleOk"
         @cancel="handleCancle"
     >

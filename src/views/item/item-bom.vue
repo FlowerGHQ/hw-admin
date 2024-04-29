@@ -6,6 +6,13 @@
             </div>
             <div class="item-tree" :style="{ height: 'calc(100% - ' + titleHeight + ')' }">
                 <!-- 左边 -->
+                <div class="category-tree">
+                    <TreeSelectCategory
+                        @change="handleCategoryChange"
+                        ref="TreeSelectCategoryRef"
+                        key="left-category-tree"
+                    />
+                </div>
                 <div
                     class="item-tree-left"
                     :class="{
@@ -74,6 +81,7 @@ import FittingsThree from './components/item-bom/FittingsThree.vue';
 import FittingsTree from './components/item-bom/FittingsTree.vue';
 import ClassifyModal from './components/item-bom/ClassifyModal.vue'; // 分类弹窗组件
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
+import TreeSelectCategory from './components/TreeSelectCategory.vue';
 // const router = useRouter()
 const minWidthCount = 890;
 const treeRef = ref(null);
@@ -209,6 +217,10 @@ const setValue = val => {
         // dataKeyPop.value = new Date();
     }
 };
+const handleCategoryChange = val => {
+    console.log(val, treeRef.value);
+    if (treeRef.value) treeRef.value.getGoodsList(val);
+};
 </script>
 
 <style lang="less" scoped>
@@ -227,6 +239,14 @@ const setValue = val => {
             display: flex;
             box-sizing: border-box;
             padding-bottom: 20px;
+            .category-tree {
+                width: 150px;
+                margin-right: 20px;
+                overflow-y: auto;
+                &::-webkit-scrollbar {
+                    width: 0px;
+                }
+            }
             .item-tree-left {
                 // min-width: 454px;
                 // width: 204px;

@@ -246,6 +246,9 @@ const messages = {
             system_management: '系统管理',
             warehousing: '仓储',
             ishas_sk3_plus: '是否有SK3 PLUS',
+            pic_tip1: '支持上传png、jpg、jpeg',
+            pic_tip2: '图片尺寸：800*800',
+            pic_tip3: '最大10M',
         },
         a: {
             // 零售商
@@ -3158,6 +3161,9 @@ const messages = {
             system_management: 'System Management',
             warehousing: 'Warehousing',
             ishas_sk3_plus: 'Is There Include SK3 PLUS',
+            pic_tip1: 'Support uploading PNG, JPG, and JPEG',
+            pic_tip2: 'Image size: 800 * 800',
+            pic_tip3: 'Maximum 10M',
         },
         a: {
             new_retailer: 'Create A New Retailer',

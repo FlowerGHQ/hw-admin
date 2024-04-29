@@ -29,30 +29,38 @@
                         </div>
                     </a-tooltip>
                 </span>
-                <span v-if="column.key === 'sales_area' /*销售区域*/">
+                <span v-else-if="column.key === 'sales_area_list' /*销售区域*/">
                     <a-tooltip>
-                        <template #title>
-                            {{ salesArea(record.sales_area_list) }}
-                        </template>
-                        <div class="one-spils cursor">
-                            {{ salesArea(record.sales_area_list) }}
+                        <template #title>{{ $Util.getSalesAreaStr(text, lang) || '-' }}</template>
+                        <div
+                            class="one-spils cursor"
+                            :style="{ width: $Util.getSalesAreaStr(text, lang)?.length > 10 ? 11 + 'em' : '' }"
+                        >
+                            {{ $Util.getSalesAreaStr(text, lang) || '-' }}
                         </div>
                     </a-tooltip>
                 </span>
-                <span v-if="column.key === 'version'">
-                    {{ record?.bom?.version || '-' }}
+                <span v-else-if="column.key === 'bom_category' /*分类*/">
+                    <div class="classify-box">
+                        <a-tooltip class="left-text">
+                            <template #title>{{
+                                text && text?.name ? text?.name : $t('item-bom.unclassified')
+                            }}</template>
+                            <div
+                                class="one-spils cursor"
+                                :style="{ width: text?.name?.length > 6 ? 7 * 12 + 'px' : '' }"
+                            >
+                                {{ text && text?.name ? text?.name : $t('item-bom.unclassified') }}
+                            </div>
+                        </a-tooltip>
+                    </div>
                 </span>
-                <span v-if="column.key === 'effective_time' /*创建时间*/">
-                    {{ $Util.timeFilter(text, 3) }}
-                </span>
-                <span v-if="column.key === 'comment' /*备注*/">
-                    <a-tooltip>
-                        <template #title>{{ text }}</template>
-                        <div class="one-spils set-width cursor">
-                            {{ text }}
-                        </div>
-                    </a-tooltip>
-                </span>
+                <template v-else-if="column.dataIndex === 'fob_eur'">
+                    {{ `€ ${$Util.countFilter(record.fob_eur)}` }}
+                </template>
+                <template v-else-if="column.dataIndex === 'fob_usd'">
+                    {{ `$ ${$Util.countFilter(record.fob_usd)}` }}
+                </template>
             </template>
         </a-table>
     </div>
@@ -82,44 +90,47 @@ const tableColumns = computed(() => {
         {
             // 商品名称
             title: proxy.$t('item-bom.product_name'),
-            dataIndex: 'sync_name',
-            key: 'sync_name',
+            dataIndex: 'name',
+            key: 'name',
+            width: '160px',
         },
         {
             // 商品编码
             title: proxy.$t('item-bom.commodity_code'),
-            dataIndex: 'sync_id',
-            key: 'sync_id',
+            dataIndex: 'code',
+            key: 'code',
         },
         {
-            // 版本号
-            title: proxy.$t('item-bom.version_number'),
-            dataIndex: 'version',
-            key: 'version',
+            // 销售区域
+            title: proxy.$t('item-bom.sales_area'),
+            dataIndex: 'sales_area_list',
+            key: 'sales_area_list',
         },
         {
-            // 用量
-            title: proxy.$t('item-bom.dosage'),
-            dataIndex: 'amount',
-            key: 'amount',
-        },
-        // {
-        //     // 销售区域
-        //     title: proxy.$t('item-bom.sales_area'),
-        //     dataIndex: 'sales_area',
-        //     key: 'sales_area',
-        // },
-        {
-            // 创建时间
-            title: proxy.$t('item-bom.create_time'),
-            dataIndex: 'effective_time',
-            key: 'effective_time',
+            // 最小起购量
+            title: proxy.$t('d.minimum_purchase'),
+            dataIndex: 'min_purchase_amount',
+            key: 'min_purchase_amount',
         },
         {
-            // 备注
-            title: proxy.$t('item-bom.remark'),
-            dataIndex: 'comment',
-            key: 'comment',
+            title: 'FOB(EUR)',
+            key: 'money',
+            dataIndex: 'fob_eur',
+            unit: '€',
+            width: 160,
+        },
+        {
+            title: 'FOB(USD)',
+            key: 'money',
+            dataIndex: 'fob_usd',
+            unit: '$',
+            width: 160,
+        },
+        {
+            // 分组
+            title: proxy.$t('item-bom.classify'),
+            dataIndex: 'bom_category',
+            key: 'bom_category',
         },
     ];
     return result;
@@ -157,6 +168,10 @@ const channelPagination = ref({
     total: 0,
     showTotal: total => `${proxy.$t('n.all_total')} ${total} ${proxy.$t('in.total')}`,
 });
+const lang = computed(() => {
+    // ==='zh'?'country':'country_en'
+    return proxy.$store.state.lang;
+});
 // 销售区域
 const salesArea = arr => {
     let result = [];
@@ -183,7 +198,7 @@ const getTableDataFetch = (parmas = {}) => {
         ...parmas,
     };
 
-    Core.Api.ITEM_BOM.partsList(obj)
+    Core.Api.ITEM_BOM.ManagerListParts(obj)
         .then(res => {
             channelPagination.value.total = res.count;
             tableData.value = res.list;
