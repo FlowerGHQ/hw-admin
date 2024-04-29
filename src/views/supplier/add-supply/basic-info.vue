@@ -2513,8 +2513,6 @@ import { useStore } from 'vuex';
 import axios from 'axios';
 import dayjs from 'dayjs';
 
-const isMember = Core.Util.Common.isMember();
-
 // json
 const chinaOptions = ref([]);
 

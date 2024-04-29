@@ -60,8 +60,7 @@ const unpaidFinalPayment = {
         title: '尾款未支付订单表',
         title_en: 'Unpaid Final List',
         icon: 'i_menu_fankuguanli',
-        roles: [LOGIN_TYPE.DISTRIBUTOR],
-        auth: ['sales.distribution.un-payment', 'aftermarket.distribution.un-payment'],
+        auth: ['sales.distribution.un-payment'],
     },
 };
 export { customerCare, unpaidFinalPayment };

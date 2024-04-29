@@ -10,8 +10,7 @@ const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 const inquiryManagement = {
     path: '/inquiry-management',
     component: () => import('@/views/layout/index.vue'),
-    name: 'InquiryManagement',    
-    type: [ROUTER_TYPE.AFTER],
+    name: 'InquiryManagement',        
     meta: {
         title: '客户关怀',
         title_en: 'Customer Care',
@@ -79,8 +78,7 @@ const inquiryManagement = {
 const operationManagement = {
     path: '/operation',
     component: () => import('@/views/layout/index.vue'),    
-    name: 'Operation',
-    type: [ROUTER_TYPE.SALES],
+    name: 'Operation',    
     meta: {
         title: '运营管理',
         title_en: 'Operation Management',
@@ -137,8 +135,7 @@ const operationManagement = {
 const repairManagement = {
     path: '/repair',
     component: () => import('@/views/layout/index.vue'),
-    name: 'RepairManagement',    
-    type: [ROUTER_TYPE.AFTER],
+    name: 'RepairManagement',        
     meta: {
         title: '工单管理',
         title_en: 'Maintenance',
@@ -249,7 +246,6 @@ const crmDashboard = {
     path: '/crm-dashboard',
     component: () => import('@/views/layout/index.vue'),    
     name: 'crm-dashboard',
-    type: [ROUTER_TYPE.CRM],
     meta: {
         title: '数据',
         title_en: 'Dashboard',
@@ -295,7 +291,6 @@ const crmCustomerManagement = {
     path: '/crm-customer',
     component: () => import('@/views/layout/index.vue'),    
     name: 'CRMCustomerManagement',
-    type: [ROUTER_TYPE.CRM],
     meta: {
         title: '客户',
         title_en: 'Customers',
@@ -374,7 +369,6 @@ const crmBoManagement = {
     path: '/crm-bo',
     component: () => import('@/views/layout/index.vue'),    
     name: 'CRMBoManagement',
-    type: [ROUTER_TYPE.CRM],
     meta: {
         title: '商机',
         title_en: 'Business Opportunity',
@@ -420,7 +414,6 @@ const crmOrder = {
     path: '/crm-order',
     component: () => import('@/views/layout/index.vue'),    
     name: 'CRMOrder',
-    type: [ROUTER_TYPE.CRM],
     meta: {
         title: '订单管理',
         title_en: 'Contract Order',
@@ -488,7 +481,6 @@ const crmOrderIncome = {
     path: '/crm-order-income',
     component: () => import('@/views/layout/index.vue'),    
     name: 'CRMOrderIncome',
-    type: [ROUTER_TYPE.CRM],
     meta: {
         title: '回款单',
         title_en: 'Payment Receipt',
@@ -545,7 +537,6 @@ const crmTestDriveList = {
     path: '/crm-test-drive-order',
     component: () => import('@/views/layout/index.vue'),    
     name: 'CRMTestDriveList',
-    type: [ROUTER_TYPE.CRM],
     meta: {
         title: '试驾单',
         title_en: 'Test Drive',
@@ -591,7 +582,6 @@ const smartLabel = {
     path: '/crm-smart-label',
     component: () => import('@/views/layout/index.vue'),    
     name: 'SmartLabel',
-    type: [ROUTER_TYPE.CRM],
     meta: {
         title: '智能标签',
         title_en: 'Smart Label',
@@ -627,7 +617,6 @@ const crmSettingManagement = {
     path: '/crm-setting',
     component: () => import('@/views/layout/index.vue'),    
     name: 'CRMSettingManagement',
-    type: [ROUTER_TYPE.CRM],
     meta: {
         title: '系统设置',
         title_en: 'System Setting',
@@ -686,7 +675,6 @@ const salesStrategyManagement = {
     path: '/sales-strategy-management',
     component: () => import('@/views/layout/index.vue'),    
     name: 'SalesStrategyManagement',
-    type: [ROUTER_TYPE.SALES],
     meta: {
         title: '销售策略管理',
         title_en: 'System Management',
@@ -724,7 +712,6 @@ const cocCertificate = {
     path: '/coc',
     component: () => import('@/views/layout/index.vue'),    
     name: 'COC',
-    type: [ROUTER_TYPE.SALES],
     meta: {
         title: 'COC证书管理',
         title_en: 'COC Certificate Management',
@@ -775,7 +762,6 @@ const rechargeManagement = {
     path: '/recharge',
     component: () => import('@/views/layout/index.vue'),    
     name: 'RechargeManagement',
-    type: [ROUTER_TYPE.FINANCE],
     meta: {
         title: '审核',
         title_en: 'Audit',
@@ -813,7 +799,6 @@ const manufactureManagement = {
     path: '/manufacture',
     component: () => import('@/views/layout/index.vue'),    
     name: 'ManufactureManagement',
-    type: [ROUTER_TYPE.PRODUCTION],
     meta: {
         title: '生产管理',
         title_en: 'Production',
@@ -918,7 +903,6 @@ const productionManagement = {
     path: '/production',
     component: () => import('@/views/layout/index.vue'),    
     name: 'ProductionManagement',
-    type: [ROUTER_TYPE.PRODUCTION],
     meta: {
         title: '供应管理',
         title_en: 'Suppliers',
@@ -1066,7 +1050,6 @@ const customerManagement = {
     path: '/eos-customer',
     component: () => import('@/views/layout/index.vue'),    
     name: 'CustomerManagement',
-    type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
     meta: {
         title: '客户管理',
         title_en: 'Customers',
@@ -1102,7 +1085,6 @@ const InventoryManagement = {
     path: '/inventory',
     component: () => import('@/views/layout/index.vue'),    
     name: 'InventoryManagement',
-    type: [ROUTER_TYPE.SALES, ROUTER_TYPE.PRODUCTION],
     meta: {
         title: '存货管理',
         title_en: 'Stock Control',
@@ -1148,7 +1130,6 @@ const WarehouseManagement = {
     path: '/warehouse',
     component: () => import('@/views/layout/index.vue'),    
     name: 'WarehouseManagement',
-    type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION],
     meta: {
         title: '库存管理',
         title_en: 'Inventories',
@@ -1353,7 +1334,6 @@ const SalesTargetManagement = {
     path: '/sale-target-management',
     name: 'saleTargetManagement',
     component: () => import('@/views/layout/index.vue'),
-    type: [ROUTER_TYPE.SALES],
     meta: {
         title: '销售目标管理',
         title_en: 'Sales Target Management',
