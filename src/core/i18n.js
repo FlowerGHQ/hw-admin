@@ -796,6 +796,7 @@ const messages = {
             battery_code: '电池码',
             motor_coding: '电机码',
             control_code: '中控码',
+            device_list: '设备列表',
         },
         wa: {
             //仓库
@@ -3250,6 +3251,7 @@ const messages = {
             battery_code: 'Battery Code',
             motor_coding: 'Motor Code',
             control_code: 'Control Code',
+            device_list: 'Device List',
         },
         wa: {
             //仓库

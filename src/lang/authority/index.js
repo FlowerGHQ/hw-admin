@@ -72,8 +72,8 @@ export default {
 
         supply: '供应链',
         'supply_supplier-manage': '供应商管理',
-        'supply_supplier-manage_save-supplier': '新增供应商',
-        'supply_supplier-manage_qualified': '合格供应商名录',
+        'supply_supplier-manage_save-supplier': '供应商管理(新增供应商)',
+        'supply_supplier-manage_qualified': '供应商管理(合格供应商名录)',
 
         'supply_cost-manage': '成本管理',
         'supply_cost-manage_vehicle': '车型成本表',
@@ -84,7 +84,7 @@ export default {
         'production_instance_parts': '零部件列表',
 
         'production_supply': '供应管理',
-        'production_supply_supplier': '新增供应商',
+        'production_supply_supplier': '供应商列表',
         'production_supply_purchase-order': '采购单列表',
         'production_supply_material': '物料列表',
         'production_supply_material-category': '物料分类',
@@ -125,7 +125,7 @@ export default {
         'aftermarket_repair_wait-warehouse-fault': '待入库故障件',
         'aftermarket_enquiry': '客户关怀',
         'aftermarket_enquiry_enquiry-ticket': '客户问询单',
-        'aftermarket_enquiry_quiry-ticket-category': '问询单车型分类列表',
+        'aftermarket_enquiry_quiry-ticket-category': '车型分类管理列表',
         'aftermarket_enquiry_enquiry-ticket-customer': '问询单分配列表',
 
         sales: '销售',
@@ -185,8 +185,8 @@ export default {
         'sales_sales-strategy': '销售策略管理',
         'sales_sales-strategy_sales-strategy': '销售策略',
 
-        'sales_account': '收款账号管理',
-        'sales_account_payment': '付款信息管理',          
+        // 'sales_account': '收款账号管理',
+        // 'sales_account_payment': '付款信息管理',          
     },
     en: {},
 };

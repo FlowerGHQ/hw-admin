@@ -43,11 +43,11 @@
 
                                                 <span
                                                     v-for="(fourItem, index) in threeItem.list"
-                                                    :key="fourItem.id"
-                                                    class="m-r-8"
+                                                    :key="fourItem.id"                                                    
                                                 >
                                                     <template v-if="$Util.Common.isMember(fourItem.id, item.select)">
                                                         <span
+                                                            class="m-r-8"
                                                             :class="{ 'color-1890ff': fourItem.scope_type > 0 }"
                                                             @click="handleScopeTypeShow(fourItem.scope_type)"
                                                         >

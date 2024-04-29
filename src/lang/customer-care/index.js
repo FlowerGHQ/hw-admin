@@ -120,6 +120,7 @@ export default {
         business_consultation: '业务咨询',
         other_consultation: '其他咨询',
         colse_time: '关闭时间',
+        vehicle_classification_management: '车型分类管理',
     },
     en: {
         inquiry_list: 'Inquiry list',
@@ -225,5 +226,6 @@ export default {
         business_consultation: 'Business Consultation',
         other_consultation: 'Other Consultation',
         colse_time: 'Colse Time',
+        vehicle_classification_management: 'Vehicle Classification Management',
     },
 };
