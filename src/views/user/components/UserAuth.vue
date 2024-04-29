@@ -92,7 +92,7 @@
                                                 </a-checkbox>
                                                 <template v-for="(threeItem, index) in subItem.list">
                                                     <a-checkbox :value="threeItem.id" :disabled="threeItem.disabled">
-                                                        {{ $t('authority.' + subItem.key) }}
+                                                        {{ $t('authority.' + threeItem.key) }}
                                                     </a-checkbox>
                                                     <a-checkbox
                                                         v-for="(fourItem, index) in threeItem.list"
