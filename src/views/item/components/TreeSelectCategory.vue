@@ -1,5 +1,8 @@
 <template>
-    <div class="CategoryTree">
+    <div class="TreeSelectCategory">
+        <div class="title">
+            {{ $t('item-bom.category') }}
+        </div>
         <!-- 
 			@expand='handleExpandedChange' 
 		 -->
@@ -111,7 +114,19 @@ export default {
 </script>
 
 <style lang="less">
-.CategoryTree {
+.TreeSelectCategory {
+    padding: 24px 16px;
+    background: #f8fafc;
+    height: 100%;
+    .ant-table-wrapper .ant-table-tbody {
+        background: #f8fafc;
+    }
+    .title {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 22px;
+        margin-bottom: 14px;
+    }
     .ant-table-thead {
         display: none;
     }

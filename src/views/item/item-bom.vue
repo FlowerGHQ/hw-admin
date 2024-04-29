@@ -21,7 +21,7 @@
                     }"
                 >
                     <div class="title-area">
-                        {{ $t('item-bom.bom_list') }}
+                        {{ $t('item-bom.model_BOM') }}
                         <div class="icon-collapse" @click="isCollapse = !isCollapse">
                             <MySvgIcon icon-class="collapse" v-if="!isCollapse" />
                             <MySvgIcon icon-class="undold" v-else />
@@ -261,6 +261,7 @@ const handleCategoryChange = val => {
                 .title-area {
                     color: #1d2129;
                     font-size: 16px;
+                    font-weight: 600;
                     line-height: 22px;
                     display: flex;
                     justify-content: space-between;
