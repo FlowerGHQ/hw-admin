@@ -61,6 +61,8 @@ import _ from 'lodash';
 const router = useRouter();
 const route = useRoute();
 const request = Core.Api.SUPPLY.adminList;
+const $auth = Core.Util.auth;
+
 const { loading, tableData, pagination, search, onPagenationChange, refreshTable, searchParam } = useTable({
     request,
     initParam: {
@@ -112,6 +114,10 @@ const tableColumns = computed(() => {
             fixed: 'right',
         },
     ];
+    if (!$auth('supply.supplier-manage.consider-exempt-review.view')) {
+        // 过滤operations
+        columns = columns.filter(item => item.key !== 'exempt_application_form');
+    }
     return columns;
 });
 const searchList = ref([

@@ -67,7 +67,6 @@ const supplyManage = {
                 title: '免审申请表',
                 title_en: 'Exempt Application Form',
                 hidden: true,
-                auth: ['supply.supplier-manage.consider-exempt-review.view'],
             },
         },
         // 待现场考核供应商名录
