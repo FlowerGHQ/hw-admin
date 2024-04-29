@@ -144,7 +144,8 @@ export default {
         'sales_distribution_supply-material': '供货订单',
         'sales_distribution_purchase-order': '采购订单',
         'sales_distribution_distributor': '分销商列表',
-        'sales_distribution_distributor-detail': '分销商列表(详情)',        
+        'sales_distribution_distributor-detail': '分销商详情',        
+        'sales_distribution_distributor_detail': '分销商列表(详情)',        
         'sales_distribution_distributor_save': '分销商列表(新建分销商)',        
         'sales_distribution_distributor_edit': '分销商列表(编辑)',
         'sales_distribution_distributor_forbidden': '分销商列表(禁用)',
@@ -157,7 +158,7 @@ export default {
         'sales_distribution_sale-area': '销售区域',
         'sales_distribution_freight': '运费待确认订单',
         'sales_distribution_balance-payment': '尾款待支付订单表',
-        'sales_distribution_un-payment': '尾款未支付订单表-payment',
+        'sales_distribution_un-payment': '尾款未支付订单表',
         'sales_distribution_cancel-order': '取消订单申请列表',
 
         'sales_item': '商品管理',
