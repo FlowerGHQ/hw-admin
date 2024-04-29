@@ -32,7 +32,16 @@
                         }, 
                     }            
               * placeholder: "def.select",
-            }
+            },
+            时间
+            {
+                id: 0,
+                type: 'time-range',
+                value: [],
+                searchParmas: ['begin_time', 'end_time'],
+                key: 'distributor-detail.time',
+                defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_E,
+            },
         ]
         isShowMore  // 是否需要-展开收起(默认true)
         isShowButton  // 是否需要-搜索重置按钮(默认true)
@@ -246,14 +255,7 @@ export default {
         },
         // 重置
         handleSearchReset() {
-            this.options.forEach(el => {
-                el.value = undefined;
-                if (el.type === 'time-range') {
-                    el.value = [];
-                }
-            });
-            console.log('重置', this.options);
-
+            this.onResetData()
             this.$emit('reset');
         },
         // 展开更多
@@ -274,6 +276,18 @@ export default {
             this.searchDom.forEach((el, index) => {
                 if (index > this.preSentationNumber) {
                     el.style.display = type;
+                }
+            });
+        },
+        // 重置数据暴露给外面的
+        onResetData() {
+            this.options.forEach(el => {
+                el.value = undefined;
+                if (el.isShowAll) {
+                    el.value = '';
+                }
+                if (el.type === 'time-range') {
+                    el.value = [];
                 }
             });
         },

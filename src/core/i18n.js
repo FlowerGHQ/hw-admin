@@ -495,6 +495,8 @@ const messages = {
             p_enter_amount: '请输入定金金额',
             not_null_and_0: '不能为空或为0',
             not_null_and_1: '不能填写小于0',
+            advance_payment: '预付款',
+            OA: 'OA',
         },
         e: {
             // 用户
@@ -622,7 +624,7 @@ const messages = {
             summary: '摘要',
             items: '您的购物车中暂无商品',
             shipping_options: '配送选项',
-            new_address: '添加新地址',
+            new_address: '添加地址',
             shipping_settings: '配送设置',
             material_put_stock: '物料入库',
             material_out_stock: '物料出库',
@@ -1085,6 +1087,11 @@ const messages = {
             synchronization_to_erp: '同步至ERP',
             reason_fail: '失败原因',
             upload_explosion: '上传爆炸图',
+            payable_time: '应付尾款时间',
+            estimated_shipping_data: '预计船期',
+            playing_tricks: "打托",
+            expected_delivery_time: "期望交期",
+            freight_status: "运费状态",
         },
         s: {
             // 门店
@@ -2957,6 +2964,8 @@ const messages = {
             p_enter_amount: 'Please enter the deposit amount',
             not_null_and_0: 'Cannot be empty or 0',
             not_null_and_1: 'The value cannot be less than 0',
+            advance_payment: 'Advance Payment',
+            OA: 'OA',
         },
         e: {
             employee_list: 'employee list',
@@ -3083,7 +3092,7 @@ const messages = {
             summary: 'Summary',
             items: 'There Is No Product In Your Shopping Cart',
             shipping_options: 'Distribution Option',
-            new_address: 'Add New Address',
+            new_address: 'Add Address',
             shipping_settings: 'Shipping Settings',
             material_put_stock: 'Material Entry',
             material_out_stock: 'Material Outbound',
@@ -3531,6 +3540,11 @@ const messages = {
             synchronization_to_erp: 'Synchronization to ERP',
             reason_fail: 'Reason for Failure',
             upload_explosion: 'Upload Explosion Map',
+            payable_time: 'Payable Time',
+            estimated_shipping_data: 'Estimated Shipping Date',
+            playing_tricks: "Playing Tricks",
+            expected_delivery_time: "Expected Delivery Time",
+            freight_status: "Freight Status",
         },
         s: {
             store_list: 'Shop list',

@@ -60,6 +60,7 @@ const loginRedirect = token => {
         .then(res => {
             console.log('输出数据', res.data.data);
             Core.Data.setUser(res.data.data.account);
+            Core.Data.setOrgObj(res.user.org);
             Core.Data.setOrgId(res.data.data.org_id);
             Core.Data.setOrgType(res.data.data.org_type);
             Core.Data.setCurrency(res.data.data.currency);

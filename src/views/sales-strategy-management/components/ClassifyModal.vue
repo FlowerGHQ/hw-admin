@@ -37,16 +37,44 @@
                     @reset="handleSearchReset"
                 >
                     <template v-slot:extend>
-                        <a-col v-if="options.type === 'input'" :xs="24" :sm="15" :xl="15" :xxl="15" class="search-box">
+                        <a-col
+                            v-if="options[0].type === 'input'"
+                            :xs="24"
+                            :sm="12"
+                            :xl="12"
+                            :xxl="12"
+                            class="search-box"
+                        >
                             <div class="item-box">
                                 <div class="key-box">
-                                    {{ $t(options.key) }}
+                                    {{ $t(options[0].key) }}
                                 </div>
                                 <div class="value-box">
                                     <a-input
                                         :disabled="level === 2"
-                                        :placeholder="$t(`${options.placeholder || 'def.input'}`)"
-                                        v-model:value="codeStr"
+                                        :placeholder="$t(`${ options[0].placeholder || 'def.input' }`)"
+                                        v-model:value="options[0].value"
+                                        @keydown.enter="handleSearch"
+                                    />
+                                </div>
+                            </div>
+                        </a-col>
+                        <a-col
+                            v-if="options[1].type === 'input'"
+                            :xs="24"
+                            :sm="12"
+                            :xl="12"
+                            :xxl="12"
+                            class="search-box"
+                        >
+                            <div class="item-box">
+                                <div class="key-box">
+                                    {{ $t(options[1].key) }}
+                                </div>
+                                <div class="value-box">
+                                    <a-input
+                                        :placeholder="$t(`${options[1].placeholder || 'def.input'}`)"
+                                        v-model:value="options[1].value"
                                         @keydown.enter="handleSearch"
                                     />
                                 </div>
@@ -91,7 +119,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, getCurrentInstance, computed, watch } from 'vue';
+import { onMounted, ref, getCurrentInstance, computed, watch, reactive } from 'vue';
 import Core from '@/core';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import TableSelect from './ItemTale.vue';
@@ -126,11 +154,7 @@ const CountryData = computed(() => {
     });
     return arr;
 });
-const initialObject = {
-    // 商品编码
-    codeList: [],
-    area: [],
-};
+
 const childRef = ref(null);
 const modalContentArea = ref(null);
 // 当前分组对象
@@ -139,18 +163,27 @@ const searchForm = ref({
     // 商品编码
     codeList: [],
     area: [],
+    name_list: [], // 产品名称
 });
 // 分类列表
 // 搜索列表组件
-const options = ref({
-    type: 'input',
-    value: '',
-    searchParmas: 'code',
-    key: 'item-bom.commodity_code',
-    placeholder: 'item-bom.filter_multiple_codes',
-});
+const options = reactive([
+    {
+        type: 'input',
+        value: '',
+        searchParmas: 'code',
+        key: 'item-bom.commodity_code',
+        placeholder: 'item-bom.filter_multiple_codes',
+    },
+    {
+        type: 'input',
+        value: '',
+        searchParmas: 'name_list',
+        key: 'item-bom.product_name',
+        placeholder: 'item-bom.filter_multiple_name',
+    },
+]);
 // 商品编码-字符串
-const codeStr = ref();
 const isEdit = ref(false);
 // 所选id列表
 const selectIdList = ref([]);
@@ -160,7 +193,6 @@ const tableData = ref([]);
 const pageSize = ref(10);
 const current = ref(1);
 const total = ref(0);
-const disabledChecked = ref([]);
 const defaultChecked = ref([]);
 // 页size改变
 const onShowSizeChange = (current, pageSize) => {
@@ -198,6 +230,57 @@ const tableColumns = computed(() => {
     return result;
 });
 
+/* Fetch start*/
+// 获取表格list
+const getTableDataFetch = (parmas = {}) => {
+    loading.value = true;
+    let obj = {
+        name_list: searchForm.value.name_list,
+        code_list: searchForm.value.codeList, //同步编号
+        flag_set: 1,
+        page: current.value,
+        page_size: pageSize.value,
+        ...parmas,
+    };
+    Core.Api.Item.list(obj)
+        .then(res => {
+            total.value = res.count;
+            tableData.value = removeChildrenFromData(res.list);
+        })
+        .catch(err => {
+            console.log('getTableDataFetch', err);
+        })
+        .finally(() => {
+            loading.value = false;
+        });
+};
+/* Fetch end*/
+
+/* methods start */
+// 初始化数据
+const initDat = () => {
+    searchForm.value = {
+        // 商品编码
+        codeList: [],
+        area: [],
+        name_list: [], // 产品名称
+    }
+        
+    options.forEach(el => {
+        el.value = undefined
+    })    
+}
+// 接收选择id的数组
+const getSelectIdList = (kesArr, itemsArr) => {
+    console.log('kesArr', kesArr);
+    console.log('itemsArr', itemsArr);
+    selectIdList.value = kesArr;
+    selectItemList.value = itemsArr;
+};
+// handlAreaChange
+const handlAreaChange = value => {
+    searchForm.value.area = value;
+};
 /* 删除加号 */
 const removeChildrenFromData = data => {
     return data.map(item => {
@@ -207,30 +290,25 @@ const removeChildrenFromData = data => {
     });
 };
 // 重置按钮
-const handleSearchReset = () => {
-    Object.assign(searchForm.value, initialObject);
-    handleSearch();
+const handleSearchReset = () => {    
+    initDat()    
+    getTableDataFetch();
 };
 const handleSearch = () => {
     current.value = 1;
     //更换数组形式传参,字符串逗号分隔输入--编码
-    let arr = codeStr?.value?.trim().split(',');
-    arr = arr?.map(item => item?.trim());
-    searchForm.value.codeList = arr?.filter(item => item !== '');
+    let commodityCode = options[0].value?.trim().split(',')?.map(item => item?.trim());  // 商品编码   
+    let productName = options[1].value?.trim().split(',')?.map(item => item?.trim());  // 产品名称
+
+    searchForm.value.name_list = productName?.filter(item => item !== '');
+    searchForm.value.codeList = commodityCode?.filter(item => item !== '');
     getTableDataFetch();
 };
+
 const handleCancle = () => {
     emits('update:visibility', false);
 };
-// addTableData
-const addTableData = () => {
-    let arr = JSON.parse(Core.Data.getSalesData());
-    arr.forEach(item => {
-        item.number = item.number + 1;
-    });
-    arr.push(...selectIdList.value);
-    Core.Data.setSalesData(JSON.stringify(arr));
-};
+
 const handleOk = () => {
     // 判断是否选择了地区和商品
     if (searchForm.value.area.length === 0) {
@@ -287,40 +365,7 @@ const handleOk = () => {
 const filterOption = (input, option) => {
     return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 };
-/* Fetch start*/
-// 获取表格list
-const getTableDataFetch = (parmas = {}) => {
-    loading.value = true;
-    let obj = {
-        code_list: searchForm.value.codeList, //同步编号
-        flag_set: 1,
-        page: current.value,
-        page_size: pageSize.value,
-        ...parmas,
-    };
-    Core.Api.Item.list(obj)
-        .then(res => {
-            total.value = res.count;
-            tableData.value = removeChildrenFromData(res.list);
-        })
-        .catch(err => {
-            console.log('getTableDataFetch', err);
-        })
-        .finally(() => {
-            loading.value = false;
-        });
-};
-// 接收选择id的数组
-const getSelectIdList = (kesArr, itemsArr) => {
-    console.log('kesArr', kesArr);
-    console.log('itemsArr', itemsArr);
-    selectIdList.value = kesArr;
-    selectItemList.value = itemsArr;
-};
-// handlAreaChange
-const handlAreaChange = value => {
-    searchForm.value.area = value;
-};
+/* methods end */
 
 watch(
     () => props.visibility,
@@ -334,7 +379,7 @@ watch(
             selectIdList.value = [];
             searchForm.value.area = [];
             searchForm.value.codeList = [];
-            codeStr.value = '';
+            options[0].value = '';
             isEdit.value = false;
             defaultChecked.value = [];
         }
@@ -347,7 +392,7 @@ watch(
             console.log('newValue', newValue);
             searchForm.value.area = [newValue.country];
             searchForm.value.codeList = newValue.item.map(item => item.code);
-            codeStr.value = newValue.item.map(item => item.code).join(',');
+            options[0].value = newValue.item.map(item => item.code).join(',');
             selectIdList.value = newValue.item.map(item => item.id);
             isEdit.value = true;
             handleSearch();
@@ -358,10 +403,7 @@ watch(
     },
 );
 
-onMounted(() => {
-    // 初始化数据
-    Object.assign(searchForm.value, initialObject);
-});
+onMounted(() => {});
 </script>
 
 <style lang="less" scoped>

@@ -298,13 +298,19 @@ const Util = {
      * @param {Number} divisor 除数 默认为100
      * @param {Number} dp 保留几位小数 默认为2
      * @param {Number} type 乘法/除法 false=除法 true=乘法
+     * @param {boolean} isNegative   //是否支出负数
      */
-    countFilter(val = 0, divisor = 100, dp = 2, type = false) {
+    countFilter(val = 0, divisor = 100, dp = 2, type = false, isNegative = false) {
         if (val === 0) {
             return '0';
         }
         if (val < 0) {
-            return 'N/A';
+            // return 'N/A';
+            if (!isNegative) {
+                return 'N/A';
+            } else {
+                return this.countFilter(Math.abs(val), divisor, dp, type, isNegative) * -1;
+            }
         }
         if (type) {
             return parseFloat((val * divisor).toFixed(dp));
@@ -667,6 +673,10 @@ const Util = {
         const MAP = Const.PURCHASE.FLAG_TRANSFER_MAP;
         let item = MAP[val + ''] || {};
         return item[to] || '';
+    },
+    purchaseTransportMethodFilter(val) {
+        const MAP = Const.PURCHASE.TRANSFER_METHODS_MAP;
+        return MAP[val] || '-';
     },
     purchaseExpressFilter(val, to = 'zh') {
         if (val === 0) {
@@ -1782,6 +1792,20 @@ const Util = {
         return item[to] || '';
     },
     /* =============== 销售目标部门 ================ */
+    auditStatusFilter(val, to = 'text', lang) {
+        const MAP = Const.AUDIT_MANAGEMENT.STATUS_MAP;
+        const COLOR_MAP = Const.AUDIT_MANAGEMENT.STATUS_COLOR_MAP;
+        switch (to) {
+            case 'text':
+                const status = MAP[val + ''];
+                if (status) {
+                    return status[lang] || '未知';
+                }
+                return '未知';
+            case 'color':
+                return COLOR_MAP[val + ''] || 'grey';
+        }
+    },
     // 公共样式
     Common,
     // 照片逻辑

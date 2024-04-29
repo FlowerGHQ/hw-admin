@@ -405,6 +405,8 @@ const apiList = {
         updatePI: ['PostJson', 'purchase-order/update-pi'], // 修改pi
         // 平台方增加功能请求-手动同步u8--同步erp
         erpPush: ['PostJson', 'erp/purchase-order/push'], // 同步erp  待生产-》生产中
+        getWallet: ['PostJson', 'wallet/get'], // 获取钱包余额
+        pay: ['PostJson', 'purchase-order/pay'], // 支付
     },
     Aftersales: {
         // 售后单
@@ -486,6 +488,11 @@ const apiList = {
         updateStatus: ['PostJson', 'distributor/update-status'], //修改状态
         walletMoneyList: ['PostJson', 'wallet-money/list'], //钱包余额明细列表
         walletDetail: ['PostJson', 'wallet/detail'], //钱包详情
+        // 充值记录
+        rechargeList: ['PostJson', 'audit-record/list-distributor-recharge'],
+        // 修改授信总额和备用件抵扣比率
+        updateCredit: ['PostJson', 'distributor/update-credit-spare-part'],
+        findAccount: ['PostJson', 'distributor/find-pay-in-account-bank'],// 拿到充值对应银行详情
     },
     Fault: {
         // 产品故障管理
@@ -1087,6 +1094,41 @@ const apiList = {
         delete: ['PostJson', 'announcement/delete'], // 删除
         save: ['PostJson', 'announcement/save'], // 新增
         updateStatus: ['PostJson', 'announcement/update-status'], // 修改排序和状态
+    },
+    RechargeAudit: {
+        audit: ['PostJson', 'audit-record/audit'], // 审核
+        detail: ['PostJson', 'audit-record/detail'], // 详情
+        list: ['PostJson', 'audit-record/list-distributor-recharge'], // 列表
+        // audit-record/save
+        save: ['PostJson', 'audit-record/save'], // 新增
+        //修改备用件抵扣比率
+        updateDeductionRate: ['PostJson', 'distributor/deduction-rate-update'],
+    },
+    PayAccount: {
+        detail: ['PostJson', 'pay-in-account/detail'], // 详情
+        save: ['PostJson', 'pay-in-account/save'], // 保存
+        list: ['PostJson', 'pay-in-account/list'], // 列表
+        updateStatus: ['PostJson', 'pay-in-account/update-status'], // 修改状态
+        delete: ['PostJson', 'pay-in-account/delete'], // 删除
+        countryList: ['PostJson', 'pay-in-account/list-country'], // 生效中的国家列表
+    },
+    // 船期以及运费
+    ShippingDateFreight: {
+        list: ['PostJson', 'purchase-order/pending-freight-confirm/list'], // 列表
+        status: ['PostJson', 'purchase-order/pending-freight-confirm/count-by-status'], // 状态数据
+        add: ['PostJson', 'purchase-order/pending-freight-confirm/save'], // 新增/修改 预计船期及运费
+        confirm: ['PostJson', 'purchase-order/pending-freight-confirm/audit'], // 确认运费
+    },
+    // 取消订单申请表
+    CancelOrderList: {
+        list: ['PostJson', 'purchase-order/cancel/list'], // 列表
+        audit: ['PostJson', 'purchase-order/cancel/audit'], // 审核
+        count: ['PostJson', 'purchase-order/cancel/count'], // 计数
+    },
+    // 尾款未支付 待支付
+    FinalPayment: {
+        list: ['PostJson', 'purchase-order/pending-final-pay/list'], // 列表
+        count: ['PostJson', 'purchase-order/pending-final-pay/count-by-status'], // 状态计数
     },
     WarehousingManagement: {
         MaterialPurchaseOrderList: ['PostJson', 'invoice-item/material-purchase-order-list'], // 采购入库单列表

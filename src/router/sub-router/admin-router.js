@@ -769,7 +769,42 @@ const cocCertificate = {
 /* 销售 end*/
 
 /* 财务 start*/
-
+// 审核
+const rechargeManagement = {
+    // 财务审核
+    path: '/recharge',
+    component: () => import('@/views/layout/index.vue'),    
+    name: 'RechargeManagement',
+    type: [ROUTER_TYPE.FINANCE],
+    meta: {
+        title: '审核',
+        title_en: 'Audit',
+        icon: 'i_s_agent',
+        auth: ['finance.audit-record'],
+    },
+    children: [
+        {
+            path: 'recharge-audit',
+            name: 'RechargeAudit',
+            component: () => import('@/views/recharge-audit/index.vue'),
+            meta: {
+                title: '充值审核',
+                title_en: 'Recharge Audit',
+                auth: ['finance.audit-record.recharge'],
+            },
+        },
+        {
+            path: 'detail',
+            name: 'RechargeDetail',
+            component: () => import('@/views/recharge-audit/detail.vue'),
+            meta: {
+                title: '充值审核详情',
+                title_en: 'Recharge Audit Details',
+                hidden: true,
+            },
+        },
+    ],
+};
 /* 财务 end*/
 
 /* 生产 start*/
@@ -1290,6 +1325,30 @@ const WarehouseManagement = {
     ],
 };
 
+// 尾款待支付订单表
+const finalPaymentOrder = {
+    path: 'final-payment-list',
+    name: 'finalPaymentList',
+    component: () => import('@/views/distributor/final-unpaid-payment/list.vue'),
+    meta: {
+        title: '尾款待支付订单表',
+        title_en: 'Final Payment List',
+        icon: 'i_menu_fankuguanli',
+        auth: ['sales.distribution.balance-payment', 'aftermarket.distribution.balance-payment'],
+    },
+};
+// 取消订单申请列表
+const cancellationOrderRequest = {
+    path: 'cancellation-order-list',
+    name: 'cancellationOrderList',
+    component: () => import('@/views/distributor/cancellation-order/list.vue'),
+    meta: {
+        title: '取消订单申请列表',
+        title_en: 'Cancellation Order List',
+        icon: 'i_menu_fankuguanli',
+        auth: ['sales.distribution.cancel-order', 'aftermarket.distribution.cancel-order'],
+    },
+};
 const SalesTargetManagement = {
     path: '/sale-target-management',
     name: 'saleTargetManagement',
@@ -1345,5 +1404,8 @@ export {
     manufactureManagement,
     productionManagement,
     repairManagement,
+    finalPaymentOrder,
+    cancellationOrderRequest,
+    rechargeManagement,
     SalesTargetManagement,
 };

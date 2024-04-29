@@ -39,7 +39,7 @@
                         </div>
                     </div>
                 </template>
-                <div class="form-item">
+                <div class="form-item required">
                     <div class="key">{{ $t('n.email') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.email" :placeholder="$t('def.input')" />
@@ -176,6 +176,9 @@ export default {
                     return this.$message.warning(this.$t('def.enter'));
                 }
                 if (!form.password) {
+                    return this.$message.warning(this.$t('def.enter'));
+                }
+                if (!form.email) {
                     return this.$message.warning(this.$t('def.enter'));
                 }
             }

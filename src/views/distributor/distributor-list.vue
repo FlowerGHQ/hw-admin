@@ -4,9 +4,13 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('d.distributor_list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')"
-                        ><i class="icon i_add" />{{ $t('d.new_distributor') }}</a-button
+                    <a-button
+                        v-if="$auth('sales.distribution.distributor.save')"
+                        type="primary"
+                        @click="routerChange('edit')"
                     >
+                        <i class="icon i_add" />{{ $t('d.new_distributor') }}
+                    </a-button>
                 </div>
             </div>
             <div class="search-container">
@@ -97,24 +101,30 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button
+                                v-if="$auth('sales.distribution.distributor.detail')"
                                 type="link"
                                 @click="routerChange('detail', record)"
-                                ><i class="icon i_detail" /> {{ $t('def.detail') }}
+                            >
+                                <i class="icon i_detail" /> {{ $t('def.detail') }}
                             </a-button>
-                            <a-button type="link" @click="routerChange('edit', record)"
+                            <a-button
+                                v-if="$auth('sales.distribution.distributor.edit')"
+                                type="link"
+                                @click="routerChange('edit', record)"
                                 ><i class="icon i_edit" />{{ $t('def.edit') }}
                             </a-button>
                             <a-button
+                                v-if="$auth('sales.distribution.distributor.forbidden')"
                                 type="link"
                                 @click="handleStatusChange(record)"
                                 :class="record.status ? 'danger' : ''"
                             >
-                                <template v-if="record.status"
-                                    ><i class="icon i_forbidden" />{{ $t('def.disable') }}</template
-                                >
-                                <template v-if="!record.status"
-                                    ><i class="icon i_enable" />{{ $t('def.enable') }}</template
-                                >
+                                <template v-if="record.status">
+                                    <i class="icon i_forbidden" />{{ $t('def.disable') }}
+                                </template>
+                                <template v-if="!record.status">
+                                    <i class="icon i_enable" />{{ $t('def.enable') }}
+                                </template>
                             </a-button>
                         </template>
                     </template>

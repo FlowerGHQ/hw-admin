@@ -31,12 +31,7 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button
-                                v-if="
-                                    $auth(
-                                        'sales.distribution.distributor.account-operations',
-                                        'aftermarket.distribution.distributor.account-operations',
-                                    )
-                                "
+                                v-if="$auth('sales.distribution.distributor.account-operations')"
                                 type="link"
                                 @click="handleModalShow('operate', record.id)"
                             >

@@ -2,12 +2,30 @@
     <div id="shopping-bag">
         <div class="content">
             <div class="title">
-                {{ $t('purchase.shopping_bag') }}（{{ $t('common.all') }}&nbsp;{{ amount || 0 }}）
+                <div>
+                    <span>{{ $t('purchase.shopping_bag') }}（{{ $t('common.all') }}&nbsp;{{ amount || 0 }}）</span>
+                    <!-- <div class="title-labels">
+                        <template v-if="payType === Core.Const.MALL.payType.TT">
+                            <span class="title-label">{{ $t('mall.payment_method') }}: TT</span>
+                            <span class="title-label">
+                                9%{{ $t('mall.advance_payment') }}, 1%{{ $t('mall.balance_payment') }}
+                            </span>
+                        </template>
+                        <template v-if="payType === Core.Const.MALL.payType.OA">
+                            <span class="title-label">{{ $t('mall.payment_method') }}: OA</span>
+                            <span class="title-label">
+                                9%{{ $t('mall.advance_payment') }}, 1%{{ $t('mall.balance_payment') }}，{{
+                                    $t('mall.account_period')
+                                }}7{{ $t('mall.days') }}
+                            </span>
+                        </template>
+                    </div> -->
+                </div>
                 <span class="settlement">
                     <span class="dis">
                         {{ $t('purchase.selected_items') }}
                     </span>
-                    <span class="price"> {{ currency }} {{ allPrice }} </span>
+                    <span class="price"> {{ currency }} {{ proxy.$Util.Number.numFormat(allPrice) }} </span>
                     <my-button
                         showRightIcon
                         type="primary"
@@ -48,7 +66,7 @@
                     </thead>
                     <div class="seize"></div>
                     <!-- 整车 -->
-                    <tbody v-if="vehicleList.length !== 0" class="list-body">
+                    <tbody v-if="getLengthNotHasGift(vehicleList) !== 0" class="list-body">
                         <tr class="row row-title">
                             <td v-for="item in columns" class="row-item">
                                 <template v-if="item.dataIndex === 'check'">
@@ -63,21 +81,21 @@
                                 </template>
                                 <template v-if="item.dataIndex === 'product'">
                                     <span class="row-text">
-                                        {{ $t('mall.vehicle_models') }}({{ vehicleList.length }})
+                                        {{ $t('mall.vehicle_models') }}({{ getLengthNotHasGift(vehicleList) }})
                                     </span>
                                 </template>
                             </td>
                         </tr>
-                        <tr v-for="item in vehicleList" class="row">
+                        <tr v-for="(item, index) in vehicleList" class="row" :class="[!item.isGift ? '' : 'gift']">
                             <td
                                 v-for="columnsItem in columns"
                                 class="row-item"
-                                :class="
-                                    (!item.flag_item_valid ? 'invalid' : '',
-                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '')
-                                "
+                                :class="[
+                                    !item.flag_item_valid ? 'invalid' : '',
+                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '',
+                                ]"
                             >
-                                <template v-if="columnsItem.dataIndex === 'check'">
+                                <template v-if="columnsItem.dataIndex === 'check' && !item.isGift">
                                     <span class="check-box" @click="changeSelect(item, 'vehicleList')">
                                         <svg-icon icon-class="no-select" class-name="no-select" v-if="!item.selected" />
                                         <svg-icon icon-class="selected" class-name="selected" v-else />
@@ -92,11 +110,23 @@
                                             <a-image :src="$Util.imageFilter(item?.item?.logo, 5)" />
                                         </div>
                                         <div class="product-mes">
-                                            <p class="name" :title="item?.item[$Util.regionalUnitMoney().name_index]">
-                                                {{ item?.item[$Util.regionalUnitMoney().name_index] }}
+                                            <p class="name">
+                                                <span
+                                                    class="name-text"
+                                                    :title="item?.item[$Util.regionalUnitMoney().name_index]"
+                                                >
+                                                    {{ item?.item[$Util.regionalUnitMoney().name_index] }}
+                                                </span>
+                                                <span class="label" v-if="item.isGift">
+                                                    {{ $t('purchase.free_gift') }}
+                                                </span>
                                             </p>
                                             <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
-                                            <p class="version" @click="showDrawer(item)" v-if="item?.item.set_id">
+                                            <p
+                                                class="version"
+                                                @click="showDrawer(item)"
+                                                v-if="item?.item.set_id && !item.isGift"
+                                            >
                                                 <span>
                                                     {{ $Util.itemSpecFilter(item.item.attr_list, lang) }}
                                                 </span>
@@ -123,33 +153,48 @@
                                 </template>
                                 <template v-if="columnsItem.dataIndex === 'quantity'">
                                     <div class="count-edit">
-                                        <a-input-number
-                                            v-model:value="item.amount"
-                                            :min="1"
-                                            :max="99999"
-                                            :precision="0"
-                                            @blur="changeAmount(item)"
-                                        />
+                                        <template v-if="!item.isGift">
+                                            <a-input-number
+                                                v-model:value="item.amount"
+                                                :min="1"
+                                                :max="99999"
+                                                :precision="0"
+                                                @blur="changeAmount(item)"
+                                            />
+                                        </template>
+                                        <template v-else>
+                                            <span class="count-number"> ×{{ item.amount }} </span>
+                                        </template>
                                     </div>
                                 </template>
                                 <template v-if="columnsItem.dataIndex === 'operation'">
                                     <div class="operation">
-                                        <span class="row-text price"
-                                            >{{ currency
-                                            }}{{
-                                                $Util.Number.numFormat(
-                                                    $Util.countFilter(
-                                                        item.amount *
-                                                            item?.item[
-                                                                $Util.Number.getStepPriceIndexByNums(item.amount)
-                                                            ],
-                                                    ),
-                                                )
-                                            }}</span
-                                        >
-                                        <span class="row-text delete" @click="handleShopCartRemove(item)">{{
-                                            $t('common.delete')
-                                        }}</span>
+                                        <span class="row-text price">
+                                            <template v-if="!item.isGift">
+                                                {{ currency
+                                                }}{{
+                                                    $Util.Number.numFormat(
+                                                        $Util.countFilter(
+                                                            item.amount *
+                                                                item?.item[
+                                                                    $Util.Number.getStepPriceIndexByNums(item.amount)
+                                                                ],
+                                                        ),
+                                                    )
+                                                }}
+                                            </template>
+                                            <template v-else>
+                                                {{ currency }}0<span class="original-price">12123</span>
+                                            </template>
+                                        </span>
+                                        <template v-if="!item.isGift">
+                                            <span class="row-text delete" @click="handleShopCartRemove(item)">{{
+                                                $t('common.delete')
+                                            }}</span>
+                                        </template>
+                                        <template v-else>
+                                            <span class="row-text excluding">{{ $t('mall.excluding') }}</span>
+                                        </template>
                                     </div>
                                 </template>
                             </td>
@@ -181,10 +226,10 @@
                             <td
                                 v-for="columnsItem in columns"
                                 class="row-item"
-                                :class="
-                                    (!item.flag_item_valid ? 'invalid' : '',
-                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '')
-                                "
+                                :class="[
+                                    !item.flag_item_valid ? 'invalid' : '',
+                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '',
+                                ]"
                             >
                                 <template v-if="columnsItem.dataIndex === 'check'">
                                     <span class="check-box" @click="changeSelect(item, 'accessoriesList')">
@@ -201,8 +246,13 @@
                                             <a-image :src="$Util.imageFilter(item?.item?.logo, 5)" />
                                         </div>
                                         <div class="product-mes">
-                                            <p class="name" :title="item?.item[$Util.regionalUnitMoney().name_index]">
-                                                {{ item?.item[$Util.regionalUnitMoney().name_index] }}
+                                            <p class="name">
+                                                <span
+                                                    class="name-text"
+                                                    :title="item?.item[$Util.regionalUnitMoney().name_index]"
+                                                >
+                                                    {{ item?.item[$Util.regionalUnitMoney().name_index] }}
+                                                </span>
                                             </p>
                                             <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
                                             <p class="version" @click="showDrawer(item)" v-if="item?.item.set_id">
@@ -224,7 +274,9 @@
                                         }}{{
                                             $Util.Number.numFormat(
                                                 $Util.countFilter(
-                                                    item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)],
+                                                    item?.item[
+                                                        $Util.Number.getStepPriceIndexByNums(1) /*配件默认正常单价*/
+                                                    ],
                                                 ),
                                             )
                                         }}</span
@@ -250,7 +302,9 @@
                                                     $Util.countFilter(
                                                         item.amount *
                                                             item?.item[
-                                                                $Util.Number.getStepPriceIndexByNums(item.amount)
+                                                                $Util.Number.getStepPriceIndexByNums(
+                                                                    1,
+                                                                ) /*配件默认正常单价*/
                                                             ],
                                                     ),
                                                 )
@@ -293,10 +347,10 @@
                             <td
                                 v-for="columnsItem in columns"
                                 class="row-item"
-                                :class="
-                                    (!item.flag_item_valid ? 'invalid' : '',
-                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '')
-                                "
+                                :class="[
+                                    !item.flag_item_valid ? 'invalid' : '',
+                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '',
+                                ]"
                             >
                                 <template v-if="columnsItem.dataIndex === 'check'">
                                     <span class="check-box" @click="changeSelect(item, 'peripheralList')">
@@ -313,8 +367,13 @@
                                             <a-image :src="$Util.imageFilter(item?.item?.logo, 5)" />
                                         </div>
                                         <div class="product-mes">
-                                            <p class="name" :title="item?.item[$Util.regionalUnitMoney().name_index]">
-                                                {{ item?.item[$Util.regionalUnitMoney().name_index] }}
+                                            <p class="name">
+                                                <span
+                                                    class="name-text"
+                                                    :title="item?.item[$Util.regionalUnitMoney().name_index]"
+                                                >
+                                                    {{ item?.item[$Util.regionalUnitMoney().name_index] }}
+                                                </span>
                                             </p>
                                             <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
                                             <p class="version" @click="showDrawer(item)" v-if="item?.item.set_id">
@@ -405,10 +464,10 @@
                             <td
                                 v-for="columnsItem in columns"
                                 class="row-item"
-                                :class="
-                                    (!item.flag_item_valid ? 'invalid' : '',
-                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '')
-                                "
+                                :class="[
+                                    !item.flag_item_valid ? 'invalid' : '',
+                                    columnsItem.dataIndex === 'check' ? 'row-item-check' : '',
+                                ]"
                             >
                                 <template v-if="columnsItem.dataIndex === 'check'">
                                     <span class="check-box" @click="changeSelect(item, 'promotionalList')">
@@ -425,8 +484,13 @@
                                             <a-image :src="$Util.imageFilter(item?.item?.logo, 5)" />
                                         </div>
                                         <div class="product-mes">
-                                            <p class="name" :title="item?.item[$Util.regionalUnitMoney().name_index]">
-                                                {{ item?.item[$Util.regionalUnitMoney().name_index] }}
+                                            <p class="name">
+                                                <span
+                                                    class="name-text"
+                                                    :title="item?.item[$Util.regionalUnitMoney().name_index]"
+                                                >
+                                                    {{ item?.item[$Util.regionalUnitMoney().name_index] }}
+                                                </span>
                                             </p>
                                             <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
                                             <p class="version" @click="showDrawer(item)" v-if="item?.item.set_id">
@@ -489,86 +553,6 @@
                         </tr>
                     </tbody>
                 </table>
-                <!-- <div class="list">
-                    <div class="list-body" v-if="vehicleList.length !== 0">
-                        <div class="row title">
-                            <span class="row-item" :style="{ flex: item.width ? `0 0 ${item.width}px` : '1' }"
-                                v-for="item in columns">
-                                <template v-if="item.dataIndex === 'check'">
-                                    <span class="check-box" @click="selectAll('vehicle', !vehicleListSelected)">
-                                        <svg-icon icon-class="no-select" class-name="no-select"
-                                            v-if="!vehicleListSelected" />
-                                        <svg-icon icon-class="selected" class-name="selected" v-else />
-                                    </span>
-                                </template>
-                                <template v-if="item.dataIndex === 'product'">
-                                    <span class="row-text">
-                                        {{ $t('mall.vehicle_models') }}({{ vehicleList.length }})
-                                    </span>
-                                </template>
-                            </span>
-                        </div>
-                        <div class="row" v-for="item in vehicleList">
-                            <span class="row-item" :class="!item.flag_item_valid ? 'invalid' : ''"
-                                :style="{ maxWidth: columnsItem.width ? `${columnsItem.width}px` : 'auto', alignSelf: columnsItem.dataIndex === 'check' ? 'center' : '' }"
-                                v-for="columnsItem in columns">
-                                <template v-if="columnsItem.dataIndex === 'check'">
-                                    <span class="check-box" @click="changeSelect(item, 'vehicleList')">
-                                        <svg-icon icon-class="no-select" class-name="no-select" v-if="!item.selected" />
-                                        <svg-icon icon-class="selected" class-name="selected" v-else />
-                                    </span>
-                                    <span class="invalid-box">
-                                        {{ $t('common.invalid') }}
-                                    </span>
-                                </template>
-                                <template v-if="columnsItem.dataIndex === 'product'">
-                                    <div class="product">
-                                        <div class="product-img">
-                                            <a-image :src="$Util.imageFilter(item?.item?.logo, 5)" />
-                                        </div>
-                                        <div class="product-mes">
-                                            <p class="name">{{ item?.item[$Util.regionalUnitMoney().name_index] }}</p>
-                                            <p class="code">{{ item?.item?.code ? item?.item?.code : '-' }}</p>
-                                            <p class="version" @click="showDrawer(item)" v-if="item?.item.set_id">
-                                                <span>
-                                                    {{ $Util.itemSpecFilter(item.item.attr_list, lang) }}
-                                                </span>
-                                                <svg-icon icon-class="cart-arrow-right" class-name="cart-arrow-right" />
-                                            </p>
-                                        </div>
-                                    </div>
-                                </template>
-                                <template v-if="columnsItem.dataIndex === 'price'">
-                                    <span class="row-text unit-price">{{ currency }}{{
-                                        $Util.Number.numFormat($Util.countFilter(item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
-                                    }}</span>
-                                </template>
-                                <template v-if="columnsItem.dataIndex === 'quantity'">
-                                    <template v-if="!item.editMode">
-                                        <span class="count" @click="handleCountEditShow(item)">x&nbsp;{{
-                                            item.amount }}</span>
-                                    </template>
-                                    <template v-else>
-                                        <div class="count-edit">
-                                            <a-input-number v-model:value="item.amount" :min="1" :max="99999" :precision="0"
-                                                @blur="changeAmount(item)" />
-                                        </div>
-                                    </template>
-                                </template>
-                                <template v-if="columnsItem.dataIndex === 'operation'">
-                                    <div class="operation">
-                                        <span class="row-text price">{{ currency }}{{
-                                            $Util.Number.numFormat($Util.countFilter(item.amount *
-                                                item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))
-                                        }}</span>
-                                        <span class="row-text delete" @click="handleShopCartRemove(item)">{{
-                                            $t('common.delete') }}</span>
-                                    </div>
-                                </template>
-                            </span>
-                        </div>
-                    </div>
-                </div> -->
             </a-spin>
         </div>
         <!-- 底部支付栏 -->
@@ -584,16 +568,36 @@
                     </span>
                 </div>
                 <div class="settlement">
-                    <span class="select-nums">
-                        <span class="nums">
-                            {{ selectNums }}
-                        </span>
-                        {{ $t('purchase.s_items') }}
-                    </span>
-                    <span class="dis">
-                        {{ $t('purchase.selected_items_total') }}
-                    </span>
-                    <span class="price"> {{ currency }} {{ allPrice }} </span>
+                    <div class="settlement-mes">
+                        <div class="settlement-price">
+                            <span class="select-nums">
+                                <span class="nums">
+                                    {{ selectNums }}
+                                </span>
+                                {{ $t('purchase.s_items') }}
+                            </span>
+                            <span class="dis">
+                                {{ $t('purchase.selected_items_total') }}
+                            </span>
+                            <span class="price"> {{ currency }} {{ proxy.$Util.Number.numFormat(allPrice) }} </span>
+                        </div>
+                        <template v-if="org?.pay_type === Core.Const.DISTRIBUTOR.PAY_TIME.OA">
+                            <!-- 授信余额足 -->
+                            <template v-if="isBalanceEnough">
+                                <p class="settlement-balance">
+                                    {{ $t('mall.credit_balance') }}: {{ currency }} {{ balance }}
+                                </p>
+                            </template>
+                            <!-- 授信余额不足 -->
+                            <template v-else>
+                                <p class="settlement-balance warn">
+                                    {{ $t('mall.credit_balance') }}: {{ currency }} {{ balance }} ({{
+                                        $t('mall.insufficient')
+                                    }})
+                                </p>
+                            </template>
+                        </template>
+                    </div>
                     <my-button
                         showRightIcon
                         type="primary"
@@ -665,6 +669,14 @@
                 </div>
             </div>
         </a-drawer>
+        <MallModal
+            :title="$t('mall.order_reminder')"
+            :visible="reminderVisible"
+            @handleClose="handleClose"
+            @handleConfirm="handleConfirm"
+        >
+            {{ $t('mall.order_reminder_content') }}
+        </MallModal>
     </div>
 </template>
 
@@ -678,6 +690,7 @@ import axios from 'axios';
 import { ref, reactive, onMounted, computed, watch, getCurrentInstance, nextTick, onBeforeUnmount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import MallModal from '../components/MallModal.vue';
 const { proxy } = getCurrentInstance();
 const route = useRoute();
 const router = useRouter();
@@ -715,6 +728,12 @@ const columns = [
     },
 ];
 /* state start */
+const orgId = Core.Data.getOrgId();
+const orgType = Core.Data.getOrgType();
+const org = Core.Data.getOrgObj();
+const balance = ref(0);
+const reminderVisible = ref(false);
+const payType = ref(2);
 const currency = ref('€');
 const paramPrice = ref(false);
 const visible = ref(false);
@@ -745,7 +764,6 @@ const shopCartListFetch = Core.Api.ShopCart.list;
 const listBySetFetch = Core.Api.AttrDef.listBySet;
 const itemListFetch = Core.Api.Item.list;
 const switchItemFetch = Core.Api.ShopCart.switchItem;
-const purchaseCreatFetch = Core.Api.Purchase.creat;
 /* state end */
 
 /* computed start */
@@ -754,15 +772,19 @@ const lang = computed(() => {
 });
 const amount = computed(() => {
     return (
-        vehicleList.value.length +
+        getLengthNotHasGift(vehicleList.value) +
         accessoriesList.value.length +
         peripheralList.value.length +
         promotionalList.value.length
     );
 });
+const isBalanceEnough = computed(() => {
+    const sum = parseFloat((preAllPrice.value - Math.ceil(preAllPrice.value * org.pay_pre_pay_ratio) / 100).toFixed(4)); // 总尾款
+    return sum <= balance.value;
+});
 // 计算是否全选车辆
 const vehicleListSelected = computed(() => {
-    const vehicleListLen = vehicleList.value.filter(item => item.flag_item_valid).length;
+    const vehicleListLen = vehicleList.value.filter(item => item.flag_item_valid && !item.isGift).length;
     return selectedId.value['vehicleList'].length === vehicleListLen && vehicleListLen;
 });
 // 计算是否全选配件
@@ -782,7 +804,7 @@ const promotionalListSelected = computed(() => {
 });
 // 计算是否全部选中
 const allSelected = computed(() => {
-    const vehicleListLen = vehicleList.value.filter(item => item.flag_item_valid).length;
+    const vehicleListLen = vehicleList.value.filter(item => item.flag_item_valid && !item.isGift).length;
     const accessoriesListLen = accessoriesList.value.filter(item => item.flag_item_valid).length;
     const peripheralListLen = peripheralList.value.filter(item => item.flag_item_valid).length;
     const promotionalListLen = promotionalList.value.filter(item => item.flag_item_valid).length;
@@ -806,7 +828,6 @@ const isSelected = computed(() => {
 });
 // 计算选中产品数量
 const selectNums = computed(() => {
-    console.log(selectedId);
     let nums = 0;
     nums += selectedId.value['vehicleList'].length;
     nums += selectedId.value['accessoriesList'].length;
@@ -824,6 +845,26 @@ const allPrice = computed(() => {
     });
     accessoriesList.value.find(item => {
         if (item.selected) {
+            price += item.amount * item?.item[proxy.$Util.Number.getStepPriceIndexByNums(1)];
+        }
+    });
+    peripheralList.value.find(item => {
+        if (item.selected) {
+            price += item.amount * item?.item[proxy.$Util.Number.getStepPriceIndexByNums(item.amount)];
+        }
+    });
+    promotionalList.value.find(item => {
+        if (item.selected) {
+            price += item.amount * item?.item[proxy.$Util.Number.getStepPriceIndexByNums(item.amount)];
+        }
+    });
+    return proxy.$Util.countFilter(price.toFixed(2));
+});
+// 售前产品总价（不包括配件）
+const preAllPrice = computed(() => {
+    let price = 0;
+    vehicleList.value.find(item => {
+        if (item.selected) {
             price += item.amount * item?.item[proxy.$Util.Number.getStepPriceIndexByNums(item.amount)];
         }
     });
@@ -837,7 +878,7 @@ const allPrice = computed(() => {
             price += item.amount * item?.item[proxy.$Util.Number.getStepPriceIndexByNums(item.amount)];
         }
     });
-    return proxy.$Util.Number.numFormat(proxy.$Util.countFilter(price.toFixed(2)));
+    return proxy.$Util.countFilter(price.toFixed(2));
 });
 /* computed end */
 
@@ -851,6 +892,7 @@ onMounted(() => {
         currency.value = '$';
     }
     getData();
+    getWallet();
 });
 
 /* methods start */
@@ -864,7 +906,7 @@ const filterData = (list, type) => {
     list = list.map(item => {
         const index = selectedId.value[type].indexOf(item.id);
         item.selected = index === -1 ? false : true;
-        if (item.item.set_id) {
+        if (item.item.set_id > 0 && item.item.flag_default === 0) {
             item.item.logo = item.item.imgs;
         }
         return item;
@@ -873,10 +915,6 @@ const filterData = (list, type) => {
 // 修改数量
 const changeAmount = item => {
     handleAddCart(item);
-};
-// 显示数量输入框
-const handleCountEditShow = item => {
-    editCount.value = item.amount;
 };
 // 选中按钮
 const changeSelect = (item, type) => {
@@ -896,7 +934,7 @@ const selectAll = (type, selected = false) => {
             selectedId.value['vehicleList'] = [];
             if (selected) {
                 vehicleList.value = vehicleList.value.map(item => {
-                    if (item.flag_item_valid) {
+                    if (item.flag_item_valid && !item.isGift) {
                         item.selected = selected;
                         selectedId.value['vehicleList'].push(item.id);
                     }
@@ -971,8 +1009,6 @@ const selectAll = (type, selected = false) => {
             break;
     }
 };
-// 下单
-const settlement = () => {};
 // 打开修改版本弹窗
 const showDrawer = item => {
     item_id.value = item?.id;
@@ -1022,13 +1058,28 @@ const selectSeries = i => {
 // 选择 variants
 const selectVariants = i => {
     variantsIndex.value = i;
-    console.log(variantsIndex.value);
 };
 // 回到顶部
 const back2Top = () => {
     setTimeout(() => {
         window.scrollTo(0, 0);
     }, 0);
+};
+const getVehicleListHasGift = list => {
+    list[0].giftList = [{ ...list[0], isGift: true }];
+    return list.forEach((item, index) => {
+        if (item?.giftList && item?.giftList.length > 0) {
+            item.giftList.forEach(iGift => {
+                iGift.isGift = true;
+            });
+            list.splice(index + 1, 0, ...item.giftList);
+            item.giftList = null;
+        }
+        return item;
+    });
+};
+const getLengthNotHasGift = list => {
+    return list.filter(i => !i.isGift).length;
 };
 /* methods end */
 
@@ -1052,11 +1103,12 @@ const getVehicleList = () => {
             accessoriesList.value = res[1]?.list;
             peripheralList.value = res[2]?.list;
             promotionalList.value = res[3]?.list;
+            // getVehicleListHasGift(vehicleList.value);// 获取赠品
             filterData(vehicleList.value, 'vehicleList');
             filterData(accessoriesList.value, 'accessoriesList');
             filterData(peripheralList.value, 'peripheralList');
             filterData(promotionalList.value, 'promotionalList');
-            back2Top();
+            // back2Top();
         })
         .finally(() => {
             spinning.value = false;
@@ -1085,7 +1137,7 @@ const handleAddCart = item => {
     };
     Core.Api.ShopCart.save({ ...params })
         .then(() => {
-            getVehicleList(); // 更新
+            // getVehicleList(); // 更新
         })
         .finally(() => {
             editCount.value = '';
@@ -1140,6 +1192,10 @@ const changeItem = () => {
 };
 // 创建订单
 const handleCreateOrder = () => {
+    if (org?.pay_type === Core.Const.DISTRIBUTOR.PAY_TIME.OA && !isBalanceEnough.value) {
+        reminderVisible.value = true;
+        return;
+    }
     const arr = [];
     for (let i in selectedId.value) {
         selectedId.value[i].forEach(item => {
@@ -1148,13 +1204,34 @@ const handleCreateOrder = () => {
     }
     Core.Data.setCartData(arr);
     let routeUrl = router.resolve({
-        path: '/purchase/item-settle',
+        path: '/mall/confirm-order',
         query: {
             unit: currency.value,
             currency: unitMap[currency.value].key,
         },
     });
     window.open(routeUrl.href, '_self');
+};
+const handleClose = () => {
+    reminderVisible.value = false;
+};
+const handleConfirm = () => {
+    reminderVisible.value = false;
+};
+const getWallet = () => {
+    const params = {
+        org_id: orgId, //组织id
+        org_type: orgType, //组织类型
+        type: 40, //钱包类型：10.售前余额；20.售后余额；30.售后备件账户；40.授信账户
+        currency_type: Core.Const.WALLET.TYPE[org.currency], //货币类型：1.人民币；2.欧元；3.美元；4.英镑
+    };
+    Core.Api.Purchase.getWallet(params)
+        .then(res => {
+            balance.value = Core.Util.countFilter((res.detail.balance || 0) + Number(org.credit));
+        })
+        .catch(err => {
+            console.log('handleCreateOrder err', err);
+        });
 };
 /* fetch end */
 </script>
@@ -1176,7 +1253,7 @@ const handleCreateOrder = () => {
         z-index: 999;
 
         .settlement-fixed-body {
-            min-height: 72px;
+            min-height: 80px;
             width: 75%;
             margin: 0 auto;
             padding: 12px 0;
@@ -1198,7 +1275,20 @@ const handleCreateOrder = () => {
 
             .settlement {
                 .flex(initial, center, row);
-
+                .settlement-mes {
+                    margin-right: 24px;
+                    .settlement-price {
+                        .flex(initial, center, row);
+                    }
+                }
+                .settlement-balance {
+                    line-height: 21px;
+                    color: #666666;
+                    text-align: right;
+                    &.warn {
+                        color: #ff3636;
+                    }
+                }
                 .select-nums {
                     color: #000;
                     font-size: 14px;
@@ -1229,8 +1319,7 @@ const handleCreateOrder = () => {
                     font-size: 24px;
                     font-style: normal;
                     font-weight: 700;
-                    line-height: normal;
-                    margin-right: 24px;
+                    line-height: 29px;
                 }
             }
         }
@@ -1243,7 +1332,7 @@ const handleCreateOrder = () => {
         font-weight: 500;
         line-height: normal;
         margin-bottom: 24px;
-        .flex(space-between, initial, row);
+        .flex(space-between, flex-end, row);
 
         .settlement {
             .flex(initial, center, row);
@@ -1267,6 +1356,26 @@ const handleCreateOrder = () => {
                 margin-right: 24px;
             }
         }
+        .title-labels {
+            .fcc();
+            margin-top: 10px;
+        }
+        .title-label {
+            display: inline-block;
+            padding: 7px 8px;
+            border: 1px solid;
+            background: transparent;
+            background: linear-gradient(100deg, #c6f 0%, #66f 100%);
+            border-image: linear-gradient(100deg, #c6f 0%, #66f 100%) 1;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 12px;
+            &:nth-child(n + 2) {
+                margin-left: 8px;
+            }
+        }
     }
 
     .select-all {
@@ -1285,6 +1394,10 @@ const handleCreateOrder = () => {
 
             &:first-child {
                 padding-left: 24px;
+                padding-right: 12px;
+            }
+            &:nth-child(2) {
+                padding-left: 0;
             }
 
             &:last-child {
@@ -1326,7 +1439,7 @@ const handleCreateOrder = () => {
 
         > tr td {
             text-align: left;
-            padding: 0 0 40px 0;
+            padding: 24px 0 16px 0;
             color: #000;
             font-size: 14px;
             font-style: normal;
@@ -1336,6 +1449,7 @@ const handleCreateOrder = () => {
 
             &:first-child {
                 padding-left: 24px;
+                padding-right: 12px;
             }
 
             &:last-child {
@@ -1347,11 +1461,21 @@ const handleCreateOrder = () => {
 
     .row {
         user-select: none;
+        &:nth-child(2) {
+            .row-item {
+                padding-top: 24px;
+            }
+        }
+        &:last-child {
+            .row-item {
+                padding-bottom: 24px;
+            }
+        }
 
         &.row-title {
             > td {
                 text-align: left;
-                padding: 24px 0;
+                padding: 24px 0 0 0;
                 color: #000;
                 font-size: 14px;
                 font-style: normal;
@@ -1376,6 +1500,9 @@ const handleCreateOrder = () => {
 
             &:last-child {
                 margin-right: 0;
+            }
+            &:nth-child(2) {
+                padding-left: 0;
             }
 
             &.operation-row {
@@ -1404,6 +1531,14 @@ const handleCreateOrder = () => {
                     line-height: normal;
                     margin-top: 4px;
                     display: inline-block;
+                    .original-price {
+                        color: #999;
+                        font-size: 14px;
+                        font-weight: 500;
+                        line-height: 21px;
+                        text-decoration: line-through;
+                        margin-left: 8px;
+                    }
                 }
 
                 &.delete {
@@ -1419,6 +1554,11 @@ const handleCreateOrder = () => {
                 &.unit-price {
                     display: inline-block;
                     margin-top: 5px;
+                }
+                &.excluding {
+                    font-size: 12px;
+                    line-height: 24px;
+                    white-space: nowrap;
                 }
             }
 
@@ -1551,12 +1691,14 @@ const handleCreateOrder = () => {
                     margin-left: 24px;
 
                     .name {
-                        .ellipsis(1);
-                        color: #000;
-                        font-size: 20px;
-                        font-style: normal;
-                        font-weight: 500;
-                        line-height: 150%;
+                        .name-text {
+                            .ellipsis(1);
+                            color: #000;
+                            font-size: 20px;
+                            font-style: normal;
+                            font-weight: 500;
+                            line-height: 150%;
+                        }
                     }
 
                     .code {
@@ -1643,7 +1785,74 @@ const handleCreateOrder = () => {
             vertical-align: inherit;
         }
     }
-
+    .gift {
+        position: relative;
+        &::after {
+            content: '';
+            display: inline-block;
+            height: 16px;
+            background: #fff;
+            width: 100%;
+            position: absolute;
+            left: 0;
+            bottom: 0px;
+        }
+        &:last-child {
+            .row-item {
+                padding-bottom: 40px;
+            }
+        }
+        .row-item {
+            background: #fafafa;
+            padding: 24px 0 40px 12px;
+            &:first-child {
+                width: 44px;
+            }
+            &:nth-child(2) {
+                padding-left: 24px;
+            }
+            .product {
+                .product-img {
+                    width: 96px;
+                    height: 96px;
+                    min-width: 96px;
+                }
+                .product-mes {
+                    .name {
+                        .fcc();
+                        .label {
+                            margin-left: 12px;
+                            border: 1px solid #c6f;
+                            display: inline-flex;
+                            padding: 4px 8px;
+                            justify-content: center;
+                            align-items: center;
+                            font-size: 10px;
+                            font-style: normal;
+                            font-weight: 500;
+                            line-height: 10px;
+                            background: linear-gradient(100deg, #c6f 0%, #66f 100%);
+                            background-clip: text;
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                        }
+                    }
+                }
+            }
+            .count-edit {
+                .count-number {
+                    padding: 7px 20px;
+                    background: #f5f5f5;
+                    font-size: 16px;
+                    font-weight: 500;
+                    line-height: 24px;
+                }
+            }
+        }
+        .row-item-check {
+            background: #fff;
+        }
+    }
     .seize {
         height: 24px;
         width: 100%;

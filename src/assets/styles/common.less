@@ -61,6 +61,14 @@
             width: 100%;
             color: #1d2129;
         }
+
+        .t-a-r {
+            text-align: right;
+        }
+        .flex-1 {
+            flex: 1;
+        }
+
         // 必选图标
         &.required {
             .key::before {
@@ -86,7 +94,7 @@
 
         .key {
             color: #1d2129;
-            // white-space: nowrap;
+            white-space: nowrap;
         }
         .key-default-w {
             width: 80px; // 默认宽度
@@ -94,6 +102,12 @@
         .value {
             width: 100%;
             color: #1d2129;
+        }
+        .t-a-r {
+            text-align: right;
+        }
+        .flex-1 {
+            flex: 1;
         }
         // 必选图标
         &.required {
@@ -472,5 +486,168 @@
     .form-btns {
         border: 1px solid #edf1f4;
         padding: 18px 0;
+    }
+}
+
+// 标签公共变量
+
+.status {
+    &.primary,
+    .primary {
+        color: @primary;
+    }
+
+    &.light,
+    .light {
+        color: @light;
+    }
+
+    &.red,
+    .red {
+        color: @red;
+    }
+
+    &.blue,
+    .blue {
+        color: @blue;
+    }
+
+    &.green,
+    .green {
+        color: @green;
+    }
+
+    &.yellow,
+    .yellow {
+        color: @yellow;
+    }
+
+    &.orange,
+    .orange {
+        color: @orange;
+    }
+
+    &.purple,
+    .purple {
+        color: @purple;
+    }
+
+    &.grey,
+    .grey,
+    &.gray,
+    .gray {
+        color: @grey;
+    }
+
+    &.blue-2,
+    .blue-2 {
+        color: @blue_2;
+    }
+
+    &.green-2,
+    .green-2 {
+        color: @green_2;
+    }
+
+    // 背景颜色
+    &-bg {
+        &.primary,
+        .primary {
+            background-color: @primary_l;
+        }
+
+        &.light,
+        .light {
+            background-color: @light_l;
+        }
+
+        &.red,
+        .red {
+            background-color: @red_l;
+        }
+
+        &.blue,
+        .blue {
+            background-color: @blue_l;
+        }
+
+        &.green,
+        .green {
+            background-color: @green_l;
+        }
+
+        &.yellow,
+        .yellow {
+            background-color: @yellow_l;
+        }
+
+        &.orange,
+        .orange {
+            background-color: @orange_l;
+        }
+
+        &.purple,
+        .purple {
+            background-color: @purple_l;
+        }
+
+        &.grey,
+        .grey,
+        &.gray,
+        .gray {
+            background-color: @grey_l;
+        }
+
+        &.blue-2,
+        .blue-2 {
+            background-color: @blue_2_l;
+        }
+        &.green-2,
+        .green-2 {
+            background-color: @green_2_l;
+        }
+    }
+
+    // tag 表格
+    &-tag {
+        .fcc();
+        display: inline-flex;        
+        height: 22px;
+        line-height: 22px;
+        border-radius: 12px;
+        font-size: @fz_sm;
+        text-align: center;
+        padding: 0 12px;
+
+        &.smell {
+            width: 42px;
+        }
+    }
+}
+
+// 时间输入框样式
+#mall-layout .mall-date-picker {
+    box-shadow: none;
+    &:hover {
+        border-color: #8f00ff;
+    }
+}
+.mall-date-picker {
+    .ant-picker-header-view button:hover {
+        color: #8f00ff;
+    }
+    .ant-picker-today-btn {
+        color: #8f00ff;
+        &:hover {
+            color: #8f00ff;;
+        }
+    }
+    .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+        border-color: #8f00ff;
+    }
+    .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner,
+    .ant-picker-cell-in-view.ant-picker-cell-range-start .ant-picker-cell-inner,
+    .ant-picker-cell-in-view.ant-picker-cell-range-end .ant-picker-cell-inner {
+        background: #8f00ff;
     }
 }

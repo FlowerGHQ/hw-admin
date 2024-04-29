@@ -1,71 +1,46 @@
 <template>
-    <div class="test">
-        <MyMask :isClose="isClose" :isClickMaskClose="false" @close="onClose">
-            <!-- 下面两者只能得其一 -->
-            <div>默认slot</div>
-            <template #center>
-                <div>居中slot</div>
-            </template>
-        </MyMask>
-    </div>
+    <a-select
+        v-model:value="value"
+        show-search
+        placeholder="Select a person"
+        style="width: 200px"
+        :options="options"
+        option-filter-prop="label"
+        :filter-option="filterOption"
+        @change="handleChange"
+    ></a-select>
 </template>
-
 <script>
-import MyMask from '@/components/horwin/based-on-dom/MyMask.vue';
-export default {
-    name: 'CustomerCare',
-    components: {
-        TimeSearch,
-        MyMask,
-    },
-    props: {},
-    data() {
-        return {
-            STATUS,
-            LOGIN_TYPE,
-            USER_TYPE,
-            loginType: Core.Data.getLoginType(),
-            // 加载
-            loading: false,
-            // 导出
-            exportDisabled: false,
-            // 分页
-            currPage: 1,
-            pageSize: 20,
-            total: 0,
-            // 搜索
-            operMode: '',
-            distributorList: [], // 分销商下拉框数据
-            storeList: [],
-            agentList: [],
-            filteredInfo: null,
-            searchForm: {
-                uid: '',
-                store_id: undefined,
-                agent_id: undefined,
-                distributor_id: undefined,
-                status: '-20',
-                entity_uid: '',
-                begin_time: '',
-                end_time: '',
-            },
-            // 表格
-            tableFields: [],
-            tableData: [],
-            // 弹框
-            modalShow: false,
-            modalType: '',
-            editForm: {
-                id: '',
-                audit_result: 1,
-                audit_message: '',
-            },
-            warehouseList: [],
-            faultForm: {
-                id: '',
-                warehouse_id: undefined,
-                fault_entity_uid: undefined,
-            },
+import { defineComponent, ref } from 'vue';
+export default defineComponent({
+    setup() {        
+        const options = ref([
+            { value: '1', label: 'Jack' },
+            { value: '2', label: 'Lucy' },
+            { value: '3', label: 'Tom' },
+            { value: '4', label: 'llll' },
+            { value: '5', label: 'cll' },
+        ]);
+        const handleChange = value => {
+            console.log(`selected ${value}`);
+        };
+        const handleBlur = () => {
+            console.log('blur');
+        };
+        const handleFocus = () => {
+            console.log('focus');
+        };
+        const filterOption = (input, option) => {
+            console.log("input", input);
+            console.log("option", option);
+            return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+        };
+        return {                       
+            filterOption,
+            handleBlur,
+            handleFocus,
+            handleChange,
+            options,
         };
     },
     watch: {
@@ -362,8 +337,3 @@ export default {
     },
 };
 </script>
-
-<style lang="less" scoped>
-.test {
-}
-</style>
