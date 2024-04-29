@@ -92,45 +92,38 @@
             </div>
         </div>
         <!-- 只有是业务员且当前状态为一审 或者是财务且当前状态为二审 才能进行审核操作 -->
-        <template
-            v-if="
-                (!isFinance && detail.status === CONST.AUDIT_STATUS_MAP.PENDING_SECOND) ||
-                (isFinance && detail.status === CONST.AUDIT_STATUS_MAP.PENDING_FIRST)
-            "
-        >
-            <div class="detail-panel">
-                <div
-                    :class="
-                        detail.result === CONST.AUDIT_RESULT_MAP.REJECT
-                            ? 'info-line center required'
-                            : 'info-line center required mb'
-                    "
-                >
-                    <div class="info-key">
-                        {{ $t(/*审核结果*/ 'payment-management.audit_result') }}
-                    </div>
-                    <div class="info-value">
-                        <a-radio-group @change="radioGroupChange" v-model:value="form.result">
-                            <a-radio v-for="item in CONST.AUDIT_RESULT" :value="item.value">
-                                {{ item[$i18n.locale] }}
-                            </a-radio>
-                        </a-radio-group>
-                    </div>
+        <div class="detail-panel">
+            <div
+                :class="
+                    detail.result === CONST.AUDIT_RESULT_MAP.REJECT
+                        ? 'info-line center required'
+                        : 'info-line center required mb'
+                "
+            >
+                <div class="info-key">
+                    {{ $t(/*审核结果*/ 'payment-management.audit_result') }}
                 </div>
-                <div v-if="form.result === CONST.AUDIT_RESULT_MAP.REJECT" class="info-line start required mb">
-                    <div class="info-key">
-                        {{ $t(/*不通过原因填写*/ 'payment-management.caus_key') }}
-                    </div>
-                    <div class="info-value">
-                        <a-textarea
-                            v-model:value="form.remark"
-                            :placeholder="$t(/*请输入不通过原因*/ 'payment-management.textarea')"
-                            :auto-size="{ minRows: 6, maxRows: 6 }"
-                        />
-                    </div>
+                <div class="info-value">
+                    <a-radio-group @change="radioGroupChange" v-model:value="form.result">
+                        <a-radio v-for="item in CONST.AUDIT_RESULT" :value="item.value">
+                            {{ item[$i18n.locale] }}
+                        </a-radio>
+                    </a-radio-group>
                 </div>
             </div>
-        </template>
+            <div v-if="form.result === CONST.AUDIT_RESULT_MAP.REJECT" class="info-line start required mb">
+                <div class="info-key">
+                    {{ $t(/*不通过原因填写*/ 'payment-management.caus_key') }}
+                </div>
+                <div class="info-value">
+                    <a-textarea
+                        v-model:value="form.remark"
+                        :placeholder="$t(/*请输入不通过原因*/ 'payment-management.textarea')"
+                        :auto-size="{ minRows: 6, maxRows: 6 }"
+                    />
+                </div>
+            </div>
+        </div>
         <!-- 审核不通过可以查看结果和审核原因 -->
         <div class="detail-panel" v-if="rejectAudit">
             <div :class="detail.result === CONST.AUDIT_RESULT_MAP.REJECT ? 'info-line center' : 'info-line center mb'">
@@ -150,13 +143,7 @@
                 </div>
             </div>
         </div>
-        <div
-            class="btn-container"
-            v-if="
-                (!isFinance && detail.status === CONST.AUDIT_STATUS_MAP.PENDING_SECOND) ||
-                (isFinance && detail.status === CONST.AUDIT_STATUS_MAP.PENDING_FIRST)
-            "
-        >
+        <div class="btn-container">
             <a-button @click="routerChange('back')">{{ $t(/*取消*/ 'pop_up.no') }}</a-button>
             <a-button @click="handleSubmit" type="primary">{{ $t(/*确定*/ 'pop_up.yes') }}</a-button>
         </div>
@@ -208,14 +195,6 @@ const currencyValue = computed(() => {
         return '€';
     } else {
         return '$';
-    }
-});
-// 是否是财务权限
-const isFinance = computed(() => {
-    if (Core.Data.getAuthority()['finance.audit-record.recharge.first-instance']) {
-        return true;
-    } else {
-        return false;
     }
 });
 // 是否是待审核状态
