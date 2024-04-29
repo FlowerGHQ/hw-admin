@@ -28,6 +28,7 @@ import {
     manufactureManagement,
     productionManagement,
     repairManagement,
+    SalesTargetManagement,
 } from './sub-router/admin-router';
 // 飞书路由
 import { fsLogin } from './sub-router/fs-login';
@@ -146,19 +147,7 @@ const routes = [
                 meta: {
                     title: '订单列表',
                     title_en: 'Order List',
-                    search_type: PURCHASE_SEARCH_TYPE.ALL,
                     auth: ['sales.distribution.order'],
-                },
-            },
-            {
-                path: 'purchase-order-self',
-                name: 'PurchaseOrderListSelf',
-                component: () => import('@/views/purchase/purchase-order-list.vue'),
-                meta: {
-                    title: '采购订单',
-                    title_en: 'Purchase order',
-                    search_type: PURCHASE_SEARCH_TYPE.SELF,
-                    auth: ['sales.distribution.purchase-order'],
                 },
             },
             {
@@ -210,7 +199,7 @@ const routes = [
                     title: '分销商详情',
                     parent: '/distributor/distributor-list',
                     roles: [LOGIN_TYPE.ADMIN],
-                    auth: ['sales.distribution.distribution-detail'],
+                    auth: ['sales.distribution.distributor-detail'],
                 },
             },
             {
@@ -221,7 +210,7 @@ const routes = [
                     title: '分销商详情',
                     title_en: 'Details',
                     roles: [LOGIN_TYPE.DISTRIBUTOR],
-                    auth: ['sales.distribution.distribution-detail'],
+                    auth: ['sales.distribution.distributor-detail'],
                 },
             },
             {
@@ -509,6 +498,17 @@ const routes = [
                 },
             },
             {
+                path: 'aftersales-supply-list',
+                name: 'AftersalesSupplyList',
+                component: () => import('@/views/aftersales/aftersales-list.vue'),
+                meta: {
+                    title: '售后响应',
+                    title_en: 'Response',
+                    query_type: REFUND_QUERY_TYPE.SUPPLY,
+                    auth: ['aftermarket.aftermarket.response'],
+                },
+            },
+            {
                 path: 'aftersales-edit',
                 name: 'AftersalesEdit',
                 component: () => import('@/views/aftersales/aftersales-edit.vue'),
@@ -537,18 +537,7 @@ const routes = [
                     hidden: true,
                     title: '退款单详情',
                 },
-            },
-            {
-                path: 'aftersales-supply-list',
-                name: 'AftersalesSupplyList',
-                component: () => import('@/views/aftersales/aftersales-list.vue'),
-                meta: {
-                    title: '售后响应',
-                    title_en: 'Response',
-                    query_type: REFUND_QUERY_TYPE.SUPPLY,
-                    auth: ['aftermarket.aftermarket.response'],
-                },
-            },
+            },            
             {
                 path: 'refund-list',
                 name: 'RefundList',
@@ -622,6 +611,7 @@ const routes = [
     ...testUseCases,
     costManagement,
     warehousingManagement,
+    SalesTargetManagement,
 ];
 
 export default routes;

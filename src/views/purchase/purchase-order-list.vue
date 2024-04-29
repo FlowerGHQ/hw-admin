@@ -427,8 +427,6 @@ export default {
             deep: true,
             immediate: true,
             handler(newRoute) {
-                let search_type = newRoute.meta ? newRoute.meta.search_type : 0;
-                this.search_type = search_type;
                 this.handleSearchReset(false);
                 this.getStatusStat();
             },
@@ -543,7 +541,13 @@ export default {
             return this.$store.state.lang;
         },
     },
-    mounted() {        
+    mounted() { 
+        if (this.$auth('ADMIN')) {
+            this.search_type = SEARCH_TYPE.ALL
+        } else if (this.$auth('DISTRIBUTOR')) {
+            this.search_type = SEARCH_TYPE.SELF
+        }
+
         this.getDistributorListAll();
         this.getAgentListAll();
         this.getStoreListAll();

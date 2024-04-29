@@ -1114,6 +1114,7 @@ const messages = {
         },
         af: {
             // 售后单
+            sales_response: '售后响应',
             list: '售后单列表',
             number: '售后订单号',
             sn: '采购订单号',
@@ -4012,6 +4013,7 @@ const messages = {
         },
         af: {
             //售后单
+            sales_response: 'Sales Response',
             list: 'After-Sales Order List',
             number: 'After -Sales Order Number',
             sn: 'Purchasing Order Number',

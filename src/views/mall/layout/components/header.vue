@@ -16,13 +16,17 @@
                         }}</span>
                     </span>
                     <!-- 订单 -->
-                    <span class="header-menu" @click="changeMenu(2, '/distributor/purchase-order-self')">
+                    <span
+                        v-if="$auth('sales.distribution.order')"
+                        class="header-menu"
+                        @click="changeMenu(2, '/distributor/purchase-order-list')"
+                    >
                         <span class="header-menu-img">
                             <a-avatar :src="getHeaderSrc('orders', 'png')" :size="18" alt="user" />
                         </span>
-                        <span class="header-menu-text tab-animate" :class="menuIndex === 2 ? 'active' : ''">{{
-                            $t('mall.Orders')
-                        }}</span>
+                        <span class="header-menu-text tab-animate" :class="menuIndex === 2 ? 'active' : ''">
+                            {{ $t('mall.Orders') }}
+                        </span>
                     </span>
                     <!-- 更多 -->
                     <span class="header-menu">
@@ -36,9 +40,9 @@
                                 <span class="header-menu-img">
                                     <a-avatar :src="getHeaderSrc('more', 'png')" :size="18" alt="user" />
                                 </span>
-                                <span class="header-menu-text tab-animate" :class="menuIndex === 3 ? 'active' : ''">{{
-                                    $t('mall.more_features')
-                                }}</span>
+                                <span class="header-menu-text tab-animate" :class="menuIndex === 3 ? 'active' : ''">
+                                    {{ $t('mall.more_features') }}
+                                </span>
                                 <svg-icon
                                     icon-class="header-expand-icon"
                                     :class-name="moreShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'"
@@ -50,11 +54,11 @@
                                         <a-menu-item
                                             v-if="$auth(...item.auth)"
                                             :key="item.key"
-                                            @click="routerChange(item.redirect)"
+                                            @click="routerChange(item.redirect || item.path)"
                                         >
-                                            <a class="menu_text" :class="lang">{{
-                                                lang == 'zh' ? item.meta.title : item.meta.title_en
-                                            }}</a>
+                                            <a class="menu_text" :class="lang">
+                                                {{ lang == 'zh' ? item.meta.title : item.meta.title_en }}
+                                            </a>
                                             <a-menu-divider class="menu_divider" v-if="index < showList.length - 1" />
                                         </a-menu-item>
                                     </template>
@@ -293,11 +297,12 @@ export default {
     },
     computed: {
         showList() {
-            let showList = SIDER.DISTRIBUTOR;
+            let showList = this.handleUnAuthListFilter(SIDER.DISTRIBUTOR);
+
             showList = showList.map(item => {
                 item.auth = item.meta ? item.meta.auth || [] : [];
                 item.not_sub_menu = item.meta ? item.meta.not_sub_menu || false : false;
-                if (item.children) {
+                if (item.children?.length) {
                     item.children = item.children.map(i => {
                         i.auth = i.meta ? i.meta.auth || [] : [];
                         return i;
@@ -308,6 +313,8 @@ export default {
                 }
                 return item;
             });
+
+            console.log('最后得结果', showList);
             return showList;
         },
         shopCartNum() {
@@ -371,6 +378,17 @@ export default {
         this.getShopCartList();
     },
     methods: {
+        // 过滤掉 路由不在 全局（authority.list）中的
+        handleUnAuthListFilter(list) {
+            let result = [];
+            result = list.filter(el => {
+                if (el.children?.length) {
+                    el.children = this.handleUnAuthListFilter(el.children);
+                }
+                return this.$auth(...(el.meta?.auth || []));
+            });
+            return result;
+        },
         getHeaderSrc(name, type = 'png') {
             const path = `../../../../assets/images/mall/header/${name}.${type}`;
             return headerModules[path]?.default || '';

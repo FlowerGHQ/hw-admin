@@ -315,6 +315,14 @@ export default {
                         }
                     });
                 });
+
+                // 过滤掉空数组的
+                for (const key in showClassify) {
+                    if (!showClassify[key].length) {
+                        Reflect.deleteProperty(showClassify, key);
+                    }
+                }
+
                 this.$store.commit('ADMIN_AUTH_TAB/SETSHOWCLASSIFY', showClassify);
 
                 // this.moduleAuthList = this.handleModuleAuthList(Object.keys(showClassify));
@@ -342,7 +350,7 @@ export default {
 
             // 判断本地是否存在tabValue不存在赋值
             if (!this.$store.state.ADMIN_AUTH_TAB.TABPOSITION) {
-                this.tabPosition = arr[0].value;
+                this.tabPosition = arr[0]?.value;
                 this.handleGetModule();
 
                 console.log('第一次进入跳转', this.showList);
@@ -545,9 +553,8 @@ export default {
 
         // 路由替换
         routerReplace() {
-            console.log('使用');
             let path = this.showList[0]?.path;
-            let subPath = this.showList[0].children?.length ? '/' + this.showList[0].children[0].path : '';
+            let subPath = this.showList[0].children?.length ? '/' + this.showList[0].children[0]?.path : '';
 
             this.$router.replace({ path: path + subPath });
         },
