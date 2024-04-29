@@ -13,8 +13,7 @@ export default {
 
         sys: '系统管理',
         sys_sys: '系统管理',
-        sys_sys_user: '用户列表',
-        'sys_sys_user_set-admin': '用户列表(设置管理员)',
+        sys_sys_user: '用户列表',        
         sys_sys_role: '角色管理',
         sys_sys_authority: '权限管理',
         sys_sys_message: '消息列表',
@@ -158,6 +157,7 @@ export default {
         sales_distribution_distributor_forbidden: '分销商列表(禁用)',
         'sales_distribution_distributor_reset-password': '分销商列表(重置密码)',
         'sales_distribution_distributor_set-role': '分销商列表(设置角色)',
+        'sales_distribution_distributor_set-admin': '分销商详情-用户管理(设置管理员)',
         'sales_distribution_distributor_account-operations': '分销商详情-钱包-售后备件信用余额(账户操作)',
 
         sales_distribution_agent: '零售商列表',
