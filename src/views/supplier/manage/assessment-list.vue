@@ -1,7 +1,7 @@
 <template>
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">{{ $t('supply-chain.consider_exempt_supplier_list') }}</div>
+            <div class="title-area">{{ $t('supply-chain.on_site_assessment_supplier_list') }}</div>
         </div>
         <!-- search -->
         <div class="search">
