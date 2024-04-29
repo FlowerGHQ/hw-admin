@@ -37,7 +37,7 @@
                 </template>
                 <template v-else>
                     <div class="list">
-                        <div class="item" v-for="item in renderType" :key="item.id" @click="handleClick(item)">
+                        <div class="item" v-for="item in renderType" :key="item.id" @click="handleCard(item)">
                             <component :is="componentName" :record="item" />
                         </div>
                     </div>
@@ -265,11 +265,11 @@ const handleSelect = async v => {
     openKeys.value = v.keyPath;
     cardClikcMock();
 };
+/* 查找已打开菜单数据 */
 const findChildrenArr = (arr, keys) => {
     let list = arr;
     let childrenArr = [];
     let obj = {};
-    console.log(arr, keys);
     keys.forEach((item, index) => {
         obj = list.find(child => child.id === item);
         childrenArr.push(obj);
@@ -277,6 +277,7 @@ const findChildrenArr = (arr, keys) => {
     });
     return childrenArr;
 };
+/* 查找已打开菜单最后一个数据 */
 const findChildren = (arr, keys) => {
     let childrenArr = arr;
     let obj = {};
@@ -286,6 +287,7 @@ const findChildren = (arr, keys) => {
     });
     return obj;
 };
+/* 给菜单插入子级 */
 const setChildren = (arr, keys, children) => {
     let childrenArr = arr;
     const child = findChildren(arr, keys);
@@ -326,17 +328,20 @@ const setChildren = (arr, keys, children) => {
             break;
     }
 };
+/* tab栏切换 */
 const handleSelectTab = i => {
     tabIndex.value = i;
     getData(true, openKeys.value[openKeys.value.length - 1]);
 };
-const handleClick = item => {
+/* 点击卡片 */
+const handleCard = item => {
     if (isItem.value) {
         routerChange(`${route.path}/detail`, { id: item.id });
     } else {
         handleItem(item);
     }
 };
+/* 点击卡片后数据处理 */
 const handleItem = item => {
     if (deep.value === 2) {
         handleSelect({ key: item.id, keyPath: [openKeys.value[0], item.id] }); // 模拟触发
@@ -345,6 +350,7 @@ const handleItem = item => {
         getData(true, item.id);
     }
 };
+/* 设置面包屑 */
 const setBreadcrumb = item => {
     if (!isDetail.value) deep.value += 1;
     typeParentId.value = item.id;
@@ -355,6 +361,7 @@ const setBreadcrumb = item => {
         name_en: item.name_en,
     });
 };
+/* 触发面包屑点击事件 */
 const handleBreadcrumb = id => {
     if (typeParentId.value === id) return;
     typeParentId.value = id;
@@ -368,6 +375,7 @@ const handleBreadcrumb = id => {
     deep.value = breadcrumbList.value.length;
     getData(true, id);
 };
+/* 滚动监听事件 */
 const handleScroll = () => {
     // 因为存在子组件路由所以判断只在父路由时执行
     if (route.path !== '/mall/accessories-list') return;
