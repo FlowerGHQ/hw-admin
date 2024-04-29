@@ -514,30 +514,20 @@ export default {
                 { title: this.$t('p.payment_time'), dataIndex: 'pay_time', key: 'time' },
                 { title: this.$t('p.complete_time'), dataIndex: 'close_time', key: 'time' },
                 { title: this.$t('p.payable_time'), dataIndex: 'final_pay_due_time', key: 'time' }, // 应付尾款时间
-            ];
-            if (this.$auth('DISTRIBUTOR')) {
-                const index = columns.findIndex(column => column.dataIndex === 'accessory_list');
-                if (index !== -1) {
-                    columns.splice(index, 1);
-                }
-            }
-            if (
-                !this.$auth('sales.distribution.order.purchase-order', 'aftermarket.distribution.order.purchase-order')
-            ) {
-                columns.splice(4, 0, {
+                {
                     title: this.$t('n.institution'),
                     dataIndex: ['create_org', 'name'],
                     key: 'item',
-                });
-                columns.splice(5, 0, { title: this.$t('p.total_price'), dataIndex: 'total_price', key: 'total_price' });
-                columns.splice(6, 0, { title: this.$t('p.freight'), dataIndex: 'freight', key: 'freight' });
-                columns.splice(7, 0, {
+                },
+                { title: this.$t('p.total_price'), dataIndex: 'total_price', key: 'total_price' },
+                { title: this.$t('p.freight'), dataIndex: 'freight', key: 'freight' },
+                {
                     title: this.$t('p.freight_status'),
                     dataIndex: 'freight_status',
                     key: 'freight_status',
-                });
-                columns.splice(9, 0, { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'amount_paid' });
-            }
+                },
+                { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'amount_paid' },
+            ];
             // 失败原因列表-仅存在与待生产tab
             if (this.searchForm.status === '150' && this.$auth('ADMIN')) {
                 columns.push({
@@ -616,11 +606,11 @@ export default {
             return this.$store.state.lang;
         },
     },
-    mounted() { 
+    mounted() {
         if (this.$auth('ADMIN')) {
-            this.search_type = SEARCH_TYPE.ALL
+            this.search_type = SEARCH_TYPE.ALL;
         } else if (this.$auth('DISTRIBUTOR')) {
-            this.search_type = SEARCH_TYPE.SELF
+            this.search_type = SEARCH_TYPE.SELF;
         }
 
         this.getDistributorListAll();

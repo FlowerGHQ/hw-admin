@@ -53,9 +53,7 @@
                                 <i class="icon i_edit" />{{ $t('def.edit') }}
                             </a-button>
                             <a-button
-                                v-if="
-                                    $auth('sales.distribution.distributor.reset-password') && $UserAuth(loginUsername)
-                                "
+                                v-if="$auth('sales.distribution.distributor.reset-password')"
                                 type="link"
                                 @click="handleReset(record)"
                             >
