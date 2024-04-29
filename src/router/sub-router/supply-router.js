@@ -10,7 +10,6 @@ const supplyManage = {
     path: '/supply-manage',
     component: () => import('@/views/layout/index.vue'),
     name: 'SupplyManage',
-    type: [ROUTER_TYPE.SUPPLIER],
     meta: {
         title: '供应商管理',
         title_en: 'supplier management',
@@ -151,7 +150,6 @@ const supplyMaterialManagement = {
     path: '/material',
     component: () => import('@/views/layout/index.vue'),
     name: 'MaterialManagement',
-    type: [ROUTER_TYPE.SUPPLIER],
     meta: {
         title: '物料管理',
         title_en: 'Material Management',
@@ -244,7 +242,6 @@ const costManagement = {
     path: '/cost',
     component: () => import('@/views/layout/index.vue'),
     name: 'CostManagement',
-    type: [ROUTER_TYPE.SUPPLIER],
     meta: {
         title: '成本管理',
         title_en: 'Cost Management',

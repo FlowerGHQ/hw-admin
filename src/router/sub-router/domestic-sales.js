@@ -9,7 +9,7 @@ const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 const domesticSales = [
     {
         path: '/stores-vehicle',
-        component: () => import('@/views/layout/index.vue'),        
+        component: () => import('@/views/layout/index.vue'),
         meta: {
             title: '国内销售门店管理',
             title_en: 'Domestic Sales Stores',
@@ -87,7 +87,7 @@ const domesticSales = [
     {
         // 人员管理
         path: '/retail-personnel',
-        component: () => import('@/views/layout/index.vue'),        
+        component: () => import('@/views/layout/index.vue'),
         meta: {
             title: '国内销售人员管理',
             title_en: 'Domestic Personnel Management',
@@ -121,9 +121,8 @@ const domesticSales = [
     {
         // 工作台
         path: '/crm-staging',
-        component: () => import('@/views/layout/index.vue'),        
+        component: () => import('@/views/layout/index.vue'),
         name: 'crm-staging',
-        type: [ROUTER_TYPE.CRM],
         meta: {
             title: '工作台',
             title_en: 'Staging',
@@ -156,13 +155,12 @@ const domesticSales = [
     {
         // 用户中心
         path: '/user-center',
-        component: () => import('@/views/layout/index.vue'),        
-        type: [ROUTER_TYPE.CRM],
+        component: () => import('@/views/layout/index.vue'),
         meta: {
             title: '用户中心',
             title_en: 'User Center',
             icon: 'i_menu_yonghuzhognxin',
-            hidden: true,            
+            hidden: true,
         },
         children: [
             {
@@ -197,12 +195,11 @@ const domesticSales = [
                 },
             },
         ],
-    },      
+    },
     {
         // 探索
         path: '/retail-explore',
-        component: () => import('@/views/layout/index.vue'),        
-        type: [ROUTER_TYPE.CRM],
+        component: () => import('@/views/layout/index.vue'),
         meta: {
             title: '探索',
             title_en: 'Explore',
@@ -253,8 +250,7 @@ const domesticSales = [
     {
         // 分配规则
         path: '/service',
-        component: () => import('@/views/layout/index.vue'),        
-        type: [ROUTER_TYPE.CRM],
+        component: () => import('@/views/layout/index.vue'),
         meta: {
             title: '分配规则',
             title_en: 'Allocation rules',
@@ -276,9 +272,8 @@ const domesticSales = [
     {
         // 好物订单
         path: '/good-items-order',
-        component: () => import('@/views/layout/index.vue'),        
+        component: () => import('@/views/layout/index.vue'),
         name: 'good-items-order',
-        type: [ROUTER_TYPE.CRM],
         meta: {
             title: '好物订单',
             title_en: 'Good Items Order',

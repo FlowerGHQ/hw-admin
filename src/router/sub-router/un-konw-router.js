@@ -11,7 +11,6 @@ const mailManagement = {
     path: '/mail-management',
     component: () => import('@/views/layout/index.vue'),
     name: 'MailManagement',
-    type: [ROUTER_TYPE.CRM],
     meta: {
         title: '邮件管理',
         title_en: 'Mail Management',
@@ -64,7 +63,6 @@ const mailManagement = {
 const retailBusinessVehicleManagement = {
     path: '/retail-vehicle',
     component: () => import('@/views/layout/index.vue'),
-    type: [ROUTER_TYPE.CRM],
     meta: {
         title: '车辆管理',
         title_en: 'Vehicle Management',
@@ -97,7 +95,6 @@ const retailBusinessVehicleManagement = {
 const retailBusinessOrderManagement = {
     path: '/retail-order',
     component: () => import('@/views/layout/index.vue'),
-    type: [ROUTER_TYPE.CRM],
     meta: {
         title: '订单管理',
         title_en: 'Order Management',
@@ -132,7 +129,6 @@ const RepairInvoiceExport = {
     path: '/repair/invoice-download',
     name: 'RepairInvoiceExport',
     component: () => import('@/views/repair/repair-invoice.vue'),
-    type: [ROUTER_TYPE.AFTER],
     meta: {
         hidden: true,
         title: '维修单结算',
@@ -144,7 +140,6 @@ const walletManagement = {
     path: '/wallet',
     component: () => import('@/views/layout/index.vue'),
     name: 'WalletManagement',
-    type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
     meta: {
         title: '账户管理',
         title_en: 'Accounts',
@@ -180,7 +175,6 @@ const Dashboard = {
     path: '/dashboard',
     component: () => import('@/views/layout/index.vue'),
     name: 'Dashboard',
-    type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION],
     meta: {
         title: '商城',
         title_en: 'Data Board',
@@ -280,7 +274,6 @@ const Dashboard = {
 //     path: '/warranty',
 //     component: () => import('@/views/layout/index.vue'),
 //     name: 'Warranty',
-//     type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
 //     meta: {
 //         title: '三包管理',
 //         title_en: 'Warranty Management',
