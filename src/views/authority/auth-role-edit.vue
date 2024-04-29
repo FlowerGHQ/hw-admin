@@ -38,8 +38,8 @@
                 <auth-tab v-if="!$auth('DISTRIBUTOR')" ref="authTabRef" class="m-b-20 m-l-140" @tab="onTab"></auth-tab>
                 <template v-for="item in authItems" :key="item.key">
                     <template v-if="$auth('DISTRIBUTOR') || activeTab === item.tab">
-                        <div v-for="(subItem, index) in item.list" :key="index" class="form-item afs">
-                            <div class="key">{{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:</div>
+                        <div v-for="(subItem, index) in item.list" :key="index" class="form-item afs">                            
+                            <div class="key">{{ $t('authority.'+ subItem.key) }}:</div>
                             <div class="value">
                                 <!-- 全选 -->
                                 <div class="m-b-10">
@@ -54,50 +54,18 @@
                                     <a-checkbox-group v-model:value="subItem.itemSelect">
                                         <!-- 二级模块渲染 -->
                                         <a-checkbox :value="subItem.id">
-                                            {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}
+                                            {{ $t('authority.' + subItem.key) }}                                            
                                         </a-checkbox>
                                         <template v-for="(threeItem, index) in subItem.list">
                                             <a-checkbox :value="threeItem.id">
-                                                {{
-                                                    $t(
-                                                        'authority.' +
-                                                            item.key +
-                                                            '.' +
-                                                            subItem.key +
-                                                            '.' +
-                                                            threeItem.key +
-                                                            '.title',
-                                                    )
-                                                }}
+                                                {{ $t('authority.' + threeItem.key) }}
                                             </a-checkbox>
                                             <a-checkbox
                                                 v-for="(fourItem, index) in threeItem.list"
                                                 :key="index"
                                                 :value="fourItem.id"
                                             >
-                                                {{
-                                                    $t(
-                                                        'authority.' +
-                                                            item.key +
-                                                            '.' +
-                                                            subItem.key +
-                                                            '.' +
-                                                            threeItem.key +
-                                                            '.title',
-                                                    )
-                                                }}
-                                                ({{
-                                                    $t(
-                                                        'authority.' +
-                                                            item.key +
-                                                            '.' +
-                                                            subItem.key +
-                                                            '.' +
-                                                            threeItem.key +
-                                                            '.' +
-                                                            fourItem.key,
-                                                    )
-                                                }})
+                                                {{ $t('authority.' + fourItem.key) }}
                                             </a-checkbox>
                                         </template>
                                     </a-checkbox-group>
@@ -174,7 +142,8 @@ export default {
                     this.detail = res.role;
                     for (const key in this.form) {
                         this.form[key] = res.role[key];
-                    }
+                    }                    
+                    
                 })
                 .catch(err => {
                     console.log('getAuthRoleDetail err', err);
@@ -197,6 +166,8 @@ export default {
                     if (this.form.id) {
                         this.getRoleSelectedAuthFetch();
                     }
+
+                    // console.log("过滤", list.map(el => el.key));
                 })
                 .catch(err => {
                     console.log('getAuthOptions err:', err);

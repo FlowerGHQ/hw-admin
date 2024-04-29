@@ -46,7 +46,7 @@ function travelAuth(authList, node, parentRoute) {
         let currentrRoute = parentRoute + '.' + key;
         let childNode = {
             parentRoute: parentRoute,
-            key: key,
+            key: currentrRoute.replaceAll(".", "_"),
         };
         const find = authList.find(el => el.key === currentrRoute);
 
