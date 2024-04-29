@@ -451,8 +451,12 @@ export default {
         please_select_result: '请选择结果',
         //
         cooperative_factory: '合作厂商',
+        // 待现场考核供应商目录
+        on_site_assessment_supplier_list: '待现场考核供应商目录',
     },
     en: {
+        // 待现场考核供应商目录
+        on_site_assessment_supplier_list: 'On Site Assessment Supplier List',
         // cooperative_factory
         cooperative_factory: 'Cooperative Factory',
         please_select_result: 'Please select result',

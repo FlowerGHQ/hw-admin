@@ -22,7 +22,11 @@
         <!-- table -->
         <div class="table-container">
             <div class="button-area m-b-10">
-                <a-button type="primary" @click="onBtn">
+                <a-button
+                    type="primary"
+                    @click="onBtn"
+                    v-if="$auth('supply.supplier-manage.save-supplier.save-supplier')"
+                >
                     {{ $t('supply-chain.create_data') }}
                 </a-button>
                 <!-- 特批为合格供应商 -->
@@ -182,6 +186,7 @@ const auditStatusMap = reactive({
     90: { text: '特批合格', value: 1501 },
     110: { text: '免审合格', value: 1502 },
 });
+const $auth = Core.Util.auth;
 
 const AUDIT_STATUS = reactive(Core.Const.SUPPLAY.AUDIT_STATUS);
 const STAGE_LIST = reactive(Core.Const.SUPPLAY.STAGE);
@@ -228,6 +233,11 @@ const tableColumns = computed(() => {
         },
         { title: $t('common.operations'), key: 'operations', fixed: 'right', width: 150 },
     ];
+    // $auth('supply.supplier-manage.save-supplier.view')
+    if (!$auth('supply.supplier-manage.save-supplier.view')) {
+        // 过滤operations
+        columns = columns.filter(item => item.key !== 'operations');
+    }
     return columns;
 });
 const qualifiedTableColumns = computed(() => {

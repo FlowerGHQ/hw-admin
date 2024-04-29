@@ -55,7 +55,7 @@ const supplyManage = {
             meta: {
                 title: '考虑免审供应商名录',
                 title_en: 'Consider Exempt Supplier List',
-                auth: ['supply.supplier-manage.save-supplier'], //临时
+                auth: ['supply.supplier-manage.consider-exempt-review'],
             },
         },
         // 免审申请表
@@ -77,7 +77,7 @@ const supplyManage = {
             meta: {
                 title: '待现场考核供应商名录',
                 title_en: 'Assessment Supplier List',
-                auth: ['supply.supplier-manage.save-supplier'], //临时
+                auth: ['supply.supplier-manage.wait-scene-examine'],
             },
         },
         {
@@ -87,7 +87,7 @@ const supplyManage = {
             meta: {
                 title: '合格供应商名录',
                 title_en: 'Qualified Supplier List',
-                auth: ['supply.supplier-manage.qualified'],
+                auth: ['supply.supplier-manage.qualified'], //正式
             },
         },
 
@@ -99,7 +99,7 @@ const supplyManage = {
             meta: {
                 title: '淘汰供应商名录',
                 title_en: 'Eliminate Supplier List',
-                auth: ['supply.supplier-manage.save-supplier'], //临时
+                auth: ['supply.supplier-manage.eliminate'],
             },
         },
 
@@ -111,7 +111,7 @@ const supplyManage = {
             meta: {
                 title: '合格供应商淘汰原因管理',
                 title_en: 'Qualified Supplier Elimination Reason Management',
-                auth: ['supply.supplier-manage.save-supplier'], //临时
+                auth: ['supply.supplier-manage.eliminate-reason'],
             },
         },
         // 车型分类管理
@@ -122,7 +122,7 @@ const supplyManage = {
             meta: {
                 title: '车型分类管理',
                 title_en: 'Vehicle Category Management',
-                auth: ['supply.supplier-manage.save-supplier'], //临时
+                auth: ['supply.supplier-manage.vehicle-category'],
             },
         },
     ],
@@ -145,8 +145,8 @@ const supplyRouters = [
 const supplyMaterialManagement = {
     // 物料管理
     path: '/material',
-    component: () => import('@/views/layout/index.vue'),    
-    name: 'MaterialManagement',    
+    component: () => import('@/views/layout/index.vue'),
+    name: 'MaterialManagement',
     meta: {
         title: '物料管理',
         title_en: 'Material Management',
@@ -237,8 +237,8 @@ const supplyMaterialManagement = {
 // 成本管理
 const costManagement = {
     path: '/cost',
-    component: () => import('@/views/layout/index.vue'),    
-    name: 'CostManagement',    
+    component: () => import('@/views/layout/index.vue'),
+    name: 'CostManagement',
     meta: {
         title: '成本管理',
         title_en: 'Cost Management',
