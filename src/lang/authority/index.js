@@ -185,7 +185,7 @@ export default {
         'sales_sales-strategy_sales-strategy': '销售策略',
 
         'sales_account': '收款账号管理',
-        'sales_account_payment': '付款信息管理',        
+        'sales_account_payment': '付款信息管理',          
     },
     en: {},
 };
