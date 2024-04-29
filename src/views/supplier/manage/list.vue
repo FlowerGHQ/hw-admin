@@ -75,11 +75,7 @@
                     </template>
                     <!-- 操作 -->
                     <template v-if="column.key === 'operations'">
-                        <a-button
-                            type="link"
-                            @click="onView('add', record)"
-                            v-if="$auth('supply.supplier-manage.save-supplier.view')"
-                        >
+                        <a-button type="link" @click="onView('add', record)">
                             <MySvgIcon icon-class="supply-view" />
                             <span class="m-l-10">{{ $t('supply-chain.view') }}</span>
                         </a-button>
@@ -190,6 +186,7 @@ const auditStatusMap = reactive({
     90: { text: '特批合格', value: 1501 },
     110: { text: '免审合格', value: 1502 },
 });
+const $auth = Core.Util.auth;
 
 const AUDIT_STATUS = reactive(Core.Const.SUPPLAY.AUDIT_STATUS);
 const STAGE_LIST = reactive(Core.Const.SUPPLAY.STAGE);
@@ -236,6 +233,11 @@ const tableColumns = computed(() => {
         },
         { title: $t('common.operations'), key: 'operations', fixed: 'right', width: 150 },
     ];
+    // $auth('supply.supplier-manage.save-supplier.view')
+    if (!$auth('supply.supplier-manage.save-supplier.view')) {
+        // 过滤operations
+        columns = columns.filter(item => item.key !== 'operations');
+    }
     return columns;
 });
 const qualifiedTableColumns = computed(() => {
