@@ -234,8 +234,9 @@
                                     <div class="count-edit">
                                         <a-input-number
                                             v-model:value="item.amount"
-                                            :min="1"
+                                            :min="item?.min_purchase_amount || 1"
                                             :max="99999"
+                                            :step="item?.min_purchase_amount || 1"
                                             :precision="0"
                                             @blur="changeAmount(item)"
                                         />

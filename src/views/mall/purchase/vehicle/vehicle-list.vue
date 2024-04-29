@@ -90,7 +90,6 @@ onBeforeUnmount(() => {
 /* methods start */
 // 获取数据
 const getData = () => {
-    console.log(123);
     getCarList();
 };
 const handleScroll = () => {

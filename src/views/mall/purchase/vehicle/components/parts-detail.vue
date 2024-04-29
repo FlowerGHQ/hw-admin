@@ -7,7 +7,7 @@
             <p class="nums">{{ itemList?.length || 0 }} {{ $t('purchase.variants') }}</p>
             <div class="variants-body">
                 <div class="variants-item" v-for="(item, i) in itemList" :key="item.id">
-                    <ProductsCard @handlechange="handlechange" type="small" :record="item" />
+                    <ProductsCard @handlechange="getData" type="small" :record="item" />
                 </div>
             </div>
         </div>
@@ -27,8 +27,8 @@ const router = useRouter();
 const store = useStore();
 
 const props = defineProps({
-    record: {
-        type: [Object, String],
+    id: {
+        type: [String, Number],
     },
 });
 /* state start */
@@ -36,7 +36,6 @@ const currency = ref('€');
 const paramPrice = ref(false);
 const spinning = ref(false);
 const itemList = ref([]);
-const vehicle_id = ref('9576');
 const detail = reactive({});
 const itemDetailFetch = Core.Api.Item.detail;
 const itemListFetch = Core.Api.Item.list;
@@ -52,49 +51,34 @@ onMounted(() => {
         currency.value = '$';
         paramPrice.value = true;
     }
-    getItemDetail();
 });
 /* methods start */
-const handlechange = () => {
+const getData = () => {
     const q = {
-        set_id: detail.set_id, //商品组id
-        flag_default: 0,
+        bom_category_id: props.id,
     };
     getCarList(q);
+    getDetail(q);
 };
 /* methods end */
 /* fetch start */
-const getItemDetail = () => {
-    spinning.value = true;
-    itemDetailFetch({ id: vehicle_id.value })
-        .then(res => {
-            Object.assign(detail, res.detail || {});
-            const q = {
-                set_id: detail.set_id, //商品组id
-                flag_default: 0,
-            };
-            getCarList(q);
-        })
-        .finally(() => {
-            spinning.value = false;
-        });
-};
 const getCarList = q => {
-    const params = {
-        type: 1, //1.整车；2.零部件/物料；3.周边；4.广宣品
-        page: 1,
-        page_size: 999,
-    };
+    const params = {};
     Object.assign(params, q);
-    itemListFetch({ ...params }).then(res => {
-        const arr = res?.list.map(item => {
-            item.logo = item.imgs;
-            return item;
-        });
-        itemList.value = arr;
+    Core.Api.Distributor.bomListParts({ ...params }).then(res => {
+        itemList.value = res?.list;
+    });
+};
+const getDetail = q => {
+    const params = { target_id: q.bom_category_id, target_type: 3 };
+    Core.Api.Distributor.itemComponentSetList({ ...params }).then(res => {
+        detail.logo = res.list?.list[0]?.img;
     });
 };
 /* fetch end */
+defineExpose({
+    getData,
+});
 </script>
 
 <style lang="less" scoped>

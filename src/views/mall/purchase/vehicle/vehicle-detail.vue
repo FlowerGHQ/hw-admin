@@ -56,7 +56,7 @@
                                     </span>
                                 </p>
                                 <p class="code">{{ vehicle_mes.code }}</p>
-                                <p class="model" ref="modelRef" v-if="record?.type === 2" @click.stop>
+                                <p class="model" ref="modelRef" v-if="vehicle_mes?.type === 2" @click.stop>
                                     <span class="model-text">model</span>
                                     <a-popover
                                         v-model:visible="visible"
@@ -67,11 +67,17 @@
                                     >
                                         <template #content>
                                             <div class="model-ul">
-                                                <p class="model-li" v-for="item in 3">Option2-1{{ item }}</p>
+                                                <p class="model-li" v-for="item in vehicle_mes?.apply_vehicle">
+                                                    {{ item }}
+                                                </p>
                                             </div>
                                         </template>
                                         <span class="model-value" @click="visible = true">
-                                            <span>Option2-1</span>
+                                            <span>{{
+                                                vehicle_mes?.apply_vehicle.length > 0
+                                                    ? vehicle_mes?.apply_vehicle[0]
+                                                    : '-'
+                                            }}</span>
                                             <img class="model-img" src="@images/down-arrow.png" />
                                         </span>
                                     </a-popover>
@@ -94,8 +100,9 @@
                                     <div class="count-edit">
                                         <a-input-number
                                             v-model:value="editCount"
-                                            :min="1"
+                                            :min="stepMinPrice"
                                             :max="99999"
+                                            :step="stepMinPrice"
                                             :precision="0"
                                         />
                                     </div>
@@ -216,6 +223,9 @@ const price = computed(() => {
 });
 const detailImageList = computed(() => {
     return vehicle_mes?.imgs ? vehicle_mes?.imgs.split(',') : [];
+});
+const stepMinPrice = computed(() => {
+    return vehicle_mes.type === Core.Const.ITEM.TYPE.COMPONENT ? vehicle_mes?.min_purchase_amount : 1;
 });
 /* computed end */
 

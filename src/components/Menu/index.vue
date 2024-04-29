@@ -36,39 +36,18 @@ const props = defineProps({
     },
 });
 
-// 面包屑数据
-const breadcrumbData = ref([]);
-
 const rootSubmenuKeys = computed(() => {
     return props.menuData.map(item => item.id);
 });
-
-// 获取图片资源分类树状数据
-
-const getDataByParent = (parent_id = 0) => {
-    // 通过父节点获取子级数据
-    Core.Api.ItemCategory.tree({
-        page: 0,
-        parent_id: parent_id,
-        is_authority: 1,
-        depth: 3,
-    })
-        .then(res => {
-            props.menuData = res?.list ? filterChildren(res.list) : [];
-        })
-        .catch(err => {
-            console.log('getDataByParent err', err);
-        });
-};
 
 const filterChildren = (arr, level = 0) => {
     return arr;
 };
 const handleSelect = val => {
-    breadcrumbData.value = [];
     emit('handleSelect', val);
 };
 const handleOpenChange = val => {
+    console.log(val);
     let openKeys = props.openKeys;
     openKeys = filterKeys(props.menuData, openKeys);
     console.log('openChange', openKeys);
@@ -83,7 +62,8 @@ const filterKeys = (arr, openKeys) => {
         const rootSubmenuKeys = arr.map(item => item.id);
         const nowKey = openKeys[index];
         if (rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-            const nextArr = arr.find(item => item.id === nowKey).children;
+            const nextArr = arr.find(item => item.id === nowKey)?.children;
+            if (!nextArr) return;
             newKeys.push(nowKey);
             index += 1;
             return findNextKey(nextArr, openKeys, index);
@@ -93,9 +73,7 @@ const filterKeys = (arr, openKeys) => {
     }
     return newKeys;
 };
-onMounted(() => {
-    getDataByParent();
-});
+onMounted(() => {});
 </script>
 
 <style lang="less" scoped>

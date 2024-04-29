@@ -23,11 +23,15 @@
                     >
                         <template #content>
                             <div class="model-ul">
-                                <p class="model-li" v-for="item in 3">Option2-1{{ item }}</p>
+                                <p class="model-li" v-for="item in record?.apply_vehicle">{{ item }}</p>
                             </div>
                         </template>
                         <span class="model-value" @click="visible = true">
-                            <span>Option2-1</span>
+                            <span>{{
+                                record?.apply_vehicle && record?.apply_vehicle.length > 0
+                                    ? record?.apply_vehicle[0]
+                                    : '-'
+                            }}</span>
                             <img class="model-img" src="@images/down-arrow.png" />
                         </span>
                     </a-popover>

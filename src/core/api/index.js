@@ -487,6 +487,14 @@ const apiList = {
         updateStatus: ['PostJson', 'distributor/update-status'], //修改状态
         walletMoneyList: ['PostJson', 'wallet-money/list'], //钱包余额明细列表
         walletDetail: ['PostJson', 'wallet/detail'], //钱包详情
+
+        bomTree: ['PostJson', 'item-category/bom-tree'], //分销商端绑定bom的商品分类
+        bomListParts: ['PostJson', 'aftermarket/bom/list-parts'], //分销商端售后bom配件列表
+        bomListName: ['PostJson', 'aftermarket/bom/list-name'], //分销商端bom名称列表
+        bomlistVersion: ['PostJson', 'aftermarket/bom/list-version'], //分销商端bom商品版本列表
+        bomlistCategory: ['PostJson', 'aftermarket/bom/list-category'], //分销商端bom版本分组
+        itemComponentSetList: ['PostJson', 'item/item-component-set-list'], //分销商端爆炸图
+        listPartsCategory: ['PostJson', 'aftermarket/bom/list-parts-category'], //分销商端bom配件分类
     },
     Fault: {
         // 产品故障管理

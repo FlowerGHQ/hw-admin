@@ -40,7 +40,14 @@
                 <template v-if="showOperation">
                     <div class="add">
                         <span class="count-edit">
-                            <a-input-number v-model:value="editCount" :min="1" :max="99999" :precision="0" autofocus />
+                            <a-input-number
+                                v-model:value="editCount"
+                                :min="stepMinPrice"
+                                :max="99999"
+                                :step="stepMinPrice"
+                                :precision="0"
+                                autofocus
+                            />
                         </span>
                         <span class="car" @click="addCar(record)">
                             <svg-icon icon-class="car-icon" class-name="car-icon" />
@@ -102,6 +109,9 @@ const stepPrice = computed(() => {
 });
 const price = computed(() => {
     return proxy.$Util.countFilter(props.record[proxy.$Util.Number.getPriceIndex()]);
+});
+const stepMinPrice = computed(() => {
+    return props.record.type === Core.Const.ITEM.TYPE.COMPONENT ? props.record?.min_purchase_amount : 1;
 });
 /* computed end */
 const emits = defineEmits(['handlechange']);

@@ -28,15 +28,20 @@
                     v-for="(item, index) in tabData"
                     @click="handleSelectTab(index)"
                 >
-                    {{ `${item[name_index]}（${item.count}）` }}
+                    {{ `${item.category_name}（${item.count}）` }}
                 </div>
             </div>
             <div class="box">
-                <div class="list">
-                    <div class="item" v-for="item in renderType" :key="item.id" @click="handleItem(item)">
-                        <component :is="componentName" :record="item" />
+                <template v-if="isDetail">
+                    <PartsDetail ref="PartsDetailRef" :id="detailId" />
+                </template>
+                <template v-else>
+                    <div class="list">
+                        <div class="item" v-for="item in renderType" :key="item.id" @click="handleClick(item)">
+                            <component :is="componentName" :record="item" />
+                        </div>
                     </div>
-                </div>
+                </template>
                 <div class="loading">
                     <down-loading class="loading" :show="spinning" />
                 </div>
@@ -54,7 +59,7 @@ import TypeCard from './components/type-card.vue';
 import Menu from '@/components/Menu/index.vue';
 import DownLoading from '../../components/DownLoading.vue';
 import Core from '@/core';
-import { ref, reactive, onMounted, computed, watch, nextTick } from 'vue';
+import { ref, reactive, onMounted, onBeforeUnmount, computed, watch, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
@@ -74,16 +79,15 @@ const pagination = reactive({
 });
 const breadcrumbList = ref([{ id: null, name: '全部', name_en: 'All' }]);
 const tabIndex = ref(0);
-const tabData = [
-    { name: '1', name_en: '1en', count: 1 },
-    { name: '2', name_en: '2', count: 2 },
-    { name: '3', name_en: '3', count: 3 },
-    { name: '3', name_en: '3', count: 3 },
-];
+const tabData = ref([]);
 const openKeys = ref([]);
 const list = ref([]);
 const itemList = ref([]);
-const itemListFetch = Core.Api.Item.list;
+const isDetail = ref(false);
+const detailId = ref('');
+const PartsDetailRef = ref(null);
+const bomListPartsFetch = Core.Api.Distributor.bomListParts;
+
 /* state end */
 
 /* computed start */
@@ -141,8 +145,6 @@ const renderType = computed(() => {
 });
 const componentName = computed(() => {
     if (isItem.value) {
-        resetFn();
-        getData();
         return VehicleCard;
     } else {
         return TypeCard;
@@ -152,22 +154,41 @@ const componentName = computed(() => {
 
 /* watch start */
 watch(breadcrumbList.value, newV => {
+    if (newV.length < 6) isDetail.value = false;
     openKeys.value = newV.slice(1).map(item => item.id);
 });
 /* watch end */
 
 onMounted(() => {
-    if (isItem.value) {
-        getData();
-    } else {
-        getDataByParent();
-    }
+    getBomTree();
+    window.addEventListener('scroll', handleScroll);
+});
+onBeforeUnmount(() => {
+    window.removeEventListener('scroll', handleScroll);
 });
 
 /* methods start */
 // 获取数据
-const getData = () => {
-    getCarList();
+const getData = async (reset = false, id = '') => {
+    if (!isItem.value || deep.value < 2) return;
+    switch (deep.value) {
+        case 3:
+            await getListPartsCategory({ bom_item_category_id: id });
+            getCarList({ bom_item_category_id: id }, reset);
+            break;
+        case 4:
+            await getListPartsCategory({ sync_id: id });
+            getCarList({ sync_id: id }, reset);
+            break;
+        case 5:
+            await getListPartsCategory({ id: id });
+            getCarList({ id: id }, reset);
+            break;
+
+        default:
+            getCarList(reset);
+            break;
+    }
 };
 // 路由跳转
 const routerChange = (routeUrl, item = {}, type = 1) => {
@@ -192,46 +213,147 @@ const resetFn = () => {
         total_page: 0,
     });
 };
+/* 初始化面包屑 */
 const initBreadcrumb = () => {
     handleBreadcrumb(null);
 };
-const handleOpenChange = val => {
+/* 模拟点击卡片 */
+const cardClikcMock = () => {
     initBreadcrumb();
-    openKeys.value = val;
-    /* 模拟点击卡片 */
-    openKeys.value.forEach(item => {
-        const child = renderType.value.find(child => child.id === item);
+    const childrenArr = findChildrenArr(list.value, openKeys.value);
+    childrenArr.forEach(child => {
+        /* 模拟点击卡片 */
         if (!child) return initBreadcrumb();
-        handleItem(child);
+        setBreadcrumb(child);
     });
+    getData(true, childrenArr[childrenArr.length - 1]?.id);
 };
-const handleSelect = v => {
-    // deep.value = v.keyPath.length + 1; // 选中数组的长度赋值给深度
-    // typeParentId.value = v.key;
-    // let arr = [];
-    // if (isItem.value) {
-    //     arr = itemList.value;
-    // } else {
-    //     arr = list.value;
-    // }
+/* 菜单开合变化 */
+const handleOpenChange = val => {
+    openKeys.value = val;
+    cardClikcMock();
+};
+/* 菜单选中 */
+const handleSelect = async v => {
+    console.log(v);
+    let res = null;
+    if (v.keyPath.length === 5) {
+        openKeys.value = v.keyPath;
+        cardClikcMock();
+        detailId.value = v.key;
+        isDetail.value = true;
+        nextTick(() => {
+            PartsDetailRef.value.getData();
+        });
+        return;
+    }
+    switch (v.keyPath.length) {
+        case 2:
+            res = await getBomListName(v.key);
+            break;
+        case 3:
+            res = await getBomlistVersion(v.key);
+            break;
+        case 4:
+            res = await getBomlistCategory(v.key);
+            break;
+
+        default:
+            break;
+    }
+    setChildren(list.value, v.keyPath, res.list);
+    openKeys.value = v.keyPath;
+    cardClikcMock();
+};
+const findChildrenArr = (arr, keys) => {
+    let list = arr;
+    let childrenArr = [];
+    let obj = {};
+    console.log(arr, keys);
+    keys.forEach((item, index) => {
+        obj = list.find(child => child.id === item);
+        childrenArr.push(obj);
+        list = obj.children;
+    });
+    return childrenArr;
+};
+const findChildren = (arr, keys) => {
+    let childrenArr = arr;
+    let obj = {};
+    keys.forEach((item, index) => {
+        obj = childrenArr.find(child => child.id === item);
+        childrenArr = obj.children;
+    });
+    return obj;
+};
+const setChildren = (arr, keys, children) => {
+    let childrenArr = arr;
+    const child = findChildren(arr, keys);
+    const parentKey = keys[keys.length - 1];
+    switch (keys.length) {
+        case 2:
+            child.children = children.map(item => {
+                return {
+                    id: item.sync_id,
+                    key: item.sync_id,
+                    name: item.name,
+                    name_en: item.name,
+                };
+            });
+            break;
+        case 3:
+            child.children = children.map(item => {
+                return {
+                    id: item.id,
+                    key: item.id,
+                    name: `${item.version} 版本`,
+                    name_en: `${item.version} Version`,
+                };
+            });
+            break;
+        case 4:
+            child.children = children.map(item => {
+                return {
+                    id: item.id,
+                    key: item.id,
+                    name: item.name,
+                    name_en: item.name,
+                };
+            });
+            break;
+
+        default:
+            break;
+    }
 };
 const handleSelectTab = i => {
     tabIndex.value = i;
+    getData(true, openKeys.value[openKeys.value.length - 1]);
+};
+const handleClick = item => {
+    if (isItem.value) {
+        routerChange(`${route.path}/detail`, { id: item.id });
+    } else {
+        handleItem(item);
+    }
 };
 const handleItem = item => {
-    if (isItem.value) {
-        console.log(deep.value);
-        // routerChange(`${route.path}/detail`, { id: item.id });
+    if (deep.value === 2) {
+        handleSelect({ key: item.id, keyPath: [openKeys.value[0], item.id] }); // 模拟触发
     } else {
-        typeParentId.value = item.id;
-        breadcrumbList.value.push({
-            id: item.id,
-            key: item.key,
-            name: item.name,
-            name_en: item.name_en,
-        });
-        deep.value += 1;
+        setBreadcrumb(item);
+        getData(true, item.id);
     }
+};
+const setBreadcrumb = item => {
+    if (!isDetail.value) deep.value += 1;
+    typeParentId.value = item.id;
+    breadcrumbList.value.push({
+        id: item.id,
+        key: item.key,
+        name: item.name,
+        name_en: item.name_en,
+    });
 };
 const handleBreadcrumb = id => {
     if (typeParentId.value === id) return;
@@ -244,24 +366,27 @@ const handleBreadcrumb = id => {
     const index = breadcrumbList.value.findIndex(item => item.id === id);
     breadcrumbList.value.splice(index + 1);
     deep.value = breadcrumbList.value.length;
+    getData(true, id);
+};
+const handleScroll = () => {
+    // 因为存在子组件路由所以判断只在父路由时执行
+    if (route.path !== '/mall/accessories-list') return;
+    const footerHeight = document.querySelector('#mall-footer').clientHeight;
+    const html = document.documentElement;
+    Core.Util.handleScrollFn(html, getData, pagination, spinning.value, footerHeight);
 };
 /* methods end */
 
 /* fetch start */
-const getDataByParent = (parent_id = 0) => {
+const getBomTree = (parent_id = 0) => {
     // 通过父节点获取子级数据
     spinning.value = true;
-    Core.Api.ItemCategory.tree({
-        page: 0,
-        parent_id: parent_id,
-        is_authority: 1,
-        depth: 3,
-    })
+    Core.Api.Distributor.bomTree()
         .then(res => {
             list.value = res?.list || [];
         })
         .catch(err => {
-            console.log('getDataByParent err', err);
+            console.log('getBomTree err', err);
         })
         .finally(() => {
             spinning.value = false;
@@ -271,13 +396,16 @@ const getCarList = (q, reset = false) => {
     if (reset) resetFn();
     spinning.value = true;
     const params = {
-        type: 2, //1.整车；2.零部件/物料；3.周边；4.广宣品
+        bom_item_item_category_id: tabData.value ? tabData.value[tabIndex.value].category_id : '',
         page: pagination.page,
         page_size: pagination.page_size,
     };
     Object.assign(params, q);
-    itemListFetch({ ...params })
+    bomListPartsFetch({ ...params })
         .then(res => {
+            res?.list.forEach(item => {
+                item.type = 2;
+            });
             itemList.value = itemList.value.concat(res?.list);
             pagination.total = res.count;
             pagination.total_page = Math.ceil(pagination.total / pagination.page_size);
@@ -285,6 +413,45 @@ const getCarList = (q, reset = false) => {
         .finally(() => {
             spinning.value = false;
         });
+};
+/* 获取bom名称列表 */
+const getBomListName = async id => {
+    const params = {
+        bom_item_category_id: id, //商品分类id
+    };
+    const res = await Core.Api.Distributor.bomListName({ ...params });
+    return res;
+};
+/* 获取bom商品版本列表 */
+const getBomlistVersion = async id => {
+    const params = {
+        sync_id: id, //商品分类id
+    };
+    const res = await Core.Api.Distributor.bomlistVersion({ ...params });
+    return res;
+};
+/* 获取bom版本分组列表 */
+const getBomlistCategory = async id => {
+    const params = {
+        bom_id: id, //商品分类id
+    };
+    const res = await Core.Api.Distributor.bomlistCategory({ ...params });
+    return res;
+};
+const getListPartsCategory = async q => {
+    const params = {};
+    Object.assign(params, q);
+    try {
+        const res = await Core.Api.Distributor.listPartsCategory({ ...params });
+        tabData.value = res.list;
+        let count = 0;
+        tabData.value.forEach(item => (count += item.count));
+        tabData.value.unshift({
+            id: '',
+            category_name: 'All',
+            count,
+        });
+    } catch {}
 };
 /* fetch end */
 </script>
@@ -294,10 +461,10 @@ const getCarList = (q, reset = false) => {
     display: flex;
     .menu {
         margin-right: 40px;
-        min-width: 320px;
+        width: 320px;
     }
     .content {
-        flex: 1;
+        width: calc(100% - 360px);
         .title {
             font-size: 32px;
             font-weight: 500;
@@ -338,9 +505,22 @@ const getCarList = (q, reset = false) => {
             }
         }
         .tab {
+            width: 100%;
             display: flex;
             margin-bottom: 32px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 6px;
+            // 滚动条样式
+            &::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+            &::-webkit-scrollbar-thumb {
+                background-color: #d9d9d9;
+            }
             .tab-item {
+                flex-shrink: 0;
                 position: relative;
                 font-size: 24px;
                 font-weight: 400;
