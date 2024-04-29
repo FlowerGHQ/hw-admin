@@ -35,7 +35,6 @@ const supplyManage = {
                 title: '资料详情',
                 title_en: 'Materials Detail',
                 hidden: true,
-                auth: ['supply.supplier-manage.save-supplier.view'],
             },
         },
         {
@@ -46,7 +45,6 @@ const supplyManage = {
                 title: '创建资料',
                 title_en: 'Create Data',
                 hidden: true,
-                auth: ['supply.supplier-manage.save-supplier.save-supplier'],
             },
         },
         // 考虑免审供应商名录

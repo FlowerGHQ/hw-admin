@@ -22,7 +22,11 @@
         <!-- table -->
         <div class="table-container">
             <div class="button-area m-b-10">
-                <a-button type="primary" @click="onBtn">
+                <a-button
+                    type="primary"
+                    @click="onBtn"
+                    v-if="$auth('supply.supplier-manage.save-supplier.save-supplier')"
+                >
                     {{ $t('supply-chain.create_data') }}
                 </a-button>
                 <!-- 特批为合格供应商 -->
@@ -71,7 +75,11 @@
                     </template>
                     <!-- 操作 -->
                     <template v-if="column.key === 'operations'">
-                        <a-button type="link" @click="onView('add', record)">
+                        <a-button
+                            type="link"
+                            @click="onView('add', record)"
+                            v-if="$auth('supply.supplier-manage.save-supplier.view')"
+                        >
                             <MySvgIcon icon-class="supply-view" />
                             <span class="m-l-10">{{ $t('supply-chain.view') }}</span>
                         </a-button>
