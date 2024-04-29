@@ -9,7 +9,7 @@ const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 // 邮件管理
 const mailManagement = {
     path: '/mail-management',
-    component: () => import('@/views/layout/index.vue'),    
+    component: () => import('@/views/layout/index.vue'),
     name: 'MailManagement',
     type: [ROUTER_TYPE.CRM],
     meta: {
@@ -63,7 +63,7 @@ const mailManagement = {
 // 车辆管理
 const retailBusinessVehicleManagement = {
     path: '/retail-vehicle',
-    component: () => import('@/views/layout/index.vue'),    
+    component: () => import('@/views/layout/index.vue'),
     type: [ROUTER_TYPE.CRM],
     meta: {
         title: '车辆管理',
@@ -96,7 +96,7 @@ const retailBusinessVehicleManagement = {
 // 订单管理
 const retailBusinessOrderManagement = {
     path: '/retail-order',
-    component: () => import('@/views/layout/index.vue'),    
+    component: () => import('@/views/layout/index.vue'),
     type: [ROUTER_TYPE.CRM],
     meta: {
         title: '订单管理',
@@ -142,7 +142,7 @@ const RepairInvoiceExport = {
 // 账户管理(废弃)
 const walletManagement = {
     path: '/wallet',
-    component: () => import('@/views/layout/index.vue'),    
+    component: () => import('@/views/layout/index.vue'),
     name: 'WalletManagement',
     type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
     meta: {
@@ -176,10 +176,10 @@ const walletManagement = {
 };
 
 // 可能废弃了
-const Dashboard = {    
+const Dashboard = {
     path: '/dashboard',
     component: () => import('@/views/layout/index.vue'),
-    name: 'Dashboard',    
+    name: 'Dashboard',
     type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION],
     meta: {
         title: '商城',
@@ -208,7 +208,7 @@ const Dashboard = {
             },
         },
     ],
-}
+};
 
 /*{ // 零售商管理 - 零售商端
         path: '/agent/agent-detail-sp',
@@ -308,4 +308,10 @@ const Dashboard = {
 //     ]
 // },
 /* 零售业务新添加在CRM中的 end*/
-export { mailManagement, retailBusinessVehicleManagement, retailBusinessOrderManagement, RepairInvoiceExport, walletManagement };
+export {
+    mailManagement,
+    retailBusinessVehicleManagement,
+    retailBusinessOrderManagement,
+    RepairInvoiceExport,
+    walletManagement,
+};
