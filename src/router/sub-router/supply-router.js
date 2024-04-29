@@ -90,7 +90,7 @@ const supplyManage = {
             meta: {
                 title: '合格供应商名录',
                 title_en: 'Qualified Supplier List',
-                auth: ['supply.supplier-manage.qualified'],
+                auth: ['supply.supplier-manage.qualified'], //正式
             },
         },
 
