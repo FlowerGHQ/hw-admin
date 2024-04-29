@@ -166,6 +166,7 @@ export default {
         // 余额
         available_balance_re: '余额',
         order_number: '订单编号',
+        deduction: '扣款',
     },
     en: {
         vehicle_account: 'Vehicle Account',
@@ -288,5 +289,6 @@ export default {
         // 余额
         available_balance_re: 'Available Balance',
         order_number: 'Order Number',
+        deduction: 'Deduction',
     },
 };

@@ -197,6 +197,9 @@
                                     >
                                         {{ $t('distributor-detail.fund_change_detail') }}
                                     </div>
+                                    <template v-if="$auth('sales.distribution.distributor.account-operations')">
+                                        <span class="deduction">{{ $t('distributor-detail.deduction') }}</span>
+                                    </template>
                                 </div>
                                 <div class="account-card-content-item-bottom">
                                     {{ $t('distributor-detail.parts_warning_tips') }}
@@ -482,6 +485,11 @@ onMounted(() => {
                     color: #1890ff;
                     cursor: pointer;
                     text-decoration: underline;
+                }
+                .deduction {
+                    margin-left: 10px;
+                    color: #ff4d4f;
+                    cursor: pointer;
                 }
             }
             .account-card-content-item-bottom {
