@@ -1358,7 +1358,7 @@ const SalesTargetManagement = {
         title: '销售目标管理',
         title_en: 'Sales Target Management',
         icon: 'i_s_dashboard',
-        auth: ['sales.sales-strategy'],
+        auth: ['sales.sale-target'],
     },
     children: [
         {
@@ -1368,7 +1368,7 @@ const SalesTargetManagement = {
             meta: {
                 title: '1.0数据看板目标设置',
                 title_en: '1.0 DataBoard Target Setting',
-                auth: ['sales.sales-strategy'],
+                auth: ['sales.sale-target.1data-board'],
             },
         },
         {
@@ -1379,7 +1379,7 @@ const SalesTargetManagement = {
                 title: '新增销售目标',
                 title_en: 'New Sales Target',
                 hidden: true,
-                auth: ['sales.sales-strategy'],
+                auth: ['sales.sale-target.1data-board'],
             },
         },
     ],
