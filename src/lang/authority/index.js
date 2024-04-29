@@ -193,6 +193,8 @@ export default {
 
         'sales_sales-strategy': '销售策略管理',
         'sales_sales-strategy_sales-strategy': '销售策略',
+        'sales_sale-target': '销售目标管理',
+        'sales_sale-target_1data-board': '1.0数据看板目标设置',
 
         // 'sales_account': '收款账号管理',
         // 'sales_account_payment': '付款信息管理',
