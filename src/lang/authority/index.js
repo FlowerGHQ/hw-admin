@@ -13,7 +13,8 @@ export default {
 
         sys: '系统管理',
         sys_sys: '系统管理',
-        sys_sys_user: '用户列表',        
+        sys_sys_user: '用户列表',
+        'sys_sys_user_set-admin': '用户列表(设置管理员)',
         sys_sys_role: '角色管理',
         sys_sys_authority: '权限管理',
         sys_sys_message: '消息列表',
