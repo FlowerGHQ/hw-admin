@@ -29,7 +29,7 @@
                         </div>
                     </a-tooltip>
                 </span>
-                <span v-else-if="column.key === 'sales_area_list' /*销售区域*/">
+                <span v-else-if="column.key === 'sales_area' /*销售区域*/">
                     <a-tooltip>
                         <template #title>{{ $Util.getSalesAreaStr(text, lang) || '-' }}</template>
                         <div
@@ -103,8 +103,8 @@ const tableColumns = computed(() => {
         {
             // 销售区域
             title: proxy.$t('item-bom.sales_area'),
-            dataIndex: 'sales_area_list',
-            key: 'sales_area_list',
+            dataIndex: 'sales_area',
+            key: 'sales_area',
         },
         {
             // 最小起购量

@@ -21,16 +21,18 @@
                     </span>
                 </div>
             </template>
-            <div class="tab">
-                <div
-                    class="tab-item"
-                    :class="[index === tabIndex ? 'active' : '']"
-                    v-for="(item, index) in tabData"
-                    @click="handleSelectTab(index)"
-                >
-                    {{ `${item.category_name}（${item.count}）` }}
+            <template v-if="isItem">
+                <div class="tab">
+                    <div
+                        class="tab-item"
+                        :class="[index === tabIndex ? 'active' : '']"
+                        v-for="(item, index) in tabData"
+                        @click="handleSelectTab(index)"
+                    >
+                        {{ `${item.category_name}（${item.count}）` }}
+                    </div>
                 </div>
-            </div>
+            </template>
             <div class="box">
                 <template v-if="isDetail">
                     <PartsDetail ref="PartsDetailRef" :id="detailId" />
@@ -273,7 +275,7 @@ const findChildrenArr = (arr, keys) => {
     keys.forEach((item, index) => {
         obj = list.find(child => child.id === item);
         childrenArr.push(obj);
-        list = obj.children;
+        list = obj?.children || [];
     });
     return childrenArr;
 };

@@ -289,13 +289,13 @@
                             </div>
                         </a-tooltip>
                     </span>
-                    <span v-if="column.key === 'sales_area_list' /*销售区域*/">
+                    <span v-if="column.key === 'sale_area' /*销售区域*/">
                         <a-tooltip placement="topLeft">
                             <template #title>
-                                <template v-if="record.sales_area_list?.length !== 0">
-                                    <span v-for="(item, index) in record.sales_area_list">
+                                <template v-if="record.sale_area?.length !== 0">
+                                    <span v-for="(item, index) in record.sale_area">
                                         {{ $i18n.locale === 'en' ? item.country_en : item.country }}
-                                        {{ index + 1 !== record.sales_area_list?.length ? ',' : '' }}
+                                        {{ index + 1 !== record.sale_area?.length ? ',' : '' }}
                                     </span>
                                 </template>
                                 <template v-else> - </template>
@@ -306,10 +306,10 @@
                                     width: text?.length > 5 ? 6 * 12 + 'px' : '',
                                 }"
                             >
-                                <template v-if="record.sales_area_list?.length !== 0">
-                                    <span v-for="(item, index) in record.sales_area_list">
+                                <template v-if="record.sale_area?.length !== 0">
+                                    <span v-for="(item, index) in record.sale_area">
                                         {{ $i18n.locale === 'en' ? item.country_en : item.country }}
-                                        {{ index + 1 !== record.sales_area_list?.length ? ',' : '' }}
+                                        {{ index + 1 !== record.sale_area?.length ? ',' : '' }}
                                     </span>
                                 </template>
                                 <template v-else> - </template>
@@ -419,8 +419,8 @@ const tableColumns = computed(() => {
         // {
         //     // 销售区域
         //     title: proxy.$t('item-bom.sales_area'),
-        //     dataIndex: 'sales_area_list',
-        //     key: 'sales_area_list',
+        //     dataIndex: 'sale_area',
+        //     key: 'sale_area',
         // },
         {
             // 创建时间
@@ -467,7 +467,7 @@ const tableData = ref([
     //     "sync_name": "后牌照支架", //同步名称
     //     "sync_type": 1, //同步类型
     //     "sync_time": 1702454601, //同步时间
-    //     // "sales_area_list": [
+    //     // "sale_area": [
     //     //     {
     //     //         "id": 6, //销售区域id
     //     //         "continent": "亚洲", //洲
