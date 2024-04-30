@@ -221,7 +221,7 @@ watch(
     },
     {
         deep: true,
-        immediate: false,
+        immediate: true,
     },
 );
 </script>
