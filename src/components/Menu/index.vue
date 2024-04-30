@@ -2,7 +2,7 @@
     <div class="media-center-menu">
         <a-menu
             v-model:openKeys="openKeysModel"
-            v-model:selectedKeys="selectedKeys"
+            v-model:selectedKeys="selectedKeysModel"
             mode="inline"
             @select="handleSelect"
             @openChange="handleOpenChange"
@@ -39,6 +39,12 @@ const props = defineProps({
 const openKeysModel = computed({
     get: () => {
         return props.openKeys;
+    },
+    set: () => {},
+});
+const selectedKeysModel = computed({
+    get: () => {
+        return props.selectedKeys;
     },
     set: () => {},
 });

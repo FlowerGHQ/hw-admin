@@ -16,27 +16,41 @@
                 <div class="table-title">{{ title }}</div>
             </template>
             <template #bodyCell="{ column, text, record }">
-                <span v-if="column.key === 'sync_name' /*商品名称*/">
+                <span v-if="column.key === 'name' /*商品名称*/">
                     <a-tooltip>
                         <template #title>{{ text }}</template>
                         <div
                             class="one-spils cursor"
                             :style="{
-                                width: text?.length > 6 ? 7 * 12 + 'px' : '',
+                                width: text?.length > 11 ? 10 + 'rem' : '',
                             }"
                         >
                             {{ text }}
                         </div>
                     </a-tooltip>
                 </span>
-                <span v-else-if="column.key === 'sales_area' /*销售区域*/">
-                    <a-tooltip>
-                        <template #title>{{ $Util.getSalesAreaStr(text, lang) || '-' }}</template>
+                <span v-else-if="column.key === 'sale_area' /*销售区域*/">
+                    <a-tooltip placement="topLeft">
+                        <template #title>
+                            <template v-if="text.join(',')?.length !== 0">
+                                <span>
+                                    {{ text.join(',') }}
+                                </span>
+                            </template>
+                            <template v-else> - </template>
+                        </template>
                         <div
                             class="one-spils cursor"
-                            :style="{ width: $Util.getSalesAreaStr(text, lang)?.length > 10 ? 11 + 'em' : '' }"
+                            :style="{
+                                width: text.join(',')?.length > 11 ? 10 + 'rem' : '',
+                            }"
                         >
-                            {{ $Util.getSalesAreaStr(text, lang) || '-' }}
+                            <template v-if="record.sale_area?.length !== 0">
+                                <span>
+                                    {{ text.join(',') }}
+                                </span>
+                            </template>
+                            <template v-else> - </template>
                         </div>
                     </a-tooltip>
                 </span>
@@ -60,6 +74,11 @@
                 </template>
                 <template v-else-if="column.dataIndex === 'fob_usd'">
                     {{ `$ ${$Util.countFilter(record.fob_usd)}` }}
+                </template>
+                <template v-else-if="column.key === 'operation' /*操作*/">
+                    <button class="edit" @click="handleEdit(record)">
+                        {{ $t('common.edit') }}
+                    </button>
                 </template>
             </template>
         </a-table>
@@ -103,8 +122,8 @@ const tableColumns = computed(() => {
         {
             // 销售区域
             title: proxy.$t('item-bom.sales_area'),
-            dataIndex: 'sales_area',
-            key: 'sales_area',
+            dataIndex: 'sale_area',
+            key: 'sale_area',
         },
         {
             // 最小起购量
@@ -128,9 +147,14 @@ const tableColumns = computed(() => {
         },
         {
             // 分组
-            title: proxy.$t('item-bom.classify'),
+            title: proxy.$t('item-bom.category'),
             dataIndex: 'bom_category',
             key: 'bom_category',
+        },
+        {
+            title: proxy.$t('common.operations'),
+            dataIndex: 'operation',
+            key: 'operation',
         },
     ];
     return result;
@@ -139,21 +163,21 @@ const tableData = ref([
     // {
     //     name: "你好啊你好啊你好啊",
     //     manufacturer_name: "你好啊你好啊你好啊",
-    //     sales_area: "你好啊你好啊你好啊",
+    //     sale_area: "你好啊你好啊你好啊",
     //     create_time: "1702363337",
     //     remark: "测试的东西是什么啊送达的傻大姐撒肯定撒看的艰苦撒旦就卡死进度加快撒可见度刷卡机的空间的健康撒可见度",
     // },
     // {
     //     name: "你好啊世界经济发",
     //     manufacturer_name: "你好啊世界经济发",
-    //     sales_area: "你好啊世界经济发",
+    //     sale_area: "你好啊世界经济发",
     //     create_time: "1702363337",
     //     remark: "ss",
     // },
     // {
     //     name: "你好啊sss",
     //     manufacturer_name: "你好啊sss",
-    //     sales_area: "你好啊sss",
+    //     sale_area: "你好啊sss",
     //     create_time: "1702363337",
     //     remark: "ss",
     // },
@@ -183,6 +207,18 @@ const salesArea = arr => {
         }
     });
     return result.length > 0 ? result.join(',') : '-';
+};
+// 编辑跳转
+const handleEdit = item => {
+    const routeUrl = router.resolve({
+        path: '/item/item-edit',
+        query: {
+            id: item.id,
+            set_id: 0, // 配件默认单规格
+            edit: true,
+        },
+    });
+    window.open(routeUrl.href, '_blank');
 };
 
 onMounted(() => {
@@ -260,5 +296,10 @@ watch(
 
 .set-width {
     width: 100px;
+}
+.edit {
+    font-weight: 400;
+    line-height: 19.6px;
+    color: #0061ff;
 }
 </style>

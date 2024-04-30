@@ -213,7 +213,7 @@ const tableColumns = computed(() => {
         },
         {
             // 分类
-            title: proxy.$t('item-bom.classify'),
+            title: proxy.$t('item-bom.category'),
             dataIndex: 'bom_category',
             key: 'bom_category',
         },

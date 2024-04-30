@@ -2,151 +2,8 @@
     <div class="fittings-three">
         <!-- 爆炸图 -->
         <div class="explosion-diagram">
-            <div class="explosion-diagram-tip">
-                <a-tooltip class="cursor" title="①上传配件，②上传爆炸图，③配置点位">
-                    <div class="tip-wrap">
-                        <img class="tip-icon" :src="tipIcon" alt="" />
-                        <div class="tip-text">
-                            {{ $t(/*操作说明*/ 'item-bom.operation_instructions') }}
-                        </div>
-                    </div>
-                </a-tooltip>
-
-                <div v-if="isExplosionImg" class="operation">
-                    <a-button class="delete-btn m-r-10" @click="onOperation('delete')">
-                        {{ /*删除*/ $t('item-bom.delete_explosive') }}
-                    </a-button>
-
-                    <a-upload
-                        class="m-r-10"
-                        name="file"
-                        accept="image/*"
-                        :file-list="uploadOptions.coverList"
-                        :action="uploadOptions.action"
-                        :headers="uploadOptions.headers"
-                        :data="uploadOptions.data"
-                        :maxCount="1"
-                        :showUploadList="false"
-                        @change="event => onUploadExplosion(event, explosionImgItem.id)"
-                    >
-                        <a-button class="replace-btn">
-                            {{ /* 替换爆炸图 */ $t('item-bom.alternate_explosive') }}
-                        </a-button>
-                    </a-upload>
-                    <a-button class="save-btn" type="primary" @click="onOperation('save')">
-                        {{ $t('item-bom.save') }}
-                    </a-button>
-                </div>
-            </div>
             <div class="explosion-diagram-bottom">
                 <div v-if="isExplosionImg" class="explosion-diagram-content">
-                    <!-- <div class="content-left /*点位*/">
-                        <div class="left-list">
-                            <div class="left-list-header">{{ $t('item-bom.point_list') }}</div>
-                            <div v-if="sidebarDataGroup.length === 0" class="left-list-emtpy-text">
-                                {{ $t('item-bom.current_point_tips') }}
-                            </div>
-                            <div v-else class="sidebar-points">
-                                <div v-for="(item, itemIndex) in sidebarDataGroup" :key="itemIndex" class="sidebar">
-                                    <template v-for="(ground, i) in item" :key="i">
-                                        <div
-                                            class="sidebar-item"
-                                            :class="{ 'sidebar-item-change': siderBarItemLabel === ground.label }"
-                                            @click="event => onSidebarItem(event, 'parent-node', ground)"
-                                        >
-                                            <div class="silder-index-left">
-                                                <div
-                                                    class="silder-index-text"
-                                                    :class="{
-                                                        'silder-index-text-change': siderBarItemLabel === ground.label,
-                                                    }"
-                                                >
-                                                    {{ $t('item-bom.point') }}
-                                                    {{ ground.index }}
-                                                </div>
-                                            </div>
-
-                                            <div class="silder-operate">
-                                                <div class="silder-copy" @click.stop="onSilderCopy(ground, i, 'node')">
-                                                    <a-tooltip>
-                                                        <template #title>
-                                                            {{ $t('item-bom.copy_point_location') }}</template
-                                                        >
-                                                        <img
-                                                            class="img-icon"
-                                                            src="../../../../assets/images/bom/copy.png"
-                                                            alt=""
-                                                        />
-                                                    </a-tooltip>
-                                                </div>
-                                                <div
-                                                    class="silder-delete"
-                                                    @click.stop="onNodeDelete(ground, i, 'node')"
-                                                >
-                                                    <a-tooltip>
-                                                        <template #title> {{ $t('item-bom.deelete_points') }}</template>
-                                                        <img
-                                                            class="img-icon"
-                                                            src="../../../../assets/images/bom/delete.png"
-                                                            alt=""
-                                                        />
-                                                    </a-tooltip>
-                                                </div>
-                                                <div
-                                                    class="silder-node"
-                                                    @click.stop="onSilderCopy(ground, i, 'child_node')"
-                                                >
-                                                    <a-tooltip>
-                                                        <template #title> {{ $t('item-bom.copy_Branch') }}</template>
-                                                        <img
-                                                            class="img-icon"
-                                                            src="../../../../assets/images/bom/childe-node.png"
-                                                            alt=""
-                                                        />
-                                                    </a-tooltip>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="child-node">
-                                            <div
-                                                class="vertical-line"
-                                                :style="{
-                                                    height:
-                                                        ground.child_node?.length <= 1
-                                                            ? 21 * ground.child_node?.length + 'px'
-                                                            : 46 * (ground.child_node?.length - 1) + 21 + 'px',
-                                                }"
-                                            ></div>
-                                            <template v-for="(item, childIndex) in ground.child_node" :key="childIndex">
-                                                <div class="child-node-item">
-                                                    <div class="line-item">
-                                                        <div class="line"></div>
-                                                        <div class="circle"></div>
-                                                    </div>
-                                                    <div
-                                                        class="child-node-text cursor"
-                                                        @click="event => onSidebarItem(event, 'child-node', ground)"
-                                                    >
-                                                        <span class="child-node-content">
-                                                            {{ $t('item-bom.branch_point') }}{{ childIndex + 1 }}
-                                                        </span>
-                                                        <div
-                                                            class="child-delete"
-                                                            @click.stop="
-                                                                onSilderDelete(ground, i, 'child_node', childIndex)
-                                                            "
-                                                        >
-                                                            <MySvgIcon icon-class="delete" class="f-s-16" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </template>
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
                     <div class="content-right /*爆炸图*/">
                         <div class="point-contain" @mouseup="mouseUpHandler" @mousemove="mousemoveHandler">
                             <!-- init中有创建了一个img在这 -->
@@ -249,11 +106,6 @@
                 <div class="fittings-title">
                     {{ $t('item-bom.accessories_list') }}
                 </div>
-                <div v-if="tableData.length > 0" class="fittings-title-options">
-                    <a-button @click="onAddFittings" type="primary">
-                        {{ $t('item-bom.add_fittings') }}
-                    </a-button>
-                </div>
             </div>
             <a-table
                 :row-key="record => record.id"
@@ -289,33 +141,6 @@
                             </div>
                         </a-tooltip>
                     </span>
-                    <span v-if="column.key === 'sale_area' /*销售区域*/">
-                        <a-tooltip placement="topLeft">
-                            <template #title>
-                                <template v-if="record.sale_area?.length !== 0">
-                                    <span v-for="(item, index) in record.sale_area">
-                                        {{ $i18n.locale === 'en' ? item.country_en : item.country }}
-                                        {{ index + 1 !== record.sale_area?.length ? ',' : '' }}
-                                    </span>
-                                </template>
-                                <template v-else> - </template>
-                            </template>
-                            <div
-                                class="one-spils cursor"
-                                :style="{
-                                    width: text?.length > 5 ? 6 * 12 + 'px' : '',
-                                }"
-                            >
-                                <template v-if="record.sale_area?.length !== 0">
-                                    <span v-for="(item, index) in record.sale_area">
-                                        {{ $i18n.locale === 'en' ? item.country_en : item.country }}
-                                        {{ index + 1 !== record.sale_area?.length ? ',' : '' }}
-                                    </span>
-                                </template>
-                                <template v-else> - </template>
-                            </div>
-                        </a-tooltip>
-                    </span>
                     <span v-if="column.key === 'version' /*创建时间*/">
                         {{ activeObj.version_name }}
                     </span>
@@ -330,19 +155,6 @@
                             </div>
                         </a-tooltip>
                     </span>
-                </template>
-                <template v-if="!isSearch" #emptyText>
-                    <div class="empty-add-item-container">
-                        <img :src="emptyImage" alt="" />
-                        <div class="empty-add-item-text-wrap">
-                            <div class="empty-add-item-tip">
-                                {{ $t('item-bom.explosion_diagram') }}
-                            </div>
-                            <a-button @click="onAddFittings" type="primary">
-                                {{ $t('item-bom.add_fittings') }}
-                            </a-button>
-                        </div>
-                    </div>
                 </template>
             </a-table>
         </div>
@@ -436,16 +248,16 @@ const tableColumns = computed(() => {
         },
     ];
 
-    if (isExplosionImg.value) {
-        // 有爆炸图才添加序号(前端自定义自己删除)
-        result.unshift({
-            // 序号
-            width: 250,
-            title: proxy.$t('item-bom.ordinal'),
-            dataIndex: 'index',
-            key: 'index',
-        });
-    }
+    // if (isExplosionImg.value) {
+    //     // 有爆炸图才添加序号(前端自定义自己删除)
+    //     result.unshift({
+    //         // 序号
+    //         width: 250,
+    //         title: proxy.$t('item-bom.ordinal'),
+    //         dataIndex: 'index',
+    //         key: 'index',
+    //     });
+    // }
     return result;
 });
 const tableData = ref([

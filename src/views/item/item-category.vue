@@ -87,7 +87,7 @@
             >
                 <div class="modal-content">
                     <!-- 添加附件 -->
-                    <div class="form-item required">
+                    <div class="form-item">
                         <div class="key">{{ $t('customer-care.add_attachment') }}</div>
                         <div class="value flex">
                             <MyUpload
@@ -355,9 +355,6 @@ export default {
         },
         handleModalSubmit() {
             let form = Core.Util.deepCopy(this.editForm);
-            if (!form.logo) {
-                return this.$message.warning(this.$t('def.enter'));
-            }
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter'));
             }

@@ -83,10 +83,10 @@
                     <div class="table-title">{{ title }}</div>
                 </template>
                 <template #bodyCell="{ column, text, record }">
-                    <span v-if="column.key === 'sync_name' /*商品名称*/">
+                    <span v-if="column.key === 'name' /*商品名称*/">
                         <a-tooltip>
                             <template #title>{{ text }}</template>
-                            <div class="one-spils cursor" :style="{ width: text?.length > 6 ? 7 * 12 + 'px' : '' }">
+                            <div class="one-spils cursor" :style="{ width: text?.length > 11 ? 10 + 'rem' : '' }">
                                 {{ text || '-' }}
 
                                 <span class="new-version title-right" v-if="record.flag_new === 1 && flagNew === 1">
@@ -96,13 +96,27 @@
                         </a-tooltip>
                     </span>
                     <span v-else-if="column.key === 'sale_area' /*销售区域*/">
-                        <a-tooltip>
-                            <template #title>{{ $Util.getSalesAreaStr(text, lang) || '-' }}</template>
+                        <a-tooltip placement="topLeft">
+                            <template #title>
+                                <template v-if="text.join(',')?.length !== 0">
+                                    <span>
+                                        {{ text.join(',') }}
+                                    </span>
+                                </template>
+                                <template v-else> - </template>
+                            </template>
                             <div
                                 class="one-spils cursor"
-                                :style="{ width: $Util.getSalesAreaStr(text, lang)?.length > 10 ? 11 + 'em' : '' }"
+                                :style="{
+                                    width: text.join(',')?.length > 11 ? 10 + 'rem' : '',
+                                }"
                             >
-                                {{ $Util.getSalesAreaStr(text, lang) || '-' }}
+                                <template v-if="record.sale_area?.length !== 0">
+                                    <span>
+                                        {{ text.join(',') }}
+                                    </span>
+                                </template>
+                                <template v-else> - </template>
                             </div>
                         </a-tooltip>
                     </span>
@@ -264,7 +278,7 @@ const tableColumns = computed(() => {
         },
         {
             // 分组
-            title: proxy.$t('item-bom.classify'),
+            title: proxy.$t('item-bom.category'),
             dataIndex: 'bom_category',
             key: 'bom_category',
         },
