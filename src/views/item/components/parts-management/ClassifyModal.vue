@@ -214,8 +214,8 @@ const tableColumns = computed(() => {
         {
             // 分类
             title: proxy.$t('item-bom.category'),
-            dataIndex: 'bom_category',
-            key: 'bom_category',
+            dataIndex: 'item_category_name',
+            key: 'item_category_name',
         },
         {
             // 用量

@@ -173,6 +173,9 @@ const TreeRefresh = val => {
 const handleCategoryChange = val => {
     console.log(val, treeRef.value);
     if (treeRef.value) treeRef.value.getGoodsList(val);
+    activeObj.value = {
+        sync_id: '-1',
+    };
 };
 
 onMounted(() => {

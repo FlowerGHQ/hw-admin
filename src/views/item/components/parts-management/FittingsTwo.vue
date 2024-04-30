@@ -279,8 +279,8 @@ const tableColumns = computed(() => {
         {
             // 分组
             title: proxy.$t('item-bom.category'),
-            dataIndex: 'bom_category',
-            key: 'bom_category',
+            dataIndex: 'item_category_name',
+            key: 'item_category_name',
         },
         {
             title: proxy.$t('common.operations'),
@@ -444,7 +444,7 @@ const handleTableChange = (pagination, filters, sorter) => {
 };
 // 编辑跳转
 const handleEdit = item => {
-    const routeUrl = router.resolve({
+    router.push({
         path: '/item/item-edit',
         query: {
             id: item.id,
@@ -452,7 +452,6 @@ const handleEdit = item => {
             edit: true,
         },
     });
-    window.open(routeUrl.href, '_blank');
 };
 /* methods end*/
 // 分类弹窗展示

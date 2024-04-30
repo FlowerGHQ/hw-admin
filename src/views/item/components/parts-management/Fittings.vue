@@ -89,6 +89,9 @@
 import { onMounted, ref, getCurrentInstance, computed, watch } from 'vue';
 import Core from '@/core';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 const $i18n = useI18n();
 const locale = $i18n.locale;
 const props = defineProps({
@@ -148,8 +151,8 @@ const tableColumns = computed(() => {
         {
             // 分组
             title: proxy.$t('item-bom.category'),
-            dataIndex: 'bom_category',
-            key: 'bom_category',
+            dataIndex: 'item_category_name',
+            key: 'item_category_name',
         },
         {
             title: proxy.$t('common.operations'),
@@ -210,7 +213,7 @@ const salesArea = arr => {
 };
 // 编辑跳转
 const handleEdit = item => {
-    const routeUrl = router.resolve({
+    router.push({
         path: '/item/item-edit',
         query: {
             id: item.id,
@@ -218,7 +221,6 @@ const handleEdit = item => {
             edit: true,
         },
     });
-    window.open(routeUrl.href, '_blank');
 };
 
 onMounted(() => {
