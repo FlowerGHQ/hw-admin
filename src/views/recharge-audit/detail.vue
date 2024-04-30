@@ -92,38 +92,48 @@
             </div>
         </div>
         <!-- 只有是业务员且当前状态为一审 或者是财务且当前状态为二审 才能进行审核操作 -->
-        <div class="detail-panel">
-            <div
-                :class="
-                    detail.result === CONST.AUDIT_RESULT_MAP.REJECT
-                        ? 'info-line center required'
-                        : 'info-line center required mb'
-                "
-            >
-                <div class="info-key">
-                    {{ $t(/*审核结果*/ 'payment-management.audit_result') }}
+        <!-- (一审核权限 && 等待审核状态) | (二审核权限 && 等待审核状态)  -->
+        <template
+            v-if="
+                ($auth('finance.audit-record.recharge.first-instance') &&
+                    $Util.Common.isMember(detail.status, [AUDIT_STATUS_MAP.PENDING_FIRST])) ||
+                ($auth('finance.audit-record.recharge.second-instance') &&
+                    $Util.Common.isMember(detail.status, [AUDIT_STATUS_MAP.PENDING_SECOND]))
+            "
+        >
+            <div class="detail-panel">
+                <div
+                    :class="
+                        detail.result === CONST.AUDIT_RESULT_MAP.REJECT
+                            ? 'info-line center required'
+                            : 'info-line center required mb'
+                    "
+                >
+                    <div class="info-key">
+                        {{ $t(/*审核结果*/ 'payment-management.audit_result') }}
+                    </div>
+                    <div class="info-value">
+                        <a-radio-group @change="radioGroupChange" v-model:value="form.result">
+                            <a-radio v-for="item in CONST.AUDIT_RESULT" :value="item.value">
+                                {{ item[$i18n.locale] }}
+                            </a-radio>
+                        </a-radio-group>
+                    </div>
                 </div>
-                <div class="info-value">
-                    <a-radio-group @change="radioGroupChange" v-model:value="form.result">
-                        <a-radio v-for="item in CONST.AUDIT_RESULT" :value="item.value">
-                            {{ item[$i18n.locale] }}
-                        </a-radio>
-                    </a-radio-group>
+                <div v-if="form.result === CONST.AUDIT_RESULT_MAP.REJECT" class="info-line start required mb">
+                    <div class="info-key">
+                        {{ $t(/*不通过原因填写*/ 'payment-management.caus_key') }}
+                    </div>
+                    <div class="info-value">
+                        <a-textarea
+                            v-model:value="form.remark"
+                            :placeholder="$t(/*请输入不通过原因*/ 'payment-management.textarea')"
+                            :auto-size="{ minRows: 6, maxRows: 6 }"
+                        />
+                    </div>
                 </div>
             </div>
-            <div v-if="form.result === CONST.AUDIT_RESULT_MAP.REJECT" class="info-line start required mb">
-                <div class="info-key">
-                    {{ $t(/*不通过原因填写*/ 'payment-management.caus_key') }}
-                </div>
-                <div class="info-value">
-                    <a-textarea
-                        v-model:value="form.remark"
-                        :placeholder="$t(/*请输入不通过原因*/ 'payment-management.textarea')"
-                        :auto-size="{ minRows: 6, maxRows: 6 }"
-                    />
-                </div>
-            </div>
-        </div>
+        </template>
         <!-- 审核不通过可以查看结果和审核原因 -->
         <div class="detail-panel" v-if="rejectAudit">
             <div :class="detail.result === CONST.AUDIT_RESULT_MAP.REJECT ? 'info-line center' : 'info-line center mb'">
@@ -143,10 +153,19 @@
                 </div>
             </div>
         </div>
-        <div class="btn-container">
-            <a-button @click="routerChange('back')">{{ $t(/*取消*/ 'pop_up.no') }}</a-button>
-            <a-button @click="handleSubmit" type="primary">{{ $t(/*确定*/ 'pop_up.yes') }}</a-button>
-        </div>
+        <template
+            v-if="
+                ($auth('finance.audit-record.recharge.first-instance') &&
+                    $Util.Common.isMember(detail.status, [AUDIT_STATUS_MAP.PENDING_FIRST])) ||
+                ($auth('finance.audit-record.recharge.second-instance') &&
+                    $Util.Common.isMember(detail.status, [AUDIT_STATUS_MAP.PENDING_SECOND]))
+            "
+        >
+            <div class="btn-container">
+                <a-button @click="routerChange('back')">{{ $t(/*取消*/ 'pop_up.no') }}</a-button>
+                <a-button @click="handleSubmit" type="primary">{{ $t(/*确定*/ 'pop_up.yes') }}</a-button>
+            </div>
+        </template>
         <CheckModal :visible="modalShow" :bodyText="modalText" :title="modalTitle">
             <a-button @click="modalShow = false">{{ $t(/*返回修改*/ 'payment-management.return_modify') }}</a-button>
             <a-button type="primary" @click="handleModalSubmit">{{ submitText }}</a-button>
@@ -189,6 +208,7 @@ const form = ref({
     remark: undefined,
 });
 const CONST = Core.Const.AUDIT_MANAGEMENT;
+const AUDIT_STATUS_MAP = Core.Const.AUDIT_MANAGEMENT.AUDIT_STATUS_MAP;
 // 当前货币类型
 const currencyValue = computed(() => {
     if (detail.value.currency === 'EUR') {
