@@ -382,10 +382,10 @@ const apiList = {
         detailBySn: ['PostJson', 'purchase-order/detail-sn'],
         itemList: ['PostJson', 'purchase-order-item/list'], // 采购订单明细列表
         giveawayList: ['PostJson', 'purchase-order-item/giveaway-list'], // 采购订单赠品明细列表
-        payList: ['PostJson', 'purchase-order-pay/list'], // 采购订单收款明细列表
-        payAudit: ['PostJson', 'purchase-order-pay/audit'], // 采购订单收款明细列表
+        payList: ['PostJson', 'pay/list'], // 采购订单收款明细列表
+        payAudit: ['PostJson', 'pay/audit'], // 采购订单收款明细列表
         createAudit: ['PostJson', 'purchase-order/create-audit'], // 售后采购单创建审核
-        delete: ['PostJson', 'purchase-order-pay/delete'], // 采购订单收款明细列表
+        delete: ['PostJson', 'pay/delete'], // 采购订单收款明细列表
         itemByIdList: ['PostJson', 'purchase-order-item/list-by-item-id'], // 采购订单明细列表
         payment: ['PostJson', 'purchase-order/payment'], // 支付订单
         outStock: ['PostJson', 'purchase-order/out-stock'], // 订单发货
