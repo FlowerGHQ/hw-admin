@@ -198,7 +198,7 @@
                         {{ $t('distributor-detail.cancel_record') }}
                     </a-button>
 
-                    <!-- 付款 分销商可见 & 订单状态(等待审核不显示) & 支付状态(待支付, 部分支付) & 权限-->
+                    <!-- 付款 分销商可见 & 订单状态(等待审核不显示) & 支付状态(待支付, 部分支付)-->
                     <a-button
                         v-if="
                             $Util.Common.isMember(loginType, [USER_TYPE.DISTRIBUTOR]) &&
@@ -206,8 +206,7 @@
                             $Util.Common.isMember(detail.payment_status, [
                                 PAYMENT_STATUS.WAIT_PAY,
                                 PAYMENT_STATUS.PAYING,
-                            ]) &&
-                            $auth('sales.distribution.order.payment')
+                            ])
                         "
                         type="primary"
                         @click="routerChange('payment')"
