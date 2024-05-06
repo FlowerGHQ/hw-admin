@@ -71,6 +71,7 @@ const store = useStore();
 
 /* state start */
 const deep = ref(1); // 层级
+const id = ref('');
 const typeParentId = ref(null);
 const spinning = ref(false);
 const pagination = reactive({
@@ -171,20 +172,22 @@ onBeforeUnmount(() => {
 
 /* methods start */
 // 获取数据
-const getData = async (reset = false, id = '') => {
+const getData = async (reset = false, id_ = '') => {
     if (!isItem.value || deep.value < 2) return;
+    spinning.value = true;
+    id.value = id_ || id.value;
     switch (deep.value) {
         case 3:
-            await getListPartsCategory({ bom_item_category_id: id });
-            getCarList({ bom_item_category_id: id }, reset);
+            await getListPartsCategory({ bom_item_category_id: id.value });
+            getCarList({ bom_item_category_id: id.value }, reset);
             break;
         case 4:
-            await getListPartsCategory({ sync_id: id });
-            getCarList({ sync_id: id }, reset);
+            await getListPartsCategory({ sync_id: id.value });
+            getCarList({ sync_id: id.value }, reset);
             break;
         case 5:
-            await getListPartsCategory({ id: id });
-            getCarList({ id: id }, reset);
+            await getListPartsCategory({ id: id.value });
+            getCarList({ id: id.value }, reset);
             break;
 
         default:
@@ -383,7 +386,22 @@ const handleScroll = () => {
     if (route.path !== '/mall/accessories-list') return;
     const footerHeight = document.querySelector('#mall-footer').clientHeight;
     const html = document.documentElement;
-    Core.Util.handleScrollFn(html, getData, pagination, spinning.value, footerHeight);
+    handleScrollFn(html, getData, footerHeight);
+};
+const handleScrollFn = (e, fn, hitBottomHeightQ = '') => {
+    if (!e || !fn) return;
+    const hitBottomHeight = 10;
+    const element = e;
+    if (
+        Math.ceil(element.scrollTop + element.clientHeight) >=
+        element.scrollHeight - (hitBottomHeightQ || 0 + hitBottomHeight)
+    ) {
+        // console.log('滑到底部');
+        if (pagination.page < pagination.total_page && !spinning.value) {
+            pagination.page++;
+            fn();
+        }
+    }
 };
 /* methods end */
 
@@ -404,7 +422,6 @@ const getBomTree = (parent_id = 0) => {
 };
 const getCarList = (q, reset = false) => {
     if (reset) resetFn();
-    spinning.value = true;
     const params = {
         bom_item_item_category_id: tabData.value ? tabData.value[tabIndex.value].category_id : '',
         page: pagination.page,

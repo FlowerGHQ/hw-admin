@@ -85,10 +85,9 @@
                 <template #bodyCell="{ column, text, record }">
                     <span v-if="column.key === 'name' /*商品名称*/">
                         <a-tooltip>
-                            <template #title>{{ text }}</template>
+                            <template #title>{{ lang === 'zh' ? text : record?.name_en || '-' }}</template>
                             <div class="one-spils cursor" :style="{ width: text?.length > 11 ? 10 + 'rem' : '' }">
-                                {{ text || '-' }}
-
+                                {{ lang === 'zh' ? text : record?.name_en || '-' }}
                                 <span class="new-version title-right" v-if="record.flag_new === 1 && flagNew === 1">
                                     {{ $t('item-bom.change') }}
                                 </span>
@@ -120,19 +119,9 @@
                             </div>
                         </a-tooltip>
                     </span>
-                    <span v-else-if="column.key === 'bom_category' /*分类*/">
+                    <span v-else-if="column.key === 'item_category_name' /*分类*/">
                         <div class="classify-box">
-                            <a-tooltip class="left-text">
-                                <template #title>{{
-                                    text && text?.name ? text?.name : $t('item-bom.unclassified')
-                                }}</template>
-                                <div
-                                    class="one-spils cursor"
-                                    :style="{ width: text?.name?.length > 6 ? 7 * 12 + 'px' : '' }"
-                                >
-                                    {{ text && text?.name ? text?.name : $t('item-bom.unclassified') }}
-                                </div>
-                            </a-tooltip>
+                            {{ lang === 'zh' ? text : record?.item_category_name_en || '-' }}
                         </div>
                     </span>
 

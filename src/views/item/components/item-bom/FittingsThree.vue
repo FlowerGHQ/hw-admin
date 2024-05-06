@@ -278,14 +278,14 @@
                     </div>
                     <span v-if="column.key === 'sync_name' /*商品名称*/">
                         <a-tooltip placement="topLeft">
-                            <template #title>{{ text }}</template>
+                            <template #title>{{ lang === 'zh' ? text : record.item?.name_en || '-' }}</template>
                             <div
                                 class="one-spils cursor"
                                 :style="{
                                     width: text?.length > 6 ? 7 * 12 + 'px' : '',
                                 }"
                             >
-                                {{ text }}
+                                {{ lang === 'zh' ? text : record.item?.name_en || '-' }}
                             </div>
                         </a-tooltip>
                     </span>
@@ -387,6 +387,9 @@ const props = defineProps({
 });
 const loading = ref(false);
 
+const lang = computed(() => {
+    return proxy.$store.state.lang;
+});
 const tableColumns = computed(() => {
     const result = [
         {

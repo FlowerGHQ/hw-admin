@@ -73,30 +73,6 @@
                 <!-- 空状态 -->
                 <div v-else class="empty-upload-container">
                     <img :src="uploadPic" alt="" />
-                    <div class="empty-upload-flex-wrap">
-                        <div class="empty-upload-tip">
-                            {{ $t('item-bom.upload_text') }}
-                        </div>
-                        <div v-if="tableData.length === 0" class="disable-add-btn">
-                            {{ $t(/*上传爆炸图*/ 'item-bom.upload_explosion') }}
-                        </div>
-                        <a-upload
-                            v-else
-                            name="file"
-                            accept="image/*"
-                            :file-list="uploadOptions.coverList"
-                            :action="uploadOptions.action"
-                            :headers="uploadOptions.headers"
-                            :data="uploadOptions.data"
-                            :maxCount="1"
-                            :showUploadList="false"
-                            @change="event => onUploadExplosion(event, 0)"
-                        >
-                            <a-button class="empty-upload-btn" type="primary">
-                                {{ $t(/*上传爆炸图*/ 'item-bom.upload_explosion') }}
-                            </a-button>
-                        </a-upload>
-                    </div>
                 </div>
             </div>
         </div>
@@ -130,14 +106,14 @@
                     </div>
                     <span v-if="column.key === 'sync_name' /*商品名称*/">
                         <a-tooltip placement="topLeft">
-                            <template #title>{{ text }}</template>
+                            <template #title>{{ lang === 'zh' ? text : record.item?.name_en || '-' }}</template>
                             <div
                                 class="one-spils cursor"
                                 :style="{
                                     width: text?.length > 6 ? 7 * 12 + 'px' : '',
                                 }"
                             >
-                                {{ text }}
+                                {{ lang === 'zh' ? text : record.item?.name_en || '-' }}
                             </div>
                         </a-tooltip>
                     </span>
@@ -202,6 +178,9 @@ const props = defineProps({
 });
 const loading = ref(false);
 
+const lang = computed(() => {
+    return proxy.$store.state.lang;
+});
 const tableColumns = computed(() => {
     const result = [
         {
