@@ -233,7 +233,7 @@ const tableColumns = computed(() => {
         },
         { title: $t('common.operations'), key: 'operations', fixed: 'right', width: 150 },
     ];
-    // $auth('supply.supplier-manage.save-supplier.view')
+    
     if (!$auth('supply.supplier-manage.save-supplier.view')) {
         // 过滤operations
         columns = columns.filter(item => item.key !== 'operations');
