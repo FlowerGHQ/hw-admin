@@ -161,6 +161,30 @@ const mallRouters = {
                 },
             ],
         },
+        {
+            path: 'recharge',
+            component: () => import('@/views/mall/order/recharge.vue'),
+            meta: {
+                title: '充值',
+                title_en: 'Recharge',
+            },
+        },
+        {
+            path: 'confirm-order',
+            component: () => import('@/views/mall/order/confirm-order.vue'),
+            meta: {
+                title: '确认订单',
+                title_en: 'Confirm Order',
+            },
+        },
+        {
+            path: 'pending-payment',
+            component: () => import('@/views/mall/order/pending-payment.vue'),
+            meta: {
+                title: '待支付订单',
+                title_en: 'Pending Payment Order',
+            },
+        },
     ],
 };
 const dealsPreview = {

@@ -6,6 +6,7 @@ let ROUTER_TYPE = {
     CRM: 4, // CRM
     SUPPLIER: 5, // 供应商
     SYSTEM: 6, // 系统管理
+    FINANCE: 7, // 财务
     WAREHOUSING: 8, // 仓储
 } 
 /**
@@ -18,6 +19,7 @@ const ROUTER_TYPE_MAP = {
     4: { KEY: 'crm', VALUE: 4 },
     5: { KEY: 'supply', VALUE: 5 },
     6: { KEY: 'sys', VALUE: 6, ISMANAGER: true },       
+    7: { KEY: 'finance', VALUE: 7,},       
     8: { KEY: 'invoice', VALUE: 8 },       
 }  
 
@@ -64,6 +66,13 @@ const MODULEAUTH = [
         key: ROUTER_TYPE_MAP[ROUTER_TYPE.CRM].KEY,
         img: Util.Image.getImageFile('router', 'router_type_1'),
         t: 'n.crm',
+    },
+    {
+        id: 7,
+        value: ROUTER_TYPE.FINANCE,
+        key: ROUTER_TYPE_MAP[ROUTER_TYPE.FINANCE].KEY,
+        img: Util.Image.getImageFile('router', 'router_type_1'),
+        t: 'payment-management.finance',
     },
     {
         id: 6,
@@ -150,9 +159,9 @@ const SYSTEM_AUTH = {
             list: [],
             select: [],
             templateSelect: [], // 当前模块是否被选中了
-            key: 'finance', // 财务
+            key: ROUTER_TYPE_MAP[ROUTER_TYPE.FINANCE].KEY, // 财务
             name: '财务',
-            tab: 7,
+            tab: ROUTER_TYPE.FINANCE,
         },        
         {
             list: [],

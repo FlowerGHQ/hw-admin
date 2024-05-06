@@ -390,7 +390,7 @@ import Core from '../../core';
 import TimeSearch from '../../components/common/TimeSearch.vue';
 import addressCascader from '@/components/common/AddressCascader.vue';
 import { take } from 'lodash';
-const modules = import.meta.globEager('../../assets/images/car/*');
+const modules = import.meta.globEager('../../assets/images/car/*', { eager: true });
 import axios from 'axios';
 import dayjs from 'dayjs';
 export default {

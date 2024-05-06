@@ -71,6 +71,7 @@ let Const = {
         KEY_PREFIX: 'haowan.admin.data.',
         KEY_TOKEN: 'token',
         KEY_USER: 'user',
+        KEY_ORG: 'org.obj',
         KEY_ORG_ID: 'org.id',
         KEY_ORG_TYPE: 'org.type',
         KEY_LOGIN_TYPE: 'login.type',
@@ -257,42 +258,6 @@ let Const = {
     FLAG: {
         YES: 1,
         NO: 0,
-    },
-
-    DISTRIBUTOR: {
-        // 代理商
-        TYPE: {
-            INTERNAL: 1, //国内
-            EXPORT: 2, //出口
-        },
-        TYPE_LIST: [
-            { zh: '国内', en: 'Internal', value: 1 },
-            { zh: '出口', en: 'Export', value: 2 },
-        ],
-        TYPE_MAP: {
-            1: { key: 1, zh: '国内', en: 'Internal' },
-            2: { key: 2, zh: '出口', en: 'Export' },
-        },
-        PAY_TIME: {
-            PAYMENT_TYPE_ALL_PAYMENT: 10,
-            PAYMENT_TYPE_DOWN_PAYMENT: 20,
-            PAYMENT_TYPE_PAYMENT_DAYS_30: 30,
-            PAYMENT_TYPE_PAYMENT_DAYS_60: 40,
-            PAYMENT_TYPE_PAYMENT_DAYS_90: 50,
-        },
-        PAY_TIME_LIST: {
-            10: { key: 10, zh: '全款发货', en: 'Full payment delivery' },
-            20: { key: 20, zh: 'TT(30%定金,70%尾款)', en: 'TT' },
-            30: { key: 30, zh: 'OA 30天', en: 'OA 30 days' },
-            40: { key: 40, zh: 'OA 60天', en: 'OA 60 days' },
-            50: { key: 50, zh: 'OA 90天', en: 'OA 90 days' },
-        },
-        PAY_TIME_MAP: {
-            10: 'TT(30%定金,70%尾款)',
-            20: 'OA 30天',
-            30: 'OA 60天',
-            40: 'OA 90天',
-        },
     },
 
     ORG_STATUS_LIST: [
@@ -782,22 +747,26 @@ let Const = {
             SPLIT: 50, // 已拆单
             WAIT_AUDIT: 60, // 等待审核
             WAIT_PAY: 100, // 待支付
+            WAIT_PRODUCED: 150, // 待生产
+            IN_PRODUCTION: 160, // 生产中
             WAIT_DELIVER: 200, // 待发货
             ORDER_TRANSFERRED: 250, // 已转单
             WAIT_TAKE_DELIVER: 300, // 已发货
             TAKE_DELIVER: 330, // 部分收货
             ALL_TAKE_DELIVER: 360, // 全部收货
             DEAL_SUCCESS: 400, // 交易完成
-            REVISE: 600,
+            REVISE: 600, // 原始订单已修改
             REVISE_AUDIT: 630, // 待审核
             CANCEL: -100, // 交易关闭
-            RE_REVISE: -200,
+            RE_REVISE: -200, // 修改后的订单被重新修改,被修改订单永久关闭
         },
         STATUS_MAP: {
             0: { value: '0', key: 0, color: 'red', zh: '未知', en: 'Unknown' },
             50: { value: '0', key: 50, color: 'green', zh: '已拆单', en: 'Separate bill' },
             60: { value: '0', key: 60, color: 'green', zh: '等待审核', en: 'Waiting for audit' },
             100: { value: '0', key: 100, color: 'orange', zh: '待支付', en: 'Waiting for payment' },
+            150: { value: '0', key: 150, color: 'blue-2', zh: '待生产', en: 'To be produced' },
+            160: { value: '0', key: 160, color: 'green-2', zh: '生产中', en: 'In production' },
             200: { value: '0', key: 200, color: 'orange', zh: '待发货', en: 'Wait for delivery' },
             250: { value: '0', key: 400, color: 'blue', zh: '已转单', en: 'Order transferred' },
             300: { value: '0', key: 300, color: 'blue', zh: '已发货', en: 'Shipped' },
@@ -805,8 +774,6 @@ let Const = {
             360: { value: '0', key: 360, color: 'yellow', zh: '全部收货', en: 'Received' },
             400: { value: '0', key: 400, color: 'green', zh: '交易完成', en: 'Order completed' },
             630: { value: '0', key: 630, color: 'yellow', zh: '待审核', en: 'To audit' },
-            150: { value: '0', key: 150, color: 'blue-2', zh: '待生产', en: 'To be produced' },
-            160: { value: '0', key: 160, color: 'green-2', zh: '生产中', en: 'In production' },
             '-100': { value: '0', key: -100, color: 'gray', zh: '交易关闭', en: 'Canceled' },
         },
         // 支付方式
@@ -823,7 +790,7 @@ let Const = {
         ],
         PAYMENT_STATUS: {
             WAIT_PAY: 100, //待支付
-            WAIT_AUDIT: 200, //部分付款
+            WAIT_AUDIT: 200, // 待审核
             PAYING: 300, //部分付款
             PAY_ALL: 400, //全部付款
             FAIL_PAY: 500, // 审核未通过
@@ -875,19 +842,19 @@ let Const = {
             ALL: 3, //所有子级采购单
         },
         // 分批发货
-        FLAG_PART_SHIPMENT_LIST: {
-            1: { key: 1, zh: '同意', en: 'Agree' },
-            2: { key: 2, zh: '不同意', en: 'Disagree' },
-        },
+        FLAG_PART_SHIPMENT_LIST: [
+            { nameLang: 'i.yes', value: 1 },
+            { nameLang: 'i.no', value: 2 },
+        ],
         FLAG_PART_SHIPMENT_MAP: {
             1: '同意',
             2: '不同意',
         },
         // 转运
-        FLAG_TRANSFER_LIST: {
-            1: { key: 1, zh: '同意', en: 'Agree' },
-            2: { key: 2, zh: '不同意', en: 'Disagree' },
-        },
+        FLAG_TRANSFER_LIST: [
+            { nameLang: 'i.yes', value: 1 },
+            { nameLang: 'i.no', value: 2 },
+        ],
         FLAG_TRANSFER_MAP: {
             1: { key: 1, zh: '同意', en: 'Allowed' },
             2: { key: 2, zh: '不同意', en: 'Disagreed' },
@@ -940,6 +907,34 @@ let Const = {
             UPDATE: 30, // 修改
             TYPE_GIVE: 40, // 修改
         },
+        // 运输方式选项列表
+        TRANSFER_METHODS: [
+            { nameLang: 'mall.by_truck', value: 1 },
+            { nameLang: 'mall.by_air', value: 2 },
+            { nameLang: 'mall.by_water_transportation', value: 3 },
+        ],
+        TRANSFER_METHODS_MAP: {
+            1: 'mall.by_truck',
+            2: 'mall.by_air',
+            3: 'mall.by_water_transportation',
+        },
+        // 目的港
+        DESTINATION_PORT: [
+            { nameLang: 'mall.victoria_harbour', value: 1 },
+            { nameLang: 'mall.dubai_port', value: 2 },
+            { nameLang: 'mall.singapore_port', value: 3 },
+            { nameLang: 'mall.busan_port', value: 4 },
+        ],
+        // 参保
+        INSURED: [
+            { nameLang: 'i.yes', value: 1 },
+            { nameLang: 'i.no', value: 2 },
+        ],
+        // 打托
+        PALLETIZE: [
+            { nameLang: 'i.yes', value: 1 },
+            { nameLang: 'i.no', value: 2 },
+        ],
     },
 
     WAYBILL: {

@@ -2,11 +2,12 @@
     <div id="ItemCategory">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">{{ $t('i.categories') }}</div>
+                <div class="title-area">{{ $t('customer-care.vehicle_classification_management') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="handleModalShow({})"
-                        ><i class="icon i_add" />{{ $t('i.add_category') }}</a-button
-                    >
+                    <a-button type="primary" @click="handleModalShow({})">
+                        <i class="icon i_add" />
+                        {{ $t('i.add_category') }}
+                    </a-button>
                 </div>
             </div>
             <div class="tabs-container colorful">

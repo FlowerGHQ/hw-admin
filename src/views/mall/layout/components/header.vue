@@ -262,7 +262,7 @@ import { SIDER } from '@/router/routes';
 import SvgIcon from '@/components/SvgIcon/index.vue';
 import MyButton from '@/components/common/MyButton.vue';
 
-const headerModules = import.meta.globEager('@/assets/images/mall/header/*');
+const headerModules = import.meta.globEager('@/assets/images/mall/header/*', { eager: true });
 
 export default {
     components: {
@@ -302,7 +302,7 @@ export default {
             showList = showList.map(item => {
                 item.auth = item.meta ? item.meta.auth || [] : [];
                 item.not_sub_menu = item.meta ? item.meta.not_sub_menu || false : false;
-                if (item.children?.length) {
+                if (item.children && item.children.length > 0) {
                     item.children = item.children.map(i => {
                         i.auth = i.meta ? i.meta.auth || [] : [];
                         return i;

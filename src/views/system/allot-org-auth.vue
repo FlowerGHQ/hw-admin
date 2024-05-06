@@ -33,15 +33,13 @@
                         <template v-else v-for="item of org.options" :key="item.key">
                             <template v-for="(subItem, index) of item.list" :key="index">
                                 <div v-if="subItem.itemSelect.length" class="form-item afs">
-                                    <div class="key">
-                                        {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:
-                                    </div>
+                                    <div class="key">{{ $t('authority.' + subItem.key) }}:</div>
                                     <div class="value">
                                         <span
                                             v-if="$Util.Common.isMember(subItem.id, item.select)"
                                             class="authority-item m-r-8"
                                         >
-                                            {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}
+                                            {{ $t('authority.' + subItem.key) }}
                                         </span>
                                         <span
                                             class="authority-item"
@@ -50,17 +48,7 @@
                                         >
                                             <template v-if="$Util.Common.isMember(threeItem.id, item.select)">
                                                 <span class="m-r-8">
-                                                    {{
-                                                        $t(
-                                                            'authority.' +
-                                                                item.key +
-                                                                '.' +
-                                                                subItem.key +
-                                                                '.' +
-                                                                threeItem.key +
-                                                                '.title',
-                                                        )
-                                                    }}
+                                                    {{ $t('authority.' + threeItem.key) }}
                                                 </span>
                                                 <template
                                                     v-for="(fourItem, index) in threeItem.list"
@@ -70,29 +58,7 @@
                                                         v-if="$Util.Common.isMember(fourItem.id, item.select)"
                                                         class="m-r-8"
                                                     >
-                                                        {{
-                                                            $t(
-                                                                'authority.' +
-                                                                    item.key +
-                                                                    '.' +
-                                                                    subItem.key +
-                                                                    '.' +
-                                                                    threeItem.key +
-                                                                    '.title',
-                                                            )
-                                                        }}
-                                                        ({{
-                                                            $t(
-                                                                'authority.' +
-                                                                    item.key +
-                                                                    '.' +
-                                                                    subItem.key +
-                                                                    '.' +
-                                                                    threeItem.key +
-                                                                    '.' +
-                                                                    fourItem.key,
-                                                            )
-                                                        }})
+                                                        {{ $t('authority.' + fourItem.key) }}
                                                     </span>
                                                 </template>
                                             </template>
@@ -109,56 +75,24 @@
                             <template v-if="activeTab === item.tab">
                                 <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
                                     <div class="key">
-                                        {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:
+                                        {{ $t('authority.'+ subItem.key) }}:
                                     </div>
                                     <div class="value">
                                         <a-checkbox-group v-model:value="subItem.itemSelect">
                                             <!-- 二级模块渲染 -->
                                             <a-checkbox :value="subItem.id">
-                                                {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}
+                                                {{ $t('authority.'+ subItem.key) }}
                                             </a-checkbox>
                                             <template v-for="(threeItem, index) in subItem.list">
                                                 <a-checkbox :value="threeItem.id">
-                                                    {{
-                                                        $t(
-                                                            'authority.' +
-                                                                item.key +
-                                                                '.' +
-                                                                subItem.key +
-                                                                '.' +
-                                                                threeItem.key +
-                                                                '.title',
-                                                        )
-                                                    }}
+                                                    {{ $t('authority.' + threeItem.key) }} 
                                                 </a-checkbox>
                                                 <a-checkbox
                                                     v-for="(fourItem, index) in threeItem.list"
                                                     :key="index"
                                                     :value="fourItem.id"
                                                 >
-                                                    {{
-                                                        $t(
-                                                            'authority.' +
-                                                                item.key +
-                                                                '.' +
-                                                                subItem.key +
-                                                                '.' +
-                                                                threeItem.key +
-                                                                '.title',
-                                                        )
-                                                    }}
-                                                    ({{
-                                                        $t(
-                                                            'authority.' +
-                                                                item.key +
-                                                                '.' +
-                                                                subItem.key +
-                                                                '.' +
-                                                                threeItem.key +
-                                                                '.' +
-                                                                fourItem.key,
-                                                        )
-                                                    }})
+                                                {{ $t('authority.' + fourItem.key) }}
                                                 </a-checkbox>
                                             </template>
                                         </a-checkbox-group>

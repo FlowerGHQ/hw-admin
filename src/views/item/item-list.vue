@@ -15,6 +15,7 @@
                         <div class="btns-area">
                             <div class="btn-group">
                                 <a-upload
+                                    v-if="$auth('sales.item.item.import')"
                                     name="file"
                                     class="file-uploader"
                                     :file-list="upload.fileList"
@@ -27,8 +28,7 @@
                                 >
                                     <div class="radio-btn first">{{ $t('i.import_name') }}</div>
                                 </a-upload>
-                                <div
-                                    v-if="$auth('sales.item.item.import')"
+                                <div                                    
                                     class="radio-btn"
                                     @click="handleExportConfirm"
                                 >

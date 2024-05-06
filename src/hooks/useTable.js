@@ -1,5 +1,6 @@
 import { ref, reactive, onMounted, computed, toRefs, onBeforeMount } from 'vue';
 import _ from 'lodash';
+import { init } from 'echarts';
 
 /**
  * @description table 页面表格操作方法封装
@@ -17,16 +18,15 @@ export function useTable({
     immediate = true,
     dataCallBack,
     minPageShowCount = 10,
-}) {
-    //初始页面
-    const INITIAL_PAGE_PARAMS = {
+    INITIAL_PAGE_PARAMS = {
         // 当前页数
         current: 1,
         // 每页显示条数
         size: 10,
         // 总条数
         total: 0,
-    };
+    },
+}) {
     const state = reactive({
         tableData: [],
         //分页数据
@@ -56,14 +56,14 @@ export function useTable({
     //获取数据
     const getTableData = async () => {
         Object.assign(state.totalParam, isPageAble ? pageParam.value : {}, initParam);
+        console.log('state.totalParam', state.totalParam);
         initParam && (state.searchInitParam = initParam);
         state.loading = true;
-        // const [error, res] = await request(state.totalParam)
-        console.log('state.totalParam', state.totalParam);
         try {
             const res = await request(state.totalParam);
             state.tableData = res.list;
             state.responseData = res;
+            console.log('res', res);
             try {
                 dataCallBack && (state.tableData = dataCallBack(res));
             } catch (error) {
@@ -123,6 +123,11 @@ export function useTable({
         state.pagination.size = size;
         getTableData();
     };
+    const onPagenationChange = (current, size) => {
+        state.pagination.current = current;
+        state.pagination.size = size;
+        getTableData();
+    };
     return {
         ...toRefs(state),
         isPaginationVisible,
@@ -131,6 +136,7 @@ export function useTable({
         onSizeChange,
         onPageChange,
         getTableData,
+        onPagenationChange,
     };
 }
 

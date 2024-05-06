@@ -9,8 +9,7 @@ const ROUTER_TYPE = Const.SYSTEM_AUTH.ROUTER_TYPE;
 const warehousingManagement = {
     path: '/warehousing-management',
     component: () => import('@/views/layout/index.vue'),    
-    name: 'WarehousingManagement',
-    type: [ROUTER_TYPE.WAREHOUSING],
+    name: 'WarehousingManagement',    
     meta: {
         title: '仓储管理',
         title_en: 'Warehousing Management',

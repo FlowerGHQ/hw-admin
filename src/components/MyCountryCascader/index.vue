@@ -20,7 +20,7 @@
  * @param {Function} handleGetItem 获取选中的数据,返回的是一个数组,ps:[{name: "中国",code: "CN",parentCode: "亚洲",parentName: "中国",parentEnName: "中国"}]
  */
 import axios from 'axios';
-import { ref, computed, getCurrentInstance, watch, onMounted, h } from 'vue';
+import { ref, computed, getCurrentInstance, watch, onMounted, h, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { message } from 'ant-design-vue';
 import Core from '../../core';
@@ -37,7 +37,6 @@ const $props = defineProps({
         default: () => [],
     },
 });
-
 // 前端获取所有大洲及国家的json文件
 const countryOptions = ref([]);
 const props = { multiple: true };
@@ -46,7 +45,7 @@ const bindArea = ref([]);
 const cascader = ref(null);
 
 const targetCountryOptions = computed(() => {
-    return addParentCode(countryOptions.value, '', '', '');
+    return addParentCode(countryOptions.value, '', '', '',);
 });
 // 给大洲的所有子元素添加父级code,并且添加一个全选
 const addParentCode = (arr, parentCode, parentName, parentEnName) => {
@@ -133,16 +132,21 @@ const getBindValue = () => {
             res.list.forEach(item => {
                 bindArea.value = bindArea.value.concat(item.country.split(','));
             });
-            console.log('bindArea', bindArea.value);
         } else {
             bindArea.value = [];
         }
     });
 };
-
+const checkDisableList = (list) => {
+    if(list.length) {
+        bindArea.value = list   
+    } else {
+        getBindValue();
+    }
+}
+defineExpose({ checkDisableList });
 onMounted(() => {
     getCountryOptions();
-    getBindValue();
 });
 </script>
 <style lang="less">

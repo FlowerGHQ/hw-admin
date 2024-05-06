@@ -10,8 +10,7 @@ const SYSTEM = {
     // 系统管理
     path: '/system',
     component: () => import('@/views/layout/index.vue'),    
-    name: 'SystemManagement',
-    type: [ROUTER_TYPE.SYSTEM],
+    name: 'SystemManagement',    
     meta: {
         title: '系统管理',
         title_en: 'System Management',

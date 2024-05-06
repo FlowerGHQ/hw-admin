@@ -12,7 +12,7 @@ export default {
         processing_progress: '处理进度',
         fault_classification: '故障分类',
         belonging_customer_service: '归属客服',
-        Construction_site_number: '工单编号',
+        construction_site_number: '问询单编号',
         classify: '归类',
         submitter: '提交人',
         model_number_mileage: '车架号、公里数',
@@ -120,6 +120,7 @@ export default {
         business_consultation: '业务咨询',
         other_consultation: '其他咨询',
         colse_time: '关闭时间',
+        vehicle_classification_management: '车型分类管理',
     },
     en: {
         inquiry_list: 'Inquiry list',
@@ -134,7 +135,7 @@ export default {
         processing_progress: 'Processing Progress',
         fault_classification: 'Fault Classification',
         belonging_customer_service: 'Belonging Customer Service',
-        Construction_site_number: 'Inquiry Number',
+        construction_site_number: 'Inquiry form number',
         classify: 'Classify',
         submitter: 'Submitter',
         model_number_mileage: 'Frame Number And Mileage',
@@ -225,5 +226,6 @@ export default {
         business_consultation: 'Business Consultation',
         other_consultation: 'Other Consultation',
         colse_time: 'Colse Time',
+        vehicle_classification_management: 'Vehicle Classification Management',
     },
 };

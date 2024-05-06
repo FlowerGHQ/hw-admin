@@ -7,7 +7,7 @@ import { supplyManage, supplyRouters, supplyMaterialManagement, costManagement }
 // 新分销商路由
 import { mallRouters, dealsPreview } from './sub-router/mall';
 // 分销商路由
-import { customerCare } from './sub-router/distributor-router';
+import { customerCare, unpaidFinalPayment } from './sub-router/distributor-router';
 // 平台方路由
 import {
     inquiryManagement,
@@ -28,8 +28,13 @@ import {
     manufactureManagement,
     productionManagement,
     repairManagement,
+    finalPaymentOrder,
+    cancellationOrderRequest,
+    rechargeManagement,
     SalesTargetManagement,
 } from './sub-router/admin-router';
+// 公共的路由
+import { freightConfirmed } from './sub-router/common';
 // 飞书路由
 import { fsLogin } from './sub-router/fs-login';
 // 系统权限路由
@@ -131,8 +136,7 @@ const routes = [
         // 分销管理 - 平台端
         path: '/distributor',
         component: () => import('@/views/layout/index.vue'),
-        name: 'DistributorManagement',
-        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
+        name: 'DistributorManagement',        
         meta: {
             title: '分销管理',
             title_en: 'Distribution',
@@ -211,6 +215,54 @@ const routes = [
                     title_en: 'Details',
                     roles: [LOGIN_TYPE.DISTRIBUTOR],
                     auth: ['sales.distribution.distributor-detail'],
+                },
+            },
+            // 资金变化明细
+            {
+                path: 'distributor-fund-change-detail',
+                name: 'FundChangeDetail',
+                component: () => import('@/views/distributor/fund-change-detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '资金变动明细',
+                    title_en: 'Fund Change Detail',
+                    parent: '/distributor/distributor-list',
+                },
+            },
+            // 授信变化
+            {
+                path: 'distributor-credit-change',
+                name: 'DistributorCreditChange',
+                component: () => import('@/views/distributor/distributor-credit-change.vue'),
+                meta: {
+                    hidden: true,
+                    title: '授信变动',
+                    title_en: 'Credit Change',
+                    parent: '/distributor/distributor-list',
+                },
+            },
+            // 充值记录
+            {
+                path: 'distributor-recharge-record',
+                name: 'RechargeRecord',
+                component: () => import('@/views/distributor/recharge-record.vue'),
+                meta: {
+                    hidden: true,
+                    title: '充值记录',
+                    title_en: 'Recharge Record',
+                    parent: '/distributor/distributor-list',
+                },
+            },
+            // 充值详情
+            {
+                path: 'distributor-recharge-detail',
+                name: 'DistributorRechargeDetail',
+                component: () => import('@/views/distributor/recharge-detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '充值详情',
+                    title_en: 'Recharge Detail',
+                    parent: '/distributor/distributor-list',
                 },
             },
             {
@@ -321,14 +373,17 @@ const routes = [
                     parent: '/item/sales-area-list',
                 },
             },
+            freightConfirmed,
+            finalPaymentOrder,
+            cancellationOrderRequest,
+            unpaidFinalPayment,
         ],
     },
     {
         // 商品管理
         path: '/item',
-        component: () => import('@/views/layout/index.vue'),
-        name: 'ItemManagement',
-        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
+        component: () => import('@/views/layout/index.vue'),        
+        name: 'ItemManagement',        
         meta: {
             title: '商品管理',
             title_en: 'Product',
@@ -429,9 +484,8 @@ const routes = [
     {
         // 实例管理
         path: '/entity',
-        component: () => import('@/views/layout/index.vue'),
-        name: 'EntityManagement',
-        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.PRODUCTION],
+        component: () => import('@/views/layout/index.vue'),        
+        name: 'EntityManagement',        
         meta: {
             title: '实例管理',
             title_en: 'Instance',
@@ -476,9 +530,8 @@ const routes = [
     {
         // 售后管理
         path: '/aftersales',
-        component: () => import('@/views/layout/index.vue'),
-        name: 'AftersalesManagement',
-        type: [ROUTER_TYPE.AFTER],
+        component: () => import('@/views/layout/index.vue'),        
+        name: 'AftersalesManagement',        
         meta: {
             title: '售后管理',
             title_en: 'After-sales',
@@ -611,6 +664,7 @@ const routes = [
     ...testUseCases,
     costManagement,
     warehousingManagement,
+    rechargeManagement,
     SalesTargetManagement,
 ];
 

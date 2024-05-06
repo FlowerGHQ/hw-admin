@@ -1514,12 +1514,12 @@
                                                 }}
                                             </a-checkbox>
                                         </template>
-                                        <sapn
+                                        <span
                                             class="custom-not-uploaded"
                                             v-if="!msgDetail.technical_info?.product_design?.length"
                                         >
                                             {{ $t('supply-chain.not_selected') }}
-                                        </sapn>
+                                        </span>
                                     </template>
                                     <template v-else>
                                         <a-checkbox-group
@@ -1552,12 +1552,12 @@
                                                 }}
                                             </a-checkbox>
                                         </template>
-                                        <sapn
+                                        <span
                                             class="custom-not-uploaded"
                                             v-if="!msgDetail.technical_info?.process_design?.length"
                                         >
                                             {{ $t('supply-chain.not_selected') }}
-                                        </sapn>
+                                        </span>
                                     </template>
                                     <template v-else>
                                         <a-checkbox-group
@@ -1592,12 +1592,12 @@
                                                 }}
                                             </a-checkbox>
                                         </template>
-                                        <sapn
+                                        <span
                                             class="custom-not-uploaded"
                                             v-if="!msgDetail.technical_info?.process_validation?.length"
                                         >
                                             {{ $t('supply-chain.not_selected') }}
-                                        </sapn>
+                                        </span>
                                     </template>
                                     <template v-else>
                                         <a-checkbox-group
@@ -2431,12 +2431,12 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn
+                                        <span
                                             class="custom-not-uploaded"
                                             v-if="!msgDetail.confirmatory_material?.business_license_photo?.length"
                                         >
                                             {{ $t('supply-chain.not_uploaded') }}
-                                        </sapn>
+                                        </span>
                                     </template>
                                     <template v-else>
                                         <MyUpload
@@ -2640,12 +2640,12 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn
+                                        <span
                                             class="custom-not-uploaded"
                                             v-if="!msgDetail.confirmatory_material?.quality_system_certificate?.length"
                                         >
                                             {{ $t('supply-chain.not_uploaded') }}
-                                        </sapn>
+                                        </span>
                                     </template>
                                     <template v-else>
                                         <MyUpload
@@ -2682,9 +2682,9 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn v-if="!msgDetail.confirmatory_material?.proxy_certificate?.length">
+                                        <span v-if="!msgDetail.confirmatory_material?.proxy_certificate?.length">
                                             {{ $t('supply-chain.not_uploaded') }}
-                                        </sapn>
+                                        </span>
                                     </template>
                                     <template v-else>
                                         <MyUpload
@@ -2730,14 +2730,14 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn
+                                        <span
                                             class="custom-not-uploaded"
                                             v-if="
                                                 !msgDetail.confirmatory_material?.account_opening_bank_license?.length
                                             "
                                         >
                                             {{ $t('supply-chain.not_uploaded') }}
-                                        </sapn>
+                                        </span>
                                     </template>
                                     <template v-else>
                                         <MyUpload
@@ -2775,12 +2775,12 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn
+                                        <span
                                             class="custom-not-uploaded"
                                             v-if="!msgDetail.confirmatory_material?.eia_certificate?.length"
                                         >
                                             {{ $t('supply-chain.not_uploaded') }}
-                                        </sapn>
+                                        </span>
                                     </template>
                                     <template v-else>
                                         <MyUpload
@@ -2817,12 +2817,12 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn
+                                        <span
                                             class="custom-not-uploaded"
                                             v-if="!msgDetail.confirmatory_material?.environmental_report?.length"
                                         >
                                             {{ $t('supply-chain.not_uploaded') }}
-                                        </sapn>
+                                        </span>
                                     </template>
                                     <template v-else>
                                         <MyUpload
@@ -2842,12 +2842,32 @@
                 </div>
             </div>
         </div>
-
         <a-modal width="800px" :visible="previewVisible" title="" :footer="null" @cancel="handleCancel">
             <img alt="" style="width: 100%" :src="previewImage" />
         </a-modal>
-
         <div class="suction-bottom">
+            <!-- 审核按钮 -->
+            <a-button
+                v-if="(allDetails.audit_status == 10 || allDetails.audit_status == 20) && !route.query.isView"
+                type="primary"
+                @click="onSuction('audit')"
+                >{{ $t('supply-chain.first_trial') }}</a-button
+            >
+            <!-- 40 待复审 -->
+            <a-button
+                v-if="allDetails.audit_status == 40 && !route.query.isView"
+                type="primary"
+                @click="onSuction('audit')"
+                >{{ $t('supply-chain.review') }}</a-button
+            >
+            <!-- 50 免审结果 -->
+            <a-button
+                type="primary"
+                @click="onSuction('audit')"
+                v-if="allDetails.audit_status == 50 && !route.query.isView"
+            >
+                {{ $t('supply-chain.exempt_result') }}
+            </a-button>
             <template v-if="!isEdit">
                 <a-button @click="onSuction('edit')">{{ $t('supply-chain.editing_data') }}</a-button>
             </template>
@@ -2856,7 +2876,6 @@
                 <a-button type="primary" @click="onSuction('add')">{{ $t('supply-chain.submit_materials') }}</a-button>
             </template>
         </div>
-
         <MyMask :isClose="isClose" @close="onPingPongMaskClose">
             <div class="mask-center">
                 <div class="title">{{ $t('supply-chain.mask_tips1') }}</div>
@@ -2870,29 +2889,40 @@
                 </div>
             </div>
         </MyMask>
+        <TrialModal
+            :modalVisible="TrialModalVisible"
+            @handleOk="trialOk"
+            @handleCancel="tralCancel"
+            :details="allDetails"
+        />
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed, getCurrentInstance } from 'vue';
+import { ref, onMounted, computed, getCurrentInstance, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Core from '@/core';
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
 import TimeSearch from '@/components/common/TimeSearch.vue';
 import MyMask from '@/components/horwin/based-on-dom/MyMask.vue';
 import MyUpload from '@/components/MyUpload/index.vue';
+import TrialModal from './components/trial-modal.vue';
 import dayjs from 'dayjs';
 import axios from 'axios';
+import { message } from 'ant-design-vue';
 // json
 const chinaOptions = ref([]);
 const route = useRoute();
 const router = useRouter();
 const msgDetail = ref({});
+const allDetails = ref({});
 const { proxy } = getCurrentInstance();
-
 // 预览显影
 const previewVisible = ref(false);
 const previewImage = ref('');
+
+// 审核
+const TrialModalVisible = ref(false);
 
 // 联系方式
 const contactInformation = computed(() => {
@@ -2905,7 +2935,6 @@ const contactInformation = computed(() => {
 
     return columns;
 });
-
 // 关键生产设备
 const deviceProductionColumns = computed(() => {
     let columns = [
@@ -3180,8 +3209,15 @@ function getDetail(params = {}) {
 
     Core.Api.SUPPLY.adminDetail(obj)
         .then(res => {
-            msgDetail.value = res.detail?.form ? JSON.parse(res.detail?.form) : {};
-            console.log('msgDetail', msgDetail.value);
+            allDetails.value = res.detail;
+            console.log('allDetails', allDetails.value);
+            if (res.detail.form) {
+                typeof res.detail.form === 'string'
+                    ? (msgDetail.value = JSON.parse(res.detail.form))
+                    : (msgDetail.value = res.detail.form);
+            } else {
+                msgDetail.value = {};
+            }
             // 回显数据
             for (const key in msgDetail.value) {
                 let keys = msgDetail.value[key];
@@ -3191,8 +3227,11 @@ function getDetail(params = {}) {
                         parameters.value[key].forEach(el => {
                             el.begin_cooperation_time = el.begin_cooperation_time
                                 ? dayjs.unix(el.begin_cooperation_time)
-                                : null;
+                                : '';
                         });
+                    } else if (key === 'contact_info') {
+                        msgDetail.value['position'] = parameters.value[key].map(item => item.position);
+                        parameters.value['position'] = msgDetail.value['position'];
                     }
                 } else if (keys instanceof Object) {
                     // 判断 是对象 [数组其实也是对象 所以先判断数组在判断对象]
@@ -3204,12 +3243,11 @@ function getDetail(params = {}) {
                     }
 
                     if (key === 'company_info') {
-                        console.log('公司概况', parameters.value[key]);
                         // 成立日期(过滤一下)
                         // console.log("parameters.value[key].established_time", parameters.value[key].established_time);
                         parameters.value[key].established_time = parameters.value[key].established_time
                             ? dayjs.unix(parameters.value[key].established_time)
-                            : null;
+                            : undefined;
                         // parameters.value[key].province = parameters.value[key].provinceAndCity[0];
                         // parameters.value[key].city = parameters.value[key].provinceAndCity[1];
                         // 构建回显省市地址的数据
@@ -3224,20 +3262,22 @@ function getDetail(params = {}) {
                         ]
                             .filter(item => item)
                             .join('/');
+                    } else if (key === 'financial_info') {
+                        parameters.value[key].flag_legal_dispute = parameters?.value[key]?.flag_legal_dispute
+                            ? parameters?.value[key]?.flag_legal_dispute
+                            : '';
                     }
                 } else if (typeof keys === 'string' || typeof keys === 'number' || typeof keys === 'boolean') {
                     // | 字符串 | 数字 | 布尔
                     parameters.value[key] = keys;
                 }
             }
-
             let businessLicensePhoto = msgDetail.value.confirmatory_material?.business_license_photo;
             let qualitySystemCertificate = msgDetail.value.confirmatory_material?.quality_system_certificate;
             let proxyCertificate = msgDetail.value.confirmatory_material?.proxy_certificate;
             let accountOpeningBankLicense = msgDetail.value.confirmatory_material?.account_opening_bank_license;
             let eiaCertificate = msgDetail.value.confirmatory_material?.eia_certificate;
             let environmentalReport = msgDetail.value.confirmatory_material?.environmental_report;
-
             // 营业执照照片
             if (businessLicensePhoto) {
                 msgDetail.value.confirmatory_material.business_license_photo = businessLicensePhoto.split(',');
@@ -3249,7 +3289,6 @@ function getDetail(params = {}) {
             // 代理证书
             if (proxyCertificate) {
                 msgDetail.value.confirmatory_material.proxy_certificate = proxyCertificate.split(',');
-                // console.log("代理证书", msgDetail.value.confirmatory_material.proxy_certificate);
             }
             // 开户行许可证
             if (accountOpeningBankLicense) {
@@ -3264,10 +3303,8 @@ function getDetail(params = {}) {
             if (environmentalReport) {
                 msgDetail.value.confirmatory_material.environmental_report = environmentalReport.split(',');
             }
-
-            // msgDetail.value.type = 1
-
-            console.log('输出的', parameters.value);
+            console.log('msgDetail', msgDetail.value);
+            console.log('parameters', parameters.value);
         })
         .catch(err => {
             console.log('getPhoneCodeFetchs err', err);
@@ -3281,11 +3318,14 @@ const saveDetail = (params = {}) => {
 
     Core.Api.SUPPLY.adminAdd(obj)
         .then(res => {
-            console.log('成功', res);
             proxy.$message.success(proxy.$t('common.successfully_saved'));
-            router.push({
-                path: '/supply-manage/list',
-            });
+            if(route.query.redirect){
+                router.push(route.query.redirect);
+            }else{
+                router.push({
+                    path: '/supply-manage/list',
+                });
+            }
         })
         .catch(err => {
             console.log('getPhoneCodeFetchs err', err);
@@ -3312,15 +3352,12 @@ const handleCancel = () => {
 
 // 营业期限时间选择器
 const handleTimeSearch = (params, type, recordItem) => {
-    console.log('时间组件', params);
     switch (type) {
         case 'business_term':
-            console.log('营业期限', params);
             parameters.value.confirmatory_material.begin_business_time = params.begin_time;
             parameters.value.confirmatory_material.end_business_time = params.end_time;
             break;
         case 'date_establishment':
-            console.log('sss', dayjs(parameters.value.company_info.established_time).format('DD/MM/YYYY'));
             // 成立日期
             // parameters.value.company_info.established_time = dayjs(params).unix()
             break;
@@ -3370,7 +3407,10 @@ const onSuction = type => {
                             ).unix();
                         });
                         break;
-
+                    case 'financial_info':
+                        // 是否有法律纠纷
+                        form[key].flag_legal_dispute = parameters?.value[key]?.flag_legal_dispute || '';
+                        break;
                     default:
                         break;
                 }
@@ -3393,6 +3433,9 @@ const onSuction = type => {
             break;
         case 'submit_exit':
             onSuction('add');
+            break;
+        case 'audit':
+            TrialModalVisible.value = true;
             break;
 
         default:
@@ -3484,6 +3527,7 @@ const plainOptions = data => {
             value: data[key].value,
         });
     }
+    console.log('arr', arr);
 
     return arr;
 };
@@ -3516,6 +3560,27 @@ const onBack = () => {
     } else {
         router.back();
     }
+};
+
+// 审核
+const trialOk = () => {
+    TrialModalVisible.value = false;
+    if (route.query.redirect) {
+        router.push({
+            path: route.query.redirect,
+        });
+    } else {
+        // 返回列表页
+        router.push({
+            path: '/supply-manage/list',
+            query: {
+                searchStaus: route?.query?.searchStaus || '',
+            },
+        });
+    }
+};
+const tralCancel = () => {
+    TrialModalVisible.value = false;
 };
 
 /* methods end*/
@@ -3836,6 +3901,11 @@ const onBack = () => {
 
     // 编辑资料
     .suction-bottom {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        // 间距10px
+        gap: 10px;
         width: calc(100% - 232px);
         position: fixed;
         bottom: 0;
