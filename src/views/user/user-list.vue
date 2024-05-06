@@ -201,19 +201,6 @@ export default {
 
             // 表格
             tableData: [],
-            tableColumns: [
-                { title: 'n.name', dataIndex: ['account', 'name'], key: 'user' },
-                { title: 'u.account', dataIndex: ['account', 'username'], key: 'item' },
-                { title: 'n.phone', dataIndex: ['account', 'phone'], key: 'item' },
-                { title: 'n.email', dataIndex: ['account', 'email'], key: 'item' },
-                { title: 'u.employee_no', dataIndex: 'employee_no', key: 'item' },
-                { title: 'u.role', dataIndex: 'role_names', key: 'role_names' },
-                { title: 'u.authority_abbreviation', dataIndex: 'flag_authority', key: 'authority' },
-                { title: 'e.administrator', dataIndex: 'flag_admin', align: 'center' },
-                { title: 'u.login', dataIndex: ['account', 'last_login_time'], key: 'time' },
-                { title: 'd.create_time', dataIndex: 'create_time', key: 'time' },
-                { title: 'def.operate', key: 'operation', fixed: 'right', width: 100 },
-            ],
 
             // 弹框
             passShow: false,
@@ -226,7 +213,29 @@ export default {
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        tableColumns() {
+            let result = [
+                { title: 'n.name', dataIndex: ['account', 'name'], key: 'user' },
+                { title: 'u.account', dataIndex: ['account', 'username'], key: 'item' },
+                { title: 'n.phone', dataIndex: ['account', 'phone'], key: 'item' },
+                { title: 'n.email', dataIndex: ['account', 'email'], key: 'item' },
+                { title: 'u.employee_no', dataIndex: 'employee_no', key: 'item' },
+                { title: 'u.role', dataIndex: 'role_names', key: 'role_names' },
+                { title: 'u.authority_abbreviation', dataIndex: 'flag_authority', key: 'authority' },
+                
+                { title: 'u.login', dataIndex: ['account', 'last_login_time'], key: 'time' },
+                { title: 'd.create_time', dataIndex: 'create_time', key: 'time' },
+                { title: 'def.operate', key: 'operation', fixed: 'right', width: 100 },
+            ]
+
+            if (this.$auth('sys.sys.user.set-admin')) {
+                result.splice(7, 0, { title: 'e.administrator', dataIndex: 'flag_admin', align: 'center' },)
+            }
+
+            return result
+        }
+    },
     mounted() {
         this.getTableData();
         if (this.$auth('ADMIN')) {

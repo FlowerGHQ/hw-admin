@@ -92,9 +92,20 @@ export default {
         }
     },
     /**
+     * @description 返回你想返回的 key下的value值
+     * @param(MAP) 对象 { 0: { value: '0', key: 0, color: 'red', zh: '未知', en: 'Unknown' }, ... } 元数据
+     * @param(val) 查找MAP对象的值 例如 0
+     * @param(to) 查询对象中的key
+     * @return 返回 key下的value
+     */
+    returenValue(MAP, val, to = 'text') {
+        let item = MAP[val] || {};
+        return item[to] || '';
+    },
+    /*
      * @description 判断两个数组是否相同
-     * @param { Array } arr1 
-     * @param { Array } arr2 
+     * @param { Array } arr1
+     * @param { Array } arr2
      * @returns Boolean
      */
     arraysAreEqual(arr1 = [], arr2 = []) {    
@@ -102,15 +113,15 @@ export default {
         let result = false
         // 检查数组长度是否相等
         if (arr1.length !== arr2.length) {
-            result = false
+            result = false;
             return result;
         }
 
         // 逐个比较数组元素
         result = arr1.every(el => {
-            return arr2.some(ele => ele === el)
-        })
-        console.log("arraysAreEqual", result);
+            return arr2.some(ele => ele === el);
+        });
+        console.log('arraysAreEqual', result);
 
         // 所有元素都相等
         return result;

@@ -33,11 +33,12 @@
                             <a-select
                                 v-model:value="searchForm.distributor_id"
                                 :placeholder="$t('def.select')"
+                                show-search
+                                :options="distributorList"
+                                option-filter-prop="label"
+                                :filter-option="onFilterOption"
                                 @change="handleSearch"
                             >
-                                <a-select-option v-for="item of distributorList" :key="item.id" :value="item.id">{{
-                                    item.name
-                                }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -55,13 +56,7 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col
-                        :xs="24"
-                        :sm="24"
-                        :xl="8"
-                        :xxl="6"
-                        class="search-item"
-                    >
+                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
                         <div class="key">{{ $t('n.store') }}：</div>
                         <div class="value">
                             <a-select
@@ -125,9 +120,34 @@
                             </a-select>
                         </div>
                     </a-col>
+                    <!-- 下单时间 -->
                     <a-col :xs="24" :sm="24" :xl="16" :xxl="12" class="search-item">
                         <div class="key">{{ $t('n.order_time') }}:</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref="TimeSearch" /></div>
+                    </a-col>
+                    <!-- 应付尾款时间 -->
+                    <a-col :xs="24" :sm="24" :xl="16" :xxl="12" class="search-item">
+                        <div class="key">{{ $t('p.payable_time') }}:</div>
+                        <div class="value"><TimeSearch @search="handleOtherPayableSearch" ref="TimeSearch1" /></div>
+                    </a-col>
+                    <!-- 运费状态 -->
+                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
+                        <div class="key">{{ $t('p.freight_status') }}:</div>
+                        <div class="value">
+                            <a-select
+                                v-model:value="searchForm.freight_status"
+                                @change="handleSearch"
+                                :placeholder="$t('def.select')"
+                            >
+                                <a-select-option
+                                    v-for="(item, index) of FREIGHT_STATUS_MAP"
+                                    :key="index"
+                                    :value="item.key"
+                                >
+                                    {{ $t(`${item.t}`) }}
+                                </a-select-option>
+                            </a-select>
+                        </div>
                     </a-col>
                 </a-row>
                 <div class="btn-area">
@@ -189,7 +209,7 @@
                                 {{
                                     record.item_list
                                         .map((item, index) => {
-                                            return $i18n.locale === 'zh' ? item.item.name : item.item.name_en;
+                                            return $i18n.locale === 'zh' ? item.item?.name : item.item?.name_en;
                                         })
                                         .join(',') || '-'
                                 }}
@@ -240,6 +260,10 @@
                                 {{ $Util.countFilter(text) }}
                             </span>
                         </template>
+                        <!-- 运费状态 -->
+                        <template v-else-if="column.key === 'freight_status'">
+                            {{ FREIGHT_STATUS_MAP[text]?.t ? $t(`${FREIGHT_STATUS_MAP[text]?.t}`) : '-' }}
+                        </template>
                         <!-- 已支付金额 -->
                         <template v-else-if="column.key === 'amount_paid'">
                             <span v-if="text >= 0">{{ $Util.priceUnitFilter(record.currency) }}</span>
@@ -247,9 +271,18 @@
                                 {{ $Util.countFilter(text) }}
                             </span>
                         </template>
-                        <template v-else-if="column.dataIndex === 'status'">
+                        <!-- 订单状态 -->
+                        <template v-else-if="column.key === 'order_status'">
                             <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text, 'color')">
                                 {{ $Util.purchaseStatusFilter(text, $i18n.locale) }}
+                            </div>
+                            <div
+                                v-if="AUDIT_CANCEL_STATUS_MAP[record.cancel_status]"
+                                class="m-l-8 status status-bg status-tag"
+                                :class="$Util.purchaseStatusFilter(text, 'color')"
+                            >
+                                {{ $t('distributor-detail.cancel_order') }}
+                                ({{ $t(`${AUDIT_CANCEL_STATUS_MAP[record.cancel_status]?.t}`) }})
                             </div>
                         </template>
                         <template v-else-if="column.dataIndex === 'payment_status'">
@@ -295,7 +328,7 @@
                                 <i class="icon i_cart" /> {{ $t('p.buy_again') }}
                             </a-button>
                             <a-button
-                                v-if="$auth('sales.distribution.order.detail')"
+                                v-if="$auth('sales.distribution.order.detail', 'aftermarket.distribution.order.detail')"
                                 type="link"
                                 @click="routerChange('detail', record)"
                             >
@@ -332,7 +365,20 @@
                     <div class="shop">
                         {{ $i18n.locale === 'zh' ? item.item.name : item.item.name_en }}
                         <!-- 修改按钮 -->
-                        <a-button @click="routerChange('editBom', item)">{{ $t('def.edit') }}</a-button>
+                        <a-button @click="routerChange('editBom', item)">
+                            {{ $t('def.edit') }}
+                        </a-button>
+
+                        <!-- <ItemSelect
+                            btnType="default"
+                            :disabled-checked="item?.accessory_list?.map(el => el.target_id)"
+                            @select="
+                                (selectItemIds, selectItems, faultName) =>
+                                    handleSelectItem(selectItemIds, selectItems, faultName, item)
+                            "
+                        >
+                            {{ $t('def.edit') }}
+                        </ItemSelect> -->
                     </div>
                     <div class="bom">
                         <div
@@ -344,7 +390,13 @@
                             <div class="bom-item-name">
                                 {{ $i18n.locale === 'zh' ? item.target_name : item.target_name_en }}
                             </div>
-                            <div class="bom-item-num">x{{ item.amount }}</div>
+                            <div class="bom-item-num">
+                                <span class="m-r-30">x{{ item.amount }}</span>
+
+                                <!-- <a-button type="link" @click="handleDelete(item.id)">
+                                    <i class="icon i_delete" />{{ $t('def.delete') }}
+                                </a-button> -->
+                            </div>
                         </div>
                         <a-empty v-else />
                     </div>
@@ -355,7 +407,7 @@
 </template>
 
 <script>
-import Core from '../../core';
+import Core from '@/core';
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE;
 const SEARCH_TYPE = Core.Const.PURCHASE.SEARCH_TYPE;
 const PAYMENT_STATUS_MAP = Core.Const.PURCHASE.PAYMENT_STATUS_MAP;
@@ -363,21 +415,26 @@ const PAYMENT_TYPE_LIST = Core.Const.PURCHASE.FLAG_ORDER_TYPE_LIST;
 const FLAG_ORDER_TYPE = Core.Const.PURCHASE.FLAG_ORDER_TYPE;
 const PAY_TIME_LIST = Core.Const.DISTRIBUTOR.PAY_TIME_LIST;
 const STATUS = Core.Const.PURCHASE.STATUS;
+const FREIGHT_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_STATUS_MAP;
+const AUDIT_CANCEL_STATUS_MAP = Core.Const.DISTRIBUTOR.AUDIT_CANCEL_STATUS_MAP;
 
+import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 import { message } from 'ant-design-vue';
-
 import TimeSearch from '@/components/common/TimeSearch.vue';
+import { debounce } from 'lodash';
 
 export default {
     name: 'PurchaseList',
     components: {
         TimeSearch,
+        ItemSelect,
     },
     props: {},
     data() {
         return {
             visible: false,
             bomModalData: [],
+            singleRecordData: {}, // 单个表格数据
             LOGIN_TYPE,
             SEARCH_TYPE,
             STATUS,
@@ -385,6 +442,8 @@ export default {
             PAYMENT_TYPE_LIST,
             PAY_TIME_LIST,
             FLAG_ORDER_TYPE,
+            FREIGHT_STATUS_MAP,
+            AUDIT_CANCEL_STATUS_MAP,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -413,6 +472,9 @@ export default {
                 subject: 0,
                 begin_time: '',
                 end_time: '',
+                freight_status: undefined, // 运费状态
+                final_pay_due_begin_time: undefined, // 应付尾款时间开始
+                final_pay_due_end_time: undefined, // 应付尾款时间结束
             },
             // 表格
             tableData: [],
@@ -441,28 +503,31 @@ export default {
                 { title: this.$t('p.parent_sn'), dataIndex: 'parent_sn' },
                 { title: this.$t('p.order_type'), dataIndex: 'type', key: 'type' },
                 { title: this.$t('p.payment_method'), dataIndex: 'pay_type', key: 'pay_type' },
-                { title: this.$t('p.order_status'), dataIndex: 'status' },
+                {
+                    title: this.$t('p.estimated_shipping_data'),
+                    dataIndex: 'shipping_time_estimated',
+                    key: 'time',
+                }, // 预计船期
+                { title: this.$t('p.order_status'), dataIndex: 'status', key: 'order_status' },
                 { title: this.$t('n.order_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('p.payment_status'), dataIndex: 'payment_status' },
                 { title: this.$t('p.payment_time'), dataIndex: 'pay_time', key: 'time' },
                 { title: this.$t('p.complete_time'), dataIndex: 'close_time', key: 'time' },
+                { title: this.$t('p.payable_time'), dataIndex: 'final_pay_due_time', key: 'time' }, // 应付尾款时间
+                {
+                    title: this.$t('n.institution'),
+                    dataIndex: ['create_org', 'name'],
+                    key: 'item',
+                },
+                { title: this.$t('p.total_price'), dataIndex: 'total_price', key: 'total_price' },
+                { title: this.$t('p.freight'), dataIndex: 'freight', key: 'freight' },
+                {
+                    title: this.$t('p.freight_status'),
+                    dataIndex: 'freight_status',
+                    key: 'freight_status',
+                },
+                { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'amount_paid' },
             ];
-            if (this.$auth('DISTRIBUTOR')) {
-                const index = columns.findIndex(column => column.dataIndex === 'accessory_list');
-                if (index !== -1) {
-                    columns.splice(index, 1);
-                }
-            }
-            // if (!this.$auth('purchase-order.supply-detail')) {
-            //     columns.splice(4, 0, {
-            //         title: this.$t('n.institution'),
-            //         dataIndex: ['create_org', 'name'],
-            //         key: 'item',
-            //     });
-            //     columns.splice(5, 0, { title: this.$t('p.total_price'), dataIndex: 'total_price', key: 'total_price' });
-            //     columns.splice(6, 0, { title: this.$t('p.freight'), dataIndex: 'freight', key: 'freight' });
-            //     columns.splice(9, 0, { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'amount_paid' });
-            // }
             // 失败原因列表-仅存在与待生产tab
             if (this.searchForm.status === '150' && this.$auth('ADMIN')) {
                 columns.push({
@@ -541,11 +606,11 @@ export default {
             return this.$store.state.lang;
         },
     },
-    mounted() { 
+    mounted() {
         if (this.$auth('ADMIN')) {
-            this.search_type = SEARCH_TYPE.ALL
+            this.search_type = SEARCH_TYPE.ALL;
         } else if (this.$auth('DISTRIBUTOR')) {
-            this.search_type = SEARCH_TYPE.SELF
+            this.search_type = SEARCH_TYPE.SELF;
         }
 
         this.getDistributorListAll();
@@ -553,7 +618,7 @@ export default {
         this.getStoreListAll();
         this.getStatusStat();
         this.timer = window.setInterval(() => {
-            setTimeout(() => {               
+            setTimeout(() => {
                 this.getDistributorListAll();
                 this.getAgentListAll();
                 this.getStoreListAll();
@@ -567,7 +632,8 @@ export default {
         // 打开销售bom弹窗
         openBomModal(record) {
             this.visible = true;
-            this.bomModalData = record.item_list;
+            this.singleRecordData = record;
+            this.bomModalData = this.singleRecordData.item_list;
         },
         getContainer() {
             return this.$refs.container;
@@ -643,7 +709,7 @@ export default {
                     });
                     window.open(routeUrl.href, '_self');
                     break;
-                case 'editBom':
+                case 'editBom': // 销售BOM
                     routeUrl = this.$router.resolve({
                         path: '/item/item-detail',
                         query: {
@@ -669,6 +735,7 @@ export default {
             // 搜索
             this.pageChange(1);
         },
+        // 下单时间搜索
         handleOtherSearch(params) {
             // 时间等组件化的搜索
             for (const key in params) {
@@ -676,27 +743,43 @@ export default {
             }
             this.pageChange(1);
         },
+        // 应付款时间搜索
+        handleOtherPayableSearch(params) {
+            console.log('应付款时间搜索', params);
+            this.searchForm.final_pay_due_begin_time = params.begin_time;
+            this.searchForm.final_pay_due_end_time = params.end_time;
+            this.pageChange(1);
+        },
         handleSearchReset(flag = true) {
             // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm);
             if (flag) {
                 this.$refs.TimeSearch.handleReset();
+                this.$refs.TimeSearch1.handleReset();
             }
             this.pageChange(1);
         },
-        getTableData() {
+        getTableData(type = false) {
             // 获取 表格 数据
             this.loading = true;
-            Core.Api.Purchase.list({
+            let obj = {
                 ...this.searchForm,
                 search_type: this.search_type,
                 page: this.currPage,
                 page_size: this.pageSize,
-            })
+            };
+
+            Core.Api.Purchase.list(obj)
                 .then(res => {
                     this.total = res.count;
                     this.tableData = res.list;
                     this.loading = false;
+
+                    // 为了让销售bom弹窗刷新修改刷新
+                    if (type) {
+                        this.singleRecordData = this.tableData.find(el => el.id === this.singleRecordData.id);
+                        this.bomModalData = this.singleRecordData.item_list;
+                    }
                 })
                 .catch(err => {
                     console.log('getTableData err:', err);
@@ -718,9 +801,17 @@ export default {
                     console.log('getStatusStat err:', err);
                 });
         },
-        getDistributorListAll() {
-            Core.Api.Distributor.listAll().then(res => {
-                this.distributorList = res.list;
+        getDistributorListAll(params) {
+            let obj = {
+                ...params,
+            };
+            Core.Api.Distributor.listAll(obj).then(res => {
+                this.distributorList = res.list.map(el => {
+                    return {
+                        value: el.id,
+                        label: el.name,
+                    };
+                });
             });
         },
         getAgentListAll() {
@@ -858,6 +949,62 @@ export default {
             });
             window.open(exportUrl, '_blank');
             this.exportDisabled = false;
+        },
+
+        // ItemSelect 组件事件
+        handleSelectItem(ids, items, faultName, bomModalItem) {
+            console.log('handleSelectItem ids, items:', ids, items);
+            console.log('bomModalItem:', bomModalItem);
+
+            // 多选操作
+            let params = {
+                item_id: bomModalItem.item_id,
+                target_list: [],
+            };
+
+            ids.forEach(el => {
+                params.target_list.push({
+                    target_id: el,
+                    target_type: Core.Const.ITEM_ACCESSORY.TARGET_TYPE_MAP.ITEM,
+                });
+            });
+
+            console.log('params', params);
+
+            Core.Api.ItemAccessory.save(params)
+                .then(() => {
+                    this.$message.success(this.$t('pop_up.save_success'));
+                    this.getTableData(true);
+                })
+                .catch(err => {
+                    console.log('handleDelete err', err);
+                });
+        },
+
+        // 删除BOM商品
+        handleDelete(id) {
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
+                okType: 'danger',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.ItemAccessory.delete({ id })
+                        .then(() => {
+                            _this.$message.success(_this.$t('pop_up.delete_success'));
+                            _this.getTableData(true);
+                        })
+                        .catch(err => {
+                            console.log('handleDelete err', err);
+                        });
+                },
+            });
+        },
+
+        // 分销商的search选项
+        onFilterOption(input, option) {
+            return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
         },
     },
 };

@@ -3,7 +3,7 @@
         <div class="list-container">
             <div class="title-container">
                 <div class="title-area">
-                    {{ viewType === 'part' ? $t('v.parts') : $t('v.vehicle') }}{{ $t('v.list') }}
+                   {{ $t('v.device_list') }}
                 </div>
             </div>
             <div class="search-container">

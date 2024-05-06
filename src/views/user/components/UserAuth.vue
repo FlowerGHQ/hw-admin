@@ -25,9 +25,7 @@
                         <template v-else v-for="item of options" :key="item.key">
                             <template v-for="(subItem, index) of item.list" :key="index">
                                 <div v-if="subItem.itemSelect?.length" class="form-item afs">
-                                    <div class="key">
-                                        {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:
-                                    </div>
+                                    <div class="key">{{ $t('authority.' + subItem.key) }}:</div>
                                     <div class="value">
                                         <span
                                             class="authority-item"
@@ -40,52 +38,20 @@
                                                     :class="{ 'color-1890ff': threeItem.scope_type > 0 }"
                                                     @click="handleScopeTypeShow(threeItem.scope_type)"
                                                 >
-                                                    {{
-                                                        $t(
-                                                            'authority.' +
-                                                                item.key +
-                                                                '.' +
-                                                                subItem.key +
-                                                                '.' +
-                                                                threeItem.key +
-                                                                '.title',
-                                                        )
-                                                    }}
+                                                    {{ $t('authority.' + threeItem.key) }}
                                                 </span>
 
                                                 <span
                                                     v-for="(fourItem, index) in threeItem.list"
-                                                    :key="fourItem.id"
-                                                    class="m-r-8"
+                                                    :key="fourItem.id"                                                    
                                                 >
                                                     <template v-if="$Util.Common.isMember(fourItem.id, item.select)">
                                                         <span
+                                                            class="m-r-8"
                                                             :class="{ 'color-1890ff': fourItem.scope_type > 0 }"
                                                             @click="handleScopeTypeShow(fourItem.scope_type)"
                                                         >
-                                                            {{
-                                                                $t(
-                                                                    'authority.' +
-                                                                        item.key +
-                                                                        '.' +
-                                                                        subItem.key +
-                                                                        '.' +
-                                                                        threeItem.key +
-                                                                        '.title',
-                                                                )
-                                                            }}
-                                                            ({{
-                                                                $t(
-                                                                    'authority.' +
-                                                                        item.key +
-                                                                        '.' +
-                                                                        subItem.key +
-                                                                        '.' +
-                                                                        threeItem.key +
-                                                                        '.' +
-                                                                        fourItem.key,
-                                                                )
-                                                            }})
+                                                            {{ $t('authority.' + fourItem.key) }}
                                                         </span>
                                                     </template>
                                                 </span>
@@ -101,9 +67,7 @@
                         <template v-for="item of options" :key="item.key">
                             <template v-if="$auth('DISTRIBUTOR') || activeTab === item.tab">
                                 <div v-for="(subItem, index) of item.list" :key="index" class="form-item afs">
-                                    <div class="key">
-                                        {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}:
-                                    </div>
+                                    <div class="key">{{ $t('authority.' + subItem.key) }}:</div>
                                     <div class="value">
                                         <!-- 全选 -->
                                         <div class="m-b-10">
@@ -124,21 +88,11 @@
                                             <a-checkbox-group v-model:value="subItem.itemSelect">
                                                 <!-- 二级模块渲染 -->
                                                 <a-checkbox :value="subItem.id" :disabled="subItem.disabled">
-                                                    {{ $t('authority.' + item.key + '.' + subItem.key + '.title') }}
+                                                    {{ $t('authority.' + subItem.key) }}
                                                 </a-checkbox>
                                                 <template v-for="(threeItem, index) in subItem.list">
                                                     <a-checkbox :value="threeItem.id" :disabled="threeItem.disabled">
-                                                        {{
-                                                            $t(
-                                                                'authority.' +
-                                                                    item.key +
-                                                                    '.' +
-                                                                    subItem.key +
-                                                                    '.' +
-                                                                    threeItem.key +
-                                                                    '.title',
-                                                            )
-                                                        }}
+                                                        {{ $t('authority.' + threeItem.key) }}
                                                     </a-checkbox>
                                                     <a-checkbox
                                                         v-for="(fourItem, index) in threeItem.list"
@@ -146,29 +100,7 @@
                                                         :value="fourItem.id"
                                                         :disabled="fourItem.disabled"
                                                     >
-                                                        {{
-                                                            $t(
-                                                                'authority.' +
-                                                                    item.key +
-                                                                    '.' +
-                                                                    subItem.key +
-                                                                    '.' +
-                                                                    threeItem.key +
-                                                                    '.title',
-                                                            )
-                                                        }}
-                                                        ({{
-                                                            $t(
-                                                                'authority.' +
-                                                                    item.key +
-                                                                    '.' +
-                                                                    subItem.key +
-                                                                    '.' +
-                                                                    threeItem.key +
-                                                                    '.' +
-                                                                    fourItem.key,
-                                                            )
-                                                        }})
+                                                        {{ $t('authority.' + fourItem.key) }}
                                                     </a-checkbox>
                                                 </template>
                                             </a-checkbox-group>

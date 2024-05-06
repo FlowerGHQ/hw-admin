@@ -42,13 +42,21 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleUserRole(record)">
+                            <a-button
+                                v-if="$auth('sales.distribution.distributor.set-role')"
+                                type="link"
+                                @click="handleUserRole(record)"
+                            >
                                 <i class="icon i_edit" />{{ $t('u.set_role') }}
                             </a-button>
                             <a-button type="link" @click="routerChange('edit', record)">
                                 <i class="icon i_edit" />{{ $t('def.edit') }}
                             </a-button>
-                            <a-button type="link" @click="handleReset(record)" v-if="$UserAuth(loginUsername)">
+                            <a-button
+                                v-if="$auth('sales.distribution.distributor.reset-password')"
+                                type="link"
+                                @click="handleReset(record)"
+                            >
                                 <i class="icon i_lock" />{{ $t('u.reset') }}
                             </a-button>
                             <a-button type="link" class="danger" @click="handleDelete(record.id)">
@@ -164,7 +172,7 @@ export default {
                 { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right' },
             ];
-            if (this.$auth('sys.sys.user.set-admin')) {
+            if (this.$auth('sales.distribution.distributor.set-admin')) {
                 columns.splice(5, 0, { title: this.$t('e.administrator'), dataIndex: 'flag_admin' });
                 // 维修工不显示管理员
             }

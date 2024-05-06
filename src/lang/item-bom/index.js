@@ -87,6 +87,8 @@ export default {
         failure: '失败',
         // 导入失败的数据可以在设变版本列表处手动分类
         import_failure_data: '导入失败的数据可以在设变版本列表处手动分类',
+        filter_multiple_name: '输入多个名称,请使用英文分隔符',
+        product_name: '产品名称',
         parts_title: '售后配件管理',
         model_BOM: '车型BOM',
     },
@@ -166,6 +168,8 @@ export default {
         failure: 'Failure',
         // 导入失败的数据可以在设变版本列表处手动分类
         import_failure_data: 'Import Failure Data Can Be Manually Classified In The Device Version List',
+        filter_multiple_name: 'Enter multiple names, please use English delimiters',
+        product_name: 'Product Name',
         parts_title: 'After Sales Parts Management',
         model_BOM: 'Model BOM',
     },

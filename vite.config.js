@@ -9,7 +9,6 @@ import { AntDesignVueResolver, ElementPlusResolver } from 'unplugin-vue-componen
 import * as path from 'path';
 // 正式环境清除console
 // https://vitejs.dev/config/
-
 export default defineConfig(({ mode }) => {
     return {
         server: {

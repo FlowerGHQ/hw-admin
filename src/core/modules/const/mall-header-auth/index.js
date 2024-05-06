@@ -22,6 +22,9 @@ const MALL_HEADER_AUTH = {
         { value: '/mall/promotional-list/detail' },
         { value: '/mall/shopping-bag' },
         { value: '/preview/deals-preview' },
+        { value: '/mall/recharge' },
+        { value: '/mall/confirm-order' },
+        { value: '/mall/pending-payment' },
     ],
     FOOTER: [
         { value: '/mall/index' },
@@ -59,6 +62,9 @@ const MALL_HEADER_AUTH = {
         { value: '/mall/peripheral-list/detail' },
         { value: '/mall/promotional-list/detail' },
         { value: '/mall/shopping-bag' },
+        { value: '/mall/recharge' },
+        { value: '/mall/confirm-order' },
+        { value: '/mall/pending-payment' },
     ],
 };
 export default MALL_HEADER_AUTH;

@@ -89,9 +89,7 @@ const onZoom = type => {
     }
 };
 /* Methods end */
-onMounted(() => {
-    console.log('previewData', props.previewData);
-});
+onMounted(() => {});
 </script>
 
 <style lang="less" scoped>

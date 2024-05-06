@@ -2511,6 +2511,7 @@ import MySvgIcon from '@/components/MySvgIcon/index.vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import axios from 'axios';
+import dayjs from 'dayjs';
 
 // json
 const chinaOptions = ref([]);
@@ -3023,6 +3024,26 @@ const draftDataReview = () => {
             if (key === 'form') {
                 for (const iterator of Object.keys(draftData[key])) {
                     formState[iterator] = draftData[key][iterator]; //die9
+                    // agent_info
+                    if (iterator === 'agent_info') {
+                        formState.agent_info.agent_effective_begin_time = dayjs(
+                            draftData[key].agent_effective_begin_time,
+                        ).unix();
+                        formState.agent_info.agent_effective_end_time = dayjs(
+                            draftData[key].agent_effective_end_time,
+                        ).unix();
+                    }
+                    // company_info
+                    if (iterator === 'company_info') {
+                        formState.company_info.established_time = dayjs(draftData[key].established_time).unix();
+                    }
+                    // 客户信息
+                    if (iterator === 'customer_info') {
+                        formState.customer_info = draftData[key];
+                        formState.customer_info.forEach(item => {
+                            item.begin_cooperation_time = dayjs(item.begin_cooperation_time).unix();
+                        });
+                    }
                 }
             } else {
                 formState[key] = draftData[key];

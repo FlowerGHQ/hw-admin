@@ -139,6 +139,47 @@ const SUPPLAY = {
         { value: 1, t: 'supply-chain.new_addition' },
         { value: 2, t: 'supply-chain.rename' },
     ],
+    // 审核状态
+    AUDIT_STATUS: {
+        // 10 待审核 20 暂不处理 30 初审淘汰 40 待复审 50考虑免审 60 复审淘汰 70 待终审 80 终审淘汰 90 特批合格 100 合格淘汰 110 免审通过
+        10: { value: 10, t: 'supply-chain.pending_audit' },
+        20: { value: 20, t: 'supply-chain.not_deal' },
+        30: { value: 30, t: 'supply-chain.initial_elimination' },
+        40: { value: 40, t: 'supply-chain.pending_review' },
+        50: { value: 50, t: 'supply-chain.consideration_exempt' },
+        60: { value: 60, t: 'supply-chain.review_elimination' },
+        70: { value: 70, t: 'supply-chain.pending_final_review' },
+        80: { value: 80, t: 'supply-chain.final_review_elimination' },
+        90: { value: 90, t: 'supply-chain.special_approval' },
+        100: { value: 100, t: 'supply-chain.qualified_elimination' },
+        110: { value: 110, t: 'supply-chain.exempt_pass' },
+    },
+    STATUS_LIST: [
+        { zh: '全  部', en: 'All', value: 0, color: 'primary', key: '' },
+        // 待初审
+        { zh: '待初审', en: 'Pending First Audit', value: 0, color: 'yellow', key: 10 },
+        // 待复审
+        { zh: '待复审', en: 'Pending Review', value: 0, color: 'blue', key: 40 },
+        // 待终审
+        { zh: '待终审', en: 'Pending Final Review', value: 0, color: 'green', key: 70 },
+    ],
+    // stage
+    STAGE: {
+        //   注册供应商
+        10: { value: 10, t: 'supply-chain.registered_supplier' },
+        // 潜在供应商
+        20: { value: 20, t: 'supply-chain.potential_supplier' },
+        // 淘汰供应商
+        30: { value: 30, t: 'supply-chain.eliminated_supplier' },
+        // 合格供应商
+        40: { value: 40, t: 'supply-chain.qualified_supplier' },
+    },
+    STAGE_LIST: [
+        { value: 10, t: 'supply-chain.registered_supplier', label: 'supply-chain.registered_supplier' },
+        { value: 20, t: 'supply-chain.potential_supplier', label: 'supply-chain.potential_supplier' },
+        { value: 30, t: 'supply-chain.eliminated_supplier', label: 'supply-chain.eliminated_supplier' },
+        { value: 40, t: 'supply-chain.qualified_supplier', label: 'supply-chain.qualified_supplier' },
+    ],
 };
 
 export default SUPPLAY;

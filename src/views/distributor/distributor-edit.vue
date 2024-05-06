@@ -31,14 +31,36 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('d.pay_type') /*付款方式*/ }}:</div>
                     <div class="value">
-                        <a-select v-model:value="form.pay_type" :placeholder="$t('def.select_payment_term')">
-                            <a-select-option
-                                v-for="(val, key) in PAY_TIME_LIST"
-                                :key="val['key']"
-                                :value="val['key']"
-                                >{{ val[$i18n.locale] }}</a-select-option
-                            >
-                        </a-select>
+                        <a-radio-group v-model:value="form.pay_type" @change="onPayType">
+                            <a-radio v-for="item in PAY_METHODS_MAP" :key="item.key" :value="item.key">
+                                {{ item.t }}
+                            </a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('d.advance_payment') /*预付款*/ }}:</div>
+                    <div class="value d-f-a">
+                        <a-input-number
+                            class="w-100"
+                            v-model:value="form.pay_pre_pay_ratio"
+                            :placeholder="$t('n.enter') + $t('d.advance_payment')"
+                            :min="0"
+                            :max="100"
+                        />
+                        <span class="m-l-8">%</span>
+                    </div>
+                </div>
+                <div v-if="Number(form.pay_type) === PAY_METHODS.OA" class="form-item required">
+                    <div class="key">{{ $t('d.OA') /*OA*/ }}:</div>
+                    <div class="value d-f-a">
+                        <a-input-number
+                            class="w-100"
+                            v-model:value="form.pay_oa_day"
+                            :placeholder="$t('n.enter') + $t('d.OA')"
+                            :min="0"
+                        />
+                        <span class="m-l-8">{{ $t('common.day') }}</span>
                     </div>
                 </div>
                 <div class="form-item required">
@@ -92,7 +114,7 @@
                         <a-input v-model:value="form.phone" :placeholder="$t('def.input')" />
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('n.email') /*邮箱*/ }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.email" :placeholder="$t('def.input')" />
@@ -119,9 +141,9 @@
                     <div class="key">{{ $t('d.sales_area') /*销售区域*/ }}:</div>
                     <div class="value">
                         <a-select v-model:value="form.sales_area_ids" mode="multiple" :placeholder="$t('def.select')">
-                            <a-select-option v-for="(item, index) of salesList" :key="index" :value="item.id">{{
-                                $i18n.locale === 'zh' ? item.name : item.name_en
-                            }}</a-select-option>
+                            <a-select-option v-for="(item, index) of salesList" :key="index" :value="item.id">
+                                {{ $i18n.locale === 'zh' ? item.name : item.name_en }}
+                            </a-select-option>
                         </a-select>
                     </div>
                 </div>
@@ -140,7 +162,9 @@
 import Core from '../../core';
 import CountryCascader from '@/components/common/CountryCascader.vue';
 import Const from '../../core/const';
-
+const PAY_METHODS = Const.DISTRIBUTOR.PAY_METHODS;
+const PAY_METHODS_MAP = Const.DISTRIBUTOR.PAY_METHODS_MAP;
+const TYPE = Const.DISTRIBUTOR.TYPE;
 export default {
     name: 'DistributorEdit',
     components: {
@@ -150,8 +174,9 @@ export default {
     data() {
         return {
             Core,
-            TYPE: Core.Const.DISTRIBUTOR.TYPE,
-            PAY_TIME_LIST: Const.DISTRIBUTOR.PAY_TIME_LIST,
+            TYPE,
+            PAY_METHODS,
+            PAY_METHODS_MAP,
             // 加载
             loading: false,
             detail: {},
@@ -170,7 +195,9 @@ export default {
                 email: '',
                 type: undefined,
                 sales_area_ids: undefined,
-                pay_type: undefined,
+                pay_type: PAY_METHODS.TT, // 支付方式
+                pay_pre_pay_ratio: undefined, // 预付款
+                pay_oa_day: undefined, // OA
                 currency: undefined,
                 flag_stock_change_use_pda: Const.FLAG.YES,
             },
@@ -223,12 +250,14 @@ export default {
                     for (const key in this.form) {
                         this.form[key] = d[key];
                     }
-                    for (const key in this.area) {
-                        this.area[key] = d[key];
-                    }
                     this.form.sales_area_ids = this.detail.sales_area_list
                         ? this.detail.sales_area_list.map(i => i.id)
                         : [];
+
+                    // 国家数据回显
+                    for (const key in this.area) {
+                        this.area[key] = d[key] || undefined;
+                    }
                     this.defArea = [d.continent || '', d.country || ''];
                 })
                 .catch(err => {
@@ -248,23 +277,53 @@ export default {
             let area = Core.Util.deepCopy(this.area);
 
             const requireList = [
-                { key: 'code', msg: this.$t('def.enter') + '(' + this.$t('d.code') + ')' }, // 编码
-                { key: 'name', msg: this.$t('def.enter') + '(' + this.$t('d.name') + ')' }, // 分销商名称
-                { key: 'short_name', msg: this.$t('def.enter') + '(' + this.$t('d.short_name') + ')' }, // 简称
-                { key: 'pay_type', msg: this.$t('def.enter') + '(' + this.$t('d.pay_type') + ')' }, // 付款方式
-                { key: 'currency', msg: this.$t('def.enter') + '(' + this.$t('p.currency') + ')' }, // 货币
-                { key: 'type', msg: this.$t('def.enter') + '(' + this.$t('n.type') + ')' }, // 类型
-                { key: 'email', msg: this.$t('def.enter') + '(' + this.$t('n.email') + ')' }, // 邮箱
-                { key: 'sales_area_ids', msg: this.$t('def.enter') + '(' + this.$t('d.sales_area') + ')' }, // 销售区域
+                { key: 'code', msg: this.$t('def.enter') + '(' + this.$t('d.code') + ')', isVerification: true }, // 编码
+                { key: 'name', msg: this.$t('def.enter') + '(' + this.$t('d.name') + ')', isVerification: true }, // 分销商名称
+                {
+                    key: 'short_name',
+                    msg: this.$t('def.enter') + '(' + this.$t('d.short_name') + ')',
+                    isVerification: true,
+                }, // 简称
+                {
+                    key: 'pay_type',
+                    msg: this.$t('def.enter') + '(' + this.$t('d.pay_type') + ')',
+                    isVerification: true,
+                }, // 付款方式
+                {
+                    key: 'pay_pre_pay_ratio',
+                    msg: this.$t('def.enter') + '(' + this.$t('d.advance_payment') + ')',
+                    isVerification: true,
+                    isZero: Number(form['pay_pre_pay_ratio']) === 0,
+                }, // 预付款
+                {
+                    key: 'pay_oa_day',
+                    msg: this.$t('def.enter') + '(' + this.$t('d.OA') + ')',
+                    isVerification: Number(form.pay_type) === PAY_METHODS.OA,
+                    isZero: Number(form['pay_oa_day']) === 0,
+                }, // OA
+                {
+                    key: 'currency',
+                    msg: this.$t('def.enter') + '(' + this.$t('p.currency') + ')',
+                    isVerification: true,
+                }, // 货币
+                { key: 'type', msg: this.$t('def.enter') + '(' + this.$t('n.type') + ')', isVerification: true }, // 类型
+                {
+                    key: 'sales_area_ids',
+                    msg: this.$t('def.enter') + '(' + this.$t('d.sales_area') + ')',
+                    isVerification: true,
+                }, // 销售区域
             ];
             for (let index in requireList) {
-                if (!form[requireList[index].key]) {
-                    return this.$message.warning(requireList[index].msg);
+                if (requireList[index]?.isVerification && !requireList[index]?.isZero) {
+                    // 判断这个对象在哪种情况需要验证
+                    if (!form[requireList[index].key]) {
+                        return this.$message.warning(requireList[index].msg);
+                    }
                 }
             }
 
-            // 国家的校验
             if (this.areaList.length) {
+                // 为了赋值
                 area = {
                     continent: this.areaList[0].name,
                     continent_en: this.areaList[0].name_en,
@@ -272,11 +331,13 @@ export default {
                     country_en: this.areaList[1].name_en,
                     country_code: this.areaList[1].code,
                 };
-            } else {
-                this.$message.warning(this.$t('def.enter') + '(' + this.$t('n.country') + ')');
+            } else if (Object.keys(area).every(key => !area[key])) {
+                // 国家的校验 [判断对象数据是否为空]
+                return this.$message.warning(this.$t('def.enter') + '(' + this.$t('n.country') + ')');
             }
-
+            
             form.sales_area_ids = form.sales_area_ids.join(',');
+            
 
             Core.Api.Distributor.save({
                 ...form,
@@ -290,10 +351,26 @@ export default {
                     console.log('handleSubmit err:', err);
                 });
         },
+        // 付款方式
+        onPayType(e) {
+            let type = e.target.value;
+
+            if (type === PAY_METHODS.TT) {
+                this.form.pay_oa_day = undefined;
+            }
+        },
     },
 };
 </script>
 
 <style lang="less" scoped>
 // #DistributorEdit {}
+.d-f-a {
+    display: flex;
+    align-items: center;
+}
+
+.w-100 {
+    width: 100%;
+}
 </style>

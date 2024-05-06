@@ -27,7 +27,7 @@ export default {
                             Core.Data.setUser(res.data.user.account || '');
                             Core.Data.setOrgId(res.data.user.org_id);
                             Core.Data.setOrgType(res.data.user.org_type);
-                            Core.Data.setCurrency(res.data.user.currency);
+                            Core.Data.setCurrency(res.data.user?.org.currency); // 账号的单位
                             Core.Data.setLoginType(res.data.user.type);
                             Core.Data.setAuthority('');
                             let loginType = res.data.user.type;

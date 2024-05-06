@@ -1,13 +1,7 @@
 <template>
-    <a-button
-        class="ReceiverAddressEdit"
-        @click.stop="handleAddressShow()"
-        :ghost="ghost"
-        :type="btnType"
-        :class="btnClass"
-    >
+    <span class="ReceiverAddressEdit" @click.stop="handleAddressShow()" :class="btnClass">
         <slot>{{ btnText }}</slot>
-    </a-button>
+    </span>
     <a-modal
         :title="$t('ad.add')"
         v-model:visible="modalShow"
@@ -40,10 +34,22 @@
                     <a-input v-model:value="form.address" :placeholder="$t('def.input')" />
                 </div>
             </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('n.email') }}:</div>
+                <div class="value">
+                    <a-input v-model:value="form.email" :placeholder="$t('def.input')" />
+                </div>
+            </div>
         </div>
         <template #footer>
-            <a-button @click="handleAddressClose">{{ $t('def.cancel') }}</a-button>
-            <a-button @click="handleConfirm" type="primary">{{ $t('def.sure') }}</a-button>
+            <div class="btns">
+                <MyButton padding="5px 28px" font="12px" @clickFn="handleAddressClose">
+                    {{ $t('def.cancel') }}
+                </MyButton>
+                <MyButton type="primary" padding="6px 28px" font="12px" @clickFn="handleConfirm">
+                    {{ $t('def.sure') }}
+                </MyButton>
+            </div>
         </template>
     </a-modal>
 </template>
@@ -53,25 +59,18 @@ import Core from '@/core';
 
 import CountryCascader from '../common/CountryCascader.vue';
 import AddressCascader from '../common/AddressCascader.vue';
+import MyButton from '../common/MyButton.vue';
 
 export default {
-    components: { AddressCascader, CountryCascader },
+    components: { AddressCascader, CountryCascader, MyButton },
     emits: ['submit'],
     props: {
         btnText: {
             type: String,
             default: '新增收货地址',
         },
-        btnType: {
-            type: String,
-            default: 'primary',
-        },
         btnClass: {
             type: String,
-        },
-        ghost: {
-            type: Boolean,
-            default: true,
         },
         detail: {
             type: Object,
@@ -94,6 +93,7 @@ export default {
                 name: '',
                 phone: '',
                 address: '',
+                email: '',
             },
 
             areaMap: {},
@@ -160,6 +160,9 @@ export default {
             if (!form.address) {
                 return this.$message.warning(this.$t('def.enter'));
             }
+            if (!form.email) {
+                return this.$message.warning(this.$t('def.enter'));
+            }
             Core.Api.ReceiveAddress.save({
                 ...form,
                 org_id: this.orgId,
@@ -184,14 +187,21 @@ export default {
 
 <style lang="less" scoped>
 .ReceiverAddressEdit {
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: 400;
     line-height: 20px;
-    height: 30px;
-    padding: 4px 14px;
-    margin-bottom: 10px;
-
+    color: #8f00ff;
+    cursor: pointer;
     .icon {
         font-size: 12px;
+    }
+}
+.btns {
+    .flex(flex-end, center, row);
+    #my-button {
+        &:nth-child(n + 2) {
+            margin-left: 8px;
+        }
     }
 }
 </style>

@@ -75,6 +75,9 @@ export default {
         width: 0px;
         transition: 0.3s;
     }
+    .my-button-text {
+        white-space: nowrap;
+    }
     &:hover {
         .right-icon {
             margin-left: 8px;
@@ -101,6 +104,22 @@ export default {
         background: linear-gradient(100deg, #c6f 0%, #66f 100%);
         .my-button-text {
             -webkit-text-fill-color: #fff;
+        }
+    }
+}
+.line {
+    border: 1px solid #999999;
+    .my-button-text {
+        color: #666666;
+    }
+    &:hover {
+        background: linear-gradient(100deg, #c6f 0%, #66f 100%);
+        border-image: linear-gradient(100deg, #c6f 0%, #66f 100%) 1;
+        background-clip: text;
+        -webkit-background-clip: text;
+        .my-button-text {
+            -webkit-text-fill-color: transparent;
+            text-align: center;
         }
     }
 }

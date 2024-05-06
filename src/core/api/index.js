@@ -383,10 +383,10 @@ const apiList = {
         detailBySn: ['PostJson', 'purchase-order/detail-sn'],
         itemList: ['PostJson', 'purchase-order-item/list'], // 采购订单明细列表
         giveawayList: ['PostJson', 'purchase-order-item/giveaway-list'], // 采购订单赠品明细列表
-        payList: ['PostJson', 'purchase-order-pay/list'], // 采购订单收款明细列表
-        payAudit: ['PostJson', 'purchase-order-pay/audit'], // 采购订单收款明细列表
+        payList: ['PostJson', 'pay/list'], // 采购订单收款明细列表
+        payAudit: ['PostJson', 'pay/audit'], // 采购订单收款明细列表
         createAudit: ['PostJson', 'purchase-order/create-audit'], // 售后采购单创建审核
-        delete: ['PostJson', 'purchase-order-pay/delete'], // 采购订单收款明细列表
+        delete: ['PostJson', 'pay/delete'], // 采购订单收款明细列表
         itemByIdList: ['PostJson', 'purchase-order-item/list-by-item-id'], // 采购订单明细列表
         payment: ['PostJson', 'purchase-order/payment'], // 支付订单
         outStock: ['PostJson', 'purchase-order/out-stock'], // 订单发货
@@ -406,6 +406,8 @@ const apiList = {
         updatePI: ['PostJson', 'purchase-order/update-pi'], // 修改pi
         // 平台方增加功能请求-手动同步u8--同步erp
         erpPush: ['PostJson', 'erp/purchase-order/push'], // 同步erp  待生产-》生产中
+        getWallet: ['PostJson', 'wallet/get'], // 获取钱包余额
+        pay: ['PostJson', 'purchase-order/pay'], // 支付
     },
     Aftersales: {
         // 售后单
@@ -487,6 +489,11 @@ const apiList = {
         updateStatus: ['PostJson', 'distributor/update-status'], //修改状态
         walletMoneyList: ['PostJson', 'wallet-money/list'], //钱包余额明细列表
         walletDetail: ['PostJson', 'wallet/detail'], //钱包详情
+        // 充值记录
+        rechargeList: ['PostJson', 'audit-record/list-distributor-recharge'],
+        // 修改授信总额和备用件抵扣比率
+        updateCredit: ['PostJson', 'distributor/update-credit-spare-part'],
+        findAccount: ['PostJson', 'distributor/find-pay-in-account-bank'],// 拿到充值对应银行详情
 
         bomTree: ['PostJson', 'item-category/bom-tree'], //分销商端绑定bom的商品分类
         bomListParts: ['PostJson', 'aftermarket/bom/list-parts'], //分销商端售后bom配件列表
@@ -1055,6 +1062,17 @@ const apiList = {
         adminDetail: ['PostJson', 'supplier-application/detail'], // 平台方供应商管理详情
         adminAdd: ['PostJson', 'supplier-application/save'], // 平台方供应商管理添加
         add: ['PostJson', 'supplier-application/save'], // 供应商前缀 /supplier
+        countStatus: ['PostJson', 'supplier-application/count-status'], // 供应商前缀 /supplier
+        // 特批为合格供应商
+        batchUpdateStage: ['PostJson', 'supplier-application/batch-update-stage'], // 供应商前缀 /supplier
+        // 审核
+        audit: ['PostJson', 'supplier-application/audit'], // 供应商前缀 /supplier
+        // 免审审核详情
+        noExamineDetail: ['PostJson', 'supplier-application/no-examine-application-detail'], // 供应商前缀 /supplier
+        // 免审申请
+        noExamine: ['PostJson', 'supplier-application/no-examine-application'], // 供应商前缀 /supplier
+        // 获取淘汰原因
+        getEliminateReason: ['PostJson', 'supplier-application/get-eliminate-reason'], // 供应商前缀 /supplier
     },
     SALES_STRATEGY: {
         list: ['PostJson', 'sales-strategy/list'],
@@ -1099,6 +1117,41 @@ const apiList = {
         save: ['PostJson', 'announcement/save'], // 新增
         updateStatus: ['PostJson', 'announcement/update-status'], // 修改排序和状态
     },
+    RechargeAudit: {
+        audit: ['PostJson', 'audit-record/audit'], // 审核
+        detail: ['PostJson', 'audit-record/detail'], // 详情
+        list: ['PostJson', 'audit-record/list-distributor-recharge'], // 列表
+        // audit-record/save
+        save: ['PostJson', 'audit-record/save'], // 新增
+        //修改备用件抵扣比率
+        updateDeductionRate: ['PostJson', 'distributor/deduction-rate-update'],
+    },
+    PayAccount: {
+        detail: ['PostJson', 'pay-in-account/detail'], // 详情
+        save: ['PostJson', 'pay-in-account/save'], // 保存
+        list: ['PostJson', 'pay-in-account/list'], // 列表
+        updateStatus: ['PostJson', 'pay-in-account/update-status'], // 修改状态
+        delete: ['PostJson', 'pay-in-account/delete'], // 删除
+        countryList: ['PostJson', 'pay-in-account/list-country'], // 生效中的国家列表
+    },
+    // 船期以及运费
+    ShippingDateFreight: {
+        list: ['PostJson', 'purchase-order/pending-freight-confirm/list'], // 列表
+        status: ['PostJson', 'purchase-order/pending-freight-confirm/count-by-status'], // 状态数据
+        add: ['PostJson', 'purchase-order/pending-freight-confirm/save'], // 新增/修改 预计船期及运费
+        confirm: ['PostJson', 'purchase-order/pending-freight-confirm/audit'], // 确认运费
+    },
+    // 取消订单申请表
+    CancelOrderList: {
+        list: ['PostJson', 'purchase-order/cancel/list'], // 列表
+        audit: ['PostJson', 'purchase-order/cancel/audit'], // 审核
+        count: ['PostJson', 'purchase-order/cancel/count'], // 计数
+    },
+    // 尾款未支付 待支付
+    FinalPayment: {
+        list: ['PostJson', 'purchase-order/pending-final-pay/list'], // 列表
+        count: ['PostJson', 'purchase-order/pending-final-pay/count-by-status'], // 状态计数
+    },
     WarehousingManagement: {
         MaterialPurchaseOrderList: ['PostJson', 'invoice-item/material-purchase-order-list'], // 采购入库单列表
         ProductionOrderList: ['PostJson', 'production-order-item-bind/production-order-list'], // 生产单列表
@@ -1106,7 +1159,13 @@ const apiList = {
         ProductionOrderItemlist: ['PostJson', 'production-order-item/list'], // 生产单子件列表
     },
     ToBCustomer: {
-        list: ['PostJson', 'comment/list'], // crm tob客户列表   
+        list: ['PostJson', 'comment/list'], // crm tob客户列表
+    },
+    // 获取供应链角色下主管
+    SupplierApplication: {
+        getAdminList: ['PostJson', 'supplier-application/get-manager'], // 获取供应链角色下主管
+        //合作供应商修改
+        update: ['PostJson', 'supplier-application/update'],
     },
     SaleTarget: {
         list: ['PostJson', 'sale-order-target/list'], // 销售目标管理列表
