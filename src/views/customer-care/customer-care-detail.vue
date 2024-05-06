@@ -390,7 +390,7 @@
 
                 <!-- 部件 -->
                 <div class="inquiry-classification-item">
-                    <div class="inquiry-classification-key" :class="requiredType === 2 ? 'required' : ''">
+                    <div class="inquiry-classification-key" :class="(requiredType === 2 && requiredPurpose) ? 'required' : ''">
                         {{ $t('customer-care.parts') }}
                     </div>
                     <div class="inquiry-classification-value">
@@ -461,7 +461,7 @@
                             'm-t-4': $Util.Common.isMember(customerCareDetail.type, [
                                 Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.BATTERY /*电池*/,
                             ]),
-                            required: requiredType === 2,
+                            required: (requiredType === 2 && requiredPurpose),
                         }"
                     >
                         {{ $t('customer-care.fault_classification') }}
@@ -885,8 +885,12 @@ const commentListComputed = computed(() => {
     return comment_list.value.sort((a, b) => a.id - b.id);
 });
 const requiredType = computed(() => {
-    // 类型为咨询返回 1（归类必填） 否则 返回 2（归类、部件和故障为必填项）
+    // 问询类型为咨询返回 1（归类必填） 否则 返回 2（归类、部件和故障为必填项）    
     return customerCareDetail.value.type === Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.CONSULTATION ? 1 : 2;
+});
+// 归类底下的
+const requiredPurpose = computed(() => {        
+    return customerCareDetail.value.purpose !==  Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE_MAP.CONSULTATION
 });
 /* computed end */
 
@@ -1415,24 +1419,29 @@ const validateForm = () => {
                 return message.warn(proxy.$t('common.please_select') + proxy.$t('customer-care.classify'));
             }
         }
-        if (customerCareDetail.value.part_list.length === 0) {
-            return message.warn(proxy.$t('common.please_select') + proxy.$t('customer-care.parts'));
-        }
-        if (
-            proxy.$Util.Common.isMember(customerCareDetail.value.type, [
-                Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION /*故障*/,
-            ])
-        ) {
-            for (let item of customerCareDetail.value.vehicle_list) {
-                if (!item.fault_type || item.fault_type === 0) {
-                    return message.warn(
-                        proxy.$t('common.please_select') + proxy.$t('customer-care.fault_classification'),
-                    );
-                }
+
+        if (customerCareDetail.value.purpose !== Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE_MAP.CONSULTATION) {
+            // 部件
+            if (customerCareDetail.value.part_list.length === 0) {
+                return message.warn(proxy.$t('common.please_select') + proxy.$t('customer-care.parts'));
             }
-        } else {
-            if (!customerCareDetail.value.fault_type || customerCareDetail.value.fault_type === 0) {
-                return message.warn(proxy.$t('common.please_select') + proxy.$t('customer-care.fault_classification'));
+            // 故障分类
+            if (
+                proxy.$Util.Common.isMember(customerCareDetail.value.type, [
+                    Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION /*故障*/,
+                ])
+            ) {
+                for (let item of customerCareDetail.value.vehicle_list) {
+                    if (!item.fault_type || item.fault_type === 0) {
+                        return message.warn(
+                            proxy.$t('common.please_select') + proxy.$t('customer-care.fault_classification'),
+                        );
+                    }
+                }
+            } else {
+                if (!customerCareDetail.value.fault_type || customerCareDetail.value.fault_type === 0) {
+                    return message.warn(proxy.$t('common.please_select') + proxy.$t('customer-care.fault_classification'));
+                }
             }
         }
     }
