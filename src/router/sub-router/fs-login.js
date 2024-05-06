@@ -1,7 +1,7 @@
 // 飞书登录相关页面
 const fsLogin = {
     path: '/feishu-login',
-    component: () => import('@/views/layout/index.vue'),
+    component: () => import('@/views/fs-login/index.vue'),
     name: 'FeishuLogin',
     meta: {
         title: '飞书扫码登录',
