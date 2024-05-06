@@ -92,7 +92,7 @@
                         <div class="value flex">
                             <MyUpload
                                 name="add_picList"
-                                v-model:value="editForm.logo"
+                                v-model:value="editForm.icon"
                                 showTip
                                 :limit="1"
                                 :limitSize="10"
@@ -201,7 +201,7 @@ export default {
             editForm: {
                 id: '',
                 parent_id: '',
-                logo: '',
+                icon: '',
                 name: '',
                 name_en: '',
                 index: '',
@@ -333,11 +333,12 @@ export default {
         },
 
         // 编辑与新增子类
-        handleModalShow({ parent_id = 0, id, name, name_en, index, index_key }, node = null, parent = null) {
+        handleModalShow({ parent_id = 0, id, name, name_en, icon, index, index_key }, node = null, parent = null) {
             this.editForm = {
                 id: id,
                 name: name,
                 name_en: name_en,
+                icon: icon,
                 parent_id: parent_id ? parent_id : this.searchForm.parent_id,
                 index: index,
                 index_key: index_key,

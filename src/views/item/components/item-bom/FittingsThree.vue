@@ -4,12 +4,12 @@
         <div class="explosion-diagram">
             <div class="explosion-diagram-tip">
                 <a-tooltip class="cursor" title="①上传配件，②上传爆炸图，③配置点位">
-                    <div class="tip-wrap">
+                    <!-- <div class="tip-wrap">
                         <img class="tip-icon" :src="tipIcon" alt="" />
                         <div class="tip-text">
                             {{ $t(/*操作说明*/ 'item-bom.operation_instructions') }}
                         </div>
-                    </div>
+                    </div> -->
                 </a-tooltip>
 
                 <div v-if="isExplosionImg" class="operation">
@@ -589,8 +589,8 @@ const getTableDataFetch = (parmas = {}) => {
             addTagItem.value.item_component_set_list[0]?.item_component_list.forEach($1 => {
                 // 给配件表格添加index
                 tableData.value.forEach($2 => {
-                    if (Number($1.target_id) === Number($2.id)) {
-                        $2.index = $1.index;
+                    if (Number($1.target_id) === Number($2.target_id)) {
+                        $2.index = $1.index || '';
                         $1['sync_name'] = $2.sync_name;
                     }
                 });
@@ -724,19 +724,19 @@ const onOperation = (type, record) => {
             console.log('pointerList', pointerList.value);
             const datas = addTagItem.value.item_component_set_list[0];
 
-            const copyPointerList = Core.Util.deepCopy(pointerList.value).filter(el => {
-                // 过滤有点位数据
-                return el.start_point?.length && el.end_point?.length;
-            });
+            // const copyPointerList = Core.Util.deepCopy(pointerList.value).filter(el => {
+            //     // 过滤有点位数据
+            //     return el.start_point?.length && el.end_point?.length;
+            // });
 
-            copyPointerList.forEach(item => {
-                // 删除字段
-                Reflect.deleteProperty(item, 'sync_name');
+            // copyPointerList.forEach(item => {
+            //     // 删除字段
+            //     Reflect.deleteProperty(item, 'sync_name');
 
-                item.end_point = JSON.stringify(item.end_point);
-                item.start_point = JSON.stringify(item.start_point);
-            });
-
+            //     item.end_point = JSON.stringify(item.end_point);
+            //     item.start_point = JSON.stringify(item.start_point);
+            // });
+            const copyPointerList = Core.Util.deepCopy(tableData.value);
             datas.item_component_list = copyPointerList;
 
             console.log('save', addTagItem.value);

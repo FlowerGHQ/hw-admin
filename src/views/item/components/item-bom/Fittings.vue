@@ -176,6 +176,7 @@ onMounted(() => {
 /* Fetch start*/
 // 获取表格list
 const getTableDataFetch = (parmas = {}) => {
+    if (parmas.sync_id === '-1') return (tableData.value = []);
     loading.value = true;
     let obj = {
         page: channelPagination.value.current,
@@ -209,6 +210,7 @@ watch(
     [() => props.searchParams, () => props.activeObj],
     val => {
         console.log('val-----------------------------------------', val);
+        if (!val[1].sync_id) return;
         parmas.value = {
             sync_id: val[1].sync_id,
             name: val[0].name,

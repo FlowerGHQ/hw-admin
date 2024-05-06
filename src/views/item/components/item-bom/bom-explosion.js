@@ -71,7 +71,7 @@ const init = (arr, urlImg) => {
     img.onload = () => {
         console.log('图片加载完成');
         setCanvasAttr(img.width, img.height);
-        initLine(arr);
+        // initLine(arr);
     };
     img.onerror = () => {
         console.log('图片加载失败');
