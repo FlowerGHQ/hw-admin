@@ -12,6 +12,30 @@
                 </p>
                 <p class="code" :title="$t('i.code')">{{ record.code ? record.code : '-' }}</p>
                 <p class="code" v-if="record.set_id">{{ record.children_number }} {{ $t('purchase.variants') }}</p>
+                <p class="model" ref="modelRef" v-if="record?.type === 2" @click.stop>
+                    <span class="model-text">model</span>
+                    <a-popover
+                        v-model:visible="visible"
+                        title=""
+                        trigger="click"
+                        placement="bottom"
+                        :getPopupContainer="() => modelRef"
+                    >
+                        <template #content>
+                            <div class="model-ul">
+                                <p class="model-li" v-for="item in record?.apply_vehicle">{{ item }}</p>
+                            </div>
+                        </template>
+                        <span class="model-value" @click="visible = true">
+                            <span>{{
+                                record?.apply_vehicle && record?.apply_vehicle.length > 0
+                                    ? record?.apply_vehicle[0]
+                                    : '-'
+                            }}</span>
+                            <img class="model-img" src="@images/down-arrow.png" />
+                        </span>
+                    </a-popover>
+                </p>
             </div>
             <div class="btn">
                 <!-- 整车 -->
@@ -24,9 +48,16 @@
                         {{ currency }}{{ $Util.countFilter(!paramPrice ? record?.fob_eur : record?.fob_usd) }}
                     </p>
                 </template>
-                <my-button showRightIcon padding="12px 32px" font="14px" @click.native="routerChange()">
-                    {{ $t('purchase.order_now') }}
-                </my-button>
+                <div @click.stop>
+                    <my-button
+                        showRightIcon
+                        padding="12px 32px"
+                        font="14px"
+                        @clickFn="routerChange(`${route.path}/detail`, { id: record.id })"
+                    >
+                        {{ $t('purchase.order_now') }}
+                    </my-button>
+                </div>
             </div>
         </div>
     </div>
@@ -40,6 +71,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 const { proxy } = getCurrentInstance();
 
+const route = useRoute();
 const router = useRouter();
 
 const store = useStore();
@@ -52,6 +84,8 @@ const props = defineProps({
 /* state start */
 const currency = ref('€');
 const paramPrice = ref(false);
+const modelRef = ref(null);
+const visible = ref(false);
 /* state end */
 
 /* computed start */
@@ -163,6 +197,41 @@ const routerChange = (routeUrl, item = {}, type = 1) => {
             font-style: normal;
             font-weight: 400;
             line-height: 150%;
+        }
+
+        .model {
+            width: 100%;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            margin-bottom: 0;
+            padding: 2px;
+            .model-text {
+                padding: 7px 8px;
+                font-size: 12px;
+                line-height: 18px;
+                color: #999;
+            }
+            .model-value {
+                flex: 1;
+                padding: 7px 8px;
+                background: #fff;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .model-img {
+                    height: 16px;
+                }
+            }
+            .model-ul {
+                width: 100%;
+                .model-li {
+                    width: 100%;
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+            }
         }
 
         .price {

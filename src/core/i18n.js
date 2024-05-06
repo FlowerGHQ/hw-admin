@@ -245,6 +245,10 @@ const messages = {
             supplier: '供应链',
             system_management: '系统管理',
             warehousing: '仓储',
+            ishas_sk3_plus: '是否有SK3 PLUS',
+            pic_tip1: '支持上传png、jpg、jpeg',
+            pic_tip2: '图片尺寸：800*800',
+            pic_tip3: '最大10M',
         },
         a: {
             // 零售商
@@ -497,6 +501,8 @@ const messages = {
             not_null_and_1: '不能填写小于0',
             advance_payment: '预付款',
             OA: 'OA',
+            minimum_purchase: '最小起购量',
+            enter_1_1000: '请输入1-1000',
         },
         e: {
             // 用户
@@ -1316,7 +1322,7 @@ const messages = {
             unfold: '展开',
             stow: '收起',
             sure_create: '确定创建',
-            required_new: "至少选择一项权限 !",
+            required_new: '至少选择一项权限 !',
         },
         search: {
             repair_sn: '工单编号',
@@ -2714,6 +2720,10 @@ const messages = {
             supplier: 'Supplier',
             system_management: 'System Management',
             warehousing: 'Warehousing',
+            ishas_sk3_plus: 'Is There Include SK3 PLUS',
+            pic_tip1: 'Support uploading PNG, JPG, and JPEG',
+            pic_tip2: 'Image size: 800 * 800',
+            pic_tip3: 'Maximum 10M',
         },
         a: {
             new_retailer: 'Create A New Retailer',
@@ -2966,6 +2976,8 @@ const messages = {
             not_null_and_1: 'The value cannot be less than 0',
             advance_payment: 'Advance Payment',
             OA: 'OA',
+            minimum_purchase: 'Minimum Purchase Quantity',
+            enter_1_1000: 'Please Enter 1-1000',
         },
         e: {
             employee_list: 'employee list',
@@ -3662,7 +3674,8 @@ const messages = {
             configure_permissions: 'Configure Permissions',
             department: 'Department',
             sure_exit_fs: 'Are You Sure To Exit And Add Users From Feishu?',
-            not_been_successfully: 'The user has not been successfully added yet. Do you want to exit the current operation',
+            not_been_successfully:
+                'The user has not been successfully added yet. Do you want to exit the current operation',
             authority_abbreviation: 'Authority',
             allocated: 'Allocated',
             unallocated: 'Unallocated',
@@ -3765,7 +3778,7 @@ const messages = {
             unfold: 'Unfold',
             stow: 'Stow',
             sure_create: 'Sure Create',
-            required_new: "Select at least one permission !",
+            required_new: 'Select at least one permission !',
         },
         search: {
             repair_sn: 'Warranty Claim Number',

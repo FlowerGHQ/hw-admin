@@ -854,7 +854,7 @@ const isClose = ref(false); // 预览组件
 const uploadOptions = ref({
     previewType: 'image', // 上传的类型
     fileData: [], // 提交的数据
-    previewImageVideo: [], // 预览照片和预览视频
+    previewImageVideo: null, // 预览照片和预览视频
 });
 
 const msgVisible = ref(false); // 基本信息弹窗
@@ -1102,43 +1102,24 @@ const saveCommentFetch = (params = {}) => {
 // 查看视频(图片)
 const onViewImage = item => {
     console.log('item', item);
-    uploadOptions.value.previewImageVideo = [];
 
     if (videoRegx.test(item.type)) {
         // 视频都是单个的
         console.log('video/*(视频预览)');
 
-        uploadOptions.value.previewImageVideo = [];
         uploadOptions.value.previewType = 'video';
-        uploadOptions.value.previewImageVideo = [item.path];
+        uploadOptions.value.previewImageVideo = item.path;
         isClose.value = true;
     } else if (imageRegx.test(item.type)) {
         console.log('image/*(照片预览)', item.type, imageRegx.test(item.type));
         uploadOptions.value.previewType = 'image';
         if (item.file?.length > 0) {
+            console.log("item", item.file);
             // 留言下的附件
-            item.file.forEach(el => {
-                if (imageRegx.test(el.type)) {
-                    if (el.name === item.name) {
-                        // 让预览的那张图片在第一张
-                        uploadOptions.value.previewImageVideo.unshift(el.path);
-                    } else {
-                        uploadOptions.value.previewImageVideo.push(el.path);
-                    }
-                }
-            });
+           uploadOptions.value.previewImageVideo = item.path
         } else {
             // 这个是详情信息的查看(照片需要判断其点击的哪个先展示哪个)[照片是多个的]
-            customerCareDetail.value.attachment_list.forEach(el => {
-                if (imageRegx.test(el.type)) {
-                    if (Number(el.id) === Number(item.id)) {
-                        // 让预览的那张图片在第一张
-                        uploadOptions.value.previewImageVideo.unshift(el.path);
-                    } else {
-                        uploadOptions.value.previewImageVideo.push(el.path);
-                    }
-                }
-            });
+            uploadOptions.value.previewImageVideo = item.path
         }
 
         isClose.value = true;
@@ -1308,32 +1289,17 @@ const handlePreview = ({ file, fileList }) => {
     console.log('预览', file, fileList);
 
     if (videoRegx.test(file.type)) {
-        uploadOptions.value.previewImageVideo = [];
         uploadOptions.value.previewType = 'video';
-        uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(file.response?.data?.filename, 4));
+        uploadOptions.value.previewImageVideo = Core.Util.imageFilter(file.response?.data?.filename, 4);
         isClose.value = true;
     } else if (imageRegx.test(file.type)) {
-        console.log('image/*(照片预览)');
+        console.log('image/*(照片预览)', file);
         uploadOptions.value.previewType = 'image';
-        uploadOptions.value.previewImageVideo = [];
-        fileList.forEach(el => {
-            // console.log("输出的东西", el.response);
-            if (el.response) {
-                if (imageRegx.test(el.type)) {
-                    if (file.uid === el.uid) {
-                        // 让预览的哪张图片在第一张
-                        uploadOptions.value.previewImageVideo.unshift(
-                            Core.Util.imageFilter(file.response?.data?.filename, 1),
-                        );
-                    } else {
-                        uploadOptions.value.previewImageVideo.push(
-                            Core.Util.imageFilter(file.response?.data?.filename, 1),
-                        );
-                    }
-                }
-            }
-        });
-        console.log('结果', uploadOptions.value.previewImageVideo);
+
+        if (file.response) {
+            uploadOptions.value.previewImageVideo = Core.Util.imageFilter(file.response?.data?.filename, 1)
+        }
+
         isClose.value = true;
     } else if (pdfRegx.test(file.type)) {
         console.log('application/pdf(pdf预览)', Core.Util.imageFilter(file.response?.data?.filename, 4));

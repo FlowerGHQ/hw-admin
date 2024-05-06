@@ -2,7 +2,7 @@
     <div class="item-bom">
         <div class="list-container item-container">
             <div class="title-container" ref="titleRefs">
-                <div class="title-area">{{ $t('item-bom.title') }}</div>
+                <div class="title-area">{{ $t('item-bom.parts_title') }}</div>
             </div>
             <div class="item-tree" :style="{ height: 'calc(100% - ' + titleHeight + ')' }">
                 <!-- 左边 -->
@@ -75,16 +75,17 @@
 // import { useRouter,onBeforeRouteUpdate } from 'vue-router';
 import { ref, shallowRef, onMounted, computed, watch, provide, onBeforeUnmount, getCurrentInstance } from 'vue';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
-import fittings from './components/item-bom/Fittings.vue';
-import FittingsTwo from './components/item-bom/FittingsTwo.vue';
-import FittingsThree from './components/item-bom/FittingsThree.vue';
-import FittingsTree from './components/item-bom/FittingsTree.vue';
-import ClassifyModal from './components/item-bom/ClassifyModal.vue'; // 分类弹窗组件
+import fittings from './components/parts-management/Fittings.vue';
+import FittingsTwo from './components/parts-management/FittingsTwo.vue';
+import FittingsThree from './components/parts-management/FittingsThree.vue';
+import FittingsTree from './components/parts-management/FittingsTree.vue';
+import ClassifyModal from './components/parts-management/ClassifyModal.vue'; // 分类弹窗组件
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
 import TreeSelectCategory from './components/TreeSelectCategory.vue';
 // const router = useRouter()
 const minWidthCount = 890;
 const treeRef = ref(null);
+const TreeSelectCategoryRef = ref(null);
 // 标题高度
 const titleRefs = ref(null);
 const titleHeight = ref(0);
@@ -169,6 +170,13 @@ const TreeRefresh = val => {
         treeRef.value.getCurrentVersion(val.shop_id, val.version_id);
     }
 };
+const handleCategoryChange = val => {
+    console.log(val, treeRef.value);
+    if (treeRef.value) treeRef.value.getGoodsList(val);
+    activeObj.value = {
+        sync_id: '-1',
+    };
+};
 
 onMounted(() => {
     titleHeight.value = titleRefs.value.offsetHeight + 'px';
@@ -216,13 +224,6 @@ const setValue = val => {
         level2CodeStr.value = '';
         // dataKeyPop.value = new Date();
     }
-};
-const handleCategoryChange = val => {
-    console.log(val, treeRef.value);
-    if (treeRef.value) treeRef.value.getGoodsList(val);
-    activeObj.value = {
-        sync_id: '-1',
-    };
 };
 </script>
 

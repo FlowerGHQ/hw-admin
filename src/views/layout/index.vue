@@ -325,7 +325,7 @@ export default {
 
                 this.$store.commit('ADMIN_AUTH_TAB/SETSHOWCLASSIFY', showClassify);
 
-                this.moduleAuthList = this.handleModuleAuthList(Object.keys(showClassify));
+                // this.moduleAuthList = this.handleModuleAuthList(Object.keys(showClassify));
             } else {
                 this.showList = routeList;
                 this.$store.commit('ADMIN_AUTH_TAB/SETSHOWCLASSIFY', routeList);

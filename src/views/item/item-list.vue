@@ -44,11 +44,7 @@
                             >
                                 <i class="icon i_edit" /> {{ $t('ar.set_sales') }}
                             </a-button>
-                            <a-button
-                                v-if="$auth('sales.item.item.save')"
-                                type="primary"
-                                @click="routerChange('add')"
-                            >
+                            <a-button v-if="$auth('sales.item.item.save')" type="primary" @click="routerChange('add')">
                                 <i class="icon i_add" />{{ $t('i.new') }}
                             </a-button>
                         </div>
@@ -293,10 +289,7 @@
                                     </a-button>
                                 </template>
                                 <a-button
-                                    v-if="
-                                        $auth('sales.item.item.up-off-shelf') &&
-                                        !record.children
-                                    "
+                                    v-if="$auth('sales.item.item.up-off-shelf') && !record.children"
                                     type="link"
                                     @click="handleStatusChange(record)"
                                     :class="record.status === 0 ? 'danger' : ''"

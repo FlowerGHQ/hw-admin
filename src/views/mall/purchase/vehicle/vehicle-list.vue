@@ -2,33 +2,40 @@
     <div v-if="!$route.meta.hideParentTemplate">
         <div id="vehicle-list">
             <div class="content">
-                <div class="title">
-                    <span v-if="vehicle_type === 1">
-                        {{ $t('purchase.all_vehicle_models') }}
-                    </span>
-                    <span v-else-if="vehicle_type === 2">
-                        {{ $t('purchase.all_accessories') }}
-                    </span>
-                    <span v-else-if="vehicle_type === 3">
-                        {{ $t('purchase.all_peripheral_products') }}
-                    </span>
-                    <span v-else-if="vehicle_type === 4">
-                        {{ $t('purchase.all_promotional_products') }}
-                    </span>
-                </div>
-                <div class="list">
-                    <div
-                        class="item"
-                        v-for="item in list"
-                        :key="item.id"
-                        @click="routerChange(`${route.path}/detail`, { id: item.id })"
-                    >
-                        <VehicleCard :record="item" />
+                <template v-if="vehicle_type !== 2">
+                    <div class="title">
+                        <span v-if="vehicle_type === 1">
+                            {{ $t('purchase.all_vehicle_models') }}
+                        </span>
+                        <!-- <span v-else-if="vehicle_type === 2">
+                            {{ $t('purchase.all_accessories') }}
+                        </span> -->
+                        <span v-else-if="vehicle_type === 3">
+                            {{ $t('purchase.all_peripheral_products') }}
+                        </span>
+                        <span v-else-if="vehicle_type === 4">
+                            {{ $t('purchase.all_promotional_products') }}
+                        </span>
                     </div>
-                </div>
-                <div class="loading">
-                    <down-loading class="loading" :show="spinning" />
-                </div>
+                </template>
+                <template v-if="vehicle_type !== 2">
+                    <div class="list">
+                        <div
+                            class="item"
+                            v-for="item in list"
+                            :key="item.id"
+                            @click="routerChange(`${route.path}/detail`, { id: item.id })"
+                        >
+                            <VehicleCard :record="item" />
+                        </div>
+                    </div>
+                    <div class="loading">
+                        <down-loading class="loading" :show="spinning" />
+                    </div>
+                </template>
+                <template v-else>
+                    <PartsList />
+                </template>
             </div>
         </div>
     </div>
@@ -39,16 +46,15 @@
 
 <script setup>
 import VehicleCard from './components/vehicle-card.vue';
+import PartsList from './parts-list.vue';
 import DownLoading from '../../components/DownLoading.vue';
 
 import Core from '@/core';
 import { ref, reactive, onMounted, computed, watch, getCurrentInstance, nextTick, onBeforeUnmount } from 'vue';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
-import { useStore } from 'vuex';
 const { proxy } = getCurrentInstance();
 const route = useRoute();
 const router = useRouter();
-const store = useStore();
 
 /* state start */
 const vehicle_type = ref(Number(route.meta?.item_type) || 1);
@@ -65,19 +71,16 @@ const itemListFetch = Core.Api.Item.list;
 
 onBeforeRouteLeave(to => {
     vehicle_type.value = Number(to.meta?.item_type) || 1;
-    getCarList({}, true);
+    // getCarList({}, true);
 });
 /* computed start */
-const lang = computed(() => {
-    return store.state.lang;
-});
 /* computed end */
 
 /* watch start */
 /* watch end */
 
 onMounted(() => {
-    getData();
+    if (vehicle_type.value !== 2) getData();
     window.addEventListener('scroll', handleScroll);
 });
 onBeforeUnmount(() => {

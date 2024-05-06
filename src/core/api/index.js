@@ -310,6 +310,7 @@ const apiList = {
         detail: ['PostJson', 'item-category/detail'],
         // 是否显示爆炸图
         updateDisplay: ['PostJson', 'item-category/update-display'],
+        categoryBomTree: ['PostJson', 'item-category/bom-tree'], // 平台端绑定bom的商品分类
     },
     ItemPrice: {
         // 商品价格体系
@@ -493,6 +494,14 @@ const apiList = {
         // 修改授信总额和备用件抵扣比率
         updateCredit: ['PostJson', 'distributor/update-credit-spare-part'],
         findAccount: ['PostJson', 'distributor/find-pay-in-account-bank'],// 拿到充值对应银行详情
+
+        bomTree: ['PostJson', 'item-category/bom-tree'], //分销商端绑定bom的商品分类
+        bomListParts: ['PostJson', 'aftermarket/bom/list-parts'], //分销商端售后bom配件列表
+        bomListName: ['PostJson', 'aftermarket/bom/list-name'], //分销商端bom名称列表
+        bomlistVersion: ['PostJson', 'aftermarket/bom/list-version'], //分销商端bom商品版本列表
+        bomlistCategory: ['PostJson', 'aftermarket/bom/list-category'], //分销商端bom版本分组
+        itemComponentSetList: ['PostJson', 'item/item-component-set-list'], //分销商端爆炸图
+        listPartsCategory: ['PostJson', 'aftermarket/bom/list-parts-category'], //分销商端bom配件分类
     },
     Fault: {
         // 产品故障管理
@@ -1044,6 +1053,8 @@ const apiList = {
         addBindCategory: ['PostJson', 'aftermarket/bom/add-bind-category'], // 给Bom商品添加（不覆盖）-绑定分类
         parsingImportFile: ['PostJson', 'aftermarket/bom/parsing-import-file'], // 二级页面解析导入表格情况返回
         importBindBomItem: ['PostJson', 'aftermarket/bom/import-bind-bom-item'], // 保存导入成功表格情况返回
+        setItemCategoryId: ['PostJson', 'aftermarket/bom/set/item-category-id'], // 给售后bom设置商品分类
+        ManagerListParts: ['PostJson', 'aftermarket/bom/manager-list-parts'], // 售后配件管理bom对应配件
     },
     // 供应商接口
     SUPPLY: {
@@ -1157,10 +1168,10 @@ const apiList = {
         update: ['PostJson', 'supplier-application/update'],
     },
     SaleTarget: {
-        list: ['PostJson', 'sale-order-target/list'], // 销售目标管理列表   
-        detail: ['PostJson', 'sale-order-target/detail'], // 销售目标详情   
-        save: ['PostJson', 'sale-order-target/save'], // 销售目标保存   
-        delete: ['PostJson', 'sale-order-target/delete'], // 销售目标删除   
+        list: ['PostJson', 'sale-order-target/list'], // 销售目标管理列表
+        detail: ['PostJson', 'sale-order-target/detail'], // 销售目标详情
+        save: ['PostJson', 'sale-order-target/save'], // 销售目标保存
+        delete: ['PostJson', 'sale-order-target/delete'], // 销售目标删除
     },
 };
 

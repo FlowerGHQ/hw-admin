@@ -1,6 +1,6 @@
 export default {
     zh: {
-        title: 'BOM管理',
+        title: 'BOM列表',
         bom_list: 'BOM列表',
         product_name: '商品名称',
         //序列
@@ -14,10 +14,15 @@ export default {
         remark: '备注',
         accessories_list: '配件列表',
         search_ph: '请输入名称或编码',
+        // 添加分组
+        add_group: '添加分组',
+        add_group_ph: '请输入分组名称',
         // 添加分类
         add_category: '添加分类',
         add_category_ph: '请输入分类名称',
         manufacturer_name: '厂家名称',
+        select_grouping: '选择分组',
+        unclassified: '未分类',
         classify: '选择分类',
         classify_update: '修改',
         change_content: '变化内容',
@@ -84,9 +89,11 @@ export default {
         import_failure_data: '导入失败的数据可以在设变版本列表处手动分类',
         filter_multiple_name: '输入多个名称,请使用英文分隔符',
         product_name: '产品名称',
+        parts_title: '售后配件管理',
+        model_BOM: '车型BOM',
     },
     en: {
-        title: 'BOM Management',
+        title: 'BOM List',
         bom_list: 'BOM List',
         product_name: 'Product Name',
         ordinal: 'Ordinal',
@@ -99,10 +106,15 @@ export default {
         remark: 'Remark',
         accessories_list: 'Accessories List',
         search_ph: 'Please enter a name or code',
+        // 添加分组
+        add_group: 'Add Group',
+        add_group_ph: 'Please enter the group name',
         // 添加分类
         add_category: 'Add Category',
         add_category_ph: 'Please enter the category name',
         manufacturer_name: 'Manufacturer Name',
+        select_grouping: 'Select Group',
+        unclassified: 'Unclassified',
         classify: 'Choose Classify',
         classify_update: 'Update',
         change_content: 'Change Content',
@@ -158,5 +170,7 @@ export default {
         import_failure_data: 'Import Failure Data Can Be Manually Classified In The Device Version List',
         filter_multiple_name: 'Enter multiple names, please use English delimiters',
         product_name: 'Product Name',
+        parts_title: 'After Sales Parts Management',
+        model_BOM: 'Model BOM',
     },
 };

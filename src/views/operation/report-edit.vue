@@ -34,7 +34,7 @@
                                 :src="getSrcImg(item, 'png')"
                                 v-for="item in locationPreviewList"
                                 :key="item"
-                                @click="handleLocationPreview(item)"
+                                @click="handleLocationPreview(getSrcImg(item, 'png'))"
                             />
                         </div>
                     </div>
@@ -209,7 +209,7 @@ const form = reactive({
 const uploadOptions = ref({
     previewType: 'image',
     fileData: [], // 提交的数据
-    previewImageVideo: [],
+    previewImageVideo: null,
 });
 const areaIndex = ref('1');
 const modules = reactive({
@@ -329,31 +329,16 @@ const handleSubmit = () => {
         });
 };
 const onChange = () => {};
-const handleLocationPreview = e => {
-    const arr = locationPreviewList.value.map(item => {
-        return getSrcImg(item, 'png');
-    });
-    uploadOptions.value.previewImageVideo = arr;
-    const index = locationPreviewList.value.indexOf(e);
-    if (index !== -1) {
-        const item = uploadOptions.value.previewImageVideo.splice(index, 1)[0];
-        uploadOptions.value.previewImageVideo.unshift(item);
-    }
+const handleLocationPreview = item => {
+    console.log("item", item);
+    uploadOptions.value.previewImageVideo = item;
     isClose.value = true;
 };
 const handlePreview = ({ file, fileList }) => {
     uploadOptions.value.previewType = 'image';
-    uploadOptions.value.previewImageVideo = [];
-    fileList.forEach(el => {
-        if (el.response) {
-            if (file.uid === el.uid) {
-                // 让预览的哪张图片在第一张
-                uploadOptions.value.previewImageVideo.unshift(Core.Util.imageFilter(file.response?.data?.filename, 1));
-            } else {
-                uploadOptions.value.previewImageVideo.push(Core.Util.imageFilter(file.response?.data?.filename, 1));
-            }
-        }
-    });
+    if (file.response) {
+        uploadOptions.value.previewImageVideo = Core.Util.imageFilter(file.response?.data?.filename, 1);
+    }
     isClose.value = true;
 };
 // 获取照片

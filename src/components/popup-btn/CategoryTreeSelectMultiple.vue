@@ -21,7 +21,7 @@ export default {
             default: 0,
         },
         categoryId: {
-            type: Number,
+            type: [Number, Array, String],
         },
         category: {
             type: Object,

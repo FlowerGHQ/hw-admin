@@ -222,6 +222,17 @@
                         <div class="tip">{{ $t('n.size') }}: 400*400px</div>
                     </div>
                 </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('n.ishas_sk3_plus') }}:</div>
+                    <div class="value">
+                        <div class="value">
+                            <a-radio-group v-model:value="form.car_type_list">
+                                <a-radio :value="Core.Const.FLAG.YES">{{ $t('i.yes') }}</a-radio>
+                                <a-radio :value="Core.Const.FLAG.NO">{{ $t('i.no') }}</a-radio>
+                            </a-radio-group>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="form-btns">
@@ -276,6 +287,7 @@ export default {
                 currency: undefined, // 货币
                 logo: '', // logo
                 flag_stock_change_use_pda: undefined, // 启用PDA
+                car_type_list: undefined, // 启用PDA
             },
             work: {
                 time: {
@@ -364,7 +376,7 @@ export default {
                         this.showArea[key] = res.detail[key];
                     }
                     // 营业时间回显
-                    if (!this.$Util.isEmptyObj(JSON.parse(this.form.business_time))) {
+                    if (!this.$Util.isEmptyObj(this.form.business_time ? JSON.parse(this.form.business_time) : {})) {
                         let timeData = JSON.parse(this.form.business_time);
 
                         this.work.time.morning.begin = dayjs(`1970-00-0 ${timeData.time.morning.begin}`);
@@ -386,6 +398,11 @@ export default {
                                 status: 'done',
                             },
                         ];
+                    }
+                    if (this.form?.car_type_list === 'SK3 PLUS') {
+                        this.form.car_type_list = Core.Const.FLAG.YES;
+                    } else {
+                        this.form.car_type_list = Core.Const.FLAG.NO;
                     }
                 })
                 .catch(err => {
@@ -444,6 +461,9 @@ export default {
             // console.log('formCopy:', formCopy, this.areaMap)
             this.workTimeFilter(formCopy);
             if (this.checkInput(formCopy)) return;
+            if (formCopy.car_type_list === Core.Const.FLAG.YES) {
+                formCopy.car_type_list = 'SK3 PLUS';
+            }
             // console.log('formCopy完成:', formCopy)
 
             Core.Api.Store.save({
@@ -584,4 +604,10 @@ export default {
 
 <style lang="less" scoped>
 // #DistributorEdit {}
+.edit-container .form-block .form-item .key {
+    width: 110px;
+}
+#Layout.en .form-item .key {
+    width: 160px;
+}
 </style>

@@ -1,5 +1,8 @@
 <template>
-    <div class="CategoryTree">
+    <div class="TreeSelectCategory">
+        <div class="title">
+            {{ $t('item-bom.category') }}
+        </div>
         <!-- 
 			@expand='handleExpandedChange' 
 		 -->
@@ -37,12 +40,6 @@ export default {
         SimpleImageEmpty,
     },
     emit: ['change'],
-    props: {
-        syncId: {
-            type: String,
-            default: '',
-        },
-    },
     data() {
         return {
             tableData: [],
@@ -59,19 +56,18 @@ export default {
         getDataByParent(parent_id = 0) {
             // 通过父节点获取子级数据
             this.loading = true;
-            Core.Api.ItemCategory.tree({
-                page: 0,
-                parent_id: parent_id,
-                is_authority: 1,
+            Core.Api.ItemCategory.categoryBomTree({
+                parent_id, //上级id
                 depth: 3,
+                type: 10, //10 商品分类
             })
                 .then(res => {
                     this.tableData = res?.list ? this.filterChildren(res.list) : [];
-                    // this.tableData.forEach(item => {
-                    //     if (item.id === 1) {
-                    //         this.expandedRowKeys.push(item.id);
-                    //     }
-                    // });
+                    this.tableData.forEach(item => {
+                        if (item.id === 1) {
+                            this.expandedRowKeys.push(item.id);
+                        }
+                    });
                 })
                 .catch(err => {
                     console.log('getDataByParent err', err);
@@ -96,7 +92,7 @@ export default {
             } else {
                 this.expandedRowKeys = this.expandedRowKeys.filter(item => item !== record.id);
             }
-            console.log(this.expandedRowKeys, 'expandedRowKeys');
+            console.log(this.expandedRowKeys, record, 'expandedRowKeys');
         },
         handleSelect(record) {
             if (record.id === this.selectKeys) {
@@ -104,7 +100,7 @@ export default {
                 return;
             }
             this.selectKeys = record.id;
-            this.$emit('change', record.id, record.parent_id !== 0 ? this.syncId : '');
+            this.$emit('change', record.id);
         },
         handleReset() {
             this.selectKeys = '';
@@ -118,7 +114,19 @@ export default {
 </script>
 
 <style lang="less">
-.CategoryTree {
+.TreeSelectCategory {
+    padding: 24px 16px;
+    background: #f8fafc;
+    height: 100%;
+    .ant-table-wrapper .ant-table-tbody {
+        background: #f8fafc;
+    }
+    .title {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 22px;
+        margin-bottom: 14px;
+    }
     .ant-table-thead {
         display: none;
     }

@@ -48,13 +48,10 @@
         <div class="fittings-list">
             <div class="title">
                 <span> {{ $t('item-bom.accessories_list') }}</span>
-                <div class="btn">
+                <!-- <div class="btn">
                     <a-button class="download-template" @click="downUploadTemplate">
                         {{ $t('item-bom.download_template') }}
                     </a-button>
-                    <!-- <a-button class="bulk-import" @click="importTemplate" >
-                        {{ $t('item-bom.bulk_import') }}
-                    </a-button> -->
 
                     <a-upload
                         name="file"
@@ -66,15 +63,12 @@
                         :data="{ ...uploadFileObj.data, bom_version_id: bomId }"
                         accept=".xlsx,.xls"
                         @change="importTemplate"
-                        ><!-- 
-                        <a-button type="primary" ghost class="file-upload-btn">
-                        <i class="icon i_add" />{{ $t("i.import") }}
-                        </a-button> -->
+                        >
                         <a-button class="bulk-import">
                             {{ $t('item-bom.bulk_import') }}
                         </a-button>
                     </a-upload>
-                </div>
+                </div> -->
             </div>
             <a-table
                 :row-key="record => record.id"
@@ -89,10 +83,10 @@
                     <div class="table-title">{{ title }}</div>
                 </template>
                 <template #bodyCell="{ column, text, record }">
-                    <span v-if="column.key === 'sync_name' /*商品名称*/">
+                    <span v-if="column.key === 'name' /*商品名称*/">
                         <a-tooltip>
                             <template #title>{{ text }}</template>
-                            <div class="one-spils cursor" :style="{ width: text?.length > 6 ? 7 * 12 + 'px' : '' }">
+                            <div class="one-spils cursor" :style="{ width: text?.length > 11 ? 10 + 'rem' : '' }">
                                 {{ text || '-' }}
 
                                 <span class="new-version title-right" v-if="record.flag_new === 1 && flagNew === 1">
@@ -101,44 +95,58 @@
                             </div>
                         </a-tooltip>
                     </span>
-                    <span v-else-if="column.key === 'sales_area_list' /*销售区域*/">
-                        <a-tooltip>
-                            <template #title>{{ $Util.getSalesAreaStr(text, lang) || '-' }}</template>
-                            <div class="one-spils cursor" :style="{ width: text?.length > 5 ? 6 * 12 + 'px' : '' }">
-                                {{ $Util.getSalesAreaStr(text, lang) || '-' }}
+                    <span v-else-if="column.key === 'sale_area' /*销售区域*/">
+                        <a-tooltip placement="topLeft">
+                            <template #title>
+                                <template v-if="text.join(',')?.length !== 0">
+                                    <span>
+                                        {{ text.join(',') }}
+                                    </span>
+                                </template>
+                                <template v-else> - </template>
+                            </template>
+                            <div
+                                class="one-spils cursor"
+                                :style="{
+                                    width: text.join(',')?.length > 11 ? 10 + 'rem' : '',
+                                }"
+                            >
+                                <template v-if="record.sale_area?.length !== 0">
+                                    <span>
+                                        {{ text.join(',') }}
+                                    </span>
+                                </template>
+                                <template v-else> - </template>
                             </div>
                         </a-tooltip>
                     </span>
                     <span v-else-if="column.key === 'bom_category' /*分类*/">
                         <div class="classify-box">
-                            <a-tooltip v-if="text" class="left-text">
-                                <template #title>{{ text?.name }}</template>
+                            <a-tooltip class="left-text">
+                                <template #title>{{
+                                    text && text?.name ? text?.name : $t('item-bom.unclassified')
+                                }}</template>
                                 <div
                                     class="one-spils cursor"
                                     :style="{ width: text?.name?.length > 6 ? 7 * 12 + 'px' : '' }"
                                 >
-                                    {{ !text?.name ? '-' : text?.name }}
+                                    {{ text && text?.name ? text?.name : $t('item-bom.unclassified') }}
                                 </div>
                             </a-tooltip>
-                            <span class="to-classify" @click="toClassify(record.sync_id)" v-if="record.sync_id">
-                                {{ !text ? $t('item-bom.select_grouping') : $t('item-bom.classify_update') }}
-                            </span>
                         </div>
-                        <!-- <span v-else-if="!text?.name">
-                            -
-                        </span> -->
                     </span>
-                    <span v-else-if="column.key === 'sync_time' /*创建时间*/">
-                        {{ $Util.timeFilter(text, 3) }}
-                    </span>
-                    <span v-else-if="column.key === 'comment' /*备注*/">
-                        <a-tooltip>
-                            <template #title>{{ text }}</template>
-                            <div class="one-spils set-width cursor">
-                                {{ text || '-' }}
-                            </div>
-                        </a-tooltip>
-                    </span>
+
+                    <template v-else-if="column.dataIndex === 'fob_eur'">
+                        {{ `€ ${$Util.countFilter(record.fob_eur)}` }}
+                    </template>
+                    <template v-else-if="column.dataIndex === 'fob_usd'">
+                        {{ `$ ${$Util.countFilter(record.fob_usd)}` }}
+                    </template>
+                    <template v-else-if="column.key === 'operation' /*操作*/">
+                        <button class="edit" @click="handleEdit(record)">
+                            {{ $t('common.edit') }}
+                        </button>
+                    </template>
                 </template>
             </a-table>
         </div>
@@ -157,6 +165,10 @@
 import { onMounted, onUnmounted, ref, getCurrentInstance, computed, reactive, inject, watch } from 'vue';
 import Core from '@/core';
 import ExportModal from './export-modal.vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
 const classifyShowModal = inject('classifyShowModal');
 const emits = defineEmits(['handleRefresh']);
 const bomId = ref(0);
@@ -228,45 +240,52 @@ const tableColumns = computed(() => {
         {
             // 商品名称
             title: proxy.$t('item-bom.product_name'),
-            dataIndex: 'sync_name',
-            key: 'sync_name',
+            dataIndex: 'name',
+            key: 'name',
             width: '160px',
         },
         {
             // 商品编码
             title: proxy.$t('item-bom.commodity_code'),
-            dataIndex: 'sync_id',
-            key: 'sync_id',
+            dataIndex: 'code',
+            key: 'code',
         },
         {
-            // 分类
-            title: proxy.$t('item-bom.select_grouping'),
-            dataIndex: 'bom_category',
-            key: 'bom_category',
+            // 销售区域
+            title: proxy.$t('item-bom.sales_area'),
+            dataIndex: 'sale_area',
+            key: 'sale_area',
         },
         {
-            // 用量
-            title: proxy.$t('item-bom.dosage'),
-            dataIndex: 'amount',
-            key: 'amount',
-        },
-        // {
-        //     // 销售区域
-        //     title: proxy.$t('item-bom.sales_area'),
-        //     dataIndex: 'sales_area_list',
-        //     key: 'sales_area_list',
-        // },
-        {
-            // 创建时间
-            title: proxy.$t('item-bom.create_time'),
-            dataIndex: 'effective_time',
-            key: 'sync_time',
+            // 最小起购量
+            title: proxy.$t('d.minimum_purchase'),
+            dataIndex: 'min_purchase_amount',
+            key: 'min_purchase_amount',
         },
         {
-            // 备注
-            title: proxy.$t('item-bom.remark'),
-            dataIndex: 'comment',
-            key: 'comment',
+            title: 'FOB(EUR)',
+            key: 'money',
+            dataIndex: 'fob_eur',
+            unit: '€',
+            width: 160,
+        },
+        {
+            title: 'FOB(USD)',
+            key: 'money',
+            dataIndex: 'fob_usd',
+            unit: '$',
+            width: 160,
+        },
+        {
+            // 分组
+            title: proxy.$t('item-bom.category'),
+            dataIndex: 'item_category_name',
+            key: 'item_category_name',
+        },
+        {
+            title: proxy.$t('common.operations'),
+            dataIndex: 'operation',
+            key: 'operation',
         },
     ];
     return result;
@@ -387,15 +406,14 @@ const getChangeCount = () => {
 const getTableDataFetch = (parmas = {}) => {
     loading.value = true;
     let obj = {
-        // name:'主撑弹簧',
-        bom_id: bomId.value,
+        id: bomId.value,
         page: channelPagination.value.current,
         page_size: channelPagination.value.pageSize,
         ...parmas,
         ...props.searchParams,
     };
 
-    Core.Api.ITEM_BOM.partsList(obj)
+    Core.Api.ITEM_BOM.ManagerListParts(obj)
         .then(res => {
             channelPagination.value.total = res.count;
             tableData.value = res.list;
@@ -422,6 +440,17 @@ const handleTableChange = (pagination, filters, sorter) => {
     getTableDataFetch({
         page_size: channelPagination.value.pageSize,
         page: channelPagination.value.current,
+    });
+};
+// 编辑跳转
+const handleEdit = item => {
+    router.push({
+        path: '/item/item-edit',
+        query: {
+            id: item.id,
+            set_id: 0, // 配件默认单规格
+            edit: true,
+        },
     });
 };
 /* methods end*/
@@ -578,5 +607,10 @@ defineExpose({
     .left-text {
         margin-right: 10px;
     }
+}
+.edit {
+    font-weight: 400;
+    line-height: 19.6px;
+    color: #0061ff;
 }
 </style>

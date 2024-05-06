@@ -59,7 +59,32 @@
                                 <div class="new_version" v-if="item.flag_new">
                                     {{ $t('item-bom.change_new_version') }}
                                 </div>
-                                <MySvgIcon icon-class="edit" @click.stop="handleEdit(item, $event)" />
+                                <a-popover placement="right" :overlayStyle="popoverStyle">
+                                    <template #content>
+                                        <!-- <a-tree
+                                                class="draggable-tree"
+                                                block-node
+                                                :tree-data="treeData"
+                                                :defaultExpandAll="defaultExpandAll"
+                                                :fieldNames="fieldNames"
+                                                v-model:selectedKeys="selectedKeys"
+                                                @select="handleSelect"
+                                            /> -->
+                                        <CategoryTree
+                                            @change="handleCategoryChange"
+                                            :syncId="item.sync_id"
+                                            ref="CategoryTreeRef"
+                                            :key="item.sync_id"
+                                        />
+                                    </template>
+                                    <button class="add-type" @click.stop="">
+                                        {{ item.item_category_name || '选择分类' }}
+                                    </button>
+                                </a-popover>
+                                <!-- <template v-else>
+                                    <span class="add-type">{{ item.item_category_name }}</span>
+                                </template> -->
+                                <!-- <MySvgIcon icon-class="edit" @click.stop="handleEdit(item, $event)" /> -->
                             </div>
                         </div>
                         <div class="expand-area" v-if="item.expand">
@@ -104,14 +129,14 @@
                                                 >
                                             </div>
                                         </div>
-                                        <div
+                                        <!-- <div
                                             class="add"
                                             v-if="generateId(item1) === activeKey"
                                             @click.stop="addCategory(item, item1)"
                                         >
                                             <MySvgIcon icon-class="add" />
-                                            <span>{{ $t('item-bom.add_group') }}</span>
-                                        </div>
+                                            <span>{{ $t('item-bom.add_category') }}</span>
+                                        </div> -->
                                     </div>
                                     <div class="expend-area-two" v-if="item1.expand">
                                         <a-spin :spinning="loading3" :delay="500">
@@ -136,13 +161,13 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="right-icon">
+                                                <!-- <div class="right-icon">
                                                     <MySvgIcon icon-class="edit" @click.stop="handleEdit(item2)" />
                                                     <MySvgIcon
                                                         icon-class="delete"
                                                         @click.stop="handleDelete(item1, item2)"
                                                     />
-                                                </div>
+                                                </div> -->
                                             </div>
                                             <div class="add-category-select">
                                                 <a-input
@@ -150,7 +175,7 @@
                                                     v-model:value="addValue"
                                                     style="width: 228px"
                                                     @blur.stop="handleAddCategory(item1)"
-                                                    :placeholder="$t('item-bom.add_group_ph')"
+                                                    :placeholder="$t('item-bom.add_category_ph')"
                                                 />
                                             </div>
                                         </a-spin>
@@ -285,7 +310,7 @@
                                             ">
                                             <MySvgIcon icon-class="add" />
                                             <span>{{
-                                                $t("item-bom.add_group")
+                                                $t("item-bom.add_category")
                                             }}</span>
                                         </div> -->
                                             </div>
@@ -334,7 +359,7 @@
                                                             v-model:value="addValue"
                                                             style="width: 228px"
                                                             @blur.stop="handleAddCategory(item1)"
-                                                            :placeholder="$t('item-bom.add_group_ph')"
+                                                            :placeholder="$t('item-bom.add_category_ph')"
                                                         />
                                                     </div>
                                                 </a-spin>
@@ -371,12 +396,14 @@
 
 <script setup>
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
-import { ref, reactive, computed, onMounted, watch, onBeforeUnmount } from 'vue';
+import { ref, reactive, computed, onMounted, watch, onBeforeUnmount, getCurrentInstance } from 'vue';
 import { useI18n } from 'vue-i18n';
 import Core from '@/core';
 const $t = useI18n().t;
 const $emit = defineEmits(['update:activeObj']);
 import Util from '@/core/utils';
+import CategoryTree from '../TreeSelect.vue';
+const { proxy } = getCurrentInstance();
 
 // // -----------------定义数据-------------------------------
 
@@ -400,6 +427,7 @@ let timer3 = ref(null);
 let timer4 = ref(null);
 let timer5 = ref(null);
 let wrap = ref(null);
+const CategoryTreeRef = ref(null);
 
 // 当前父级shop_id
 const shopId = ref(null);
@@ -420,9 +448,32 @@ const props = defineProps({
         default: false,
     },
 });
+const selectedKeys = [];
+const defaultExpandAll = true;
+const fieldNames = { children: 'children', title: 'title', key: 'key' };
+const treeData = [
+    {
+        title: 'parent 1',
+        key: '0-0',
+        children: [
+            {
+                title: 'parent 1-0',
+                key: '0-0-0',
+            },
+            {
+                title: 'parent 1-1',
+                key: '0-0-1',
+            },
+        ],
+    },
+];
+const popoverStyle = { minWidth: '150px' };
 
 // -----------------定义方法--------------------------
-
+const handleCategoryChange = (val, syncId) => {
+    if (!syncId) return;
+    setItemCategoryId(val, syncId);
+};
 // 搜索
 const onSearch = value => {
     getGoodsList(bomItemCategoryId.value);
@@ -499,7 +550,8 @@ const selectKey = (parentItem = {}, item) => {
                 version_name: item.version,
                 category_id: '',
                 name: item.name,
-                sync_id: '',
+                sync_id: parentItem.sync_id,
+                bom_item_category_id: parentItem.item_category_id,
                 flag_new: item.flag_new,
             });
             break;
@@ -508,11 +560,12 @@ const selectKey = (parentItem = {}, item) => {
             $emit('update:activeObj', {
                 level: item.level,
                 version_id: parentItem.id,
-                version_name: item.version,
+                version_name: parentItem.version,
                 shop_id: '',
                 category_id: item.id,
                 name: item.name,
-                sync_id: '',
+                sync_id: parentItem.sync_id,
+                bom_item_category_id: parentItem.item_category_id,
             });
             break;
         default:
@@ -580,7 +633,6 @@ const getGoodsList = (bom_item_category_id = '') => {
         .then(res => {
             realData.value = res.list;
             realData.value = setChildRen(realData.value, 1);
-            console.log(realData.value);
             loading1.value = false;
         })
         .catch(err => {
@@ -744,6 +796,17 @@ const getCurrentVersion = (parentId, id) => {
     // 请求该版本下的分类
     getCategory(currentVersion);
 };
+const setItemCategoryId = (bom_item_category_id = '', sync_id = '') => {
+    const params = {
+        sync_id, //同步id
+        bom_item_category_id, //商品分类id
+    };
+    Core.Api.ITEM_BOM.setItemCategoryId({ ...params }).then(res => {
+        onSearch();
+        proxy.$message.success($t('pop_up.operate'));
+    });
+};
+const handleSelect = () => {};
 defineExpose({
     getCurrentVersion,
     getGoodsList,
@@ -754,6 +817,7 @@ onMounted(() => {
     // 请求商品列表
     loading1.value = true;
     Core.Api.ITEM_BOM.listName({
+        bom_item_category_id: '', //商品分类id
         key: keyWord.value,
     })
         .then(res => {
@@ -927,6 +991,10 @@ onBeforeUnmount(() => {
                             font-size: 14px;
                             padding: 0 4px;
                             margin-right: 10px;
+                        }
+                        .add-type {
+                            font-size: 14px;
+                            color: rgba(0, 97, 255, 1);
                         }
                         .svg-icon {
                             font-size: 16px;

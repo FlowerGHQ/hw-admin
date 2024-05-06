@@ -33,6 +33,18 @@
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
+                        <template v-if="column.key === 'name'">
+                            <a-image
+                                class="image"
+                                :width="55"
+                                :height="55"
+                                :src="$Util.imageFilter(record.logo, 6)"
+                                :fallback="$t('def.none')"
+                            />
+                            <span class="name-info">
+                                {{ text || '-' }}
+                            </span>
+                        </template>
                         <template v-if="column.key === 'tip_item'">
                             <a-tooltip placement="top" :title="text">
                                 <div class="ell" style="max-width: 160px">{{ text || '-' }}</div>
@@ -42,14 +54,14 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleSalesAreaByIdsShow(record.id)"
+                            <!-- <a-button type="link" @click="handleSalesAreaByIdsShow(record.id)"
                                 ><i class="icon i_edit" /> {{ $t('ar.set_sales') }}
                             </a-button>
                             <a-button type="link" @click="routerChange('explored', record)"
                                 ><i class="icon i_edit" />{{ $t('i.edit_bom') }}
-                            </a-button>
+                            </a-button> -->
                             <a-button type="link" @click="handleModalShow(record, record)"
-                                ><i class="icon i_edit" />{{ $t('i.edit_name') }}
+                                ><i class="icon i_edit" />{{ $t('n.edit') }}
                             </a-button>
                             <!-- <a-button type='link' @click="routerChange('config', record)"><i class="icon i_hint"/> {{ $t('i.product_configuration') }}
                             </a-button> -->
@@ -74,16 +86,50 @@
                 @ok="handleModalSubmit"
             >
                 <div class="modal-content">
+                    <!-- 添加附件 -->
+                    <div class="form-item">
+                        <div class="key">{{ $t('customer-care.add_attachment') }}</div>
+                        <div class="value flex">
+                            <MyUpload
+                                name="add_picList"
+                                v-model:value="editForm.icon"
+                                showTip
+                                :limit="1"
+                                :limitSize="10"
+                                :valueType="1"
+                                tipPosition="right"
+                                :defaultPreview="false"
+                                @preview="handlePreview"
+                            >
+                            </MyUpload>
+
+                            <div class="add-attachment-tip m-l-10">
+                                <div>{{ $t('n.pic_tip1') }}</div>
+                                <div>{{ $t('n.pic_tip2') }}</div>
+                                <div>{{ $t('n.pic_tip3') }}</div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-item required">
                         <div class="key">{{ $t('m.category_name') }}</div>
                         <div class="value">
-                            <a-input v-model:value="editForm.name" :placeholder="$t('def.input')" />
+                            <a-input
+                                v-model:value="editForm.name"
+                                :placeholder="$t('def.input')"
+                                show-count
+                                :maxlength="maxlength"
+                            />
                         </div>
                     </div>
                     <div class="form-item required">
                         <div class="key">{{ $t('n.name_en') }}</div>
                         <div class="value">
-                            <a-input v-model:value="editForm.name_en" :placeholder="$t('def.input')" />
+                            <a-input
+                                v-model:value="editForm.name_en"
+                                :placeholder="$t('def.input')"
+                                show-count
+                                :maxlength="maxlength"
+                            />
                         </div>
                     </div>
                 </div>
@@ -120,11 +166,20 @@
                 </template>
             </a-modal>
         </template>
+        <!-- v-if="isClose" -->
+        <MyPreviewImageVideo
+            v-model:isClose="isClose"
+            :type="uploadOptions.previewType"
+            :previewData="uploadOptions.previewImageVideo"
+        >
+        </MyPreviewImageVideo>
     </div>
 </template>
 
 <script>
 import Core from '../../core';
+import MyPreviewImageVideo from '@/components/horwin/based-on-ant/MyPreviewImageVideo.vue';
+import MyUpload from '@/components/MyUpload/index.vue';
 
 export default {
     name: 'ItemCategory',
@@ -146,6 +201,7 @@ export default {
             editForm: {
                 id: '',
                 parent_id: '',
+                icon: '',
                 name: '',
                 name_en: '',
                 index: '',
@@ -158,13 +214,21 @@ export default {
             searchForm: {
                 parent_id: 0,
             },
+            // 上传预览和详情预览参数
+            uploadOptions: {
+                previewType: 'image', // 上传的类型
+                fileData: [], // 提交的数据
+                previewImageVideo: null, // 预览照片和预览视频
+            },
+            isClose: false,
+            maxlength: 10,
         };
     },
     watch: {},
     computed: {
         tableColumns() {
             let columns = [
-                { title: this.$t('m.category_name'), dataIndex: 'name' },
+                { title: this.$t('m.category_name'), dataIndex: 'name', key: 'name' },
                 { title: this.$t('n.name_en'), dataIndex: 'name_en' },
                 { title: this.$t('i.commodity_quantity'), dataIndex: 'item_quantity', key: 'item' },
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100 },
@@ -269,11 +333,12 @@ export default {
         },
 
         // 编辑与新增子类
-        handleModalShow({ parent_id = 0, id, name, name_en, index, index_key }, node = null, parent = null) {
+        handleModalShow({ parent_id = 0, id, name, name_en, icon, index, index_key }, node = null, parent = null) {
             this.editForm = {
                 id: id,
                 name: name,
                 name_en: name_en,
+                icon: icon,
                 parent_id: parent_id ? parent_id : this.searchForm.parent_id,
                 index: index,
                 index_key: index_key,
@@ -410,10 +475,30 @@ export default {
                 }
             });
         },
+        handlePreview({ file, fileList }) {
+            console.log('image/*(照片预览)', file);
+            this.uploadOptions.previewType = 'image';
+
+            if (file.response) {
+                this.uploadOptions.previewImageVideo = Core.Util.imageFilter(file.response?.data?.filename, 1);
+            }
+
+            this.isClose = true;
+        },
     },
 };
 </script>
 
 <style lang="less" scoped>
 // #ItemCategory {}
+.name-info {
+    margin-left: 10px;
+}
+.flex {
+    display: flex;
+    align-items: center;
+    :deep(.upload-wrap) {
+        margin: 0;
+    }
+}
 </style>

@@ -227,8 +227,8 @@ const supplyMaterialManagement = {
             name: 'SupplyMaterialBom',
             component: () => import('@/views/item/item-bom.vue'),
             meta: {
-                title: 'BOM管理',
-                title_en: 'BOM Management',
+                title: 'BOM列表',
+                title_en: 'BOM List',
                 auth: ['supplier-material.bom-list'],
             },
         },
