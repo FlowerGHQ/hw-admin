@@ -415,6 +415,9 @@ const getBomTree = (parent_id = 0) => {
     Core.Api.Distributor.bomTree()
         .then(res => {
             list.value = res?.list || [];
+            list.value.forEach(item => {
+                item.logo = item.icon;
+            });
         })
         .catch(err => {
             console.log('getBomTree err', err);
