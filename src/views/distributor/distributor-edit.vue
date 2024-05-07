@@ -225,11 +225,11 @@ export default {
     },
 
     mounted() {
+        this.getSalesAreaList();
         this.form.id = Number(this.$route.query.id) || 0;
         if (this.form.id) {
             this.getDistributorDetail();
         }
-        this.getSalesAreaList();
     },
     methods: {
         routerChange(type, item) {
@@ -261,6 +261,7 @@ export default {
                         this.area[key] = d[key] || undefined;
                     }
                     this.defArea = [d.continent || '', d.country || ''];
+                    this.areaList = [d.continent || '', d.country || ''];
                 })
                 .catch(err => {
                     console.log('getDistributorDetail err', err);

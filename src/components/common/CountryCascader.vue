@@ -80,10 +80,11 @@ export default {
                         name_en: item.name_en,
                     })),
                 );
+                this.$emit('search', { continent: value[0], country: value[1] });
             } else {
                 this.$emit('update:value', []);
+                this.$emit('search', {});
             }
-            this.$emit('search', { continent: value[0], country: value[1] });
         },
         handleReset() {
             this.selectCode = [];
