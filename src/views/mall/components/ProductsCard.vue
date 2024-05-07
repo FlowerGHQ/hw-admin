@@ -167,7 +167,7 @@ const addFavorites = async item => {
 };
 // 删除收藏
 const removeFavorites = item => {
-    Core.Api.Favorite.remove({ id: item.id }).then(() => {
+    Core.Api.Favorite.remove({ id: item?.favorite_id }).then(() => {
         proxy.$message.success(proxy.$t('pop_up.move'));
         // 重新获取列表数据
         emits('handlechange');
