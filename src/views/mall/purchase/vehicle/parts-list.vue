@@ -406,6 +406,14 @@ const handleScrollFn = (e, fn, hitBottomHeightQ = '') => {
         }
     }
 };
+const filterBomTreeData = list => {
+    list.forEach(item => {
+        item.logo = item.icon;
+        if (item.children && item.children.length > 0) {
+            filterBomTreeData(item.children);
+        }
+    });
+};
 /* methods end */
 
 /* fetch start */
@@ -415,9 +423,7 @@ const getBomTree = (parent_id = 0) => {
     Core.Api.Distributor.bomTree()
         .then(res => {
             list.value = res?.list || [];
-            list.value.forEach(item => {
-                item.logo = item.icon;
-            });
+            filterBomTreeData(list.value);
         })
         .catch(err => {
             console.log('getBomTree err', err);

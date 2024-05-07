@@ -3,7 +3,7 @@
         destroyOnClose
         v-model:visible="visibility"
         :width="860"
-        title="配件分组"
+        :title="$t('item-bom.accessories_grouping')"
         @ok="handleOk"
         @cancel="handleCancle"
     >
@@ -203,7 +203,7 @@ const tableColumns = computed(() => {
             // 商品名称
             title: proxy.$t('item-bom.product_name'),
             dataIndex: 'sync_name',
-            key: 'sync_name',
+            key: 'name',
         },
         {
             // 商品编码

@@ -91,6 +91,7 @@ export default {
         product_name: '产品名称',
         parts_title: '售后配件管理',
         model_BOM: '车型BOM',
+        accessories_grouping: '配件分组',
     },
     en: {
         title: 'BOM List',
@@ -172,5 +173,6 @@ export default {
         product_name: 'Product Name',
         parts_title: 'After Sales Parts Management',
         model_BOM: 'Model BOM',
+        accessories_grouping: 'Accessories Grouping',
     },
 };
