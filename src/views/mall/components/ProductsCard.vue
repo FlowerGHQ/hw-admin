@@ -32,9 +32,11 @@
                             Samples : {{ currency }}{{ stepPrice['normal'] }} / 20GP : {{ currency
                             }}{{ stepPrice['20gp'] }}
                         </p>
+                        <p class="dosage">{{ $t('mall.dosage') }}: {{ record.amount }}</p>
                     </template>
                     <template v-else>
                         <p class="price-text">{{ currency }}{{ price }}</p>
+                        <p class="dosage">{{ $t('mall.dosage') }}: {{ record.amount }}</p>
                     </template>
                 </div>
                 <template v-if="showOperation">
@@ -268,8 +270,9 @@ const removeFavorites = item => {
                     font-weight: 700;
                     line-height: normal;
                 }
-
-                &:nth-child(2) {
+            }
+            .text {
+                .price-text-t {
                     color: #8e8e8e;
                     text-align: right;
                     font-size: 12px;
@@ -278,8 +281,13 @@ const removeFavorites = item => {
                     line-height: 150%;
                     /* 18px */
                 }
+                .dosage {
+                    font-size: 12px;
+                    font-weight: 400;
+                    line-height: 18px;
+                    color: #333;
+                }
             }
-
             .add {
                 .fcc();
 

@@ -98,11 +98,7 @@
                 </template>
                 <template #bodyCell="{ text, record, index, column }">
                     <div class="ordinal" v-if="column.key === 'index' /*序号*/">
-                        <a-input
-                            v-model:value="record.index"
-                            :placeholder="$t('item-bom.point_configure_number')"
-                            @blur="onOperation('blur', record)"
-                        />
+                        {{ text }}
                     </div>
                     <span v-if="column.key === 'sync_name' /*商品名称*/">
                         <a-tooltip placement="topLeft">
@@ -183,6 +179,13 @@ const lang = computed(() => {
 });
 const tableColumns = computed(() => {
     const result = [
+        {
+            // 序号
+            width: 250,
+            title: proxy.$t('item-bom.ordinal'),
+            dataIndex: 'index',
+            key: 'index',
+        },
         {
             // 商品名称
             title: proxy.$t('item-bom.product_name'),
@@ -385,7 +388,7 @@ const getTableDataFetch = (parmas = {}) => {
                 // 给配件表格添加index
                 tableData.value.forEach($2 => {
                     if (Number($1.target_id) === Number($2.id)) {
-                        $2.index = $1.index;
+                        $2.index = $1.index || '';
                         $1['sync_name'] = $2.sync_name;
                     }
                 });

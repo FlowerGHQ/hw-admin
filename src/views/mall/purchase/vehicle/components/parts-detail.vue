@@ -7,6 +7,7 @@
             <p class="nums">{{ itemList?.length || 0 }} {{ $t('purchase.variants') }}</p>
             <div class="variants-body">
                 <div class="variants-item" v-for="(item, i) in itemList" :key="item.id">
+                    <div class="index-nums">{{ item.index || '-' }}</div>
                     <ProductsCard @handlechange="getData" type="small" :record="item" />
                 </div>
             </div>
@@ -34,11 +35,8 @@ const props = defineProps({
 /* state start */
 const currency = ref('€');
 const paramPrice = ref(false);
-const spinning = ref(false);
 const itemList = ref([]);
 const detail = reactive({});
-const itemDetailFetch = Core.Api.Item.detail;
-const itemListFetch = Core.Api.Item.list;
 /* state end */
 
 /* computed start */
@@ -58,7 +56,6 @@ const getData = () => {
         bom_category_id: props.id,
     };
     getCarList(q);
-    getDetail(q);
 };
 /* methods end */
 /* fetch start */
@@ -67,12 +64,22 @@ const getCarList = q => {
     Object.assign(params, q);
     Core.Api.Distributor.bomListParts({ ...params }).then(res => {
         itemList.value = res?.list;
+        getDetail(q);
     });
 };
 const getDetail = q => {
     const params = { target_id: q.bom_category_id, target_type: 3 };
     Core.Api.Distributor.itemComponentSetList({ ...params }).then(res => {
         detail.logo = res.list?.list[0]?.img;
+        res.list?.list[0]?.item_component_list.forEach($1 => {
+            // 给配件表格添加index
+            itemList.value.forEach($2 => {
+                if (Number($1.target_id) === Number($2.id)) {
+                    $2.index = $1.index || '';
+                    $1['sync_name'] = $2.sync_name;
+                }
+            });
+        });
     });
 };
 /* fetch end */
@@ -86,6 +93,33 @@ defineExpose({
     img {
         width: 100%;
         margin-bottom: 16px;
+    }
+    .nums {
+        color: #666666;
+        text-align: right;
+    }
+    .variants-item {
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        background: #fff;
+        .index-nums {
+            margin: 0 20px 0 40px;
+            height: 48px;
+            width: 48px;
+            color: #999;
+            font-size: 24px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f8f8;
+            border: 1px solid #eeeeee;
+            border-radius: 50%;
+        }
+        #products-card {
+            flex: 1;
+        }
     }
 }
 </style>

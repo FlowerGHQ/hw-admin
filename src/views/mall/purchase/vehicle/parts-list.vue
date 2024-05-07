@@ -157,6 +157,7 @@ const componentName = computed(() => {
 
 /* watch start */
 watch(breadcrumbList.value, newV => {
+    if (newV.length !== deep.value) deep.value = newV.length;
     if (newV.length < 6) isDetail.value = false;
     openKeys.value = newV.slice(1).map(item => item.id);
 });
