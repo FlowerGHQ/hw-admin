@@ -37,8 +37,8 @@
                         <template v-else-if="column.key === 'type'">
                             {{
                                 $i18n.locale === 'zh'
-                                    ? Core.Const.DISTRIBUTOR.EXPENDITURE_TYPE[record.subject].zh
-                                    : Core.Const.DISTRIBUTOR.EXPENDITURE_TYPE[record.subject].en
+                                    ? Core.Const.DISTRIBUTOR.EXPENDITURE_TYPE[record.subject]?.zh
+                                    : Core.Const.DISTRIBUTOR.EXPENDITURE_TYPE[record.subject]?.en
                             }}
                         </template>
                         <!-- 资金变动 -->
