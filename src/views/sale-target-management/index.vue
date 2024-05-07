@@ -129,7 +129,7 @@ const searchList = ref([
         value: undefined,
         searchParmas: 'target_id',
         key: 'target.department_selection',
-        selectMap: Core.Const.TARGET.SECTION_TYPE,
+        selectMap: Core.Const.TARGET.SECTION_SEARCH_TYPE,
     },
 ]);
 

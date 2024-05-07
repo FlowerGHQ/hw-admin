@@ -1,6 +1,11 @@
 const TARGET = {
-    SECTION_TYPE: {
+    SECTION_SEARCH_TYPE: {
         'ALL': { value: 'ALL', zh: '全部', en: 'All' },
+        'EUROPE': { value: 'EUROPE', zh: '欧洲运营中心', en: 'European Operations Center' },
+        'KA': { value: 'KA', zh: 'KA运营中心', en: 'KA Operations Center' },
+        'AFTERMARKET': { value: 'AFTERMARKET', zh: '售后服务部', en: 'After Sales Service Department' },
+    },
+    SECTION_TYPE: {
         'EUROPE': { value: 'EUROPE', zh: '欧洲运营中心', en: 'European Operations Center' },
         'KA': { value: 'KA', zh: 'KA运营中心', en: 'KA Operations Center' },
         'AFTERMARKET': { value: 'AFTERMARKET', zh: '售后服务部', en: 'After Sales Service Department' },
