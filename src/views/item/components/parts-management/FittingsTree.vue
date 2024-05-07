@@ -153,7 +153,9 @@
                                             >
                                                 <div class="title">
                                                     <div class="title-area">
-                                                        <span v-if="!item2.edit">{{ item2.name }}</span>
+                                                        <span v-if="!item2.edit">
+                                                            {{ (lang === 'zh' ? item2.name : item2.name_en) || '-' }}
+                                                        </span>
                                                         <a-input
                                                             v-else
                                                             v-model:value="item2.name"
@@ -331,7 +333,12 @@
                                                     >
                                                         <div class="title">
                                                             <div class="title-area">
-                                                                <span v-if="!item2.edit">{{ item2.name }}</span>
+                                                                <span v-if="!item2.edit">
+                                                                    {{
+                                                                        (lang === 'zh' ? item2.name : item2.name_en) ||
+                                                                        '-'
+                                                                    }}
+                                                                </span>
                                                                 <a-input
                                                                     v-else
                                                                     v-model:value="item2.name"
