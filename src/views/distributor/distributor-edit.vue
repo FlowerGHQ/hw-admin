@@ -11,12 +11,6 @@
             </div>
             <div class="form-content">
                 <div class="form-item required">
-                    <div class="key">{{ $t('d.code') /*编码*/ }}:</div>
-                    <div class="value">
-                        <a-input v-model:value="form.code" :placeholder="$t('n.enter')" />
-                    </div>
-                </div>
-                <div class="form-item required">
                     <div class="key">{{ $t('d.name') /*分销商名称*/ }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.name" :placeholder="$t('n.enter')" />
@@ -126,6 +120,16 @@
                         <CountryCascader v-model:value="areaList" :def-area="defArea" />
                     </div>
                 </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('d.code') /*编码*/ }}:</div>
+                    <div class="value">
+                        <a-input v-model:value="form.code" :placeholder="$t('n.enter')" disabled />
+                        <!-- 生成按钮 -->
+                        <a-button class="generate-btn" v-if="areaList && areaList.length > 0">
+                            {{ $t('def.generate') }}
+                        </a-button>
+                    </div>
+                </div>
                 <div class="form-item">
                     <div class="key">{{ $t('n.pda') /*启用PDA*/ }}:</div>
                     <div class="value">
@@ -150,9 +154,7 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary">{{
-                $t('def.sure')
-            }}</a-button>
+            <a-button @click="handleSubmit" type="primary">{{ $t('def.sure') }}</a-button>
             <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
         </div>
     </div>
@@ -335,9 +337,8 @@ export default {
                 // 国家的校验 [判断对象数据是否为空]
                 return this.$message.warning(this.$t('def.enter') + '(' + this.$t('n.country') + ')');
             }
-            
+
             form.sales_area_ids = form.sales_area_ids.join(',');
-            
 
             Core.Api.Distributor.save({
                 ...form,
@@ -372,5 +373,11 @@ export default {
 
 .w-100 {
     width: 100%;
+}
+.value {
+    display: flex;
+    .generate-btn {
+        margin-left: 10px;
+    }
 }
 </style>

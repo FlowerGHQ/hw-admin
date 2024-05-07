@@ -1316,6 +1316,8 @@ const messages = {
             stow: '收起',
             sure_create: '确定创建',
             required_new: '至少选择一项权限 !',
+            // 生成
+            generate: '生成',
         },
         search: {
             repair_sn: '工单编号',
@@ -3704,6 +3706,8 @@ const messages = {
             detail: 'Message Details',
         },
         def: {
+            // 生成
+            generate: 'Generate',
             p_set: 'Product Setting',
             delete_content: 'Are You Sure To Delete It?',
             search: 'Search',

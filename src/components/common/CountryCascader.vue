@@ -68,16 +68,21 @@ export default {
         },
         handleChange(value, selectedOptions) {
             console.log('handleChange value:', value);
+            console.log('handleChange selectedOptions:', selectedOptions);
             this.selectItems = selectedOptions;
 
-            this.$emit(
-                'update:value',
-                selectedOptions.map(item => ({
-                    code: item.code,
-                    name: item.name,
-                    name_en: item.name_en,
-                })),
-            );
+            if (selectedOptions) {
+                this.$emit(
+                    'update:value',
+                    selectedOptions.map(item => ({
+                        code: item.code,
+                        name: item.name,
+                        name_en: item.name_en,
+                    })),
+                );
+            } else {
+                this.$emit('update:value', []);
+            }
             this.$emit('search', { continent: value[0], country: value[1] });
         },
         handleReset() {
