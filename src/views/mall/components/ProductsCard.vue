@@ -38,6 +38,7 @@
                 <template v-if="showOperation">
                     <div class="add">
                         <span class="count-edit">
+                            <span class="min-count">{{ $t('mall.min_order_quantity') }} {{ stepMinPrice }}</span>
                             <a-input-number
                                 v-model:value="editCount"
                                 :min="stepMinPrice"
@@ -286,8 +287,17 @@ const removeFavorites = item => {
             }
             .add {
                 .fcc();
-
                 .count-edit {
+                    position: relative;
+                    .min-count {
+                        position: absolute;
+                        font-size: 12px;
+                        line-height: 18px;
+                        color: #999;
+                        left: -12px;
+                        bottom: 0;
+                        transform: translateX(-100%);
+                    }
                     /deep/.ant-input-number {
                         width: 136px;
                         box-shadow: 0 0 0 0;

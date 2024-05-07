@@ -380,10 +380,10 @@
     <a-modal v-model:visible="visibleEdit" :title="$t('n.edit')" @ok="handleEditName(editItem)">
         <a-form :model="formState" name="editForm" ref="formRef" :label-col="{ span: 6 }" :wrapper-col="{ span: 17 }">
             <a-form-item :label="$t('n.name')" name="name" :rules="[{ required: true, message: $t('n.enter') }]">
-                <a-input v-model:value="formState.name" />
+                <a-input v-model:value="formState.name" show-count :maxlength="20" />
             </a-form-item>
             <a-form-item :label="$t('n.name_en')" name="name_en" :rules="[{ required: true, message: $t('n.enter') }]">
-                <a-input v-model:value="formState.name_en" />
+                <a-input v-model:value="formState.name_en" show-count :maxlength="20" />
             </a-form-item>
         </a-form>
     </a-modal>

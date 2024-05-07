@@ -100,6 +100,9 @@
                                         </template>
                                     </div>
                                     <div class="count-edit">
+                                        <span class="min-count"
+                                            >{{ $t('mall.min_order_quantity') }} {{ stepMinPrice }}</span
+                                        >
                                         <a-input-number
                                             v-model:value="editCount"
                                             :min="stepMinPrice"
@@ -502,7 +505,6 @@ const getShopCartList = () => {
                     .single-bottom {
                         .price {
                             .flex(space-between, center, row);
-
                             .price-content {
                                 .price-text {
                                     color: #8f00ff;
@@ -524,6 +526,16 @@ const getShopCartList = () => {
                             }
 
                             .count-edit {
+                                position: relative;
+                                .min-count {
+                                    position: absolute;
+                                    font-size: 12px;
+                                    line-height: 18px;
+                                    color: #999;
+                                    left: -12px;
+                                    bottom: 0;
+                                    transform: translateX(-100%);
+                                }
                                 /deep/.ant-input-number {
                                     width: 207px;
                                     box-shadow: 0 0 0 0;
