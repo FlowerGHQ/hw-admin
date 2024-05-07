@@ -226,7 +226,7 @@ let Const = {
             AGENT: 20,
             STORE: 30,
             SUPPLIER: 60, // 供应商
-        },             
+        },
     },
     LOGINMALL: {
         // 登录
@@ -1346,6 +1346,10 @@ let Const = {
             10: { key: 10, zh: '管理员操作', en: 'Admin action' },
             20: { key: 20, zh: '采购单', en: 'Purchase order' },
             50: { key: 50, zh: '维修单', en: 'Repair order' },
+        },
+        DEDUCTION_SUBJECT_MAP: {
+            301: { key: 301, zh: '人工扣款-配件下单', en: 'Manual deduction - ordering accessories' },
+            302: { key: 302, zh: '人工扣款-其他', en: 'Manual deduction - other' },
         },
     },
     WARRANTY: {

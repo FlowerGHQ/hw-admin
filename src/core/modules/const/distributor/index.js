@@ -196,6 +196,20 @@ const DISTRIBUTOR = {
             en: 'Work order compensation',
             addOrSubtract: '-',
         },
+        // 工单赔付
+        301: {
+            value: 301,
+            zh: '人工扣款-配件下单',
+            en: 'Manual deduction - ordering accessories',
+            addOrSubtract: '-',
+        },
+        // 工单赔付
+        302: {
+            value: 301,
+            zh: '人工扣款-其他',
+            en: 'Manual deduction - other',
+            addOrSubtract: '-',
+        },
     },
     // 取消状态
     AUDIT_CANCEL_STATUS: {
