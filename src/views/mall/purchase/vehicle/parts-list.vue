@@ -43,10 +43,10 @@
                             <component :is="componentName" :record="item" />
                         </div>
                     </div>
+                    <div class="loading">
+                        <down-loading class="loading" :show="spinning" />
+                    </div>
                 </template>
-                <div class="loading">
-                    <down-loading class="loading" :show="spinning" />
-                </div>
             </div>
             <!-- 解决循环渲染 componentName 不响应bug -->
             <span class="hide">{{ componentName }}</span>
@@ -174,7 +174,7 @@ onBeforeUnmount(() => {
 /* methods start */
 // 获取数据
 const getData = async (reset = false, id_ = '') => {
-    if (!isItem.value || deep.value < 2) return;
+    if (!isItem.value || deep.value < 2 || deep.value > 5) return;
     spinning.value = true;
     id.value = id_ || id.value;
     switch (deep.value) {
@@ -383,6 +383,8 @@ const handleBreadcrumb = id => {
 };
 /* 滚动监听事件 */
 const handleScroll = () => {
+    // 详情获取非商品不执行
+    if (isDetail.value || !isItem.value) return;
     // 因为存在子组件路由所以判断只在父路由时执行
     if (route.path !== '/mall/accessories-list') return;
     const footerHeight = document.querySelector('#mall-footer').clientHeight;
