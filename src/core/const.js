@@ -1341,6 +1341,8 @@ let Const = {
             MANAGER_ADJUSTMENT: 10,
             PURCHASE_ORDER: 20,
             REPAIR_ORDER_DEDUCTIONS: 50,
+            MANUAL_DEDUCTION_ACCESSORIES: 301,
+            MANUAL_DEDUCTION_OTHER: 302,
         },
         SUBJECT_MAP: {
             10: { key: 10, zh: '管理员操作', en: 'Admin action' },

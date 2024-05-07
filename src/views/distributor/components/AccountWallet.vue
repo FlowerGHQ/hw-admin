@@ -302,9 +302,11 @@
                         }}</a-select-option>
                     </a-select>
                 </a-form-item>
-                <a-form-item :label="$t('p.remark')" name="remark">
-                    <a-textarea v-model:value="formStateOp.remark" show-count :maxlength="100" />
-                </a-form-item>
+                <template v-if="showRemark">
+                    <a-form-item :label="$t('p.remark')" name="remark">
+                        <a-textarea v-model:value="formStateOp.remark" show-count :maxlength="100" />
+                    </a-form-item>
+                </template>
             </a-form>
         </a-modal>
     </div>
@@ -363,6 +365,12 @@ const subjectMap = computed(() => {
         default:
             return Core.Const.WALLET.SUBJECT_MAP;
     }
+});
+const showRemark = computed(() => {
+    const show =
+        formStateOp.value.type === 2 && formStateOp.value.subject == Core.Const.WALLET.SUBJECT.MANUAL_DEDUCTION_OTHER;
+    if (!show) formStateOp.value.remark = '';
+    return show;
 });
 const visible = ref(false);
 const visibleOp = ref(false);
