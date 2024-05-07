@@ -98,7 +98,7 @@
                 </template>
                 <template #bodyCell="{ text, record, index, column }">
                     <div class="ordinal" v-if="column.key === 'index' /*序号*/">
-                        {{ text }}
+                        {{ text || '-' }}
                     </div>
                     <span v-if="column.key === 'sync_name' /*商品名称*/">
                         <a-tooltip placement="topLeft">

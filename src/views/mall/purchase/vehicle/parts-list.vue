@@ -21,7 +21,7 @@
                     </span>
                 </div>
             </template>
-            <template v-if="isItem">
+            <template v-if="isItem && !isDetail">
                 <div class="tab">
                     <div
                         class="tab-item"
