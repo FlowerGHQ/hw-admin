@@ -255,6 +255,7 @@
             v-model:visible="visibleOp"
             :title="$t('ac.operation')"
             @ok="handleConfirmOp"
+            @cancel="initFormOp"
         >
             <a-row class="balance">
                 <a-col :span="6" align="right">余额：</a-col>
