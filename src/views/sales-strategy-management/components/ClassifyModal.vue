@@ -13,19 +13,7 @@
                 <div class="item-box">
                     <div class="key-box">选择地区</div>
                     <div class="value-box">
-                        <a-select
-                            v-model:value="searchForm.area"
-                            :options="CountryData"
-                            mode="multiple"
-                            show-search
-                            :filter-option="filterOption"
-                            @change="handlAreaChange"
-                            :placeholder="$t('def.select')"
-                        >
-                            <template #removeIcon>
-                                <MySvgIcon icon-class="sales-circle-delete" />
-                            </template>
-                        </a-select>
+                        <MyCountryCascader v-model:value="searchForm.area" />
                     </div>
                 </div>
             </div>
@@ -52,7 +40,7 @@
                                 <div class="value-box">
                                     <a-input
                                         :disabled="level === 2"
-                                        :placeholder="$t(`${ options[0].placeholder || 'def.input' }`)"
+                                        :placeholder="$t(`${options[0].placeholder || 'def.input'}`)"
                                         v-model:value="options[0].value"
                                         @keydown.enter="handleSearch"
                                     />
@@ -124,7 +112,8 @@ import Core from '@/core';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import TableSelect from './ItemTale.vue';
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
-import COUNTYR from '@/assets/js/address/countries.json';
+import MyCountryCascader from '@/components/MyCountryCascader/index.vue';
+// import COUNTYR from '@/assets/js/address/countries.json';
 import { message } from 'ant-design-vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
@@ -144,16 +133,16 @@ const props = defineProps({
         default: () => {},
     },
 });
-const CountryData = computed(() => {
-    let arr = [];
-    COUNTYR.forEach(item => {
-        arr.push({
-            label: item.name,
-            value: item.name,
-        });
-    });
-    return arr;
-});
+// const CountryData = computed(() => {
+//     let arr = [];
+//     COUNTYR.forEach(item => {
+//         arr.push({
+//             label: item.name,
+//             value: item.name,
+//         });
+//     });
+//     return arr;
+// });
 
 const childRef = ref(null);
 const modalContentArea = ref(null);
@@ -264,12 +253,12 @@ const initDat = () => {
         codeList: [],
         area: [],
         name_list: [], // 产品名称
-    }
-        
+    };
+
     options.forEach(el => {
-        el.value = undefined
-    })    
-}
+        el.value = undefined;
+    });
+};
 // 接收选择id的数组
 const getSelectIdList = (kesArr, itemsArr) => {
     console.log('kesArr', kesArr);
@@ -279,6 +268,7 @@ const getSelectIdList = (kesArr, itemsArr) => {
 };
 // handlAreaChange
 const handlAreaChange = value => {
+    console.log(value);
     searchForm.value.area = value;
 };
 /* 删除加号 */
@@ -290,15 +280,21 @@ const removeChildrenFromData = data => {
     });
 };
 // 重置按钮
-const handleSearchReset = () => {    
-    initDat()    
+const handleSearchReset = () => {
+    initDat();
     getTableDataFetch();
 };
 const handleSearch = () => {
     current.value = 1;
     //更换数组形式传参,字符串逗号分隔输入--编码
-    let commodityCode = options[0].value?.trim().split(',')?.map(item => item?.trim());  // 商品编码   
-    let productName = options[1].value?.trim().split(',')?.map(item => item?.trim());  // 产品名称
+    let commodityCode = options[0].value
+        ?.trim()
+        .split(',')
+        ?.map(item => item?.trim()); // 商品编码
+    let productName = options[1].value
+        ?.trim()
+        .split(',')
+        ?.map(item => item?.trim()); // 产品名称
 
     searchForm.value.name_list = productName?.filter(item => item !== '');
     searchForm.value.codeList = commodityCode?.filter(item => item !== '');
