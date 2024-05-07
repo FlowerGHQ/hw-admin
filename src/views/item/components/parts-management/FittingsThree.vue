@@ -100,16 +100,16 @@
                     <div class="ordinal" v-if="column.key === 'index' /*序号*/">
                         {{ text || '-' }}
                     </div>
-                    <span v-if="column.key === 'sync_name' /*商品名称*/">
+                    <span v-if="column.key === 'name' /*商品名称*/">
                         <a-tooltip placement="topLeft">
-                            <template #title>{{ lang === 'zh' ? text : record.item?.name_en || '-' }}</template>
+                            <template #title>{{ lang === 'zh' ? text : record?.name_en || '-' }}</template>
                             <div
                                 class="one-spils cursor"
                                 :style="{
                                     width: text?.length > 6 ? 7 * 12 + 'px' : '',
                                 }"
                             >
-                                {{ lang === 'zh' ? text : record.item?.name_en || '-' }}
+                                {{ lang === 'zh' ? text : record?.name_en || '-' }}
                             </div>
                         </a-tooltip>
                     </span>

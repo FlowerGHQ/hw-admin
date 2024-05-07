@@ -111,12 +111,12 @@
                     <span v-else-if="column.key === 'bom_category' /*分类*/">
                         <div class="classify-box">
                             <a-tooltip v-if="text" class="left-text">
-                                <template #title>{{ text?.name }}</template>
+                                <template #title>{{ lang === 'zh' ? text?.name : text?.name_en || '-' }}</template>
                                 <div
                                     class="one-spils cursor"
                                     :style="{ width: text?.name?.length > 6 ? 7 * 12 + 'px' : '' }"
                                 >
-                                    {{ !text?.name ? '-' : text?.name }}
+                                    {{ lang === 'zh' ? text?.name : text?.name_en || '-' }}
                                 </div>
                             </a-tooltip>
                             <span class="to-classify" @click="toClassify(record.sync_id)" v-if="record.sync_id">

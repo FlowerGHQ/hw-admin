@@ -95,29 +95,56 @@
                         </a-tooltip>
                     </span>
                     <span v-else-if="column.key === 'sale_area' /*销售区域*/">
-                        <a-tooltip placement="topLeft">
-                            <template #title>
-                                <template v-if="text.join(',')?.length !== 0">
-                                    <span>
-                                        {{ text.join(',') }}
-                                    </span>
+                        <template v-if="lang === 'zh'">
+                            <a-tooltip placement="topLeft">
+                                <template #title>
+                                    <template v-if="text.join(',')?.length !== 0">
+                                        <span>
+                                            {{ text.join(',') }}
+                                        </span>
+                                    </template>
+                                    <template v-else> - </template>
                                 </template>
-                                <template v-else> - </template>
-                            </template>
-                            <div
-                                class="one-spils cursor"
-                                :style="{
-                                    width: text.join(',')?.length > 11 ? 10 + 'rem' : '',
-                                }"
-                            >
-                                <template v-if="record.sale_area?.length !== 0">
-                                    <span>
-                                        {{ text.join(',') }}
-                                    </span>
+                                <div
+                                    class="one-spils cursor"
+                                    :style="{
+                                        width: text.join(',')?.length > 11 ? 10 + 'rem' : '',
+                                    }"
+                                >
+                                    <template v-if="record.sale_area?.length !== 0">
+                                        <span>
+                                            {{ text.join(',') }}
+                                        </span>
+                                    </template>
+                                    <template v-else> - </template>
+                                </div>
+                            </a-tooltip>
+                        </template>
+                        <template v-else>
+                            <a-tooltip placement="topLeft">
+                                <template #title>
+                                    <template v-if="record.sale_area_en.join(',')?.length !== 0">
+                                        <span>
+                                            {{ record.sale_area_en.join(',') }}
+                                        </span>
+                                    </template>
+                                    <template v-else> - </template>
                                 </template>
-                                <template v-else> - </template>
-                            </div>
-                        </a-tooltip>
+                                <div
+                                    class="one-spils cursor"
+                                    :style="{
+                                        width: record.sale_area_en.join(',')?.length > 11 ? 10 + 'rem' : '',
+                                    }"
+                                >
+                                    <template v-if="record.sale_area?.length !== 0">
+                                        <span>
+                                            {{ record.sale_area_en.join(',') }}
+                                        </span>
+                                    </template>
+                                    <template v-else> - </template>
+                                </div>
+                            </a-tooltip>
+                        </template>
                     </span>
                     <span v-else-if="column.key === 'item_category_name' /*分类*/">
                         <div class="classify-box">
