@@ -21,7 +21,7 @@
                         ref="formRef"
                         name="custom-validation"
                         :model="formState"
-                        :labelCol="{ style: { width: '86px' } }"
+                        :labelCol="{ style: { width: '130px' } }"
                         :rules="rules"
                     >
                         <!-- 策略名称 -->
@@ -73,7 +73,7 @@
                         <!-- 策略类型 -->
                         <a-row :gutter="18">
                             <a-col :xs="24" :sm="24" :md="24" :lg="22" :xl="18" :xxl="12" :xxxl="12">
-                                <!-- <a-form-item label="销售类型" name="type">
+                                <!-- <a-form-item label="策略类型" name="type">
                                     <a-select
                                         v-model:value="formState.type"
                                         :disabled="type === 'details' ? true : false"
@@ -83,7 +83,7 @@
                                     />
                                 </a-form-item> -->
                                 <!-- 单选框 -->
-                                <a-form-item label="销售类型" name="type">
+                                <a-form-item label="策略类型" name="type">
                                     <a-radio-group
                                         v-model:value="formState.type"
                                         :disabled="type === 'details' ? true : false"
@@ -175,6 +175,26 @@
                                             </a-input-number>
                                         </div>
                                     </div>
+                                </a-form-item>
+                            </a-col>
+                        </a-row>
+                        <!-- 是否作为生产BOM -->
+                        <a-row :gutter="18">
+                            <a-col :xs="24" :sm="24" :md="24" :lg="22" :xl="18" :xxl="12" :xxxl="12">
+                                <!-- 单选框 -->
+                                <a-form-item label="是否作为生产BOM" name="type">
+                                    <a-radio-group
+                                        v-model:value="formState.isProductBom"
+                                        :disabled="type === 'details' ? true : false"
+                                        @change="handleClearVaild"
+                                    >
+                                        <a-radio
+                                            v-for="(item, index) in isProductBomOptions"
+                                            :key="item.key"
+                                            :value="item.key"
+                                            >{{ item[lang] }}</a-radio
+                                        >
+                                    </a-radio-group>
                                 </a-form-item>
                             </a-col>
                         </a-row>
@@ -321,12 +341,11 @@ import MySvgIcon from '@/components/MySvgIcon/index.vue';
 import ClassifyModal from './components/ClassifyModal.vue';
 import { Form, message, Modal } from 'ant-design-vue';
 import _ from 'lodash';
-// 使用useTable
-import { useTable } from '@/hooks/useTable';
 import { useI18n } from 'vue-i18n';
 import { useRouter, useRoute } from 'vue-router';
 import Core from '../../core';
-import { Item } from 'ant-design-vue/lib/menu';
+import { useStore } from 'vuex';
+const store = useStore();
 const $router = useRouter();
 const $route = useRoute();
 const $t = useI18n().t;
@@ -343,6 +362,7 @@ const formState = reactive({
     },
     strategy_detail: [],
     item_list: [],
+    isProductBom: null, //是否作为生产BOM
 });
 const reviewData = ref([]);
 const strategyTypeOptions = ref([
@@ -354,6 +374,10 @@ const strategyTypeOptions = ref([
         label: '整单送',
         value: '2',
     },
+]);
+const isProductBomOptions = ref([
+    { key: 1, zh: '是', en: 'Yes' },
+    { key: 0, zh: '否', en: 'No' },
 ]);
 const formRef = ref(null);
 const giftRulesVaild = (rule, value) => {
@@ -371,6 +395,9 @@ const giftRulesVaild = (rule, value) => {
         }
     }
 };
+const lang = computed(() => {
+    return store.state.lang;
+});
 const type = computed(() => $route.query.type);
 const rules = computed(() => {
     let rule = {
