@@ -521,9 +521,18 @@ const handleConfirmOp = async () => {
         };
         Core.Api.Wallet.update(params).then(res => {
             getWalletList();
+            initFormOp();
             visibleOp.value = false;
         });
     } catch {}
+};
+const initFormOp = () => {
+    formStateOp.value = {
+        type: 1,
+        money: '',
+        subject: '',
+        remark: '',
+    };
 };
 
 watch(
