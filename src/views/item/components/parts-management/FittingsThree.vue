@@ -113,10 +113,10 @@
                             </div>
                         </a-tooltip>
                     </span>
-                    <span v-if="column.key === 'version' /*创建时间*/">
+                    <span v-if="column.key === 'version'">
                         {{ activeObj.version_name }}
                     </span>
-                    <span v-if="column.key === 'effective_time' /*创建时间*/">
+                    <span v-if="column.key === 'create_time' /*创建时间*/">
                         {{ $Util.timeFilter(text, 3) }}
                     </span>
                     <span v-if="column.key === 'comment' /*备注*/">
@@ -219,8 +219,8 @@ const tableColumns = computed(() => {
         {
             // 创建时间
             title: proxy.$t('item-bom.create_time'),
-            dataIndex: 'effective_time',
-            key: 'effective_time',
+            dataIndex: 'create_time',
+            key: 'create_time',
         },
         {
             // 备注
@@ -389,6 +389,7 @@ const getTableDataFetch = (parmas = {}) => {
                 tableData.value.forEach($2 => {
                     if (Number($1.target_id) === Number($2.id)) {
                         $2.index = $1.index || '';
+                        $2.create_time = $1.create_time || '';
                         $1['sync_name'] = $2.sync_name;
                     }
                 });

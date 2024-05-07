@@ -14,11 +14,7 @@
                 </div>
                 <template v-if="showOperation">
                     <p class="favorites" @click="addFavorites(record)">
-                        <svg-icon
-                            icon-class="collected-icon"
-                            class-name="favorites-icon"
-                            v-if="record.in_favorite || canRemoveFavorites"
-                        />
+                        <svg-icon icon-class="collected-icon" class-name="favorites-icon" v-if="record.in_favorite" />
                         <svg-icon icon-class="favorites-icon" class-name="favorites-icon" v-else />
                         <span class="favorites-text">{{ $t('mall.favorites') }}</span>
                     </p>
@@ -95,7 +91,7 @@ const props = defineProps({
     },
 });
 
-const editCount = ref(1);
+const editCount = ref(props.record.type === Core.Const.ITEM.TYPE.COMPONENT ? props.record?.min_purchase_amount : 1);
 const currency = ref('€');
 const paramPrice = ref(false);
 /* computed start */

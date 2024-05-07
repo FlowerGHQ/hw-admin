@@ -8,7 +8,7 @@
             <div class="variants-body">
                 <div class="variants-item" v-for="(item, i) in itemList" :key="item.id">
                     <div class="index-nums">{{ item.index || '-' }}</div>
-                    <ProductsCard @handlechange="getData" type="small" :record="item" />
+                    <ProductsCard @handlechange="getData" type="small" :record="item" canRemoveFavorites />
                 </div>
             </div>
         </div>
@@ -64,6 +64,9 @@ const getCarList = q => {
     Object.assign(params, q);
     Core.Api.Distributor.bomListParts({ ...params }).then(res => {
         itemList.value = res?.list;
+        itemList.value.forEach(item => {
+            item.type = Core.Const.ITEM.TYPE.COMPONENT;
+        });
         getDetail(q);
     });
 };
