@@ -1088,9 +1088,9 @@ const messages = {
             upload_explosion: '上传爆炸图',
             payable_time: '应付尾款时间',
             estimated_shipping_data: '预计船期',
-            playing_tricks: "打托",
-            expected_delivery_time: "期望交期",
-            freight_status: "运费状态",
+            playing_tricks: '打托',
+            expected_delivery_time: '期望交期',
+            freight_status: '运费状态',
         },
         s: {
             // 门店
@@ -1315,7 +1315,7 @@ const messages = {
             unfold: '展开',
             stow: '收起',
             sure_create: '确定创建',
-            required_new: "至少选择一项权限 !",
+            required_new: '至少选择一项权限 !',
         },
         search: {
             repair_sn: '工单编号',
@@ -1975,7 +1975,7 @@ const messages = {
             set_deadline: '设置期限',
             item_name: '商品名称',
             max_range: '已超出最大范围',
-        },     
+        },
         error_code: {
             expire: '登录状态已过期，请重新登录',
             timeout: '请求超时',
@@ -3540,9 +3540,9 @@ const messages = {
             upload_explosion: 'Upload Explosion Map',
             payable_time: 'Payable Time',
             estimated_shipping_data: 'Estimated Shipping Date',
-            playing_tricks: "Playing Tricks",
-            expected_delivery_time: "Expected Delivery Time",
-            freight_status: "Freight Status",
+            playing_tricks: 'Playing Tricks',
+            expected_delivery_time: 'Expected Delivery Time',
+            freight_status: 'Freight Status',
         },
         s: {
             store_list: 'Shop list',
@@ -3660,7 +3660,8 @@ const messages = {
             configure_permissions: 'Configure Permissions',
             department: 'Department',
             sure_exit_fs: 'Are You Sure To Exit And Add Users From Feishu?',
-            not_been_successfully: 'The user has not been successfully added yet. Do you want to exit the current operation',
+            not_been_successfully:
+                'The user has not been successfully added yet. Do you want to exit the current operation',
             authority_abbreviation: 'Authority',
             allocated: 'Allocated',
             unallocated: 'Unallocated',
@@ -3763,7 +3764,7 @@ const messages = {
             unfold: 'Unfold',
             stow: 'Stow',
             sure_create: 'Sure Create',
-            required_new: "Select at least one permission !",
+            required_new: 'Select at least one permission !',
         },
         search: {
             repair_sn: 'Warranty Claim Number',

@@ -28,10 +28,43 @@ export default {
         audit: '审核',
         audit_success: '审核成功',
         audit_error: '审核失败',
-        confirm_freight_tips: "请确认该订单的船期和运费。确认后，请按时缴纳运费。运费缴纳完成，将按预计船期发货。若拒绝，请说明原因。",
-        add_gift: "添加赠品",
+        confirm_freight_tips:
+            '请确认该订单的船期和运费。确认后，请按时缴纳运费。运费缴纳完成，将按预计船期发货。若拒绝，请说明原因。',
+        add_gift: '添加赠品',
+        // 强制推送
+        force_push: '强制推送',
+        // 强推生产
+        force_push_production: '强推生产',
+        // 订单编号
+        order_number: '订单编号',
+        // 订单金额
+        order_amount: '订单金额',
+        //已支付订单金额
+        paid_order_amount: '已支付订单金额',
+        // 飞书审批单号
+        feishu_approval_number: '飞书审批单号',
+        // 请输入飞书审批单号
+        please_enter_feishu_approval_number: '请输入飞书审批单号',
+        // 原因
+        reason: '原因',
+        // 请输入原因
+        please_enter_reason: '请输入原因',
+        // 该订单不符合推生产条件，是否将该订单强制推送生产？
+        force_push_production_tips: '该订单不符合推生产条件，是否将该订单强制推送生产？',
+        // 新增备注
+        add_remarks: '新增备注',
+        // 备注内容
+        remarks_content: '备注内容',
+        // 请输入备注内容
+        please_enter_remarks_content: '请输入备注内容',
     },
     en: {
+        // 新增备注
+        add_remarks: 'Add Remarks',
+        // 备注内容
+        remarks_content: 'Remarks Content',
+        // 请输入备注内容
+        please_enter_remarks_content: 'Please Enter Remarks Content',
         to_be_determined: 'To Be Determined',
         determined: 'Determined',
         rejected: 'Rejected',
@@ -60,7 +93,29 @@ export default {
         audit: 'Audit',
         audit_success: 'Audit Success',
         audit_error: 'Audit Error',
-        confirm_freight_tips: "Please confirm the shipping date and freight of the order. After confirmation, please pay the freight on time. The freight payment is completed and the goods will be delivered on the expected shipping date. If you refuse, please state the reason.",
-        add_gift: "Add Gift",
+        confirm_freight_tips:
+            'Please confirm the shipping date and freight of the order. After confirmation, please pay the freight on time. The freight payment is completed and the goods will be delivered on the expected shipping date. If you refuse, please state the reason.',
+        add_gift: 'Add Gift',
+        // 强制推送
+        force_push: 'Force Push',
+        // 强推生产
+        force_push_production: 'Force Push Production',
+        // 订单编号
+        order_number: 'Order Number',
+        // 订单金额
+        order_amount: 'Order Amount',
+        //已支付订单金额
+        paid_order_amount: 'Paid Order Amount',
+        // 飞书审批单号
+        feishu_approval_number: 'Feishu Approval Number',
+        // 请输入飞书审批单号
+        please_enter_feishu_approval_number: 'Please Enter Feishu Approval Number',
+        // 原因
+        reason: 'Reason',
+        // 请输入原因
+        please_enter_reason: 'Please Enter Reason',
+        // 该订单不符合推生产条件，是否将该订单强制推送生产？
+        force_push_production_tips:
+            'The order does not meet the conditions for pushing production. Do you want to push the order to production by force?',
     },
 };

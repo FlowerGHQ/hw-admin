@@ -21,6 +21,10 @@
                     :pagination="false"
                 >
                     <template #bodyCell="{ column, record }">
+                        <!-- source_uid -->
+                        <template v-if="column.key === 'source_uid'">
+                            <a-button type="link" @click="goToOrderDetail(record)">{{ record.source_uid }}</a-button>
+                        </template>
                         <!-- 创建时间 -->
                         <template v-if="column.key === 'create_time'">
                             {{ Core.Util.timeFormat(record.create_time) }}
@@ -81,8 +85,9 @@ import { useI18n } from 'vue-i18n';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import Core from '@/core';
 import { useTable } from '@/hooks/useTable';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
+const router = useRouter();
 const $t = useI18n().t;
 
 const tableColumns = computed(() => {
@@ -102,10 +107,6 @@ const tableColumns = computed(() => {
             title: $t('distributor-detail.order_number'),
             dataIndex: 'source_uid',
             key: 'source_uid',
-            customRender: record => {
-                console.log('record', record);
-                return record.text || '-';
-            },
         },
         {
             title: $t('distributor-detail.fund_change'),
@@ -127,7 +128,7 @@ const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPa
     immediate: false,
 });
 
-// 收入支出类型
+// 收入支出类型K
 const typeMap = computed(() => [
     {
         id: 0,
@@ -234,6 +235,15 @@ const onReset = () => {
     activeTypeValue.value = '';
     refreshTable();
 };
+
+// 跳转订单详情
+const goToOrderDetail = record => {
+    router.push({
+        path: '/distributor/purchase-order-detail',
+        query: { id: record.source_id },
+    });
+};
+
 onMounted(() => {
     searchParam.value.wallet_type = route.query.walletType;
     searchParam.value.type = route.query.type;
