@@ -159,7 +159,7 @@
                             class="same-series-item"
                             v-for="item in sameSeriesList"
                             :key="item.id"
-                            @click="routerChange('/mall/vehicle-list/detail', { id: item.id })"
+                            @click="routerChange(route.path, { id: item.id })"
                         >
                             <VehicleCard :record="item" />
                         </div>
