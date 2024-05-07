@@ -29,7 +29,7 @@
                         v-for="(item, index) in tabData"
                         @click="handleSelectTab(index)"
                     >
-                        {{ `${item.category_name}（${item.count}）` }}
+                        {{ `${item[lang === 'zh' ? 'category_name' : 'category_name_en']}（${item.count}）` }}
                     </div>
                 </div>
             </template>
@@ -305,7 +305,7 @@ const setChildren = (arr, keys, children) => {
                     id: item.sync_id,
                     key: item.sync_id,
                     name: item.name,
-                    name_en: item.name,
+                    name_en: item.name_en || '-',
                 };
             });
             break;
@@ -325,7 +325,7 @@ const setChildren = (arr, keys, children) => {
                     id: item.id,
                     key: item.id,
                     name: item.name,
-                    name_en: item.name,
+                    name_en: item.name_en || '-',
                 };
             });
             break;
@@ -478,7 +478,8 @@ const getListPartsCategory = async q => {
         tabData.value.forEach(item => (count += item.count));
         tabData.value.unshift({
             id: '',
-            category_name: 'All',
+            category_name: '全部',
+            category_name_en: 'All',
             count,
         });
     } catch {}

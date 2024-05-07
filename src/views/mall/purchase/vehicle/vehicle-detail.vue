@@ -68,14 +68,16 @@
                                         <template #content>
                                             <div class="model-ul">
                                                 <p class="model-li" v-for="item in vehicle_mes?.apply_vehicle">
-                                                    {{ item }}
+                                                    {{ item[$Util.regionalUnitMoney().name_index] || '-' }}
                                                 </p>
                                             </div>
                                         </template>
                                         <span class="model-value" @click="visible = true">
                                             <span>{{
                                                 vehicle_mes?.apply_vehicle.length > 0
-                                                    ? vehicle_mes?.apply_vehicle[0]
+                                                    ? vehicle_mes?.apply_vehicle[0][
+                                                          $Util.regionalUnitMoney().name_index
+                                                      ] || '-'
                                                     : '-'
                                             }}</span>
                                             <img class="model-img" src="@images/down-arrow.png" />
@@ -184,6 +186,7 @@ const store = useStore();
 const vehicle_id = Number(route.query?.id);
 
 /* state start */
+const visible = ref(false);
 const currency = ref('€');
 const paramPrice = ref(false);
 const modelRef = ref(null);
@@ -225,6 +228,7 @@ const detailImageList = computed(() => {
     return vehicle_mes?.imgs ? vehicle_mes?.imgs.split(',') : [];
 });
 const stepMinPrice = computed(() => {
+    editCount.value = vehicle_mes.type === Core.Const.ITEM.TYPE.COMPONENT ? vehicle_mes?.min_purchase_amount : 1;
     return vehicle_mes.type === Core.Const.ITEM.TYPE.COMPONENT ? vehicle_mes?.min_purchase_amount : 1;
 });
 /* computed end */

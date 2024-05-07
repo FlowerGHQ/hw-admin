@@ -4,7 +4,7 @@
         <template #title>{{ menuInfo[$Util.regionalUnitMoney().name_index] }}</template>
         <div v-for="item in menuInfo.children" :key="item.key">
             <template v-if="!item.children || item.children.length === 0">
-                <a-menu-item :key="item.key" class="no-child-item">
+                <a-menu-item :key="item.key" class="no-child-item" :title="item[lang === 'zh' ? 'name' : 'name_en']">
                     {{ item[lang === 'zh' ? 'name' : 'name_en'] }}
                 </a-menu-item>
             </template>

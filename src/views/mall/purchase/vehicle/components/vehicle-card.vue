@@ -23,13 +23,15 @@
                     >
                         <template #content>
                             <div class="model-ul">
-                                <p class="model-li" v-for="item in record?.apply_vehicle">{{ item }}</p>
+                                <p class="model-li" v-for="item in record?.apply_vehicle">
+                                    {{ item[$Util.regionalUnitMoney().name_index] || '-' }}
+                                </p>
                             </div>
                         </template>
                         <span class="model-value" @click="visible = true">
                             <span>{{
                                 record?.apply_vehicle && record?.apply_vehicle.length > 0
-                                    ? record?.apply_vehicle[0]
+                                    ? record?.apply_vehicle[0][$Util.regionalUnitMoney().name_index] || '-'
                                     : '-'
                             }}</span>
                             <img class="model-img" src="@images/down-arrow.png" />
