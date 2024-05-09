@@ -127,6 +127,7 @@
                             class="tab-item tab-animate"
                             :class="tabIndex === i ? 'active' : ''"
                             v-for="(item, i) in tabList"
+                            :key="i"
                             @click="changeTab(i)"
                         >
                             {{ $t(`purchase.${item.nameLang}`) }}
@@ -139,7 +140,8 @@
                                     class="img-detail"
                                     :src="$Util.imageFilter(item, 5)"
                                     alt=""
-                                    v-for="item in detailImageList"
+                                    v-for="(item, i) in detailImageList"
+                                    :key="i"
                                 />
                             </template>
                             <a-empty :description="null" v-else />

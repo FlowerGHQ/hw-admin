@@ -332,8 +332,24 @@
                                 type="link"
                                 @click="routerChange('detail', record)"
                             >
-                                <i class="icon i_detail" />{{ $t('def.detail') }}</a-button
+                                <i class="icon i_detail" />
+                                {{ $t('def.detail') }}
+                            </a-button>
+                            <!-- 强制推送 -->
+                            <a-button
+                                type="link"
+                                danger
+                                v-if="record.payment_status === 100"
+                                @click="handleForcePush(record)"
                             >
+                                <i class="icon i_expan_l" />
+                                {{ $t('distributor.force_push') }}
+                            </a-button>
+                            <!-- 备注 -->
+                            <a-button type="link" @click="handleRemark(record)" danger>
+                                <i class="icon i_menu_fankuguanli" />
+                                {{ $t('def.remark') }}
+                            </a-button>
                         </template>
                     </template>
                 </a-table>
@@ -402,12 +418,20 @@
                     </div>
                 </div>
             </a-modal>
+            <ForceModal v-model:value="forceVisible" :record="singleRecordData" />
+            <RemarkModal v-model:value="remarkVisible" :record="singleRecordData" />
         </div>
     </div>
 </template>
 
 <script>
 import Core from '@/core';
+import TimeSearch from '@/components/common/TimeSearch.vue';
+import ForceModal from './components/ForceModal.vue';
+import RemarkModal from './components/RemarkModal.vue';
+import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
+import { message } from 'ant-design-vue';
+import { debounce } from 'lodash';
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE;
 const SEARCH_TYPE = Core.Const.PURCHASE.SEARCH_TYPE;
 const PAYMENT_STATUS_MAP = Core.Const.PURCHASE.PAYMENT_STATUS_MAP;
@@ -417,21 +441,19 @@ const PAY_TIME_LIST = Core.Const.DISTRIBUTOR.PAY_TIME_LIST;
 const STATUS = Core.Const.PURCHASE.STATUS;
 const FREIGHT_STATUS_MAP = Core.Const.DISTRIBUTOR.FREIGHT_STATUS_MAP;
 const AUDIT_CANCEL_STATUS_MAP = Core.Const.DISTRIBUTOR.AUDIT_CANCEL_STATUS_MAP;
-
-import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
-import { message } from 'ant-design-vue';
-import TimeSearch from '@/components/common/TimeSearch.vue';
-import { debounce } from 'lodash';
-
 export default {
     name: 'PurchaseList',
     components: {
         TimeSearch,
         ItemSelect,
+        ForceModal,
+        RemarkModal,
     },
     props: {},
     data() {
         return {
+            forceVisible: false,
+            remarkVisible: false,
             visible: false,
             bomModalData: [],
             singleRecordData: {}, // 单个表格数据
@@ -482,6 +504,7 @@ export default {
             // 勾选项
             selectedRowKeys: [],
             statusListData: [], // tabs数据
+            singleRecordData: {},
         };
     },
     watch: {
@@ -1005,6 +1028,15 @@ export default {
         // 分销商的search选项
         onFilterOption(input, option) {
             return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+        },
+        // handleForcePush
+        handleForcePush(record) {
+            this.singleRecordData = record;
+            this.forceVisible = true;
+        },
+        handleRemark(record) {
+            this.singleRecordData = record;
+            this.remarkVisible = true;
         },
     },
 };

@@ -197,6 +197,9 @@
                                     >
                                         {{ $t('distributor-detail.fund_change_detail') }}
                                     </div>
+                                    <template v-if="$auth('sales.distribution.distributor.account-operations')">
+                                        <span class="deduction" @click="handleOpenOp">{{ $t('def.operate') }}</span>
+                                    </template>
                                 </div>
                                 <div class="account-card-content-item-bottom">
                                     {{ $t('distributor-detail.parts_warning_tips') }}
@@ -246,6 +249,66 @@
                 </template>
             </a-modal>
         </div>
+        <a-modal
+            destroyOnClose
+            wrapClassName="modalOp"
+            v-model:visible="visibleOp"
+            :title="$t('ac.operation')"
+            @ok="handleConfirmOp"
+            @cancel="initFormOp"
+        >
+            <a-row class="balance">
+                <a-col :span="6" align="right">余额：</a-col>
+                <a-col :span="17">{{ currency }} {{ dataObject.afterSaleData.balance }}</a-col>
+            </a-row>
+            <a-form
+                :model="formStateOp"
+                ref="formOpRef"
+                name="basic"
+                :label-col="{ span: 6 }"
+                :wrapper-col="{ span: 17 }"
+            >
+                <a-form-item
+                    :label="$t('n.type')"
+                    name="type"
+                    :rules="[{ required: true, message: 'Please input your username!' }]"
+                >
+                    <a-radio-group v-model:value="formStateOp.type" @change="handleChangeType">
+                        <a-radio :value="1">{{ $t('ac.recharge') }}</a-radio>
+                        <a-radio :value="2">{{ $t('distributor-detail.deduction') }}</a-radio>
+                    </a-radio-group>
+                </a-form-item>
+                <a-form-item
+                    :label="$t('n.amount')"
+                    name="money"
+                    :rules="[{ required: true, message: 'Please input your username!' }]"
+                >
+                    <a-input-number
+                        :addon-after="currency"
+                        v-model:value="formStateOp.money"
+                        :min="0"
+                        :max="formStateOp.type === 2 ? dataObject.afterSaleData.balance || 0 : 9999"
+                        :precision="2"
+                    />
+                </a-form-item>
+                <a-form-item
+                    :label="$t('n.reason')"
+                    name="subject"
+                    :rules="[{ required: true, message: 'Please input your subject!' }]"
+                >
+                    <a-select v-model:value="formStateOp.subject" :placeholder="$t('def.select')">
+                        <a-select-option v-for="(val, key) of subjectMap" :key="key" :value="key">{{
+                            val[$i18n.locale]
+                        }}</a-select-option>
+                    </a-select>
+                </a-form-item>
+                <template v-if="showRemark">
+                    <a-form-item :label="$t('p.remark')" name="remark">
+                        <a-textarea v-model:value="formStateOp.remark" show-count :maxlength="100" />
+                    </a-form-item>
+                </template>
+            </a-form>
+        </a-modal>
     </div>
 </template>
 
@@ -291,8 +354,28 @@ const currency = computed(() => {
             return '';
     }
 });
+const subjectMap = computed(() => {
+    switch (formStateOp.value.type) {
+        case 1:
+            return {
+                103: { key: 301, zh: '账户充值', en: 'Account recharge' },
+            };
+        case 2:
+            return Core.Const.WALLET.DEDUCTION_SUBJECT_MAP;
+        default:
+            return Core.Const.WALLET.SUBJECT_MAP;
+    }
+});
+const showRemark = computed(() => {
+    const show =
+        formStateOp.value.type === 2 && formStateOp.value.subject == Core.Const.WALLET.SUBJECT.MANUAL_DEDUCTION_OTHER;
+    if (!show) formStateOp.value.remark = '';
+    return show;
+});
 const visible = ref(false);
+const visibleOp = ref(false);
 const modalRefs = ref(null);
+const formOpRef = ref(null);
 
 const dataObject = ref({
     vehicleData: {
@@ -318,6 +401,12 @@ const formState = ref({
     availableBalance: 0,
     // 授信总额
     creditBalance: 0,
+});
+const formStateOp = ref({
+    type: 1,
+    money: '',
+    subject: '',
+    remark: '',
 });
 
 const getWalletList = () => {
@@ -424,6 +513,36 @@ const handleOk = () => {
         getWalletList();
     });
 };
+const handleOpenOp = () => {
+    visibleOp.value = true;
+};
+const handleChangeType = e => {
+    console.log(e.target.value);
+    formStateOp.value.subject = '';
+};
+const handleConfirmOp = async () => {
+    try {
+        const values = await formOpRef.value.validateFields();
+        values.money = values.money * 100;
+        let params = {
+            wallet_id: dataObject.value.afterSaleData.id,
+            ...values,
+        };
+        Core.Api.Wallet.update(params).then(res => {
+            getWalletList();
+            initFormOp();
+            visibleOp.value = false;
+        });
+    } catch {}
+};
+const initFormOp = () => {
+    formStateOp.value = {
+        type: 1,
+        money: '',
+        subject: '',
+        remark: '',
+    };
+};
 
 watch(
     () => props.detail,
@@ -483,6 +602,11 @@ onMounted(() => {
                     cursor: pointer;
                     text-decoration: underline;
                 }
+                .deduction {
+                    margin-left: 10px;
+                    color: #ff4d4f;
+                    cursor: pointer;
+                }
             }
             .account-card-content-item-bottom {
                 margin-top: 16px;
@@ -516,6 +640,13 @@ onMounted(() => {
                 }
             }
         }
+    }
+}
+</style>
+<style lang="less">
+.modalOp {
+    .balance {
+        margin-bottom: 16px;
     }
 }
 </style>

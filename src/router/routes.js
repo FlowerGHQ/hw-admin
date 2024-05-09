@@ -136,7 +136,7 @@ const routes = [
         // 分销管理 - 平台端
         path: '/distributor',
         component: () => import('@/views/layout/index.vue'),
-        name: 'DistributorManagement',        
+        name: 'DistributorManagement',
         meta: {
             title: '分销管理',
             title_en: 'Distribution',
@@ -382,8 +382,9 @@ const routes = [
     {
         // 商品管理
         path: '/item',
-        component: () => import('@/views/layout/index.vue'),        
-        name: 'ItemManagement',        
+        component: () => import('@/views/layout/index.vue'),
+        name: 'ItemManagement',
+        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
         meta: {
             title: '商品管理',
             title_en: 'Product',
@@ -484,8 +485,9 @@ const routes = [
     {
         // 实例管理
         path: '/entity',
-        component: () => import('@/views/layout/index.vue'),        
-        name: 'EntityManagement',        
+        component: () => import('@/views/layout/index.vue'),
+        name: 'EntityManagement',
+        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.PRODUCTION],
         meta: {
             title: '实例管理',
             title_en: 'Instance',
@@ -530,8 +532,9 @@ const routes = [
     {
         // 售后管理
         path: '/aftersales',
-        component: () => import('@/views/layout/index.vue'),        
-        name: 'AftersalesManagement',        
+        component: () => import('@/views/layout/index.vue'),
+        name: 'AftersalesManagement',
+        type: [ROUTER_TYPE.AFTER],
         meta: {
             title: '售后管理',
             title_en: 'After-sales',
@@ -590,7 +593,7 @@ const routes = [
                     hidden: true,
                     title: '退款单详情',
                 },
-            },            
+            },
             {
                 path: 'refund-list',
                 name: 'RefundList',

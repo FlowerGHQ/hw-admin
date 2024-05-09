@@ -1095,9 +1095,9 @@ const messages = {
             upload_explosion: '上传爆炸图',
             payable_time: '应付尾款时间',
             estimated_shipping_data: '预计船期',
-            playing_tricks: "打托",
-            expected_delivery_time: "期望交期",
-            freight_status: "运费状态",
+            playing_tricks: '打托',
+            expected_delivery_time: '期望交期',
+            freight_status: '运费状态',
         },
         s: {
             // 门店
@@ -1323,6 +1323,8 @@ const messages = {
             stow: '收起',
             sure_create: '确定创建',
             required_new: '至少选择一项权限 !',
+            // 生成
+            generate: '生成',
         },
         search: {
             repair_sn: '工单编号',
@@ -1982,7 +1984,7 @@ const messages = {
             set_deadline: '设置期限',
             item_name: '商品名称',
             max_range: '已超出最大范围',
-        },     
+        },
         error_code: {
             expire: '登录状态已过期，请重新登录',
             timeout: '请求超时',
@@ -3554,9 +3556,9 @@ const messages = {
             upload_explosion: 'Upload Explosion Map',
             payable_time: 'Payable Time',
             estimated_shipping_data: 'Estimated Shipping Date',
-            playing_tricks: "Playing Tricks",
-            expected_delivery_time: "Expected Delivery Time",
-            freight_status: "Freight Status",
+            playing_tricks: 'Playing Tricks',
+            expected_delivery_time: 'Expected Delivery Time',
+            freight_status: 'Freight Status',
         },
         s: {
             store_list: 'Shop list',
@@ -3718,6 +3720,8 @@ const messages = {
             detail: 'Message Details',
         },
         def: {
+            // 生成
+            generate: 'Generate',
             p_set: 'Product Setting',
             delete_content: 'Are You Sure To Delete It?',
             search: 'Search',

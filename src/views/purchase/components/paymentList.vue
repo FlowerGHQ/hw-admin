@@ -18,7 +18,7 @@
                     <template #bodyCell="{ column, text, record }">
                         <!-- 已支付金额 -->
                         <template v-if="column.key === 'type'">
-                            {{ TYPE_WALLET[text]?.t ? $t(`${ TYPE_WALLET[text]?.t }`) : '-' }}
+                            {{ TYPE_WALLET[text]?.t ? $t(`${TYPE_WALLET[text]?.t}`) : '-' }}
                         </template>
                         <!-- 已支付金额 -->
                         <template v-if="column.key === 'money'">
@@ -96,7 +96,7 @@ const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPa
     request: getInquirySheet,
     initParam: {
         target_id: props.target_id,
-        subject_list: [2000, 2100, 2200, 2300] // 过滤数据
+        subject_list: [2000, 2100, 2200, 2300], // 过滤数据
     },
 });
 
