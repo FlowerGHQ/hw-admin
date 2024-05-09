@@ -3,7 +3,7 @@
         destroyOnClose
         v-model:visible="visibility"
         :width="860"
-        title="配件分组"
+        :title="$t('item-bom.accessories_grouping')"
         @ok="handleOk"
         @cancel="handleCancle"
     >
@@ -17,7 +17,7 @@
                 <div class="value-box">
                     <a-select v-model:value="categoryId" placeholder="请选择" @change="changeSelect">
                         <a-select-option v-for="(val, key) in classList" :key="key" :value="val.id">{{
-                            val.name
+                            (lang === 'zh' ? val.name : val.name_en) || '-'
                         }}</a-select-option>
                     </a-select>
                 </div>
@@ -86,6 +86,8 @@ import { onMounted, ref, getCurrentInstance, computed, watch, onUnmounted, nextT
 import Core from '@/core';
 import SearchAll from '@/components/horwin/based-on-ant/SearchAll.vue';
 import TableSelectV3 from '@/components/table/TableSelectV3.vue';
+import { useStore } from 'vuex';
+const store = useStore();
 const initialObject = {
     // 商品编码
     codeList: [],
@@ -197,13 +199,16 @@ const pageChange = () => {
 };
 const { proxy } = getCurrentInstance();
 const loading = ref(false);
+const lang = computed(() => {
+    return store.state.lang;
+});
 const tableColumns = computed(() => {
     const result = [
         {
             // 商品名称
             title: proxy.$t('item-bom.product_name'),
             dataIndex: 'sync_name',
-            key: 'sync_name',
+            key: 'name',
         },
         {
             // 商品编码

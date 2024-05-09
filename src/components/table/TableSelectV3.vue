@@ -20,7 +20,7 @@
                 <a-tooltip>
                     <template #title>{{ text }}</template>
                     <div class="one-spils cursor" :style="{ width: text?.length > 6 ? 7 * 12 + 'px' : '' }">
-                        {{ text }}
+                        {{ lang === 'zh' ? record.item?.name : record.item?.name_en }}
                     </div>
                 </a-tooltip>
             </span>

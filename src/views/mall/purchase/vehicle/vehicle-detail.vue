@@ -68,14 +68,16 @@
                                         <template #content>
                                             <div class="model-ul">
                                                 <p class="model-li" v-for="item in vehicle_mes?.apply_vehicle">
-                                                    {{ item }}
+                                                    {{ item[$Util.regionalUnitMoney().name_index] || '-' }}
                                                 </p>
                                             </div>
                                         </template>
                                         <span class="model-value" @click="visible = true">
                                             <span>{{
                                                 vehicle_mes?.apply_vehicle.length > 0
-                                                    ? vehicle_mes?.apply_vehicle[0]
+                                                    ? vehicle_mes?.apply_vehicle[0][
+                                                          $Util.regionalUnitMoney().name_index
+                                                      ] || '-'
                                                     : '-'
                                             }}</span>
                                             <img class="model-img" src="@images/down-arrow.png" />
@@ -98,6 +100,9 @@
                                         </template>
                                     </div>
                                     <div class="count-edit">
+                                        <span class="min-count"
+                                            >{{ $t('mall.min_order_quantity') }} {{ stepMinPrice }}</span
+                                        >
                                         <a-input-number
                                             v-model:value="editCount"
                                             :min="stepMinPrice"
@@ -156,7 +161,7 @@
                             class="same-series-item"
                             v-for="item in sameSeriesList"
                             :key="item.id"
-                            @click="routerChange('/mall/vehicle-list/detail', { id: item.id })"
+                            @click="routerChange(route.path, { id: item.id })"
                         >
                             <VehicleCard :record="item" />
                         </div>
@@ -186,6 +191,7 @@ const store = useStore();
 const vehicle_id = Number(route.query?.id);
 
 /* state start */
+const visible = ref(false);
 const currency = ref('€');
 const paramPrice = ref(false);
 const modelRef = ref(null);
@@ -227,6 +233,7 @@ const detailImageList = computed(() => {
     return vehicle_mes?.imgs ? vehicle_mes?.imgs.split(',') : [];
 });
 const stepMinPrice = computed(() => {
+    editCount.value = vehicle_mes.type === Core.Const.ITEM.TYPE.COMPONENT ? vehicle_mes?.min_purchase_amount : 1;
     return vehicle_mes.type === Core.Const.ITEM.TYPE.COMPONENT ? vehicle_mes?.min_purchase_amount : 1;
 });
 /* computed end */
@@ -500,7 +507,6 @@ const getShopCartList = () => {
                     .single-bottom {
                         .price {
                             .flex(space-between, center, row);
-
                             .price-content {
                                 .price-text {
                                     color: #8f00ff;
@@ -522,6 +528,16 @@ const getShopCartList = () => {
                             }
 
                             .count-edit {
+                                position: relative;
+                                .min-count {
+                                    position: absolute;
+                                    font-size: 12px;
+                                    line-height: 18px;
+                                    color: #999;
+                                    left: -12px;
+                                    bottom: 0;
+                                    transform: translateX(-100%);
+                                }
                                 /deep/.ant-input-number {
                                     width: 207px;
                                     box-shadow: 0 0 0 0;

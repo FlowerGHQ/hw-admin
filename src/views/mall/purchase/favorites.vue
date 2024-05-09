@@ -50,6 +50,7 @@ const listRender = computed(() => {
     return list.value.map(item => {
         delete item['item'].id;
         return {
+            favorite_id: item.id,
             ...item,
             ...item['item'],
         };

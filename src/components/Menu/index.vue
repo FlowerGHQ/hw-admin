@@ -1,5 +1,5 @@
 <template>
-    <div class="media-center-menu">
+    <div class="media-center-menu" :key="lang">
         <a-menu
             v-model:openKeys="openKeysModel"
             v-model:selectedKeys="selectedKeysModel"
@@ -19,6 +19,8 @@
 import { ref, onMounted, computed } from 'vue';
 import MenuSub from '@/components/Menu/Sub.vue';
 import Core from '@/core';
+import { useStore } from 'vuex';
+const store = useStore();
 
 const emit = defineEmits(['handleSelect', 'openChange']);
 const props = defineProps({
@@ -51,6 +53,10 @@ const selectedKeysModel = computed({
 
 const rootSubmenuKeys = computed(() => {
     return props.menuData.map(item => item.id);
+});
+
+const lang = computed(() => {
+    return store.state.lang;
 });
 
 const filterChildren = (arr, level = 0) => {

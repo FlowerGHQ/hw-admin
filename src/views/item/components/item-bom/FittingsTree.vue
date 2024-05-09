@@ -39,15 +39,15 @@
                                 <div class="title">
                                     <div class="title-left">
                                         <div class="title-left-top">
-                                            <span v-if="!item.edit">{{ item.name }}</span>
-                                            <a-input
+                                            <span>{{ (lang === 'zh' ? item.name : item.name_en) || '-' }}</span>
+                                            <!-- <a-input
                                                 v-else
                                                 v-model:value="item.name"
                                                 id="input1"
                                                 :placeholder="$t('item-bom.title_the_ph')"
                                                 @blur.stop="handleEditName(item)"
                                                 @pressEnter.stop="handleEditName(item)"
-                                            />
+                                            /> -->
                                         </div>
                                         <div class="title-left-bottom">
                                             {{ item.item_code }}
@@ -59,7 +59,7 @@
                                 <div class="new_version" v-if="item.flag_new">
                                     {{ $t('item-bom.change_new_version') }}
                                 </div>
-                                <MySvgIcon icon-class="edit" @click.stop="handleEdit(item, $event)" />
+                                <MySvgIcon icon-class="edit" @click.stop="handleEdit(item)" />
                             </div>
                         </div>
                         <div class="expand-area" v-if="item.expand">
@@ -87,7 +87,7 @@
                                                         'common-title': item1.count <= 0,
                                                         'common-title2': item1.count > 0,
                                                     }"
-                                                    >{{ item1.version }}版本</span
+                                                    >{{ item1.version }}{{ $t('item-bom.version') }}</span
                                                 >
                                                 <span class="new-version" v-if="item1.flag_new">
                                                     {{ $t('item-bom.change') }}
@@ -126,13 +126,15 @@
                                             >
                                                 <div class="title">
                                                     <div class="title-area">
-                                                        <span v-if="!item2.edit">{{ item2.name }}</span>
-                                                        <a-input
+                                                        <span>{{
+                                                            lang === 'en' ? item2.name_en || '-' : item2.name
+                                                        }}</span>
+                                                        <!-- <a-input
                                                             v-else
                                                             v-model:value="item2.name"
                                                             :placeholder="$t('item-bom.title_the_ph')"
                                                             @blur.stop="handleEditName(item2)"
-                                                        />
+                                                        /> -->
                                                     </div>
                                                 </div>
 
@@ -196,7 +198,9 @@
                                                 class="arrow"
                                             />
                                             <!-- v-if="!item.edit" -->
-                                            <span class="span-iscollapse-title margin-left-3">{{ item.name }}</span>
+                                            <span class="span-iscollapse-title margin-left-3">
+                                                {{ (lang === 'zh' ? item.name : item.name_en) || '-' }}
+                                            </span>
                                             <!-- <a-input
                                                 v-else
                                                 v-model:value="item.name"
@@ -260,7 +264,7 @@
                                                                 'common-title': item1.count <= 0,
                                                                 'common-title2': item1.count > 0,
                                                             }"
-                                                            >{{ item1.version }}版本</span
+                                                            >{{ item1.version }}{{ $t('item-bom.version') }}</span
                                                         >
                                                         <span class="new-version" v-if="item1.flag_new">
                                                             {{ $t('item-bom.change') }}
@@ -302,13 +306,19 @@
                                                     >
                                                         <div class="title">
                                                             <div class="title-area">
-                                                                <span v-if="!item2.edit">{{ item2.name }}</span>
-                                                                <a-input
+                                                                <span>
+                                                                    {{
+                                                                        lang === 'en'
+                                                                            ? item2.name_en || '-'
+                                                                            : item2.name
+                                                                    }}
+                                                                </span>
+                                                                <!-- <a-input
                                                                     v-else
                                                                     v-model:value="item2.name"
                                                                     :placeholder="$t('item-bom.title_the_ph')"
                                                                     @blur.stop="handleEditName(item2)"
-                                                                />
+                                                                /> -->
                                                             </div>
                                                         </div>
 
@@ -367,15 +377,26 @@
             <p class="content">{{ $t('item-bom.confirm_delete_content') }}</p>
         </a-modal>
     </div>
+    <a-modal v-model:visible="visibleEdit" :title="$t('n.edit')" @ok="handleEditName(editItem)">
+        <a-form :model="formState" name="editForm" ref="formRef" :label-col="{ span: 6 }" :wrapper-col="{ span: 17 }">
+            <a-form-item :label="$t('n.name')" name="name" :rules="[{ required: true, message: $t('n.enter') }]">
+                <a-input v-model:value="formState.name" show-count :maxlength="20" />
+            </a-form-item>
+            <a-form-item :label="$t('n.name_en')" name="name_en" :rules="[{ required: true, message: $t('n.enter') }]">
+                <a-input v-model:value="formState.name_en" show-count :maxlength="20" />
+            </a-form-item>
+        </a-form>
+    </a-modal>
 </template>
 
 <script setup>
 import MySvgIcon from '@/components/MySvgIcon/index.vue';
-import { ref, reactive, computed, onMounted, watch, onBeforeUnmount } from 'vue';
+import { ref, reactive, computed, onMounted, watch, onBeforeUnmount, getCurrentInstance } from 'vue';
 import { useI18n } from 'vue-i18n';
 import Core from '@/core';
 const $t = useI18n().t;
 const $emit = defineEmits(['update:activeObj']);
+const { proxy } = getCurrentInstance();
 import Util from '@/core/utils';
 
 // // -----------------定义数据-------------------------------
@@ -390,6 +411,7 @@ let loading2 = ref(false);
 let loading3 = ref(false);
 const addValue = ref('新增');
 let visible = ref(false);
+const visibleEdit = ref(false);
 // // 删除的item及其父级item
 let deleteItem = ref(null);
 let deleteParentItem = ref(null);
@@ -405,6 +427,13 @@ let wrap = ref(null);
 const shopId = ref(null);
 const bomItemCategoryId = ref('');
 
+const formRef = ref(null);
+const editItem = reactive({});
+const formState = reactive({
+    name: '',
+    name_en: '',
+});
+
 // 接受activeObj
 const props = defineProps({
     activeObj: {
@@ -419,6 +448,10 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+});
+
+const lang = computed(() => {
+    return proxy.$store.state.lang;
 });
 
 // -----------------定义方法--------------------------
@@ -543,29 +576,45 @@ const expand = item => {
     }
 };
 // 编辑
-const handleEdit = (item, e) => {
-    item.edit = true;
-    // 当前元素的兄弟元素下》title》title-left》a-input
-    timer4.value = setTimeout(() => {
-        const inputDom = e.target.parentNode.parentNode.parentNode.querySelector(
-            '.title-left>.title-left-top>.ant-input',
-        );
-        // 聚焦
-        inputDom && inputDom.focus();
-    }, 200);
+const handleEdit = item => {
+    // item.edit = true;
+    // // 当前元素的兄弟元素下》title》title-left》a-input
+    // timer4.value = setTimeout(() => {
+    //     const inputDom = e.target.parentNode.parentNode.parentNode.querySelector(
+    //         '.title-left>.title-left-top>.ant-input',
+    //     );
+    //     // 聚焦
+    //     inputDom && inputDom.focus();
+    // }, 200);
+    visibleEdit.value = true;
+    Object.assign(editItem, item);
+    Object.assign(formState, {
+        name: item.name,
+        name_en: item.name_en,
+    });
 };
 // 编辑名称后的entry和blur事件
-const handleEditName = item => {
-    item.edit = false;
-    switch (item.level) {
-        case 1:
-            editGoodsName(item);
-            break;
-        case 3:
-            editCategoryName(item);
-            break;
-        default:
-            break;
+const handleEditName = async item => {
+    try {
+        const values = await formRef.value.validateFields();
+        console.log('Success:', values);
+        Object.assign(item, {
+            name: formState.name,
+            name_en: formState.name_en,
+        });
+        item.edit = false;
+        switch (item.level) {
+            case 1:
+                editGoodsName(item);
+                break;
+            case 3:
+                editCategoryName(item);
+                break;
+            default:
+                break;
+        }
+    } catch (errorInfo) {
+        console.log('Failed:', errorInfo);
     }
 };
 
@@ -614,29 +663,45 @@ const getCategory = item => {
             item.children = res.list;
             item.count = res.list.length;
             item.children = setChildRen(item.children, 3);
-            loading3.value = false;
         })
         .catch(err => {
-            loading3.value = false;
             console.log(err);
+        })
+        .finally(() => {
+            loading3.value = false;
         });
 };
 // 修改bom名称
 const editGoodsName = item => {
     Core.Api.ITEM_BOM.updateName({
         name: item.name,
+        name_en: item.name_en,
         sync_id: item.sync_id,
-    }).catch(err => {
-        console.log(err);
-    });
+    })
+        .then(res => {
+            getData();
+        })
+        .catch(err => {
+            console.log(err);
+        })
+        .finally(() => {
+            visibleEdit.value = false;
+        });
 };
 // 修改分类名称
 const editCategoryName = item => {
     Core.Api.ITEM_BOM.saveCategoryName({
         ...item,
-    }).catch(err => {
-        console.log(err);
-    });
+    })
+        .then(res => {
+            getData();
+        })
+        .catch(err => {
+            console.log(err);
+        })
+        .finally(() => {
+            visibleEdit.value = false;
+        });
 };
 // 添加分类
 const addCategory = async (parentItem, item) => {
@@ -744,13 +809,7 @@ const getCurrentVersion = (parentId, id) => {
     // 请求该版本下的分类
     getCategory(currentVersion);
 };
-defineExpose({
-    getCurrentVersion,
-    getGoodsList,
-});
-
-// 生命周期
-onMounted(() => {
+const getData = () => {
     // 请求商品列表
     loading1.value = true;
     Core.Api.ITEM_BOM.listName({
@@ -784,6 +843,15 @@ onMounted(() => {
             loading1.value = false;
             console.log(err);
         });
+};
+defineExpose({
+    getCurrentVersion,
+    getGoodsList,
+});
+
+// 生命周期
+onMounted(() => {
+    getData();
 });
 onBeforeUnmount(() => {
     clearTimeout(timer1.value);

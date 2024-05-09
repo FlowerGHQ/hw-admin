@@ -91,10 +91,9 @@
                 <template #bodyCell="{ column, text, record }">
                     <span v-if="column.key === 'sync_name' /*商品名称*/">
                         <a-tooltip>
-                            <template #title>{{ text }}</template>
+                            <template #title>{{ lang === 'zh' ? text : record.item?.name_en || '-' }}</template>
                             <div class="one-spils cursor" :style="{ width: text?.length > 6 ? 7 * 12 + 'px' : '' }">
-                                {{ text || '-' }}
-
+                                {{ lang === 'zh' ? text : record.item?.name_en || '-' }}
                                 <span class="new-version title-right" v-if="record.flag_new === 1 && flagNew === 1">
                                     {{ $t('item-bom.change') }}
                                 </span>
@@ -112,12 +111,12 @@
                     <span v-else-if="column.key === 'bom_category' /*分类*/">
                         <div class="classify-box">
                             <a-tooltip v-if="text" class="left-text">
-                                <template #title>{{ text?.name }}</template>
+                                <template #title>{{ lang === 'zh' ? text?.name : text?.name_en || '-' }}</template>
                                 <div
                                     class="one-spils cursor"
                                     :style="{ width: text?.name?.length > 6 ? 7 * 12 + 'px' : '' }"
                                 >
-                                    {{ !text?.name ? '-' : text?.name }}
+                                    {{ lang === 'zh' ? text?.name : text?.name_en || '-' }}
                                 </div>
                             </a-tooltip>
                             <span class="to-classify" @click="toClassify(record.sync_id)" v-if="record.sync_id">
@@ -193,6 +192,10 @@ const uploadFileObj = reactive({
 });
 const isShow = ref(false);
 const tableDataChange = ref([]);
+
+const lang = computed(() => {
+    return proxy.$store.state.lang;
+});
 const changeTableColumn = computed(() => {
     let arr = [
         {
@@ -217,11 +220,6 @@ const changeTableColumn = computed(() => {
         },
     ];
     return arr;
-});
-
-const lang = computed(() => {
-    // ==='zh'?'country':'country_en'
-    return proxy.$store.state.lang;
 });
 const tableColumns = computed(() => {
     const result = [

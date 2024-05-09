@@ -39,15 +39,17 @@
                                 <div class="title">
                                     <div class="title-left">
                                         <div class="title-left-top">
-                                            <span v-if="!item.edit">{{ item.name }}</span>
-                                            <a-input
+                                            <span>
+                                                {{ (lang === 'zh' ? item.name : item.name_en) || '-' }}
+                                            </span>
+                                            <!-- <a-input
                                                 v-else
                                                 v-model:value="item.name"
                                                 id="input1"
                                                 :placeholder="$t('item-bom.title_the_ph')"
                                                 @blur.stop="handleEditName(item)"
                                                 @pressEnter.stop="handleEditName(item)"
-                                            />
+                                            /> -->
                                         </div>
                                         <div class="title-left-bottom">
                                             {{ item.item_code }}
@@ -112,7 +114,7 @@
                                                         'common-title': item1.count <= 0,
                                                         'common-title2': item1.count > 0,
                                                     }"
-                                                    >{{ item1.version }}版本</span
+                                                    >{{ item1.version }}{{ $t('item-bom.version') }}</span
                                                 >
                                                 <span class="new-version" v-if="item1.flag_new">
                                                     {{ $t('item-bom.change') }}
@@ -151,7 +153,9 @@
                                             >
                                                 <div class="title">
                                                     <div class="title-area">
-                                                        <span v-if="!item2.edit">{{ item2.name }}</span>
+                                                        <span v-if="!item2.edit">
+                                                            {{ (lang === 'zh' ? item2.name : item2.name_en) || '-' }}
+                                                        </span>
                                                         <a-input
                                                             v-else
                                                             v-model:value="item2.name"
@@ -221,7 +225,9 @@
                                                 class="arrow"
                                             />
                                             <!-- v-if="!item.edit" -->
-                                            <span class="span-iscollapse-title margin-left-3">{{ item.name }}</span>
+                                            <span class="span-iscollapse-title margin-left-3">
+                                                {{ (lang === 'zh' ? item.name : item.name_en) || '-' }}
+                                            </span>
                                             <!-- <a-input
                                                 v-else
                                                 v-model:value="item.name"
@@ -285,7 +291,7 @@
                                                                 'common-title': item1.count <= 0,
                                                                 'common-title2': item1.count > 0,
                                                             }"
-                                                            >{{ item1.version }}版本</span
+                                                            >{{ item1.version }}{{ $t('item-bom.version') }}</span
                                                         >
                                                         <span class="new-version" v-if="item1.flag_new">
                                                             {{ $t('item-bom.change') }}
@@ -327,7 +333,12 @@
                                                     >
                                                         <div class="title">
                                                             <div class="title-area">
-                                                                <span v-if="!item2.edit">{{ item2.name }}</span>
+                                                                <span v-if="!item2.edit">
+                                                                    {{
+                                                                        (lang === 'zh' ? item2.name : item2.name_en) ||
+                                                                        '-'
+                                                                    }}
+                                                                </span>
                                                                 <a-input
                                                                     v-else
                                                                     v-model:value="item2.name"
@@ -468,6 +479,9 @@ const treeData = [
     },
 ];
 const popoverStyle = { minWidth: '150px' };
+const lang = computed(() => {
+    return proxy.$store.state.lang;
+});
 
 // -----------------定义方法--------------------------
 const handleCategoryChange = (val, syncId) => {

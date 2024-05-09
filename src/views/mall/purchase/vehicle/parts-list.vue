@@ -21,7 +21,7 @@
                     </span>
                 </div>
             </template>
-            <template v-if="isItem">
+            <template v-if="isItem && !isDetail">
                 <div class="tab">
                     <div
                         class="tab-item"
@@ -29,7 +29,7 @@
                         v-for="(item, index) in tabData"
                         @click="handleSelectTab(index)"
                     >
-                        {{ `${item.category_name}（${item.count}）` }}
+                        {{ `${item[lang === 'zh' ? 'category_name' : 'category_name_en']}（${item.count}）` }}
                     </div>
                 </div>
             </template>
@@ -43,10 +43,10 @@
                             <component :is="componentName" :record="item" />
                         </div>
                     </div>
+                    <div class="loading">
+                        <down-loading class="loading" :show="spinning" />
+                    </div>
                 </template>
-                <div class="loading">
-                    <down-loading class="loading" :show="spinning" />
-                </div>
             </div>
             <!-- 解决循环渲染 componentName 不响应bug -->
             <span class="hide">{{ componentName }}</span>
@@ -71,6 +71,7 @@ const store = useStore();
 
 /* state start */
 const deep = ref(1); // 层级
+const id = ref('');
 const typeParentId = ref(null);
 const spinning = ref(false);
 const pagination = reactive({
@@ -156,6 +157,7 @@ const componentName = computed(() => {
 
 /* watch start */
 watch(breadcrumbList.value, newV => {
+    if (newV.length !== deep.value) deep.value = newV.length;
     if (newV.length < 6) isDetail.value = false;
     openKeys.value = newV.slice(1).map(item => item.id);
 });
@@ -171,20 +173,22 @@ onBeforeUnmount(() => {
 
 /* methods start */
 // 获取数据
-const getData = async (reset = false, id = '') => {
-    if (!isItem.value || deep.value < 2) return;
+const getData = async (reset = false, id_ = '') => {
+    if (!isItem.value || deep.value < 2 || deep.value > 5) return;
+    spinning.value = true;
+    id.value = id_ || id.value;
     switch (deep.value) {
         case 3:
-            await getListPartsCategory({ bom_item_category_id: id });
-            getCarList({ bom_item_category_id: id }, reset);
+            await getListPartsCategory({ bom_item_category_id: id.value });
+            getCarList({ bom_item_category_id: id.value }, reset);
             break;
         case 4:
-            await getListPartsCategory({ sync_id: id });
-            getCarList({ sync_id: id }, reset);
+            await getListPartsCategory({ sync_id: id.value });
+            getCarList({ sync_id: id.value }, reset);
             break;
         case 5:
-            await getListPartsCategory({ id: id });
-            getCarList({ id: id }, reset);
+            await getListPartsCategory({ id: id.value });
+            getCarList({ id: id.value }, reset);
             break;
 
         default:
@@ -301,7 +305,7 @@ const setChildren = (arr, keys, children) => {
                     id: item.sync_id,
                     key: item.sync_id,
                     name: item.name,
-                    name_en: item.name,
+                    name_en: item.name_en || '-',
                 };
             });
             break;
@@ -321,7 +325,7 @@ const setChildren = (arr, keys, children) => {
                     id: item.id,
                     key: item.id,
                     name: item.name,
-                    name_en: item.name,
+                    name_en: item.name_en || '-',
                 };
             });
             break;
@@ -379,11 +383,36 @@ const handleBreadcrumb = id => {
 };
 /* 滚动监听事件 */
 const handleScroll = () => {
+    // 详情获取非商品不执行
+    if (isDetail.value || !isItem.value) return;
     // 因为存在子组件路由所以判断只在父路由时执行
     if (route.path !== '/mall/accessories-list') return;
     const footerHeight = document.querySelector('#mall-footer').clientHeight;
     const html = document.documentElement;
-    Core.Util.handleScrollFn(html, getData, pagination, spinning.value, footerHeight);
+    handleScrollFn(html, getData, footerHeight);
+};
+const handleScrollFn = (e, fn, hitBottomHeightQ = '') => {
+    if (!e || !fn) return;
+    const hitBottomHeight = 10;
+    const element = e;
+    if (
+        Math.ceil(element.scrollTop + element.clientHeight) >=
+        element.scrollHeight - (hitBottomHeightQ || 0 + hitBottomHeight)
+    ) {
+        // console.log('滑到底部');
+        if (pagination.page < pagination.total_page && !spinning.value) {
+            pagination.page++;
+            fn();
+        }
+    }
+};
+const filterBomTreeData = list => {
+    list.forEach(item => {
+        item.logo = item.icon;
+        if (item.children && item.children.length > 0) {
+            filterBomTreeData(item.children);
+        }
+    });
 };
 /* methods end */
 
@@ -394,6 +423,7 @@ const getBomTree = (parent_id = 0) => {
     Core.Api.Distributor.bomTree()
         .then(res => {
             list.value = res?.list || [];
+            filterBomTreeData(list.value);
         })
         .catch(err => {
             console.log('getBomTree err', err);
@@ -404,7 +434,6 @@ const getBomTree = (parent_id = 0) => {
 };
 const getCarList = (q, reset = false) => {
     if (reset) resetFn();
-    spinning.value = true;
     const params = {
         bom_item_item_category_id: tabData.value ? tabData.value[tabIndex.value].category_id : '',
         page: pagination.page,
@@ -458,7 +487,8 @@ const getListPartsCategory = async q => {
         tabData.value.forEach(item => (count += item.count));
         tabData.value.unshift({
             id: '',
-            category_name: 'All',
+            category_name: '全部',
+            category_name_en: 'All',
             count,
         });
     } catch {}

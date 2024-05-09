@@ -114,6 +114,8 @@ export default {
         please_input_number: '请输入正数金额',
         undetermined: '未确定',
         determined_to_pay: '运费未确定，等运费确定后再支付',
+        dosage: '用量',
+        min_order_quantity: '最小订购量',
     },
     en: {
         system: 'BOS',
@@ -234,5 +236,7 @@ export default {
         please_input_number: 'Please Enter A Positive Amount',
         undetermined: 'Undetermined',
         determined_to_pay: 'The freight undetermined, payment after the freight is confirmed',
+        dosage: 'Dosage',
+        min_order_quantity: 'Min Order Quantity',
     },
 };

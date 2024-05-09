@@ -14,11 +14,7 @@
                 </div>
                 <template v-if="showOperation">
                     <p class="favorites" @click="addFavorites(record)">
-                        <svg-icon
-                            icon-class="collected-icon"
-                            class-name="favorites-icon"
-                            v-if="record.in_favorite || canRemoveFavorites"
-                        />
+                        <svg-icon icon-class="collected-icon" class-name="favorites-icon" v-if="record.in_favorite" />
                         <svg-icon icon-class="favorites-icon" class-name="favorites-icon" v-else />
                         <span class="favorites-text">{{ $t('mall.favorites') }}</span>
                     </p>
@@ -32,14 +28,17 @@
                             Samples : {{ currency }}{{ stepPrice['normal'] }} / 20GP : {{ currency
                             }}{{ stepPrice['20gp'] }}
                         </p>
+                        <p class="dosage">{{ $t('mall.dosage') }}: {{ record.amount }}</p>
                     </template>
                     <template v-else>
                         <p class="price-text">{{ currency }}{{ price }}</p>
+                        <p class="dosage">{{ $t('mall.dosage') }}: {{ record.amount }}</p>
                     </template>
                 </div>
                 <template v-if="showOperation">
                     <div class="add">
                         <span class="count-edit">
+                            <span class="min-count">{{ $t('mall.min_order_quantity') }} {{ stepMinPrice }}</span>
                             <a-input-number
                                 v-model:value="editCount"
                                 :min="stepMinPrice"
@@ -91,7 +90,7 @@ const props = defineProps({
     },
 });
 
-const editCount = ref(1);
+const editCount = ref(props.record.type === Core.Const.ITEM.TYPE.COMPONENT ? props.record?.min_purchase_amount : 1);
 const currency = ref('€');
 const paramPrice = ref(false);
 /* computed start */
@@ -163,7 +162,7 @@ const addFavorites = async item => {
 };
 // 删除收藏
 const removeFavorites = item => {
-    Core.Api.Favorite.remove({ id: item.id }).then(() => {
+    Core.Api.Favorite.remove({ id: item?.favorite_id }).then(() => {
         proxy.$message.success(proxy.$t('pop_up.move'));
         // 重新获取列表数据
         emits('handlechange');
@@ -263,8 +262,9 @@ const removeFavorites = item => {
                     font-weight: 700;
                     line-height: normal;
                 }
-
-                &:nth-child(2) {
+            }
+            .text {
+                .price-text-t {
                     color: #8e8e8e;
                     text-align: right;
                     font-size: 12px;
@@ -273,12 +273,26 @@ const removeFavorites = item => {
                     line-height: 150%;
                     /* 18px */
                 }
+                .dosage {
+                    font-size: 12px;
+                    font-weight: 400;
+                    line-height: 18px;
+                    color: #333;
+                }
             }
-
             .add {
                 .fcc();
-
                 .count-edit {
+                    position: relative;
+                    .min-count {
+                        position: absolute;
+                        font-size: 12px;
+                        line-height: 18px;
+                        color: #999;
+                        left: -12px;
+                        bottom: 0;
+                        transform: translateX(-100%);
+                    }
                     /deep/.ant-input-number {
                         width: 136px;
                         box-shadow: 0 0 0 0;

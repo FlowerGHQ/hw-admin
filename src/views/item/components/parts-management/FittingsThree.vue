@@ -73,30 +73,6 @@
                 <!-- 空状态 -->
                 <div v-else class="empty-upload-container">
                     <img :src="uploadPic" alt="" />
-                    <div class="empty-upload-flex-wrap">
-                        <div class="empty-upload-tip">
-                            {{ $t('item-bom.upload_text') }}
-                        </div>
-                        <div v-if="tableData.length === 0" class="disable-add-btn">
-                            {{ $t(/*上传爆炸图*/ 'item-bom.upload_explosion') }}
-                        </div>
-                        <a-upload
-                            v-else
-                            name="file"
-                            accept="image/*"
-                            :file-list="uploadOptions.coverList"
-                            :action="uploadOptions.action"
-                            :headers="uploadOptions.headers"
-                            :data="uploadOptions.data"
-                            :maxCount="1"
-                            :showUploadList="false"
-                            @change="event => onUploadExplosion(event, 0)"
-                        >
-                            <a-button class="empty-upload-btn" type="primary">
-                                {{ $t(/*上传爆炸图*/ 'item-bom.upload_explosion') }}
-                            </a-button>
-                        </a-upload>
-                    </div>
                 </div>
             </div>
         </div>
@@ -122,29 +98,25 @@
                 </template>
                 <template #bodyCell="{ text, record, index, column }">
                     <div class="ordinal" v-if="column.key === 'index' /*序号*/">
-                        <a-input
-                            v-model:value="record.index"
-                            :placeholder="$t('item-bom.point_configure_number')"
-                            @blur="onOperation('blur', record)"
-                        />
+                        {{ text || '-' }}
                     </div>
-                    <span v-if="column.key === 'sync_name' /*商品名称*/">
+                    <span v-if="column.key === 'name' /*商品名称*/">
                         <a-tooltip placement="topLeft">
-                            <template #title>{{ text }}</template>
+                            <template #title>{{ lang === 'zh' ? text : record?.name_en || '-' }}</template>
                             <div
                                 class="one-spils cursor"
                                 :style="{
                                     width: text?.length > 6 ? 7 * 12 + 'px' : '',
                                 }"
                             >
-                                {{ text }}
+                                {{ lang === 'zh' ? text : record?.name_en || '-' }}
                             </div>
                         </a-tooltip>
                     </span>
-                    <span v-if="column.key === 'version' /*创建时间*/">
+                    <span v-if="column.key === 'version'">
                         {{ activeObj.version_name }}
                     </span>
-                    <span v-if="column.key === 'effective_time' /*创建时间*/">
+                    <span v-if="column.key === 'create_time' /*创建时间*/">
                         {{ $Util.timeFilter(text, 3) }}
                     </span>
                     <span v-if="column.key === 'comment' /*备注*/">
@@ -202,8 +174,18 @@ const props = defineProps({
 });
 const loading = ref(false);
 
+const lang = computed(() => {
+    return proxy.$store.state.lang;
+});
 const tableColumns = computed(() => {
     const result = [
+        {
+            // 序号
+            width: 250,
+            title: proxy.$t('item-bom.ordinal'),
+            dataIndex: 'index',
+            key: 'index',
+        },
         {
             // 商品名称
             title: proxy.$t('item-bom.product_name'),
@@ -237,8 +219,8 @@ const tableColumns = computed(() => {
         {
             // 创建时间
             title: proxy.$t('item-bom.create_time'),
-            dataIndex: 'effective_time',
-            key: 'effective_time',
+            dataIndex: 'create_time',
+            key: 'create_time',
         },
         {
             // 备注
@@ -406,7 +388,8 @@ const getTableDataFetch = (parmas = {}) => {
                 // 给配件表格添加index
                 tableData.value.forEach($2 => {
                     if (Number($1.target_id) === Number($2.id)) {
-                        $2.index = $1.index;
+                        $2.index = $1.index || '';
+                        $2.create_time = $1.create_time || '';
                         $1['sync_name'] = $2.sync_name;
                     }
                 });

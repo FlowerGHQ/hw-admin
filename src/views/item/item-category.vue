@@ -38,7 +38,7 @@
                                 class="image"
                                 :width="55"
                                 :height="55"
-                                :src="$Util.imageFilter(record.logo, 6)"
+                                :src="$Util.imageFilter(record.icon, 6)"
                                 :fallback="$t('def.none')"
                             />
                             <span class="name-info">
