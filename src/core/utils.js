@@ -520,10 +520,19 @@ const Util = {
         let value = MAP[val + ''] || {};
         return value[to] || '-';
     },
-    payTypeFilter(val, to = 'zh') {
+    payTypeFilter(val, to = 'zh', pay_pre_pay_ratio /* 预付比例 */, pay_oa_day /* 期 */) {
         const MAP = Const.DISTRIBUTOR.PAY_TIME_LIST;
         let value = MAP[val + ''] || {};
-        return value[to] || '-';
+        let str = value[to] || '-';
+        switch (val) {
+            case Const.DISTRIBUTOR.PAY_TIME.OA:
+                str += `(${pay_pre_pay_ratio}%预付款，${parseFloat((100 - pay_pre_pay_ratio).toFixed(2))}%尾款，OA ${pay_oa_day}天)`;
+                break;
+            case Const.DISTRIBUTOR.PAY_TIME.TT:
+                str += `(${pay_pre_pay_ratio}%预付款，${parseFloat((100 - pay_pre_pay_ratio).toFixed(2))}%尾款)`;
+                break;
+        }
+        return str;
     },
 
     /* =============== 分销商管理 ================ */

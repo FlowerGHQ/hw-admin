@@ -503,6 +503,7 @@ const messages = {
             OA: 'OA',
             minimum_purchase: '最小起购量',
             enter_1_1000: '请输入1-1000',
+            customer_code: '客户编码',
         },
         e: {
             // 用户
@@ -2980,6 +2981,7 @@ const messages = {
             OA: 'OA',
             minimum_purchase: 'Minimum Purchase Quantity',
             enter_1_1000: 'Please Enter 1-1000',
+            customer_code: 'Customer Code',
         },
         e: {
             employee_list: 'employee list',

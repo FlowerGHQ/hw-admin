@@ -64,10 +64,8 @@
 import SvgIcon from '@/components/SvgIcon/index.vue';
 import Core from '@/core';
 import { ref, onMounted, computed, getCurrentInstance } from 'vue';
-import { useStore } from 'vuex';
 const { proxy } = getCurrentInstance();
 
-const store = useStore();
 const props = defineProps({
     selected: {
         type: Boolean,
@@ -97,9 +95,6 @@ const editCount = ref(1);
 const currency = ref('€');
 const paramPrice = ref(false);
 /* computed start */
-const lang = computed(() => {
-    return store.state.lang;
-});
 const stepPrice = computed(() => {
     return {
         '40qh': proxy.$Util.countFilter(props.record[proxy.$Util.Number.getStepPriceIndex('40qh')]),

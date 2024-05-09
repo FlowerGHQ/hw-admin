@@ -15,7 +15,7 @@
             </div>
             <div class="search-container">
                 <a-row class="search-area">
-                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
+                    <a-col :xs="24" :sm="16" :xl="12" :xxl="6" class="search-item">
                         <div class="key">{{ $t('d.name_short_name') }}:</div>
                         <div class="value">
                             <a-input
@@ -25,13 +25,23 @@
                             />
                         </div>
                     </a-col>
-                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
+                    <a-col :xs="24" :sm="16" :xl="12" :xxl="6" class="search-item">
+                        <div class="key">{{ $t('customer-care.distributor_account_number') }}:</div>
+                        <div class="value">
+                            <a-input
+                                :placeholder="$t('n.enter')"
+                                v-model:value="searchForm.user_name"
+                                @keydown.enter="handleSearch"
+                            />
+                        </div>
+                    </a-col>
+                    <a-col :xs="24" :sm="16" :xl="12" :xxl="6" class="search-item">
                         <div class="key">{{ $t('n.area') }}:</div>
                         <div class="value">
                             <CountryCascader @search="handleOtherSearch" ref="CountryCascader" />
                         </div>
                     </a-col>
-                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
+                    <a-col :xs="24" :sm="16" :xl="12" :xxl="6" class="search-item">
                         <div class="key">{{ $t('d.pay_type') }}:</div>
                         <div class="value">
                             <a-select
@@ -43,6 +53,16 @@
                                     item[$i18n.locale]
                                 }}</a-select-option>
                             </a-select>
+                        </div>
+                    </a-col>
+                    <a-col :xs="24" :sm="16" :xl="12" :xxl="6" class="search-item">
+                        <div class="key">{{ $t('d.customer_code') }}:</div>
+                        <div class="value">
+                            <a-input
+                                :placeholder="$t('n.enter')"
+                                v-model:value="searchForm.customer_code"
+                                @keydown.enter="handleSearch"
+                            />
                         </div>
                     </a-col>
                     <a-col :xs="24" :sm="24" :xl="16" :xxl="12" class="search-item">
@@ -90,11 +110,22 @@
                             </div>
                             <div v-else>-</div>
                         </template>
+                        <template v-if="column.key === 'receive_port'">
+                            <a-tooltip>
+                                <template #title> {{ text }}</template>
+                                <div class="one-spils cursor" :style="{ width: text?.length > 5 ? 6 + 'rem' : '' }">
+                                    {{ text }}
+                                </div>
+                            </a-tooltip>
+                        </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'pay_type'">
-                            {{ $Util.payTypeFilter(text, $i18n.locale) || '-' }}
+                            {{
+                                $Util.payTypeFilter(text, $i18n.locale, record.pay_pre_pay_ratio, record.pay_oa_day) ||
+                                '-'
+                            }}
                         </template>
                         <template v-if="column.key === 'country'">
                             {{ text || '-' }}
@@ -177,6 +208,8 @@ export default {
             filteredInfo: { status: [1] },
             searchForm: {
                 name: '',
+                user_name: '',
+                customer_code: '',
                 status: 1,
                 type: '',
                 continent: '',
@@ -205,7 +238,8 @@ export default {
                     filteredValue: filteredInfo.type || null,
                 },
                 { title: this.$t('n.country'), dataIndex: 'country', key: 'country' },
-                { title: this.$t('d.port'), dataIndex: 'receive_port' },
+                { title: this.$t('d.customer_code'), dataIndex: 'customer_code', key: 'customer_code' },
+                { title: this.$t('d.port'), dataIndex: 'receive_port', key: 'receive_port' },
                 { title: this.$t('n.contact'), dataIndex: 'contact' },
                 { title: this.$t('n.phone'), dataIndex: 'phone' },
                 { title: this.$t('d.sales_area'), dataIndex: 'sales_area_list' },
